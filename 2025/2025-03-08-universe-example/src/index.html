@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Measuring the Size of the Universe</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Measuring the Size of the Universe</h1>
+            <p class="subtitle">From our solar system to the edge of the observable universe</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="#introduction">Introduction</a></li>
+                <li><a href="#foundations">Foundations</a></li>
+                <li><a href="#standard-candles">Standard Candles</a></li>
+                <li><a href="#galaxies">Galaxies & Beyond</a></li>
+                <li><a href="#advanced">Advanced Techniques</a></li>
+                <li><a href="#future">Future</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <section id="welcome" class="hero">
+                <div class="hero-content">
+                    <h2>Welcome to the Course</h2>
+                    <p>Explore the methods astronomers use to measure the vast distances of our universe, from nearby stars to the most distant galaxies.</p>
+                    <a href="#introduction" class="btn">Begin the Journey</a>
+                </div>
+            </section>
+
+            <section id="introduction">
+                <h2>Module 1: Introduction to Cosmic Measurements</h2>
+                <div class="module-content">
+                    <div class="unit">
+                        <h3>The Quest to Measure the Cosmos</h3>
+                        <p>Throughout history, humans have looked up at the night sky and wondered about the distances to the stars and other celestial objects. This module explores the historical development of our understanding of cosmic distances.</p>
+                        <div class="image-container">
+                            <img src="images/cosmic_distance_ladder.jpg" alt="Cosmic Distance Ladder" class="responsive-img">
+                            <p class="caption">The cosmic distance ladder illustrates how astronomers use different methods to measure distances at different scales. Credit: NASA, ESA</p>
+                        </div>
+                        <div class="interactive-element" id="timeline-container">
+                            <!-- Interactive timeline will be inserted here via JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="unit">
+                        <h3>The Challenge of Cosmic Distances</h3>
+                        <p>Why is measuring the universe so difficult? This unit explores the fundamental challenges astronomers face when trying to determine distances beyond our solar system.</p>
+                        <div class="interactive-element" id="scale-visualization">
+                            <!-- Interactive scale visualization will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="foundations">
+                <h2>Module 2: Foundations of Distance Measurement</h2>
+                <div class="module-content">
+                    <div class="unit">
+                        <h3>Our Solar System as a Baseline</h3>
+                        <p>The first step in measuring the universe is understanding the scale of our own solar system. This unit explores how astronomers determined the astronomical unit (AU) and established the first rung of the cosmic distance ladder.</p>
+                        <div class="interactive-element" id="au-calculator">
+                            <!-- Interactive AU calculator will be inserted here -->
+                        </div>
+                    </div>
+
+                    <div class="unit">
+                        <h3>Reaching the Stars with Parallax</h3>
+                        <p>Parallax is the apparent shift in position of a nearby star against the background of distant stars as Earth orbits the Sun. This fundamental technique allows astronomers to measure distances to nearby stars.</p>
+                        <div class="image-container">
+                            <!-- Parallax image will be inserted here -->
+                        </div>
+                        <div class="interactive-element" id="parallax-demo">
+                            <!-- Interactive parallax demonstration will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="standard-candles">
+                <h2>Module 3: Standard Candles and Cosmic Yardsticks</h2>
+                <div class="module-content">
+                    <div class="unit">
+                        <h3>Variable Stars as Distance Indicators</h3>
+                        <p>Certain types of variable stars, particularly Cepheid variables and RR Lyrae stars, have a known relationship between their period of variation and their intrinsic brightness. This makes them valuable "standard candles" for measuring distances.</p>
+                        <div class="image-container">
+                            <img src="images/supernova_host_galaxies.jpg" alt="Galaxies hosting Cepheid variables and supernovae" class="responsive-img">
+                            <p class="caption">This collection of galaxies hosts both Cepheid variables and supernovae, making them crucial for calibrating cosmic distances. Credit: ESA/Hubble</p>
+                        </div>
+                        <div class="interactive-element" id="cepheid-calculator">
+                            <!-- Interactive Cepheid calculator will be inserted here -->
+                        </div>
+                    </div>
+
+                    <div class="unit">
+                        <h3>Stellar Populations and Clusters</h3>
+                        <p>Globular clusters and other stellar populations provide another method for determining distances through techniques like main sequence fitting.</p>
+                        <div class="interactive-element" id="hr-diagram">
+                            <!-- Interactive HR diagram will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="galaxies">
+                <h2>Module 4: Extending to Galaxies and Beyond</h2>
+                <div class="module-content">
+                    <div class="unit">
+                        <h3>Supernovae as Cosmic Beacons</h3>
+                        <p>Type Ia supernovae are among the brightest events in the universe and have a nearly uniform intrinsic brightness, making them excellent standard candles for measuring vast cosmic distances.</p>
+                        <div class="interactive-element" id="supernova-demo">
+                            <!-- Interactive supernova demonstration will be inserted here -->
+                        </div>
+                    </div>
+
+                    <div class="unit">
+                        <h3>The Expanding Universe</h3>
+                        <p>Edwin Hubble's discovery that galaxies are moving away from us at speeds proportional to their distance revolutionized our understanding of the universe. This unit explores Hubble's Law and how redshift measurements help determine cosmic distances.</p>
+                        <div class="image-container">
+                            <img src="images/cmb_radiation.png" alt="Cosmic Microwave Background Radiation" class="responsive-img">
+                            <p class="caption">The cosmic microwave background radiation provides evidence of the universe's early state. Credit: NASA/WMAP Science Team</p>
+                        </div>
+                        <div class="interactive-element" id="redshift-calculator">
+                            <!-- Interactive redshift calculator will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="advanced">
+                <h2>Module 5: Advanced Measurement Techniques</h2>
+                <div class="module-content">
+                    <div class="unit">
+                        <h3>Gravitational Lensing</h3>
+                        <p>Einstein's theory of general relativity predicts that massive objects can bend light. This phenomenon, known as gravitational lensing, has become an important tool for measuring cosmic distances.</p>
+                        <div class="interactive-element" id="lensing-simulation">
+                            <!-- Interactive gravitational lensing simulation will be inserted here -->
+                        </div>
+                    </div>
+
+                    <div class="unit">
+                        <h3>Cosmic Microwave Background</h3>
+                        <p>The cosmic microwave background radiation is the afterglow of the Big Bang. Measurements of its properties help determine the age, size, and geometry of the universe.</p>
+                        <div class="interactive-element" id="cmb-explorer">
+                            <!-- Interactive CMB explorer will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="future">
+                <h2>Module 6: The Future of Cosmic Measurement</h2>
+                <div class="module-content">
+                    <div class="unit">
+                        <h3>Current Challenges and Controversies</h3>
+                        <p>Modern measurements of the universe's expansion rate have revealed tensions between different methods. This unit explores the Hubble tension and other current challenges in cosmic distance measurement.</p>
+                        <div class="interactive-element" id="hubble-tension">
+                            <!-- Interactive Hubble tension visualization will be inserted here -->
+                        </div>
+                    </div>
+
+                    <div class="unit">
+                        <h3>Next-Generation Techniques</h3>
+                        <p>New telescopes and innovative methods promise to revolutionize our ability to measure cosmic distances. This unit looks at the future of cosmic distance measurement.</p>
+                        <div class="interactive-element" id="future-missions">
+                            <!-- Interactive future missions timeline will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="assessment">
+                <h2>Test Your Knowledge</h2>
+                <div class="quiz-container">
+                    <!-- Quiz will be inserted here via JavaScript -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Measuring the Universe Course</p>
+            <p>Images courtesy of NASA, ESA, and other sources as credited</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/interactive.js"></script>
+    <script src="js/interactive_elements.js"></script>
+</body>
+</html>

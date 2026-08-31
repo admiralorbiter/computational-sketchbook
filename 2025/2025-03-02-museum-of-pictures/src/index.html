@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Virtual Museum</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Add empty favicon to prevent 404 error -->
+    <link rel="icon" href="data:,">
+</head>
+<body>
+    <div id="loading-screen">
+        <div class="loader"></div>
+        <p>Loading Virtual Museum...</p>
+    </div>
+    
+    <div id="container"></div>
+    
+    <div id="info-panel" class="hidden">
+        <div class="info-header">
+            <h2 id="info-title">Artwork Title</h2>
+            <button id="close-info">×</button>
+        </div>
+        <div class="info-content">
+            <p id="info-author">Artist Name</p>
+            <p id="info-description">Description</p>
+            <p id="info-source">Source</p>
+        </div>
+    </div>
+    
+    <div id="hud">
+        <div id="location-indicator">Gallery: Main Hall</div>
+        <div id="performance-stats"></div>
+    </div>
+    
+    <!-- Three.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.js"></script>
+    
+    <!-- Additional dependencies -->
+    <!-- Stats.js is now imported directly in app.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.7/dat.gui.min.js"></script>
+    
+    <!-- Application scripts -->
+    <script type="module" src="src/app.js"></script>
+</body>
+</html>
