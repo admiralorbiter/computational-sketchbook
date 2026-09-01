@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+	<h2>Sources</h2>
+	<div>
+		<a href="/research" class="btn btn-outline-secondary">Back</a>
+	</div>
+</div>
+
+<div class="card mb-3">
+	<div class="card-body">
+		<h5 class="card-title">Quick Add</h5>
+		<div class="row g-2">
+			<div class="col-md-2"><input id="sKind" type="text" class="form-control" placeholder="Kind (paper, blog, report)"></div>
+			<div class="col-md-4"><input id="sTitle" type="text" class="form-control" placeholder="Title"></div>
+			<div class="col-md-2"><input id="sAuthor" type="text" class="form-control" placeholder="Author(s)"></div>
+			<div class="col-md-1"><input id="sYear" type="number" class="form-control" placeholder="Year"></div>
+			<div class="col-md-2"><input id="sUrl" type="url" class="form-control" placeholder="URL"></div>
+			<div class="col-md-1 d-grid"><button class="btn btn-primary" onclick="addSource()">Add</button></div>
+		</div>
+	</div>
+</div>
+
+<div class="card">
+	<div class="card-body">
+		<div class="d-flex justify-content-between align-items-center mb-2">
+			<h5 class="card-title mb-0">Sources</h5>
+            <div class="input-group" style="max-width: 680px;">
+                <input id="sq" type="search" class="form-control" placeholder="Search...">
+                <select id="skind" class="form-select" style="max-width: 140px">
+					<option value="">All kinds</option>
+					<option>paper</option>
+					<option>report</option>
+					<option>blog</option>
+					<option>article</option>
+					<option>video</option>
+					<option>podcast</option>
+				</select>
+                <input id="stag" type="search" class="form-control" style="max-width: 160px" placeholder="tag (optional)">
+                <select id="spageSize" class="form-select" style="max-width: 120px">
+                    <option value="10">10</option>
+                    <option value="25" selected>25</option>
+                    <option value="50">50</option>
+                </select>
+				<button class="btn btn-outline-secondary" onclick="loadSources()">Go</button>
+			</div>
+		</div>
+        <div id="sourcesList" class="list-group small"></div>
+        <div id="sourcesEmpty" class="text-center text-muted py-4 d-none">
+            <i class="bi bi-journal-text fs-1"></i>
+            <div>No sources yet. Use Quick Add above or import from CSV.</div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+            <button class="btn btn-sm btn-outline-secondary" onclick="prevSources()">Prev</button>
+            <div class="text-muted" id="sourcesPageInfo"></div>
+            <button class="btn btn-sm btn-outline-secondary" onclick="nextSources()">Next</button>
+        </div>
+	</div>
+</div>
+
+<div class="card mt-3">
+	<div class="card-body">
+		<h5 class="card-title">Import CSV</h5>
+		<div class="row g-2 align-items-center">
+			<div class="col-md-5">
+				<input id="csvFile" type="file" class="form-control" accept=".csv">
+			</div>
+			<div class="col-md-4">
+				<input id="csvListTag" type="text" class="form-control" placeholder="Optional list tag (e.g. AI List)">
+			</div>
+			<div class="col-md-2 d-grid">
+				<button class="btn btn-outline-primary" onclick="importSourcesCsv()">Upload</button>
+			</div>
+		</div>
+		<div class="form-text">Expected headers: Title, Date, Type, Notes, Tags, URL, Biblo (flexible; mapping supported).</div>
+	</div>
+</div>
+
+<script>
+let sPage = 1;
+let sPageSize = 25;
+document.addEventListener('DOMContentLoaded', loadSources);
+
+function loadSources() {
+	const params = new URLSearchParams();
+    const q = document.getElementById('sq').value.trim();
+    const kind = document.getElementById('skind').value.trim();
+    const tag = document.getElementById('stag').value.trim();
+    const psEl = document.getElementById('spageSize');
+    sPageSize = psEl ? parseInt(psEl.value) : sPageSize;
+    if (q) params.set('q', q);
+	if (kind) params.set('kind', kind);
+    if (tag) params.set('tag', tag);
+    params.set('page', sPage);
+    params.set('page_size', sPageSize);
+	fetch('/research/sources?' + params.toString())
+		.then(r => r.json())
+		.then(items => {
+			const el = document.getElementById('sourcesList');
+            const empty = document.getElementById('sourcesEmpty');
+            if (!items || items.length === 0) {
+                el.innerHTML = '';
+                if (empty) empty.classList.remove('d-none');
+                return;
+            }
+            if (empty) empty.classList.add('d-none');
+			el.innerHTML = items.map(s => `
+				<a class="list-group-item list-group-item-action" id="row-source-${s.id}" href="/research/sources/detail?id=${s.id}">
+					<div class="d-flex justify-content-between align-items-start">
+						<div>
+							<div><strong>${(s.title||'').replaceAll('<','&lt;')}</strong></div>
+							<div class="text-muted">${(s.kind||'')} • ${(s.author||'')} • ${(s.year||'')}</div>
+							<div class="mt-1 d-flex flex-wrap gap-1" id="tags-source-${s.id}"></div>
+						</div>
+                        <div class="d-flex flex-wrap gap-2 justify-content-end">
+                            ${ s.url ? `<a href="${s.url}" target="_blank" class="btn btn-sm btn-outline-secondary" onclick="event.stopPropagation();">Open</a>`:'' }
+                            <a class="btn btn-sm btn-outline-secondary" href="/research/sources/detail?id=${s.id}#notes" onclick="event.stopPropagation();">Notes/Highlights</a>
+                            <a class="btn btn-sm btn-outline-secondary" href="/research/sources/detail?id=${s.id}" onclick="event.stopPropagation();">Details</a>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="event.preventDefault(); addTagPrompt('source', ${s.id})">Add tag</button>
+                            <button class="btn btn-sm btn-outline-primary" onclick="event.preventDefault(); toggleSourceEdit(${s.id})">Edit</button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="event.preventDefault(); delSource(${s.id})">Delete</button>
+                        </div>
+					</div>
+					<div class="mt-2 d-none" id="edit-source-${s.id}">
+						<div class="row g-2">
+							<div class="col-md-4"><input class="form-control form-control-sm" id="es-title-${s.id}" value="${(s.title||'').replaceAll('"','&quot;')}"></div>
+							<div class="col-md-2"><input class="form-control form-control-sm" id="es-kind-${s.id}" value="${(s.kind||'').replaceAll('"','&quot;')}"></div>
+							<div class="col-md-3"><input class="form-control form-control-sm" id="es-author-${s.id}" value="${(s.author||'').replaceAll('"','&quot;')}"></div>
+							<div class="col-md-1"><input class="form-control form-control-sm" id="es-year-${s.id}" value="${(s.year||'')}"></div>
+							<div class="col-md-2"><input class="form-control form-control-sm" id="es-url-${s.id}" value="${(s.url||'').replaceAll('"','&quot;')}"></div>
+							<div class="col-12 d-flex gap-2">
+								<button class="btn btn-sm btn-primary" onclick="event.preventDefault(); saveSourceEdit(${s.id})">Save</button>
+								<button class="btn btn-sm btn-secondary" onclick="event.preventDefault(); toggleSourceEdit(${s.id}, true)">Cancel</button>
+							</div>
+						</div>
+					</div>
+				</a>
+			`).join('');
+            // load tags per source
+            items.forEach(s => loadEntityTags('source', s.id));
+            const info = document.getElementById('sourcesPageInfo');
+            if (info) info.textContent = `Page ${sPage}`;
+		});
+}
+
+function nextSources(){ sPage += 1; loadSources(); }
+function prevSources(){ if (sPage > 1) { sPage -= 1; loadSources(); } }
+
+function addSource() {
+	const data = {
+		kind: document.getElementById('sKind').value || null,
+		title: document.getElementById('sTitle').value,
+		author: document.getElementById('sAuthor').value || null,
+		year: document.getElementById('sYear').value ? parseInt(document.getElementById('sYear').value) : null,
+		url: document.getElementById('sUrl').value || null
+	};
+	if (!data.title) { alert('Title is required'); return; }
+	fetch('/research/sources', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) })
+		.then(r => r.json())
+		.then(()=>{ loadSources(); clearForm(); });
+}
+
+function clearForm() {
+	['sKind','sTitle','sAuthor','sYear','sUrl'].forEach(id => document.getElementById(id).value = '');
+}
+
+function delSource(id) {
+	if (!confirm('Delete this source?')) return;
+	fetch(`/research/sources/${id}`, { method:'DELETE' })
+		.then(()=> loadSources());
+}
+
+// Tag helpers
+function loadEntityTags(entityType, entityId) {
+	const container = document.getElementById(`tags-${entityType}-${entityId}`);
+	if (!container) return;
+	container.innerHTML = '<span class="text-muted">Loading...</span>';
+	fetch(`/research/tags/${entityType}/${entityId}`)
+		.then(r=>r.json())
+		.then(tags => {
+			if (!tags || tags.length === 0) { container.innerHTML = '<span class="text-muted">No tags</span>'; return; }
+			container.innerHTML = tags.map(t => `
+				<span class='badge rounded-pill bg-secondary'>${t.name}
+					<button class='btn btn-sm btn-close btn-close-white ms-1' style='font-size: .5rem;' onclick='event.preventDefault(); event.stopPropagation(); removeTag("${entityType}", ${entityId}, ${t.id})'></button>
+				</span>
+			`).join(' ');
+		});
+}
+
+function addTagPrompt(entityType, entityId) {
+	const name = prompt('Add tag:');
+	if (!name) return;
+	fetch(`/research/tags/${entityType}/${entityId}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name }) })
+		.then(()=> loadEntityTags(entityType, entityId));
+}
+
+function removeTag(entityType, entityId, tagId) {
+	fetch(`/research/tags/${entityType}/${entityId}/${tagId}`, { method:'DELETE' })
+		.then(()=> loadEntityTags(entityType, entityId));
+}
+
+// Inline edit helpers for sources list
+function toggleSourceEdit(id, hideOnly) {
+	const el = document.getElementById(`edit-source-${id}`);
+	if (!el) return;
+	if (hideOnly) {
+		el.classList.add('d-none');
+		return;
+	}
+	el.classList.toggle('d-none');
+}
+
+function saveSourceEdit(id) {
+	const title = (document.getElementById(`es-title-${id}`)?.value || '').trim();
+	const kind = (document.getElementById(`es-kind-${id}`)?.value || '').trim();
+	const author = (document.getElementById(`es-author-${id}`)?.value || '').trim();
+	const yearRaw = (document.getElementById(`es-year-${id}`)?.value || '').trim();
+	const url = (document.getElementById(`es-url-${id}`)?.value || '').trim();
+
+	const data = {};
+	if (title) data.title = title;
+	if (kind) data.kind = kind;
+	if (author) data.author = author;
+	if (yearRaw) {
+		const y = parseInt(yearRaw, 10);
+		if (!isNaN(y)) data.year = y;
+	}
+	if (url) data.url = url;
+
+	fetch(`/research/sources/${id}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) })
+		.then(r => {
+			if (!r.ok) throw new Error('Failed to save');
+			return r.json();
+		})
+		.then(() => {
+			toggleSourceEdit(id, true);
+			loadSources();
+		})
+		.catch(() => alert('Save failed. Please try again.'));
+}
+
+function importSourcesCsv() {
+	const fileInput = document.getElementById('csvFile');
+	if (!fileInput || !fileInput.files || fileInput.files.length === 0) { alert('Choose a CSV file'); return; }
+	const listTag = (document.getElementById('csvListTag')?.value || '').trim();
+	const fd = new FormData();
+	fd.append('file', fileInput.files[0]);
+	if (listTag) fd.append('list_tag', listTag);
+	fetch('/research/sources/import/csv', { method: 'POST', body: fd })
+		.then(r => r.json())
+		.then(res => {
+			if (!res || res.error) { alert(res?.error || 'Import failed'); return; }
+			alert(`Imported: ${res.stats?.created||0} created, ${res.stats?.updated||0} updated (total ${res.stats?.total||0})`);
+			loadSources();
+			if (fileInput) fileInput.value = '';
+			if (document.getElementById('csvListTag')) document.getElementById('csvListTag').value = '';
+		});
+}
+</script>
+{% endblock %}
+
+

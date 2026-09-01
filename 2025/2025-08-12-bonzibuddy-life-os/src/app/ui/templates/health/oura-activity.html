@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h1 class="h2">Oura Activity Data</h1>
+          <p class="text-muted">Your activity metrics and insights from Oura Ring</p>
+        </div>
+        <div>
+          <a href="/health/" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+          </a>
+          <button class="btn btn-success ms-2" onclick="refreshData()">
+            <i class="bi bi-arrow-clockwise"></i> Refresh
+          </button>
+        </div>
+      </div>
+
+      <!-- Data Range Selector -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="row align-items-end">
+            <div class="col-md-3">
+              <label for="startDate" class="form-label">Start Date</label>
+              <input type="date" class="form-control" id="startDate">
+            </div>
+            <div class="col-md-3">
+              <label for="endDate" class="form-label">End Date</label>
+              <input type="date" class="form-control" id="endDate">
+            </div>
+            <div class="col-md-3">
+              <button class="btn btn-primary" onclick="loadActivityData()">
+                <i class="bi bi-search"></i> Load Data
+              </button>
+            </div>
+            <div class="col-md-3">
+              <div class="text-end">
+                <small class="text-muted">Last updated: <span id="lastUpdated">--</span></small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity Summary -->
+      <div class="row mb-4" id="activitySummary" style="display: none;">
+        <div class="col-md-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title text-success" id="avgActivityScore">--</h5>
+              <p class="card-text">Average Activity Score</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title text-info" id="avgSteps">--</h5>
+              <p class="card-text">Average Steps</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title text-warning" id="avgCalories">--</h5>
+              <p class="card-text">Average Calories</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title text-primary" id="avgActiveTime">--</h5>
+              <p class="card-text">Average Active Time</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity Data Table -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Activity Records</h5>
+        </div>
+        <div class="card-body">
+          <div id="activityDataTable">
+            <div class="text-center text-muted py-5">
+              <i class="bi bi-activity fs-1"></i>
+              <p>Select a date range and click "Load Data" to view your activity records</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Set default dates (last 7 days)
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - 7);
+
+  document.getElementById('endDate').value = endDate.toISOString().split('T')[0];
+  document.getElementById('startDate').value = startDate.toISOString().split('T')[0];
+});
+
+function loadActivityData() {
+  const startDate = document.getElementById('startDate').value;
+  const endDate = document.getElementById('endDate').value;
+
+  if (!startDate || !endDate) {
+    alert('Please select both start and end dates');
+    return;
+  }
+
+  // Show loading state
+  document.getElementById('activityDataTable').innerHTML = `
+    <div class="text-center py-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-2">Loading activity data...</p>
+    </div>
+  `;
+
+  fetch(`/health/oura/activity?start_date=${startDate}&end_date=${endDate}`)
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) {
+        document.getElementById('activityDataTable').innerHTML = `
+          <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle"></i> Error: ${data.error}
+          </div>
+        `;
+        return;
+      }
+
+      displayActivityData(data);
+    })
+    .catch(error => {
+      console.error('Error loading activity data:', error);
+      document.getElementById('activityDataTable').innerHTML = `
+        <div class="alert alert-danger">
+          <i class="bi bi-exclamation-triangle"></i> Failed to load activity data
+        </div>
+      `;
+    });
+}
+
+function displayActivityData(data) {
+  if (!data.data || data.data.length === 0) {
+    document.getElementById('activityDataTable').innerHTML = `
+      <div class="text-center text-muted py-5">
+        <i class="bi bi-activity fs-1"></i>
+        <p>No activity data found for the selected date range</p>
+      </div>
+    `;
+    return;
+  }
+
+  // Calculate summary statistics
+  const scores = data.data.map(record => record.score || 0).filter(score => score > 0);
+  const steps = data.data.map(record => record.steps || 0).filter(step => step > 0);
+  const calories = data.data.map(record => record.calories || 0).filter(cal => cal > 0);
+  const activeTimes = data.data.map(record => record.active || 0).filter(time => time > 0);
+
+  const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+  const avgSteps = steps.length > 0 ? Math.round(steps.reduce((a, b) => a + b, 0) / steps.length) : 0;
+  const avgCalories = calories.length > 0 ? Math.round(calories.reduce((a, b) => a + b, 0) / calories.length) : 0;
+  const avgActiveTime = activeTimes.length > 0 ? Math.round(activeTimes.reduce((a, b) => a + b, 0) / activeTimes.length) : 0;
+
+  // Update summary cards
+  document.getElementById('avgActivityScore').textContent = avgScore;
+  document.getElementById('avgSteps').textContent = avgSteps.toLocaleString();
+  document.getElementById('avgCalories').textContent = avgCalories.toLocaleString();
+  document.getElementById('avgActiveTime').textContent = `${Math.floor(avgActiveTime / 60)}h ${avgActiveTime % 60}m`;
+
+  // Show summary
+  document.getElementById('activitySummary').style.display = 'block';
+
+  // Create data table
+  const tableHTML = `
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Score</th>
+            <th>Steps</th>
+            <th>Calories</th>
+            <th>Active Time</th>
+            <th>Rest Time</th>
+            <th>Inactive Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.data.map(record => `
+            <tr>
+              <td>${record.day || '--'}</td>
+              <td>
+                <span class="badge bg-${getScoreColor(record.score)}">${record.score || '--'}</span>
+              </td>
+              <td>${record.steps ? record.steps.toLocaleString() : '--'}</td>
+              <td>${record.calories ? record.calories.toLocaleString() : '--'}</td>
+              <td>${formatTime(record.active)}</td>
+              <td>${formatTime(record.rest)}</td>
+              <td>${formatTime(record.inactive)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  document.getElementById('activityDataTable').innerHTML = tableHTML;
+}
+
+function getScoreColor(score) {
+  if (!score) return 'secondary';
+  if (score >= 85) return 'success';
+  if (score >= 70) return 'warning';
+  return 'danger';
+}
+
+function formatTime(minutes) {
+  if (!minutes || minutes === 0) return '--';
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  return `${hours}h ${mins}m`;
+}
+
+function refreshData() {
+  loadActivityData();
+}
+</script>
+{% endblock %}

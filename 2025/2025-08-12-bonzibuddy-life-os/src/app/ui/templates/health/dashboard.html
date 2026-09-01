@@ -1,0 +1,1113 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col">
+      <h1 class="h2">Health Dashboard</h1>
+      <p class="text-muted">Track your medications, symptoms, vitals, and appointments</p>
+    </div>
+  </div>
+
+  <!-- Quick Actions Row -->
+  <div class="row mb-4">
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Quick Actions</h5>
+          <div id="refillBanner" class="alert alert-warning d-none" role="alert"></div>
+          <div id="labsBanner" class="alert alert-info d-none" role="alert"></div>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMedModal">
+              <i class="bi bi-plus-circle"></i> Add Medication
+            </button>
+            <button type="button" class="btn btn-outline-primary" onclick="importPrescriptions()">
+              <i class="bi bi-file-earmark-spreadsheet"></i> Import Prescriptions CSV
+            </button>
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#logSymptomModal">
+              <i class="bi bi-clipboard-pulse"></i> Log Symptom
+            </button>
+            <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#logVitalModal">
+              <i class="bi bi-heart-pulse"></i> Log Vital
+            </button>
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#addAppointmentModal">
+              <i class="bi bi-calendar-plus"></i> Add Appointment
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Dashboard Grid -->
+  <div class="row g-4">
+    <!-- CGM Card -->
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0">CGM</h5>
+          <span id="cgmOnHand" class="badge bg-secondary">--</span>
+        </div>
+        <div class="card-body">
+          <div id="cgmBody" class="text-center text-muted py-3">
+            <i class="bi bi-activity fs-1"></i>
+            <p>Loading...</p>
+          </div>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+          <button class="btn btn-sm btn-outline-primary" onclick="startCGM()">Start</button>
+          <button class="btn btn-sm btn-outline-secondary" onclick="endCGM()">End</button>
+          <button class="btn btn-sm btn-outline-success" onclick="addCGMPack()">Add Pack</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- OTC Card -->
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0">OTC</h5>
+          <span id="otcLowBadge" class="badge bg-secondary">--</span>
+        </div>
+        <div class="card-body">
+          <div id="otcBody" class="text-muted small">
+            <div class="text-center py-3"><i class="bi bi-capsule fs-1"></i><div>Loading...</div></div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-sm btn-outline-primary" onclick="logTumsQuick()">Log Tums</button>
+        </div>
+      </div>
+    </div>
+    <!-- Medications Card -->
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0">Medications</h5>
+          <span class="badge bg-primary">{{ data.meds.total }}</span>
+        </div>
+        <div class="card-body">
+          <div id="medsList">
+            <!-- Medications will be loaded here via JavaScript -->
+            <div class="text-center text-muted py-3">
+              <i class="bi bi-pills fs-1"></i>
+              <p>No medications yet</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <a href="/health/meds/view" class="btn btn-sm btn-outline-primary">View All</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Oura Integration Card -->
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0">Oura Ring</h5>
+          <span id="ouraStatusBadge" class="badge bg-secondary">--</span>
+        </div>
+        <div class="card-body">
+          <div id="ouraBody" class="text-center text-muted py-3">
+            <i class="bi bi-heart-pulse fs-1"></i>
+            <p id="ouraStatusText">Loading...</p>
+          </div>
+          
+          <!-- Oura Data Summary (shown when connected) -->
+          <div id="ouraDataSummary" class="d-none">
+            <div class="row text-center mb-3">
+              <div class="col-4">
+                <div class="border-end">
+                  <h6 class="text-primary mb-1" id="ouraSleepScore">--</h6>
+                  <small class="text-muted">Sleep</small>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="border-end">
+                  <h6 class="text-success mb-1" id="ouraActivityScore">--</h6>
+                  <small class="text-muted">Activity</small>
+                </div>
+              </div>
+              <div class="col-4">
+                <h6 class="text-warning mb-1" id="ouraReadinessScore">--</h6>
+                <small class="text-muted">Readiness</small>
+              </div>
+            </div>
+            
+            <!-- Quick Data Links -->
+            <div class="d-grid gap-2">
+              <a href="/health/oura/sleep/view" class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-moon-stars"></i> View Sleep Data
+              </a>
+              <a href="/health/oura/activity/view" class="btn btn-sm btn-outline-success">
+                <i class="bi bi-activity"></i> View Activity Data
+              </a>
+              <a href="/health/oura/readiness/view" class="btn btn-sm btn-outline-warning">
+                <i class="bi bi-lightning-charge"></i> View Readiness Data
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button id="ouraConnectBtn" class="btn btn-sm btn-outline-primary d-none" onclick="connectOura()">
+            <i class="bi bi-link-45deg"></i> Connect
+          </button>
+          <button id="ouraDisconnectBtn" class="btn btn-sm btn-outline-danger d-none" onclick="disconnectOura()">
+            <i class="bi bi-link-break"></i> Disconnect
+          </button>
+          <button id="ouraSyncBtn" class="btn btn-sm btn-outline-success d-none" onclick="syncOuraData()">
+            <i class="bi bi-arrow-clockwise"></i> Sync
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Appointments Card -->
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0">Appointments</h5>
+          <span class="badge bg-warning">{{ data.appointments.upcoming }}</span>
+        </div>
+        <div class="card-body">
+          {% if data.appointments.next %}
+          <div class="alert alert-info">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <strong>Next:</strong> {{ data.appointments.next.provider }}
+                {% if data.appointments.next.is_virtual %}<span class="badge rounded-pill text-bg-info ms-2">Virtual</span>{% endif %}
+                <br>
+                <small>{{ data.appointments.next.ts[:10] }} - {{ data.appointments.next.purpose }}</small>
+                {% if data.appointments.next.location %}<div class="small text-muted">{{ data.appointments.next.location }}</div>{% endif %}
+                {% if data.appointments.next.labs and (data.appointments.next.labs.total > 0) %}
+                  <div class="small">
+                    <span class="badge text-bg-secondary">Labs: {{ data.appointments.next.labs.total }}</span>
+                    {% if data.appointments.next.labs.scheduled %}<span class="badge text-bg-info ms-1">Scheduled: {{ data.appointments.next.labs.scheduled }}</span>{% endif %}
+                    {% if data.appointments.next.labs.overdue %}<span class="badge text-bg-danger ms-1">Overdue: {{ data.appointments.next.labs.overdue }}</span>{% endif %}
+                    {% if data.appointments.next.labs.due_soon and not data.appointments.next.labs.overdue %}<span class="badge text-bg-warning ms-1">Due soon: {{ data.appointments.next.labs.due_soon }}</span>{% endif %}
+                    {% if data.appointments.next.labs.next_due_ts %}<div class="text-muted">Next lab due {{ data.appointments.next.labs.next_due_ts[:10] }}</div>{% endif %}
+                  </div>
+                {% endif %}
+              </div>
+              <div class="text-end">
+                {% set due = data.appointments.next.due_tasks %}
+                {% set open = data.appointments.next.open_tasks %}
+                {% if due and due > 0 %}
+                  <span class="badge text-bg-danger">{{ due }} due</span>
+                {% endif %}
+                {% if open and open > 0 %}
+                  <span class="badge text-bg-secondary ms-1">{{ open }} open</span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <div class="text-center text-muted py-3">
+            <i class="bi bi-calendar-x fs-1"></i>
+            <p>No upcoming appointments</p>
+          </div>
+          {% endif %}
+        </div>
+        <div class="card-footer">
+          <a href="/health/appointments/view" class="btn btn-sm btn-outline-warning">View All</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Symptoms Card -->
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0">Recent Symptoms</h5>
+          <span class="badge bg-danger">{{ data.symptoms.total }}</span>
+        </div>
+        <div class="card-body">
+          {% if data.symptoms.total > 0 %}
+          <div class="mb-2">
+            <strong>Average Severity:</strong> {{ data.symptoms.avg_severity }}/5
+          </div>
+          <div class="mb-2">
+            <strong>By Severity:</strong>
+            {% for severity, count in data.symptoms.by_severity.items() %}
+            <span class="badge bg-secondary me-1">{{ severity }}: {{ count }}</span>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="text-center text-muted py-3">
+            <i class="bi bi-emoji-smile fs-1"></i>
+            <p>No symptoms logged</p>
+          </div>
+          {% endif %}
+        </div>
+        <div class="card-footer">
+          <a href="#" class="btn btn-sm btn-outline-danger" onclick="loadSymptoms()">View All</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vitals Card -->
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0">Recent Vitals</h5>
+          <span class="badge bg-info">{{ data.vitals.total }}</span>
+        </div>
+        <div class="card-body">
+          {% if data.vitals.total > 0 %}
+          <div class="mb-2">
+            <strong>By Type:</strong>
+            {% for kind, count in data.vitals.by_kind.items() %}
+            <span class="badge bg-info me-1">{{ kind }}: {{ count }}</span>
+            {% endfor %}
+          </div>
+          <div class="mb-2">
+            <strong>Most Recent:</strong>
+            {% for vital in data.vitals.recent[:3] %}
+            <div class="small">{{ vital.kind }}: {{ vital.value_num }} {{ vital.unit or '' }}</div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="text-center text-muted py-3">
+            <i class="bi bi-heart fs-1"></i>
+            <p>No vitals logged</p>
+          </div>
+          {% endif %}
+        </div>
+        <div class="card-footer">
+          <a href="#" class="btn btn-sm btn-outline-info" onclick="loadVitals()">View All</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity Card -->
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Recent Activity</h5>
+        </div>
+        <div class="card-body">
+          <div id="recentActivity">
+            <!-- Recent activity will be loaded here -->
+            <div class="text-center text-muted py-3">
+              <i class="bi bi-activity fs-1"></i>
+              <p>No recent activity</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <a href="#" class="btn btn-sm btn-outline-secondary">View All</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Health Summary Card -->
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Health Summary</h5>
+        </div>
+        <div class="card-body">
+          <div class="row text-center">
+            <div class="col-6">
+              <div class="border-end">
+                <h4 class="text-primary">{{ data.meds.total }}</h4>
+                <small class="text-muted">Medications</small>
+              </div>
+            </div>
+            <div class="col-6">
+              <h4 class="text-warning">{{ data.appointments.upcoming }}</h4>
+              <small class="text-muted">Upcoming</small>
+            </div>
+          </div>
+          <hr>
+          <div class="row text-center">
+            <div class="col-6">
+              <div class="border-end">
+                <h4 class="text-danger">{{ data.symptoms.total }}</h4>
+                <small class="text-muted">Symptoms (7d)</small>
+              </div>
+            </div>
+            <div class="col-6">
+              <h4 class="text-info">{{ data.vitals.total }}</h4>
+              <small class="text-muted">Vitals (7d)</small>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-sm btn-outline-secondary" onclick="refreshDashboard()">Refresh</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Medication Modal -->
+<div class="modal fade" id="addMedModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Medication</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addMedForm">
+          <div class="mb-3">
+            <label for="medName" class="form-label">Medication Name *</label>
+            <input type="text" class="form-control" id="medName" required>
+          </div>
+          <div class="mb-3">
+            <label for="medDosage" class="form-label">Strength (Dosage)</label>
+            <input type="text" class="form-control" id="medDosage" placeholder="e.g., 50 mg">
+          </div>
+          <div class="mb-3">
+            <label for="medDose" class="form-label">Dosage Instructions</label>
+            <textarea class="form-control" id="medDose" rows="2"></textarea>
+          </div>
+          <div class="row g-2">
+            <div class="col-md-4">
+              <label for="medQty" class="form-label">Qty</label>
+              <input type="number" class="form-control" id="medQty" min="0">
+            </div>
+            <div class="col-md-4">
+              <label for="medRefillsLeft" class="form-label">Refills Left</label>
+              <input type="number" class="form-control" id="medRefillsLeft" min="0">
+            </div>
+            <div class="col-md-4">
+              <label for="medQtyPerDay" class="form-label">Doses/Day</label>
+              <input type="number" step="0.1" class="form-control" id="medQtyPerDay" min="0">
+            </div>
+          </div>
+          <div class="row g-2 mt-2">
+            <div class="col-md-6">
+              <label for="medLastRefilled" class="form-label">Last Refilled</label>
+              <input type="date" class="form-control" id="medLastRefilled">
+            </div>
+            <div class="col-md-6">
+              <label for="medPharmacy" class="form-label">Pharmacy</label>
+              <input type="text" class="form-control" id="medPharmacy" placeholder="e.g., Walgreens">
+            </div>
+          </div>
+          <div class="mb-3 mt-2">
+            <label for="medCondition" class="form-label">Condition</label>
+            <input type="text" class="form-control" id="medCondition" placeholder="e.g., diabetes">
+          </div>
+          <div class="mb-3">
+            <label for="medNotes" class="form-label">Notes</label>
+            <textarea class="form-control" id="medNotes" rows="2"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="addMedication()">Add Medication</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OTC Logs Modal -->
+<div class="modal fade" id="otcLogsModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">OTC Logs: <span id="otcLogsTitle"></span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="otcLogsBody"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+  </div>
+
+<!-- Log Symptom Modal -->
+<div class="modal fade" id="logSymptomModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Log Symptom</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="logSymptomForm">
+          <div class="mb-3">
+            <label for="symptomLabel" class="form-label">Symptom *</label>
+            <input type="text" class="form-control" id="symptomLabel" required>
+          </div>
+          <div class="mb-3">
+            <label for="symptomSeverity" class="form-label">Severity (1-5) *</label>
+            <select class="form-select" id="symptomSeverity" required>
+              <option value="">Select severity...</option>
+              <option value="1">1 - Very Mild</option>
+              <option value="2">2 - Mild</option>
+              <option value="3">3 - Moderate</option>
+              <option value="4">4 - Severe</option>
+              <option value="5">5 - Very Severe</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="symptomTrigger" class="form-label">Trigger</label>
+            <input type="text" class="form-control" id="symptomTrigger">
+          </div>
+          <div class="mb-3">
+            <label for="symptomNote" class="form-label">Notes</label>
+            <textarea class="form-control" id="symptomNote" rows="2"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success" onclick="logSymptom()">Log Symptom</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Log Vital Modal -->
+<div class="modal fade" id="logVitalModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Log Vital Sign</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="logVitalForm">
+          <div class="mb-3">
+            <label for="vitalKind" class="form-label">Vital Type *</label>
+            <select class="form-select" id="vitalKind" required>
+              <option value="">Select type...</option>
+              <option value="BP">Blood Pressure</option>
+              <option value="HR">Heart Rate</option>
+              <option value="Weight">Weight</option>
+              <option value="Temperature">Temperature</option>
+              <option value="Oxygen">Oxygen Saturation</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="vitalValue" class="form-label">Value *</label>
+            <input type="number" step="0.1" class="form-control" id="vitalValue" required>
+          </div>
+          <div class="mb-3">
+            <label for="vitalUnit" class="form-label">Unit</label>
+            <input type="text" class="form-control" id="vitalUnit" placeholder="e.g., mmHg, bpm, lbs, °F">
+          </div>
+          <div class="mb-3">
+            <label for="vitalNote" class="form-label">Notes</label>
+            <textarea class="form-control" id="vitalNote" rows="2"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-info" onclick="logVital()">Log Vital</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Appointment Modal -->
+<div class="modal fade" id="addAppointmentModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Appointment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addAppointmentForm">
+          <div class="mb-3">
+            <label for="appointmentDate" class="form-label">Date & Time *</label>
+            <input type="datetime-local" class="form-control" id="appointmentDate" required>
+          </div>
+          <div class="mb-3">
+            <label for="appointmentProvider" class="form-label">Provider *</label>
+            <input type="text" class="form-control" id="appointmentProvider" required>
+          </div>
+          <div class="mb-3">
+            <label for="appointmentLocation" class="form-label">Location</label>
+            <input type="text" class="form-control" id="appointmentLocation">
+          </div>
+          <div class="mb-3">
+            <label for="appointmentPurpose" class="form-label">Purpose</label>
+            <textarea class="form-control" id="appointmentPurpose" rows="2"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="appointmentNote" class="form-label">Notes</label>
+            <textarea class="form-control" id="appointmentNote" rows="2"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-warning" onclick="addAppointment()">Add Appointment</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Dashboard functionality
+document.addEventListener('DOMContentLoaded', function() {
+  loadMeds();
+  loadRecentActivity();
+  checkRefillBanner();
+  checkLabsBanner();
+  loadCGM();
+  loadOTC();
+  loadOuraStatus(); // Load Oura status on page load
+});
+
+function loadMeds() {
+  fetch('/health/meds')
+    .then(response => response.json())
+    .then(meds => {
+      const medsList = document.getElementById('medsList');
+      if (meds.length === 0) {
+        medsList.innerHTML = `
+          <div class="text-center text-muted py-3">
+            <i class="bi bi-pills fs-1"></i>
+            <p>No medications yet</p>
+          </div>
+        `;
+        return;
+      }
+      
+      let html = '';
+      meds.slice(0, 3).forEach(med => {
+        const supply = med.supply || null;
+        const percentLeft = supply ? supply.percent_left : null;
+        const dueSoon = supply ? supply.due_soon : false;
+        const overdue = supply ? supply.overdue : false;
+        const badgeClass = overdue ? 'danger' : (dueSoon ? 'warning' : 'success');
+
+        const strength = med.dosage || '';
+        const dosesPerDay = med.qty_per_day ? `${med.qty_per_day}/day` : '';
+        const refills = Number.isFinite(med.refills_left) && med.refills_left !== null ? `Refills: ${med.refills_left}` : '';
+        const pharmacy = med.pharmacy || '';
+        const line1 = med.dose_text || [strength, dosesPerDay].filter(Boolean).join(' • ') || 'No dosage info';
+        const line2Parts = [refills, pharmacy, med.condition].filter(Boolean);
+        const line2 = line2Parts.length ? line2Parts.join(' • ') : '';
+
+        html += `
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <div>
+              <strong>${med.name}</strong><br>
+              <small class="text-muted">${line1}</small>
+              ${line2 ? `<div class="small text-muted">${line2}</div>` : ''}
+            </div>
+            <div class="text-end">
+              ${percentLeft !== null ? `<div class=\"pill-bottle\"><div class=\"pill-fill\" style=\"height:${Math.min(100, Math.max(0, percentLeft)).toFixed(0)}%; background-color:${overdue ? '#f8d7da' : (dueSoon ? '#fff3cd' : '#d1e7dd')}\"></div><div class=\"pill-count\">${supply.pills_remaining}/${supply.pills_total ?? ''}</div></div>` : ''}
+            </div>
+          </div>
+        `;
+      });
+      
+      if (meds.length > 3) {
+        html += `<div class="text-center"><small class="text-muted">+${meds.length - 3} more</small></div>`;
+      }
+      
+      medsList.innerHTML = html;
+      // Update refill banner based on current meds
+      updateRefillBanner(meds);
+    })
+    .catch(error => {
+      console.error('Error loading medications:', error);
+    });
+}
+
+function loadRecentActivity() {
+  // This would load recent activity from the dashboard endpoint
+  // For now, we'll show a placeholder
+}
+
+function refreshDashboard() {
+  location.reload();
+}
+
+// Form submission functions
+function addMedication() {
+  const form = document.getElementById('addMedForm');
+  const data = {
+    name: document.getElementById('medName').value,
+    dosage: document.getElementById('medDosage').value,
+    dose_text: document.getElementById('medDose').value,
+    qty: parseInt(document.getElementById('medQty').value || '0') || null,
+    refills_left: parseInt(document.getElementById('medRefillsLeft').value || '0') || null,
+    qty_per_day: parseFloat(document.getElementById('medQtyPerDay').value || '0') || null,
+    last_refilled: (function(){
+      const v = document.getElementById('medLastRefilled').value;
+      return v ? new Date(v).toISOString().slice(0,10) : null; // send YYYY-MM-DD
+    })(),
+    pharmacy: document.getElementById('medPharmacy').value,
+    condition: document.getElementById('medCondition').value,
+    notes: document.getElementById('medNotes').value
+  };
+  
+  fetch('/health/meds', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    if (result.error) {
+      alert('Error: ' + result.error);
+    } else {
+      bootstrap.Modal.getInstance(document.getElementById('addMedModal')).hide();
+      form.reset();
+      loadMeds();
+      location.reload(); // Refresh dashboard
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Error adding medication');
+  });
+}
+
+function importPrescriptions() {
+  const path = null; // default path in data/
+  fetch('/health/meds/import', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ path })
+  })
+  .then(r => r.json())
+  .then(result => {
+    if (result.error) {
+      alert('Import failed: ' + result.error);
+    } else {
+      alert(result.message || 'Import complete');
+      loadMeds();
+      checkRefillBanner(true);
+    }
+  })
+  .catch(err => {
+    console.error('Import error:', err);
+    alert('Error importing prescriptions');
+  });
+}
+
+function checkRefillBanner(force=false) {
+  // Fetch meds only if not already provided
+  if (force) {
+    fetch('/health/meds').then(r => r.json()).then(updateRefillBanner).catch(()=>{});
+  }
+}
+
+function updateRefillBanner(meds) {
+  const banner = document.getElementById('refillBanner');
+  if (!Array.isArray(meds)) return;
+  const overdue = meds.filter(m => m.supply && m.supply.overdue);
+  const soon = meds.filter(m => m.supply && m.supply.due_soon && !m.supply.overdue);
+  if (overdue.length > 0 || soon.length > 0) {
+    const pieces = [];
+    if (overdue.length > 0) pieces.push(`${overdue.length} overdue`);
+    if (soon.length > 0) pieces.push(`${soon.length} due soon`);
+    banner.textContent = `Refill reminders: ${pieces.join(', ')}.`;
+    banner.classList.remove('d-none');
+  } else {
+    banner.classList.add('d-none');
+  }
+}
+
+// CGM helpers
+function loadCGM() {
+  fetch('/health/sensors/summary?type=stelo_cgm')
+    .then(r=>r.json())
+    .then(sum => {
+      const body = document.getElementById('cgmBody');
+      const onHand = document.getElementById('cgmOnHand');
+      if (!body || !onHand) return;
+      onHand.textContent = `${sum.on_hand ?? 0} on hand`;
+      if (sum.active) {
+        body.innerHTML = `<div class='display-6 mb-1'>${sum.countdown_days ?? '--'}d left</div>` +
+                         `<div class='small text-muted'>Ends ${sum.next_end_ts ? sum.next_end_ts.slice(0,10) : ''}</div>` +
+                         `${sum.need_reorder ? `<div class='mt-2'><span class='badge text-bg-warning'>Reorder soon</span></div>` : ''}`;
+        body.dataset.activeUseId = sum.active_use_id;
+      } else {
+        body.innerHTML = `<div class='text-muted'>No sensor active</div>` +
+                         `${sum.need_reorder ? `<div class='mt-2'><span class='badge text-bg-warning'>Reorder soon</span></div>` : ''}`;
+        body.dataset.activeUseId = '';
+      }
+    })
+    .catch(()=>{});
+}
+
+function startCGM() {
+  fetch('/health/sensors/uses/start', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ type_key:'stelo_cgm' })})
+    .then(r=>r.json()).then(()=> loadCGM());
+}
+
+function endCGM() {
+  const body = document.getElementById('cgmBody');
+  const id = body ? body.dataset.activeUseId : null;
+  if (!id) { alert('No active sensor'); return; }
+  fetch('/health/sensors/uses/end', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ id })})
+    .then(r=>r.json()).then(()=> loadCGM());
+}
+
+function addCGMPack() {
+  const packs = prompt('How many packs to add? (pack = 2 sensors)', '1');
+  if (!packs) return;
+  fetch('/health/sensors/inventory/add_pack', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ type_key:'stelo_cgm', packs: parseInt(packs) })})
+    .then(r=>r.json()).then(()=> loadCGM());
+}
+
+let otcNameById = {};
+function loadOTC() {
+  fetch('/health/otc/summary')
+    .then(r=>r.json())
+    .then(sum => {
+      const badge = document.getElementById('otcLowBadge');
+      const body = document.getElementById('otcBody');
+      if (!badge || !body) return;
+      badge.textContent = `${sum.low_count || 0} low`;
+      if (!sum.items || sum.items.length === 0) {
+        body.innerHTML = '<div class="text-center text-muted py-3">No OTC items configured</div>';
+        return;
+      }
+      const lowItems = sum.items.filter(i=>i.low);
+      otcNameById = {};
+      sum.items.forEach(i => { otcNameById[i.id] = i.name; });
+      const show = (lowItems.length ? lowItems : sum.items).slice(0,3);
+      body.innerHTML = show.map(i => `
+        <div class='d-flex justify-content-between align-items-center mb-1'>
+          <div><strong>${i.name}</strong> <span class='small text-muted'>${(i.on_hand_qty ?? '')} ${i.unit||''}</span></div>
+          <div class='d-flex align-items-center gap-2'>
+            ${i.low ? `<span class='badge text-bg-warning'>Low</span>`: ''}
+            <button class='btn btn-sm btn-outline-secondary' onclick='openOtcLogs(${i.id})'>Logs</button>
+          </div>
+        </div>
+      `).join('');
+    })
+    .catch(()=>{});
+}
+
+function logTumsQuick() {
+  // naive quick log: find an OTC med named 'Tums' (case insensitive)
+  fetch('/health/otc')
+    .then(r=>r.json())
+    .then(items => {
+      const t = items.find(m => (m.name||'').toLowerCase().includes('tums'));
+      if (!t) { alert('Tums not found. Add it under Medications as OTC.'); return; }
+      fetch(`/health/meds/${t.id}/log`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ amount: 1 })})
+        .then(r=>r.json())
+        .then(()=> loadOTC());
+    });
+}
+
+function openOtcLogs(medId) {
+  const title = document.getElementById('otcLogsTitle');
+  const body = document.getElementById('otcLogsBody');
+  if (title) title.textContent = `${otcNameById[medId] || 'Logs'}`;
+  if (body) body.innerHTML = 'Loading...';
+  fetch(`/health/meds/${medId}/events?days=180`)
+    .then(r=>r.json())
+    .then(events => {
+      if (!body) return;
+      if (!events || events.length === 0) {
+        body.innerHTML = '<div class="text-muted">No logs in last 180 days.</div>';
+        return;
+      }
+      body.innerHTML = `<ul class='list-group'>` + events.map(e => `
+        <li class='list-group-item d-flex justify-content-between align-items-center'>
+          <div>
+            <div>${(e.ts || '').slice(0,16).replace('T',' ')}</div>
+            ${e.note ? `<div class='small text-muted'>${e.note}</div>`: ''}
+          </div>
+          <span class='badge text-bg-secondary'>${e.amount ?? ''}</span>
+        </li>
+      `).join('') + `</ul>`;
+    })
+    .catch(()=> { if (body) body.innerHTML = '<div class="text-danger">Failed to load logs.</div>'; });
+  const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('otcLogsModal'));
+  modal.show();
+}
+
+function checkLabsBanner(force=false) {
+  if (force) {
+    fetch('/health/labs').then(r=>r.json()).then(updateLabsBanner).catch(()=>{});
+  } else {
+    fetch('/health/labs').then(r=>r.json()).then(updateLabsBanner).catch(()=>{});
+  }
+}
+
+function updateLabsBanner(labs) {
+  const banner = document.getElementById('labsBanner');
+  if (!Array.isArray(labs)) return;
+  const now = new Date();
+  let dueSoon = 0, overdue = 0;
+  labs.forEach(l => {
+    if (!l.due_ts) return;
+    const due = new Date(l.due_ts);
+    const soon = l.reminder_days ? ((due - now) / 86400000) <= l.reminder_days : false;
+    if (due < now && l.status !== 'completed') overdue++;
+    else if (soon && l.status !== 'completed') dueSoon++;
+  });
+  if (overdue > 0 || dueSoon > 0) {
+    const parts = [];
+    if (overdue > 0) parts.push(`${overdue} lab(s) overdue`);
+    if (dueSoon > 0) parts.push(`${dueSoon} due soon`);
+    banner.textContent = `Lab reminders: ${parts.join(', ')}.`;
+    banner.classList.remove('d-none');
+  } else {
+    banner.classList.add('d-none');
+  }
+}
+
+function logSymptom() {
+  const form = document.getElementById('logSymptomForm');
+  const data = {
+    label: document.getElementById('symptomLabel').value,
+    severity: parseInt(document.getElementById('symptomSeverity').value),
+    trigger: document.getElementById('symptomTrigger').value,
+    note: document.getElementById('symptomNote').value
+  };
+  
+  fetch('/health/symptoms', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    if (result.error) {
+      alert('Error: ' + result.error);
+    } else {
+      bootstrap.Modal.getInstance(document.getElementById('logSymptomModal')).hide();
+      form.reset();
+      location.reload(); // Refresh dashboard
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Error logging symptom');
+  });
+}
+
+function logVital() {
+  const form = document.getElementById('logVitalForm');
+  const data = {
+    kind: document.getElementById('vitalKind').value,
+    value_num: parseFloat(document.getElementById('vitalValue').value),
+    unit: document.getElementById('vitalUnit').value,
+    note: document.getElementById('vitalNote').value
+  };
+  
+  fetch('/health/vitals', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    if (result.error) {
+      alert('Error: ' + result.error);
+    } else {
+      bootstrap.Modal.getInstance(document.getElementById('logVitalModal')).hide();
+      form.reset();
+      location.reload(); // Refresh dashboard
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Error logging vital');
+  });
+}
+
+function addAppointment() {
+  const form = document.getElementById('addAppointmentForm');
+  const dateInput = document.getElementById('appointmentDate');
+  const date = new Date(dateInput.value);
+  
+  const data = {
+    ts: date.toISOString(),
+    provider: document.getElementById('appointmentProvider').value,
+    location: document.getElementById('appointmentLocation').value,
+    purpose: document.getElementById('appointmentPurpose').value,
+    note: document.getElementById('appointmentNote').value
+  };
+  
+  fetch('/health/appointments', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    if (result.error) {
+      alert('Error: ' + result.error);
+    } else {
+      bootstrap.Modal.getInstance(document.getElementById('addAppointmentModal')).hide();
+      form.reset();
+      location.reload(); // Refresh dashboard
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Error adding appointment');
+  });
+}
+
+// Placeholder functions for view all buttons
+function loadAppointments() {
+  // TODO: Implement appointments list view
+  alert('Appointments list view coming soon!');
+}
+
+function loadSymptoms() {
+  // TODO: Implement symptoms list view
+  alert('Symptoms list view coming soon!');
+}
+
+function loadVitals() {
+  // TODO: Implement vitals list view
+  alert('Vitals list view coming soon!');
+}
+
+// Oura integration functions
+function loadOuraStatus() {
+  fetch('/health/oura/status')
+    .then(r => r.json())
+    .then(status => {
+      const statusBadge = document.getElementById('ouraStatusBadge');
+      const statusText = document.getElementById('ouraStatusText');
+      const connectBtn = document.getElementById('ouraConnectBtn');
+      const disconnectBtn = document.getElementById('ouraDisconnectBtn');
+      const syncBtn = document.getElementById('ouraSyncBtn');
+      const ouraDataSummary = document.getElementById('ouraDataSummary');
+      const ouraSleepScore = document.getElementById('ouraSleepScore');
+      const ouraActivityScore = document.getElementById('ouraActivityScore');
+      const ouraReadinessScore = document.getElementById('ouraReadinessScore');
+
+      if (!statusBadge || !statusText || !connectBtn || !disconnectBtn || !syncBtn || !ouraDataSummary || !ouraSleepScore || !ouraActivityScore || !ouraReadinessScore) return;
+
+      if (status.connected && status.users && status.users.length > 0) {
+        const user = status.users[0];
+        statusBadge.textContent = 'Connected';
+        statusBadge.classList.remove('bg-secondary');
+        statusBadge.classList.add('bg-success');
+        
+        const lastSync = user.last_sync ? new Date(user.last_sync).toLocaleDateString() + ' ' + new Date(user.last_sync).toLocaleTimeString() : 'Never';
+        statusText.textContent = `Connected to your Oura Ring. Last synced: ${lastSync}`;
+        
+        connectBtn.classList.add('d-none');
+        disconnectBtn.classList.remove('d-none');
+        syncBtn.classList.remove('d-none');
+
+        // Load recent data scores
+        fetch(`/health/oura/recent_data?days=7`)
+          .then(r => r.json())
+          .then(data => {
+            ouraSleepScore.textContent = `${data.sleep_score ?? '--'}`;
+            ouraActivityScore.textContent = `${data.activity_score ?? '--'}`;
+            ouraReadinessScore.textContent = `${data.readiness_score ?? '--'}`;
+            ouraDataSummary.classList.remove('d-none');
+          })
+          .catch(error => {
+            console.error('Error loading Oura recent data:', error);
+            ouraDataSummary.classList.add('d-none');
+          });
+
+      } else {
+        statusBadge.textContent = 'Disconnected';
+        statusBadge.classList.remove('bg-success');
+        statusBadge.classList.add('bg-secondary');
+        statusText.textContent = 'Not connected to your Oura Ring. Click "Connect" to link your account.';
+        connectBtn.classList.remove('d-none');
+        disconnectBtn.classList.add('d-none');
+        syncBtn.classList.add('d-none');
+        ouraDataSummary.classList.add('d-none');
+      }
+    })
+    .catch(error => {
+      console.error('Error loading Oura status:', error);
+      const statusBadge = document.getElementById('ouraStatusBadge');
+      const statusText = document.getElementById('ouraStatusText');
+      const connectBtn = document.getElementById('ouraConnectBtn');
+      const disconnectBtn = document.getElementById('ouraDisconnectBtn');
+      const syncBtn = document.getElementById('ouraSyncBtn');
+      const ouraDataSummary = document.getElementById('ouraDataSummary');
+      const ouraSleepScore = document.getElementById('ouraSleepScore');
+      const ouraActivityScore = document.getElementById('ouraActivityScore');
+      const ouraReadinessScore = document.getElementById('ouraReadinessScore');
+
+      if (!statusBadge || !statusText || !connectBtn || !disconnectBtn || !syncBtn || !ouraDataSummary || !ouraSleepScore || !ouraActivityScore || !ouraReadinessScore) return;
+
+      statusBadge.textContent = 'Error';
+      statusBadge.classList.remove('bg-secondary', 'bg-success');
+      statusBadge.classList.add('bg-danger');
+      statusText.textContent = 'Could not connect to Oura Ring. Please check your API key.';
+      connectBtn.classList.remove('d-none');
+      disconnectBtn.classList.add('d-none');
+      syncBtn.classList.add('d-none');
+      ouraDataSummary.classList.add('d-none');
+    });
+}
+
+function connectOura() {
+  // Redirect to Oura OAuth authorization
+  window.location.href = '/health/oura/connect';
+}
+
+function disconnectOura() {
+  if (confirm('Are you sure you want to disconnect your Oura Ring? This will remove all synced data.')) {
+    fetch('/health/oura/disconnect', { method: 'GET' })
+      .then(r => r.json())
+      .then(result => {
+        if (result.error) {
+          alert('Error disconnecting Oura: ' + result.error);
+        } else {
+          alert('Oura Ring disconnected successfully!');
+          loadOuraStatus();
+        }
+      })
+      .catch(error => {
+        console.error('Error disconnecting Oura:', error);
+        alert('Error disconnecting Oura.');
+      });
+  }
+}
+
+function syncOuraData() {
+  if (confirm('This will sync your latest Oura data (sleep, activity, readiness, daily vitals) with your health dashboard. This might take a few minutes.')) {
+    fetch('/health/oura/sync')
+      .then(r => r.json())
+      .then(result => {
+        if (result.error) {
+          alert('Error syncing Oura data: ' + result.error);
+        } else {
+          // Show sync results
+          const message = `Oura data synced successfully!\n\n` +
+                         `Sleep records: ${result.sleep_records}\n` +
+                         `Activity records: ${result.activity_records}\n` +
+                         `Readiness records: ${result.readiness_records}\n` +
+                         `Last sync: ${result.last_sync ? new Date(result.last_sync).toLocaleString() : 'Unknown'}`;
+          
+          alert(message);
+          
+          // Refresh the status display and data
+          loadOuraStatus();
+        }
+      })
+      .catch(error => {
+        console.error('Error syncing Oura data:', error);
+        alert('Error syncing Oura data.');
+      });
+  }
+}
+</script>
+{% endblock %}

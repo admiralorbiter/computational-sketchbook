@@ -1,0 +1,279 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 id="title">Source</h2>
+  <div>
+    <a href="/research/sources/view" class="btn btn-outline-secondary">Back</a>
+  </div>
+  </div>
+
+<div id="meta" class="card mb-3"><div class="card-body">Loading...</div></div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title" id="notes">Notes</h5>
+        <div class="mb-2 d-flex gap-2">
+          <input id="noteBody" type="text" class="form-control" placeholder="New note...">
+          <button class="btn btn-primary" onclick="addNote()">Add</button>
+        </div>
+        <div id="notesList" class="list-group small"></div>
+        <div id="notesEmpty" class="text-muted d-none">No notes yet.</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title" id="highlights">Highlights</h5>
+        <div class="row g-2 mb-2">
+          <div class="col-md-3"><input id="hlLocation" type="text" class="form-control" placeholder="Location"></div>
+          <div class="col-md-7"><input id="hlText" type="text" class="form-control" placeholder="Text"></div>
+          <div class="col-md-2 d-grid"><button class="btn btn-primary" onclick="addHighlight()">Add</button></div>
+        </div>
+        <div id="highlightsList" class="list-group small"></div>
+        <div id="highlightsEmpty" class="text-muted d-none">No highlights yet.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-3">
+  <div class="card-body">
+    <h5 class="card-title" id="evidence">Evidence Links</h5>
+    <div class="mb-2 d-flex flex-wrap gap-2" id="tags-source-${sourceId}"></div>
+    <div class="row g-2 mb-2">
+      <div class="col-md-6"><input id="evQuestionId" type="number" class="form-control" placeholder="Question ID"></div>
+      <div class="col-md-4">
+        <select id="evStance" class="form-select">
+          <option value="neutral">neutral</option>
+          <option value="supports">supports</option>
+          <option value="refutes">refutes</option>
+        </select>
+      </div>
+      <div class="col-md-2 d-grid"><button class="btn btn-outline-primary" onclick="addEvidence()">Link</button></div>
+      <div class="col-12"><input id="evNote" type="text" class="form-control" placeholder="Note (optional)"></div>
+    </div>
+    <div id="evidenceList" class="list-group small"></div>
+  </div>
+</div>
+
+<div class="card mt-3">
+  <div class="card-body">
+    <h5 class="card-title" id="links">External Links</h5>
+    <div class="row g-2 mb-2">
+      <div class="col-md-2">
+        <select id="lkProvider" class="form-select">
+          <option value="web">web</option>
+          <option value="google_docs">google_docs</option>
+          <option value="google_sheets">google_sheets</option>
+        </select>
+      </div>
+      <div class="col-md-2"><input id="lkKind" class="form-control" placeholder="kind (doc/sheet/web)"></div>
+      <div class="col-md-5"><input id="lkUrl" class="form-control" placeholder="URL (or leave empty if using ID)"></div>
+      <div class="col-md-2"><input id="lkExtId" class="form-control" placeholder="external_id"></div>
+      <div class="col-md-1 d-grid"><button class="btn btn-outline-primary" onclick="addLink()">Add</button></div>
+      <div class="col-12"><input id="lkTitle" class="form-control" placeholder="Title (optional)"></div>
+    </div>
+    <div id="linksList" class="list-group small"></div>
+  </div>
+  </div>
+
+<script>
+const sourceId = parseInt(new URLSearchParams(location.search).get('id'));
+document.addEventListener('DOMContentLoaded', function() {
+  loadMeta();
+  loadNotes();
+  loadHighlights();
+  loadEvidence();
+  loadLinks();
+});
+
+function loadMeta() {
+  fetch(`/research/sources/${sourceId}`)
+    .then(r=>r.json())
+    .then(s => {
+      document.getElementById('title').textContent = s.title || 'Source';
+      const m = document.getElementById('meta');
+      m.innerHTML = `<div class="card-body">
+        <div><strong>${s.title||''}</strong></div>
+        <div class="text-muted">${s.kind||''} • ${s.author||''} • ${s.year||''}</div>
+        ${s.url ? `<div class="mt-2"><a href="${s.url}" target="_blank" class="btn btn-sm btn-outline-secondary">Open</a></div>`:''}
+        <div class="mt-2"><div class="d-flex flex-wrap gap-1" id="tags-source-${sourceId}"></div>
+        <button class="btn btn-sm btn-outline-secondary mt-2" onclick="addTagPrompt('source', ${sourceId})">Add tag</button></div>
+      </div>`;
+      loadEntityTags('source', sourceId);
+    });
+}
+
+function loadNotes() {
+  fetch(`/research/notes?source_id=${sourceId}`)
+    .then(r=>r.json())
+    .then(items => {
+      const el = document.getElementById('notesList');
+      const empty = document.getElementById('notesEmpty');
+      if (!items || items.length === 0) { el.innerHTML = ''; if (empty) empty.classList.remove('d-none'); return; }
+      if (empty) empty.classList.add('d-none');
+      el.innerHTML = items.map(n => `
+        <div class='list-group-item d-flex justify-content-between align-items-center'>
+          <div>
+            <div>${(n.body||'').replaceAll('<','&lt;')}</div>
+            <div class='text-muted'>${(n.ts||'').replace('T',' ').slice(0,16)} ${n.kind?`• ${n.kind}`:''}</div>
+          </div>
+          <button class='btn btn-sm btn-outline-danger' onclick='delNote(${n.id})'>Delete</button>
+        </div>
+      `).join('');
+    });
+}
+
+function addNote() {
+  const body = document.getElementById('noteBody').value.trim();
+  if (!body) return;
+  fetch('/research/notes', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ source_id: sourceId, body }) })
+    .then(()=> { document.getElementById('noteBody').value=''; loadNotes(); });
+}
+
+function delNote(id) {
+  if (!confirm('Delete this note?')) return;
+  fetch(`/research/notes/${id}`, { method:'DELETE' })
+    .then(()=> loadNotes());
+}
+
+function loadHighlights() {
+  fetch(`/research/highlights?source_id=${sourceId}`)
+    .then(r=>r.json())
+    .then(items => {
+      const el = document.getElementById('highlightsList');
+      const empty = document.getElementById('highlightsEmpty');
+      if (!items || items.length === 0) { el.innerHTML = ''; if (empty) empty.classList.remove('d-none'); return; }
+      if (empty) empty.classList.add('d-none');
+      el.innerHTML = items.map(h => `
+        <div class='list-group-item d-flex justify-content-between align-items-center'>
+          <div>
+            <div><em>${(h.text||'').replaceAll('<','&lt;')}</em></div>
+            <div class='text-muted'>${h.location||''} ${h.comment?`• ${h.comment}`:''}</div>
+          </div>
+          <button class='btn btn-sm btn-outline-danger' onclick='delHighlight(${h.id})'>Delete</button>
+        </div>
+      `).join('');
+    });
+}
+
+function addHighlight() {
+  const location = document.getElementById('hlLocation').value.trim() || null;
+  const textVal = document.getElementById('hlText').value.trim();
+  if (!textVal) return;
+  fetch('/research/highlights', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ source_id: sourceId, location, text: textVal }) })
+    .then(()=> { document.getElementById('hlLocation').value=''; document.getElementById('hlText').value=''; loadHighlights(); });
+}
+
+function delHighlight(id) {
+  if (!confirm('Delete this highlight?')) return;
+  fetch(`/research/highlights/${id}`, { method:'DELETE' })
+    .then(()=> loadHighlights());
+}
+
+function loadEvidence() {
+  fetch(`/research/sources/${sourceId}/evidence`)
+    .then(r=>r.json())
+    .then(items => {
+      const el = document.getElementById('evidenceList');
+      if (!items || items.length === 0) { el.innerHTML = '<div class="text-muted">No evidence links yet.</div>'; return; }
+      el.innerHTML = items.map(e => `
+        <div class='list-group-item d-flex justify-content-between align-items-center'>
+          <div>
+            <div>${(e.question_text||'Question')} <span class='badge bg-secondary ms-1'>${e.stance}</span></div>
+            <div class='text-muted'>${e.question_status||''} ${e.question_area?`• ${e.question_area}`:''}</div>
+          </div>
+          <button class='btn btn-sm btn-outline-danger' onclick='delEvidence(${e.id})'>Remove</button>
+        </div>
+      `).join('');
+    });
+}
+
+function addEvidence() {
+  const qid = parseInt(document.getElementById('evQuestionId').value);
+  const stance = document.getElementById('evStance').value;
+  const note = document.getElementById('evNote').value || null;
+  if (!qid) { alert('Enter a question ID'); return; }
+  fetch(`/research/questions/${qid}/evidence`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ source_id: sourceId, stance, note }) })
+    .then(()=> { document.getElementById('evQuestionId').value=''; document.getElementById('evNote').value=''; loadEvidence(); });
+}
+
+function delEvidence(id) {
+  if (!confirm('Remove this link?')) return;
+  fetch(`/research/evidence/${id}`, { method:'DELETE' })
+    .then(()=> loadEvidence());
+}
+
+function loadLinks() {
+  fetch(`/research/links/source/${sourceId}`)
+    .then(r=>r.json())
+    .then(items => {
+      const el = document.getElementById('linksList');
+      if (!items || items.length === 0) { el.innerHTML = '<div class="text-muted">No external links yet.</div>'; return; }
+      el.innerHTML = items.map(l => `
+        <div class='list-group-item d-flex justify-content-between align-items-center'>
+          <div>
+            <div>${(l.title||l.kind||l.provider||'link')}</div>
+            <div class='text-muted'>${l.provider} ${l.external_id?`• ${l.external_id}`:''}</div>
+          </div>
+          <div class='d-flex gap-2'>
+            ${l.url ? `<a href='${l.url}' target='_blank' class='btn btn-sm btn-outline-secondary'>Open</a>`:''}
+            <button class='btn btn-sm btn-outline-danger' onclick='delLink(${l.id})'>Delete</button>
+          </div>
+        </div>
+      `).join('');
+    });
+}
+
+function addLink() {
+  const provider = document.getElementById('lkProvider').value;
+  const kind = document.getElementById('lkKind').value || null;
+  const url = document.getElementById('lkUrl').value || null;
+  const external_id = document.getElementById('lkExtId').value || null;
+  const title = document.getElementById('lkTitle').value || null;
+  if (!url && !external_id) { alert('Provide url or external_id'); return; }
+  fetch(`/research/links/source/${sourceId}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ provider, kind, url, external_id, title }) })
+    .then(()=> { ['lkKind','lkUrl','lkExtId','lkTitle'].forEach(id => document.getElementById(id).value=''); loadLinks(); });
+}
+
+function delLink(id) {
+  if (!confirm('Delete this external link?')) return;
+  fetch(`/research/links/${id}`, { method:'DELETE' })
+    .then(()=> loadLinks());
+}
+
+// Tags (reuse helpers from lists)
+function loadEntityTags(entityType, entityId) {
+  const container = document.getElementById(`tags-${entityType}-${entityId}`);
+  if (!container) return;
+  container.innerHTML = '<span class="text-muted">Loading...</span>';
+  fetch(`/research/tags/${entityType}/${entityId}`)
+    .then(r=>r.json())
+    .then(tags => {
+      if (!tags || tags.length === 0) { container.innerHTML = '<span class="text-muted">No tags</span>'; return; }
+      container.innerHTML = tags.map(t => `
+        <span class='badge rounded-pill bg-secondary'>${t.name}
+          <button class='btn btn-sm btn-close btn-close-white ms-1' style='font-size: .5rem;' onclick='event.preventDefault(); removeTag("${entityType}", ${entityId}, ${t.id})'></button>
+        </span>
+      `).join(' ');
+    });
+}
+
+function addTagPrompt(entityType, entityId) {
+  const name = prompt('Add tag:');
+  if (!name) return;
+  fetch(`/research/tags/${entityType}/${entityId}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name }) })
+    .then(()=> loadEntityTags(entityType, entityId));
+}
+
+function removeTag(entityType, entityId, tagId) {
+  fetch(`/research/tags/${entityType}/${entityId}/${tagId}`, { method:'DELETE' })
+    .then(()=> loadEntityTags(entityType, entityId));
+}
+</script>
+{% endblock %}
+
+

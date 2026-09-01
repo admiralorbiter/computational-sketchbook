@@ -1,0 +1,381 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row mb-3">
+    <div class="col d-flex align-items-center justify-content-between">
+      <div>
+        <h1 class="h3 mb-0">Medications</h1>
+        <small class="text-muted">View and manage all prescriptions</small>
+      </div>
+      <div class="btn-group">
+        <a href="/health/" class="btn btn-outline-secondary">Back to Dashboard</a>
+        <button class="btn btn-outline-primary" onclick="importPrescriptionsPage()">
+          <i class="bi bi-file-earmark-spreadsheet"></i> Import CSV
+        </button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMedModal">
+          <i class="bi bi-plus-circle"></i> Add Medication
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body p-0">
+      <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+        <div class="btn-group" role="group" aria-label="Refill filter">
+          <button id="filterAll" type="button" class="btn btn-outline-secondary active" onclick="setFilter('all')">All</button>
+          <button id="filterSoon" type="button" class="btn btn-outline-warning" onclick="setFilter('soon')">Refill Soon</button>
+          <button id="filterOverdue" type="button" class="btn btn-outline-danger" onclick="setFilter('overdue')">Overdue</button>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <label for="sortSelect" class="form-label mb-0 small text-muted">Sort</label>
+          <select id="sortSelect" class="form-select form-select-sm" style="width: 220px" onchange="applyFilterSort()">
+            <option value="name_asc">Name A→Z</option>
+            <option value="refill_asc">Refill date (soonest)</option>
+            <option value="percent_asc">Percent left (low→high)</option>
+            <option value="percent_desc">Percent left (high→low)</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table id="medsTable" class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Name</th>
+              <th>Strength</th>
+              <th>Doses/Day</th>
+              <th>Qty</th>
+              <th>Refills</th>
+              <th>Last Refilled</th>
+              <th>Pharmacy</th>
+              <th>Condition</th>
+              <th>Unit</th>
+              <th>On-hand</th>
+              <th>Low</th>
+              <th>Supply Left</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for med in meds %}
+            <tr
+              data-name="{{ med.name|e }}"
+              data-percent-left="{{ (med.supply.percent_left if med.supply else '') }}"
+              data-refill-date="{{ (med.supply.refill_date if med.supply else '') }}"
+              data-due-soon="{{ 'true' if med.supply and med.supply.due_soon else 'false' }}"
+              data-overdue="{{ 'true' if med.supply and med.supply.overdue else 'false' }}"
+            >
+              <td>
+                <div class="fw-semibold">{{ med.name }}</div>
+                <div class="small text-muted">{{ med.dose_text or '' }}</div>
+              </td>
+              <td>{{ med.dosage or '' }}</td>
+              <td>{{ med.qty_per_day or '' }}</td>
+              <td>{{ med.qty or '' }}</td>
+              <td>{{ med.refills_left if med.refills_left is not none else '' }}</td>
+              <td>{{ (med.last_refilled or '')[:10] }}</td>
+              <td>{{ med.pharmacy or '' }}</td>
+              <td>{{ med.condition or '' }}</td>
+              <td>{{ med.unit or '' }}</td>
+              <td>{{ med.on_hand_qty if med.on_hand_qty is not none else '' }}</td>
+              <td>
+                {% if med.is_low %}
+                  <span class="badge text-bg-warning">Low</span>
+                {% elif med.low_threshold is not none and med.low_threshold > 0 and med.on_hand_qty is not none and med.on_hand_qty <= med.low_threshold %}
+                  <span class="badge text-bg-warning">Low</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if med.supply %}
+                  {% set p = med.supply.percent_left or 0 %}
+                  {% set fill_h = (p if p <= 100 else 100) %}
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="pill-bottle">
+                      <div class="pill-fill" style="height: {{ fill_h|round|int }}%; background-color: {{ med.supply.overdue and '#f8d7da' or (med.supply.due_soon and '#fff3cd' or '#d1e7dd') }};"></div>
+                      <div class="pill-count">{{ med.supply.pills_remaining }}/{{ med.supply.pills_total }}</div>
+                    </div>
+                    <div>
+                      <span class="badge bg-{{ med.supply.overdue and 'danger' or (med.supply.due_soon and 'warning' or 'success') }}">{{ p|round|int }}%</span>
+                      <div class="small text-muted">Refill by {{ med.supply.refill_date[:10] }}</div>
+                    </div>
+                  </div>
+                {% else %}
+                  <span class="text-muted">n/a</span>
+                {% endif %}
+              </td>
+              <td class="text-end">
+                <div class="btn-group btn-group-sm">
+                  <button class="btn btn-outline-secondary" onclick="logTaken({{ med.id }})">Log</button>
+                  <button class="btn btn-outline-primary" onclick="editMedication({{ med.id }})">Edit</button>
+                  <button class="btn btn-outline-danger" onclick="deleteMed({{ med.id }})">Delete</button>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  {# Reuse Add Medication Modal from dashboard by including a minimal copy #}
+  <div class="modal fade" id="addMedModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Medication</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addMedForm">
+            <input type="hidden" id="medId">
+            <div class="mb-3">
+              <label for="medName" class="form-label">Medication Name *</label>
+              <input type="text" class="form-control" id="medName" required>
+            </div>
+            <div class="mb-3">
+              <label for="medDosage" class="form-label">Strength (Dosage)</label>
+              <input type="text" class="form-control" id="medDosage" placeholder="e.g., 50 mg">
+            </div>
+            <div class="mb-3">
+              <label for="medDose" class="form-label">Dosage Instructions</label>
+              <textarea class="form-control" id="medDose" rows="2"></textarea>
+            </div>
+            <div class="row g-2">
+              <div class="col-md-4">
+                <label for="medQty" class="form-label">Qty</label>
+                <input type="number" class="form-control" id="medQty" min="0">
+              </div>
+              <div class="col-md-4">
+                <label for="medRefillsLeft" class="form-label">Refills Left</label>
+                <input type="number" class="form-control" id="medRefillsLeft" min="0">
+              </div>
+              <div class="col-md-4">
+                <label for="medQtyPerDay" class="form-label">Doses/Day</label>
+                <input type="number" step="0.1" class="form-control" id="medQtyPerDay" min="0">
+              </div>
+            </div>
+            <div class="row g-2 mt-2">
+              <div class="col-md-6">
+                <label for="medLastRefilled" class="form-label">Last Refilled</label>
+                <input type="date" class="form-control" id="medLastRefilled">
+              </div>
+              <div class="col-md-6">
+                <label for="medPharmacy" class="form-label">Pharmacy</label>
+                <input type="text" class="form-control" id="medPharmacy" placeholder="e.g., Walgreens">
+              </div>
+            </div>
+            <div class="mb-3 mt-2">
+              <label for="medCondition" class="form-label">Condition</label>
+              <input type="text" class="form-control" id="medCondition" placeholder="e.g., diabetes">
+            </div>
+            <div class="mb-3">
+              <label for="medNotes" class="form-label">Notes</label>
+              <textarea class="form-control" id="medNotes" rows="2"></textarea>
+            </div>
+            <hr>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="medIsOTC">
+              <label class="form-check-label" for="medIsOTC">Over-the-counter (OTC)</label>
+            </div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="medIsLow">
+              <label class="form-check-label" for="medIsLow">Mark as Low (manual)</label>
+            </div>
+            <div class="row g-2">
+              <div class="col-md-4">
+                <label for="medUnit" class="form-label">Unit</label>
+                <input type="text" class="form-control" id="medUnit" placeholder="e.g., tabs">
+              </div>
+              <div class="col-md-4">
+                <label for="medOnHand" class="form-label">On-hand Qty</label>
+                <input type="number" step="0.1" class="form-control" id="medOnHand" min="0">
+              </div>
+              <div class="col-md-4">
+                <label for="medLowThreshold" class="form-label">Low Threshold</label>
+                <input type="number" step="0.1" class="form-control" id="medLowThreshold" min="0">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="saveMedication()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let currentFilter = 'all';
+
+function importPrescriptionsPage() {
+  fetch('/health/meds/import', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) })
+    .then(r => r.json())
+    .then(result => {
+      if (result.error) {
+        alert('Import failed: ' + result.error);
+      } else {
+        alert(result.message || 'Import complete');
+        location.reload();
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Error importing prescriptions');
+    });
+}
+
+function saveMedication() {
+  const id = document.getElementById('medId').value;
+  const data = {
+    name: document.getElementById('medName').value,
+    dosage: document.getElementById('medDosage').value,
+    dose_text: document.getElementById('medDose').value,
+    qty: parseInt(document.getElementById('medQty').value || '0') || null,
+    refills_left: parseInt(document.getElementById('medRefillsLeft').value || '0') || null,
+    qty_per_day: parseFloat(document.getElementById('medQtyPerDay').value || '0') || null,
+    last_refilled: (function(){
+      const v = document.getElementById('medLastRefilled').value;
+      return v ? new Date(v).toISOString().slice(0,10) : null;
+    })(),
+    pharmacy: document.getElementById('medPharmacy').value,
+    condition: document.getElementById('medCondition').value,
+    notes: document.getElementById('medNotes').value,
+    is_otc: document.getElementById('medIsOTC').checked,
+    unit: document.getElementById('medUnit').value,
+    on_hand_qty: parseFloat(document.getElementById('medOnHand').value || '0') || 0,
+    low_threshold: parseFloat(document.getElementById('medLowThreshold').value || '0') || 0,
+    is_low: document.getElementById('medIsLow').checked
+  };
+  const method = id ? 'PUT' : 'POST';
+  const url = id ? `/health/meds/${id}` : '/health/meds';
+  fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+    .then(r => r.json())
+    .then(result => {
+      if (result.error) {
+        alert('Error: ' + result.error);
+      } else {
+        bootstrap.Modal.getInstance(document.getElementById('addMedModal')).hide();
+        location.reload();
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Error adding medication');
+    });
+}
+
+function editMedication(id) {
+  fetch('/health/meds')
+    .then(r=>r.json())
+    .then(list => {
+      const m = list.find(x=>x.id===id);
+      if (!m) return;
+      document.getElementById('medId').value = m.id;
+      document.getElementById('medName').value = m.name || '';
+      document.getElementById('medDosage').value = m.dosage || '';
+      document.getElementById('medDose').value = m.dose_text || '';
+      document.getElementById('medQty').value = m.qty || '';
+      document.getElementById('medRefillsLeft').value = (m.refills_left ?? '');
+      document.getElementById('medQtyPerDay').value = (m.qty_per_day ?? '');
+      document.getElementById('medLastRefilled').value = m.last_refilled ? m.last_refilled.slice(0,10): '';
+      document.getElementById('medPharmacy').value = m.pharmacy || '';
+      document.getElementById('medCondition').value = m.condition || '';
+      document.getElementById('medNotes').value = m.notes || '';
+      document.getElementById('medIsOTC').checked = !!m.is_otc;
+      document.getElementById('medUnit').value = m.unit || '';
+      document.getElementById('medOnHand').value = (m.on_hand_qty ?? '');
+      document.getElementById('medLowThreshold').value = (m.low_threshold ?? '');
+      document.getElementById('medIsLow').checked = !!m.is_low;
+      const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('addMedModal'));
+      modal.show();
+    });
+}
+
+function logTaken(medId) {
+  const amount = 1.0; // quick action default
+  fetch(`/health/meds/${medId}/log`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ amount }) })
+    .then(r => r.json())
+    .then(result => {
+      if (result.error) {
+        alert('Error: ' + result.error);
+      } else {
+        location.reload();
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Error logging event');
+    });
+}
+
+function deleteMed(medId) {
+  if (!confirm('Delete this medication? This will remove associated events.')) return;
+  fetch(`/health/meds/${medId}`, { method: 'DELETE' })
+    .then(r => r.json())
+    .then(result => {
+      if (result.error) {
+        alert('Error: ' + result.error);
+      } else {
+        location.reload();
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Error deleting medication');
+    });
+}
+
+function setFilter(filter) {
+  currentFilter = filter;
+  document.getElementById('filterAll').classList.toggle('active', filter === 'all');
+  document.getElementById('filterSoon').classList.toggle('active', filter === 'soon');
+  document.getElementById('filterOverdue').classList.toggle('active', filter === 'overdue');
+  applyFilterSort();
+}
+
+function applyFilterSort() {
+  const tbody = document.querySelector('#medsTable tbody');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+
+  // Filter
+  rows.forEach(row => {
+    const dueSoon = row.dataset.dueSoon === 'true';
+    const overdue = row.dataset.overdue === 'true';
+    let visible = true;
+    if (currentFilter === 'soon') visible = dueSoon && !overdue;
+    if (currentFilter === 'overdue') visible = overdue;
+    row.style.display = visible ? '' : 'none';
+  });
+
+  // Sort
+  const sortValue = document.getElementById('sortSelect').value;
+  const keyFuncs = {
+    'name_asc': row => (row.dataset.name || '').toLowerCase(),
+    'refill_asc': row => new Date(row.dataset.refillDate || '9999-12-31').getTime(),
+    'percent_asc': row => parseFloat(row.dataset.percentLeft || '999999'),
+    'percent_desc': row => -parseFloat(row.dataset.percentLeft || '-999999')
+  };
+  const key = keyFuncs[sortValue] || keyFuncs['name_asc'];
+  const sorted = rows.slice().sort((a, b) => {
+    const ka = key(a);
+    const kb = key(b);
+    if (ka < kb) return -1;
+    if (ka > kb) return 1;
+    return 0;
+  });
+
+  // Re-append in order
+  sorted.forEach(r => tbody.appendChild(r));
+}
+
+// Initialize default sort/filter on load
+document.addEventListener('DOMContentLoaded', applyFilterSort);
+</script>
+{% endblock %}
+
+

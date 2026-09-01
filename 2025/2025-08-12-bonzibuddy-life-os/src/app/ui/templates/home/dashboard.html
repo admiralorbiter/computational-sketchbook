@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Home & Property Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <h1 class="h3 mb-4">Home & Property Dashboard</h1>
+  
+  <!-- Export Section -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Export Data</h5>
+          <p class="card-text">Download your home data in CSV format for backup or analysis.</p>
+          <div class="btn-group" role="group">
+            <a href="/home/export/assets" class="btn btn-outline-primary btn-sm">Assets</a>
+            <a href="/home/export/maintenance" class="btn btn-outline-primary btn-sm">Maintenance</a>
+            <a href="/home/export/inventory" class="btn btn-outline-primary btn-sm">Inventory</a>
+            <a href="/home/export/combined" class="btn btn-primary btn-sm">All Data</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Links -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <a href="/home/assets/view" class="btn btn-outline-secondary w-100">Assets</a>
+    </div>
+    <div class="col-md-3">
+      <a href="/home/maintenance/view" class="btn btn-outline-secondary w-100">Maintenance</a>
+    </div>
+    <div class="col-md-3">
+      <a href="/home/chores/view" class="btn btn-outline-secondary w-100">Chores</a>
+    </div>
+    <div class="col-md-3">
+      <a href="/home/safety/view" class="btn btn-outline-secondary w-100">Safety</a>
+    </div>
+  </div>
+
+<div class="row g-3">
+  <div class="col-md-2">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Assets</h5>
+        <p class="card-text mb-1">Total: {{ (data.assets.total or 0) if data and data.assets else 0 }}</p>
+        <a href="/home/assets/view" class="btn btn-sm btn-primary">Manage Assets</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Maintenance</h5>
+        <p class="card-text mb-1">Plans: {{ (data.maintenance.plans or 0) if data and data.maintenance else 0 }}</p>
+        <p class="card-text">Recent events: {{ (data.maintenance.recent_events or 0) if data and data.maintenance else 0 }}</p>
+        <a href="/home/maintenance/view" class="btn btn-sm btn-primary">Manage Plans</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Chores</h5>
+        <p class="card-text mb-1">Plans: {{ (data.chores.plans or 0) if data and data.chores else 0 }}</p>
+        <a href="/home/chores/view" class="btn btn-sm btn-primary">Manage Chores</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Safety</h5>
+        <p class="card-text">Devices due: {{ (data.safety.devices_due or 0) if data and data.safety else 0 }}</p>
+        <a href="/home/safety/view" class="btn btn-sm btn-primary">Manage Safety</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Warranties</h5>
+        <p class="card-text">Expiring soon: {{ (data.warranties.expiring_soon or 0) if data and data.warranties else 0 }}</p>
+        <a href="/home/assets/view" class="btn btn-sm btn-primary">View Assets</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="row g-3 mt-3">
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Safety Drills</h5>
+          <p class="card-text mb-1">Total: {{ (data.safety_enhanced.drills_total or 0) if data and data.safety_enhanced else 0 }}</p>
+          <p class="card-text">Overdue: {{ (data.safety_enhanced.drills_overdue or 0) if data and data.safety_enhanced else 0 }}</p>
+          <a href="/home/safety/drills/view" class="btn btn-sm btn-primary">Manage Drills</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Emergency Kits</h5>
+          <p class="card-text mb-1">Total: {{ (data.safety_enhanced.kits_total or 0) if data and data.safety_enhanced else 0 }}</p>
+          <p class="card-text">Due audit: {{ (data.safety_enhanced.kits_due_audit or 0) if data and data.safety_enhanced else 0 }}</p>
+          <a href="/home/safety/kits/view" class="btn btn-sm btn-primary">Manage Kits</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Utilities</h5>
+          <p class="card-text mb-1">Accounts: {{ (data.utilities.accounts_total or 0) if data and data.utilities else 0 }}</p>
+          <p class="card-text mb-1">Renewals soon: {{ (data.utilities.renewals_soon or 0) if data and data.utilities else 0 }}</p>
+          <a href="/home/utilities/view" class="btn btn-sm btn-primary">Manage Utilities</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Inventory</h5>
+          <p class="card-text mb-1">Total: {{ (data.inventory.items_total or 0) if data and data.inventory else 0 }}</p>
+          <p class="card-text">Low stock: {{ (data.inventory.low_stock_count or 0) if data and data.inventory else 0 }}</p>
+          <a href="/home/inventory/view" class="btn btn-sm btn-primary">Manage Inventory</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Projects</h5>
+          <p class="text-muted mb-0">Coming soon: home improvement tracking</p>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+

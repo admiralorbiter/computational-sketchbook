@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h1 class="h3 mb-0">Labs</h1>
+      <small class="text-muted">Manage your lab orders</small>
+    </div>
+    <div class="btn-group">
+      <a href="/health/" class="btn btn-outline-secondary">Back to Dashboard</a>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#labModal" onclick="openCreateLab()"><i class="bi bi-plus-circle"></i> New Lab</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" id="labTable">
+          <thead class="table-light">
+            <tr>
+              <th>Label</th>
+              <th>Type</th>
+              <th>Appointment</th>
+              <th>Due</th>
+              <th>Status</th>
+              <th>Reminder</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="labTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create/Edit Lab Modal -->
+  <div class="modal fade" id="labModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="labModalTitle">New Lab</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="labForm">
+            <input type="hidden" id="labId">
+            <div class="mb-2">
+              <label class="form-label">Label *</label>
+              <input id="labLabel" class="form-control" required>
+            </div>
+            <div class="row g-2 mb-2">
+              <div class="col">
+                <label class="form-label">Type</label>
+                <input id="labKind" class="form-control" placeholder="bloodwork, imaging, ...">
+              </div>
+              <div class="col">
+                <label class="form-label">Appointment</label>
+                <select id="labApptSel" class="form-select">
+                  <option value="">None</option>
+                </select>
+              </div>
+            </div>
+            <div class="row g-2 mb-2">
+              <div class="col">
+                <label class="form-label">Due Date</label>
+                <input id="labDue" type="date" class="form-control">
+              </div>
+              <div class="col">
+                <label class="form-label">Reminder (days)</label>
+                <input id="labReminder" type="number" min="0" class="form-control">
+              </div>
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Provider</label>
+              <input id="labProvider" class="form-control">
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Location</label>
+              <input id="labLocation" class="form-control">
+            </div>
+            <div class="mb-2">
+              <label class="form-label">Instructions</label>
+              <textarea id="labInstructions" class="form-control" rows="2"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button class="btn btn-primary" onclick="saveLab()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let labsAppointments = [];
+let appointmentsLoaded = false;
+document.addEventListener('DOMContentLoaded', () => { loadAppointmentsForLabs(); loadLabs(); });
+
+function loadLabs() {
+  fetch('/health/labs')
+    .then(r=>r.json())
+    .then(renderLabs)
+    .catch(console.error);
+}
+
+function renderLabs(labs) {
+  const tbody = document.getElementById('labTbody');
+  tbody.innerHTML = '';
+  labs.sort((a,b)=> new Date(a.due_ts || '9999-12-31') - new Date(b.due_ts || '9999-12-31'));
+  labs.forEach(lab => {
+    const due = lab.due_ts ? new Date(lab.due_ts).toLocaleDateString() : '—';
+    const statusBadge = lab.status === 'completed' ? 'success' : (lab.status === 'scheduled' ? 'info' : (lab.status==='canceled' ? 'secondary' : 'warning'));
+    const soon = lab.due_ts && daysUntil(lab.due_ts) <= (lab.reminder_days || 0);
+    const overdue = lab.due_ts && new Date(lab.due_ts) < new Date();
+    const reminderHtml = overdue ? `<span class="badge text-bg-danger">Overdue</span>` : (soon ? `<span class="badge text-bg-warning">Soon</span>` : '');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><div class="fw-semibold">${lab.label}</div><div class="small text-muted">${lab.provider || ''}</div></td>
+      <td>${lab.kind || ''}</td>
+      <td>${lab.appointment_id || ''}</td>
+      <td>${due}</td>
+      <td><span class="badge text-bg-${statusBadge}">${lab.status}</span></td>
+      <td>${reminderHtml}</td>
+      <td class="text-end">
+        <div class="btn-group btn-group-sm">
+          ${lab.status!=='scheduled' ? `<button class="btn btn-outline-info" onclick="quickSchedule(${lab.id})">Schedule</button>`:''}
+          ${lab.status!=='completed' ? `<button class="btn btn-outline-success" onclick="quickComplete(${lab.id})">Complete</button>`:''}
+          <button class="btn btn-outline-secondary" onclick="unlinkLab(${lab.id})">Unlink</button>
+          <button class="btn btn-outline-primary" onclick="editLab(${lab.id})">Edit</button>
+        </div>
+      </td>`;
+    tbody.appendChild(tr);
+  })
+}
+
+function daysUntil(ts) {
+  const d = new Date(ts);
+  const now = new Date();
+  return Math.ceil((d - now) / (1000*60*60*24));
+}
+
+function openCreateLab() {
+  document.getElementById('labModalTitle').textContent = 'New Lab';
+  document.getElementById('labForm').reset();
+  document.getElementById('labId').value = '';
+  populateApptSelect();
+}
+
+function editLab(id) {
+  fetch('/health/labs').then(r=>r.json()).then(list => {
+    const lab = list.find(l=>l.id===id); if(!lab) return;
+    document.getElementById('labModalTitle').textContent = 'Edit Lab';
+    document.getElementById('labId').value = lab.id;
+    document.getElementById('labLabel').value = lab.label || '';
+    document.getElementById('labKind').value = lab.kind || '';
+    populateApptSelect(lab.appointment_id);
+    document.getElementById('labDue').value = lab.due_ts ? lab.due_ts.slice(0,10): '';
+    document.getElementById('labReminder').value = lab.reminder_days || '';
+    document.getElementById('labProvider').value = lab.provider || '';
+    document.getElementById('labLocation').value = lab.location || '';
+    document.getElementById('labInstructions').value = lab.instructions || '';
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('labModal')).show();
+  });
+}
+
+function saveLab() {
+  const id = document.getElementById('labId').value;
+  const body = {
+    label: document.getElementById('labLabel').value,
+    kind: document.getElementById('labKind').value,
+    appointment_id: (function(){ const v=document.getElementById('labApptSel').value; return v? parseInt(v): null; })(),
+    due_ts: (function(){ const v=document.getElementById('labDue').value; return v? new Date(v).toISOString(): null; })(),
+    reminder_days: parseInt(document.getElementById('labReminder').value || '0') || null,
+    provider: document.getElementById('labProvider').value,
+    location: document.getElementById('labLocation').value,
+    instructions: document.getElementById('labInstructions').value
+  };
+  const method = id ? 'PUT' : 'POST';
+  const url = id ? `/health/labs/${id}` : '/health/labs';
+  fetch(url, { method, headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) })
+    .then(r=>r.json())
+    .then(res => { if(res.error) return alert(res.error); bootstrap.Modal.getInstance(document.getElementById('labModal')).hide(); loadLabs(); });
+}
+
+function quickSchedule(id) {
+  const when = prompt('Schedule date (YYYY-MM-DD)');
+  if (!when) return;
+  fetch(`/health/labs/${id}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ status:'scheduled', scheduled_ts: new Date(when).toISOString() }) })
+    .then(()=>loadLabs());
+}
+
+function quickComplete(id) {
+  const when = new Date().toISOString();
+  fetch(`/health/labs/${id}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ status:'completed', completed_ts: when }) })
+    .then(()=>loadLabs());
+}
+
+function unlinkLab(id) {
+  fetch(`/health/labs/${id}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ appointment_id: null }) })
+    .then(()=>loadLabs());
+}
+
+function loadAppointmentsForLabs() {
+  fetch('/health/appointments?days_ahead=365&include_past=true')
+    .then(r=>r.json())
+    .then(list => { labsAppointments = list; appointmentsLoaded = true; populateApptSelect(); handleLabsQueryParam(); })
+    .catch(()=>{});
+}
+
+function populateApptSelect(selectedId) {
+  const sel = document.getElementById('labApptSel');
+  if (!sel) return;
+  const current = sel.value;
+  sel.innerHTML = '<option value="">None</option>';
+  labsAppointments
+    .slice()
+    .sort((a,b)=> new Date(a.ts) - new Date(b.ts))
+    .forEach(a => {
+      const d = new Date(a.ts);
+      const opt = document.createElement('option');
+      opt.value = a.id;
+      opt.textContent = `${d.toLocaleDateString()} ${a.provider} - ${a.purpose || ''}`;
+      sel.appendChild(opt);
+    });
+  if (selectedId) sel.value = String(selectedId);
+}
+
+function handleLabsQueryParam() {
+  if (!appointmentsLoaded) return;
+  const params = new URLSearchParams(window.location.search);
+  const apptId = params.get('appt_id');
+  const open = params.get('open');
+  if (open === 'new') {
+    openCreateLab();
+    if (apptId) populateApptSelect(apptId);
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('labModal')).show();
+  }
+}
+</script>
+{% endblock %}
+
+

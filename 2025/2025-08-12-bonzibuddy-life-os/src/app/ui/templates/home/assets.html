@@ -1,0 +1,563 @@
+{% extends "base.html" %}
+{% block content %}
+<div x-data="assetsPage()">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h2>Assets</h2>
+    <div>
+      <a href="/home/export/assets" class="btn btn-sm btn-outline-success me-2">
+        <i class="bi bi-download"></i> Export CSV
+      </a>
+      <button @click="showAdd = true" class="btn btn-primary">Add Asset</button>
+    </div>
+  </div>
+
+  <template x-if="showAdd">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h6 class="card-title" x-text="editing ? 'Edit Asset' : 'Add New Asset'"></h6>
+        <div class="row g-2">
+          <div class="col-md-6">
+            <label class="form-label">Name *</label>
+            <input class="form-control" placeholder="e.g., HVAC Unit" x-model="form.name" required />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Type</label>
+            <input class="form-control" placeholder="e.g., HVAC, Appliance, Tool" x-model="form.type" />
+          </div>
+        </div>
+        <div class="row g-2 mt-2">
+          <div class="col-md-6">
+            <label class="form-label">Brand</label>
+            <input class="form-control" placeholder="e.g., Carrier, Samsung" x-model="form.brand" />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Model</label>
+            <input class="form-control" placeholder="e.g., 24ABC123" x-model="form.model" />
+          </div>
+        </div>
+        <div class="row g-2 mt-2">
+          <div class="col-md-6">
+            <label class="form-label">Serial Number</label>
+            <input class="form-control" placeholder="e.g., SN123456789" x-model="form.serial" />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Purchase Date</label>
+            <input class="form-control" type="date" x-model="form.purchase_date" />
+          </div>
+        </div>
+        <div class="row g-2 mt-2">
+          <div class="col-md-6">
+            <label class="form-label">Purchase Price</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input class="form-control" type="number" step="0.01" placeholder="0.00" x-model="form.purchase_price" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Location</label>
+            <select class="form-select" x-model="form.location_id">
+              <option value="">Select Location</option>
+              <template x-for="loc in locations" :key="loc.id">
+                <option :value="loc.id" x-text="loc.name"></option>
+              </template>
+            </select>
+          </div>
+        </div>
+        <div class="row g-2 mt-2">
+          <div class="col-12">
+            <label class="form-label">Notes</label>
+            <textarea class="form-control" rows="2" placeholder="Additional notes..." x-model="form.notes"></textarea>
+          </div>
+        </div>
+        <div class="mt-3 d-flex gap-2">
+          <button class="btn btn-success btn-sm" @click="editing ? update() : create()" :disabled="!form.name">
+            <span x-text="editing ? 'Update Asset' : 'Save Asset'"></span>
+          </button>
+          <button class="btn btn-outline-secondary btn-sm" @click="reset()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <!-- Asset Detail View -->
+  <template x-if="selectedAsset">
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <h5 class="card-title" x-text="selectedAsset.name"></h5>
+            <p class="text-muted mb-2">
+              <span x-text="selectedAsset.type || 'No type'"></span> • 
+              <span x-text="selectedAsset.brand || 'No brand'"></span> • 
+              <span x-text="selectedAsset.model || 'No model'"></span>
+            </p>
+          </div>
+          <button class="btn btn-outline-secondary btn-sm" @click="selectedAsset = null">Close</button>
+        </div>
+        
+        <!-- Manuals Section -->
+        <div class="mt-3">
+          <h6>Manuals</h6>
+          <div class="mb-2">
+            <button class="btn btn-outline-primary btn-sm" @click="showManualForm = true">Add Manual</button>
+          </div>
+          
+          <template x-if="showManualForm">
+            <div class="card mb-2">
+              <div class="card-body">
+                <div class="row g-2">
+                  <div class="col-md-6">
+                    <label class="form-label">URL (optional)</label>
+                    <input class="form-control" placeholder="https://..." x-model="manualForm.url" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">File ID (optional)</label>
+                    <input class="form-control" placeholder="File reference" x-model="manualForm.file_id" />
+                  </div>
+                </div>
+                <div class="mt-2">
+                  <label class="form-label">Notes</label>
+                  <textarea class="form-control" rows="2" placeholder="Manual description..." x-model="manualForm.note"></textarea>
+                </div>
+                <div class="mt-2 d-flex gap-2">
+                  <button class="btn btn-success btn-sm" @click="addManual()">Save Manual</button>
+                  <button class="btn btn-outline-secondary btn-sm" @click="showManualForm = false">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </template>
+          
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Notes</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template x-for="m in assetManuals" :key="m.id">
+                  <tr>
+                    <td>
+                      <span x-text="m.url ? 'URL' : 'File'"></span>
+                      <template x-if="m.url">
+                        <br><small><a :href="m.url" target="_blank" x-text="m.url"></a></small>
+                      </template>
+                    </td>
+                    <td x-text="m.note || '-'"></td>
+                    <td>
+                      <button class="btn btn-outline-danger btn-sm" @click="deleteManual(m.id)">Delete</button>
+                    </td>
+                  </tr>
+                </template>
+                <template x-if="assetManuals.length === 0">
+                  <tr>
+                    <td colspan="3" class="text-center text-muted">No manuals attached</td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- Warranties Section -->
+        <div class="mt-4">
+          <h6>Warranties</h6>
+          <div class="mb-2">
+            <button class="btn btn-outline-primary btn-sm" @click="showWarrantyForm = true">Add Warranty</button>
+          </div>
+          
+          <template x-if="showWarrantyForm">
+            <div class="card mb-2">
+              <div class="card-body">
+                <div class="row g-2">
+                  <div class="col-md-6">
+                    <label class="form-label">Provider *</label>
+                    <input class="form-control" placeholder="Warranty provider" x-model="warrantyForm.provider" required />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Policy Number</label>
+                    <input class="form-control" placeholder="Policy #" x-model="warrantyForm.policy_no" />
+                  </div>
+                </div>
+                <div class="row g-2 mt-2">
+                  <div class="col-md-6">
+                    <label class="form-label">Start Date</label>
+                    <input class="form-control" type="date" x-model="warrantyForm.start_date" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">End Date *</label>
+                    <input class="form-control" type="date" x-model="warrantyForm.end_date" required />
+                  </div>
+                </div>
+                <div class="mt-2">
+                  <label class="form-label">Coverage Notes</label>
+                    <textarea class="form-control" rows="2" placeholder="What's covered..." x-model="warrantyForm.coverage_note"></textarea>
+                </div>
+                <div class="mt-2">
+                  <label class="form-label">Claim Steps</label>
+                    <textarea class="form-control" rows="2" placeholder="How to make a claim..." x-model="warrantyForm.claim_steps"></textarea>
+                </div>
+                <div class="mt-2 d-flex gap-2">
+                  <button class="btn btn-success btn-sm" @click="addWarranty()" :disabled="!warrantyForm.provider || !warrantyForm.end_date">Save Warranty</button>
+                  <button class="btn btn-outline-secondary btn-sm" @click="showWarrantyForm = false">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </template>
+          
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Provider</th>
+                  <th>Policy #</th>
+                  <th>End Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template x-for="w in assetWarranties" :key="w.id">
+                  <tr :class="getWarrantyStatusClass(w)">
+                    <td x-text="w.provider"></td>
+                    <td x-text="w.policy_no || '-'"></td>
+                    <td x-text="formatDate(w.end_date)"></td>
+                    <td>
+                      <span class="badge" :class="getWarrantyStatusBadgeClass(w)" x-text="getWarrantyStatusText(w)"></span>
+                    </td>
+                    <td>
+                      <button class="btn btn-outline-danger btn-sm" @click="deleteWarranty(w.id)">Delete</button>
+                    </td>
+                  </tr>
+                </template>
+                <template x-if="assetWarranties.length === 0">
+                  <tr>
+                    <td colspan="5" class="text-center text-muted">No warranties attached</td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <div class="table-responsive">
+    <table class="table table-sm align-middle">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Brand</th>
+          <th>Model</th>
+          <th>Serial</th>
+          <th>Location</th>
+          <th>Purchase Date</th>
+          <th>Price</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="a in assets" :key="a.id">
+          <tr>
+            <td><strong x-text="a.name"></strong></td>
+            <td x-text="a.type || '-'"></td>
+            <td x-text="a.brand || '-'"></td>
+            <td x-text="a.model || '-'"></td>
+            <td x-text="a.serial || '-'"></td>
+            <td x-text="getLocationName(a.location_id)"></td>
+            <td x-text="formatDate(a.purchase_date)"></td>
+            <td x-text="formatPrice(a.purchase_price)"></td>
+            <td>
+              <div class="btn-group btn-group-sm">
+                <button class="btn btn-outline-info" @click="viewDetails(a)" title="View Details"><i class="bi bi-eye"></i></button>
+                <button class="btn btn-outline-primary" @click="edit(a)" title="Edit"><i class="bi bi-pencil"></i></button>
+                <button class="btn btn-outline-danger" @click="remove(a.id)" title="Delete"><i class="bi bi-trash"></i></button>
+              </div>
+            </td>
+          </tr>
+        </template>
+        <template x-if="assets.length === 0">
+          <tr>
+            <td colspan="9" class="text-center text-muted py-4">
+              No assets found. Click "Add Asset" to get started.
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+function assetsPage(){
+  return {
+    assets: [],
+    locations: [],
+    showAdd: false,
+    editing: null,
+    selectedAsset: null,
+    assetManuals: [],
+    assetWarranties: [],
+    showManualForm: false,
+    showWarrantyForm: false,
+    form: {
+      name: '', type: '', brand: '', model: '', serial: '', 
+      purchase_date: '', purchase_price: '', location_id: '', notes: ''
+    },
+    manualForm: {
+      url: '', file_id: '', note: ''
+    },
+    warrantyForm: {
+      provider: '', policy_no: '', start_date: '', end_date: '', coverage_note: '', claim_steps: ''
+    },
+    
+    async load(){
+      try {
+        const [assetsRes, locationsRes] = await Promise.all([
+          fetch('/home/assets'),
+          fetch('/home/locations')
+        ]);
+        this.assets = await assetsRes.json();
+        this.locations = await locationsRes.json();
+      } catch (e) {
+        console.error('Error loading data:', e);
+      }
+    },
+    
+    async create(){
+      if(!this.form.name) return;
+      
+      try {
+        const r = await fetch('/home/assets', {
+          method: 'POST', 
+          headers: {'Content-Type': 'application/json'}, 
+          body: JSON.stringify(this.form)
+        });
+        if(r.ok){ 
+          this.reset(); 
+          this.load(); 
+        } else {
+          const error = await r.json();
+          alert('Error: ' + (error.error || 'Failed to create asset'));
+        }
+      } catch (e) {
+        console.error('Error creating asset:', e);
+        alert('Error creating asset');
+      }
+    },
+    
+    edit(asset) {
+      this.editing = asset.id;
+      this.form = { ...asset };
+      this.showAdd = true;
+      this.selectedAsset = null;
+    },
+    
+    async update() {
+      if(!this.form.name || !this.editing) return;
+      
+      try {
+        const r = await fetch(`/home/assets/${this.editing}`, {
+          method: 'PUT', 
+          headers: {'Content-Type': 'application/json'}, 
+          body: JSON.stringify(this.form)
+        });
+        if(r.ok){ 
+          this.reset(); 
+          this.load(); 
+        } else {
+          const error = await r.json();
+          alert('Error: ' + (error.error || 'Failed to update asset'));
+        }
+      } catch (e) {
+        console.error('Error updating asset:', e);
+        alert('Error updating asset');
+      }
+    },
+    
+    async remove(id){
+      if(!confirm('Are you sure you want to delete this asset?')) return;
+      
+      try {
+        const r = await fetch(`/home/assets/${id}`, {method: 'DELETE'});
+        if(r.ok){ this.load(); }
+      } catch (e) {
+        console.error('Error deleting asset:', e);
+        alert('Error deleting asset');
+      }
+    },
+    
+    async viewDetails(asset) {
+      this.selectedAsset = asset;
+      this.editing = null;
+      this.showAdd = false;
+      await this.loadAssetDetails(asset.id);
+    },
+    
+    async loadAssetDetails(assetId) {
+      try {
+        const [manualsRes, warrantiesRes] = await Promise.all([
+          fetch(`/home/manuals?asset_id=${assetId}`),
+          fetch(`/home/warranties?asset_id=${assetId}`)
+        ]);
+        this.assetManuals = await manualsRes.json();
+        this.assetWarranties = await warrantiesRes.json();
+      } catch (e) {
+        console.error('Error loading asset details:', e);
+      }
+    },
+    
+    async addManual() {
+      if (!this.selectedAsset) return;
+      
+      try {
+        const r = await fetch('/home/manuals', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            ...this.manualForm,
+            asset_id: this.selectedAsset.id
+          })
+        });
+        if (r.ok) {
+          this.manualForm = { url: '', file_id: '', note: '' };
+          this.showManualForm = false;
+          await this.loadAssetDetails(this.selectedAsset.id);
+        } else {
+          const error = await r.json();
+          alert('Error: ' + (error.error || 'Failed to add manual'));
+        }
+      } catch (e) {
+        console.error('Error adding manual:', e);
+        alert('Error adding manual');
+      }
+    },
+    
+    async addWarranty() {
+      if (!this.selectedAsset || !this.warrantyForm.provider || !this.warrantyForm.end_date) return;
+      
+      try {
+        const r = await fetch('/home/warranties', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            ...this.warrantyForm,
+            asset_id: this.selectedAsset.id
+          })
+        });
+        if (r.ok) {
+          this.warrantyForm = { provider: '', policy_no: '', start_date: '', end_date: '', coverage_note: '', claim_steps: '' };
+          this.showWarrantyForm = false;
+          await this.loadAssetDetails(this.selectedAsset.id);
+        } else {
+          const error = await r.json();
+          alert('Error: ' + (error.error || 'Failed to add warranty'));
+        }
+      } catch (e) {
+        console.error('Error adding warranty:', e);
+        alert('Error adding warranty');
+      }
+    },
+    
+    async deleteManual(manualId) {
+      if (!confirm('Are you sure you want to delete this manual?')) return;
+      
+      try {
+        const r = await fetch(`/home/manuals/${manualId}`, { method: 'DELETE' });
+        if (r.ok) {
+          await this.loadAssetDetails(this.selectedAsset.id);
+        }
+      } catch (e) {
+        console.error('Error deleting manual:', e);
+        alert('Error deleting manual');
+      }
+    },
+    
+    async deleteWarranty(warrantyId) {
+      if (!confirm('Are you sure you want to delete this warranty?')) return;
+      
+      try {
+        const r = await fetch(`/home/warranties/${warrantyId}`, { method: 'DELETE' });
+        if (r.ok) {
+          await this.loadAssetDetails(this.selectedAsset.id);
+        }
+      } catch (e) {
+        console.error('Error deleting warranty:', e);
+        alert('Error deleting warranty');
+      }
+    },
+    
+    reset(){ 
+      this.showAdd = false; 
+      this.editing = null;
+      this.selectedAsset = null;
+      this.assetManuals = [];
+      this.assetWarranties = [];
+      this.showManualForm = false;
+      this.showWarrantyForm = false;
+      this.form = {
+        name: '', type: '', brand: '', model: '', serial: '', 
+        purchase_date: '', purchase_price: '', location_id: '', notes: ''
+      }; 
+      this.manualForm = { url: '', file_id: '', note: '' };
+      this.warrantyForm = { provider: '', policy_no: '', start_date: '', end_date: '', coverage_note: '', claim_steps: '' };
+    },
+    
+    getLocationName(locationId) {
+      if (!locationId) return '-';
+      const location = this.locations.find(l => l.id === locationId);
+      return location ? location.name : '-';
+    },
+    
+    formatDate(dateStr) {
+      if (!dateStr) return '-';
+      try {
+        return new Date(dateStr).toLocaleDateString();
+      } catch {
+        return dateStr;
+      }
+    },
+    
+    formatPrice(price) {
+      if (!price) return '-';
+      return `$${parseFloat(price).toFixed(2)}`;
+    },
+    
+    getWarrantyStatusClass(warranty) {
+      if (!warranty.end_date) return '';
+      const today = new Date();
+      const endDate = new Date(warranty.end_date);
+      if (endDate < today) return 'table-danger';
+      if (endDate.getTime() - today.getTime() < 30 * 24 * 60 * 60 * 1000) return 'table-warning';
+      return '';
+    },
+    
+    getWarrantyStatusText(warranty) {
+      if (!warranty.end_date) return 'No end date';
+      const today = new Date();
+      const endDate = new Date(warranty.end_date);
+      if (endDate < today) return 'Expired';
+      if (endDate.getTime() - today.getTime() < 30 * 24 * 60 * 60 * 1000) return 'Expiring Soon';
+      return 'Active';
+    },
+    
+    getWarrantyStatusBadgeClass(warranty) {
+      if (!warranty.end_date) return 'bg-secondary';
+      const today = new Date();
+      const endDate = new Date(warranty.end_date);
+      if (endDate < today) return 'bg-danger';
+      if (endDate.getTime() - today.getTime() < 30 * 24 * 60 * 60 * 1000) return 'bg-warning';
+      return 'bg-success';
+    },
+    
+    init(){ this.load(); }
+  }
+}
+</script>
+{% endblock %}
+
+

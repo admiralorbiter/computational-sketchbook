@@ -1,0 +1,426 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h1 class="h3 mb-0">Appointments</h1>
+      <small class="text-muted">Manage your upcoming and past visits</small>
+    </div>
+    <div class="btn-group">
+      <a href="/health/" class="btn btn-outline-secondary">Back to Dashboard</a>
+      <button id="newApptBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createApptModal" onclick="openCreate()">
+        <i class="bi bi-calendar-plus"></i> New Appointment
+      </button>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" id="apptTable">
+          <thead class="table-light">
+            <tr>
+              <th>Date</th>
+              <th>Doctor</th>
+              <th>Location</th>
+              <th>Reason</th>
+              <th>Labels</th>
+              <th>Reminders</th>
+              <th>Tasks</th>
+              <th>Labs</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="apptTbody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create/Edit Modal -->
+  <div class="modal fade" id="createApptModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="apptModalTitle">New Appointment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="apptForm">
+            <input type="hidden" id="apptId">
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label">Date & Time *</label>
+                <input type="datetime-local" class="form-control" id="apptTs" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Doctor *</label>
+                <input type="text" class="form-control" id="apptProvider" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Location</label>
+                <input type="text" class="form-control" id="apptLocation">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Reason</label>
+                <input type="text" class="form-control" id="apptPurpose">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Notes</label>
+                <input type="text" class="form-control" id="apptNote">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Specialty</label>
+                <input type="text" class="form-control" id="apptSpecialty" placeholder="e.g., Transplant">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Status</label>
+                <select id="apptStatus" class="form-select">
+                  <option value="planned">Planned</option>
+                  <option value="completed">Completed</option>
+                  <option value="canceled">Canceled</option>
+                  <option value="rescheduled">Rescheduled</option>
+                </select>
+              </div>
+              <div class="col-md-2 d-flex align-items-end">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="apptVirtual">
+                  <label class="form-check-label" for="apptVirtual">Virtual</label>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <label class="form-label">Remind (days)</label>
+                <input type="number" id="apptReminderDays" class="form-control" min="0" placeholder="7">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Follow-up Date</label>
+                <input type="datetime-local" id="apptFollowUpTs" class="form-control">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Lab Due Date</label>
+                <input type="date" id="apptLabDueTs" class="form-control">
+              </div>
+            </div>
+          </form>
+
+          <hr>
+          <h6 class="mb-2">Checklist</h6>
+          <div class="input-group mb-3">
+            <input id="taskLabel" type="text" class="form-control" placeholder="Add a task (e.g., Do labs)">
+            <input id="taskDue" type="date" class="form-control" style="max-width: 200px;">
+            <button class="btn btn-outline-primary" type="button" onclick="addTaskInline()">Add</button>
+          </div>
+          <ul id="taskList" class="list-group"></ul>
+
+          <hr>
+          <h6 class="mb-2">Labs</h6>
+          <div class="input-group mb-3">
+            <input id="labInlineLabel" type="text" class="form-control" placeholder="Add lab (e.g., CMP)">
+            <input id="labInlineDue" type="date" class="form-control" style="max-width: 200px;">
+            <button class="btn btn-outline-primary" type="button" onclick="addLabInline()">Add</button>
+          </div>
+          <ul id="labInlineList" class="list-group"></ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="saveAppointment()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let tasksByAppt = new Map();
+let labsByAppt = new Map();
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadAppointments();
+});
+
+function loadAppointments() {
+  fetch('/health/appointments?days_ahead=365&include_past=true')
+    .then(r => r.json())
+    .then(list => renderAppointments(list))
+    .catch(console.error);
+}
+
+function renderAppointments(appts) {
+  const tbody = document.getElementById('apptTbody');
+  tbody.innerHTML = '';
+  appts.sort((a,b) => new Date(a.ts) - new Date(b.ts));
+  appts.forEach(appt => {
+    const tr = document.createElement('tr');
+    const when = new Date(appt.ts);
+    const labels = [];
+    if (appt.is_virtual) labels.push('<span class="badge rounded-pill text-bg-info">Virtual</span>');
+    if (appt.status && appt.status !== 'planned') labels.push(`<span class="badge rounded-pill text-bg-secondary">${appt.status}</span>`);
+    if (appt.lab_due_ts) labels.push('<span class="badge rounded-pill text-bg-warning">Labs</span>');
+    if (appt.follow_up_ts) labels.push('<span class="badge rounded-pill text-bg-primary">Follow-up</span>');
+
+    const reminder = (appt.reminder_days ? `${appt.reminder_days}d before` : '—');
+
+    tr.innerHTML = `
+      <td><div>${when.toLocaleDateString()} ${when.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div></td>
+      <td><div class="fw-semibold">${appt.provider}</div><div class="small text-muted">${appt.specialty || ''}</div></td>
+      <td>${appt.location || ''}</td>
+      <td>${appt.purpose || ''}</td>
+      <td>${labels.join(' ')}</td>
+      <td>${reminder}</td>
+      <td>
+        <div class="btn-group btn-group-sm">
+          <button class="btn btn-outline-secondary" onclick="openTasks(${appt.id})">View</button>
+          <a class="btn btn-outline-primary" href="/health/labs/view?open=new&appt_id=${appt.id}">Add Lab</a>
+        </div>
+      </td>
+      <td>
+        <div class="d-flex align-items-center gap-2">
+          <div id="labsSummary-${appt.id}" class="small text-muted">Loading...</div>
+          <button class="btn btn-sm btn-outline-info" onclick="openLabs(${appt.id})">View</button>
+        </div>
+      </td>
+      <td class="text-end">
+        <div class="btn-group btn-group-sm">
+          <button class="btn btn-outline-primary" onclick="editAppt(${appt.id})">Edit</button>
+          <button class="btn btn-outline-danger" onclick="delAppt(${appt.id})">Delete</button>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+    loadLabsSummary(appt.id);
+  })
+}
+
+function loadLabsSummary(apptId) {
+  fetch(`/health/labs?appointment_id=${apptId}`)
+    .then(r=>r.json())
+    .then(labs => {
+      const el = document.getElementById(`labsSummary-${apptId}`);
+      if (!el) return;
+      if (!labs || labs.length === 0) { el.textContent = 'No labs'; return; }
+      const total = labs.length;
+      const scheduled = labs.filter(l=>l.status==='scheduled').length;
+      const completed = labs.filter(l=>l.status==='completed').length;
+      const overdue = labs.filter(l=>l.due_ts && new Date(l.due_ts) < new Date() && l.status!=='completed').length;
+      const parts = [];
+      parts.push(`<span class='badge text-bg-secondary'>${total} total</span>`);
+      if (scheduled) parts.push(`<span class='badge text-bg-info ms-1'>${scheduled} scheduled</span>`);
+      if (completed) parts.push(`<span class='badge text-bg-success ms-1'>${completed} done</span>`);
+      if (overdue) parts.push(`<span class='badge text-bg-danger ms-1'>${overdue} overdue</span>`);
+      el.innerHTML = parts.join('');
+    })
+    .catch(()=>{
+      const el = document.getElementById(`labsSummary-${apptId}`);
+      if (el) el.textContent = '';
+    });
+}
+
+function editAppt(id) {
+  fetch(`/health/appointments`)
+    .then(r => r.json())
+    .then(list => {
+      const appt = list.find(a => a.id === id);
+      if (!appt) return;
+      document.getElementById('apptModalTitle').textContent = 'Edit Appointment';
+      document.getElementById('apptId').value = appt.id;
+      document.getElementById('apptTs').value = appt.ts.slice(0,16);
+      document.getElementById('apptProvider').value = appt.provider || '';
+      document.getElementById('apptLocation').value = appt.location || '';
+      document.getElementById('apptPurpose').value = appt.purpose || '';
+      document.getElementById('apptNote').value = appt.note || '';
+      document.getElementById('apptSpecialty').value = appt.specialty || '';
+      document.getElementById('apptStatus').value = appt.status || 'planned';
+      document.getElementById('apptVirtual').checked = !!appt.is_virtual;
+      document.getElementById('apptReminderDays').value = appt.reminder_days || '';
+      document.getElementById('apptFollowUpTs').value = appt.follow_up_ts ? appt.follow_up_ts.slice(0,16) : '';
+      document.getElementById('apptLabDueTs').value = appt.lab_due_ts ? appt.lab_due_ts.slice(0,10) : '';
+      bootstrap.Modal.getOrCreateInstance(document.getElementById('createApptModal')).show();
+      // load tasks
+      loadTasks(id);
+    });
+}
+
+function openCreate() {
+  document.getElementById('apptModalTitle').textContent = 'New Appointment';
+  document.getElementById('apptForm').reset();
+  document.getElementById('apptId').value = '';
+  document.getElementById('taskList').innerHTML = '';
+}
+
+function openTasks(id) {
+  editAppt(id);
+}
+
+function openLabs(apptId) {
+  editAppt(apptId);
+  loadLabsInline(apptId);
+}
+
+function saveAppointment() {
+  const id = document.getElementById('apptId').value;
+  const body = {
+    ts: new Date(document.getElementById('apptTs').value).toISOString(),
+    provider: document.getElementById('apptProvider').value,
+    location: document.getElementById('apptLocation').value,
+    purpose: document.getElementById('apptPurpose').value,
+    note: document.getElementById('apptNote').value,
+    specialty: document.getElementById('apptSpecialty').value,
+    status: document.getElementById('apptStatus').value,
+    is_virtual: document.getElementById('apptVirtual').checked,
+    reminder_days: parseInt(document.getElementById('apptReminderDays').value || '0') || null,
+    follow_up_ts: (function(){ const v=document.getElementById('apptFollowUpTs').value; return v? new Date(v).toISOString(): null; })(),
+    lab_due_ts: (function(){ const v=document.getElementById('apptLabDueTs').value; return v? new Date(v).toISOString().slice(0,10): null; })()
+  };
+  const method = id ? 'PUT' : 'POST';
+  const url = id ? `/health/appointments/${id}` : '/health/appointments';
+  fetch(url, { method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) })
+    .then(r => r.json())
+    .then(res => {
+      if (res.error) return alert(res.error);
+      bootstrap.Modal.getInstance(document.getElementById('createApptModal')).hide();
+      loadAppointments();
+    });
+}
+
+function delAppt(id) {
+  if (!confirm('Delete this appointment?')) return;
+  fetch(`/health/appointments/${id}`, { method:'DELETE' })
+    .then(r => r.json())
+    .then(() => loadAppointments());
+}
+
+function loadTasks(apptId) {
+  fetch(`/health/appointments/${apptId}/tasks`)
+    .then(r=>r.json())
+    .then(list => {
+      tasksByAppt.set(apptId, list);
+      renderTaskList(apptId);
+    });
+}
+
+function loadLabsInline(apptId) {
+  fetch(`/health/labs?appointment_id=${apptId}`)
+    .then(r=>r.json())
+    .then(list => { labsByAppt.set(apptId, list); renderLabInlineList(apptId); });
+}
+
+function renderLabInlineList(apptId) {
+  const list = labsByAppt.get(apptId) || [];
+  const ul = document.getElementById('labInlineList');
+  if (!ul) return;
+  ul.innerHTML = '';
+  list.sort((a,b)=> new Date(a.due_ts || '9999-12-31') - new Date(b.due_ts || '9999-12-31'));
+  list.forEach(l => {
+    const due = l.due_ts ? new Date(l.due_ts).toLocaleDateString() : '';
+    const statusBadge = l.status === 'completed' ? 'success' : (l.status === 'scheduled' ? 'info' : (l.status==='canceled' ? 'secondary' : 'warning'));
+    const li = document.createElement('li');
+    li.className = 'list-group-item d-flex justify-content-between align-items-center';
+    li.innerHTML = `
+      <div>
+        <span class="badge text-bg-${statusBadge} me-2">${l.status}</span>
+        ${l.label}
+        ${due ? `<small class='text-muted ms-2'>(${due})</small>`:''}
+      </div>
+      <div class="btn-group btn-group-sm">
+        ${l.status!=='scheduled' ? `<button class=\"btn btn-outline-info\" onclick=\"quickScheduleLab(${l.id}, ${apptId})\">Schedule</button>`:''}
+        ${l.status!=='completed' ? `<button class=\"btn btn-outline-success\" onclick=\"quickCompleteLab(${l.id}, ${apptId})\">Complete</button>`:''}
+      </div>`;
+    ul.appendChild(li);
+  })
+}
+
+function addLabInline() {
+  const apptId = parseInt(document.getElementById('apptId').value);
+  if (!apptId) { alert('Save appointment first, then add labs.'); return; }
+  const label = document.getElementById('labInlineLabel').value.trim();
+  const dueRaw = document.getElementById('labInlineDue').value;
+  if (!label) return;
+  fetch('/health/labs', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ appointment_id: apptId, label, due_ts: dueRaw? new Date(dueRaw).toISOString(): null }) })
+    .then(r=>r.json())
+    .then(lab => {
+      document.getElementById('labInlineLabel').value=''; document.getElementById('labInlineDue').value='';
+      const list = labsByAppt.get(apptId) || []; list.push(lab); labsByAppt.set(apptId, list);
+      renderLabInlineList(apptId);
+    });
+}
+
+function quickScheduleLab(labId, apptId) {
+  const when = prompt('Schedule date (YYYY-MM-DD)'); if (!when) return;
+  fetch(`/health/labs/${labId}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ status:'scheduled', scheduled_ts: new Date(when).toISOString() }) })
+    .then(()=> loadLabsInline(apptId));
+}
+
+function quickCompleteLab(labId, apptId) {
+  const when = new Date().toISOString();
+  fetch(`/health/labs/${labId}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ status:'completed', completed_ts: when }) })
+    .then(()=> loadLabsInline(apptId));
+}
+
+function renderTaskList(apptId) {
+  const list = tasksByAppt.get(apptId) || [];
+  const ul = document.getElementById('taskList');
+  ul.innerHTML = '';
+  list.sort((a,b)=>{
+    const ka = a.done ? 1 : 0; const kb = b.done ? 1 : 0; if (ka!==kb) return ka-kb; const da = a.due_ts ? new Date(a.due_ts).getTime(): Infinity; const db = b.due_ts ? new Date(b.due_ts).getTime(): Infinity; return da-db;
+  });
+  list.forEach(t => {
+    const li = document.createElement('li');
+    li.className = 'list-group-item d-flex justify-content-between align-items-center';
+    const due = t.due_ts ? new Date(t.due_ts).toLocaleDateString() : '';
+    li.innerHTML = `
+      <div>
+        <input class="form-check-input me-2" type="checkbox" ${t.done ? 'checked':''} onchange="toggleTask(${t.id}, this.checked, ${apptId})">
+        <span ${t.done ? 'class="text-decoration-line-through"':''}>${t.label}</span>
+        ${due ? `<small class='text-muted ms-2'>(${due})</small>`:''}
+      </div>
+      <button class="btn btn-sm btn-outline-secondary" onclick="editTaskPrompt(${t.id}, ${apptId})">Edit</button>`;
+    ul.appendChild(li);
+  });
+}
+
+function addTaskInline() {
+  const apptId = parseInt(document.getElementById('apptId').value);
+  if (!apptId) { alert('Save appointment first, then add tasks.'); return; }
+  const label = document.getElementById('taskLabel').value.trim();
+  const dueRaw = document.getElementById('taskDue').value;
+  if (!label) return;
+  fetch(`/health/appointments/${apptId}/tasks`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ label, due_ts: dueRaw? new Date(dueRaw).toISOString(): null }) })
+    .then(r=>r.json())
+    .then(task => {
+      document.getElementById('taskLabel').value = '';
+      document.getElementById('taskDue').value = '';
+      const list = tasksByAppt.get(apptId) || [];
+      list.push(task); tasksByAppt.set(apptId, list);
+      renderTaskList(apptId);
+      loadAppointments();
+    });
+}
+
+function toggleTask(taskId, done, apptId) {
+  fetch(`/health/appointments/tasks/${taskId}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ done }) })
+    .then(r=>r.json())
+    .then(task => {
+      const list = tasksByAppt.get(apptId) || [];
+      const i = list.findIndex(t=>t.id===taskId); if (i>=0) list[i]=task; tasksByAppt.set(apptId, list);
+      renderTaskList(apptId);
+      loadAppointments();
+    });
+}
+
+function editTaskPrompt(taskId, apptId) {
+  const list = tasksByAppt.get(apptId) || [];
+  const t = list.find(x=>x.id===taskId); if (!t) return;
+  const label = prompt('Edit task', t.label) || t.label;
+  const due = prompt('Edit due date (YYYY-MM-DD) or leave blank', t.due_ts ? t.due_ts.slice(0,10): '') || '';
+  const due_ts = due ? new Date(due).toISOString() : null;
+  fetch(`/health/appointments/tasks/${taskId}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ label, due_ts }) })
+    .then(r=>r.json())
+    .then(task => { const i=list.findIndex(x=>x.id===taskId); if(i>=0) list[i]=task; tasksByAppt.set(apptId,list); renderTaskList(apptId); loadAppointments(); });
+}
+</script>
+{% endblock %}
+
+

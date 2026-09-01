@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Research</h2>
+  <div>
+    <a href="/" class="btn btn-outline-secondary">Home</a>
+  </div>
+  </div>
+<div class="row g-3">
+  <div class="col-md-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6 class="text-muted">Events</h6>
+        <div class="display-6">{{ data.events or 0 }}</div>
+        <div class="d-flex gap-2 mt-2">
+          <a href="/research/events/view" class="btn btn-sm btn-outline-primary">Open</a>
+          <a href="/research/events" class="btn btn-sm btn-primary">API</a>
+        </div>
+        <hr>
+        <div class="small text-muted mb-1">Quick Add</div>
+        <div class="input-group input-group-sm mb-1">
+          <input id="d_ev_date" type="date" class="form-control" placeholder="Date">
+        </div>
+        <div class="input-group input-group-sm mb-1">
+          <input id="d_ev_headline" type="text" class="form-control" placeholder="Headline">
+        </div>
+        <div class="input-group input-group-sm mb-1">
+          <input id="d_ev_outlet" type="text" class="form-control" placeholder="Outlet">
+        </div>
+        <div class="input-group input-group-sm mb-2">
+          <input id="d_ev_url" type="url" class="form-control" placeholder="URL">
+          <button class="btn btn-outline-primary" onclick="dashAddEvent()">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6 class="text-muted">Sources</h6>
+        <div class="display-6">{{ data.sources or 0 }}</div>
+        <div class="d-flex gap-2 mt-2">
+          <a href="/research/sources/view" class="btn btn-sm btn-outline-primary">Open</a>
+          <a href="/research/sources" class="btn btn-sm btn-primary">API</a>
+        </div>
+        <hr>
+        <div class="small text-muted mb-1">Quick Add</div>
+        <div class="input-group input-group-sm mb-1">
+          <input id="d_src_title" type="text" class="form-control" placeholder="Title">
+        </div>
+        <div class="input-group input-group-sm mb-1">
+          <input id="d_src_kind" type="text" class="form-control" placeholder="Kind (paper, report, blog)">
+        </div>
+        <div class="input-group input-group-sm mb-1">
+          <input id="d_src_author" type="text" class="form-control" placeholder="Author(s)">
+        </div>
+        <div class="input-group input-group-sm mb-2">
+          <input id="d_src_url" type="url" class="form-control" placeholder="URL">
+          <button class="btn btn-outline-primary" onclick="dashAddSource()">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6 class="text-muted">Notes</h6>
+        <div class="display-6">{{ data.notes or 0 }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h6 class="text-muted">Highlights</h6>
+        <div class="display-6">{{ data.highlights or 0 }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-4">
+  <div class="col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="card-title mb-0">Recent Events</h5>
+          <a href="/research/events/view" class="btn btn-sm btn-outline-secondary">Open</a>
+        </div>
+        <div id="dashEvents" class="list-group small"></div>
+        <div id="dashEventsEmpty" class="text-muted">No events yet.</div>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <button class="btn btn-sm btn-outline-secondary" onclick="dashPrevEvents()">Prev</button>
+          <div id="dashEventsInfo" class="text-muted"></div>
+          <button class="btn btn-sm btn-outline-secondary" onclick="dashNextEvents()">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="card-title mb-0">Recent Sources</h5>
+          <a href="/research/sources/view" class="btn btn-sm btn-outline-secondary">Open</a>
+        </div>
+        <div id="dashSources" class="list-group small"></div>
+        <div id="dashSourcesEmpty" class="text-muted">No sources yet.</div>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <button class="btn btn-sm btn-outline-secondary" onclick="dashPrevSources()">Prev</button>
+          <div id="dashSourcesInfo" class="text-muted"></div>
+          <button class="btn btn-sm btn-outline-secondary" onclick="dashNextSources()">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="card-title mb-0">Recent Notes</h5>
+        </div>
+        <div id="dashNotes" class="list-group small"></div>
+        <div id="dashNotesEmpty" class="text-muted">No notes yet.</div>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <button class="btn btn-sm btn-outline-secondary" onclick="dashPrevNotes()">Prev</button>
+          <div id="dashNotesInfo" class="text-muted"></div>
+          <button class="btn btn-sm btn-outline-secondary" onclick="dashNextNotes()">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="card-title mb-0">Recent Highlights</h5>
+        </div>
+        <div id="dashHighlights" class="list-group small"></div>
+        <div id="dashHighlightsEmpty" class="text-muted">No highlights yet.</div>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <button class="btn btn-sm btn-outline-secondary" onclick="dashPrevHighlights()">Prev</button>
+          <div id="dashHighlightsInfo" class="text-muted"></div>
+          <button class="btn btn-sm btn-outline-secondary" onclick="dashNextHighlights()">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function dashAddEvent() {
+  const data = {
+    date_ts: document.getElementById('d_ev_date').value || null,
+    headline: document.getElementById('d_ev_headline').value,
+    outlet: document.getElementById('d_ev_outlet').value || null,
+    url: document.getElementById('d_ev_url').value || null
+  };
+  if (!data.headline) { alert('Headline is required'); return; }
+  fetch('/research/events', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) })
+    .then(r=>r.json())
+    .then(() => { ['d_ev_date','d_ev_headline','d_ev_outlet','d_ev_url'].forEach(id => document.getElementById(id).value=''); location.reload(); });
+}
+
+function dashAddSource() {
+  const data = {
+    title: document.getElementById('d_src_title').value,
+    kind: document.getElementById('d_src_kind').value || null,
+    author: document.getElementById('d_src_author').value || null,
+    url: document.getElementById('d_src_url').value || null
+  };
+  if (!data.title) { alert('Title is required'); return; }
+  fetch('/research/sources', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) })
+    .then(r=>r.json())
+    .then(() => { ['d_src_title','d_src_kind','d_src_author','d_src_url'].forEach(id => document.getElementById(id).value=''); location.reload(); });
+}
+
+// Dashboard lists (independent pagination)
+let dEvPage = 1, dEvSize = 5;
+let dSrcPage = 1, dSrcSize = 5;
+let dNotePage = 1, dNoteSize = 5;
+let dHlPage = 1, dHlSize = 5;
+
+document.addEventListener('DOMContentLoaded', function() {
+  loadDashEvents();
+  loadDashSources();
+  loadDashNotes();
+  loadDashHighlights();
+});
+
+function loadDashEvents() {
+  const params = new URLSearchParams({ page: dEvPage, page_size: dEvSize });
+  fetch('/research/events?' + params.toString())
+    .then(r=>r.json())
+    .then(items => {
+      const el = document.getElementById('dashEvents');
+      const empty = document.getElementById('dashEventsEmpty');
+      if (!items || items.length === 0) { el.innerHTML = ''; if (empty) empty.classList.remove('d-none'); return; }
+      if (empty) empty.classList.add('d-none');
+      el.innerHTML = items.map(e => `
+        <a class='list-group-item list-group-item-action' ${e.url?`href='${e.url}' target='_blank'`:''}>
+          <div class='d-flex justify-content-between align-items-start'>
+            <div>
+              <div><strong>${(e.headline||'').replaceAll('<','&lt;')}</strong></div>
+              <div class='text-muted'>${(e.date_ts||'').slice(0,10)} ${(e.outlet?('• '+e.outlet):'')}</div>
+            </div>
+          </div>
+        </a>
+      `).join('');
+      const info = document.getElementById('dashEventsInfo');
+      if (info) info.textContent = `Page ${dEvPage}`;
+    });
+}
+function dashNextEvents(){ dEvPage += 1; loadDashEvents(); }
+function dashPrevEvents(){ if (dEvPage>1){ dEvPage -= 1; loadDashEvents(); } }
+
+function loadDashSources() {
+  const params = new URLSearchParams({ page: dSrcPage, page_size: dSrcSize });
+  fetch('/research/sources?' + params.toString())
+    .then(r=>r.json())
+    .then(items => {
+      const el = document.getElementById('dashSources');
+      const empty = document.getElementById('dashSourcesEmpty');
+      if (!items || items.length === 0) { el.innerHTML = ''; if (empty) empty.classList.remove('d-none'); return; }
+      if (empty) empty.classList.add('d-none');
+      el.innerHTML = items.map(s => `
+        <a class='list-group-item list-group-item-action' href='/research/sources/detail?id=${s.id}'>
+          <div><strong>${(s.title||'').replaceAll('<','&lt;')}</strong></div>
+          <div class='text-muted'>${(s.kind||'')} ${(s.author?('• '+s.author):'')} ${(s.year?('• '+s.year):'')}</div>
+        </a>
+      `).join('');
+      const info = document.getElementById('dashSourcesInfo');
+      if (info) info.textContent = `Page ${dSrcPage}`;
+    });
+}
+function dashNextSources(){ dSrcPage += 1; loadDashSources(); }
+function dashPrevSources(){ if (dSrcPage>1){ dSrcPage -= 1; loadDashSources(); } }
+
+function loadDashNotes() {
+  const params = new URLSearchParams({ page: dNotePage, page_size: dNoteSize });
+  fetch('/research/notes?' + params.toString())
+    .then(r=>r.json())
+    .then(items => {
+      const el = document.getElementById('dashNotes');
+      const empty = document.getElementById('dashNotesEmpty');
+      if (!items || items.length === 0) { el.innerHTML = ''; if (empty) empty.classList.remove('d-none'); return; }
+      if (empty) empty.classList.add('d-none');
+      el.innerHTML = items.map(n => `
+        <div class='list-group-item'>
+          <div>${(n.body||'').replaceAll('<','&lt;')}</div>
+          <div class='text-muted'>${(n.ts||'').replace('T',' ').slice(0,16)} ${n.kind?('• '+n.kind):''}</div>
+        </div>
+      `).join('');
+      const info = document.getElementById('dashNotesInfo');
+      if (info) info.textContent = `Page ${dNotePage}`;
+    });
+}
+function dashNextNotes(){ dNotePage += 1; loadDashNotes(); }
+function dashPrevNotes(){ if (dNotePage>1){ dNotePage -= 1; loadDashNotes(); } }
+
+function loadDashHighlights() {
+  const params = new URLSearchParams({ page: dHlPage, page_size: dHlSize });
+  fetch('/research/highlights?' + params.toString())
+    .then(r=>r.json())
+    .then(items => {
+      const el = document.getElementById('dashHighlights');
+      const empty = document.getElementById('dashHighlightsEmpty');
+      if (!items || items.length === 0) { el.innerHTML = ''; if (empty) empty.classList.remove('d-none'); return; }
+      if (empty) empty.classList.add('d-none');
+      el.innerHTML = items.map(h => `
+        <div class='list-group-item'>
+          <div><em>${(h.text||'').replaceAll('<','&lt;')}</em></div>
+          <div class='text-muted'>${h.location||''} ${h.comment?('• '+h.comment):''}</div>
+        </div>
+      `).join('');
+      const info = document.getElementById('dashHighlightsInfo');
+      if (info) info.textContent = `Page ${dHlPage}`;
+    });
+}
+function dashNextHighlights(){ dHlPage += 1; loadDashHighlights(); }
+function dashPrevHighlights(){ if (dHlPage>1){ dHlPage -= 1; loadDashHighlights(); } }
+</script>
+{% endblock %}

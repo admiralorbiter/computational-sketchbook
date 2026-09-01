@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h1 class="h2">Oura Readiness Data</h1>
+          <p class="text-muted">Your readiness metrics and insights from Oura Ring</p>
+        </div>
+        <div>
+          <a href="/health/" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+          </a>
+          <button class="btn btn-success ms-2" onclick="refreshData()">
+            <i class="bi bi-arrow-clockwise"></i> Refresh
+          </button>
+        </div>
+      </div>
+
+      <!-- Data Range Selector -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="row align-items-end">
+            <div class="col-md-3">
+              <label for="startDate" class="form-label">Start Date</label>
+              <input type="date" class="form-control" id="startDate">
+            </div>
+            <div class="col-md-3">
+              <label for="endDate" class="form-label">End Date</label>
+              <input type="date" class="form-control" id="endDate">
+            </div>
+            <div class="col-md-3">
+              <button class="btn btn-primary" onclick="loadReadinessData()">
+                <i class="bi bi-search"></i> Load Data
+              </button>
+            </div>
+            <div class="col-md-3">
+              <div class="text-end">
+                <small class="text-muted">Last updated: <span id="lastUpdated">--</span></small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Readiness Summary -->
+      <div class="row mb-4" id="readinessSummary" style="display: none;">
+        <div class="col-md-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title text-warning" id="avgReadinessScore">--</h5>
+              <p class="card-text">Average Readiness Score</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title text-info" id="avgHrv">--</h5>
+              <p class="card-text">Average HRV</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title text-success" id="avgRecoveryIndex">--</h5>
+              <p class="card-text">Average Recovery Index</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title text-primary" id="avgRestingHeartRate">--</h5>
+              <p class="card-text">Average Resting HR</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Readiness Data Table -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Readiness Records</h5>
+        </div>
+        <div class="card-body">
+          <div id="readinessDataTable">
+            <div class="text-center text-muted py-5">
+              <i class="bi bi-lightning-charge fs-1"></i>
+              <p>Select a date range and click "Load Data" to view your readiness records</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Set default dates (last 7 days)
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - 7);
+
+  document.getElementById('endDate').value = endDate.toISOString().split('T')[0];
+  document.getElementById('startDate').value = startDate.toISOString().split('T')[0];
+});
+
+function loadReadinessData() {
+  const startDate = document.getElementById('startDate').value;
+  const endDate = document.getElementById('endDate').value;
+
+  if (!startDate || !endDate) {
+    alert('Please select both start and end dates');
+    return;
+  }
+
+  // Show loading state
+  document.getElementById('readinessDataTable').innerHTML = `
+    <div class="text-center py-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-2">Loading readiness data...</p>
+    </div>
+  `;
+
+  fetch(`/health/oura/readiness?start_date=${startDate}&end_date=${endDate}`)
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) {
+        document.getElementById('readinessDataTable').innerHTML = `
+          <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle"></i> Error: ${data.error}
+          </div>
+        `;
+        return;
+      }
+
+      displayReadinessData(data);
+    })
+    .catch(error => {
+      console.error('Error loading readiness data:', error);
+      document.getElementById('readinessDataTable').innerHTML = `
+        <div class="alert alert-danger">
+          <i class="bi bi-exclamation-triangle"></i> Failed to load readiness data
+        </div>
+      `;
+    });
+}
+
+function displayReadinessData(data) {
+  if (!data.data || data.data.length === 0) {
+    document.getElementById('readinessDataTable').innerHTML = `
+      <div class="text-center text-muted py-5">
+        <i class="bi bi-lightning-charge fs-1"></i>
+        <p>No readiness data found for the selected date range</p>
+      </div>
+    `;
+    return;
+  }
+
+  // Calculate summary statistics
+  const scores = data.data.map(record => record.score || 0).filter(score => score > 0);
+  const hrvs = data.data.map(record => record.hrv || 0).filter(hrv => hrv > 0);
+  const recoveryIndices = data.data.map(record => record.recovery_index || 0).filter(ri => ri > 0);
+  const restingHeartRates = data.data.map(record => record.resting_heart_rate || 0).filter(hr => hr > 0);
+
+  const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+  const avgHrv = hrvs.length > 0 ? Math.round(hrvs.reduce((a, b) => a + b, 0) / hrvs.length) : 0;
+  const avgRecoveryIndex = recoveryIndices.length > 0 ? Math.round(recoveryIndices.reduce((a, b) => a + b, 0) / recoveryIndices.length) : 0;
+  const avgRestingHeartRate = restingHeartRates.length > 0 ? Math.round(restingHeartRates.reduce((a, b) => a + b, 0) / restingHeartRates.length) : 0;
+
+  // Update summary cards
+  document.getElementById('avgReadinessScore').textContent = avgScore;
+  document.getElementById('avgHrv').textContent = `${avgHrv}ms`;
+  document.getElementById('avgRecoveryIndex').textContent = avgRecoveryIndex;
+  document.getElementById('avgRestingHeartRate').textContent = `${avgRestingHeartRate} bpm`;
+
+  // Show summary
+  document.getElementById('readinessSummary').style.display = 'block';
+
+  // Create data table
+  const tableHTML = `
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Score</th>
+            <th>HRV</th>
+            <th>Recovery Index</th>
+            <th>Resting HR</th>
+            <th>Temperature</th>
+            <th>Respiratory Rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.data.map(record => `
+            <tr>
+              <td>${record.day || '--'}</td>
+              <td>
+                <span class="badge bg-${getScoreColor(record.score)}">${record.score || '--'}</span>
+              </td>
+              <td>${record.hrv ? `${record.hrv}ms` : '--'}</td>
+              <td>${record.recovery_index || '--'}</td>
+              <td>${record.resting_heart_rate ? `${record.resting_heart_rate} bpm` : '--'}</td>
+              <td>${record.temperature ? `${record.temperature}°C` : '--'}</td>
+              <td>${record.respiratory_rate ? `${record.respiratory_rate} rpm` : '--'}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  document.getElementById('readinessDataTable').innerHTML = tableHTML;
+}
+
+function getScoreColor(score) {
+  if (!score) return 'secondary';
+  if (score >= 85) return 'success';
+  if (score >= 70) return 'warning';
+  return 'danger';
+}
+
+function refreshData() {
+  loadReadinessData();
+}
+</script>
+{% endblock %}

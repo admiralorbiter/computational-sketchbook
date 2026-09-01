@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h1 class="h2">Oura Sleep Data</h1>
+          <p class="text-muted">Your sleep metrics and insights from Oura Ring</p>
+        </div>
+        <div>
+          <a href="/health/" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+          </a>
+          <button class="btn btn-success ms-2" onclick="refreshData()">
+            <i class="bi bi-arrow-clockwise"></i> Refresh
+          </button>
+        </div>
+      </div>
+      
+      <!-- Data Range Selector -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="row align-items-end">
+            <div class="col-md-3">
+              <label for="startDate" class="form-label">Start Date</label>
+              <input type="date" class="form-control" id="startDate">
+            </div>
+            <div class="col-md-3">
+              <label for="endDate" class="form-label">End Date</label>
+              <input type="date" class="form-control" id="endDate">
+            </div>
+            <div class="col-md-3">
+              <button class="btn btn-primary" onclick="loadSleepData()">
+                <i class="bi bi-search"></i> Load Data
+              </button>
+            </div>
+            <div class="col-md-3">
+              <div class="text-end">
+                <small class="text-muted">Last updated: <span id="lastUpdated">--</span></small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Sleep Summary -->
+      <div class="row mb-4" id="sleepSummary" style="display: none;">
+        <div class="col-md-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title text-primary" id="avgSleepScore">--</h5>
+              <p class="card-text">Average Sleep Score</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title text-info" id="avgSleepTime">--</h5>
+              <p class="card-text">Average Sleep Time</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title text-success" id="avgDeepSleep">--</h5>
+              <p class="card-text">Average Deep Sleep</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title text-warning" id="avgRemSleep">--</h5>
+              <p class="card-text">Average REM Sleep</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Sleep Data Table -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0">Sleep Records</h5>
+        </div>
+        <div class="card-body">
+          <div id="sleepDataTable">
+            <div class="text-center text-muted py-5">
+              <i class="bi bi-moon-stars fs-1"></i>
+              <p>Select a date range and click "Load Data" to view your sleep records</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Set default dates (last 7 days)
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - 7);
+  
+  document.getElementById('endDate').value = endDate.toISOString().split('T')[0];
+  document.getElementById('startDate').value = startDate.toISOString().split('T')[0];
+});
+
+function loadSleepData() {
+  const startDate = document.getElementById('startDate').value;
+  const endDate = document.getElementById('endDate').value;
+  
+  if (!startDate || !endDate) {
+    alert('Please select both start and end dates');
+    return;
+  }
+  
+  // Show loading state
+  document.getElementById('sleepDataTable').innerHTML = `
+    <div class="text-center py-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-2">Loading sleep data...</p>
+    </div>
+  `;
+  
+  fetch(`/health/oura/sleep?start_date=${startDate}&end_date=${endDate}`)
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) {
+        document.getElementById('sleepDataTable').innerHTML = `
+          <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle"></i> Error: ${data.error}
+          </div>
+        `;
+        return;
+      }
+      
+      displaySleepData(data);
+    })
+    .catch(error => {
+      console.error('Error loading sleep data:', error);
+      document.getElementById('sleepDataTable').innerHTML = `
+        <div class="alert alert-danger">
+          <i class="bi bi-exclamation-triangle"></i> Failed to load sleep data
+        </div>
+      `;
+    });
+}
+
+function displaySleepData(data) {
+  if (!data.data || data.data.length === 0) {
+    document.getElementById('sleepDataTable').innerHTML = `
+      <div class="text-center text-muted py-5">
+        <i class="bi bi-moon-stars fs-1"></i>
+        <p>No sleep data found for the selected date range</p>
+      </div>
+    `;
+    return;
+  }
+  
+  // Calculate summary statistics
+  const scores = data.data.map(record => record.score || 0).filter(score => score > 0);
+  const sleepTimes = data.data.map(record => record.sleep || 0).filter(time => time > 0);
+  const deepSleeps = data.data.map(record => record.deep || 0).filter(time => time > 0);
+  const remSleeps = data.data.map(record => record.rem || 0).filter(time => time > 0);
+  
+  const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+  const avgSleepTime = sleepTimes.length > 0 ? Math.round(sleepTimes.reduce((a, b) => a + b, 0) / sleepTimes.length) : 0;
+  const avgDeepSleep = deepSleeps.length > 0 ? Math.round(deepSleeps.reduce((a, b) => a + b, 0) / deepSleeps.length) : 0;
+  const avgRemSleep = remSleeps.length > 0 ? Math.round(remSleeps.reduce((a, b) => a + b, 0) / remSleeps.length) : 0;
+  
+  // Update summary cards
+  document.getElementById('avgSleepScore').textContent = avgScore;
+  document.getElementById('avgSleepTime').textContent = `${Math.floor(avgSleepTime / 60)}h ${avgSleepTime % 60}m`;
+  document.getElementById('avgDeepSleep').textContent = `${Math.floor(avgDeepSleep / 60)}h ${avgDeepSleep % 60}m`;
+  document.getElementById('avgRemSleep').textContent = `${Math.floor(avgRemSleep / 60)}h ${avgRemSleep % 60}m`;
+  
+  // Show summary
+  document.getElementById('sleepSummary').style.display = 'block';
+  
+  // Create data table
+  const tableHTML = `
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Score</th>
+            <th>Sleep Time</th>
+            <th>Deep Sleep</th>
+            <th>REM Sleep</th>
+            <th>Efficiency</th>
+            <th>Latency</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.data.map(record => `
+            <tr>
+              <td>${record.day || '--'}</td>
+              <td>
+                <span class="badge bg-${getScoreColor(record.score)}">${record.score || '--'}</span>
+              </td>
+              <td>${formatTime(record.sleep)}</td>
+              <td>${formatTime(record.deep)}</td>
+              <td>${formatTime(record.rem)}</td>
+              <td>${record.efficiency ? Math.round(record.efficiency) + '%' : '--'}</td>
+              <td>${formatTime(record.latency)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+  
+  document.getElementById('sleepDataTable').innerHTML = tableHTML;
+}
+
+function getScoreColor(score) {
+  if (!score) return 'secondary';
+  if (score >= 85) return 'success';
+  if (score >= 70) return 'warning';
+  return 'danger';
+}
+
+function formatTime(minutes) {
+  if (!minutes || minutes === 0) return '--';
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  return `${hours}h ${mins}m`;
+}
+
+function refreshData() {
+  loadSleepData();
+}
+</script>
+{% endblock %}

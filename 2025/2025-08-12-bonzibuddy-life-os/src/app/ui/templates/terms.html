@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <h1 class="h2 mb-4">Terms of Service</h1>
+      
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Acceptance of Terms</h5>
+          <p>By using BonziBuddy, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the application.</p>
+          
+          <h6>Description of Service:</h6>
+          <p>BonziBuddy is a personal health tracking application that allows you to:</p>
+          <ul>
+            <li>Track medications, symptoms, and vital signs</li>
+            <li>Manage medical appointments and lab results</li>
+            <li>Integrate with Oura Ring for sleep and activity data</li>
+            <li>Generate health reports and insights</li>
+          </ul>
+          
+          <h6>User Responsibilities:</h6>
+          <ul>
+            <li>Provide accurate and truthful health information</li>
+            <li>Maintain the security of your account and data</li>
+            <li>Use the application for personal health management only</li>
+            <li>Comply with applicable laws and regulations</li>
+            <li>Not attempt to reverse engineer or hack the application</li>
+          </ul>
+          
+          <h6>Health Information Disclaimer:</h6>
+          <p><strong>Important:</strong> BonziBuddy is not a substitute for professional medical advice, diagnosis, or treatment. Always consult with qualified healthcare professionals for medical decisions.</p>
+          
+          <ul>
+            <li>The application is for informational purposes only</li>
+            <li>Health data should be shared with your healthcare providers</li>
+            <li>We are not responsible for medical decisions based on app data</li>
+            <li>Seek immediate medical attention for emergencies</li>
+          </ul>
+          
+          <h6>Oura Ring Integration:</h6>
+          <p>When using Oura Ring integration:</p>
+          <ul>
+            <li>You authorize us to access your Oura data</li>
+            <li>Data syncing occurs according to your Oura account settings</li>
+            <li>You can disconnect integration at any time</li>
+            <li>Oura's own terms and privacy policy also apply</li>
+          </ul>
+          
+          <h6>Data and Privacy:</h6>
+          <ul>
+            <li>Your health data is stored locally and privately</li>
+            <li>We do not sell or share your personal information</li>
+            <li>You retain ownership of all your health data</li>
+            <li>You can export or delete your data at any time</li>
+          </ul>
+          
+          <h6>Limitation of Liability:</h6>
+          <p>BonziBuddy is provided "as is" without warranties. We are not liable for:</p>
+          <ul>
+            <li>Data loss or corruption</li>
+            <li>Inaccurate health information</li>
+            <li>Medical decisions or outcomes</li>
+            <li>Service interruptions or technical issues</li>
+          </ul>
+          
+          <h6>Service Availability:</h6>
+          <p>We strive to maintain service availability but cannot guarantee uninterrupted access. The application may be updated or modified to improve functionality.</p>
+          
+          <h6>Termination:</h6>
+          <p>You may stop using BonziBuddy at any time. We may terminate service for violations of these terms or for other legitimate reasons.</p>
+          
+          <h6>Changes to Terms:</h6>
+          <p>We may update these terms from time to time. Continued use of the application constitutes acceptance of updated terms.</p>
+          
+          <h6>Contact:</h6>
+          <p>For questions about these terms, please contact us.</p>
+          
+          <p class="text-muted small">Last updated: {{ moment().format('YYYY-MM-DD') }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

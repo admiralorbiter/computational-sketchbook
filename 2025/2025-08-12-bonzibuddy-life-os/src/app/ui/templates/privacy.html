@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <h1 class="h2 mb-4">Privacy Policy</h1>
+      
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Data Collection and Usage</h5>
+          <p>BonziBuddy is a personal health tracking application that helps you manage your health data locally. We are committed to protecting your privacy and ensuring the security of your health information.</p>
+          
+          <h6>What We Collect:</h6>
+          <ul>
+            <li><strong>Health Data:</strong> Medications, symptoms, vitals, appointments, and lab results you manually enter</li>
+            <li><strong>Oura Ring Data:</strong> Sleep, activity, and readiness data from your Oura Ring (only when connected)</li>
+            <li><strong>Account Information:</strong> Basic profile information and Oura OAuth tokens</li>
+          </ul>
+          
+          <h6>How We Use Your Data:</h6>
+          <ul>
+            <li>To provide health tracking and management features</li>
+            <li>To sync data with your Oura Ring when connected</li>
+            <li>To generate health insights and reports</li>
+            <li>To send medication and appointment reminders</li>
+          </ul>
+          
+          <h6>Data Storage:</h6>
+          <p>All your health data is stored locally on your device or in your personal database. We do not store your health information on external servers unless you explicitly connect to Oura Ring.</p>
+          
+          <h6>Oura Ring Integration:</h6>
+          <p>When you connect your Oura Ring:</p>
+          <ul>
+            <li>We store OAuth tokens to access your Oura data</li>
+            <li>We sync sleep, activity, and readiness data</li>
+            <li>Your Oura data is stored locally and not shared with third parties</li>
+            <li>You can disconnect at any time to stop data syncing</li>
+          </ul>
+          
+          <h6>Data Sharing:</h6>
+          <p>We do not sell, trade, or share your personal health information with third parties. Your data remains private and under your control.</p>
+          
+          <h6>Your Rights:</h6>
+          <ul>
+            <li>Access and review your stored data</li>
+            <li>Export your data in common formats</li>
+            <li>Delete your data at any time</li>
+            <li>Disconnect from Oura Ring integration</li>
+          </ul>
+          
+          <h6>Contact:</h6>
+          <p>If you have questions about this privacy policy, please contact us at your convenience.</p>
+          
+          <p class="text-muted small">Last updated: {{ moment().format('YYYY-MM-DD') }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

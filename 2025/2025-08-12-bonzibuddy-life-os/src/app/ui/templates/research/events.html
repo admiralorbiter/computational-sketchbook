@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+	<h2>Current Events</h2>
+	<div>
+		<a href="/research" class="btn btn-outline-secondary">Back</a>
+	</div>
+</div>
+
+<div class="card mb-3">
+	<div class="card-body">
+		<h5 class="card-title">Quick Add</h5>
+		<div class="row g-2">
+			<div class="col-md-2"><input id="evDate" type="date" class="form-control" placeholder="Date"></div>
+			<div class="col-md-4"><input id="evHeadline" type="text" class="form-control" placeholder="Headline"></div>
+			<div class="col-md-2"><input id="evOutlet" type="text" class="form-control" placeholder="Outlet"></div>
+			<div class="col-md-3"><input id="evUrl" type="url" class="form-control" placeholder="URL"></div>
+			<div class="col-md-1 d-grid"><button class="btn btn-primary" onclick="addEvent()">Add</button></div>
+			<div class="col-12"><input id="evSummary" type="text" class="form-control" placeholder="Summary"></div>
+		</div>
+	</div>
+</div>
+
+<div class="card">
+	<div class="card-body">
+		<div class="d-flex justify-content-between align-items-center mb-2">
+			<h5 class="card-title mb-0">Events</h5>
+            <div class="input-group" style="max-width: 640px;">
+                <input id="q" type="search" class="form-control" placeholder="Search...">
+                <input id="etag" type="search" class="form-control" style="max-width: 160px" placeholder="tag (optional)">
+                <select id="epageSize" class="form-select" style="max-width: 120px">
+                    <option value="10">10</option>
+                    <option value="25" selected>25</option>
+                    <option value="50">50</option>
+                </select>
+                <button class="btn btn-outline-secondary" onclick="loadEvents()">Go</button>
+			</div>
+		</div>
+        <div id="eventsList" class="list-group small"></div>
+        <div id="eventsEmpty" class="text-center text-muted py-4 d-none">
+            <i class="bi bi-newspaper fs-1"></i>
+            <div>No events yet. Use Quick Add above or import from CSV.</div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+            <button class="btn btn-sm btn-outline-secondary" onclick="prevEvents()">Prev</button>
+            <div class="text-muted" id="eventsPageInfo"></div>
+            <button class="btn btn-sm btn-outline-secondary" onclick="nextEvents()">Next</button>
+        </div>
+	</div>
+</div>
+
+<div class="card mt-3">
+	<div class="card-body">
+		<h5 class="card-title">Import CSV</h5>
+		<div class="row g-2 align-items-center">
+			<div class="col-md-5">
+				<input id="evCsvFile" type="file" class="form-control" accept=".csv">
+			</div>
+			<div class="col-md-4">
+				<input id="evCsvListTag" type="text" class="form-control" placeholder="Optional list tag (e.g. News List)">
+			</div>
+			<div class="col-md-2 d-grid">
+				<button class="btn btn-outline-primary" onclick="importEventsCsv()">Upload</button>
+			</div>
+		</div>
+		<div class="form-text">Expected headers: Title (or Headline), Date, URL. Optional: Outlet, Summary, Tags.</div>
+	</div>
+</div>
+
+<script>
+let ePage = 1; let ePageSize = 25; document.addEventListener('DOMContentLoaded', loadEvents);
+
+function loadEvents() {
+	const params = new URLSearchParams();
+    const q = document.getElementById('q').value.trim();
+    const tag = document.getElementById('etag').value.trim();
+    const psEl = document.getElementById('epageSize');
+    ePageSize = psEl ? parseInt(psEl.value) : ePageSize;
+    if (q) params.set('q', q);
+    if (tag) params.set('tag', tag);
+    params.set('page', ePage);
+    params.set('page_size', ePageSize);
+    fetch('/research/events?' + params.toString())
+		.then(r => r.json())
+		.then(items => {
+			const el = document.getElementById('eventsList');
+            const empty = document.getElementById('eventsEmpty');
+            if (!items || items.length === 0) {
+                el.innerHTML = '';
+                if (empty) empty.classList.remove('d-none');
+                return;
+            }
+            if (empty) empty.classList.add('d-none');
+            el.innerHTML = items.map(e => `
+                <a class="list-group-item list-group-item-action">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <div><strong>${(e.headline||'').replaceAll('<','&lt;')}</strong></div>
+                      <div class="text-muted">${(e.date_ts||'').slice(0,10)} • ${(e.outlet||'')}</div>
+                      <div class="mt-1 d-flex flex-wrap gap-1" id="tags-event-${e.id}"></div>
+                    </div>
+                    <div class="d-flex gap-2">
+                      ${ e.url ? `<a href="${e.url}" target="_blank" class="btn btn-sm btn-outline-secondary">Open</a>`:'' }
+                      <button class="btn btn-sm btn-outline-secondary" onclick="event.preventDefault(); addTagPrompt('news_event', ${e.id})">Add tag</button>
+                      <button class="btn btn-sm btn-outline-primary" onclick="event.preventDefault(); toggleEventEdit(${e.id})">Edit</button>
+                      <button class="btn btn-sm btn-outline-danger" onclick="event.preventDefault(); delEvent(${e.id})">Delete</button>
+                    </div>
+                  </div>
+                </a>
+                <div class="mt-2 d-none" id="edit-event-${e.id}">
+                  <div class="row g-2">
+                    <div class="col-md-5"><input class="form-control form-control-sm" id="ee-headline-${e.id}" value="${(e.headline||'').replaceAll('"','&quot;')}"></div>
+                    <div class="col-md-3"><input class="form-control form-control-sm" id="ee-outlet-${e.id}" value="${(e.outlet||'').replaceAll('"','&quot;')}"></div>
+                    <div class="col-md-3"><input class="form-control form-control-sm" id="ee-url-${e.id}" value="${(e.url||'').replaceAll('"','&quot;')}"></div>
+                    <div class="col-12 d-flex gap-2">
+                      <button class="btn btn-sm btn-primary" onclick="event.preventDefault(); saveEventEdit(${e.id})">Save</button>
+                      <button class="btn btn-sm btn-secondary" onclick="event.preventDefault(); toggleEventEdit(${e.id}, true)">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+            `).join('');
+            items.forEach(e => loadEntityTags('news_event', e.id));
+            const info = document.getElementById('eventsPageInfo');
+            if (info) info.textContent = `Page ${ePage}`;
+		});
+}
+
+function nextEvents(){ ePage += 1; loadEvents(); }
+function prevEvents(){ if (ePage > 1) { ePage -= 1; loadEvents(); } }
+
+function addEvent() {
+	const data = {
+		date_ts: document.getElementById('evDate').value || null,
+		headline: document.getElementById('evHeadline').value,
+		outlet: document.getElementById('evOutlet').value || null,
+		summary: document.getElementById('evSummary').value || null,
+		url: document.getElementById('evUrl').value || null
+	};
+	if (!data.headline) { alert('Headline is required'); return; }
+	fetch('/research/events', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) })
+		.then(r => r.json())
+		.then(()=>{ loadEvents(); clearForm(); });
+}
+
+function clearForm() {
+	['evDate','evHeadline','evOutlet','evSummary','evUrl'].forEach(id => document.getElementById(id).value = '');
+}
+
+function delEvent(id) {
+	if (!confirm('Delete this event?')) return;
+	fetch(`/research/events/${id}`, { method:'DELETE' })
+		.then(()=> loadEvents());
+}
+
+// Tag helpers (reuse from sources view if page combined later)
+function loadEntityTags(entityType, entityId) {
+    const container = document.getElementById(`tags-${entityType === 'news_event' ? 'event' : entityType}-${entityId}`);
+    if (!container) return;
+    container.innerHTML = '<span class="text-muted">Loading...</span>';
+    fetch(`/research/tags/${entityType}/${entityId}`)
+        .then(r=>r.json())
+        .then(tags => {
+            if (!tags || tags.length === 0) { container.innerHTML = '<span class="text-muted">No tags</span>'; return; }
+            container.innerHTML = tags.map(t => `
+                <span class='badge rounded-pill bg-secondary'>${t.name}
+                    <button class='btn btn-sm btn-close btn-close-white ms-1' style='font-size: .5rem;' onclick='event.preventDefault(); event.stopPropagation(); removeTag("${entityType}", ${entityId}, ${t.id})'></button>
+                </span>
+            `).join(' ');
+        });
+}
+
+function addTagPrompt(entityType, entityId) {
+    const name = prompt('Add tag:');
+    if (!name) return;
+    fetch(`/research/tags/${entityType}/${entityId}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name }) })
+        .then(()=> loadEntityTags(entityType, entityId));
+}
+
+function removeTag(entityType, entityId, tagId) {
+    fetch(`/research/tags/${entityType}/${entityId}/${tagId}`, { method:'DELETE' })
+        .then(()=> loadEntityTags(entityType, entityId));
+}
+
+function toggleEventEdit(id, cancelOnly) {
+    const el = document.getElementById(`edit-event-${id}`);
+    if (!el) return;
+    const isHidden = el.classList.contains('d-none');
+    if (cancelOnly && !isHidden) { el.classList.add('d-none'); return; }
+    el.classList.toggle('d-none');
+}
+
+function saveEventEdit(id) {
+    const body = {};
+    const headline = document.getElementById(`ee-headline-${id}`).value.trim();
+    const outlet = document.getElementById(`ee-outlet-${id}`).value.trim();
+    const url = document.getElementById(`ee-url-${id}`).value.trim();
+    if (headline) body.headline = headline;
+    if (outlet) body.outlet = outlet;
+    if (url) body.url = url;
+    fetch(`/research/events/${id}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) })
+        .then(()=> loadEvents());
+}
+
+function importEventsCsv() {
+	const fileInput = document.getElementById('evCsvFile');
+	if (!fileInput || !fileInput.files || fileInput.files.length === 0) { alert('Choose a CSV file'); return; }
+	const listTag = (document.getElementById('evCsvListTag')?.value || '').trim();
+	const fd = new FormData();
+	fd.append('file', fileInput.files[0]);
+	if (listTag) fd.append('list_tag', listTag);
+	fetch('/research/events/import/csv', { method: 'POST', body: fd })
+		.then(r => r.json())
+		.then(res => {
+			if (!res || res.error) { alert(res?.error || 'Import failed'); return; }
+			alert(`Imported: ${res.stats?.created||0} created, ${res.stats?.updated||0} updated (total ${res.stats?.total||0})`);
+			loadEvents();
+			if (fileInput) fileInput.value = '';
+			if (document.getElementById('evCsvListTag')) document.getElementById('evCsvListTag').value = '';
+		});
+}
+</script>
+{% endblock %}
+
+
