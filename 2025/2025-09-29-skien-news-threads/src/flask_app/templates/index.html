@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}Home - SKIEN{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="jumbotron bg-gradient text-white rounded-3 p-5 mb-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <h1 class="display-4 fw-bold">
+                <i class="fas fa-project-diagram me-3"></i>Welcome to SKIEN
+            </h1>
+            <p class="lead">Story Knowledge Information Extraction Network</p>
+            <p class="mb-4">A powerful platform for analyzing and connecting news stories, events, and information threads.</p>
+            <a class="btn btn-light btn-lg" href="{{ url_for('import.index') }}" role="button">
+                <i class="fas fa-upload me-2"></i>Start Importing Stories
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-newspaper fa-3x text-primary mb-3"></i>
+                <h5 class="card-title">Story Management</h5>
+                <p class="card-text">Import, organize, and analyze news stories from various sources. Track events and their relationships.</p>
+                <a href="{{ url_for('import.index') }}" class="btn btn-primary">
+                    <i class="fas fa-arrow-right me-1"></i>Get Started
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-sitemap fa-3x text-success mb-3"></i>
+                <h5 class="card-title">Event Tracking</h5>
+                <p class="card-text">Create and manage events, track their progression, and understand how stories connect over time.</p>
+                <a href="#" class="btn btn-success">
+                    <i class="fas fa-arrow-right me-1"></i>Explore Events
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-tags fa-3x text-warning mb-3"></i>
+                <h5 class="card-title">Topic Analysis</h5>
+                <p class="card-text">Categorize stories by topics and threads. Discover patterns and relationships in your data.</p>
+                <a href="#" class="btn btn-warning">
+                    <i class="fas fa-arrow-right me-1"></i>View Topics
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-line me-2"></i>Quick Stats
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <div class="stats-card">
+                            <h3 id="total-stories">-</h3>
+                            <p class="mb-0">Total Stories</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                            <h3 id="total-events">-</h3>
+                            <p class="mb-0">Events Tracked</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                            <h3 id="total-topics">-</h3>
+                            <p class="mb-0">Topics</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stats-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                            <h3 id="total-tags">-</h3>
+                            <p class="mb-0">Tags</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Getting Started
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-upload me-2 text-primary"></i>Import Your Data</h6>
+                        <p>Start by importing your CSV file with news stories. Our system supports flexible column mapping and automatic source detection.</p>
+                        
+                        <h6><i class="fas fa-cogs me-2 text-success"></i>Create Events</h6>
+                        <p>Link stories to events and track how they develop over time. Create threads to organize related events.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-tags me-2 text-warning"></i>Organize with Topics</h6>
+                        <p>Categorize your stories using topics and tags. This helps you find patterns and connections in your data.</p>
+                        
+                        <h6><i class="fas fa-chart-network me-2 text-info"></i>Analyze Relationships</h6>
+                        <p>Discover how stories connect through events, topics, and time. Build a comprehensive knowledge network.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Load dashboard stats
+document.addEventListener('DOMContentLoaded', function() {
+    // This would normally fetch from an API endpoint
+    // For now, we'll show placeholder values
+    document.getElementById('total-stories').textContent = '0';
+    document.getElementById('total-events').textContent = '0';
+    document.getElementById('total-topics').textContent = '0';
+    document.getElementById('total-tags').textContent = '0';
+});
+</script>
+{% endblock %}
