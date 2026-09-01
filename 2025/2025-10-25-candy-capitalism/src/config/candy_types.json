@@ -1,0 +1,44 @@
+{
+  "CHOCOLATE": {
+    "name": "Chocolate",
+    "real_value": 8.0,
+    "decay_rate": 0.01,
+    "color": [139, 69, 19],
+    "description": "Rich, creamy chocolate candy"
+  },
+  "FRUITY": {
+    "name": "Fruity",
+    "real_value": 5.0,
+    "decay_rate": 0.015,
+    "color": [255, 100, 100],
+    "description": "Sweet, fruity flavored candy"
+  },
+  "SOUR": {
+    "name": "Sour",
+    "real_value": 6.0,
+    "decay_rate": 0.012,
+    "color": [255, 255, 100],
+    "description": "Tart, sour candy that makes you pucker"
+  },
+  "NOVELTY": {
+    "name": "Novelty",
+    "real_value": 4.0,
+    "decay_rate": 0.008,
+    "color": [255, 100, 255],
+    "description": "Fun, unique candy with special shapes or effects"
+  },
+  "HEALTH": {
+    "name": "Health",
+    "real_value": 2.0,
+    "decay_rate": 0.005,
+    "color": [100, 255, 100],
+    "description": "Healthy alternatives like fruit snacks"
+  },
+  "TRASH": {
+    "name": "Trash",
+    "real_value": 1.0,
+    "decay_rate": 0.001,
+    "color": [100, 100, 100],
+    "description": "Unwanted candy like raisins or pennies"
+  }
+}

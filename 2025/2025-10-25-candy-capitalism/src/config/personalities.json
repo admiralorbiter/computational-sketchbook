@@ -1,0 +1,37 @@
+{
+  "VALUE_INVESTOR": {
+    "name": "Value Investor",
+    "threshold": 1.5,
+    "learning_rate": 0.08,
+    "risk_tolerance": 0.3,
+    "description": "Patient trader who waits for good deals"
+  },
+  "MOMENTUM_TRADER": {
+    "name": "Momentum Trader",
+    "threshold": 0.5,
+    "learning_rate": 0.15,
+    "risk_tolerance": 0.7,
+    "description": "Follows market trends and buys rising candies"
+  },
+  "HOARDER": {
+    "name": "Hoarder",
+    "threshold": 2.0,
+    "learning_rate": 0.05,
+    "risk_tolerance": 0.1,
+    "description": "Accumulates favorites and rarely trades"
+  },
+  "SOCIAL_TRADER": {
+    "name": "Social Trader",
+    "threshold": 0.8,
+    "learning_rate": 0.12,
+    "risk_tolerance": 0.4,
+    "description": "Trades with friends even at bad rates"
+  },
+  "PANIC_SELLER": {
+    "name": "Panic Seller",
+    "threshold": 0.2,
+    "learning_rate": 0.2,
+    "risk_tolerance": 0.9,
+    "description": "Sells quickly and is easily influenced by rumors"
+  }
+}

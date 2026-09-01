@@ -1,0 +1,26 @@
+{
+  "default": {
+    "grid_size": [40, 40],
+    "num_houses": 18,
+    "house_spacing": 150,
+    "quality_distribution": [0.2, 0.5, 0.3],
+    "world_width": 2000,
+    "world_height": 2000
+  },
+  "test_small": {
+    "grid_size": [20, 20],
+    "num_houses": 5,
+    "house_spacing": 100,
+    "quality_distribution": [0.3, 0.4, 0.3],
+    "world_width": 1000,
+    "world_height": 1000
+  },
+  "test_large": {
+    "grid_size": [60, 60],
+    "num_houses": 25,
+    "house_spacing": 200,
+    "quality_distribution": [0.1, 0.6, 0.3],
+    "world_width": 3000,
+    "world_height": 3000
+  }
+}

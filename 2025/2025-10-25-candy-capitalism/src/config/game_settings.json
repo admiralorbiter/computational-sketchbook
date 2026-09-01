@@ -1,0 +1,71 @@
+{
+  "screen_width": 1280,
+  "screen_height": 720,
+  "fps": 60,
+  "ai_tick_rate": 2.0,
+  "spatial_grid_cell_size": 100,
+  "max_kids": 30,
+  "max_houses": 25,
+  "chaos_energy": {
+    "max_energy": 100.0,
+    "regen_rate": 1.0,
+    "drain_rate": 2.0
+  },
+  "trading": {
+    "trade_cooldown": 3.0,
+    "max_trade_distance": 150.0,
+    "price_discovery_rate": 0.01,
+    "trade_check_interval": 2.0,
+    "trade_range": 150,
+    "min_trade_value_delta": 0.5
+  },
+  "economy": {
+    "price_discovery_mode": "fixed",
+    "convergence_rate": 0.1,
+    "market_history_window": 20,
+        "enable_multi_item_trades": true
+  },
+  "rumors": {
+    "spread_chance": 0.3,
+    "overhear_chance": 0.1,
+    "mutation_chance": 0.15,
+    "max_age": 60.0
+  },
+  "trading_blocs": {
+    "min_members": 3,
+    "formation_threshold": 0.7,
+    "fracture_threshold": 0.3
+  },
+  "world": {
+    "world_width": 2000,
+    "world_height": 2000,
+    "background_color": [20, 20, 30]
+  },
+  "kid_movement": {
+    "max_speed": 50.0,
+    "acceleration": 100.0,
+    "arrival_distance": 10.0,
+    "collision_radius": 15.0
+  },
+  "pathfinding": {
+    "grid_cell_size": 20,
+    "cache_lifetime": 5.0,
+    "max_path_length": 100
+  },
+  "possession": {
+    "initial_energy": 100,
+    "max_energy": 100,
+    "regen_rate": 1.0,
+    "drain_rate": 2.0,
+    "cooldown": 3.0,
+    "possess_cost": 10
+  },
+  "house_powers": {
+    "curse_cost": 15,
+    "curse_duration": 60,
+    "curse_multiplier": 0.3,
+    "bless_cost": 25,
+    "bless_duration": 30,
+    "bless_multiplier": 2.5
+  }
+}
