@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="p-4 bg-primary text-white rounded-3 mb-4">
+      <h1 class="display-6 fw-semibold">🚀 Live Kalshi Markets</h1>
+      <p class="lead mb-3">Real-time Bitcoin & Ethereum prediction markets with Kelly sizing, price guidance, and time-sensitive analysis.</p>
+      <a href="{{ url_for('kalshi_markets') }}" class="btn btn-light btn-lg">
+        <i class="fas fa-chart-line me-2"></i>View Live Markets
+      </a>
+    </div>
+    
+    <div class="p-4 bg-body-tertiary rounded-3">
+      <h2 class="h4 fw-semibold mb-3">Features</h2>
+      <div class="row">
+        <div class="col-md-6">
+          <ul class="mb-0">
+            <li><strong>Live Market Data</strong> - Real-time BTC/ETH prices from Kalshi</li>
+            <li><strong>Kelly Sizing</strong> - Optimal bet sizing based on your bankroll</li>
+            <li><strong>Price Guidance</strong> - Max safe prices and limit order suggestions</li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <ul class="mb-0">
+            <li><strong>Time-Sensitive Analysis</strong> - Volatility-based probability estimates</li>
+            <li><strong>Contract Calculations</strong> - Realistic contract suggestions for limit orders</li>
+            <li><strong>Risk Management</strong> - Built-in safety checks and warnings</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card shadow-sm border-primary">
+      <div class="card-header bg-primary text-white">
+        <h5 class="card-title mb-0"><i class="fas fa-star me-2"></i>Featured</h5>
+      </div>
+      <div class="card-body">
+        <div class="list-group list-group-flush">
+          <a href="{{ url_for('kalshi_markets') }}" class="list-group-item list-group-item-action active">
+            <i class="fas fa-chart-line me-2"></i><strong>Live Kalshi Markets</strong>
+            <small class="d-block text-muted">BTC/ETH with Kelly sizing & price guidance</small>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card shadow-sm mt-3">
+      <div class="card-body">
+        <h5 class="card-title">Tools</h5>
+        <div class="list-group list-group-flush">
+          <a href="{{ url_for('bitcoin_analysis') }}" class="list-group-item list-group-item-action">₿ Bitcoin Analysis</a>
+          <a href="{{ url_for('fees') }}" class="list-group-item list-group-item-action">Fee Calculator</a>
+          <a href="{{ url_for('kelly') }}" class="list-group-item list-group-item-action">Kelly & EV</a>
+          <a href="{{ url_for('prices') }}" class="list-group-item list-group-item-action">BTC/ETH/NDX Probability</a>
+          <a href="{{ url_for('sports') }}" class="list-group-item list-group-item-action">Sports (Live) Helper</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="alert alert-warning mt-3 small">
+      <strong>⚠️ Risk Warning:</strong> This is an educational demo. Not financial advice. Event-contract trading involves risk of loss.
+    </div>
+  </div>
+</div>
+{% endblock %}

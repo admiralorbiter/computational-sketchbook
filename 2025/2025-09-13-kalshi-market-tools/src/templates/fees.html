@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2 class="mb-3">Fee Calculator</h2>
+<form method="post" class="row gy-3">
+  <div class="col-sm-3">
+    <label class="form-label">Kalshi Price (0–1)</label>
+    <input type="number" name="price" step="0.01" min="0.01" max="0.99" class="form-control" placeholder="0.55" required>
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Contracts</label>
+    <input type="number" name="contracts" min="1" step="1" class="form-control" value="1">
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Role</label>
+    <select name="role" class="form-select">
+      <option value="taker">Taker (crosses spread)</option>
+      <option value="maker">Maker (resting)</option>
+    </select>
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Product Type</label>
+    <select name="product_type" class="form-select">
+      <option value="general">General</option>
+      <option value="sports">Sports (maker fee series)</option>
+      <option value="nasdaq_spx">NASDAQ100 / SPX (reduced taker fee)</option>
+    </select>
+  </div>
+  <div class="col-12">
+    <button class="btn btn-primary">Compute Fee</button>
+  </div>
+</form>
+
+{% if result %}
+<hr class="my-4">
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h5 class="card-title">Result</h5>
+    <dl class="row">
+      <dt class="col-sm-4">Fee (total)</dt><dd class="col-sm-8">${{ '%.2f'|format(result.fee_total) }}</dd>
+      <dt class="col-sm-4">Fee per contract</dt><dd class="col-sm-8">${{ '%.2f'|format(result.fee_per_contract) }}</dd>
+      <dt class="col-sm-4">Inputs</dt>
+      <dd class="col-sm-8">
+        Price={{ result.price }}, Contracts={{ result.contracts }}, Role={{ result.role|capitalize }}, Product={{ result.product_type }}
+      </dd>
+    </dl>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expected Table Output with Price Guidance</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        .price-guidance { text-align: center; font-size: 0.9em; }
+        .max-safe { color: #28a745; font-weight: bold; }
+        .limit { color: #007bff; font-weight: bold; }
+        .warning { color: #ffc107; font-weight: bold; }
+        .betting-analysis { text-align: center; }
+        .buy-no { color: #dc3545; font-weight: bold; }
+        .buy-yes { color: #28a745; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>Expected Table Output with Price Guidance</h2>
+    
+    <p>Your table should now show the "Price Guidance" column with actual data like this:</p>
+    
+    <table>
+        <tr>
+            <th>Ticker</th>
+            <th>Title</th>
+            <th>Strike Price ($)</th>
+            <th>Time Left</th>
+            <th>Yes Bid (¢)</th>
+            <th>Yes Ask (¢)</th>
+            <th>Mid Price (¢ / %)</th>
+            <th>Volume (trades)</th>
+            <th>Open Interest (contracts)</th>
+            <th>Betting Analysis</th>
+            <th>Price Guidance (Max Safe / Limit)</th>
+            <th>Action</th>
+        </tr>
+        <tr>
+            <td>KXBTCD-25SEP1412-T115999.99</td>
+            <td>Bitcoin price on Sep 14, 2025?</td>
+            <td>$116,000</td>
+            <td>45m</td>
+            <td>3.0¢</td>
+            <td>6.0¢</td>
+            <td>4.5¢ (450.0%)</td>
+            <td>1,868</td>
+            <td>1,201</td>
+            <td class="betting-analysis">
+                <div class="buy-no">BUY NO</div>
+                <div>60% Confidence</div>
+                <div>10 Value</div>
+            </td>
+            <td class="price-guidance">
+                <div><strong>Max Safe:</strong> <span class="max-safe">0.950</span></div>
+                <div><strong>Limit:</strong> <span class="limit">0.855</span></div>
+            </td>
+            <td>Bet on Kalshi</td>
+        </tr>
+        <tr>
+            <td>KXBTCD-25SEP1412-T115749.99</td>
+            <td>Bitcoin price on Sep 14, 2025?</td>
+            <td>$115,750</td>
+            <td>45m</td>
+            <td>11.0¢</td>
+            <td>14.0¢</td>
+            <td>12.5¢ (1250.0%)</td>
+            <td>460</td>
+            <td>460</td>
+            <td class="betting-analysis">
+                <div class="buy-no">BUY NO</div>
+                <div>60% Confidence</div>
+                <div>0 Value</div>
+            </td>
+            <td class="price-guidance">
+                <div><strong>Max Safe:</strong> <span class="max-safe">0.850</span></div>
+                <div><strong>Limit:</strong> <span class="limit">0.765</span></div>
+            </td>
+            <td>Bet on Kalshi</td>
+        </tr>
+        <tr>
+            <td>KXBTCD-25SEP1412-T115499.99</td>
+            <td>Bitcoin price on Sep 14, 2025?</td>
+            <td>$115,500</td>
+            <td>45m</td>
+            <td>33.0¢</td>
+            <td>37.0¢</td>
+            <td>35.0¢ (3500.0%)</td>
+            <td>3,170</td>
+            <td>1,905</td>
+            <td class="betting-analysis">
+                <div class="buy-no">BUY NO</div>
+                <div>60% Confidence</div>
+                <div>25 Value</div>
+            </td>
+            <td class="price-guidance">
+                <div><strong>Max Safe:</strong> <span class="max-safe">0.750</span></div>
+                <div><strong>Limit:</strong> <span class="limit">0.675</span></div>
+            </td>
+            <td>Bet on Kalshi</td>
+        </tr>
+        <tr>
+            <td>KXBTCD-25SEP1412-T115249.99</td>
+            <td>Bitcoin price on Sep 14, 2025?</td>
+            <td>$115,250</td>
+            <td>45m</td>
+            <td>71.0¢</td>
+            <td>73.0¢</td>
+            <td>72.0¢ (7200.0%)</td>
+            <td>1,837</td>
+            <td>1,623</td>
+            <td class="betting-analysis">
+                <div class="buy-yes">BUY YES</div>
+                <div>60% Confidence</div>
+                <div>25 Value</div>
+            </td>
+            <td class="price-guidance">
+                <div><strong>Max Safe:</strong> <span class="max-safe">0.650</span></div>
+                <div><strong>Limit:</strong> <span class="limit">0.585</span></div>
+                <div class="warning">⚠️ 0.97 too high</div>
+            </td>
+            <td>Bet on Kalshi</td>
+        </tr>
+    </table>
+    
+    <h3>How to Interpret the Price Guidance:</h3>
+    
+    <h4>For BUY NO bets (like $116,000):</h4>
+    <ul>
+        <li><strong>Max Safe: 0.950</strong> = Don't pay more than 95¢ for a "NO" contract</li>
+        <li><strong>Limit: 0.855</strong> = Set your limit order at 85.5¢ for good entry</li>
+        <li><strong>Current Market: 4.5¢</strong> = Way below max safe - excellent value!</li>
+    </ul>
+    
+    <h4>For BUY YES bets (like $115,250):</h4>
+    <ul>
+        <li><strong>Max Safe: 0.650</strong> = Don't pay more than 65¢ for a "YES" contract</li>
+        <li><strong>Limit: 0.585</strong> = Set your limit order at 58.5¢ for good entry</li>
+        <li><strong>Current Market: 72.0¢</strong> = Above max safe - overpriced!</li>
+        <li><strong>Warning:</strong> 0.97 is definitely too high for this bet</li>
+    </ul>
+    
+    <h4>Key Insights:</h4>
+    <ul>
+        <li><strong>$116,000 NO at 4.5¢:</strong> Excellent value - you could pay up to 95¢</li>
+        <li><strong>$115,750 NO at 12.5¢:</strong> Good value - max safe is 85¢</li>
+        <li><strong>$115,500 NO at 35.0¢:</strong> Fair value - max safe is 75¢</li>
+        <li><strong>$115,250 YES at 72.0¢:</strong> Overpriced - max safe is 65¢</li>
+    </ul>
+    
+    <p><strong>Note:</strong> If you don't see this data in your table, try refreshing the page or restarting the Flask app. The data is being generated correctly - it just needs to be displayed in the template.</p>
+</body>
+</html>

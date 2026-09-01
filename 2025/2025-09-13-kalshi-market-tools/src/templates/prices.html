@@ -1,0 +1,211 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2 class="mb-3">BTC / ETH / NASDAQ‑100 — Above/Below Helper</h2>
+
+<!-- Real-time Market Data Display -->
+{% if market_data %}
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card bg-light">
+      <div class="card-body">
+        <h5 class="card-title">Real-time Market Data</h5>
+        <div class="row">
+          {% if market_data.crypto_prices.BTC %}
+          <div class="col-md-4">
+            <div class="d-flex justify-content-between">
+              <span><strong>BTC:</strong></span>
+              <span>${{ "%.2f"|format(market_data.crypto_prices.BTC.price) }}</span>
+            </div>
+            <small class="text-muted">{{ market_data.crypto_prices.BTC.source }}</small>
+          </div>
+          {% endif %}
+          {% if market_data.crypto_prices.ETH %}
+          <div class="col-md-4">
+            <div class="d-flex justify-content-between">
+              <span><strong>ETH:</strong></span>
+              <span>${{ "%.2f"|format(market_data.crypto_prices.ETH.price) }}</span>
+            </div>
+            <small class="text-muted">{{ market_data.crypto_prices.ETH.source }}</small>
+          </div>
+          {% endif %}
+          {% if market_data.nasdaq_price %}
+          <div class="col-md-4">
+            <div class="d-flex justify-content-between">
+              <span><strong>NASDAQ-100:</strong></span>
+              <span>${{ "%.2f"|format(market_data.nasdaq_price.price) }}</span>
+            </div>
+            <small class="text-muted">{{ market_data.nasdaq_price.source }}</small>
+          </div>
+          {% endif %}
+        </div>
+        <div class="mt-2">
+          <small class="text-muted">Last updated: {{ market_data.timestamp }}</small>
+          <button type="button" class="btn btn-sm btn-outline-primary ms-2" onclick="location.reload()">Refresh</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<form method="post" class="row gy-3">
+  <div class="col-sm-2">
+    <label class="form-label">Symbol</label>
+    <select name="symbol" class="form-select" onchange="updatePricePlaceholder()">
+      <option value="BTC">BTC</option>
+      <option value="ETH">ETH</option>
+      <option value="NDX">NASDAQ-100</option>
+    </select>
+  </div>
+  <div class="col-sm-2">
+    <label class="form-label">Use Real-time Price</label>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="use_realtime" id="use_realtime" onchange="togglePriceInput()">
+      <label class="form-check-label" for="use_realtime">
+        Auto-fill
+      </label>
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Current Price S</label>
+    <input type="number" name="S" id="price_input" step="0.01" min="0.01" class="form-control" placeholder="e.g., 2700.00" required>
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Strike K</label>
+    <input type="number" name="K" step="0.01" min="0.01" class="form-control" placeholder="e.g., 2750.00" required>
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Time to Fix (minutes)</label>
+    <input type="number" name="minutes" step="1" min="0" class="form-control" placeholder="30" required>
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Vol σ (annualized, e.g., 0.80)</label>
+    <input type="number" name="sigma" step="0.01" min="0.01" class="form-control" placeholder="0.80" required>
+  </div>
+
+  <div class="col-sm-3">
+    <label class="form-label">Kalshi Price</label>
+    <input type="number" name="price" step="0.01" min="0.01" max="0.99" class="form-control" placeholder="0.53" required>
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Contracts</label>
+    <input type="number" name="contracts" min="1" step="1" class="form-control" value="1">
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Role</label>
+    <select name="role" class="form-select">
+      <option value="taker">Taker</option>
+      <option value="maker">Maker</option>
+    </select>
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Product Type</label>
+    <select name="product_type" class="form-select">
+      <option value="general">General</option>
+      <option value="nasdaq_spx">NASDAQ100 / SPX</option>
+    </select>
+  </div>
+
+  <div class="col-12">
+    <button class="btn btn-primary">Estimate & Evaluate</button>
+  </div>
+</form>
+
+{% if result %}
+<hr class="my-4">
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title">Probability & Timing</h5>
+        <p class="mb-1"><strong>Symbol:</strong> {{ result.symbol }}</p>
+        <p class="mb-1"><strong>Estimated p(up):</strong> {{ '%.4f'|format(result.p_up) }}</p>
+        <p class="mb-1"><strong>T (years):</strong> {{ '%.6f'|format(result.T_years) }}</p>
+        {% if result.use_realtime %}
+        <p class="mb-1"><strong>Price Source:</strong> Real-time data</p>
+        {% endif %}
+        <p class="small text-secondary mb-0">This GBM shortcut is for short horizons and ignores drift; near fixes you may prefer a Brownian-bridge or realized-vol approach.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title">Fees, EV & Kelly</h5>
+        <p class="mb-1"><strong>Entry fee (total):</strong> ${{ '%.2f'|format(result.fee_total) }}</p>
+        <p class="mb-1"><strong>Fee per contract:</strong> ${{ '%.2f'|format(result.fee_per_contract) }}</p>
+        <p class="mb-1"><strong>EV per contract (hold):</strong> ${{ '%.4f'|format(result.ev_per_contract) }}</p>
+        <p class="mb-1"><strong>Kelly (full / ½):</strong> {{ '%.2f'|format(result.kelly_full*100) }}% / {{ '%.2f'|format(result.kelly_half*100) }}%</p>
+        <p class="mb-0 text-secondary small">Inputs: S={{ result.S }}, K={{ result.K }}, σ={{ result.sigma }}, P={{ result.price }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<script>
+function updatePricePlaceholder() {
+    const symbol = document.querySelector('select[name="symbol"]').value;
+    const priceInput = document.getElementById('price_input');
+    
+    if (symbol === 'BTC') {
+        priceInput.placeholder = 'e.g., 45000.00';
+    } else if (symbol === 'ETH') {
+        priceInput.placeholder = 'e.g., 3000.00';
+    } else if (symbol === 'NDX') {
+        priceInput.placeholder = 'e.g., 15000.00';
+    }
+}
+
+function togglePriceInput() {
+    const useRealtime = document.getElementById('use_realtime').checked;
+    const priceInput = document.getElementById('price_input');
+    const symbol = document.querySelector('select[name="symbol"]').value;
+    
+    if (useRealtime) {
+        priceInput.disabled = true;
+        priceInput.placeholder = 'Will be filled automatically';
+        
+        // Auto-fill with current market price
+        fetch('/api/market-data')
+            .then(response => response.json())
+            .then(data => {
+                let currentPrice = null;
+                if (symbol === 'BTC' && data.crypto_prices && data.crypto_prices.BTC) {
+                    currentPrice = data.crypto_prices.BTC.price;
+                } else if (symbol === 'ETH' && data.crypto_prices && data.crypto_prices.ETH) {
+                    currentPrice = data.crypto_prices.ETH.price;
+                } else if (symbol === 'NDX' && data.nasdaq_price) {
+                    currentPrice = data.nasdaq_price.price;
+                }
+                
+                if (currentPrice) {
+                    priceInput.value = currentPrice.toFixed(2);
+                    priceInput.placeholder = `Current ${symbol} price: $${currentPrice.toFixed(2)}`;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching market data:', error);
+                priceInput.placeholder = 'Error fetching price';
+            });
+    } else {
+        priceInput.disabled = false;
+        priceInput.value = '';
+        updatePricePlaceholder();
+    }
+}
+
+// Auto-refresh market data every 30 seconds
+setInterval(function() {
+    fetch('/api/market-data')
+        .then(response => response.json())
+        .then(data => {
+            // Update the market data display if needed
+            console.log('Market data refreshed');
+        })
+        .catch(error => {
+            console.error('Error refreshing market data:', error);
+        });
+}, 30000);
+</script>
+{% endblock %}

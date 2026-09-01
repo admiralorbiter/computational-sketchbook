@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2 class="mb-3">Kelly & EV (Fee-aware)</h2>
+<form method="post" class="row gy-3">
+  <div class="col-sm-3">
+    <label class="form-label">Model Probability p*</label>
+    <input type="number" name="p_star" step="0.001" min="0" max="1" class="form-control" placeholder="0.62" required>
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Kalshi Price</label>
+    <input type="number" name="price" step="0.01" min="0.01" max="0.99" class="form-control" placeholder="0.58" required>
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Bankroll ($)</label>
+    <input type="number" name="bankroll" step="1" min="1" class="form-control" placeholder="1000" required>
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Contracts (for fee calc)</label>
+    <input type="number" name="contracts" min="1" step="1" class="form-control" value="1">
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Role</label>
+    <select name="role" class="form-select">
+      <option value="taker">Taker</option>
+      <option value="maker">Maker</option>
+    </select>
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Product Type</label>
+    <select name="product_type" class="form-select">
+      <option value="general">General</option>
+      <option value="sports">Sports (maker fee series)</option>
+      <option value="nasdaq_spx">NASDAQ100 / SPX</option>
+    </select>
+  </div>
+  <div class="col-12">
+    <button class="btn btn-primary">Compute</button>
+  </div>
+</form>
+
+{% if result %}
+<hr class="my-4">
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title">Sizing</h5>
+        <p class="mb-1"><strong>Kelly (full):</strong> {{ '%.2f'|format(result.kelly_full * 100) }}%</p>
+        <p class="mb-1"><strong>Kelly (½):</strong> {{ '%.2f'|format(result.kelly_half * 100) }}%</p>
+        <p class="mb-1"><strong>Effective Entry Cost (c_eff):</strong> ${{ '%.4f'|format(result.c_eff) }}</p>
+        <p class="mb-0 text-secondary small">Suggested contracts @ ½‑Kelly: <strong>{{ result.suggested_contracts }}</strong> (each risks c_eff)</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title">Economics</h5>
+        <p class="mb-1"><strong>Entry fee (total):</strong> ${{ '%.2f'|format(result.fee_total) }}</p>
+        <p class="mb-1"><strong>Fee per contract:</strong> ${{ '%.2f'|format(result.fee_per_contract) }}</p>
+        <p class="mb-1"><strong>EV per contract (hold):</strong> ${{ '%.4f'|format(result.ev_per_contract) }}</p>
+        <p class="mb-0 text-secondary small">Inputs: p*={{ result.p_star }}, P={{ result.price }}, Role={{ result.role|capitalize }}, Product={{ result.product_type }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

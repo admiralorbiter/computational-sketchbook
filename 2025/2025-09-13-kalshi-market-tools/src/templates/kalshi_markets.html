@@ -1,0 +1,771 @@
+{% extends "layout.html" %}
+
+{% block extra_css %}
+<style>
+  .table th {
+    background-color: #f8f9fa;
+    border-top: 2px solid #dee2e6;
+    font-weight: 600;
+  }
+  
+  .table td {
+    vertical-align: middle;
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .badge-lg {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .fs-5 {
+    font-size: 1.1rem !important;
+  }
+  
+  .fs-6 {
+    font-size: 0.9rem !important;
+  }
+  
+  .table-responsive {
+    border-radius: 0.375rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  }
+  
+  .text-primary {
+    color: #0d6efd !important;
+  }
+  
+  .text-success {
+    color: #198754 !important;
+  }
+  
+  .text-warning {
+    color: #fd7e14 !important;
+  }
+  
+  .text-danger {
+    color: #dc3545 !important;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Kalshi Markets - BTC/ETH Daily with Betting Analysis</h2>
+
+<!-- Bitcoin Analysis Summary -->
+{% if bitcoin_analysis and not bitcoin_analysis.error %}
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card border-primary">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Bitcoin Market Context</h5>
+        <small>Current Bitcoin analysis to help with your betting decisions</small>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="text-center">
+              <div class="h4 text-primary">${{ "{:,.0f}".format(bitcoin_analysis.current_price) }}</div>
+              <small class="text-muted">Current Price</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-center">
+              <div class="h4 {% if bitcoin_analysis.price_change_24h.change_pct > 0 %}text-success{% elif bitcoin_analysis.price_change_24h.change_pct < 0 %}text-danger{% else %}text-muted{% endif %}">
+                {% if bitcoin_analysis.price_change_24h.change_pct > 0 %}+{% endif %}{{ bitcoin_analysis.price_change_24h.change_pct }}%
+              </div>
+              <small class="text-muted">24h Change</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-center">
+              <div class="h4 {% if bitcoin_analysis.trend_analysis.trend == 'UPTREND' %}text-success{% elif bitcoin_analysis.trend_analysis.trend == 'DOWNTREND' %}text-danger{% else %}text-warning{% endif %}">
+                {% if bitcoin_analysis.trend_analysis.trend == 'UPTREND' %}
+                  📈 UP
+                {% elif bitcoin_analysis.trend_analysis.trend == 'DOWNTREND' %}
+                  📉 DOWN
+                {% else %}
+                  ↔️ SIDE
+                {% endif %}
+              </div>
+              <small class="text-muted">Trend</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-center">
+              <div class="h4 {% if bitcoin_analysis.betting_timing.recommendation == 'STRONG_BUY' %}text-success{% elif bitcoin_analysis.betting_timing.recommendation == 'BUY' %}text-primary{% elif bitcoin_analysis.betting_timing.recommendation == 'HOLD' %}text-warning{% elif bitcoin_analysis.betting_timing.recommendation == 'SELL' %}text-danger{% else %}text-muted{% endif %}">
+                {% if bitcoin_analysis.betting_timing.recommendation == 'STRONG_BUY' %}
+                  🎯 STRONG BUY
+                {% elif bitcoin_analysis.betting_timing.recommendation == 'BUY' %}
+                  👍 BUY
+                {% elif bitcoin_analysis.betting_timing.recommendation == 'HOLD' %}
+                  ⏸️ HOLD
+                {% elif bitcoin_analysis.betting_timing.recommendation == 'SELL' %}
+                  👎 SELL
+                {% else %}
+                  ❓ UNCLEAR
+                {% endif %}
+              </div>
+              <small class="text-muted">Betting Signal</small>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <div class="alert alert-{% if bitcoin_analysis.volatility_analysis.signal == 'LOW_VOLATILITY' %}success{% elif bitcoin_analysis.volatility_analysis.signal == 'HIGH_VOLATILITY' %}danger{% else %}warning{% endif %} mb-0">
+              <h6><i class="fas fa-info-circle me-2"></i>Market Conditions</h6>
+              <p class="mb-1">
+                <strong>Volatility:</strong> {{ bitcoin_analysis.volatility_analysis.volatility }}% 
+                ({{ bitcoin_analysis.volatility_analysis.signal.replace('_', ' ').title() }})
+              </p>
+              <p class="mb-0">
+                <strong>Risk Level:</strong> {{ bitcoin_analysis.risk_level.level }} 
+                ({{ "{:.1f}".format(bitcoin_analysis.risk_level.score) }}/1.0)
+              </p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="alert alert-{% if bitcoin_analysis.betting_timing.recommendation == 'STRONG_BUY' %}success{% elif bitcoin_analysis.betting_timing.recommendation == 'BUY' %}primary{% elif bitcoin_analysis.betting_timing.recommendation == 'HOLD' %}warning{% elif bitcoin_analysis.betting_timing.recommendation == 'SELL' %}danger{% else %}secondary{% endif %} mb-0">
+              <h6><i class="fas fa-lightbulb me-2"></i>Betting Guidance</h6>
+              <p class="mb-1">{{ bitcoin_analysis.betting_timing.action }}</p>
+              <p class="mb-0">
+                <strong>Confidence:</strong> {{ (bitcoin_analysis.betting_timing.confidence * 100)|round(0) }}% | 
+                <strong>Score:</strong> {{ bitcoin_analysis.betting_timing.score }}/4
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<div class="row mb-4">
+  <div class="col-12">
+    {% if kalshi_data.is_mock_data %}
+    <div class="alert alert-warning">
+      <strong>⚠️ Demo Data:</strong> No real Bitcoin/Ethereum markets are currently available on Kalshi. 
+      Showing mock data for demonstration purposes. Real-time crypto prices still work from other APIs.
+      <button type="button" class="btn btn-sm btn-outline-primary ms-2" onclick="location.reload()">Refresh</button>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+      <strong>Real-time Kalshi Data:</strong> This page shows actual Kalshi daily markets for BTC and ETH price predictions.
+      <button type="button" class="btn btn-sm btn-outline-primary ms-2" onclick="location.reload()">Refresh</button>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Bankroll Input -->
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h6 class="mb-0">💰 Kelly Sizing Calculator</h6>
+      </div>
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <label for="bankroll-input" class="form-label">Your Bankroll ($):</label>
+            <input type="number" class="form-control" id="bankroll-input" value="{{ user_bankroll or 1000 }}" min="100" max="100000" step="100">
+            <small class="text-muted">Used for Kelly sizing calculations (default: $1,000)</small>
+          </div>
+          <div class="col-md-6">
+            <button type="button" class="btn btn-primary" onclick="updateKellySizing()">
+              <i class="fas fa-calculator"></i> Update Bet Sizes
+            </button>
+            <small class="text-muted d-block mt-1">Click to recalculate Kelly sizing with your bankroll</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Top Betting Opportunities -->
+{% if kalshi_data.top_opportunities %}
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card border-success">
+      <div class="card-header bg-success text-white">
+        <h5 class="mb-0">🎯 Top Betting Opportunities</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          {% for opportunity in kalshi_data.top_opportunities[:5] %}
+          <div class="col-md-6 mb-3">
+            <div class="card h-100">
+              <div class="card-body">
+                <h6 class="card-title">
+                  {% if opportunity.analysis.recommendation == 'BUY_YES' %}
+                    <span class="badge bg-success fs-6">BUY YES</span>
+                  {% elif opportunity.analysis.recommendation == 'BUY_NO' %}
+                    <span class="badge bg-danger fs-6">BUY NO</span>
+                  {% else %}
+                    <span class="badge bg-secondary fs-6">HOLD</span>
+                  {% endif %}
+                </h6>
+                <p class="card-text small mb-2">{{ opportunity.market.title }}</p>
+                <div class="mb-2">
+                  <strong class="text-dark fs-5">
+                    {% if opportunity.market.strike_price %}
+                      ${{ "{:,.0f}".format(opportunity.market.strike_price) }}
+                    {% else %}
+                      {% set ticker_parts = opportunity.market.ticker.split('-') %}
+                      {% if ticker_parts|length > 2 and ticker_parts[2].startswith('T') %}
+                        {% set strike_from_ticker = ticker_parts[2][1:] %}
+                        ${{ "{:,.0f}".format(strike_from_ticker|float) }}
+                      {% else %}
+                        {{ opportunity.market.ticker }}
+                      {% endif %}
+                    {% endif %}
+                  </strong>
+                  <small class="text-muted d-block">Strike Price</small>
+                </div>
+                <div class="row mb-2">
+                  <div class="col-4">
+                    <div class="text-center">
+                      <strong class="text-{% if opportunity.analysis.confidence >= 60 %}success{% elif opportunity.analysis.confidence >= 40 %}warning{% else %}muted{% endif %} fs-5">
+                        {{ opportunity.analysis.confidence }}%
+                      </strong>
+                      <small class="text-muted d-block">Confidence</small>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="text-center">
+                      <span class="badge bg-{% if opportunity.analysis.value_score > 0 %}success{% elif opportunity.analysis.value_score < 0 %}danger{% else %}secondary{% endif %} fs-6 px-2 py-1">
+                        {{ opportunity.analysis.value_score }}
+                      </span>
+                      <small class="text-muted d-block">Value Score</small>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="text-center">
+                      {% if opportunity.analysis.kelly_sizing %}
+                        <strong class="text-primary fs-5 kelly-percentage" 
+                                data-suggested-contracts="{{ opportunity.analysis.kelly_sizing.suggested_contracts }}"
+                                data-c-eff="{{ opportunity.analysis.kelly_sizing.c_eff }}"
+                                data-kelly-half="{{ opportunity.analysis.kelly_sizing.kelly_half }}">
+                          {{ "%.1f"|format(opportunity.analysis.kelly_sizing.suggested_bet_percentage) }}%
+                        </strong>
+                        <small class="text-muted d-block">Bet Size</small>
+                      {% else %}
+                        <span class="text-muted">-</span>
+                        <small class="text-muted d-block">Bet Size</small>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-2">
+                  <strong class="text-muted small">Reasons:</strong>
+                  <ul class="mb-2 small text-muted">
+                    {% for reason in opportunity.analysis.reasons[:2] %}
+                    <li>{{ reason }}</li>
+                    {% endfor %}
+                  </ul>
+                  
+                  <!-- Kelly Sizing Details -->
+                  {% if opportunity.analysis.kelly_sizing %}
+                  <div class="mb-2">
+                    <strong class="text-muted small">Kelly Sizing:</strong>
+                    <div class="small text-muted">
+                      <div data-kelly-contracts>Suggested: {{ opportunity.analysis.kelly_sizing.suggested_contracts }} contracts</div>
+                      <div data-kelly-amount>(${{ "%.2f"|format(opportunity.analysis.kelly_sizing.suggested_bet_amount) }})</div>
+                      <div>Kelly Fraction: <span class="kelly-percentage" 
+                            data-suggested-contracts="{{ opportunity.analysis.kelly_sizing.suggested_contracts }}"
+                            data-c-eff="{{ opportunity.analysis.kelly_sizing.c_eff }}"
+                            data-kelly-half="{{ opportunity.analysis.kelly_sizing.kelly_half }}">{{ "%.2f"|format(opportunity.analysis.kelly_sizing.kelly_half * 100) }}%</span> (half-Kelly)</div>
+                    </div>
+                  </div>
+                  {% endif %}
+                  
+                  <!-- Time-Sensitive Analysis -->
+                  {% if opportunity.analysis.time_sensitive %}
+                  <div class="mb-2">
+                    <strong class="text-muted small">⏰ Time Analysis:</strong>
+                    <div class="small text-muted">
+                      <div>Time Left: {{ opportunity.analysis.minutes_remaining }} minutes</div>
+                      <div>Urgency: <span class="badge bg-{% if opportunity.analysis.urgency == 'EXTREME' %}danger{% elif opportunity.analysis.urgency == 'HIGH' %}warning{% else %}info{% endif %}">{{ opportunity.analysis.urgency }}</span></div>
+                      {% if opportunity.analysis.volatility_analysis %}
+                        <div>Required Change: {{ "%.2f"|format(opportunity.analysis.volatility_analysis.required_change_pct) }}%</div>
+                        <div>Historical Context: {{ opportunity.analysis.volatility_analysis.historical_context.difficulty }}</div>
+                      {% endif %}
+                    </div>
+                  </div>
+                  {% endif %}
+                  
+                  <!-- Price Guidance -->
+                  {% if opportunity.analysis.price_recommendations %}
+                  <div class="mb-2">
+                    <strong class="text-muted small">Price Guidance:</strong>
+                    <div class="small text-muted">
+                      <div>Current: {{ "%.3f"|format(opportunity.analysis.price_recommendations.current_mid) }}</div>
+                      <div>Max Safe: {{ "%.3f"|format(opportunity.analysis.price_recommendations.max_price) }}</div>
+                      {% if opportunity.analysis.price_recommendations.is_0_97_too_much %}
+                        <div class="text-warning">⚠️ 0.97 is too much! Use limit order</div>
+                      {% endif %}
+                      <div class="text-info">💡 Limit at: {{ "%.3f"|format(opportunity.analysis.price_recommendations.recommended_limit) }}</div>
+                      {% if opportunity.analysis.price_recommendations.time_urgency %}
+                        <div class="text-{% if opportunity.analysis.price_recommendations.time_urgency == 'EXTREME' %}danger{% elif opportunity.analysis.price_recommendations.time_urgency == 'HIGH' %}warning{% else %}muted{% endif %}">
+                          {{ opportunity.analysis.price_recommendations.price_guidance }}
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                  {% endif %}
+                  
+                  <!-- Bitcoin Context -->
+                  {% if bitcoin_analysis and not bitcoin_analysis.error %}
+                  <div class="mb-2">
+                    <strong class="text-muted small">₿ Bitcoin Context:</strong>
+                    <div class="small text-muted">
+                      <div class="d-flex justify-content-between">
+                        <span>Current: ${{ "{:,.0f}".format(bitcoin_analysis.current_price) }}</span>
+                        <span class="{% if bitcoin_analysis.price_change_24h.change_pct > 0 %}text-success{% elif bitcoin_analysis.price_change_24h.change_pct < 0 %}text-danger{% else %}text-muted{% endif %}">
+                          {% if bitcoin_analysis.price_change_24h.change_pct > 0 %}+{% endif %}{{ bitcoin_analysis.price_change_24h.change_pct }}%
+                        </span>
+                      </div>
+                      <div class="d-flex justify-content-between">
+                        <span>Trend: 
+                          {% if bitcoin_analysis.trend_analysis.trend == 'UPTREND' %}
+                            📈 UP ({{ (bitcoin_analysis.trend_analysis.strength * 100)|round(0) }}%)
+                          {% elif bitcoin_analysis.trend_analysis.trend == 'DOWNTREND' %}
+                            📉 DOWN ({{ (bitcoin_analysis.trend_analysis.strength * 100)|round(0) }}%)
+                          {% else %}
+                            ↔️ SIDEWAYS
+                          {% endif %}
+                        </span>
+                        <span class="{% if bitcoin_analysis.volatility_analysis.signal == 'LOW_VOLATILITY' %}text-success{% elif bitcoin_analysis.volatility_analysis.signal == 'HIGH_VOLATILITY' %}text-danger{% else %}text-warning{% endif %}">
+                          {{ bitcoin_analysis.volatility_analysis.volatility }}% vol
+                        </span>
+                      </div>
+                      <div class="mt-1">
+                        <span class="badge bg-{% if bitcoin_analysis.betting_timing.recommendation == 'STRONG_BUY' %}success{% elif bitcoin_analysis.betting_timing.recommendation == 'BUY' %}primary{% elif bitcoin_analysis.betting_timing.recommendation == 'HOLD' %}warning{% elif bitcoin_analysis.betting_timing.recommendation == 'SELL' %}danger{% else %}secondary{% endif %} fs-6">
+                          {% if bitcoin_analysis.betting_timing.recommendation == 'STRONG_BUY' %}
+                            🎯 STRONG BUY
+                          {% elif bitcoin_analysis.betting_timing.recommendation == 'BUY' %}
+                            👍 BUY
+                          {% elif bitcoin_analysis.betting_timing.recommendation == 'HOLD' %}
+                            ⏸️ HOLD
+                          {% elif bitcoin_analysis.betting_timing.recommendation == 'SELL' %}
+                            👎 SELL
+                          {% else %}
+                            ❓ UNCLEAR
+                          {% endif %}
+                        </span>
+                        <span class="text-muted ms-2">{{ (bitcoin_analysis.betting_timing.confidence * 100)|round(0) }}% confidence</span>
+                      </div>
+                    </div>
+                  </div>
+                  {% endif %}
+                  
+                  <a href="https://kalshi.com/markets/{{ opportunity.market.ticker.split('-')[0].lower() }}/{% if 'bitcoin' in opportunity.market.title.lower() or 'btc' in opportunity.market.ticker.lower() %}bitcoin-price-abovebelow{% else %}ethereum-price-abovebelow{% endif %}/{{ opportunity.market.event_ticker }}" 
+                     target="_blank" 
+                     class="btn btn-sm btn-success"
+                     title="Go to Kalshi Market: {{ opportunity.market.ticker }}">
+                    <i class="fas fa-external-link-alt"></i> Place Bet
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Market Summary -->
+{% if kalshi_data.btc_summary or kalshi_data.eth_summary %}
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">📊 Market Summary</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          {% if kalshi_data.btc_summary %}
+          <div class="col-md-6">
+            <h6>Bitcoin Markets</h6>
+            <ul class="list-unstyled">
+              <li><strong>Total Markets:</strong> {{ kalshi_data.btc_summary.total_markets }}</li>
+              <li><strong>Opportunities:</strong> {{ kalshi_data.btc_summary.opportunities }}</li>
+              <li><strong>Avg Confidence:</strong> {{ kalshi_data.btc_summary.avg_confidence }}%</li>
+              <li><strong>Total Volume:</strong> {{ "{:,}".format(kalshi_data.btc_summary.total_volume) }}</li>
+            </ul>
+          </div>
+          {% endif %}
+          {% if kalshi_data.eth_summary %}
+          <div class="col-md-6">
+            <h6>Ethereum Markets</h6>
+            <ul class="list-unstyled">
+              <li><strong>Total Markets:</strong> {{ kalshi_data.eth_summary.total_markets }}</li>
+              <li><strong>Opportunities:</strong> {{ kalshi_data.eth_summary.opportunities }}</li>
+              <li><strong>Avg Confidence:</strong> {{ kalshi_data.eth_summary.avg_confidence }}%</li>
+              <li><strong>Total Volume:</strong> {{ "{:,}".format(kalshi_data.eth_summary.total_volume) }}</li>
+            </ul>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- BTC Daily Markets -->
+{% if kalshi_data.btc_daily %}
+<div class="row mb-4">
+  <div class="col-12">
+    <h4>Bitcoin (BTC) Daily Markets</h4>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Ticker</th>
+            <th>Title</th>
+            <th class="text-center">Strike Price<br><small class="text-muted">($)</small></th>
+            <th>Time Left</th>
+            <th>Status</th>
+            <th class="text-center">Yes Bid<br><small class="text-muted">(¢)</small></th>
+            <th class="text-center">Yes Ask<br><small class="text-muted">(¢)</small></th>
+            <th class="text-center">Mid Price<br><small class="text-muted">(¢ / %)</small></th>
+            <th class="text-center">Volume<br><small class="text-muted">(trades)</small></th>
+            <th class="text-center">Open Interest<br><small class="text-muted">(contracts)</small></th>
+            <th>Betting Analysis</th>
+            <th class="text-center">Price & Kelly Guidance<br><small class="text-muted">(Max Safe / Limit / Kelly %)</small></th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for market in kalshi_data.btc_daily %}
+          <tr>
+            <td><code>{{ market.ticker }}</code></td>
+            <td>{{ market.title }}</td>
+            <td class="text-center">
+              {% if market.strike_price %}
+                <strong class="text-dark fs-5">${{ "{:,.0f}".format(market.strike_price) }}</strong>
+                <br><small class="text-muted">Strike</small>
+              {% else %}
+                <span class="text-muted">-</span>
+              {% endif %}
+            </td>
+            <td>
+              <span class="badge bg-{{ 'warning' if 'h' in market.time_left or 'd' in market.time_left else 'success' if market.time_left != 'Closed' else 'secondary' }}">
+                {{ market.time_left }}
+              </span>
+            </td>
+            <td>
+              <span class="badge bg-{{ 'success' if market.status == 'open' else 'secondary' }}">
+                {{ market.status }}
+              </span>
+            </td>
+            <td class="text-center">
+              {% if market.yes_bid %}
+                <span class="badge bg-light text-dark">{{ "%.1f"|format(market.yes_bid) }}¢</span>
+              {% else %}
+                <span class="text-muted">-</span>
+              {% endif %}
+            </td>
+            <td class="text-center">
+              {% if market.yes_ask %}
+                <span class="badge bg-light text-dark">{{ "%.1f"|format(market.yes_ask) }}¢</span>
+              {% else %}
+                <span class="text-muted">-</span>
+              {% endif %}
+            </td>
+            <td class="text-center">
+              {% if market.yes_mid %}
+                <strong class="text-primary fs-5">{{ "%.1f"|format(market.yes_mid) }}¢</strong>
+                <br><small class="text-muted">{{ "%.1f"|format(market.yes_mid * 100) }}%</small>
+              {% else %}
+                <span class="text-muted">-</span>
+              {% endif %}
+            </td>
+            <td class="text-center">
+              <span class="badge bg-info text-white">{{ "{:,}".format(market.volume) }}</span>
+            </td>
+            <td class="text-center">
+              <span class="badge bg-secondary">{{ "{:,}".format(market.open_interest) }}</span>
+            </td>
+            <td class="text-center">
+              {% if market.betting_analysis %}
+                <div class="mb-2">
+                  {% if market.betting_analysis.recommendation == 'BUY_YES' %}
+                    <span class="badge bg-success fs-6">BUY YES</span>
+                  {% elif market.betting_analysis.recommendation == 'BUY_NO' %}
+                    <span class="badge bg-danger fs-6">BUY NO</span>
+                  {% else %}
+                    <span class="badge bg-secondary fs-6">HOLD</span>
+                  {% endif %}
+                </div>
+                <div class="mb-1">
+                  <strong class="text-{% if market.betting_analysis.confidence >= 60 %}success{% elif market.betting_analysis.confidence >= 40 %}warning{% else %}muted{% endif %}">
+                    {{ market.betting_analysis.confidence }}%
+                  </strong>
+                  <small class="text-muted d-block">Confidence</small>
+                </div>
+                <div>
+                  <span class="badge bg-{% if market.betting_analysis.value_score > 0 %}success{% elif market.betting_analysis.value_score < 0 %}danger{% else %}secondary{% endif %} fs-6 px-2 py-1">
+                    {{ market.betting_analysis.value_score }}
+                  </span>
+                  <small class="text-muted d-block">Value</small>
+                </div>
+              {% else %}
+                <span class="text-muted">-</span>
+              {% endif %}
+            </td>
+            <td class="text-center">
+              {% if market.betting_analysis and market.betting_analysis.price_recommendations %}
+                <div class="small">
+                  <div><strong>Max Safe:</strong> {{ "%.3f"|format(market.betting_analysis.price_recommendations.max_price) }}</div>
+                  <div><strong>Limit:</strong> {{ "%.3f"|format(market.betting_analysis.price_recommendations.recommended_limit) }}</div>
+                  {% if market.betting_analysis.kelly_sizing %}
+                    <div class="mt-1">
+                      <div><strong>Kelly:</strong> {{ "%.1f"|format(market.betting_analysis.kelly_sizing.suggested_bet_percentage) }}%</div>
+                      <div><strong>Contracts:</strong> {{ market.betting_analysis.kelly_sizing.suggested_contracts }}</div>
+                    </div>
+                  {% endif %}
+                  {% if market.betting_analysis.price_recommendations.is_0_97_too_much %}
+                    <div class="text-warning small">⚠️ 0.97 too high</div>
+                  {% endif %}
+                </div>
+              {% else %}
+                <span class="text-muted">-</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="https://kalshi.com/markets/{{ market.ticker.split('-')[0].lower() }}/{% if 'bitcoin' in market.title.lower() or 'btc' in market.ticker.lower() %}bitcoin-price-abovebelow{% else %}ethereum-price-abovebelow{% endif %}/{{ market.event_ticker }}" 
+                 target="_blank" 
+                 class="btn btn-sm btn-outline-primary"
+                 title="Go to Kalshi Market: {{ market.ticker }}">
+                <i class="fas fa-external-link-alt"></i> Bet on Kalshi
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="alert alert-warning">
+      <strong>No BTC hourly markets found.</strong> This could be due to API issues or no active BTC hourly markets.
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- ETH Daily Markets -->
+{% if kalshi_data.eth_daily %}
+<div class="row mb-4">
+  <div class="col-12">
+    <h4>Ethereum (ETH) Daily Markets</h4>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Ticker</th>
+            <th>Title</th>
+            <th class="text-center">Strike Price<br><small class="text-muted">($)</small></th>
+            <th>Time Left</th>
+            <th>Status</th>
+            <th class="text-center">Yes Bid<br><small class="text-muted">(¢)</small></th>
+            <th class="text-center">Yes Ask<br><small class="text-muted">(¢)</small></th>
+            <th class="text-center">Mid Price<br><small class="text-muted">(¢ / %)</small></th>
+            <th class="text-center">Volume<br><small class="text-muted">(trades)</small></th>
+            <th class="text-center">Open Interest<br><small class="text-muted">(contracts)</small></th>
+            <th>Betting Analysis</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for market in kalshi_data.eth_daily %}
+          <tr>
+            <td><code>{{ market.ticker }}</code></td>
+            <td>{{ market.title }}</td>
+            <td class="text-center">
+              {% if market.strike_price %}
+                <strong class="text-dark fs-5">${{ "{:,.0f}".format(market.strike_price) }}</strong>
+                <br><small class="text-muted">Strike</small>
+              {% else %}
+                <span class="text-muted">-</span>
+              {% endif %}
+            </td>
+            <td>
+              <span class="badge bg-{{ 'warning' if 'h' in market.time_left or 'd' in market.time_left else 'success' if market.time_left != 'Closed' else 'secondary' }}">
+                {{ market.time_left }}
+              </span>
+            </td>
+            <td>
+              <span class="badge bg-{{ 'success' if market.status == 'open' else 'secondary' }}">
+                {{ market.status }}
+              </span>
+            </td>
+            <td class="text-center">
+              {% if market.yes_bid %}
+                <span class="badge bg-light text-dark">{{ "%.1f"|format(market.yes_bid) }}¢</span>
+              {% else %}
+                <span class="text-muted">-</span>
+              {% endif %}
+            </td>
+            <td class="text-center">
+              {% if market.yes_ask %}
+                <span class="badge bg-light text-dark">{{ "%.1f"|format(market.yes_ask) }}¢</span>
+              {% else %}
+                <span class="text-muted">-</span>
+              {% endif %}
+            </td>
+            <td class="text-center">
+              {% if market.yes_mid %}
+                <strong class="text-primary fs-5">{{ "%.1f"|format(market.yes_mid) }}¢</strong>
+                <br><small class="text-muted">{{ "%.1f"|format(market.yes_mid * 100) }}%</small>
+              {% else %}
+                <span class="text-muted">-</span>
+              {% endif %}
+            </td>
+            <td class="text-center">
+              <span class="badge bg-info text-white">{{ "{:,}".format(market.volume) }}</span>
+            </td>
+            <td class="text-center">
+              <span class="badge bg-secondary">{{ "{:,}".format(market.open_interest) }}</span>
+            </td>
+            <td class="text-center">
+              {% if market.betting_analysis %}
+                <div class="mb-2">
+                  {% if market.betting_analysis.recommendation == 'BUY_YES' %}
+                    <span class="badge bg-success fs-6">BUY YES</span>
+                  {% elif market.betting_analysis.recommendation == 'BUY_NO' %}
+                    <span class="badge bg-danger fs-6">BUY NO</span>
+                  {% else %}
+                    <span class="badge bg-secondary fs-6">HOLD</span>
+                  {% endif %}
+                </div>
+                <div class="mb-1">
+                  <strong class="text-{% if market.betting_analysis.confidence >= 60 %}success{% elif market.betting_analysis.confidence >= 40 %}warning{% else %}muted{% endif %}">
+                    {{ market.betting_analysis.confidence }}%
+                  </strong>
+                  <small class="text-muted d-block">Confidence</small>
+                </div>
+                <div>
+                  <span class="badge bg-{% if market.betting_analysis.value_score > 0 %}success{% elif market.betting_analysis.value_score < 0 %}danger{% else %}secondary{% endif %} fs-6 px-2 py-1">
+                    {{ market.betting_analysis.value_score }}
+                  </span>
+                  <small class="text-muted d-block">Value</small>
+                </div>
+              {% else %}
+                <span class="text-muted">-</span>
+              {% endif %}
+            </td>
+            <td class="text-center">
+              {% if market.betting_analysis and market.betting_analysis.price_recommendations %}
+                <div class="small">
+                  <div><strong>Max Safe:</strong> {{ "%.3f"|format(market.betting_analysis.price_recommendations.max_price) }}</div>
+                  <div><strong>Limit:</strong> {{ "%.3f"|format(market.betting_analysis.price_recommendations.recommended_limit) }}</div>
+                  {% if market.betting_analysis.kelly_sizing %}
+                    <div class="mt-1">
+                      <div><strong>Kelly:</strong> {{ "%.1f"|format(market.betting_analysis.kelly_sizing.suggested_bet_percentage) }}%</div>
+                      <div><strong>Contracts:</strong> {{ market.betting_analysis.kelly_sizing.suggested_contracts }}</div>
+                    </div>
+                  {% endif %}
+                  {% if market.betting_analysis.price_recommendations.is_0_97_too_much %}
+                    <div class="text-warning small">⚠️ 0.97 too high</div>
+                  {% endif %}
+                </div>
+              {% else %}
+                <span class="text-muted">-</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="https://kalshi.com/markets/{{ market.ticker.split('-')[0].lower() }}/{% if 'bitcoin' in market.title.lower() or 'btc' in market.ticker.lower() %}bitcoin-price-abovebelow{% else %}ethereum-price-abovebelow{% endif %}/{{ market.event_ticker }}" 
+                 target="_blank" 
+                 class="btn btn-sm btn-outline-primary"
+                 title="Go to Kalshi Market: {{ market.ticker }}">
+                <i class="fas fa-external-link-alt"></i> Bet on Kalshi
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="alert alert-warning">
+      <strong>No ETH daily markets found.</strong> This could be due to API issues or no active ETH daily markets.
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">How to Use This Data</h5>
+        <ul class="mb-0">
+          <li><strong>Yes Bid/Ask:</strong> Current bid and ask prices for "Yes" contracts (price will be above strike)</li>
+          <li><strong>Mid Price:</strong> Average of bid and ask - useful for fair value estimation</li>
+          <li><strong>Volume:</strong> Total trading volume for the market</li>
+          <li><strong>Open Interest:</strong> Number of outstanding contracts</li>
+          <li><strong>Last Trade:</strong> Most recent trade price</li>
+          <li><strong>Daily Markets:</strong> These markets predict if BTC/ETH will be above a certain price at 5pm EDT or 11pm EDT</li>
+        </ul>
+        <p class="mt-2 mb-0">
+          <small class="text-muted">
+            Use these daily market prices in the <a href="{{ url_for('prices') }}">BTC/ETH Probability Helper</a> 
+            to get more accurate probability estimates and Kelly sizing for daily predictions.
+          </small>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Auto-refresh every 60 seconds
+setInterval(function() {
+    location.reload();
+}, 60000);
+
+// Kelly sizing update function
+function updateKellySizing() {
+    const bankroll = parseFloat(document.getElementById('bankroll-input').value);
+    if (!bankroll || bankroll < 100) {
+        alert('Please enter a valid bankroll amount (minimum $100)');
+        return;
+    }
+    
+    // Reload the page with the new bankroll parameter
+    const currentUrl = new URL(window.location);
+    currentUrl.searchParams.set('bankroll', bankroll);
+    window.location.href = currentUrl.toString();
+}
+
+// Add data attributes to Kelly sizing elements for dynamic updates
+document.addEventListener('DOMContentLoaded', function() {
+    const kellyElements = document.querySelectorAll('.kelly-percentage');
+    kellyElements.forEach(element => {
+        const suggestedContracts = parseFloat(element.getAttribute('data-suggested-contracts') || '0');
+        const cEff = parseFloat(element.getAttribute('data-c-eff') || '0.01');
+        const kellyHalf = parseFloat(element.getAttribute('data-kelly-half') || '0');
+        
+        element.setAttribute('data-kelly-suggested', suggestedContracts);
+        element.setAttribute('data-kelly-ceff', cEff);
+        element.setAttribute('data-kelly-half', kellyHalf);
+    });
+});
+</script>
+{% endblock %}

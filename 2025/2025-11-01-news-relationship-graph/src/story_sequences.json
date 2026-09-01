@@ -1,0 +1,399 @@
+{
+  "total_sequences": 34,
+  "type_breakdown": {
+    "causes_chain": 5,
+    "follows_up": 18,
+    "context_for": 9,
+    "causal_chain": 2
+  },
+  "story_arcs": [
+    [
+      "ART-0257",
+      "ART-0258"
+    ],
+    [
+      "ART-0111",
+      "ART-0121"
+    ],
+    [
+      "ART-0221",
+      "ART-0228"
+    ]
+  ],
+  "top_sequences": [
+    {
+      "source": "ART-0007",
+      "target": "ART-0025",
+      "type": "follows_up",
+      "strength": 0.9,
+      "reason": "The AP's condemnation of the Trump administration's actions regarding Oval Office access leads directly to the indefinite ban discussed in the second article.",
+      "source_title": "AP statement on Oval Office access",
+      "target_title": "The White House bans the AP indefinitely over the use of \u2018Gulf of Mexico\u2019",
+      "source_date": "2/11/25",
+      "target_date": "2/14/25"
+    },
+    {
+      "source": "ART-0111",
+      "target": "ART-0121",
+      "type": "follows_up",
+      "strength": 0.9,
+      "reason": "Both articles discuss federal judges ordering the reinstatement of unlawfully terminated probationary employees, highlighting a legal challenge to the Trump administration's layoffs.",
+      "source_title": "Judge orders Trump administration to reinstate thousands of fired employees at VA, Defense Department and other agencies",
+      "target_title": "A 2nd judge orders thousands of fired federal employees temporarily reinstated",
+      "source_date": "3/13/25",
+      "target_date": "3/13/25"
+    },
+    {
+      "source": "ART-0257",
+      "target": "ART-0258",
+      "type": "follows_up",
+      "strength": 0.9,
+      "reason": "Trump's announcement of control over the skies over Iran leads directly into his demand for Iran's unconditional surrender.",
+      "source_title": "Trump says 'we now have complete and total control of the skies over Iran'",
+      "target_title": "Trump demands Iran\u2019s \u2018unconditional surrender\u2019 as strikes continue",
+      "source_date": "6/18/25",
+      "target_date": "6/18/25"
+    },
+    {
+      "source": "ART-0258",
+      "target": "ART-0259",
+      "type": "follows_up",
+      "strength": 0.9,
+      "reason": "Trump's demand for Iran's surrender is directly referenced in the subsequent article detailing military actions against Iran.",
+      "source_title": "Trump demands Iran\u2019s \u2018unconditional surrender\u2019 as strikes continue",
+      "target_title": "Israel announces wave of strikes on Tehran after Trump demands Iran\u2019s \u2018unconditional surrender\u2019 \u2013 latest updates",
+      "source_date": "6/18/25",
+      "target_date": "6/18/25"
+    },
+    {
+      "source": "ART-0285",
+      "target": "ART-0286",
+      "type": "follows_up",
+      "strength": 0.9,
+      "reason": "Trump's declaration of a crime emergency is directly followed by his announcement of a federal takeover of the DC police.",
+      "source_title": "DECLARING A CRIME EMERGENCY IN THE DISTRICT OF COLUMBIA",
+      "target_title": "Trump announces federal takeover of DC police and mobilization of National Guard",
+      "source_date": "8/11/25",
+      "target_date": "8/11/25"
+    },
+    {
+      "source": "ART-0345",
+      "target": "ART-0392",
+      "type": "causal_chain",
+      "strength": 0.9,
+      "reason": "The government shutdown (ART-0345) leads to the halting of SNAP benefits (ART-0392), illustrating the direct consequences of the funding impasse.",
+      "source_title": "Portland National Guard deployment bumped by administrative delays, will cost at least $3.8 million",
+      "target_title": "SNAP benefits to halt in some states amid government shutdown",
+      "source_date": "10/1/25",
+      "target_date": "10/21/25"
+    },
+    {
+      "source": "ART-0002",
+      "target": "ART-0014",
+      "type": "causes_chain",
+      "strength": 0.8,
+      "reason": "The restoration of health information webpages ordered by Judge Bates (ART-0002) led to the reinstatement of datasets by health agencies (ART-0014).",
+      "source_title": "Judge orders HHS, CDC and FDA to restore deleted webpages with health information",
+      "target_title": "Fed Health agencies restore webpages and datasets folowing judges order",
+      "source_date": "2/11/25",
+      "target_date": "2/12/25"
+    },
+    {
+      "source": "ART-0004",
+      "target": "ART-0185",
+      "type": "causes_chain",
+      "strength": 0.8,
+      "reason": "Musk's warning about Social Security fraud may have led to increased scrutiny and disruptions at the Social Security Administration, resulting in website crashes.",
+      "source_title": "Elon Musk Issues Major Social Security Warning",
+      "target_title": "Social Security Website Crashes as DOGE-Linked Disruption at the Agency Continues",
+      "source_date": "2/11/25",
+      "target_date": "4/2/25"
+    },
+    {
+      "source": "ART-0022",
+      "target": "ART-0035",
+      "type": "causes_chain",
+      "strength": 0.8,
+      "reason": "OPM's directive to fire probationary employees led to significant layoffs at NASA, which was part of the broader restructuring effort.",
+      "source_title": "OPM directs agencies to fire government workers still on probation",
+      "target_title": "NASA layoffs: Up to 10% of workforce affected by Trump administration job cuts",
+      "source_date": "2/13/25",
+      "target_date": "2/18/25"
+    },
+    {
+      "source": "ART-0121",
+      "target": "ART-0140",
+      "type": "follows_up",
+      "strength": 0.8,
+      "reason": "The second judge's order for reinstatement follows the first judge's ruling, showing a continued legal battle over the layoffs.",
+      "source_title": "A 2nd judge orders thousands of fired federal employees temporarily reinstated",
+      "target_title": "Trump administration asks Supreme Court to halt judge\u2019s order to rehire probationary federal workers",
+      "source_date": "3/13/25",
+      "target_date": "3/24/25"
+    },
+    {
+      "source": "ART-0180",
+      "target": "ART-0184",
+      "type": "causes_chain",
+      "strength": 0.8,
+      "reason": "The review of contracts and grants with Harvard due to antisemitism concerns led to the Trump administration's suspension of research grants to Princeton, as both actions are part of a broader investigation into antisemitism at universities.",
+      "source_title": "Federal agencies reviewing nearly $9 billion in contracts, grants with Harvard over antisemitism concerns",
+      "target_title": "Trump administration suspends dozens of research grants to Princeton",
+      "source_date": "3/31/25",
+      "target_date": "4/1/25"
+    },
+    {
+      "source": "ART-0221",
+      "target": "ART-0228",
+      "type": "causes_chain",
+      "strength": 0.8,
+      "reason": "China's halt on Boeing orders due to tariffs is a direct consequence of the trade tensions that led to stock market declines as warned by Powell.",
+      "source_title": "China halts all Boeing jet orders",
+      "target_title": "Stocks slide as Powell warns of impact of tariffs on the economy",
+      "source_date": "4/15/25",
+      "target_date": "4/16/25"
+    },
+    {
+      "source": "ART-0279",
+      "target": "ART-0288",
+      "type": "follows_up",
+      "strength": 0.8,
+      "reason": "Paxton's comments about jailing Democrats who left Texas are followed by the news of Texas Democrats returning after successfully stalling redistricting efforts.",
+      "source_title": "Paxton: Democrats who don\u2019t return to Texas \u2018hopefully\u2019 will be jailed",
+      "target_title": "Texas Democrats to return after governor ends special session that included redistricting, sources say",
+      "source_date": "8/8/25",
+      "target_date": "8/12/25"
+    },
+    {
+      "source": "ART-0321",
+      "target": "ART-0324",
+      "type": "follows_up",
+      "strength": 0.8,
+      "reason": "The campaign against disparaging Charlie Kirk leads to the suspension of Jimmy Kimmel's show, illustrating the consequences of political backlash against media figures.",
+      "source_title": "House Republicans threaten to cancel anyone who disparages Charlie Kirk",
+      "target_title": "ABC suspends Jimmy Kimmel\u2019s late-night show indefinitely over his remarks about Charlie Kirk\u2019s death",
+      "source_date": "9/16/25",
+      "target_date": "9/16/25"
+    },
+    {
+      "source": "ART-0410",
+      "target": "ART-0392",
+      "type": "follows_up",
+      "strength": 0.8,
+      "reason": "The expiration of food benefits for millions (ART-0410) is a direct follow-up to the impacts of the government shutdown on SNAP benefits (ART-0392).",
+      "source_title": "Food benefits set to expire for 41 million people as US shutdown continues",
+      "target_title": "SNAP benefits to halt in some states amid government shutdown",
+      "source_date": "10/26/25",
+      "target_date": "10/21/25"
+    },
+    {
+      "source": "ART-0342",
+      "target": "ART-0355",
+      "type": "follows_up",
+      "strength": 0.8,
+      "reason": "The shutdown mentioned in ART-0342 is a direct continuation of the funding impasse discussed in ART-0355, detailing the ongoing impact of the shutdown on federal workers.",
+      "source_title": "Government shutdown live updates as up to 750,000 federal workers face furlough",
+      "target_title": "Illinois sues the Trump administration to block National Guard deployment, joining Oregon",
+      "source_date": "10/1/25",
+      "target_date": "10/6/25"
+    },
+    {
+      "source": "ART-0172",
+      "target": "ART-0011",
+      "type": "context_for",
+      "strength": 0.7,
+      "reason": "The Smithsonian's changes under Trump's orders in ART-0172 reflect the authoritarian tendencies discussed in ART-0011.",
+      "source_title": "\u2018It reminds you of a fascist state\u2019: Smithsonian Institution braces for Trump rewrite of US history",
+      "target_title": "The Path to American Authoritarianism",
+      "source_date": "3/30/25",
+      "target_date": "2/11/25"
+    },
+    {
+      "source": "ART-0023",
+      "target": "ART-0035",
+      "type": "follows_up",
+      "strength": 0.7,
+      "reason": "The layoffs at the Education Department initiated by the Trump administration are part of the same broader strategy affecting NASA.",
+      "source_title": "Federal employee layoffs begin at Education Department as DOGE tries to shrink government",
+      "target_title": "NASA layoffs: Up to 10% of workforce affected by Trump administration job cuts",
+      "source_date": "2/13/25",
+      "target_date": "2/18/25"
+    },
+    {
+      "source": "ART-0228",
+      "target": "ART-0366",
+      "type": "follows_up",
+      "strength": 0.7,
+      "reason": "The stock market's reaction to tariffs is part of a broader narrative that includes Trump's announcement of new tariffs on Chinese goods.",
+      "source_title": "Stocks slide as Powell warns of impact of tariffs on the economy",
+      "target_title": "Trump threatens economic retaliation on China amid dispute over critical rare earths",
+      "source_date": "4/16/25",
+      "target_date": "10/10/25"
+    },
+    {
+      "source": "ART-0247",
+      "target": "ART-0268",
+      "type": "follows_up",
+      "strength": 0.7,
+      "reason": "The concerns raised by Senate Republicans about Trump's dinner with meme coin investors relate to the subsequent actions taken to keep Alina Habba as the U.S. attorney, indicating ongoing political maneuvering.",
+      "source_title": "Senate Republicans raise red flags about Trump's private dinner with his meme coin holders",
+      "target_title": "Trump administration clears way to keep Alina Habba as New Jersey\u2019s top federal prosecutor",
+      "source_date": "5/2/25",
+      "target_date": "7/25/25"
+    },
+    {
+      "source": "ART-0310",
+      "target": "ART-0382",
+      "type": "context_for",
+      "strength": 0.7,
+      "reason": "Trump's warning about federal intervention in Chicago provides context for the administration's request to deploy the National Guard, illustrating escalating tensions over immigration enforcement.",
+      "source_title": "President Trump warns that Chicago is 'about to find out why it's called the Department of WAR' in incendiary Truth Social post",
+      "target_title": "Trump administration asks Supreme Court to allow deployment of National Guard in Chicago area",
+      "source_date": "9/6/25",
+      "target_date": "10/17/25"
+    },
+    {
+      "source": "ART-0013",
+      "target": "ART-0031",
+      "type": "causal_chain",
+      "strength": 0.6,
+      "reason": "The cancellation of contracts for the Institute of Education Sciences (ART-0013) contributes to funding cuts impacting teacher training programs (ART-0031).",
+      "source_title": "$900 Million in Institute of Education Sciences Contracts Axed",
+      "target_title": "Bridgeport, Stramford lose millions over federal dei standards",
+      "source_date": "2/12/25",
+      "target_date": "2/15/25"
+    },
+    {
+      "source": "ART-0126",
+      "target": "ART-0054",
+      "type": "context_for",
+      "strength": 0.6,
+      "reason": "The actions taken by Musk's DOGE to seize control of the U.S. Institute of Peace provide context for the need for heightened security measures, as indicated by the deputization of Musk's private security detail.",
+      "source_title": "Elon Musk\u2019s DOGE Uses Police to Seize Independent Nonprofit",
+      "target_title": "Elon Musk\u2019s private security detail gets deputized by US Marshals Service",
+      "source_date": "3/18/25",
+      "target_date": "2/20/25"
+    },
+    {
+      "source": "ART-0194",
+      "target": "ART-0197",
+      "type": "follows_up",
+      "strength": 0.6,
+      "reason": "The demands issued to Harvard regarding federal funding are a continuation of the administration's anti-DEI policy, which culminated in the Supreme Court's ruling on teacher training grants.",
+      "source_title": "Trump administration demands changes in letter to Harvard University as review of federal funding is underway",
+      "target_title": "Supreme Court allows Trump to terminate teacher training grants as part of anti-DEI policy",
+      "source_date": "4/4/25",
+      "target_date": "4/4/25"
+    },
+    {
+      "source": "ART-0206",
+      "target": "ART-0222",
+      "type": "follows_up",
+      "strength": 0.6,
+      "reason": "The funding freeze for Cornell and Northwestern universities is part of the same broader context of funding cuts affecting Harvard, which also led to research halts.",
+      "source_title": "Trump administration halts $1 billion in federal funding for Cornell, $790 million for Northwestern",
+      "target_title": "Leading Harvard scientist ordered to halt research in funding freeze",
+      "source_date": "4/9/25",
+      "target_date": "4/15/25"
+    },
+    {
+      "source": "ART-0215",
+      "target": "ART-0216",
+      "type": "follows_up",
+      "strength": 0.6,
+      "reason": "The inability of the Trump administration to locate Kilmar Abrego Garcia (ART-0215) follows the military border surge announcement (ART-0216), indicating ongoing issues in immigration enforcement.",
+      "source_title": "Trump DoJ unable to tell court where man wrongly deported to El Salvador is",
+      "target_title": "Trump\u2019s military border surge takes shape along U.S.-Mexico frontier",
+      "source_date": "4/11/25",
+      "target_date": "4/11/25"
+    },
+    {
+      "source": "ART-0235",
+      "target": "ART-0252",
+      "type": "context_for",
+      "strength": 0.6,
+      "reason": "The extension granted to the DOJ in the deportation case provides context for the broader crackdown on immigration, including the suspension of visa interviews for foreign students.",
+      "source_title": "After a scathing rebuke, judge grants DOJ an extension in deportation case",
+      "target_title": "US stops scheduling visa interviews for foreign students while it expands social media vetting",
+      "source_date": "4/23/25",
+      "target_date": "5/27/25"
+    },
+    {
+      "source": "ART-0270",
+      "target": "ART-0274",
+      "type": "follows_up",
+      "strength": 0.6,
+      "reason": "The reassignment of Air Marshals to deportation duties is a follow-up to the ongoing deportation cases and reflects the administration's broader immigration enforcement strategy.",
+      "source_title": "Air Marshals Shift to Deportation Duty",
+      "target_title": "Appeals court tosses judge\u2019s contempt finding against Trump administration in prison deportations",
+      "source_date": "8/1/25",
+      "target_date": "8/8/25"
+    },
+    {
+      "source": "ART-0386",
+      "target": "ART-0391",
+      "type": "context_for",
+      "strength": 0.6,
+      "reason": "Trump's bizarre video response to the protests provides context for the political climate and the partisan tensions leading to the redistricting efforts discussed in the following article.",
+      "source_title": "Donald Trump Posts Bizarre AI Video of Himself in a \u2018King Trump\u2019 Fighter Jet Bombing NYC Protestors With Streams of Brown Liquid",
+      "target_title": "Republicans are poised to add a seventh GOP seat in Donald Trump\u2019s redistricting battle",
+      "source_date": "10/18/25",
+      "target_date": "10/21/25"
+    },
+    {
+      "source": "ART-0073",
+      "target": "ART-0068",
+      "type": "context_for",
+      "strength": 0.5,
+      "reason": "ART-0073 provides context for the rejection of diversity programs in ART-0068, illustrating the broader trend of tech companies responding to political pressures.",
+      "source_title": "Here are all the tech companies rolling back DEI or still committed to it \u2014 so far",
+      "target_title": "Apple shareholders reject proposal to scrap company\u2019s diversity programs",
+      "source_date": "2/26/2025",
+      "target_date": "2/25/25"
+    },
+    {
+      "source": "ART-0116",
+      "target": "ART-0120",
+      "type": "context_for",
+      "strength": 0.5,
+      "reason": "The disbanding of UMass's biomedical graduate class (ART-0116) provides context for the confusion surrounding student loan repayment plans (ART-0120) due to funding issues.",
+      "source_title": "UMass disbands its entering biomed graduate class over Trump funding chaos",
+      "target_title": "Some student loan repayment plans have been suspended. Here\u2019s what borrowers should know",
+      "source_date": "3/14/25",
+      "target_date": "3/14/25"
+    },
+    {
+      "source": "ART-0275",
+      "target": "ART-0293",
+      "type": "follows_up",
+      "strength": 0.5,
+      "reason": "The appeals court ruling on deportations ties into the broader context of the State Department's actions regarding visa revocations, indicating ongoing legal and administrative challenges.",
+      "source_title": "Appeals court tosses judge's contempt order in case over Venezuelans sent to El Salvador",
+      "target_title": "US State Department revokes 6,000 student visas",
+      "source_date": "8/8/25",
+      "target_date": "8/18/25"
+    },
+    {
+      "source": "ART-0322",
+      "target": "ART-0323",
+      "type": "context_for",
+      "strength": 0.5,
+      "reason": "The investigation into the hanging of Demartravion Reed provides context for the State Department's actions regarding visa denials related to the celebration of Charlie Kirk's death.",
+      "source_title": "A Black student was found hanging from a tree. Police say there\u2019s no sign of foul play",
+      "target_title": "State Department is denying visas to those who 'celebrate' Charlie Kirk's death, Rubio says",
+      "source_date": "9/17/25",
+      "target_date": "9/16/25"
+    },
+    {
+      "source": "ART-0208",
+      "target": "ART-0209",
+      "type": "context_for",
+      "strength": 0.4,
+      "reason": "The escalating trade tensions and tariffs provide context for the humanitarian crisis in Gaza, as both are influenced by U.S. foreign policy under Trump.",
+      "source_title": "China retaliates with new 84% tariffs as global markets fall",
+      "target_title": "UN finds 36 Israeli strikes on Gaza killed only women and children",
+      "source_date": "4/9/25",
+      "target_date": "4/11/25"
+    }
+  ]
+}

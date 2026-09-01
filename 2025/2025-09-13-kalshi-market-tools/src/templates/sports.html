@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2 class="mb-3">Sports — Live In‑Game Helper</h2>
+<form method="post" class="row gy-3">
+  <div class="col-sm-3">
+    <label class="form-label">League</label>
+    <select name="league" class="form-select">
+      <option value="NFL">NFL</option>
+      <option value="NBA">NBA</option>
+    </select>
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Kalshi Price (Team A — YES)</label>
+    <input type="number" name="price" step="0.01" min="0.01" max="0.99" class="form-control" placeholder="0.62" required>
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Contracts</label>
+    <input type="number" name="contracts" min="1" step="1" class="form-control" value="1">
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Role</label>
+    <select name="role" class="form-select">
+      <option value="maker">Maker</option>
+      <option value="taker">Taker</option>
+    </select>
+  </div>
+
+  <div class="col-sm-3">
+    <label class="form-label">Product Type</label>
+    <select name="product_type" class="form-select">
+      <option value="sports">Sports (maker fee applies)</option>
+      <option value="general">General</option>
+    </select>
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Score Margin (A − B)</label>
+    <input type="number" name="margin" step="1" class="form-control" placeholder="+14 for your example" required>
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Minutes Remaining</label>
+    <input type="number" name="minutes_remaining" step="0.1" min="0" class="form-control" placeholder="e.g., 12.0" required>
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Possession</label>
+    <select name="possession" class="form-select">
+      <option value="none">None/Unknown</option>
+      <option value="A">Team A has ball</option>
+      <option value="B">Team B has ball</option>
+    </select>
+  </div>
+  <div class="col-sm-3">
+    <label class="form-label">Pre‑game Spread (A)</label>
+    <input type="number" name="pre_spread" step="0.5" class="form-control" placeholder="-3.5 means A was favored">
+  </div>
+
+  <div class="col-12">
+    <button class="btn btn-primary">Estimate & Evaluate</button>
+  </div>
+</form>
+
+{% if result %}
+<hr class="my-4">
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title">Win Probability (toy)</h5>
+        <p class="display-6">{{ '%.1f'|format(result.p_star*100) }}%</p>
+        <p class="text-secondary small mb-0">This is a simple placeholder. Replace with your calibrated model.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title">Fees, EV & Kelly</h5>
+        <p class="mb-1"><strong>Entry fee (total):</strong> ${{ '%.2f'|format(result.fee_total) }}</p>
+        <p class="mb-1"><strong>Fee per contract:</strong> ${{ '%.2f'|format(result.fee_per_contract) }}</p>
+        <p class="mb-1"><strong>EV per contract (hold):</strong> ${{ '%.4f'|format(result.ev_per_contract) }}</p>
+        <p class="mb-1"><strong>Kelly (full / ½):</strong> {{ '%.2f'|format(result.kelly_full*100) }}% / {{ '%.2f'|format(result.kelly_half*100) }}%</p>
+        <p class="mb-0 text-secondary small">Inputs: {{ result.inputs }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
