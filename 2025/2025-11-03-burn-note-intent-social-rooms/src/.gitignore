@@ -1,0 +1,6 @@
+/target
+**/*.rs.bk
+/.vscode/.cmake
+/.idea
+.DS_Store
+*.db

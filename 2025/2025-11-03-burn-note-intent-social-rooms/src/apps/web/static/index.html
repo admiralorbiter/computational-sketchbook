@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burn Note - Anonymous Topic Rooms</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.5rem;
+        }
+        
+        #session-controls {
+            display: flex;
+            align-items: center;
+        }
+        
+        .burn-btn, .burn-btn-small {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .burn-btn:hover, .burn-btn-small:hover {
+            background: #c0392b;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .view {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            min-height: 500px;
+        }
+        
+        /* Intent Entry Styles */
+        .intent-entry {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 3rem 0;
+        }
+        
+        .intent-subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        
+        .intent-input-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        #intent-input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+        
+        #intent-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .match-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+        
+        .match-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .intent-options {
+            margin-bottom: 1rem;
+        }
+        
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .dev-controls {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .text-btn {
+            background: none;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 0.9rem;
+        }
+        
+        .text-btn:hover {
+            color: #764ba2;
+        }
+        
+        /* Matched Results Styles */
+        .matched-room-card {
+            border: 2px solid #667eea;
+            background: #f8f9ff;
+        }
+        
+        .match-reason {
+            color: #666;
+            font-size: 0.9rem;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+        
+        .fit-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 0.75rem;
+        }
+        
+        .fit-badge.excellent {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+        }
+        
+        .fit-badge.good {
+            background: linear-gradient(135deg, #667eea, #5a67d8);
+            color: white;
+        }
+        
+        .fit-badge.moderate {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .new-room-notice {
+            background: linear-gradient(135deg, #fef5e7, #fdebd0);
+            border: 2px solid #f39c12;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .new-room-notice h3 {
+            color: #e67e22;
+            margin-bottom: 0.5rem;
+        }
+        
+        .new-room-notice p {
+            color: #7f8c8d;
+        }
+        
+        /* Alternatives */
+        .alternatives-toggle {
+            width: 100%;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        
+        .alternatives-toggle:hover {
+            background: #eeeeee;
+        }
+        
+        #alternatives-container {
+            margin-top: 1rem;
+        }
+        
+        #rooms-view h2 {
+            margin-bottom: 1.5rem;
+            color: #667eea;
+        }
+        
+        #rooms-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .room-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .room-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+        
+        .room-card h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .room-meta {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .join-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+        
+        .join-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .join-btn:active {
+            transform: translateY(0);
+        }
+        
+        #room-view {
+            display: none;
+        }
+        
+        .room-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .room-header h2 {
+            color: #667eea;
+        }
+        
+        .session-info {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .back-btn {
+            background: #e0e0e0;
+            color: #333;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .back-btn:hover {
+            background: #d0d0d0;
+        }
+        
+        #messages-container {
+            height: 400px;
+            overflow-y: auto;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
+        
+        .message {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .sender-mask {
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .message-time {
+            color: #999;
+        }
+        
+        .message-body {
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .empty {
+            text-align: center;
+            color: #999;
+            padding: 2rem;
+        }
+        
+        .message-input-area {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        #message-input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+        
+        #message-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .send-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .send-btn:hover {
+            opacity: 0.9;
+        }
+        
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            padding: 1rem;
+        }
+        
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .tab {
+            background: none;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        .tab:hover {
+            color: #667eea;
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Posts Styles */
+        .post-form {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
+        
+        .post-form textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            margin-bottom: 1rem;
+        }
+        
+        .post-form textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .post-form button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .post-form button:hover {
+            opacity: 0.9;
+        }
+        
+        #posts-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .post {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+        
+        .post:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+        
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .post-body {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            white-space: pre-wrap;
+        }
+        
+        .post-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .reply-count {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .reply-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .reply-btn:hover {
+            background: #5a67d8;
+        }
+        
+        .replies-section {
+            margin-top: 1rem;
+            padding-left: 2rem;
+            border-left: 3px solid #e0e0e0;
+        }
+        
+        .reply {
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .reply-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .reply-body {
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .reply-form {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        
+        .reply-form textarea {
+            width: 100%;
+            min-height: 60px;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            resize: vertical;
+            margin-bottom: 0.5rem;
+        }
+        
+        .reply-form button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        /* Highlights Styles */
+        .highlights-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .highlight-form {
+            background: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        .highlight-form h4 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+        
+        .highlight-form input[type="text"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+        
+        .highlight-form input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        #highlights-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .highlight-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+        
+        .highlight-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+        
+        .highlight-card.auto {
+            border-left: 4px solid #48bb78;
+        }
+        
+        .highlight-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.75rem;
+        }
+        
+        .highlight-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .highlight-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        
+        .highlight-auto-badge {
+            display: inline-block;
+            background: #48bb78;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .highlight-reference {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .highlight-reference-link {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        .highlight-reference-link:hover {
+            text-decoration: underline;
+        }
+        
+        .highlight-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .highlight-delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        
+        .highlight-delete-btn:hover {
+            background: #c0392b;
+        }
+        
+        /* Resources Styles */
+        .resources-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .resource-form {
+            background: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        .resource-form h4 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+        
+        .resource-form input[type="text"],
+        .resource-form input[type="url"],
+        .resource-form textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            margin-bottom: 1rem;
+            box-sizing: border-box;
+        }
+        
+        .resource-form input[type="text"]:focus,
+        .resource-form input[type="url"]:focus,
+        .resource-form textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .resource-form textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        /* Form button styles */
+        .highlight-form button,
+        .resource-form button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        
+        .highlight-form button:first-of-type,
+        .resource-form button:first-of-type {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .highlight-form button:first-of-type:hover,
+        .resource-form button:first-of-type:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        .highlight-form button:last-of-type,
+        .resource-form button:last-of-type {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .highlight-form button:last-of-type:hover,
+        .resource-form button:last-of-type:hover {
+            background: #d0d0d0;
+        }
+        
+        #resources-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .resource-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+        
+        .resource-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+        
+        .resource-card.verified {
+            border-left: 4px solid #48bb78;
+        }
+        
+        /* Member List Styles */
+        .member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .member-item:hover {
+            background: #f0f0f0;
+        }
+        
+        .member-item:hover .whisper-btn {
+            display: block;
+        }
+        
+        .member-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .whisper-btn {
+            display: none;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        
+        .whisper-btn:hover {
+            background: #5a67d8;
+        }
+        
+        /* Whisper Styles */
+        .whisper-item {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .whisper-item:hover {
+            border-color: #667eea;
+        }
+        
+        .whisper-item.active {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        
+        .whisper-item.pending {
+            border-left: 4px solid #fbbf24;
+        }
+        
+        .whisper-item.active-state {
+            border-left: 4px solid #48bb78;
+        }
+        
+        .whisper-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .whisper-participant {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .whisper-state {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            background: #e0e0e0;
+        }
+        
+        .whisper-state.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .whisper-state.active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .whisper-expiry {
+            font-size: 0.75rem;
+            color: #666;
+        }
+        
+        .whisper-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .whisper-action-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .whisper-action-btn.accept {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .whisper-action-btn.decline {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .expiry-warning {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
+        .resource-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.75rem;
+        }
+        
+        .resource-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .resource-url {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9rem;
+            word-break: break-all;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .resource-url:hover {
+            text-decoration: underline;
+        }
+        
+        .resource-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .resource-verified-badge {
+            display: inline-block;
+            background: #48bb78;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .resource-category-badge {
+            display: inline-block;
+            background: #e0e0e0;
+            color: #333;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+        
+        .resource-description {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #e0e0e0;
+            color: #555;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .resource-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .resource-edit-btn,
+        .resource-delete-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        
+        .resource-edit-btn:hover {
+            background: #5568d3;
+        }
+        
+        .resource-delete-btn {
+            background: #e74c3c;
+        }
+        
+        .resource-delete-btn:hover {
+            background: #c0392b;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            #rooms-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Burn Note</h1>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <p style="color: #666; font-size: 0.9rem; margin: 0;">Anonymous topic-based chat rooms</p>
+            <div id="session-controls" style="display: none;">
+                <button class="burn-btn" onclick="burnSession()" title="Delete session and leave room">
+                    🔥 Burn Session
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Intent Entry View (Home) -->
+        <div id="intent-view" class="view">
+            <div class="intent-entry">
+                <h2>What would you like to talk about?</h2>
+                <p class="intent-subtitle">Tell us your interest and we'll find the right room</p>
+                
+                <div class="intent-input-container">
+                    <input 
+                        type="text" 
+                        id="intent-input" 
+                        placeholder="I'm currently interested in..."
+                        maxlength="500"
+                    />
+                    <button class="match-btn" onclick="matchIntent()">Find Rooms</button>
+                </div>
+                
+                <div class="intent-options">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="include-sensitive" />
+                        <span>Include sensitive topics</span>
+                    </label>
+                </div>
+                
+                <!-- Dev only: Browse all rooms link -->
+                <div class="dev-controls">
+                    <button class="text-btn" onclick="showRoomsView()">Browse all rooms (dev)</button>
+                </div>
+            </div>
+            
+            <!-- Matched Results Container (hidden initially) -->
+            <div id="matched-results" style="display: none;">
+                <button class="back-btn" onclick="showIntentEntry()">← New Search</button>
+                <h3>Top Matches</h3>
+                <div id="matched-rooms-container"></div>
+                
+                <div id="alternatives-section" style="display: none;">
+                    <button class="alternatives-toggle" onclick="toggleAlternatives()">
+                        <span id="alternatives-toggle-text">Show more options</span>
+                        <span id="alternatives-count"></span>
+                    </button>
+                    <div id="alternatives-container" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rooms View -->
+        <div id="rooms-view" class="view" style="display: none;">
+            <button class="back-btn" onclick="showIntentView()">← Back to Intent</button>
+            <h2>Available Rooms</h2>
+            <div id="rooms-container">
+                <p>Loading rooms...</p>
+            </div>
+        </div>
+        
+        <!-- Room View -->
+        <div id="room-view" class="view">
+            <div class="room-header">
+                <div>
+                    <button class="back-btn" onclick="leaveRoom()">← Leave Room</button>
+                    <h2 id="room-title" style="margin-top: 0.5rem;"></h2>
+                    <p class="session-info" id="session-mask"></p>
+                </div>
+                <button class="burn-btn-small" onclick="burnSession()" title="Burn session">
+                    🔥 Burn
+                </button>
+            </div>
+            
+            <!-- Tab Navigation -->
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('live')" id="tab-live">Live</button>
+                <button class="tab" onclick="switchTab('posts')" id="tab-posts">Posts</button>
+                <button class="tab" onclick="switchTab('highlights')" id="tab-highlights">Highlights</button>
+                <button class="tab" onclick="switchTab('resources')" id="tab-resources">Resources</button>
+                <button class="tab" onclick="switchTab('whispers')" id="tab-whispers">Whispers</button>
+            </div>
+            
+            <!-- Live Tab Content -->
+            <div id="tab-live-content" class="tab-content active">
+                <div style="display: flex; gap: 1rem;">
+                    <div style="flex: 1;">
+                        <div id="messages-container">
+                            <p class="empty">Loading messages...</p>
+                        </div>
+                        
+                        <div class="message-input-area">
+                            <input 
+                                type="text" 
+                                id="message-input" 
+                                placeholder="Type your message..."
+                                maxlength="4096"
+                            />
+                            <button class="send-btn" onclick="sendMessage()">Send</button>
+                        </div>
+                    </div>
+                    <div style="width: 200px; background: #f9f9f9; padding: 1rem; border-radius: 8px;">
+                        <h4 style="margin-bottom: 0.5rem; font-size: 0.9rem;">Active Members</h4>
+                        <div id="members-list">
+                            <p style="font-size: 0.85rem; color: #999;">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Posts Tab Content -->
+            <div id="tab-posts-content" class="tab-content">
+                <div class="post-form">
+                    <textarea 
+                        id="post-input" 
+                        placeholder="Ask a question or share something..."
+                        maxlength="4096"
+                    ></textarea>
+                    <button onclick="createPost()">Create Post</button>
+                </div>
+                
+                <div id="posts-container">
+                    <p class="empty">Loading posts...</p>
+                </div>
+            </div>
+            
+            <!-- Highlights Tab Content -->
+            <div id="tab-highlights-content" class="tab-content">
+                <div class="highlights-header">
+                    <h3 style="margin: 0;">Room Highlights</h3>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <button class="text-btn" onclick="toggleLast24h()" id="last24h-toggle" style="font-size: 0.9rem;">
+                            Skim last 24h
+                        </button>
+                        <button class="reply-btn" onclick="toggleCreateHighlightForm()">Create Highlight</button>
+                    </div>
+                </div>
+                
+                <div id="create-highlight-form" class="highlight-form" style="display: none;">
+                    <h4>Create Highlight</h4>
+                    <input 
+                        type="text" 
+                        id="highlight-title-input" 
+                        placeholder="Enter highlight title..."
+                        maxlength="200"
+                    />
+                    <div style="margin-top: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem; color: #666;">
+                            Reference (optional):
+                        </label>
+                        <select id="highlight-reference-type" style="width: 100%; padding: 0.5rem; border: 2px solid #e0e0e0; border-radius: 6px; margin-bottom: 0.5rem;">
+                            <option value="standalone">Standalone (no reference)</option>
+                            <option value="post">Reference a Post</option>
+                            <option value="message">Reference a Message</option>
+                        </select>
+                        <input 
+                            type="text" 
+                            id="highlight-reference-id-input" 
+                            placeholder="Enter message/post ID..."
+                            style="width: 100%; padding: 0.5rem; border: 2px solid #e0e0e0; border-radius: 6px; display: none;"
+                        />
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                        <button onclick="submitHighlight()">Create</button>
+                        <button onclick="toggleCreateHighlightForm()">Cancel</button>
+                    </div>
+                </div>
+                
+                <div id="highlights-container">
+                    <p class="empty">Loading highlights...</p>
+                </div>
+            </div>
+            
+            <!-- Resources Tab Content -->
+            <div id="tab-resources-content" class="tab-content">
+                <div class="resources-header">
+                    <h3 style="margin: 0;">Room Resources</h3>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <select id="resource-category-filter" onchange="filterResourcesByCategory()" style="padding: 0.5rem; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 0.9rem;">
+                            <option value="">All Categories</option>
+                        </select>
+                        <button class="reply-btn" onclick="toggleCreateResourceForm()">Create Resource</button>
+                    </div>
+                </div>
+                
+                <div id="create-resource-form" class="resource-form" style="display: none;">
+                    <h4>Create Resource</h4>
+                    <input 
+                        type="text" 
+                        id="resource-title-input" 
+                        placeholder="Enter resource title..."
+                        maxlength="200"
+                        required
+                    />
+                    <input 
+                        type="url" 
+                        id="resource-url-input" 
+                        placeholder="https://example.com"
+                        required
+                    />
+                    <textarea 
+                        id="resource-description-input" 
+                        placeholder="Optional description..."
+                        maxlength="500"
+                        rows="3"
+                    ></textarea>
+                    <input 
+                        type="text" 
+                        id="resource-category-input" 
+                        placeholder="Optional category (e.g., health, legal, tools, guides)..."
+                        maxlength="50"
+                        list="category-suggestions"
+                    />
+                    <datalist id="category-suggestions">
+                        <option value="health">health</option>
+                        <option value="legal">legal</option>
+                        <option value="tools">tools</option>
+                        <option value="guides">guides</option>
+                        <option value="support">support</option>
+                        <option value="education">education</option>
+                    </datalist>
+                    <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                        <button onclick="submitResource()">Create</button>
+                        <button onclick="toggleCreateResourceForm()">Cancel</button>
+                    </div>
+                </div>
+                
+                <div id="resources-container">
+                    <p class="empty">Loading resources...</p>
+                </div>
+            </div>
+            
+            <!-- Whispers Tab Content -->
+            <div id="tab-whispers-content" class="tab-content">
+                <div style="display: flex; gap: 1rem; height: 600px;">
+                    <div style="width: 300px; background: #f9f9f9; padding: 1rem; border-radius: 8px; overflow-y: auto;">
+                        <h3 style="margin-bottom: 1rem;">Whispers</h3>
+                        <div id="whispers-list">
+                            <p class="empty">No whispers yet</p>
+                        </div>
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; background: white; border-radius: 8px; border: 1px solid #e0e0e0;">
+                        <div id="whisper-chat-header" style="padding: 1rem; border-bottom: 2px solid #e0e0e0; display: none;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h4 id="whisper-chat-recipient" style="margin: 0;"></h4>
+                                    <p id="whisper-chat-expiry" style="margin: 0.25rem 0 0 0; font-size: 0.85rem; color: #666;"></p>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="text-btn" onclick="extendCurrentWhisper()" id="extend-whisper-btn" style="font-size: 0.85rem;">Extend</button>
+                                    <button class="text-btn" onclick="endCurrentWhisper()" style="font-size: 0.85rem; color: #e74c3c;">End</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="whisper-chat-messages" style="flex: 1; overflow-y: auto; padding: 1rem;">
+                            <p class="empty">Select a whisper to view messages</p>
+                        </div>
+                        <div id="whisper-chat-input-area" style="padding: 1rem; border-top: 2px solid #e0e0e0; display: none;">
+                            <div class="message-input-area">
+                                <input 
+                                    type="text" 
+                                    id="whisper-message-input" 
+                                    placeholder="Type your whisper..."
+                                    maxlength="4096"
+                                />
+                                <button class="send-btn" onclick="sendWhisperMessage()">Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/static/app.js"></script>
+</body>
+</html>
