@@ -1,0 +1,608 @@
+{% extends "base.html" %}
+
+{% block title %}Producer Theory Lab - Econ Explorer{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Story and Controls Column -->
+        <div class="col-12 col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h2 class="card-title text-primary mb-4">🏭 The Producer's Challenge</h2>
+                    
+                    <!-- Progress Bar -->
+                    <div class="progress mb-4" style="height: 8px;">
+                        <div class="progress-bar bg-success" id="storyProgress" role="progressbar" style="width: 20%"></div>
+                    </div>
+
+                    <!-- Chapter 1: Meet Alex -->
+                    <div class="story-chapter active" id="chapter1">
+                        <h4 class="text-success">Chapter 1: Meet Alex 📖</h4>
+                        <p>Meet Alex, a passionate entrepreneur who just opened a small bakery. Alex needs to understand how to produce efficiently to stay competitive in the market.</p>
+                        
+                        <div class="controls-section">
+                            <h6>Production Parameters</h6>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <label for="labor1" class="form-label">Labor (workers)</label>
+                                    <input type="number" class="form-control" id="labor1" value="5" min="1" max="20" step="1">
+                                </div>
+                                <div class="col-6">
+                                    <label for="capital1" class="form-label">Capital (machines)</label>
+                                    <input type="number" class="form-control" id="capital1" value="3" min="1" max="10" step="1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="navigation-buttons">
+                            <button class="btn btn-primary" onclick="nextChapter()">Next Chapter →</button>
+                        </div>
+                    </div>
+
+                    <!-- Chapter 2: Production Function -->
+                    <div class="story-chapter" id="chapter2">
+                        <h4 class="text-success">Chapter 2: The Production Function 🏗️</h4>
+                        <p>Alex discovers that output depends on both labor and capital. The Cobb-Douglas production function shows how these inputs combine to create bread.</p>
+                        
+                        <div class="controls-section">
+                            <h6>Production Technology</h6>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <label for="labor2" class="form-label">Labor (workers)</label>
+                                    <input type="number" class="form-control" id="labor2" value="5" min="1" max="20" step="1">
+                                </div>
+                                <div class="col-6">
+                                    <label for="capital2" class="form-label">Capital (machines)</label>
+                                    <input type="number" class="form-control" id="capital2" value="3" min="1" max="10" step="1">
+                                </div>
+                                <div class="col-6">
+                                    <label for="laborExponent2" class="form-label">Labor Exponent (α)</label>
+                                    <input type="number" class="form-control" id="laborExponent2" value="0.6" min="0.1" max="0.9" step="0.1">
+                                </div>
+                                <div class="col-6">
+                                    <label for="capitalExponent2" class="form-label">Capital Exponent (β)</label>
+                                    <input type="number" class="form-control" id="capitalExponent2" value="0.4" min="0.1" max="0.9" step="0.1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="navigation-buttons">
+                            <button class="btn btn-outline-secondary" onclick="previousChapter()">← Previous</button>
+                            <button class="btn btn-primary" onclick="nextChapter()">Next Chapter →</button>
+                        </div>
+                    </div>
+
+                    <!-- Chapter 3: Cost Structure -->
+                    <div class="story-chapter" id="chapter3">
+                        <h4 class="text-success">Chapter 3: Understanding Costs 💰</h4>
+                        <p>Alex learns about fixed costs (rent, equipment) and variable costs (wages, ingredients). Total cost depends on input prices and quantities.</p>
+                        
+                        <div class="controls-section">
+                            <h6>Cost Parameters</h6>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <label for="wage3" class="form-label">Wage Rate ($/worker)</label>
+                                    <input type="number" class="form-control" id="wage3" value="15" min="10" max="30" step="1">
+                                </div>
+                                <div class="col-6">
+                                    <label for="rentalRate3" class="form-label">Rental Rate ($/machine)</label>
+                                    <input type="number" class="form-control" id="rentalRate3" value="50" min="20" max="100" step="5">
+                                </div>
+                                <div class="col-6">
+                                    <label for="fixedCost3" class="form-label">Fixed Cost ($)</label>
+                                    <input type="number" class="form-control" id="fixedCost3" value="200" min="100" max="500" step="25">
+                                </div>
+                                <div class="col-6">
+                                    <label for="labor3" class="form-label">Labor (workers)</label>
+                                    <input type="number" class="form-control" id="labor3" value="5" min="1" max="20" step="1">
+                                </div>
+                                <div class="col-6">
+                                    <label for="capital3" class="form-label">Capital (machines)</label>
+                                    <input type="number" class="form-control" id="capital3" value="3" min="1" max="10" step="1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="navigation-buttons">
+                            <button class="btn btn-outline-secondary" onclick="previousChapter()">← Previous</button>
+                            <button class="btn btn-primary" onclick="nextChapter()">Next Chapter →</button>
+                        </div>
+                    </div>
+
+                    <!-- Chapter 4: Profit Maximization -->
+                    <div class="story-chapter" id="chapter4">
+                        <h4 class="text-success">Chapter 4: Maximizing Profit 🎯</h4>
+                        <p>Alex discovers the profit-maximizing rule: hire workers and machines until the value of their marginal product equals their cost.</p>
+                        
+                        <div class="controls-section">
+                            <h6>Market Conditions</h6>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <label for="outputPrice4" class="form-label">Output Price ($/unit)</label>
+                                    <input type="number" class="form-control" id="outputPrice4" value="5" min="2" max="15" step="0.5">
+                                </div>
+                                <div class="col-6">
+                                    <label for="wage4" class="form-label">Wage Rate ($/worker)</label>
+                                    <input type="number" class="form-control" id="wage4" value="15" min="10" max="30" step="1">
+                                </div>
+                                <div class="col-6">
+                                    <label for="rentalRate4" class="form-label">Rental Rate ($/machine)</label>
+                                    <input type="number" class="form-control" id="rentalRate4" value="50" min="20" max="100" step="5">
+                                </div>
+                                <div class="col-6">
+                                    <label for="fixedCost4" class="form-label">Fixed Cost ($)</label>
+                                    <input type="number" class="form-control" id="fixedCost4" value="200" min="100" max="500" step="25">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="navigation-buttons">
+                            <button class="btn btn-outline-secondary" onclick="previousChapter()">← Previous</button>
+                            <button class="btn btn-primary" onclick="nextChapter()">Next Chapter →</button>
+                        </div>
+                    </div>
+
+                    <!-- Chapter 5: Comparative Statics -->
+                    <div class="story-chapter" id="chapter5">
+                        <h4 class="text-success">Chapter 5: How Changes Affect Production 🔄</h4>
+                        <p>Alex explores how changes in wages, rental rates, and output prices affect the optimal production decision and profitability.</p>
+                        
+                        <div class="controls-section">
+                            <h6>Scenario Analysis</h6>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <label for="outputPrice5" class="form-label">Output Price ($/unit)</label>
+                                    <input type="number" class="form-control" id="outputPrice5" value="5" min="2" max="15" step="0.5">
+                                </div>
+                                <div class="col-6">
+                                    <label for="wage5" class="form-label">Wage Rate ($/worker)</label>
+                                    <input type="number" class="form-control" id="wage5" value="15" min="10" max="30" step="1">
+                                </div>
+                                <div class="col-6">
+                                    <label for="rentalRate5" class="form-label">Rental Rate ($/machine)</label>
+                                    <input type="number" class="form-control" id="rentalRate5" value="50" min="20" max="100" step="5">
+                                </div>
+                                <div class="col-6">
+                                    <label for="fixedCost5" class="form-label">Fixed Cost ($)</label>
+                                    <input type="number" class="form-control" id="fixedCost5" value="200" min="100" max="500" step="25">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="controls-section">
+                            <h6>Advanced Features</h6>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="showIsoquants" checked>
+                                <label class="form-check-label" for="showIsoquants">Show Isoquants</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="showIsocosts" checked>
+                                <label class="form-check-label" for="showIsocosts">Show Isocost Lines</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="showExpansionPath">
+                                <label class="form-check-label" for="showExpansionPath">Show Expansion Path</label>
+                            </div>
+                        </div>
+
+                        <div class="navigation-buttons">
+                            <button class="btn btn-outline-secondary" onclick="previousChapter()">← Previous</button>
+                            <button class="btn btn-success" onclick="completeStory()">Complete Journey! 🎉</button>
+                        </div>
+                    </div>
+
+                    <!-- Self-Check Question -->
+                    <div class="self-check-question mt-4">
+                        <h6>Self-Check Question:</h6>
+                        <p>When the wage rate increases, what happens to the optimal amount of labor hired?</p>
+                        <div class="btn-group-vertical w-100" role="group">
+                            <input type="radio" class="btn-check" name="q1" id="q1a" value="a">
+                            <label class="btn btn-outline-primary" for="q1a">a) It increases</label>
+                            
+                            <input type="radio" class="btn-check" name="q1" id="q1b" value="b">
+                            <label class="btn btn-outline-primary" for="q1b">b) It decreases</label>
+                            
+                            <input type="radio" class="btn-check" name="q1" id="q1c" value="c">
+                            <label class="btn btn-outline-primary" for="q1c">c) It stays the same</label>
+                        </div>
+                        <button class="btn btn-outline-info btn-sm mt-2" onclick="checkAnswers()">Check Answer</button>
+                        <div id="q1feedback" class="mt-2" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visualization and Outcomes Column -->
+        <div class="col-12 col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Production Analysis</h5>
+                    
+                    <!-- Chart Container -->
+                    <div class="chart-wrap">
+                        <div id="producerPlot"></div>
+                    </div>
+
+                    <!-- Outcomes Table -->
+                    <div class="table-responsive mt-3">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Output (Q)</td>
+                                    <td id="output">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Cost</td>
+                                    <td id="totalCost">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Revenue</td>
+                                    <td id="totalRevenue">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Profit</td>
+                                    <td id="profit">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Average Cost</td>
+                                    <td id="averageCost">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Marginal Cost</td>
+                                    <td id="marginalCost">-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+        let currentChapter = 1;
+        const totalChapters = 5;
+
+        function nextChapter() {
+            if (currentChapter < totalChapters) {
+                document.getElementById(`chapter${currentChapter}`).classList.remove('active');
+                currentChapter++;
+                document.getElementById(`chapter${currentChapter}`).classList.add('active');
+                updateProgress();
+                updateControls();
+                updateVisualization();
+            }
+        }
+
+        function previousChapter() {
+            if (currentChapter > 1) {
+                document.getElementById(`chapter${currentChapter}`).classList.remove('active');
+                currentChapter--;
+                document.getElementById(`chapter${currentChapter}`).classList.add('active');
+                updateProgress();
+                updateControls();
+                updateVisualization();
+            }
+        }
+
+        function updateProgress() {
+            const progress = (currentChapter / totalChapters) * 100;
+            document.getElementById('storyProgress').style.width = progress + '%';
+        }
+
+        function updateControls() {
+            // Update input values based on current chapter
+            if (currentChapter >= 2) {
+                document.getElementById('labor2').value = document.getElementById('labor1').value;
+                document.getElementById('capital2').value = document.getElementById('capital1').value;
+            }
+            if (currentChapter >= 3) {
+                document.getElementById('labor3').value = document.getElementById('labor2').value;
+                document.getElementById('capital3').value = document.getElementById('capital2').value;
+            }
+            if (currentChapter >= 4) {
+                document.getElementById('outputPrice4').value = 5;
+                document.getElementById('wage4').value = document.getElementById('wage3').value;
+                document.getElementById('rentalRate4').value = document.getElementById('rentalRate3').value;
+                document.getElementById('fixedCost4').value = document.getElementById('fixedCost3').value;
+            }
+            if (currentChapter >= 5) {
+                document.getElementById('outputPrice5').value = document.getElementById('outputPrice4').value;
+                document.getElementById('wage5').value = document.getElementById('wage4').value;
+                document.getElementById('rentalRate5').value = document.getElementById('rentalRate4').value;
+                document.getElementById('fixedCost5').value = document.getElementById('fixedCost4').value;
+            }
+        }
+
+        function getCurrentParams() {
+            const params = {
+                labor: 5,
+                capital: 3,
+                laborExponent: 0.6,
+                capitalExponent: 0.4,
+                wage: 15,
+                rentalRate: 50,
+                fixedCost: 200,
+                outputPrice: 5
+            };
+
+            if (currentChapter >= 1) {
+                params.labor = parseInt(document.getElementById('labor1').value) || params.labor;
+                params.capital = parseInt(document.getElementById('capital1').value) || params.capital;
+            }
+
+            if (currentChapter >= 2) {
+                params.labor = parseInt(document.getElementById('labor2').value) || params.labor;
+                params.capital = parseInt(document.getElementById('capital2').value) || params.capital;
+                params.laborExponent = parseFloat(document.getElementById('laborExponent2').value) || params.laborExponent;
+                params.capitalExponent = parseFloat(document.getElementById('capitalExponent2').value) || params.capitalExponent;
+            }
+
+            if (currentChapter >= 3) {
+                params.wage = parseFloat(document.getElementById('wage3').value) || params.wage;
+                params.rentalRate = parseFloat(document.getElementById('rentalRate3').value) || params.rentalRate;
+                params.fixedCost = parseFloat(document.getElementById('fixedCost3').value) || params.fixedCost;
+                params.labor = parseInt(document.getElementById('labor3').value) || params.labor;
+                params.capital = parseInt(document.getElementById('capital3').value) || params.capital;
+            }
+
+            if (currentChapter >= 4) {
+                params.outputPrice = parseFloat(document.getElementById('outputPrice4').value) || params.outputPrice;
+                params.wage = parseFloat(document.getElementById('wage4').value) || params.wage;
+                params.rentalRate = parseFloat(document.getElementById('rentalRate4').value) || params.rentalRate;
+                params.fixedCost = parseFloat(document.getElementById('fixedCost4').value) || params.fixedCost;
+            }
+
+            if (currentChapter >= 5) {
+                params.outputPrice = parseFloat(document.getElementById('outputPrice5').value) || params.outputPrice;
+                params.wage = parseFloat(document.getElementById('wage5').value) || params.wage;
+                params.rentalRate = parseFloat(document.getElementById('rentalRate5').value) || params.rentalRate;
+                params.fixedCost = parseFloat(document.getElementById('fixedCost5').value) || params.fixedCost;
+            }
+
+            return params;
+        }
+
+        function calculateProduction(params) {
+            const { labor, capital, laborExponent, capitalExponent } = params;
+            
+            // Cobb-Douglas production function: Q = L^α × K^β
+            const output = Math.pow(labor, laborExponent) * Math.pow(capital, capitalExponent);
+            
+            // Calculate costs
+            const variableCost = params.wage * labor + params.rentalRate * capital;
+            const totalCost = variableCost + params.fixedCost;
+            
+            // Calculate revenue and profit
+            const totalRevenue = output * params.outputPrice;
+            const profit = totalRevenue - totalCost;
+            
+            // Calculate average and marginal costs
+            const averageCost = totalCost / output;
+            const marginalCost = (params.wage / (laborExponent * Math.pow(capital, capitalExponent))) + 
+                                (params.rentalRate / (capitalExponent * Math.pow(labor, laborExponent)));
+
+            return {
+                output,
+                totalCost,
+                totalRevenue,
+                profit,
+                averageCost,
+                marginalCost
+            };
+        }
+
+        function updateOutcomesTable(production, params) {
+            document.getElementById('output').textContent = production.output.toFixed(2);
+            document.getElementById('totalCost').textContent = `$${production.totalCost.toFixed(2)}`;
+            document.getElementById('totalRevenue').textContent = `$${production.totalRevenue.toFixed(2)}`;
+            document.getElementById('profit').textContent = `$${production.profit.toFixed(2)}`;
+            document.getElementById('averageCost').textContent = `$${production.averageCost.toFixed(2)}`;
+            document.getElementById('marginalCost').textContent = `$${production.marginalCost.toFixed(2)}`;
+        }
+
+        function createProducerPlot(production, params) {
+            const { labor, capital, laborExponent, capitalExponent, wage, rentalRate, fixedCost, outputPrice } = params;
+
+            // Generate isoquant data
+            const isoquant = generateIsoquant(production.output, laborExponent, capitalExponent);
+
+            // Generate isocost data
+            const isocost = generateIsocost(wage, rentalRate, production.totalCost - fixedCost);
+
+            // Current production point
+            const currentPoint = {
+                x: [labor],
+                y: [capital],
+                type: 'scatter',
+                mode: 'markers',
+                name: 'Current Production',
+                marker: { color: 'green', size: 12, symbol: 'star' },
+                visible: true
+            };
+
+            // Isoquant trace
+            const isoquantTrace = {
+                x: isoquant.x,
+                y: isoquant.y,
+                type: 'scatter',
+                mode: 'lines',
+                name: `Q = ${production.output.toFixed(1)}`,
+                line: { color: 'red', width: 2, dash: 'dash' },
+                visible: document.getElementById('showIsoquants')?.checked !== false
+            };
+
+            // Isocost trace
+            const isocostTrace = {
+                x: isocost.x,
+                y: isocost.y,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Isocost Line',
+                line: { color: 'blue', width: 3 },
+                visible: document.getElementById('showIsocosts')?.checked !== false
+            };
+
+            // Expansion path if requested
+            let expansionPathTraces = [];
+            if (document.getElementById('showExpansionPath')?.checked) {
+                for (let q = 2; q <= 20; q += 2) {
+                    const optimalLabor = Math.pow(q / Math.pow(capital, capitalExponent), 1 / laborExponent);
+                    const optimalCapital = capital; // Keep capital fixed for simplicity
+                    expansionPathTraces.push({
+                        x: [optimalLabor],
+                        y: [optimalCapital],
+                        type: 'scatter',
+                        mode: 'markers',
+                        name: `Q = ${q}`,
+                        marker: { color: 'purple', size: 8 },
+                        showlegend: false
+                    });
+                }
+            }
+
+            const traces = [isoquantTrace, isocostTrace, currentPoint, ...expansionPathTraces];
+
+            const layout = {
+                title: 'Production Analysis: Labor vs Capital',
+                xaxis: { title: 'Labor (workers)', range: [0, Math.max(labor * 1.5, 15)] },
+                yaxis: { title: 'Capital (machines)', range: [0, Math.max(capital * 1.5, 8)] },
+                hovermode: 'closest',
+                legend: { x: 0, y: 1 },
+                margin: { l: 60, r: 30, t: 60, b: 60 }
+            };
+
+            Plotly.newPlot('producerPlot', traces, layout, {responsive: true});
+        }
+
+        function generateIsoquant(output, alpha, beta) {
+            const points = [];
+            const maxLabor = Math.pow(output / Math.pow(0.1, beta), 1 / alpha);
+
+            for (let l = 0.1; l <= maxLabor; l += maxLabor / 100) {
+                const k = Math.pow(output / Math.pow(l, alpha), 1 / beta);
+                if (k > 0 && k < 20) { // Reasonable bounds
+                    points.push({ x: l, y: k });
+                }
+            }
+
+            return {
+                x: points.map(p => p.x),
+                y: points.map(p => p.y)
+            };
+        }
+
+        function generateIsocost(wage, rentalRate, variableCost) {
+            const maxLabor = variableCost / wage;
+            const maxCapital = variableCost / rentalRate;
+
+            return {
+                x: [0, maxLabor],
+                y: [maxCapital, 0]
+            };
+        }
+
+        function updateVisualization() {
+            const params = getCurrentParams();
+            const production = calculateProduction(params);
+            updateOutcomesTable(production, params);
+            createProducerPlot(production, params);
+        }
+
+        function checkAnswers() {
+            const q1Answer = document.querySelector('input[name="q1"]:checked')?.value;
+            const feedback = document.getElementById('q1feedback');
+
+            if (q1Answer === 'b') {
+                feedback.innerHTML = '<span class="text-success">✅ Correct! When wages increase, the optimal amount of labor hired decreases due to higher costs.</span>';
+            } else if (q1Answer === 'a' || q1Answer === 'c') {
+                feedback.innerHTML = '<span class="text-danger">❌ Not quite right. Think about how higher input costs affect the profit-maximizing decision.</span>';
+            } else {
+                feedback.innerHTML = '<span class="text-warning">⚠️ Please select an answer first.</span>';
+            }
+
+            feedback.style.display = 'block';
+        }
+
+        function completeStory() {
+            alert('🎉 Congratulations! You\'ve completed "The Producer\'s Challenge" and learned about producer theory fundamentals!');
+        }
+
+        // Add event listeners for parameter changes
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add input event listeners for all numeric inputs
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.addEventListener('input', updateVisualization);
+            });
+
+            // Add checkbox event listeners
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateVisualization);
+            });
+
+            // Initialize visualization
+            updateVisualization();
+        });
+        </script>
+
+        <style>
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .story-chapter {
+            display: none;
+        }
+
+        .story-chapter.active {
+            display: block;
+        }
+
+        .controls-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .navigation-buttons {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .self-check-question {
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn-check:checked + .btn-outline-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+            color: white;
+        }
+
+        .chart-wrap {
+            position: relative;
+            height: 500px;
+        }
+
+        .chart-wrap.lg {
+            height: 500px;
+        }
+        </style>
+{% endblock %}

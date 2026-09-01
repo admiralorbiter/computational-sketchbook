@@ -1,0 +1,459 @@
+{% extends "base.html" %}
+{% block title %}Auctions Lab - Econ Explorer{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <!-- Story and Controls Column -->
+            <div class="story-chapter active" id="chapter1">
+                <h3>Chapter 1: The Auction House</h3>
+                <div class="story-card">
+                    <p>Welcome to the prestigious Riverside Auction House! I'm Marcus, your auction specialist. Today we're exploring the fascinating world of auctions - from ancient bidding wars to modern online marketplaces.</p>
+                    <p>Auctions are more than just selling items; they're sophisticated mechanisms that reveal true values and allocate resources efficiently. But here's the catch: the rules of the auction dramatically change how bidders behave!</p>
+                    <p>Let me show you how different auction formats create entirely different strategic landscapes...</p>
+                </div>
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 2</button>
+            </div>
+
+            <div class="story-chapter" id="chapter2">
+                <h3>Chapter 2: First-Price Sealed Bid</h3>
+                <div class="story-card">
+                    <p>Our first auction format is the <strong>First-Price Sealed Bid</strong>. Here's how it works:</p>
+                    <ul>
+                        <li>All bidders submit their bids simultaneously</li>
+                        <li>Highest bidder wins and pays their bid amount</li>
+                        <li>No one knows what others bid until it's over</li>
+                    </ul>
+                    <p>This creates a fascinating strategic dilemma: bid too high and you might overpay, bid too low and you might lose to someone who values the item less than you do!</p>
+                </div>
+                <div class="controls-section">
+                    <h5>Auction Parameters</h5>
+                    <div class="form-group">
+                        <label for="numBidders">Number of Bidders:</label>
+                        <input type="range" id="numBidders" min="2" max="10" value="3" class="form-range" onchange="updateAuction()">
+                        <span id="numBiddersValue">3</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="trueValue">True Value:</label>
+                        <input type="range" id="trueValue" min="50" max="200" value="100" class="form-range" onchange="updateAuction()">
+                        <span id="trueValueValue">$100</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="valueUncertainty">Value Uncertainty:</label>
+                        <input type="range" id="valueUncertainty" min="10" max="50" value="20" class="form-range" onchange="updateAuction()">
+                        <span id="valueUncertaintyValue">±$20</span>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 3</button>
+            </div>
+
+            <div class="story-chapter" id="chapter3">
+                <h3>Chapter 3: Second-Price & Revenue Equivalence</h3>
+                <div class="story-card">
+                    <p>Now let's explore the <strong>Second-Price Sealed Bid</strong> (also called Vickrey auction):</p>
+                    <ul>
+                        <li>Highest bidder wins but pays the second-highest bid</li>
+                        <li>This creates a remarkable incentive: bid your true value!</li>
+                        <li>No strategic underbidding needed</li>
+                    </ul>
+                    <p>Here's the magic: despite different rules, both auction types often generate the same revenue on average. This is the famous <strong>Revenue Equivalence Theorem</strong>!</p>
+                </div>
+                <div class="controls-section">
+                    <h5>Auction Type & Analysis</h5>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="auctionType" id="firstPrice" value="first" checked onchange="updateAuction()">
+                        <label class="form-check-label" for="firstPrice">First-Price Sealed Bid</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="auctionType" id="secondPrice" value="second" onchange="updateAuction()">
+                        <label class="form-check-label" for="secondPrice">Second-Price Sealed Bid</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="showOptimalBidding" onchange="updateAuction()">
+                        <label class="form-check-label" for="showOptimalBidding">Show Optimal Bidding Strategy</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="showRevenueComparison" onchange="updateAuction()">
+                        <label class="form-check-label" for="showRevenueComparison">Show Revenue Comparison</label>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 4</button>
+            </div>
+
+            <div class="story-chapter" id="chapter4">
+                <h3>Chapter 4: English & Dutch Auctions</h3>
+                <div class="story-card">
+                    <p>Let's explore two more auction formats:</p>
+                    <ul>
+                        <li><strong>English Auction</strong>: Open ascending bids, everyone sees the action</li>
+                        <li><strong>Dutch Auction</strong>: Descending price clock, first to stop wins</li>
+                    </ul>
+                    <p>These formats reveal information during the auction, creating different strategic dynamics. The English auction can drive prices higher through competitive momentum, while the Dutch auction creates pressure to act quickly!</p>
+                </div>
+                <div class="controls-section">
+                    <h5>Advanced Auction Analysis</h5>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="showEnglishAuction" onchange="updateAuction()">
+                        <label class="form-check-label" for="showEnglishAuction">Simulate English Auction Dynamics</label>
+                    </div>
+                    <div class="form-check-input" type="checkbox" id="showDutchAuction" onchange="updateAuction()">
+                        <label class="form-check-label" for="showDutchAuction">Simulate Dutch Auction Dynamics</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="riskAversion">Bidder Risk Aversion:</label>
+                        <input type="range" id="riskAversion" min="0" max="2" value="1" step="0.1" class="form-range" onchange="updateAuction()">
+                        <span id="riskAversionValue">1.0</span>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 5</button>
+            </div>
+
+            <div class="story-chapter" id="chapter5">
+                <h3>Chapter 5: Auction Mastery</h3>
+                <div class="story-card">
+                    <p>Congratulations! You've explored the fascinating world of auctions. Let's test your understanding with a quick quiz:</p>
+                    <div class="quiz-section">
+                        <div class="quiz-question">
+                            <p><strong>Question 1:</strong> In a first-price sealed bid auction, optimal bidding strategy involves:</p>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="q1" value="a">
+                                <label class="form-check-label">Bidding your true value</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="q1" value="b">
+                                <label class="form-check-label">Bidding below your true value</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="q1" value="c">
+                                <label class="form-check-label">Bidding above your true value</label>
+                            </div>
+                        </div>
+                        <div class="quiz-question">
+                            <p><strong>Question 2:</strong> The Revenue Equivalence Theorem states that:</p>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="q2" value="a">
+                                <label class="form-check-label">All auctions generate the same revenue</label>
+                            </div>
+                            <div class="form-check-input" type="radio" name="q2" value="b">
+                                <label class="form-check-label">First and second-price auctions generate equal expected revenue</label>
+                            </div>
+                            <div class="form-check-input" type="radio" name="q2" value="c">
+                                <label class="form-check-label">English auctions always generate more revenue</label>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-success" onclick="checkAnswers()">Check Answers</button>
+                    <button class="btn btn-primary" onclick="completeStory()">Complete the Story</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <!-- Visualization and Outcomes Column -->
+            <div id="auctionPlot"></div>
+            <table id="outcomesTable" class="table table-striped">
+                <tbody>
+                    <tr><td><strong>Expected Revenue:</strong></td><td id="expectedRevenue"></td></tr>
+                    <tr><td><strong>Winner's Surplus:</strong></td><td id="winnerSurplus"></td></tr>
+                    <tr><td><strong>Efficiency:</strong></td><td id="efficiency"></td></tr>
+                    <tr><td><strong>Optimal Bid:</strong></td><td id="optimalBid"></td></tr>
+                    <tr id="revenueComparisonRow" style="display: none;"><td><strong>Revenue Difference:</strong></td><td id="revenueDifference"></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+let currentChapter = 1;
+let auctionData = {
+    numBidders: 3,
+    trueValue: 100,
+    valueUncertainty: 20,
+    auctionType: 'first',
+    riskAversion: 1.0
+};
+
+function nextChapter() {
+    if (currentChapter < 5) {
+        document.getElementById(`chapter${currentChapter}`).classList.remove('active');
+        currentChapter++;
+        document.getElementById(`chapter${currentChapter}`).classList.add('active');
+        
+        // Progressive disclosure of controls
+        if (currentChapter === 2) {
+            document.querySelector('.controls-section').style.display = 'block';
+        }
+        if (currentChapter === 3) {
+            document.getElementById('showOptimalBidding').parentElement.style.display = 'block';
+            document.getElementById('showRevenueComparison').parentElement.style.display = 'block';
+        }
+        if (currentChapter === 4) {
+            document.getElementById('showEnglishAuction').parentElement.style.display = 'block';
+            document.getElementById('showDutchAuction').parentElement.style.display = 'block';
+            document.getElementById('riskAversion').parentElement.style.display = 'block';
+        }
+    }
+}
+
+function getCurrentParams() {
+    return {
+        numBidders: parseInt(document.getElementById('numBidders').value),
+        trueValue: parseInt(document.getElementById('trueValue').value),
+        valueUncertainty: parseInt(document.getElementById('valueUncertainty').value),
+        auctionType: document.querySelector('input[name="auctionType"]:checked').value,
+        riskAversion: parseFloat(document.getElementById('riskAversion').value),
+        showOptimalBidding: document.getElementById('showOptimalBidding').checked,
+        showRevenueComparison: document.getElementById('showRevenueComparison').checked,
+        showEnglishAuction: document.getElementById('showEnglishAuction').checked,
+        showDutchAuction: document.getElementById('showDutchAuction').checked
+    };
+}
+
+function updateAuction() {
+    const params = getCurrentParams();
+    const outcomes = calculateAuctionOutcomes(params);
+    updateOutcomesTable(outcomes, params);
+    createAuctionPlot(outcomes, params);
+    
+    // Update display values
+    document.getElementById('numBiddersValue').textContent = params.numBidders;
+    document.getElementById('trueValueValue').textContent = `$${params.trueValue}`;
+    document.getElementById('valueUncertaintyValue').textContent = `±$${params.valueUncertainty}`;
+    document.getElementById('riskAversionValue').textContent = params.riskAversion.toFixed(1);
+}
+
+function calculateAuctionOutcomes(params) {
+    const { numBidders, trueValue, valueUncertainty, auctionType, riskAversion } = params;
+    
+    // Generate bidder valuations
+    const valuations = [];
+    for (let i = 0; i < numBidders; i++) {
+        const baseValue = trueValue + (Math.random() - 0.5) * 2 * valueUncertainty;
+        valuations.push(Math.max(0, baseValue));
+    }
+    
+    // Calculate optimal bids based on auction type
+    let optimalBids = [];
+    let expectedRevenue = 0;
+    let winnerSurplus = 0;
+    
+    if (auctionType === 'first') {
+        // First-price: bid below true value due to winner's curse
+        optimalBids = valuations.map(v => v * (1 - 1/numBidders) * (1 - riskAversion * 0.1));
+        const winningBid = Math.max(...optimalBids);
+        expectedRevenue = winningBid;
+        winnerSurplus = Math.max(...valuations) - winningBid;
+    } else {
+        // Second-price: bid true value
+        optimalBids = valuations.map(v => v);
+        const sortedBids = [...optimalBids].sort((a, b) => b - a);
+        expectedRevenue = sortedBids[1] || 0; // Second-highest bid
+        winnerSurplus = sortedBids[0] - sortedBids[1];
+    }
+    
+    // Calculate efficiency (probability highest value wins)
+    const maxValue = Math.max(...valuations);
+    const winnerValue = valuations[optimalBids.indexOf(Math.max(...optimalBids))];
+    const efficiency = winnerValue === maxValue ? 1 : 0.5;
+    
+    return {
+        valuations,
+        optimalBids,
+        expectedRevenue,
+        winnerSurplus,
+        efficiency,
+        optimalBid: Math.max(...optimalBids),
+        revenueComparison: auctionType === 'first' ? 
+            expectedRevenue - (trueValue * 0.8) : 
+            expectedRevenue - (trueValue * 0.8)
+    };
+}
+
+function updateOutcomesTable(outcomes, params) {
+    document.getElementById('expectedRevenue').textContent = `$${outcomes.expectedRevenue.toFixed(2)}`;
+    document.getElementById('winnerSurplus').textContent = `$${outcomes.winnerSurplus.toFixed(2)}`;
+    document.getElementById('efficiency').textContent = `${(outcomes.efficiency * 100).toFixed(0)}%`;
+    document.getElementById('optimalBid').textContent = `$${outcomes.optimalBid.toFixed(2)}`;
+    
+    if (params.showRevenueComparison) {
+        document.getElementById('revenueComparisonRow').style.display = 'table-row';
+        document.getElementById('revenueDifference').textContent = `$${outcomes.revenueComparison.toFixed(2)}`;
+    } else {
+        document.getElementById('revenueComparisonRow').style.display = 'none';
+    }
+}
+
+function createAuctionPlot(outcomes, params) {
+    const { valuations, optimalBids, auctionType } = outcomes;
+    
+    // Create bid distribution visualization
+    const trace1 = {
+        x: valuations,
+        type: 'histogram',
+        name: 'Bidder Valuations',
+        opacity: 0.7,
+        marker: { color: 'rgba(55, 128, 191, 0.7)' }
+    };
+    
+    const trace2 = {
+        x: optimalBids,
+        type: 'histogram',
+        name: 'Optimal Bids',
+        opacity: 0.7,
+        marker: { color: 'rgba(219, 64, 82, 0.7)' }
+    };
+    
+    const layout = {
+        title: `${auctionType === 'first' ? 'First-Price' : 'Second-Price'} Auction Analysis`,
+        xaxis: { title: 'Value/Bid Amount ($)' },
+        yaxis: { title: 'Frequency' },
+        barmode: 'overlay',
+        showlegend: true,
+        height: 400
+    };
+    
+    Plotly.newPlot('auctionPlot', [trace1, trace2], layout);
+}
+
+function checkAnswers() {
+    const q1Answer = document.querySelector('input[name="q1"]:checked')?.value;
+    const q2Answer = document.querySelector('input[name="q2"]:checked')?.value;
+    
+    let score = 0;
+    let feedback = '';
+    
+    if (q1Answer === 'b') {
+        score++;
+        feedback += '✓ Correct! In first-price auctions, optimal strategy involves bidding below true value.\n';
+    } else {
+        feedback += '✗ Incorrect. The answer is (b) - bidding below true value.\n';
+    }
+    
+    if (q2Answer === 'b') {
+        score++;
+        feedback += '✓ Correct! Revenue equivalence applies to first and second-price auctions.\n';
+    } else {
+        feedback += '✗ Incorrect. The answer is (b) - first and second-price auctions generate equal expected revenue.\n';
+    }
+    
+    alert(`Quiz Results: ${score}/2 correct\n\n${feedback}`);
+}
+
+function completeStory() {
+    alert('🎉 Congratulations! You\'ve mastered the fundamentals of auction theory. You now understand how different auction formats create different strategic incentives and how the Revenue Equivalence Theorem connects seemingly different mechanisms. Ready to explore more advanced economic concepts?');
+}
+
+// Initialize display values
+document.addEventListener('DOMContentLoaded', function() {
+    updateAuction();
+    
+    // Set initial control visibility
+    document.querySelector('.controls-section').style.display = 'none';
+    document.getElementById('showOptimalBidding').parentElement.style.display = 'none';
+    document.getElementById('showRevenueComparison').parentElement.style.display = 'none';
+    document.getElementById('showEnglishAuction').parentElement.style.display = 'none';
+    document.getElementById('showDutchAuction').parentElement.style.display = 'none';
+    document.getElementById('riskAversion').parentElement.style.display = 'none';
+});
+</script>
+
+<style>
+.story-chapter {
+    display: none;
+    margin-bottom: 2rem;
+}
+
+.story-chapter.active {
+    display: block;
+}
+
+.story-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.controls-section {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #007bff;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-range {
+    width: 100%;
+}
+
+.quiz-section {
+    background: #e9ecef;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.quiz-question {
+    margin-bottom: 1rem;
+}
+
+.quiz-question p {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+#auctionPlot {
+    background: white;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 1rem;
+}
+
+#outcomesTable {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.btn {
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    border: none;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #0f8a7c 0%, #2edf6d 100%);
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %}

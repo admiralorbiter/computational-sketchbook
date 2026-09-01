@@ -1,0 +1,596 @@
+{% extends "base.html" %}
+{% block title %}Growth Models Lab - Econ Explorer{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <!-- Story and Controls Column -->
+            <div class="story-chapter active" id="chapter1">
+                <h3>Chapter 1: The Development Journey</h3>
+                <div class="story-card">
+                    <p>Welcome to the village of Prospera! You are Maya, a young economist who has returned to your hometown after studying abroad. Prospera has been struggling with slow economic growth, and the village council has asked for your help.</p>
+                    <p>"Maya," says the village elder, "we need to understand why our economy isn't growing faster. We've been saving and investing, but something isn't working."</p>
+                    <p>You decide to start by examining the basic factors that drive economic growth. Let's begin with the Solow growth model, which shows how capital accumulation, labor growth, and technological progress determine a nation's long-run economic performance.</p>
+                </div>
+                <div class="concept-highlight">
+                    <h5>Key Concept: The Solow Growth Model</h5>
+                    <p>The Solow model shows how economies grow through capital accumulation, but eventually reach a steady state where growth stops unless there's technological progress.</p>
+                </div>
+                <button class="btn btn-primary" onclick="nextChapter()">Begin Your Analysis</button>
+            </div>
+
+            <div class="story-chapter" id="chapter2">
+                <h3>Chapter 2: Capital Accumulation</h3>
+                <div class="story-card">
+                    <p>Maya sets up her analysis station in the village square. "First," she explains to the council, "we need to understand how capital accumulation works. Capital is our tools, machines, and infrastructure - the things that make workers more productive."</p>
+                    <p>The council members nod. "We've been building new workshops and buying better tools," says one. "But how much should we invest?"</p>
+                    <p>Maya smiles. "That's exactly what we'll explore. The key is finding the right balance between consuming today and investing for tomorrow."</p>
+                </div>
+                <div class="controls-section">
+                    <h5>Growth Parameters</h5>
+                    <div class="control-group">
+                        <label for="savingsRate">Savings Rate (s): <span id="savingsRateValue">0.3</span></label>
+                        <input type="range" id="savingsRate" min="0.1" max="0.8" step="0.05" value="0.3" onchange="updateGrowth()">
+                        <small class="text-muted">How much of income is saved and invested</small>
+                    </div>
+                    <div class="control-group">
+                        <label for="depreciationRate">Depreciation Rate (δ): <span id="depreciationRateValue">0.1</span></label>
+                        <input type="range" id="depreciationRate" min="0.05" max="0.2" step="0.01" value="0.1" onchange="updateGrowth()">
+                        <small class="text-muted">How quickly capital wears out</small>
+                    </div>
+                    <div class="control-group">
+                        <label for="populationGrowth">Population Growth (n): <span id="populationGrowthValue">0.02</span></label>
+                        <input type="range" id="populationGrowth" min="0.01" max="0.05" step="0.005" value="0.02" onchange="updateGrowth()">
+                        <small class="text-muted">How fast the labor force grows</small>
+                    </div>
+                </div>
+                <div class="concept-highlight">
+                    <h5>Key Concept: Steady State</h5>
+                    <p>When investment equals depreciation plus population growth, the economy reaches a steady state where capital per worker stops growing.</p>
+                </div>
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 3</button>
+            </div>
+
+            <div class="story-chapter" id="chapter3">
+                <h3>Chapter 3: Production Function & Technology</h3>
+                <div class="story-card">
+                    <p>"Now let's look at how we produce things," Maya continues. "The production function shows how capital and labor combine to create output. We'll use a Cobb-Douglas function: Y = K^α × L^(1-α) × A, where A represents technology."</p>
+                    <p>The village blacksmith raises his hand. "What does that mean for our workshops?"</p>
+                    <p>"Great question! The parameter α tells us how important capital is relative to labor. If α is high, capital is very productive. If it's low, labor is more important."</p>
+                </div>
+                <div class="controls-section">
+                    <h5>Production Parameters</h5>
+                    <div class="control-group">
+                        <label for="capitalShare">Capital Share (α): <span id="capitalShareValue">0.33</span></label>
+                        <input type="range" id="capitalShare" min="0.2" max="0.6" step="0.01" value="0.33" onchange="updateGrowth()">
+                        <small class="text-muted">How important capital is in production</small>
+                    </div>
+                    <div class="control-group">
+                        <label for="technologyLevel">Technology Level (A): <span id="technologyLevelValue">1.0</span></label>
+                        <input type="range" id="technologyLevel" min="0.5" max="2.0" step="0.1" value="1.0" onchange="updateGrowth()">
+                        <small class="text-muted">Overall productivity level</small>
+                    </div>
+                    <div class="control-group">
+                        <label for="initialCapital">Initial Capital: <span id="initialCapitalValue">10</span></label>
+                        <input type="range" id="initialCapital" min="1" max="50" step="1" value="10" onchange="updateGrowth()">
+                        <small class="text-muted">Starting capital stock</small>
+                    </div>
+                </div>
+                <div class="concept-highlight">
+                    <h5>Key Concept: Returns to Scale</h5>
+                    <p>With constant returns to scale, doubling both capital and labor doubles output. This is why the exponents in our production function sum to 1.</p>
+                </div>
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 4</button>
+            </div>
+
+            <div class="story-chapter" id="chapter4">
+                <h3>Chapter 4: Convergence & Golden Rule</h3>
+                <div class="story-card">
+                    <p>"Here's something fascinating," Maya says excitedly. "Poorer economies should grow faster than rich ones, all else equal. This is called convergence. But there's a catch - we need to find the 'golden rule' savings rate that maximizes steady-state consumption."</p>
+                    <p>The village elder leans forward. "So we shouldn't just save as much as possible?"</p>
+                    <p>"Exactly! Too much saving means less consumption today. Too little means less capital and lower future output. We need the sweet spot."</p>
+                </div>
+                <div class="controls-section">
+                    <h5>Analysis Tools</h5>
+                    <div class="control-group">
+                        <input type="checkbox" id="showGoldenRule" onchange="updateGrowth()">
+                        <label for="showGoldenRule">Show Golden Rule Savings Rate</label>
+                    </div>
+                    <div class="control-group">
+                        <input type="checkbox" id="showConvergence" onchange="updateGrowth()">
+                        <label for="showConvergence">Show Convergence Path</label>
+                    </div>
+                    <div class="control-group">
+                        <input type="checkbox" id="showSteadyState" onchange="updateGrowth()">
+                        <label for="showSteadyState">Show Steady State Values</label>
+                    </div>
+                    <div class="control-group">
+                        <label for="timeHorizon">Time Horizon: <span id="timeHorizonValue">50</span> periods</label>
+                        <input type="range" id="timeHorizon" min="20" max="100" step="5" value="50" onchange="updateGrowth()">
+                        <small class="text-muted">How far into the future to project</small>
+                    </div>
+                </div>
+                <div class="concept-highlight">
+                    <h5>Key Concept: Golden Rule</h5>
+                    <p>The golden rule savings rate maximizes steady-state consumption per worker. It occurs when the marginal product of capital equals the sum of depreciation and population growth.</p>
+                </div>
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 5</button>
+            </div>
+
+            <div class="story-chapter" id="chapter5">
+                <h3>Chapter 5: Growth Mastery</h3>
+                <div class="story-card">
+                    <p>Maya presents her findings to the village council. "Based on our analysis, here's what we've learned about Prospera's growth prospects..."</p>
+                    <p>The council members are impressed. "This gives us a clear roadmap for our development strategy," says the elder. "We need to balance investment with consumption, focus on technology improvements, and be patient for the long-term benefits."</p>
+                    <p>"Exactly!" Maya smiles. "Growth takes time, but understanding these principles will help Prospera thrive for generations to come."</p>
+                </div>
+                
+                <div class="quiz-section">
+                    <h5>Test Your Understanding</h5>
+                    <div class="quiz-question">
+                        <p><strong>Question 1:</strong> What happens to steady-state capital per worker if the savings rate increases?</p>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="q1" id="q1a" value="a">
+                            <label class="form-check-label" for="q1a">It decreases</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="q1" id="q1b" value="b">
+                            <label class="form-check-label" for="q1b">It increases</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="q1" id="q1c" value="c">
+                            <label class="form-check-label" for="q1c">It stays the same</label>
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-question">
+                        <p><strong>Question 2:</strong> What is the golden rule savings rate?</p>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="q2" id="q2a" value="a">
+                            <label class="form-check-label" for="q2a">The rate that maximizes steady-state output</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="q2" id="q2b" value="b">
+                            <label class="form-check-label" for="q2b">The rate that maximizes steady-state consumption</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="q2" id="q2c" value="c">
+                            <label class="form-check-label" for="q2c">The rate that minimizes depreciation</label>
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-question">
+                        <p><strong>Question 3:</strong> Why do poor economies tend to grow faster than rich ones?</p>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="q3" id="q3a" value="a">
+                            <label class="form-check-label" for="q3a">Because they have more natural resources</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="q3" id="q3b" value="b">
+                            <label class="form-check-label" for="q3b">Because of diminishing returns to capital</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="q3" id="q3c" value="c">
+                            <label class="form-check-label" for="q3c">Because they have better institutions</label>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-success" onclick="checkAnswers()">Check Answers</button>
+                </div>
+                
+                <button class="btn btn-primary" onclick="completeStory()">Complete the Story</button>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <!-- Visualization and Outcomes Column -->
+            <div id="growthPlot"></div>
+            
+            <div class="outcomes-section">
+                <h5>Growth Analysis Results</h5>
+                <table id="outcomesTable" class="table table-sm">
+                    <tbody>
+                        <tr><td><strong>Steady State Capital:</strong></td><td id="steadyStateCapital"></td></tr>
+                        <tr><td><strong>Steady State Output:</strong></td><td id="steadyStateOutput"></td></tr>
+                        <tr><td><strong>Steady State Consumption:</strong></td><td id="steadyStateConsumption"></td></tr>
+                        <tr><td><strong>Golden Rule Savings:</strong></td><td id="goldenRuleSavings"></td></tr>
+                        <tr><td><strong>Convergence Speed:</strong></td><td id="convergenceSpeed"></td></tr>
+                        <tr id="goldenRuleRow" style="display: none;"><td><strong>Golden Rule Capital:</strong></td><td id="goldenRuleCapital"></td></tr>
+                        <tr id="goldenRuleConsumptionRow" style="display: none;"><td><strong>Golden Rule Consumption:</strong></td><td id="goldenRuleConsumption"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+let currentChapter = 1;
+let growthData = {
+    savingsRate: 0.3,
+    depreciationRate: 0.1,
+    populationGrowth: 0.02,
+    capitalShare: 0.33,
+    technologyLevel: 1.0,
+    initialCapital: 10,
+    timeHorizon: 50
+};
+
+function nextChapter() {
+    if (currentChapter < 5) {
+        document.getElementById(`chapter${currentChapter}`).classList.remove('active');
+        currentChapter++;
+        document.getElementById(`chapter${currentChapter}`).classList.add('active');
+        
+        // Show relevant controls based on chapter
+        if (currentChapter >= 2) {
+            document.querySelectorAll('.controls-section').forEach(el => el.style.display = 'block');
+        }
+        if (currentChapter >= 4) {
+            document.querySelectorAll('.controls-section input[type="checkbox"]').forEach(el => el.style.display = 'block');
+        }
+    }
+}
+
+function getCurrentParams() {
+    return {
+        savingsRate: parseFloat(document.getElementById('savingsRate').value),
+        depreciationRate: parseFloat(document.getElementById('depreciationRate').value),
+        populationGrowth: parseFloat(document.getElementById('populationGrowth').value),
+        capitalShare: parseFloat(document.getElementById('capitalShare').value),
+        technologyLevel: parseFloat(document.getElementById('technologyLevel').value),
+        initialCapital: parseFloat(document.getElementById('initialCapital').value),
+        timeHorizon: parseInt(document.getElementById('timeHorizon').value)
+    };
+}
+
+function updateGrowth() {
+    const params = getCurrentParams();
+    const outcomes = calculateGrowthOutcomes(params);
+    updateOutcomesTable(outcomes, params);
+    createGrowthPlot(outcomes, params);
+    
+    // Update display values
+    document.getElementById('savingsRateValue').textContent = params.savingsRate.toFixed(2);
+    document.getElementById('depreciationRateValue').textContent = params.depreciationRate.toFixed(2);
+    document.getElementById('populationGrowthValue').textContent = params.populationGrowth.toFixed(3);
+    document.getElementById('capitalShareValue').textContent = params.capitalShare.toFixed(2);
+    document.getElementById('technologyLevelValue').textContent = params.technologyLevel.toFixed(1);
+    document.getElementById('initialCapitalValue').textContent = params.initialCapital;
+    document.getElementById('timeHorizonValue').textContent = params.timeHorizon;
+}
+
+function calculateGrowthOutcomes(params) {
+    const { savingsRate, depreciationRate, populationGrowth, capitalShare, technologyLevel, initialCapital, timeHorizon } = params;
+    
+    // Calculate steady state values
+    const steadyStateCapital = Math.pow((savingsRate * technologyLevel) / (depreciationRate + populationGrowth), 1 / (1 - capitalShare));
+    const steadyStateOutput = technologyLevel * Math.pow(steadyStateCapital, capitalShare);
+    const steadyStateConsumption = (1 - savingsRate) * steadyStateOutput;
+    
+    // Calculate golden rule (MPK = δ + n)
+    const goldenRuleSavings = capitalShare;
+    const goldenRuleCapital = Math.pow((goldenRuleSavings * technologyLevel) / (depreciationRate + populationGrowth), 1 / (1 - capitalShare));
+    const goldenRuleOutput = technologyLevel * Math.pow(goldenRuleCapital, capitalShare);
+    const goldenRuleConsumption = (1 - goldenRuleSavings) * goldenRuleOutput;
+    
+    // Calculate convergence speed (half-life)
+    const convergenceSpeed = Math.log(2) / ((1 - capitalShare) * (depreciationRate + populationGrowth));
+    
+    // Generate time series
+    const timeSeries = [];
+    const capitalSeries = [];
+    const outputSeries = [];
+    const consumptionSeries = [];
+    
+    let currentCapital = initialCapital;
+    for (let t = 0; t <= timeHorizon; t++) {
+        timeSeries.push(t);
+        capitalSeries.push(currentCapital);
+        
+        const currentOutput = technologyLevel * Math.pow(currentCapital, capitalShare);
+        outputSeries.push(currentOutput);
+        consumptionSeries.push((1 - savingsRate) * currentOutput);
+        
+        // Update capital for next period
+        const investment = savingsRate * currentOutput;
+        const depreciation = depreciationRate * currentCapital;
+        const populationEffect = populationGrowth * currentCapital;
+        currentCapital = currentCapital + investment - depreciation - populationEffect;
+    }
+    
+    return {
+        steadyStateCapital,
+        steadyStateOutput,
+        steadyStateConsumption,
+        goldenRuleSavings,
+        goldenRuleCapital,
+        goldenRuleOutput,
+        goldenRuleConsumption,
+        convergenceSpeed,
+        timeSeries,
+        capitalSeries,
+        outputSeries,
+        consumptionSeries
+    };
+}
+
+function updateOutcomesTable(outcomes, params) {
+    document.getElementById('steadyStateCapital').textContent = outcomes.steadyStateCapital.toFixed(2);
+    document.getElementById('steadyStateOutput').textContent = outcomes.steadyStateOutput.toFixed(2);
+    document.getElementById('steadyStateConsumption').textContent = outcomes.steadyStateConsumption.toFixed(2);
+    document.getElementById('goldenRuleSavings').textContent = (outcomes.goldenRuleSavings * 100).toFixed(1) + '%';
+    document.getElementById('convergenceSpeed').textContent = outcomes.convergenceSpeed.toFixed(1) + ' periods';
+    
+    // Show golden rule values if checkbox is checked
+    if (document.getElementById('showGoldenRule').checked) {
+        document.getElementById('goldenRuleRow').style.display = 'table-row';
+        document.getElementById('goldenRuleConsumptionRow').style.display = 'table-row';
+        document.getElementById('goldenRuleCapital').textContent = outcomes.goldenRuleCapital.toFixed(2);
+        document.getElementById('goldenRuleConsumption').textContent = outcomes.goldenRuleConsumption.toFixed(2);
+    } else {
+        document.getElementById('goldenRuleRow').style.display = 'none';
+        document.getElementById('goldenRuleConsumptionRow').style.display = 'none';
+    }
+}
+
+function createGrowthPlot(outcomes, params) {
+    const { timeSeries, capitalSeries, outputSeries, consumptionSeries, steadyStateCapital, steadyStateOutput, steadyStateConsumption } = outcomes;
+    const { showGoldenRule, showConvergence, showSteadyState } = getCheckboxStates();
+    
+    const traces = [
+        {
+            x: timeSeries,
+            y: capitalSeries,
+            type: 'scatter',
+            mode: 'lines',
+            name: 'Capital per Worker',
+            line: { color: '#1f77b4', width: 3 }
+        },
+        {
+            x: timeSeries,
+            y: outputSeries,
+            type: 'scatter',
+            mode: 'lines',
+            name: 'Output per Worker',
+            line: { color: '#ff7f0e', width: 3 }
+        },
+        {
+            x: timeSeries,
+            y: consumptionSeries,
+            type: 'scatter',
+            mode: 'lines',
+            name: 'Consumption per Worker',
+            line: { color: '#2ca02c', width: 3 }
+        }
+    ];
+    
+    // Add steady state lines if requested
+    if (showSteadyState) {
+        traces.push(
+            {
+                x: [0, params.timeHorizon],
+                y: [steadyStateCapital, steadyStateCapital],
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Steady State Capital',
+                line: { color: '#1f77b4', width: 2, dash: 'dash' }
+            },
+            {
+                x: [0, params.timeHorizon],
+                y: [steadyStateOutput, steadyStateOutput],
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Steady State Output',
+                line: { color: '#ff7f0e', width: 2, dash: 'dash' }
+            },
+            {
+                x: [0, params.timeHorizon],
+                y: [steadyStateConsumption, steadyStateConsumption],
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Steady State Consumption',
+                line: { color: '#2ca02c', width: 2, dash: 'dash' }
+            }
+        );
+    }
+    
+    // Add golden rule lines if requested
+    if (showGoldenRule) {
+        const { goldenRuleCapital, goldenRuleOutput, goldenRuleConsumption } = outcomes;
+        traces.push(
+            {
+                x: [0, params.timeHorizon],
+                y: [goldenRuleCapital, goldenRuleCapital],
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Golden Rule Capital',
+                line: { color: '#1f77b4', width: 2, dash: 'dot' }
+            },
+            {
+                x: [0, params.timeHorizon],
+                y: [goldenRuleOutput, goldenRuleOutput],
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Golden Rule Output',
+                line: { color: '#ff7f0e', width: 2, dash: 'dot' }
+            },
+            {
+                x: [0, params.timeHorizon],
+                y: [goldenRuleConsumption, goldenRuleConsumption],
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Golden Rule Consumption',
+                line: { color: '#2ca02c', width: 2, dash: 'dot' }
+            }
+        );
+    }
+    
+    const layout = {
+        title: 'Economic Growth Dynamics',
+        xaxis: { title: 'Time Periods' },
+        yaxis: { title: 'Per Worker Values' },
+        hovermode: 'closest',
+        legend: { x: 0, y: 1 },
+        margin: { l: 60, r: 30, t: 60, b: 60 }
+    };
+    
+    Plotly.newPlot('growthPlot', traces, layout);
+}
+
+function getCheckboxStates() {
+    return {
+        showGoldenRule: document.getElementById('showGoldenRule').checked,
+        showConvergence: document.getElementById('showConvergence').checked,
+        showSteadyState: document.getElementById('showSteadyState').checked
+    };
+}
+
+function checkAnswers() {
+    const q1 = document.querySelector('input[name="q1"]:checked')?.value;
+    const q2 = document.querySelector('input[name="q2"]:checked')?.value;
+    const q3 = document.querySelector('input[name="q3"]:checked')?.value;
+    
+    let score = 0;
+    let feedback = '';
+    
+    if (q1 === 'b') {
+        score++;
+        feedback += '✓ Question 1: Correct! Higher savings means more investment and higher steady-state capital.\n';
+    } else {
+        feedback += '✗ Question 1: Incorrect. Higher savings rate leads to higher steady-state capital per worker.\n';
+    }
+    
+    if (q2 === 'b') {
+        score++;
+        feedback += '✓ Question 2: Correct! The golden rule maximizes steady-state consumption.\n';
+    } else {
+        feedback += '✗ Question 2: Incorrect. The golden rule savings rate maximizes steady-state consumption per worker.\n';
+    }
+    
+    if (q3 === 'b') {
+        score++;
+        feedback += '✓ Question 3: Correct! Diminishing returns to capital explain convergence.\n';
+    } else {
+        feedback += '✗ Question 3: Incorrect. Poor economies grow faster due to diminishing returns to capital.\n';
+    }
+    
+    const percentage = Math.round((score / 3) * 100);
+    alert(`Quiz Results: ${score}/3 (${percentage}%)\n\n${feedback}`);
+}
+
+function completeStory() {
+    alert('Congratulations! You have completed the Growth Models lab. You now understand how economies grow through capital accumulation, the importance of the steady state, and the golden rule for optimal savings. Prospera\'s future looks bright with your economic wisdom!');
+}
+
+// Initialize the lab
+document.addEventListener('DOMContentLoaded', function() {
+    updateGrowth();
+});
+</script>
+
+<style>
+.story-chapter {
+    display: none;
+    margin-bottom: 2rem;
+}
+
+.story-chapter.active {
+    display: block;
+}
+
+.story-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.concept-highlight {
+    background: #f8f9fa;
+    border-left: 4px solid #007bff;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0 8px 8px 0;
+}
+
+.controls-section {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    display: none;
+}
+
+.control-group {
+    margin-bottom: 1rem;
+}
+
+.control-group label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.control-group input[type="range"] {
+    width: 100%;
+    margin: 0.5rem 0;
+}
+
+.control-group input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
+.control-group small {
+    color: #6c757d;
+    font-style: italic;
+}
+
+.quiz-section {
+    background: #e3f2fd;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.quiz-question {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+}
+
+.form-check {
+    margin-bottom: 0.5rem;
+}
+
+.outcomes-section {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-top: 1rem;
+}
+
+#growthPlot {
+    background: white;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 1rem;
+}
+
+.table td {
+    padding: 0.5rem;
+    border-top: 1px solid #dee2e6;
+}
+
+.btn {
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+</style>
+{% endblock %}

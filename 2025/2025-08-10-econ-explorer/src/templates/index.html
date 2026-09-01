@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-12 col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title">Consumer Prices (CPI)</h5>
+        <p class="text-muted">From FRED (or sample fallback). Indexed to 100 at base date.</p>
+        <div class="chart-wrap sm"><canvas id="cpiChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title">KC House Price Index (FHFA)</h5>
+        <p class="text-muted">FRED series ATNHPIUS28140Q (quarterly).</p>
+        <div class="chart-wrap sm"><canvas id="hpiChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  window.addEventListener('DOMContentLoaded', async () => {
+    const cpi = await fetchSeries('cpi');
+    const hpi = await fetchSeries('hpi_kc');
+    if (cpi) {
+      const ctx = document.getElementById('cpiChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: { labels: cpi.observations.map(o=>o.date),
+          datasets: [{ label: 'CPI (index=100)', data: cpi.observations.map(o=>o.value), fill:false, tension:0.2 }]},
+        options: { responsive: true, maintainAspectRatio: false, animation: false }
+      });
+    }
+    if (hpi) {
+      const ctx2 = document.getElementById('hpiChart').getContext('2d');
+      new Chart(ctx2, {
+        type: 'line',
+        data: { labels: hpi.observations.map(o=>o.date),
+          datasets: [{ label: 'FHFA HPI KC (index=100)', data: hpi.observations.map(o=>o.value), fill:false, tension:0.2 }]},
+        options: { responsive: true, maintainAspectRatio: false, animation: false }
+      });
+    }
+  });
+</script>
+{% endblock %}

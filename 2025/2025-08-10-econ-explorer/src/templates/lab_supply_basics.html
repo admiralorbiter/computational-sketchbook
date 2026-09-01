@@ -1,0 +1,853 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+  <!-- Story Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow-sm border-0 bg-gradient-primary text-white">
+        <div class="card-body text-center py-4">
+          <h1 class="display-6 mb-2">🏪 The Market Story</h1>
+          <p class="lead mb-0">Follow the journey of a simple market as it faces challenges and policies</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Story Progress Bar -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <span class="me-3 fw-bold">Story Progress:</span>
+            <div class="progress flex-grow-1 me-3" style="height: 8px;">
+              <div class="progress-bar" id="storyProgress" role="progressbar" style="width: 0%"></div>
+            </div>
+            <span class="badge bg-primary" id="currentChapter">Chapter 1/5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+<div class="row g-4">
+    <!-- Left Column: Story & Controls -->
+    <div class="col-12 col-xl-5">
+      <!-- Story Panel -->
+      <div class="card shadow-sm mb-4">
+      <div class="card-body">
+          <div id="storyContent">
+            <!-- Chapter 1: Introduction -->
+            <div class="story-chapter active" data-chapter="1">
+              <h4 class="card-title">📖 Chapter 1: Meet the Market</h4>
+              <div class="story-text">
+                <p>Welcome to Econville! You're about to meet a simple market where people buy and sell widgets. 
+                This market follows the classic laws of supply and demand.</p>
+                
+                <div class="alert alert-info">
+                  <strong>🎯 Your Mission:</strong> Help this market find its natural equilibrium and understand 
+                  what happens when policies change things.
+                </div>
+
+                <p>Let's start by exploring the basic market structure. Use the sliders below to see how 
+                the market responds to different conditions.</p>
+              </div>
+              
+              <div class="story-controls">
+                <h6>Market Parameters</h6>
+                <div class="row g-2">
+          <div class="col-6">
+                    <label class="form-label">Market Size <span class="text-muted">(a_d)</span></label>
+                    <input type="range" class="form-range" id="a_d" min="5" max="20" value="10" step="1">
+                    <div class="text-center small text-muted" id="a_d_value">10</div>
+          </div>
+          <div class="col-6">
+                    <label class="form-label">Demand Sensitivity <span class="text-muted">(b_d)</span></label>
+                    <input type="range" class="form-range" id="b_d" min="0.5" max="2" value="1" step="0.1">
+                    <div class="text-center small text-muted" id="b_d_value">1.0</div>
+                  </div>
+          </div>
+                <div class="row g-2 mt-2">
+          <div class="col-6">
+                    <label class="form-label">Supply Cost <span class="text-muted">(a_s)</span></label>
+                    <input type="range" class="form-range" id="a_s" min="0" max="8" value="2" step="0.5">
+                    <div class="text-center small text-muted" id="a_s_value">2.0</div>
+          </div>
+          <div class="col-6">
+                    <label class="form-label">Supply Flexibility <span class="text-muted">(b_s)</span></label>
+                    <input type="range" class="form-range" id="b_s" min="0.5" max="2" value="1" step="0.1">
+                    <div class="text-center small text-muted" id="b_s_value">1.0</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="story-action mt-3">
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 2 →</button>
+              </div>
+            </div>
+
+            <!-- Chapter 2: Equilibrium Discovery -->
+            <div class="story-chapter" data-chapter="2">
+              <h4 class="card-title">⚖️ Chapter 2: Finding Balance</h4>
+              <div class="story-text">
+                <p>Great! Now you can see how the market curves respond to your changes. 
+                The point where supply meets demand is called the <strong>equilibrium</strong>.</p>
+                
+                <div class="alert alert-success">
+                  <strong>💡 Key Insight:</strong> At equilibrium, the market clears - everyone who wants to buy 
+                  can find a seller, and every seller can find a buyer.
+                </div>
+
+                <p>Try adjusting the parameters and watch how the equilibrium point moves. 
+                Notice how the consumer surplus (CS) and producer surplus (PS) change.</p>
+          </div>
+
+              <div class="story-controls">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="toggleCSPS">
+                  <label class="form-check-label" for="toggleCSPS">Show Consumer & Producer Surplus</label>
+                </div>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="toggleDWL">
+                  <label class="form-check-label" for="toggleDWL">Show Deadweight Loss (when applicable)</label>
+                </div>
+          </div>
+
+              <div class="story-action mt-3">
+                <button class="btn btn-outline-secondary me-2" onclick="prevChapter()">← Previous</button>
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 3 →</button>
+              </div>
+          </div>
+
+            <!-- Chapter 3: Policy Challenges -->
+            <div class="story-chapter" data-chapter="3">
+              <h4 class="card-title">🏛️ Chapter 3: The Government Steps In</h4>
+              <div class="story-text">
+                <p>Uh oh! The government has decided to intervene in your market. 
+                They want to raise revenue and "help" consumers. Let's see what happens...</p>
+                
+                <div class="alert alert-warning">
+                  <strong>⚠️ Challenge:</strong> Every policy has winners and losers. Your job is to understand who 
+                  bears the burden and why.
+          </div>
+
+                <p>Choose a policy below and see how it affects the market equilibrium, 
+                consumer surplus, and producer surplus.</p>
+          </div>
+
+              <div class="story-controls">
+                <h6>Choose Your Policy</h6>
+                <div class="btn-group-vertical w-100" role="group">
+                  <input type="radio" class="btn-check" name="policy" id="policy_none" value="none" checked>
+                  <label class="btn btn-outline-secondary" for="policy_none">No Policy (Baseline)</label>
+                  
+                  <input type="radio" class="btn-check" name="policy" id="policy_tax" value="per_unit_tax">
+                  <label class="btn btn-outline-secondary" for="policy_tax">Per-Unit Tax</label>
+                  
+                  <input type="radio" class="btn-check" name="policy" id="policy_quota" value="quota">
+                  <label class="btn btn-outline-secondary" for="policy_quota">Quantity Quota</label>
+                  
+                  <input type="radio" class="btn-check" name="policy" id="policy_ceiling" value="price_ceiling">
+                  <label class="btn btn-outline-secondary" for="policy_ceiling">Price Ceiling</label>
+          </div>
+
+                <div id="policyControls" class="mt-3" style="display: none;">
+                  <div id="taxControl" style="display: none;">
+                    <label class="form-label">Tax Amount (τ)</label>
+                    <input type="range" class="form-range" id="tau" min="0" max="5" value="1" step="0.1">
+                    <div class="text-center small text-muted" id="tau_value">1.0</div>
+          </div>
+                  <div id="quotaControl" style="display: none;">
+                    <label class="form-label">Quota Limit (q_cap)</label>
+                    <input type="range" class="form-range" id="q_cap" min="1" max="8" value="3" step="0.1">
+                    <div class="text-center small text-muted" id="q_cap_value">3.0</div>
+          </div>
+                  <div id="ceilingControl" style="display: none;">
+                    <label class="form-label">Ceiling Price (p̄)</label>
+                    <input type="range" class="form-range" id="p_bar" min="2" max="8" value="4" step="0.1">
+                    <div class="text-center small text-muted" id="p_bar_value">4.0</div>
+              </div>
+            </div>
+          </div>
+
+              <div class="story-action mt-3">
+                <button class="btn btn-outline-secondary me-2" onclick="prevChapter()">← Previous</button>
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 4 →</button>
+              </div>
+            </div>
+
+            <!-- Chapter 4: Deep Analysis -->
+            <div class="story-chapter" data-chapter="4">
+              <h4 class="card-title">🔍 Chapter 4: Understanding the Impact</h4>
+              <div class="story-text">
+                <p>Now let's dig deeper into what these policies actually do. 
+                Look at the outcomes table and the visual overlays to understand the full picture.</p>
+                
+                <div class="alert alert-info">
+                  <strong>🎯 Analysis Task:</strong> Compare the baseline scenario with your chosen policy. 
+                  Who gains? Who loses? What's the total welfare impact?
+                </div>
+
+                <p>Try different policy combinations and parameter values to see patterns emerge. 
+                What determines who bears the burden of taxes? Why do some policies create shortages?</p>
+              </div>
+
+              <div class="story-controls">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="toggleTR">
+                  <label class="form-check-label" for="toggleTR">Show Tax Revenue/Quota Rent</label>
+                </div>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="toggleDWL">
+                  <label class="form-check-label" for="toggleDWL">Show Deadweight Loss</label>
+                </div>
+              </div>
+
+              <div class="story-action mt-3">
+                <button class="btn btn-outline-secondary me-2" onclick="prevChapter()">← Previous</button>
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 5 →</button>
+              </div>
+            </div>
+
+            <!-- Chapter 5: Mastery & Exploration -->
+            <div class="story-chapter" data-chapter="5">
+              <h4 class="card-title">🎓 Chapter 5: Mastery & Beyond</h4>
+              <div class="story-text">
+                <p>Congratulations! You've mastered the basics of supply and demand analysis. 
+                Now it's time to explore freely and test your understanding.</p>
+                
+                <div class="alert alert-success">
+                  <strong>🚀 Free Exploration:</strong> You now have access to all controls and can experiment 
+                  with any combination of parameters and policies.
+                </div>
+
+                <p>Try the self-check scenarios, take the quizzes, or create your own experiments. 
+                Save interesting configurations as bookmarks for future reference.</p>
+              </div>
+
+              <div class="story-controls">
+                <h6>Advanced Controls</h6>
+                <div class="row g-2">
+                  <div class="col-6">
+                    <label class="form-label">Ad-Valorem Tax (t)</label>
+                    <input type="range" class="form-range" id="t" min="0" max="0.5" value="0.1" step="0.01">
+                    <div class="text-center small text-muted" id="t_value">0.10</div>
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">Price Floor (p̄)</label>
+                    <input type="range" class="form-range" id="p_floor" min="4" max="10" value="7" step="0.1">
+                    <div class="text-center small text-muted" id="p_floor_value">7.0</div>
+      </div>
+    </div>
+  </div>
+
+              <div class="story-action mt-3">
+                <button class="btn btn-outline-secondary me-2" onclick="prevChapter()">← Previous</button>
+                <button class="btn btn-success" onclick="completeStory()">Complete Story! 🎉</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions Panel -->
+      <div class="card shadow-sm">
+      <div class="card-body">
+          <h6 class="card-title">⚡ Quick Actions</h6>
+          <div class="d-grid gap-2">
+            <button class="btn btn-outline-primary btn-sm" onclick="resetToBaseline()">Reset to Baseline</button>
+            <button class="btn btn-outline-secondary btn-sm" onclick="toggleTeachingPanel()">Show Teaching Prompts</button>
+            <button class="btn btn-outline-info btn-sm" onclick="showGlossary()">Show Glossary</button>
+          </div>
+          </div>
+          </div>
+        </div>
+
+    <!-- Right Column: Visualization & Analysis -->
+    <div class="col-12 col-xl-7">
+      <!-- Market Visualization -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h5 class="card-title">📊 Market Visualization</h5>
+        <div class="chart-wrap lg position-relative">
+            <div id="marketPlot" class="w-100 h-100" style="width:100%;height:400px;"></div>
+        </div>
+      </div>
+    </div>
+
+      <!-- Outcomes Analysis -->
+      <div class="card shadow-sm mb-4">
+      <div class="card-body">
+          <h5 class="card-title">📈 Market Outcomes</h5>
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+              <thead><tr><th>Metric</th><th>Baseline</th><th>Current</th><th>Change</th></tr></thead>
+              <tbody id="outcomesTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+      <!-- Story Insights -->
+      <div class="card shadow-sm">
+      <div class="card-body">
+          <h5 class="card-title">💡 Story Insights</h5>
+          <div id="storyInsights">
+            <p class="text-muted">Adjust the market parameters and policies to see insights appear here...</p>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+  <!-- Teaching Panel (Offcanvas) -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="teachingPanel" aria-labelledby="teachingPanelLabel">
+      <div class="offcanvas-header">
+      <h5 id="teachingPanelLabel" class="mb-0">Teaching Prompts & Self-Checks</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+      <div class="mb-4">
+        <h6>🎯 Learning Objectives</h6>
+        <ul class="small">
+          <li>Understand how supply and demand curves determine equilibrium</li>
+          <li>See how policy interventions affect market outcomes</li>
+          <li>Learn to identify winners, losers, and efficiency costs</li>
+          <li>Develop intuition for tax incidence and deadweight loss</li>
+        </ul>
+        </div>
+
+      <div class="mb-4">
+        <h6>✅ Self-Check Scenarios</h6>
+        <div class="d-grid gap-2">
+          <button class="btn btn-sm btn-outline-primary" onclick="checkBaseline()">Check Baseline (a_d=10, b_d=1, a_s=2, b_s=1)</button>
+          <button class="btn btn-sm btn-outline-primary" onclick="checkTaxScenario()">Check Tax Scenario (τ=1.0)</button>
+          <button class="btn btn-sm btn-outline-primary" onclick="checkQuotaScenario()">Check Quota Scenario (q_cap=3.0)</button>
+              </div>
+        </div>
+
+      <div class="mb-4">
+        <h6>🧠 Quick Quiz</h6>
+        <div class="mb-3">
+          <div class="fw-semibold">Who bears more of a per-unit tax burden when demand is less elastic than supply?</div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="quiz1" id="q1a" value="buyers"><label class="form-check-label" for="q1a">Buyers</label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="quiz1" id="q1b" value="sellers"><label class="form-check-label" for="q1b">Sellers</label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="quiz1" id="q1c" value="equal"><label class="form-check-label" for="q1c">Equal burden</label></div>
+          <button class="btn btn-sm btn-outline-primary mt-2" onclick="checkQuiz1()">Check Answer</button>
+          <div id="quiz1Result" class="mt-2"></div>
+          </div>
+          </div>
+          </div>
+        </div>
+
+  <!-- Glossary Modal -->
+  <div class="modal fade" id="glossaryModal" tabindex="-1" aria-labelledby="glossaryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="glossaryModalLabel">📚 Economic Terms Glossary</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h6>Market Parameters</h6>
+              <dl class="small">
+                <dt>a_d (Demand Intercept)</dt>
+                <dd>Quantity demanded when price is zero</dd>
+                <dt>b_d (Demand Slope)</dt>
+                <dd>How quickly quantity falls as price rises</dd>
+                <dt>a_s (Supply Intercept)</dt>
+                <dd>Cost structure parameter for supply</dd>
+                <dt>b_s (Supply Slope)</dt>
+                <dd>How quickly quantity rises as price rises</dd>
+              </dl>
+          </div>
+            <div class="col-md-6">
+              <h6>Market Outcomes</h6>
+              <dl class="small">
+                <dt>p* (Equilibrium Price)</dt>
+                <dd>Market-clearing price where supply meets demand</dd>
+                <dt>q* (Equilibrium Quantity)</dt>
+                <dd>Market-clearing quantity traded</dd>
+                <dt>CS (Consumer Surplus)</dt>
+                <dd>Net benefit to consumers above the price paid</dd>
+                <dt>PS (Producer Surplus)</dt>
+                <dd>Net benefit to producers above their costs</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script>
+// Story Management
+let currentChapter = 1;
+const totalChapters = 5;
+
+function showChapter(chapter) {
+  // Hide all chapters
+  document.querySelectorAll('.story-chapter').forEach(ch => ch.classList.remove('active'));
+  
+  // Show target chapter
+  const targetChapter = document.querySelector(`[data-chapter="${chapter}"]`);
+  if (targetChapter) {
+    targetChapter.classList.add('active');
+    currentChapter = chapter;
+    
+    // Update progress bar
+    const progress = (chapter / totalChapters) * 100;
+    document.getElementById('storyProgress').style.width = `${progress}%`;
+    document.getElementById('currentChapter').textContent = `Chapter ${chapter}/${totalChapters}`;
+    
+    // Update chapter-specific content
+    updateChapterContent(chapter);
+  }
+}
+
+function nextChapter() {
+  if (currentChapter < totalChapters) {
+    showChapter(currentChapter + 1);
+  }
+}
+
+function prevChapter() {
+  if (currentChapter > 1) {
+    showChapter(currentChapter - 1);
+  }
+}
+
+function updateChapterContent(chapter) {
+  // Chapter-specific logic
+  switch(chapter) {
+    case 1:
+      // Reset to baseline parameters
+      resetToBaseline();
+      break;
+    case 3:
+      // Show policy controls
+      document.getElementById('policyControls').style.display = 'block';
+      break;
+    case 5:
+      // Enable all advanced controls
+      enableAdvancedControls();
+      break;
+  }
+}
+
+// Market Model Functions
+function computeEquilibrium(a_d, b_d, a_s, b_s) {
+    const q_star = (a_d * b_s - a_s * b_d) / (b_d + b_s);
+    const p_star = (a_d + a_s) / (b_d + b_s);
+    const p_int_d = a_d / b_d;
+    const p_int_s = a_s / b_s;
+    return { q_star, p_star, p_int_d, p_int_s };
+  }
+
+function computePolicyOutcome(baseline, policy, params) {
+  let outcome = null;
+  
+  switch(policy) {
+    case 'per_unit_tax':
+      const tau = params.tau || 1;
+      const p_s = (baseline.a_d + baseline.a_s - baseline.b_d * tau) / (baseline.b_d + baseline.b_s);
+      const q = Math.max(0, baseline.a_d - baseline.b_d * (p_s + tau));
+    const p_b = p_s + tau;
+      const tr = tau * q;
+      const dwl = 0.5 * tau * Math.max(0, baseline.q_star - q);
+      outcome = { p_b, p_s, q, tr, dwl, policy: 'per_unit_tax' };
+      break;
+      
+    case 'quota':
+      const q_cap = params.q_cap || 3;
+      const q_quota = Math.min(baseline.q_star, q_cap);
+      const p_b_quota = (baseline.a_d - q_quota) / baseline.b_d;
+      const p_s_quota = (q_quota + baseline.a_s) / baseline.b_s;
+      const quota_rent = (p_b_quota - p_s_quota) * q_quota;
+      const dwl_quota = 0.5 * (p_b_quota - p_s_quota) * Math.max(0, baseline.q_star - q_quota);
+      outcome = { p_b: p_b_quota, p_s: p_s_quota, q: q_quota, tr: 0, dwl: dwl_quota, quota_rent, policy: 'quota' };
+      break;
+      
+    case 'price_ceiling':
+      const p_ceiling = params.p_bar || 4;
+      const q_d_ceiling = Math.max(0, baseline.a_d - baseline.b_d * p_ceiling);
+      const q_s_ceiling = Math.max(0, (p_ceiling - baseline.a_s) * baseline.b_s);
+      const q_ceiling = Math.min(q_d_ceiling, q_s_ceiling);
+      const dwl_ceiling = 0.5 * Math.abs(p_ceiling - baseline.p_star) * Math.abs(q_ceiling - baseline.q_star);
+      outcome = { p_b: p_ceiling, p_s: p_ceiling, q: q_ceiling, tr: 0, dwl: dwl_ceiling, policy: 'price_ceiling' };
+      break;
+  }
+  
+  return outcome;
+}
+
+// UI Update Functions
+function updateOutcomesTable(baseline, outcome) {
+  const tbody = document.getElementById('outcomesTable');
+  let rows = '';
+  
+  if (!outcome) {
+    // Baseline only
+    const cs = 0.5 * baseline.q_star * (baseline.p_int_d - baseline.p_star);
+    const ps = 0.5 * baseline.q_star * (baseline.p_star - baseline.p_int_s);
+    
+    rows = `
+      <tr><td>Equilibrium Price (p*)</td><td>${baseline.p_star.toFixed(2)}</td><td>-</td><td>-</td></tr>
+      <tr><td>Equilibrium Quantity (q*)</td><td>${baseline.q_star.toFixed(2)}</td><td>-</td><td>-</td></tr>
+      <tr><td>Consumer Surplus (CS)</td><td>${cs.toFixed(2)}</td><td>-</td><td>-</td></tr>
+      <tr><td>Producer Surplus (PS)</td><td>${ps.toFixed(2)}</td><td>-</td><td>-</td></tr>
+    `;
+    } else {
+    // With policy outcome
+    const delta_p = (outcome.p_b - baseline.p_star).toFixed(2);
+    const delta_q = (outcome.q - baseline.q_star).toFixed(2);
+    
+    rows = `
+      <tr><td>Price (Buyer)</td><td>${baseline.p_star.toFixed(2)}</td><td>${outcome.p_b.toFixed(2)}</td><td class="${delta_p > 0 ? 'text-danger' : 'text-success'}">${delta_p > 0 ? '+' : ''}${delta_p}</td></tr>
+      <tr><td>Price (Seller)</td><td>${baseline.p_star.toFixed(2)}</td><td>${outcome.p_s.toFixed(2)}</td><td class="${(outcome.p_s - baseline.p_star) > 0 ? 'text-danger' : 'text-success'}">${(outcome.p_s - baseline.p_star) > 0 ? '+' : ''}${(outcome.p_s - baseline.p_star).toFixed(2)}</td></tr>
+      <tr><td>Quantity Traded</td><td>${baseline.q_star.toFixed(2)}</td><td>${outcome.q.toFixed(2)}</td><td class="${delta_q < 0 ? 'text-danger' : 'text-success'}">${delta_q < 0 ? '' : '+'}${delta_q}</td></tr>
+    `;
+    
+    if (outcome.tr > 0) {
+      rows += `<tr><td>Tax Revenue</td><td>0.00</td><td>${outcome.tr.toFixed(2)}</td><td class="text-success">+${outcome.tr.toFixed(2)}</td></tr>`;
+    }
+    
+    if (outcome.quota_rent > 0) {
+      rows += `<tr><td>Quota Rent</td><td>0.00</td><td>${outcome.quota_rent.toFixed(2)}</td><td class="text-success">+${outcome.quota_rent.toFixed(2)}</td></tr>`;
+    }
+    
+    if (outcome.dwl > 0) {
+      rows += `<tr><td>Deadweight Loss</td><td>0.00</td><td>${outcome.dwl.toFixed(2)}</td><td class="text-danger">+${outcome.dwl.toFixed(2)}</td></tr>`;
+    }
+  }
+  
+  tbody.innerHTML = rows;
+}
+
+function updateStoryInsights(baseline, outcome) {
+  const insightsDiv = document.getElementById('storyInsights');
+  let insights = '';
+  
+  if (!outcome) {
+    insights = `
+      <div class="alert alert-info">
+        <strong>Market Status:</strong> The market is in equilibrium at price ${baseline.p_star.toFixed(2)} 
+        with ${baseline.q_star.toFixed(2)} units traded. This represents the efficient allocation 
+        where supply meets demand.
+      </div>
+    `;
+  } else {
+    switch(outcome.policy) {
+      case 'per_unit_tax':
+        insights = `
+          <div class="alert alert-warning">
+            <strong>Tax Impact:</strong> A per-unit tax of ${outcome.p_b - outcome.p_s} creates a wedge 
+            between buyer and seller prices. The tax reduces quantity from ${baseline.q_star.toFixed(2)} 
+            to ${outcome.q.toFixed(2)}, creating deadweight loss of ${outcome.dwl.toFixed(2)}.
+          </div>
+        `;
+        break;
+      case 'quota':
+        insights = `
+          <div class="alert alert-warning">
+            <strong>Quota Impact:</strong> The quantity quota of ${outcome.q} creates a price gap 
+            between buyers (${outcome.p_b.toFixed(2)}) and sellers (${outcome.p_s.toFixed(2)}). 
+            This generates quota rent of ${outcome.quota_rent.toFixed(2)} and deadweight loss of ${outcome.dwl.toFixed(2)}.
+          </div>
+        `;
+        break;
+      case 'price_ceiling':
+        insights = `
+          <div class="alert alert-warning">
+            <strong>Price Ceiling Impact:</strong> The price ceiling of ${outcome.p_b.toFixed(2)} 
+            reduces quantity traded to ${outcome.q.toFixed(2)}. This creates a shortage and 
+            deadweight loss of ${outcome.dwl.toFixed(2)}.
+          </div>
+        `;
+        break;
+    }
+  }
+  
+  insightsDiv.innerHTML = insights;
+}
+
+// Plot Rendering
+function renderMarketPlot(baseline, outcome) {
+  const el = document.getElementById('marketPlot');
+  
+  // Generate curve data
+  const q_max = Math.max(baseline.q_star * 1.5, baseline.a_d * 1.2);
+  const n = 100;
+  const Q = Array.from({length: n}, (_, i) => q_max * i / (n-1));
+  const P_d = Q.map(q => (baseline.a_d - q) / baseline.b_d);
+  const P_s = Q.map(q => (q + baseline.a_s) / baseline.b_s);
+
+    const traces = [
+    { x: Q, y: P_d, mode: 'lines', name: 'Demand P(Q)', line: {color: '#0d6efd', width: 3} },
+    { x: Q, y: P_s, mode: 'lines', name: 'Supply P(Q)', line: {color: '#198754', width: 3} }
+  ];
+  
+  // Add equilibrium point
+  traces.push({
+    x: [baseline.q_star],
+    y: [baseline.p_star],
+    mode: 'markers',
+    name: 'Equilibrium',
+    marker: { size: 12, color: '#dc3545', symbol: 'diamond' }
+  });
+  
+  // Add policy-specific overlays
+  if (outcome) {
+    // Add outcome point
+    traces.push({
+      x: [outcome.q],
+      y: [outcome.p_b],
+      mode: 'markers',
+      name: 'Policy Outcome',
+      marker: { size: 10, color: '#ffc107', symbol: 'circle' }
+    });
+    
+    // Add price wedge if applicable
+    if (outcome.p_b !== outcome.p_s) {
+      traces.push({
+        x: [outcome.q, outcome.q],
+        y: [outcome.p_s, outcome.p_b],
+        mode: 'lines',
+        name: 'Price Wedge',
+        line: { color: '#fd7e14', width: 4, dash: 'dash' }
+      });
+    }
+    }
+
+    const layout = {
+    title: 'Market Supply & Demand',
+    xaxis: { title: 'Quantity (Q)', range: [0, q_max] },
+    yaxis: { title: 'Price (P)', range: [0, Math.max(...P_d, ...P_s) * 1.1] },
+    showlegend: true,
+    margin: { l: 60, r: 30, t: 40, b: 60 }
+  };
+  
+  Plotly.react(el, traces, layout, { displayModeBar: false, responsive: true });
+}
+
+// Event Handlers
+function resetToBaseline() {
+  document.getElementById('a_d').value = 10;
+  document.getElementById('b_d').value = 1;
+  document.getElementById('a_s').value = 2;
+  document.getElementById('b_s').value = 1;
+  document.getElementById('tau').value = 1;
+  document.getElementById('q_cap').value = 3;
+  document.getElementById('p_bar').value = 4;
+  document.getElementById('t').value = 0.1;
+  document.getElementById('p_floor').value = 7;
+  
+  // Update display values
+  updateDisplayValues();
+  
+  // Recompute and render
+  updateMarket();
+}
+
+function updateDisplayValues() {
+  document.getElementById('a_d_value').textContent = document.getElementById('a_d').value;
+  document.getElementById('b_d_value').textContent = document.getElementById('b_d').value;
+  document.getElementById('a_s_value').textContent = document.getElementById('a_s').value;
+  document.getElementById('b_s_value').textContent = document.getElementById('b_s').value;
+  document.getElementById('tau_value').textContent = document.getElementById('tau').value;
+  document.getElementById('q_cap_value').textContent = document.getElementById('q_cap').value;
+  document.getElementById('p_bar_value').textContent = document.getElementById('p_bar').value;
+  document.getElementById('t_value').textContent = document.getElementById('t').value;
+  document.getElementById('p_floor_value').textContent = document.getElementById('p_floor').value;
+}
+
+function updateMarket() {
+  const a_d = parseFloat(document.getElementById('a_d').value);
+  const b_d = parseFloat(document.getElementById('b_d').value);
+  const a_s = parseFloat(document.getElementById('a_s').value);
+  const b_s = parseFloat(document.getElementById('b_s').value);
+  
+  const baseline = { ...computeEquilibrium(a_d, b_d, a_s, b_s), a_d, b_d, a_s, b_s };
+  
+  // Determine current policy
+  let policy = 'none';
+  let params = {};
+  
+  if (document.getElementById('policy_tax').checked) {
+    policy = 'per_unit_tax';
+    params.tau = parseFloat(document.getElementById('tau').value);
+  } else if (document.getElementById('policy_quota').checked) {
+    policy = 'quota';
+    params.q_cap = parseFloat(document.getElementById('q_cap').value);
+  } else if (document.getElementById('policy_ceiling').checked) {
+    policy = 'price_ceiling';
+    params.p_bar = parseFloat(document.getElementById('p_bar').value);
+  }
+  
+  const outcome = policy !== 'none' ? computePolicyOutcome(baseline, policy, params) : null;
+  
+  // Update UI
+  updateOutcomesTable(baseline, outcome);
+  updateStoryInsights(baseline, outcome);
+  renderMarketPlot(baseline, outcome);
+}
+
+// Policy control visibility
+document.querySelectorAll('input[name="policy"]').forEach(radio => {
+  radio.addEventListener('change', function() {
+    const policyControls = document.getElementById('policyControls');
+    const taxControl = document.getElementById('taxControl');
+    const quotaControl = document.getElementById('quotaControl');
+    const ceilingControl = document.getElementById('ceilingControl');
+    
+    policyControls.style.display = 'block';
+    taxControl.style.display = 'none';
+    quotaControl.style.display = 'none';
+    ceilingControl.style.display = 'none';
+    
+    switch(this.value) {
+      case 'per_unit_tax':
+        taxControl.style.display = 'block';
+        break;
+      case 'quota':
+        quotaControl.style.display = 'block';
+        break;
+      case 'price_ceiling':
+        ceilingControl.style.display = 'block';
+        break;
+      default:
+        policyControls.style.display = 'none';
+    }
+    
+    updateMarket();
+  });
+});
+
+// Parameter change handlers
+['a_d', 'b_d', 'a_s', 'b_s', 'tau', 'q_cap', 'p_bar', 't', 'p_floor'].forEach(id => {
+  document.getElementById(id).addEventListener('input', function() {
+    updateDisplayValues();
+    updateMarket();
+  });
+});
+
+// Utility functions
+function toggleTeachingPanel() {
+  const bsOffcanvas = new bootstrap.Offcanvas(document.getElementById('teachingPanel'));
+  bsOffcanvas.show();
+}
+
+function showGlossary() {
+  const bsModal = new bootstrap.Modal(document.getElementById('glossaryModal'));
+  bsModal.show();
+}
+
+function completeStory() {
+  alert('🎉 Congratulations! You have completed the Supply & Demand Basics story. You now have a solid understanding of market equilibrium and policy analysis. Continue exploring with the advanced controls!');
+}
+
+// Self-check functions
+function checkBaseline() {
+  const baseline = computeEquilibrium(10, 1, 2, 1);
+  if (Math.abs(baseline.p_star - 6) < 0.1 && Math.abs(baseline.q_star - 4) < 0.1) {
+    alert('✅ Baseline check passed! p* = 6, q* = 4');
+  } else {
+    alert('❌ Baseline check failed. Expected p* ≈ 6, q* ≈ 4');
+  }
+}
+
+function checkTaxScenario() {
+  const baseline = { ...computeEquilibrium(10, 1, 2, 1), a_d: 10, b_d: 1, a_s: 2, b_s: 1 };
+  const outcome = computePolicyOutcome(baseline, 'per_unit_tax', { tau: 1 });
+  if (Math.abs(outcome.p_b - 7) < 0.1 && Math.abs(outcome.p_s - 6) < 0.1 && Math.abs(outcome.q - 3) < 0.1) {
+    alert('✅ Tax scenario check passed! p_b = 7, p_s = 6, q = 3');
+  } else {
+    alert('❌ Tax scenario check failed. Expected p_b ≈ 7, p_s ≈ 6, q ≈ 3');
+  }
+}
+
+function checkQuotaScenario() {
+  const baseline = { ...computeEquilibrium(10, 1, 2, 1), a_d: 10, b_d: 1, a_s: 2, b_s: 1 };
+  const outcome = computePolicyOutcome(baseline, 'quota', { q_cap: 3 });
+  if (Math.abs(outcome.p_b - 7) < 0.1 && Math.abs(outcome.p_s - 5) < 0.1 && Math.abs(outcome.q - 3) < 0.1) {
+    alert('✅ Quota scenario check passed! p_b = 7, p_s = 5, q = 3');
+  } else {
+    alert('❌ Quota scenario check failed. Expected p_b ≈ 7, p_s ≈ 5, q ≈ 3');
+  }
+}
+
+function checkQuiz1() {
+  const val = document.querySelector('input[name="quiz1"]:checked');
+  const resultDiv = document.getElementById('quiz1Result');
+  
+  if (!val) {
+    resultDiv.innerHTML = '<div class="alert alert-warning">Please select an answer first.</div>';
+    return;
+  }
+  
+  if (val.value === 'buyers') {
+    resultDiv.innerHTML = '<div class="alert alert-success">✅ Correct! When demand is less elastic (steeper), buyers bear more of the tax burden because they are less responsive to price changes.</div>';
+    } else {
+    resultDiv.innerHTML = '<div class="alert alert-danger">❌ Incorrect. Think about which side is less responsive to price changes - that side will bear more of the tax burden.</div>';
+  }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+  showChapter(1);
+  updateMarket();
+});
+</script>
+
+<style>
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+}
+
+.story-chapter {
+  display: none;
+}
+
+.story-chapter.active {
+  display: block;
+}
+
+.story-controls {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 0.375rem;
+  margin: 1rem 0;
+}
+
+.story-action {
+  border-top: 1px solid #dee2e6;
+  padding-top: 1rem;
+}
+
+.chart-wrap.lg {
+  min-height: 400px;
+}
+
+.check-result.pass {
+  color: #198754;
+  font-weight: bold;
+}
+
+.check-result.fail {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.sticky-card {
+  position: sticky;
+  top: 1rem;
+}
+</style>
+{% endblock %}
+
+

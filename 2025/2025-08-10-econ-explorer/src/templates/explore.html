@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row g-4">
+  <!-- Labs Section -->
+  <div class="col-12 col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title mb-3">🎓 Interactive Learning Labs</h5>
+        <p class="card-text">Explore economic concepts through narrative-driven, interactive experiences.</p>
+        
+        <div class="d-grid gap-2">
+          <a href="/lab/basics" class="btn btn-primary">
+            <strong>Supply & Demand Basics</strong>
+            <br><small class="text-light">Follow "The Market Story" through 5 chapters</small>
+          </a>
+          
+          <a href="/lab/supply-demand" class="btn btn-outline-primary">
+            <strong>Supply & Demand Lab</strong>
+            <br><small class="text-muted">Advanced policy analysis with multiple interventions</small>
+          </a>
+          
+          <a href="/lab/consumer-theory" class="btn btn-outline-primary">
+            <strong>Consumer Theory</strong>
+            <br><small class="text-muted">Follow Sarah's journey through consumer choice</small>
+          </a>
+
+          <a href="/lab/producer-theory" class="btn btn-outline-primary">
+            <strong>Producer Theory</strong>
+            <br><small class="text-muted">Follow Alex's challenge in production optimization</small>
+          </a>
+
+          <a href="/lab/market-equilibrium" class="btn btn-outline-primary">
+            <strong>Market Equilibrium</strong>
+            <br><small class="text-muted">Follow Mayor Sarah's journey in market dynamics</small>
+          </a>
+
+          <a href="/lab/game-theory" class="btn btn-outline-primary">
+            <strong>Game Theory</strong>
+            <br><small class="text-muted">Follow Emma's strategic challenge in competitive dynamics</small>
+          </a>
+
+            <a href="/lab/auctions" class="btn btn-outline-primary">
+              <strong>Auctions</strong>
+              <br><small class="text-muted">Follow Marcus's journey through auction theory and bidding dynamics</small>
+            </a>
+
+            <a href="/lab/growth-models" class="btn btn-outline-primary">
+              <strong>Growth Models</strong>
+              <br><small class="text-muted">Follow Maya's analysis of Prospera's development journey</small>
+            </a>
+          </div>
+        
+        <div class="mt-3">
+          <small class="text-muted">
+            💡 Each lab uses progressive disclosure and narrative learning to build understanding step-by-step.
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Explorer Section -->
+  <div class="col-12 col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title mb-3">📊 Data Explorer</h5>
+        <p class="card-text">Explore economic time series data from FRED.</p>
+        
+        <form class="row g-2" id="seriesForm">
+          <div class="col-auto">
+            <select class="form-select" id="series_id">
+              <option value="cpi">cpi</option>
+              <option value="hpi_kc">hpi_kc</option>
+            </select>
+          </div>
+          <div class="col-auto">
+            <input class="form-control" type="text" id="from" placeholder="from (YYYY-MM)">
+          </div>
+          <div class="col-auto">
+            <input class="form-control" type="text" id="to" placeholder="to (YYYY-MM)">
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-primary" type="submit">Load</button>
+          </div>
+        </form>
+        
+        <div class="mt-4 chart-wrap lg">
+          <canvas id="exploreChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('seriesForm');
+  const ctx = document.getElementById('exploreChart').getContext('2d');
+  let chart;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const series_id = document.getElementById('series_id').value;
+    const f = document.getElementById('from').value || '';
+    const t = document.getElementById('to').value || '';
+    const data = await fetchSeries(series_id, f, t);
+    if (!data) return;
+    const labels = data.observations.map(o => o.date);
+    const values = data.observations.map(o => o.value);
+    if (chart) chart.destroy();
+    chart = new Chart(ctx, {
+      type: 'line',
+      data: { labels, datasets: [{ label: data.series_id, data: values, fill:false, tension:0.2 }]},
+      options: { responsive: true, maintainAspectRatio: false, animation: false }
+    });
+  });
+</script>
+{% endblock %}

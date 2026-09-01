@@ -1,0 +1,643 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+  <!-- Story Header -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow-sm border-0 bg-gradient-primary text-white">
+        <div class="card-body text-center py-4">
+          <h1 class="display-6 mb-2">🛒 The Consumer's Journey</h1>
+          <p class="lead mb-0">Follow Sarah's shopping adventure as she learns about preferences, budgets, and optimal choices</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Story Progress Bar -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <span class="me-3 fw-bold">Story Progress:</span>
+            <div class="progress flex-grow-1 me-3" style="height: 8px;">
+              <div class="progress-bar" id="storyProgress" role="progressbar" style="width: 0%"></div>
+            </div>
+            <span class="badge bg-primary" id="currentChapter">Chapter 1/5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="row g-4">
+    <!-- Left Column: Story & Controls -->
+    <div class="col-12 col-xl-5">
+      <!-- Story Panel -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <div id="storyContent">
+            <!-- Chapter 1: Introduction -->
+            <div class="story-chapter active" data-chapter="1">
+              <h4 class="card-title">📖 Chapter 1: Meet Sarah</h4>
+              <div class="story-text">
+                <p>Meet Sarah, a college student who loves both coffee and donuts. She has a weekly budget of $20 to spend on these treats. Let's explore how she makes her choices!</p>
+                <p>First, let's set up Sarah's preferences and budget constraints.</p>
+              </div>
+              
+              <div class="controls-section">
+                <h6 class="fw-bold mb-3">Sarah's Preferences</h6>
+                <div class="row g-2">
+                  <div class="col-6">
+                    <label class="form-label">Coffee Price ($)</label>
+                    <input type="number" class="form-control" id="priceCoffee" value="2" step="0.5" min="0.5">
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">Donut Price ($)</label>
+                    <input type="number" class="form-control" id="priceDonut" value="1" step="0.5" min="0.5">
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">Weekly Budget ($)</label>
+                    <input type="number" class="form-control" id="budget" value="20" step="1" min="5">
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">Utility Exponent</label>
+                    <input type="number" class="form-control" id="utilityExponent" value="0.5" step="0.1" min="0.1" max="0.9">
+                  </div>
+                </div>
+              </div>
+
+              <div class="navigation-buttons">
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 2 →</button>
+              </div>
+            </div>
+
+            <!-- Chapter 2: Budget Constraint -->
+            <div class="story-chapter" data-chapter="2">
+              <h4 class="card-title">💰 Chapter 2: The Budget Line</h4>
+              <div class="story-text">
+                <p>Sarah's budget creates a constraint on what she can afford. The budget line shows all possible combinations of coffee and donuts she can buy with her $20.</p>
+                <p>Try changing the prices and budget to see how the budget line shifts!</p>
+              </div>
+              
+              <div class="controls-section">
+                <h6 class="fw-bold mb-3">Budget Analysis</h6>
+                <div class="row g-2">
+                  <div class="col-6">
+                    <label class="form-label">Coffee Price ($)</label>
+                    <input type="number" class="form-control" id="priceCoffee2" value="2" step="0.5" min="0.5">
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">Donut Price ($)</label>
+                    <input type="number" class="form-control" id="priceDonut2" value="1" step="0.5" min="0.5">
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">Weekly Budget ($)</label>
+                    <input type="number" class="form-control" id="budget2" value="20" step="1" min="5">
+                  </div>
+                  <div class="col-12">
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" id="showBudgetLine" checked>
+                      <label class="form-check-label" for="showBudgetLine">Show Budget Line</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="navigation-buttons">
+                <button class="btn btn-outline-secondary" onclick="previousChapter()">← Back to Chapter 1</button>
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 3 →</button>
+              </div>
+            </div>
+
+            <!-- Chapter 3: Indifference Curves -->
+            <div class="story-chapter" data-chapter="3">
+              <h4 class="card-title">📊 Chapter 3: Sarah's Preferences</h4>
+              <div class="story-text">
+                <p>Sarah has preferences about how much she values coffee vs donuts. Indifference curves show combinations that give her the same level of happiness (utility).</p>
+                <p>Explore how different utility levels create different indifference curves!</p>
+              </div>
+              
+              <div class="controls-section">
+                <h6 class="fw-bold mb-3">Preference Analysis</h6>
+                <div class="row g-2">
+                  <div class="col-6">
+                    <label class="form-label">Utility Exponent</label>
+                    <input type="number" class="form-control" id="utilityExponent3" value="0.5" step="0.1" min="0.1" max="0.9">
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">Show Utility Level</label>
+                    <input type="number" class="form-control" id="utilityLevel" value="8" step="0.5" min="1" max="20">
+                  </div>
+                  <div class="col-12">
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" id="showIndifferenceCurves" checked>
+                      <label class="form-check-label" for="showIndifferenceCurves">Show Indifference Curves</label>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" id="showUtilityLevels">
+                      <label class="form-check-label" for="showUtilityLevels">Show Multiple Utility Levels</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="navigation-buttons">
+                <button class="btn btn-outline-secondary" onclick="previousChapter()">← Back to Chapter 2</button>
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 4 →</button>
+              </div>
+            </div>
+
+            <!-- Chapter 4: Optimal Choice -->
+            <div class="story-chapter" data-chapter="4">
+              <h4 class="card-title">🎯 Chapter 4: Finding the Best Choice</h4>
+              <div class="story-text">
+                <p>Sarah wants to maximize her happiness while staying within her budget. The optimal choice occurs where an indifference curve just touches the budget line.</p>
+                <p>This is called the "tangency condition" - where the slope of the indifference curve equals the slope of the budget line!</p>
+              </div>
+              
+              <div class="controls-section">
+                <h6 class="fw-bold mb-3">Optimal Choice Analysis</h6>
+                <div class="row g-2">
+                  <div class="col-6">
+                    <label class="form-label">Coffee Price ($)</label>
+                    <input type="number" class="form-control" id="priceCoffee4" value="2" step="0.5" min="0.5">
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">Donut Price ($)</label>
+                    <input type="number" class="form-control" id="priceDonut4" value="1" step="0.5" min="0.5">
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">Weekly Budget ($)</label>
+                    <input type="number" class="form-control" id="budget4" value="20" step="1" min="5">
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">Utility Exponent</label>
+                    <input type="number" class="form-control" id="utilityExponent4" value="0.5" step="0.1" min="0.1" max="0.9">
+                  </div>
+                  <div class="col-12">
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" id="showOptimalPoint" checked>
+                      <label class="form-check-label" for="showOptimalPoint">Show Optimal Point</label>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" id="showTangentLine">
+                      <label class="form-check-label" for="showTangentLine">Show Tangent Line</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="navigation-buttons">
+                <button class="btn btn-outline-secondary" onclick="previousChapter()">← Back to Chapter 3</button>
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 5 →</button>
+              </div>
+            </div>
+
+            <!-- Chapter 5: Comparative Statics -->
+            <div class="story-chapter" data-chapter="5">
+              <h4 class="card-title">🔄 Chapter 5: How Changes Affect Choices</h4>
+              <div class="story-text">
+                <p>What happens when prices or income change? Let's explore how Sarah's optimal choice responds to different economic conditions.</p>
+                <p>This is called "comparative statics" - comparing different equilibrium situations!</p>
+              </div>
+              
+              <div class="controls-section">
+                <h6 class="fw-bold mb-3">Comparative Statics</h6>
+                <div class="row g-2">
+                  <div class="col-6">
+                    <label class="form-label">Coffee Price ($)</label>
+                    <input type="number" class="form-control" id="priceCoffee5" value="2" step="0.5" min="0.5">
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">Donut Price ($)</label>
+                    <input type="number" class="form-control" id="priceDonut5" value="1" step="0.5" min="0.5">
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">Weekly Budget ($)</label>
+                    <input type="number" class="form-control" id="priceBudget5" value="20" step="1" min="5">
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label">Utility Exponent</label>
+                    <input type="number" class="form-control" id="utilityExponent5" value="0.5" step="0.1" min="0.1" max="0.9">
+                  </div>
+                  <div class="col-12">
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" id="showComparativeAnalysis" checked>
+                      <label class="form-check-label" for="showComparativeAnalysis">Show Comparative Analysis</label>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" id="showIncomeExpansion">
+                      <label class="form-check-label" for="showIncomeExpansion">Show Income Expansion Path</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="navigation-buttons">
+                <button class="btn btn-outline-secondary" onclick="previousChapter()">← Back to Chapter 4</button>
+                <button class="btn btn-success" onclick="completeStory()">Complete Story! 🎉</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Self-Check Section -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h5 class="card-title">🧠 Self-Check Questions</h5>
+          <div id="selfCheckContent">
+            <div class="self-check-question">
+              <p class="fw-bold">Question 1:</p>
+              <p>What happens to Sarah's budget line if the price of coffee increases?</p>
+              <div class="btn-group-vertical w-100" role="group">
+                <input type="radio" class="btn-check" name="q1" id="q1a" value="a">
+                <label class="btn btn-outline-primary" for="q1a">It shifts outward</label>
+                <input type="radio" class="btn-check" name="q1" id="q1b" value="b">
+                <label class="btn btn-outline-primary" for="q1b">It shifts inward</label>
+                <input type="radio" class="btn-check" name="q1" id="q1c" value="c">
+                <label class="btn btn-outline-primary" for="q1c">It rotates clockwise</label>
+              </div>
+              <div class="mt-2" id="q1feedback" style="display: none;"></div>
+            </div>
+          </div>
+          <button class="btn btn-outline-primary mt-3" onclick="checkAnswers()">Check Answers</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Visualization & Outcomes -->
+    <div class="col-12 col-xl-7">
+      <!-- Market Visualization -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Consumer Choice Visualization</h5>
+          <div class="chart-wrap lg position-relative">
+            <div id="consumerPlot" class="w-100 h-100" style="width:100%;height:500px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Consumer Outcomes -->
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Sarah's Optimal Choice</h5>
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <tbody>
+                <tr>
+                  <td><strong>Optimal Coffee:</strong></td>
+                  <td id="optimalCoffee">-</td>
+                  <td><strong>Optimal Donuts:</strong></td>
+                  <td id="optimalDonuts">-</td>
+                </tr>
+                <tr>
+                  <td><strong>Total Spending:</strong></td>
+                  <td id="totalSpending">-</td>
+                  <td><strong>Remaining Budget:</strong></td>
+                  <td id="remainingBudget">-</td>
+                </tr>
+                <tr>
+                  <td><strong>Utility Level:</strong></td>
+                  <td id="utilityLevel">-</td>
+                  <td><strong>Budget Line Slope:</strong></td>
+                  <td id="budgetSlope">-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+let currentChapter = 1;
+let plotData = {};
+
+// Initialize the story
+document.addEventListener('DOMContentLoaded', function() {
+    updateStoryProgress();
+    updateChapterDisplay();
+    initializePlot();
+    setupEventListeners();
+});
+
+function setupEventListeners() {
+    // Set up all input event listeners
+    const inputs = document.querySelectorAll('input[type="number"]');
+    inputs.forEach(input => {
+        input.addEventListener('input', updatePlot);
+    });
+    
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updatePlot);
+    });
+}
+
+function nextChapter() {
+    if (currentChapter < 5) {
+        currentChapter++;
+        updateStoryProgress();
+        updateChapterDisplay();
+        updatePlot();
+    }
+}
+
+function previousChapter() {
+    if (currentChapter > 1) {
+        currentChapter--;
+        updateStoryProgress();
+        updateChapterDisplay();
+        updatePlot();
+    }
+}
+
+function updateStoryProgress() {
+    const progress = (currentChapter / 5) * 100;
+    document.getElementById('storyProgress').style.width = progress + '%';
+    document.getElementById('currentChapter').textContent = `Chapter ${currentChapter}/5`;
+}
+
+function updateChapterDisplay() {
+    document.querySelectorAll('.story-chapter').forEach(chapter => {
+        chapter.classList.remove('active');
+    });
+    document.querySelector(`[data-chapter="${currentChapter}"]`).classList.add('active');
+}
+
+function initializePlot() {
+    updatePlot();
+}
+
+function updatePlot() {
+    // Get current parameters based on chapter
+    const params = getCurrentParameters();
+    
+    // Calculate consumer choice
+    const choice = calculateOptimalChoice(params);
+    
+    // Update outcomes table
+    updateOutcomesTable(choice, params);
+    
+    // Create plot
+    createConsumerPlot(choice, params);
+}
+
+function getCurrentParameters() {
+    const params = {};
+    
+    if (currentChapter >= 1) {
+        params.priceCoffee = parseFloat(document.getElementById('priceCoffee').value) || 2;
+        params.priceDonut = parseFloat(document.getElementById('priceDonut').value) || 1;
+        params.budget = parseFloat(document.getElementById('budget').value) || 20;
+        params.utilityExponent = parseFloat(document.getElementById('utilityExponent').value) || 0.5;
+    }
+    
+    if (currentChapter >= 2) {
+        params.priceCoffee = parseFloat(document.getElementById('priceCoffee2').value) || params.priceCoffee;
+        params.priceDonut = parseFloat(document.getElementById('priceDonut2').value) || params.priceDonut;
+        params.budget = parseFloat(document.getElementById('budget2').value) || params.budget;
+    }
+    
+    if (currentChapter >= 3) {
+        params.utilityExponent = parseFloat(document.getElementById('utilityExponent3').value) || params.utilityExponent;
+        params.utilityLevel = parseFloat(document.getElementById('utilityLevel').value) || 8;
+    }
+    
+    if (currentChapter >= 4) {
+        params.priceCoffee = parseFloat(document.getElementById('priceCoffee4').value) || params.priceCoffee;
+        params.priceDonut = parseFloat(document.getElementById('priceDonut4').value) || params.priceDonut;
+        params.budget = parseFloat(document.getElementById('budget4').value) || params.budget;
+        params.utilityExponent = parseFloat(document.getElementById('utilityExponent4').value) || params.utilityExponent;
+    }
+    
+    if (currentChapter >= 5) {
+        params.priceCoffee = parseFloat(document.getElementById('priceCoffee5').value) || params.priceCoffee;
+        params.priceDonut = parseFloat(document.getElementById('priceDonut5').value) || params.priceDonut;
+        params.budget = parseFloat(document.getElementById('priceBudget5').value) || params.budget;
+        params.utilityExponent = parseFloat(document.getElementById('utilityExponent5').value) || params.utilityExponent;
+    }
+    
+    return params;
+}
+
+function calculateOptimalChoice(params) {
+    const { priceCoffee, priceDonut, budget, utilityExponent } = params;
+    
+    // Cobb-Douglas utility function: U = (coffee^α) * (donuts^(1-α))
+    // Optimal choice: coffee = (α * budget) / priceCoffee, donuts = ((1-α) * budget) / priceDonut
+    const alpha = utilityExponent;
+    
+    const optimalCoffee = (alpha * budget) / priceCoffee;
+    const optimalDonuts = ((1 - alpha) * budget) / priceDonut;
+    
+    const totalSpending = optimalCoffee * priceCoffee + optimalDonuts * priceDonut;
+    const remainingBudget = budget - totalSpending;
+    const utilityLevel = Math.pow(optimalCoffee, alpha) * Math.pow(optimalDonuts, 1 - alpha);
+    const budgetSlope = -priceCoffee / priceDonut;
+    
+    return {
+        coffee: optimalCoffee,
+        donuts: optimalDonuts,
+        totalSpending,
+        remainingBudget,
+        utilityLevel,
+        budgetSlope
+    };
+}
+
+function updateOutcomesTable(choice, params) {
+    document.getElementById('optimalCoffee').textContent = choice.coffee.toFixed(2);
+    document.getElementById('optimalDonuts').textContent = choice.donuts.toFixed(2);
+    document.getElementById('totalSpending').textContent = `$${choice.totalSpending.toFixed(2)}`;
+    document.getElementById('remainingBudget').textContent = `$${choice.remainingBudget.toFixed(2)}`;
+    document.getElementById('utilityLevel').textContent = choice.utilityLevel.toFixed(3);
+    document.getElementById('budgetSlope').textContent = choice.budgetSlope.toFixed(2);
+}
+
+function createConsumerPlot(choice, params) {
+    const { priceCoffee, priceDonut, budget, utilityExponent } = params;
+    
+    // Generate data for budget line
+    const maxCoffee = budget / priceCoffee;
+    const maxDonuts = budget / priceDonut;
+    
+    const budgetLine = {
+        x: [0, maxCoffee],
+        y: [maxDonuts, 0],
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Budget Line',
+        line: { color: 'blue', width: 3 },
+        visible: document.getElementById('showBudgetLine')?.checked !== false
+    };
+    
+    // Generate indifference curve data
+    const utilityLevel = document.getElementById('utilityLevel')?.value || 8;
+    const indifferenceCurve = generateIndifferenceCurve(utilityLevel, utilityExponent);
+    
+    const indifferenceCurveTrace = {
+        x: indifferenceCurve.x,
+        y: indifferenceCurve.y,
+        type: 'scatter',
+        mode: 'lines',
+        name: `U = ${utilityLevel}`,
+        line: { color: 'red', width: 2, dash: 'dash' },
+        visible: document.getElementById('showIndifferenceCurves')?.checked !== false
+    };
+    
+    // Optimal point
+    const optimalPoint = {
+        x: [choice.coffee],
+        y: [choice.donuts],
+        type: 'scatter',
+        mode: 'markers',
+        name: 'Optimal Choice',
+        marker: { color: 'green', size: 12, symbol: 'star' },
+        visible: document.getElementById('showOptimalPoint')?.checked !== false
+    };
+    
+    // Multiple utility levels if requested
+    let multipleUtilityTraces = [];
+    if (document.getElementById('showUtilityLevels')?.checked) {
+        for (let u = 4; u <= 16; u += 4) {
+            if (u !== parseFloat(utilityLevel)) {
+                const curve = generateIndifferenceCurve(u, utilityExponent);
+                multipleUtilityTraces.push({
+                    x: curve.x,
+                    y: curve.y,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: `U = ${u}`,
+                    line: { color: 'lightcoral', width: 1, dash: 'dot' },
+                    showlegend: false
+                });
+            }
+        }
+    }
+    
+    // Income expansion path if requested
+    let incomeExpansionTraces = [];
+    if (document.getElementById('showIncomeExpansion')?.checked) {
+        for (let b = 10; b <= 30; b += 5) {
+            const coffee = (utilityExponent * b) / priceCoffee;
+            const donuts = ((1 - utilityExponent) * b) / priceDonut;
+            incomeExpansionTraces.push({
+                x: [coffee],
+                y: [donuts],
+                type: 'scatter',
+                mode: 'markers',
+                name: `Budget $${b}`,
+                marker: { color: 'purple', size: 8 },
+                showlegend: false
+            });
+        }
+    }
+    
+    const traces = [budgetLine, indifferenceCurveTrace, optimalPoint, ...multipleUtilityTraces, ...incomeExpansionTraces];
+    
+    const layout = {
+        title: 'Consumer Choice: Coffee vs Donuts',
+        xaxis: { title: 'Coffee (cups)', range: [0, Math.max(maxCoffee * 1.1, choice.coffee * 1.5)] },
+        yaxis: { title: 'Donuts', range: [0, Math.max(maxDonuts * 1.1, choice.donuts * 1.5)] },
+        hovermode: 'closest',
+        legend: { x: 0, y: 1 },
+        margin: { l: 60, r: 30, t: 60, b: 60 }
+    };
+    
+    Plotly.newPlot('consumerPlot', traces, layout, {responsive: true});
+}
+
+function generateIndifferenceCurve(utility, alpha) {
+    const points = [];
+    const maxX = Math.pow(utility / Math.pow(0.1, 1 - alpha), 1 / alpha);
+    
+    for (let x = 0.1; x <= maxX; x += maxX / 100) {
+        const y = Math.pow(utility / Math.pow(x, alpha), 1 / (1 - alpha));
+        if (y > 0 && y < 100) { // Reasonable bounds
+            points.push({ x, y });
+        }
+    }
+    
+    return {
+        x: points.map(p => p.x),
+        y: points.map(p => p.y)
+    };
+}
+
+function checkAnswers() {
+    const q1Answer = document.querySelector('input[name="q1"]:checked')?.value;
+    const feedback = document.getElementById('q1feedback');
+    
+    if (q1Answer === 'c') {
+        feedback.innerHTML = '<span class="text-success">✅ Correct! When coffee price increases, the budget line rotates clockwise (becomes steeper).</span>';
+    } else if (q1Answer === 'a' || q1Answer === 'b') {
+        feedback.innerHTML = '<span class="text-danger">❌ Not quite right. Think about how the slope of the budget line changes when one price changes.</span>';
+    } else {
+        feedback.innerHTML = '<span class="text-warning">⚠️ Please select an answer first.</span>';
+    }
+    
+    feedback.style.display = 'block';
+}
+
+function completeStory() {
+    alert('🎉 Congratulations! You\'ve completed "The Consumer\'s Journey" and learned about consumer theory fundamentals!');
+}
+</script>
+
+<style>
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.story-chapter {
+    display: none;
+}
+
+.story-chapter.active {
+    display: block;
+}
+
+.controls-section {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.navigation-buttons {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.self-check-question {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.btn-check:checked + .btn-outline-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: white;
+}
+
+.chart-wrap {
+    position: relative;
+    height: 500px;
+}
+
+.chart-wrap.lg {
+    height: 500px;
+}
+</style>
+{% endblock %}

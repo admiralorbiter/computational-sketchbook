@@ -1,0 +1,527 @@
+{% extends "base.html" %}
+{% block title %}Market Equilibrium Lab - Econ Explorer{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <!-- Story and Controls Column -->
+            <div class="story-chapter active" id="chapter1">
+                <h3>Chapter 1: The Market Awakens</h3>
+                <p>Welcome to Econville, a bustling town where supply meets demand! You're Mayor Sarah, and today you're observing the local coffee market. Two coffee shops, "Brew & Bean" and "Caffeine Corner," are setting up shop.</p>
+                <p>Watch as the market finds its natural equilibrium price and quantity. Notice how the supply and demand curves interact to determine the market outcome.</p>
+                <div class="alert alert-info">
+                    <strong>Learning Focus:</strong> Understanding how supply and demand curves determine market equilibrium
+                </div>
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 2</button>
+            </div>
+
+            <div class="story-chapter" id="chapter2">
+                <h3>Chapter 2: The Price Discovery</h3>
+                <p>Now you can see the supply and demand curves clearly! The demand curve shows how much coffee people want at different prices, while the supply curve shows how much coffee shops are willing to provide.</p>
+                <p>Adjust the demand and supply parameters to see how they affect the equilibrium. What happens when people become more price-sensitive? When production costs change?</p>
+                
+                <div class="controls-section">
+                    <h5>Demand Parameters</h5>
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="demandIntercept">Demand Intercept:</label>
+                            <input type="range" id="demandIntercept" min="80" max="120" value="100" class="form-range" onchange="updateMarket()">
+                            <span id="demandInterceptValue">100</span>
+                        </div>
+                        <div class="col-6">
+                            <label for="demandSlope">Demand Slope:</label>
+                            <input type="range" id="demandSlope" min="-2" max="-0.5" value="-1" step="0.1" class="form-range" onchange="updateMarket()">
+                            <span id="demandSlopeValue">-1.0</span>
+                        </div>
+                    </div>
+                    
+                    <h5>Supply Parameters</h5>
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="supplyIntercept">Supply Intercept:</label>
+                            <input type="range" id="supplyIntercept" min="0" max="40" value="20" class="form-range" onchange="updateMarket()">
+                            <span id="supplyInterceptValue">20</span>
+                        </div>
+                        <div class="col-6">
+                            <label for="supplySlope">Supply Slope:</label>
+                            <input type="range" id="supplySlope" min="0.5" max="2" value="1" step="0.1" class="form-range" onchange="updateMarket()">
+                            <span id="supplySlopeValue">1.0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 3</button>
+            </div>
+
+            <div class="story-chapter" id="chapter3">
+                <h3>Chapter 3: Welfare Analysis</h3>
+                <p>Great! Now you can see the market equilibrium clearly. But what does this mean for society? Let's explore consumer surplus, producer surplus, and total welfare.</p>
+                <p>The area above the price line and below the demand curve represents consumer surplus - the extra value consumers get. The area below the price line and above the supply curve represents producer surplus.</p>
+                
+                <div class="controls-section">
+                    <h5>Market Analysis</h5>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="showSurplus" onchange="updateMarket()">
+                        <label class="form-check-label" for="showSurplus">
+                            Show Consumer & Producer Surplus
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="showDeadweightLoss" onchange="updateMarket()">
+                        <label class="form-check-label" for="showDeadweightLoss">
+                            Show Deadweight Loss (when applicable)
+                        </label>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 4</button>
+            </div>
+
+            <div class="story-chapter" id="chapter4">
+                <h3>Chapter 4: Policy Interventions</h3>
+                <p>Now the fun begins! As mayor, you can implement policies that affect the market. But be careful - every policy has consequences!</p>
+                <p>Try setting a price ceiling (maximum price) or price floor (minimum price). Watch how these policies affect the market equilibrium and create shortages or surpluses.</p>
+                
+                <div class="controls-section">
+                    <h5>Policy Controls</h5>
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="priceCeiling">Price Ceiling:</label>
+                            <input type="range" id="priceCeiling" min="0" max="100" value="0" class="form-range" onchange="updateMarket()">
+                            <span id="priceCeilingValue">None</span>
+                        </div>
+                        <div class="col-6">
+                            <label for="priceFloor">Price Floor:</label>
+                            <input type="range" id="priceFloor" min="0" max="100" value="0" class="form-range" onchange="updateMarket()">
+                            <span id="priceFloorValue">None</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="showPolicyEffects" onchange="updateMarket()">
+                        <label class="form-check-label" for="showPolicyEffects">
+                            Highlight Policy Effects
+                        </label>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 5</button>
+            </div>
+
+            <div class="story-chapter" id="chapter5">
+                <h3>Chapter 5: Market Mastery</h3>
+                <p>Congratulations! You've mastered the fundamentals of market equilibrium. Now let's test your understanding with some interactive questions.</p>
+                
+                <div class="quiz-section">
+                    <h5>Quick Check</h5>
+                    <div class="mb-3">
+                        <p><strong>Question 1:</strong> What happens to consumer surplus when demand increases?</p>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="q1" value="a">
+                            <label class="form-check-label">It always decreases</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="q1" value="b">
+                            <label class="form-check-label">It always increases</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="q1" value="c">
+                            <label class="form-check-label">It depends on the price change</label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <p><strong>Question 2:</strong> A price ceiling below equilibrium creates:</p>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="q2" value="a">
+                            <label class="form-check-label">A surplus</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="q2" value="b">
+                            <label class="form-check-label">A shortage</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="q2" value="c">
+                            <label class="form-check-label">No change</label>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-success" onclick="checkAnswers()">Check Answers</button>
+                    <div id="quizResults" class="mt-3"></div>
+                </div>
+                
+                <div class="mt-4">
+                    <h5>Your Market Journey</h5>
+                    <p>You've successfully navigated the complex world of market equilibrium! You now understand:</p>
+                    <ul>
+                        <li>How supply and demand determine market outcomes</li>
+                        <li>The meaning and calculation of consumer and producer surplus</li>
+                        <li>The effects of price controls on market efficiency</li>
+                        <li>How to analyze welfare implications of market changes</li>
+                    </ul>
+                </div>
+                
+                <button class="btn btn-primary" onclick="completeStory()">Complete the Story</button>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <!-- Visualization and Outcomes Column -->
+            <div class="card">
+                <div class="card-header">
+                    <h4>Market Equilibrium Visualization</h4>
+                </div>
+                <div class="card-body">
+                    <div id="marketPlot"></div>
+                </div>
+            </div>
+            
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5>Market Outcomes</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr>
+                                <td><strong>Equilibrium Price:</strong></td>
+                                <td id="equilibriumPrice">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Equilibrium Quantity:</strong></td>
+                                <td id="equilibriumQuantity">0</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Consumer Surplus:</strong></td>
+                                <td id="consumerSurplus">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Producer Surplus:</strong></td>
+                                <td id="producerSurplus">$0.00</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Welfare:</strong></td>
+                                <td id="totalWelfare">$0.00</td>
+                            </tr>
+                            <tr id="policyRow" style="display: none;">
+                                <td><strong>Policy Effect:</strong></td>
+                                <td id="policyEffect">None</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+let currentChapter = 1;
+let marketData = {
+    demandIntercept: 100,
+    demandSlope: -1,
+    supplyIntercept: 20,
+    supplySlope: 1,
+    priceCeiling: 0,
+    priceFloor: 0
+};
+
+function nextChapter() {
+    if (currentChapter < 5) {
+        document.getElementById(`chapter${currentChapter}`).classList.remove('active');
+        currentChapter++;
+        document.getElementById(`chapter${currentChapter}`).classList.add('active');
+        
+        // Show controls progressively
+        if (currentChapter >= 2) {
+            document.querySelector('.controls-section').style.display = 'block';
+        }
+        if (currentChapter >= 4) {
+            document.querySelector('.quiz-section').style.display = 'block';
+        }
+    }
+}
+
+function getCurrentParams() {
+    return {
+        demandIntercept: parseFloat(document.getElementById('demandIntercept').value),
+        demandSlope: parseFloat(document.getElementById('demandSlope').value),
+        supplyIntercept: parseFloat(document.getElementById('supplyIntercept').value),
+        supplySlope: parseFloat(document.getElementById('supplySlope').value),
+        priceCeiling: parseFloat(document.getElementById('priceCeiling').value),
+        priceFloor: parseFloat(document.getElementById('priceFloor').value)
+    };
+}
+
+function updateMarket() {
+    const params = getCurrentParams();
+    marketData = params;
+    
+    // Update display values
+    document.getElementById('demandInterceptValue').textContent = params.demandIntercept;
+    document.getElementById('demandSlopeValue').textContent = params.demandSlope.toFixed(1);
+    document.getElementById('supplyInterceptValue').textContent = params.supplyIntercept;
+    document.getElementById('supplySlopeValue').textContent = params.supplySlope.toFixed(1);
+    
+    document.getElementById('priceCeilingValue').textContent = params.priceCeiling > 0 ? `$${params.priceCeiling.toFixed(2)}` : 'None';
+    document.getElementById('priceFloorValue').textContent = params.priceFloor > 0 ? `$${params.priceFloor.toFixed(2)}` : 'None';
+    
+    // Calculate equilibrium
+    const equilibrium = calculateEquilibrium(params);
+    
+    // Update outcomes table
+    updateOutcomesTable(equilibrium, params);
+    
+    // Update visualization
+    createMarketPlot(equilibrium, params);
+}
+
+function calculateEquilibrium(params) {
+    // Solve for equilibrium: Qd = Qs
+    // Demand: Q = demandIntercept + demandSlope * P
+    // Supply: Q = supplyIntercept + supplySlope * P
+    
+    // At equilibrium: demandIntercept + demandSlope * P = supplyIntercept + supplySlope * P
+    // demandIntercept - supplyIntercept = (supplySlope - demandSlope) * P
+    const equilibriumPrice = (params.demandIntercept - params.supplyIntercept) / (params.supplySlope - params.demandSlope);
+    const equilibriumQuantity = params.demandIntercept + params.demandSlope * equilibriumPrice;
+    
+    return {
+        price: equilibriumPrice,
+        quantity: equilibriumQuantity
+    };
+}
+
+function updateOutcomesTable(equilibrium, params) {
+    document.getElementById('equilibriumPrice').textContent = `$${equilibrium.price.toFixed(2)}`;
+    document.getElementById('equilibriumQuantity').textContent = equilibrium.quantity.toFixed(0);
+    
+    // Calculate surpluses
+    const consumerSurplus = calculateConsumerSurplus(equilibrium, params);
+    const producerSurplus = calculateProducerSurplus(equilibrium, params);
+    const totalWelfare = consumerSurplus + producerSurplus;
+    
+    document.getElementById('consumerSurplus').textContent = `$${consumerSurplus.toFixed(2)}`;
+    document.getElementById('producerSurplus').textContent = `$${producerSurplus.toFixed(2)}`;
+    document.getElementById('totalWelfare').textContent = `$${totalWelfare.toFixed(2)}`;
+    
+    // Check for policy effects
+    let policyEffect = 'None';
+    let showPolicyRow = false;
+    
+    if (params.priceCeiling > 0 && params.priceCeiling < equilibrium.price) {
+        policyEffect = 'Shortage created';
+        showPolicyRow = true;
+    } else if (params.priceFloor > 0 && params.priceFloor > equilibrium.price) {
+        policyEffect = 'Surplus created';
+        showPolicyRow = true;
+    }
+    
+    document.getElementById('policyEffect').textContent = policyEffect;
+    document.getElementById('policyRow').style.display = showPolicyRow ? 'table-row' : 'none';
+}
+
+function calculateConsumerSurplus(equilibrium, params) {
+    // Consumer surplus = area above price line, below demand curve
+    const maxPrice = params.demandIntercept / Math.abs(params.demandSlope);
+    const height = maxPrice - equilibrium.price;
+    const base = equilibrium.quantity;
+    return 0.5 * height * base;
+}
+
+function calculateProducerSurplus(equilibrium, params) {
+    // Producer surplus = area below price line, above supply curve
+    const minPrice = params.supplyIntercept / Math.abs(params.supplySlope);
+    const height = equilibrium.price - minPrice;
+    const base = equilibrium.quantity;
+    return 0.5 * height * base;
+}
+
+function createMarketPlot(equilibrium, params) {
+    const prices = Array.from({length: 101}, (_, i) => i);
+    
+    // Generate demand and supply curves
+    const demand = prices.map(p => params.demandIntercept + params.demandSlope * p);
+    const supply = prices.map(p => params.supplyIntercept + params.supplySlope * p);
+    
+    const traces = [
+        {
+            x: demand,
+            y: prices,
+            type: 'scatter',
+            mode: 'lines',
+            name: 'Demand',
+            line: {color: 'blue', width: 3}
+        },
+        {
+            x: supply,
+            y: prices,
+            type: 'scatter',
+            mode: 'lines',
+            name: 'Supply',
+            line: {color: 'red', width: 3}
+        },
+        {
+            x: [equilibrium.quantity],
+            y: [equilibrium.price],
+            type: 'scatter',
+            mode: 'markers',
+            name: 'Equilibrium',
+            marker: {color: 'green', size: 10, symbol: 'diamond'}
+        }
+    ];
+    
+    // Add policy lines if applicable
+    if (params.priceCeiling > 0) {
+        traces.push({
+            x: [0, Math.max(...demand)],
+            y: [params.priceCeiling, params.priceCeiling],
+            type: 'scatter',
+            mode: 'lines',
+            name: 'Price Ceiling',
+            line: {color: 'orange', width: 2, dash: 'dash'}
+        });
+    }
+    
+    if (params.priceFloor > 0) {
+        traces.push({
+            x: [0, Math.max(...demand)],
+            y: [params.priceFloor, params.priceFloor],
+            type: 'scatter',
+            mode: 'lines',
+            name: 'Price Floor',
+            line: {color: 'purple', width: 2, dash: 'dash'}
+        });
+    }
+    
+    // Add surplus areas if requested
+    if (document.getElementById('showSurplus').checked) {
+        // Consumer surplus area
+        const csPrices = prices.filter(p => p <= equilibrium.price);
+        const csDemand = csPrices.map(p => params.demandIntercept + params.demandSlope * p);
+        traces.push({
+            x: csDemand,
+            y: csPrices,
+            type: 'scatter',
+            mode: 'lines',
+            fill: 'tonexty',
+            fillcolor: 'rgba(0,0,255,0.1)',
+            line: {color: 'transparent'},
+            showlegend: false,
+            name: 'Consumer Surplus'
+        });
+        
+        // Producer surplus area
+        const psPrices = prices.filter(p => p >= params.supplyIntercept / Math.abs(params.supplySlope));
+        const psSupply = psPrices.map(p => params.supplyIntercept + params.supplySlope * p);
+        traces.push({
+            x: psSupply,
+            y: psPrices,
+            type: 'scatter',
+            mode: 'lines',
+            fill: 'tonexty',
+            fillcolor: 'rgba(255,0,0,0.1)',
+            line: {color: 'transparent'},
+            showlegend: false,
+            name: 'Producer Surplus'
+        });
+    }
+    
+    const layout = {
+        title: 'Market Equilibrium',
+        xaxis: {title: 'Quantity', range: [0, Math.max(...demand) * 1.1]},
+        yaxis: {title: 'Price ($)', range: [0, Math.max(...prices) * 1.1]},
+        hovermode: 'closest',
+        showlegend: true
+    };
+    
+    Plotly.newPlot('marketPlot', traces, layout);
+}
+
+function checkAnswers() {
+    const q1Answer = document.querySelector('input[name="q1"]:checked')?.value;
+    const q2Answer = document.querySelector('input[name="q2"]:checked')?.value;
+    
+    let results = '<div class="alert alert-info">';
+    
+    if (q1Answer === 'c') {
+        results += '<p>✅ Question 1: Correct! Consumer surplus depends on both the demand shift and the resulting price change.</p>';
+    } else {
+        results += '<p>❌ Question 1: Think about how a demand increase affects both quantity and price.</p>';
+    }
+    
+    if (q2Answer === 'b') {
+        results += '<p>✅ Question 2: Correct! A price ceiling below equilibrium creates a shortage because quantity demanded exceeds quantity supplied.</p>';
+    } else {
+        results += '<p>❌ Question 2: Remember that a price ceiling is a maximum price limit.</p>';
+    }
+    
+    results += '</div>';
+    
+    document.getElementById('quizResults').innerHTML = results;
+}
+
+function completeStory() {
+    alert('🎉 Congratulations! You have successfully completed the Market Equilibrium Lab. You now understand how markets work, how to analyze welfare, and how policies affect market outcomes.');
+}
+
+// Initialize the market visualization
+document.addEventListener('DOMContentLoaded', function() {
+    updateMarket();
+});
+</script>
+
+<style>
+.story-chapter {
+    display: none;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-left: 4px solid #007bff;
+}
+
+.story-chapter.active {
+    display: block;
+}
+
+.controls-section {
+    display: none;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+    border: 1px solid #dee2e6;
+}
+
+.quiz-section {
+    display: none;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+    border: 1px solid #dee2e6;
+}
+
+.form-range {
+    margin-bottom: 10px;
+}
+
+.card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: none;
+}
+
+.table td {
+    padding: 8px;
+    border-top: 1px solid #dee2e6;
+}
+
+#marketPlot {
+    height: 500px;
+    width: 100%;
+}
+</style>
+{% endblock %}

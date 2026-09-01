@@ -1,0 +1,475 @@
+{% extends "base.html" %}
+{% block title %}Game Theory Lab - Econ Explorer{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <!-- Story and Controls Column -->
+            <div class="story-chapter active" id="chapter1">
+                <h3>Chapter 1: The Strategic Challenge</h3>
+                <div class="story-card">
+                    <p>Meet <strong>Emma</strong>, a brilliant strategist who has just been hired by TechCorp to analyze competitive dynamics in the smartphone market. Her first challenge? Understanding how companies make strategic decisions when their success depends on what their competitors do.</p>
+                    <p>"In game theory," Emma explains to her team, "we don't just look at what's best for us in isolation. We have to think about what our competitors will do, knowing they're thinking about what we'll do. It's like a chess game where both players are trying to outthink each other."</p>
+                    <p>Emma's first task is to analyze a simple but powerful concept: the <strong>Prisoner's Dilemma</strong>. This classic game shows how rational individual decisions can lead to outcomes that are worse for everyone.</p>
+                </div>
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 2</button>
+            </div>
+
+            <div class="story-chapter" id="chapter2">
+                <h3>Chapter 2: The Prisoner's Dilemma</h3>
+                <div class="story-card">
+                    <p>Emma sets up a scenario: Two tech companies, <strong>TechCorp</strong> and <strong>InnovateTech</strong>, are deciding whether to invest heavily in research and development (R&D) or cut costs to maximize short-term profits.</p>
+                    <p>"If both companies invest in R&D," Emma explains, "they both benefit from innovation and market growth. But if one company cuts costs while the other invests, the cost-cutter gets a huge advantage. The problem is, both companies have an incentive to cut costs, leading to a worse outcome for both."</p>
+                    <p>Let's explore this strategic interaction. Use the sliders below to see how different payoff structures affect the equilibrium outcome.</p>
+                </div>
+                <div class="controls-section">
+                    <h5>Payoff Matrix Parameters</h5>
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="cooperatePayoff">Mutual Cooperation Payoff:</label>
+                            <input type="range" id="cooperatePayoff" min="3" max="8" value="5" step="0.5" onchange="updateGame()">
+                            <span id="cooperatePayoffValue">5</span>
+                        </div>
+                        <div class="col-6">
+                            <label for="defectPayoff">Mutual Defection Payoff:</label>
+                            <input type="range" id="defectPayoff" min="1" max="4" value="2" step="0.5" onchange="updateGame()">
+                            <span id="defectPayoffValue">2</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="temptationPayoff">Temptation to Defect:</label>
+                            <input type="range" id="temptationPayoff" min="6" max="10" value="8" step="0.5" onchange="updateGame()">
+                            <span id="temptationPayoffValue">8</span>
+                        </div>
+                        <div class="col-6">
+                            <label for="suckerPayoff">Sucker's Payoff:</label>
+                            <input type="range" id="suckerPayoff" min="0" max="3" value="1" step="0.5" onchange="updateGame()">
+                            <span id="suckerPayoffValue">1</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 3</button>
+            </div>
+
+            <div class="story-chapter" id="chapter3">
+                <h3>Chapter 3: Nash Equilibrium</h3>
+                <div class="story-card">
+                    <p>"Now let's understand what happens when both companies act rationally," Emma continues. "A Nash equilibrium occurs when neither player can improve their outcome by changing their strategy, given what the other player is doing."</p>
+                    <p>"In our R&D game, if both companies know the other will invest in R&D, neither has an incentive to change. But if both know the other will cut costs, neither has an incentive to change either. The key insight is that the equilibrium isn't necessarily the best outcome for everyone."</p>
+                    <p>Let's visualize the best response functions and find the Nash equilibrium. Check the boxes below to see different aspects of the game analysis.</p>
+                </div>
+                <div class="controls-section">
+                    <h5>Game Analysis Tools</h5>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="showBestResponses" onchange="updateGame()">
+                        <label class="form-check-label" for="showBestResponses">
+                            Show Best Response Functions
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="showEquilibrium" onchange="updateGame()">
+                        <label class="form-check-label" for="showEquilibrium">
+                            Highlight Nash Equilibrium
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="showDominantStrategies" onchange="updateGame()">
+                        <label class="form-check-label" for="showDominantStrategies">
+                            Identify Dominant Strategies
+                        </label>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 4</button>
+            </div>
+
+            <div class="story-chapter" id="chapter4">
+                <h3>Chapter 4: Repeated Games & Cooperation</h3>
+                <div class="story-card">
+                    <p>"But what if this isn't a one-time decision?" Emma asks. "What if TechCorp and InnovateTech face this choice repeatedly? That changes everything."</p>
+                    <p>"In repeated games, players can use strategies like 'tit-for-tat' - start by cooperating, then do whatever the other player did in the previous round. This can sustain cooperation even when one-shot games would lead to defection."</p>
+                    <p>Let's explore how the discount factor affects the possibility of cooperation. A higher discount factor means players value future payoffs more, making cooperation more sustainable.</p>
+                </div>
+                <div class="controls-section">
+                    <h5>Repeated Game Parameters</h5>
+                    <label for="discountFactor">Discount Factor (δ):</label>
+                    <input type="range" id="discountFactor" min="0.1" max="0.95" value="0.8" step="0.05" onchange="updateGame()">
+                    <span id="discountFactorValue">0.8</span>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="showRepeatedGame" onchange="updateGame()">
+                        <label class="form-check-label" for="showRepeatedGame">
+                            Show Repeated Game Analysis
+                        </label>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="nextChapter()">Continue to Chapter 5</button>
+            </div>
+
+            <div class="story-chapter" id="chapter5">
+                <h3>Chapter 5: Strategic Mastery</h3>
+                <div class="story-card">
+                    <p>"Game theory isn't just about predicting outcomes," Emma concludes. "It's about understanding strategic incentives and designing better institutions. By recognizing the structure of strategic interactions, we can create environments that encourage cooperation and mutual benefit."</p>
+                    <p>"Now let's test your understanding with a quick quiz about the key concepts we've covered."</p>
+                </div>
+                
+                <div class="quiz-section">
+                    <h5>Quick Quiz</h5>
+                    <div class="question">
+                        <p><strong>Question 1:</strong> In the Prisoner's Dilemma, what happens when both players choose their dominant strategy?</p>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="q1" value="a">
+                            <label class="form-check-label">Both players get their best possible outcome</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="q1" value="b">
+                            <label class="form-check-label">Both players get their worst possible outcome</label>
+                        </div>
+                        <div class="form-check-input" type="radio" name="q1" value="c">
+                            <label class="form-check-label">Both players get a moderate outcome</label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <p><strong>Question 2:</strong> What is a Nash equilibrium?</p>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="q2" value="a">
+                            <label class="form-check-label">A strategy that always gives the best outcome</label>
+                        </div>
+                        <div class="form-check-input" type="radio" name="q2" value="b">
+                            <label class="form-check-label">A situation where no player can improve by changing strategy</label>
+                        </div>
+                        <div class="form-check-input" type="radio" name="q2" value="c">
+                            <label class="form-check-label">A strategy that dominates all others</label>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <p><strong>Question 3:</strong> How does repetition affect cooperation in the Prisoner's Dilemma?</p>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="q3" value="a">
+                            <label class="form-check-label">It makes cooperation impossible</label>
+                        </div>
+                        <div class="form-check-input" type="radio" name="q3" value="b">
+                            <label class="form-check-label">It can sustain cooperation through strategic incentives</label>
+                        </div>
+                        <div class="form-check-input" type="radio" name="q3" value="c">
+                            <label class="form-check-label">It has no effect on the outcome</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-success" onclick="checkAnswers()">Check Answers</button>
+                <button class="btn btn-primary" onclick="completeStory()">Complete the Story</button>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <!-- Visualization and Outcomes Column -->
+            <div id="gamePlot"></div>
+            <div class="outcomes-section">
+                <h5>Game Analysis</h5>
+                <table id="outcomesTable">
+                    <tbody>
+                        <tr><td><strong>Nash Equilibrium:</strong></td><td id="nashEquilibrium"></td></tr>
+                        <tr><td><strong>Dominant Strategy:</strong></td><td id="dominantStrategy"></td></tr>
+                        <tr><td><strong>Cooperation Sustainable:</strong></td><td id="cooperationSustainable"></td></tr>
+                        <tr><td><strong>Minimax Value:</strong></td><td id="minimaxValue"></td></tr>
+                        <tr id="repeatedGameRow" style="display: none;"><td><strong>Repeated Game Value:</strong></td><td id="repeatedGameValue"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+let currentChapter = 1;
+let gameData = {
+    cooperatePayoff: 5,
+    defectPayoff: 2,
+    temptationPayoff: 8,
+    suckerPayoff: 1,
+    discountFactor: 0.8
+};
+
+function nextChapter() {
+    if (currentChapter < 5) {
+        document.getElementById(`chapter${currentChapter}`).classList.remove('active');
+        currentChapter++;
+        document.getElementById(`chapter${currentChapter}`).classList.add('active');
+        
+        // Show controls progressively
+        if (currentChapter === 2) {
+            document.querySelector('.controls-section').style.display = 'block';
+        }
+        if (currentChapter === 3) {
+            document.querySelectorAll('.controls-section')[1].style.display = 'block';
+        }
+        if (currentChapter === 4) {
+            document.querySelectorAll('.controls-section')[2].style.display = 'block';
+        }
+        if (currentChapter === 5) {
+            document.querySelector('.quiz-section').style.display = 'block';
+        }
+    }
+}
+
+function getCurrentParams() {
+    return {
+        cooperatePayoff: parseFloat(document.getElementById('cooperatePayoff').value),
+        defectPayoff: parseFloat(document.getElementById('defectPayoff').value),
+        temptationPayoff: parseFloat(document.getElementById('temptationPayoff').value),
+        suckerPayoff: parseFloat(document.getElementById('suckerPayoff').value),
+        discountFactor: parseFloat(document.getElementById('discountFactor').value)
+    };
+}
+
+function updateGame() {
+    const params = getCurrentParams();
+    gameData = params;
+    
+    // Update display values
+    document.getElementById('cooperatePayoffValue').textContent = params.cooperatePayoff;
+    document.getElementById('defectPayoffValue').textContent = params.defectPayoff;
+    document.getElementById('temptationPayoffValue').textContent = params.temptationPayoff;
+    document.getElementById('suckerPayoffValue').textContent = params.suckerPayoff;
+    document.getElementById('discountFactorValue').textContent = params.discountFactor;
+    
+    // Calculate game outcomes
+    const outcomes = calculateGameOutcomes(params);
+    updateOutcomesTable(outcomes, params);
+    createGamePlot(outcomes, params);
+}
+
+function calculateGameOutcomes(params) {
+    const { cooperatePayoff, defectPayoff, temptationPayoff, suckerPayoff, discountFactor } = params;
+    
+    // Check if defection is dominant strategy
+    const defectDominant = temptationPayoff > cooperatePayoff && defectPayoff > suckerPayoff;
+    
+    // Check if cooperation is sustainable in repeated game
+    const cooperationSustainable = discountFactor > (temptationPayoff - cooperatePayoff) / (temptationPayoff - defectPayoff);
+    
+    // Calculate minimax value (worst outcome when playing optimally)
+    const minimaxValue = Math.min(defectPayoff, suckerPayoff);
+    
+    // Calculate repeated game value
+    const repeatedGameValue = cooperationSustainable ? cooperatePayoff : defectPayoff;
+    
+    return {
+        nashEquilibrium: defectDominant ? "Both Defect" : "Mixed Strategy",
+        dominantStrategy: defectDominant ? "Defect" : "None",
+        cooperationSustainable: cooperationSustainable ? "Yes" : "No",
+        minimaxValue: minimaxValue.toFixed(2),
+        repeatedGameValue: repeatedGameValue.toFixed(2)
+    };
+}
+
+function updateOutcomesTable(outcomes, params) {
+    document.getElementById('nashEquilibrium').textContent = outcomes.nashEquilibrium;
+    document.getElementById('dominantStrategy').textContent = outcomes.dominantStrategy;
+    document.getElementById('cooperationSustainable').textContent = outcomes.cooperationSustainable;
+    document.getElementById('minimaxValue').textContent = outcomes.minimaxValue;
+    document.getElementById('repeatedGameValue').textContent = outcomes.repeatedGameValue;
+    
+    // Show repeated game row if relevant
+    if (document.getElementById('showRepeatedGame').checked) {
+        document.getElementById('repeatedGameRow').style.display = 'table-row';
+    } else {
+        document.getElementById('repeatedGameRow').style.display = 'none';
+    }
+}
+
+function createGamePlot(outcomes, params) {
+    const { cooperatePayoff, defectPayoff, temptationPayoff, suckerPayoff } = params;
+    
+    // Create payoff matrix visualization
+    const data = [
+        {
+            type: 'table',
+            header: {
+                values: ['', 'TechCorp Cooperate', 'TechCorp Defect'],
+                align: 'center',
+                line: {width: 1, color: 'black'},
+                fill: {color: 'lightblue'},
+                font: {family: 'Arial', size: 12, color: 'black'}
+            },
+            cells: {
+                values: [
+                    ['InnovateTech Cooperate', 'InnovateTech Defect'],
+                    [`(${cooperatePayoff}, ${cooperatePayoff})`, `(${suckerPayoff}, ${temptationPayoff})`],
+                    [`(${temptationPayoff}, ${suckerPayoff})`, `(${defectPayoff}, ${defectPayoff})`]
+                ],
+                align: 'center',
+                line: {width: 1, color: 'black'},
+                fill: {
+                    color: [
+                        ['lightgreen', 'lightgreen'],
+                        ['lightgreen', 'lightgreen'],
+                        ['lightgreen', 'lightgreen']
+                    ]
+                },
+                font: {family: 'Arial', size: 11, color: 'black'}
+            }
+        }
+    ];
+    
+    const layout = {
+        title: 'Payoff Matrix: TechCorp vs InnovateTech',
+        width: 500,
+        height: 300,
+        margin: {t: 50, b: 50, l: 50, r: 50}
+    };
+    
+    Plotly.newPlot('gamePlot', data, layout);
+}
+
+function checkAnswers() {
+    const q1 = document.querySelector('input[name="q1"]:checked')?.value;
+    const q2 = document.querySelector('input[name="q2"]:checked')?.value;
+    const q3 = document.querySelector('input[name="q3"]:checked')?.value;
+    
+    let score = 0;
+    let feedback = '';
+    
+    if (q1 === 'b') score++;
+    if (q2 === 'b') score++;
+    if (q3 === 'b') score++;
+    
+    if (score === 3) {
+        feedback = 'Excellent! You have a deep understanding of game theory concepts.';
+    } else if (score === 2) {
+        feedback = 'Good work! You understand most concepts but might want to review a few areas.';
+    } else {
+        feedback = 'Keep studying! Game theory takes time to master. Review the concepts and try again.';
+    }
+    
+    alert(`Quiz Results: ${score}/3 correct\n\n${feedback}`);
+}
+
+function completeStory() {
+    alert('Congratulations! You have completed Emma\'s strategic challenge and gained valuable insights into game theory. You now understand how strategic interactions shape decision-making in competitive environments.');
+}
+
+// Initialize the game
+document.addEventListener('DOMContentLoaded', function() {
+    // Hide controls initially (show progressively)
+    document.querySelectorAll('.controls-section').forEach(section => {
+        section.style.display = 'none';
+    });
+    document.querySelector('.quiz-section').style.display = 'none';
+    
+    updateGame();
+});
+</script>
+
+<style>
+.story-chapter {
+    display: none;
+    margin-bottom: 2rem;
+}
+
+.story-chapter.active {
+    display: block;
+}
+
+.story-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.controls-section {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.controls-section h5 {
+    color: #495057;
+    margin-bottom: 1rem;
+}
+
+.controls-section label {
+    font-weight: 500;
+    color: #495057;
+}
+
+.controls-section input[type="range"] {
+    width: 100%;
+    margin: 0.5rem 0;
+}
+
+.quiz-section {
+    background: #e3f2fd;
+    border: 1px solid #90caf9;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.question {
+    margin-bottom: 1.5rem;
+}
+
+.question p {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.form-check {
+    margin-bottom: 0.5rem;
+}
+
+.outcomes-section {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+}
+
+#outcomesTable {
+    width: 100%;
+}
+
+#outcomesTable td {
+    padding: 0.5rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+#outcomesTable td:first-child {
+    font-weight: 500;
+    color: #495057;
+}
+
+#gamePlot {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.btn {
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border: none;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+    border: none;
+}
+</style>
+{% endblock %}

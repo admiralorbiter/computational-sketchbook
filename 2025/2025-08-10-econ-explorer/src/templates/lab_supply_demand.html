@@ -1,0 +1,459 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-12 col-xl-4">
+    <div class="card shadow-sm h-100 sticky-card">
+      <div class="card-body">
+        <h5 class="card-title">Supply–Demand Controls</h5>
+        <form id="sdForm" class="row gy-2">
+          <div class="col-6">
+            <label class="form-label"><span data-var="a_d">a_d</span></label>
+            <input type="number" class="form-control" id="a_d" value="10" step="0.1">
+          </div>
+          <div class="col-6">
+            <label class="form-label"><span data-var="b_d">b_d</span></label>
+            <input type="number" class="form-control" id="b_d" value="1.0" step="0.1" min="0.1">
+          </div>
+          <div class="col-6">
+            <label class="form-label"><span data-var="a_s">a_s</span></label>
+            <input type="number" class="form-control" id="a_s" value="2" step="0.1" min="0">
+          </div>
+          <div class="col-6">
+            <label class="form-label"><span data-var="b_s">b_s</span></label>
+            <input type="number" class="form-control" id="b_s" value="1.0" step="0.1" min="0.1">
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">Policy</label>
+            <select class="form-select" id="policy">
+              <option value="none">None</option>
+              <option value="per_unit_tax">Per-unit tax</option>
+              <option value="ad_valorem_tax">Ad valorem tax</option>
+              <option value="quota">Quota</option>
+              <option value="price_floor">Price floor</option>
+              <option value="price_ceiling">Price ceiling</option>
+            </select>
+          </div>
+
+          <div class="col-6">
+            <label class="form-label"><span data-var="tau">τ</span> (per-unit)</label>
+            <input type="number" class="form-control" id="tau" value="1.0" step="0.1">
+          </div>
+          <div class="col-6">
+            <label class="form-label">t (ad valorem)</label>
+            <input type="number" class="form-control" id="t" value="0.1" step="0.01" min="0" max="1">
+          </div>
+          <div class="col-6">
+            <label class="form-label">q_cap (quota)</label>
+            <input type="number" class="form-control" id="q_cap" value="3.0" step="0.1" min="0">
+          </div>
+          <div class="col-6">
+            <label class="form-label">p̄ (control)</label>
+            <input type="number" class="form-control" id="p_bar" value="6.0" step="0.1" min="0">
+          </div>
+
+          <div class="col-12 d-grid">
+            <button type="submit" class="btn btn-primary">Run</button>
+          </div>
+          <div class="col-12 d-flex gap-2 mt-1">
+            <button type="button" class="btn btn-outline-secondary btn-sm" id="btnReset">Reset</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" id="btnCopy">Copy JSON</button>
+          </div>
+          <div class="col-12 mt-2">
+            <div class="row g-2 align-items-center">
+              <div class="col-7"><input type="text" class="form-control form-control-sm" id="bmName" placeholder="Bookmark name"></div>
+              <div class="col-5 d-grid"><button type="button" class="btn btn-sm btn-outline-primary" id="btnSaveBm">Save</button></div>
+              <div class="col-7"><select class="form-select form-select-sm" id="bmSelect"></select></div>
+              <div class="col-5 d-flex gap-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="btnLoadBm">Load</button>
+                <button type="button" class="btn btn-sm btn-outline-danger" id="btnDeleteBm">Delete</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-xl-8">
+    <div class="card shadow-sm mb-3">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="card-title mb-0">Curves & Equilibria</h5>
+          <button class="btn btn-outline-secondary btn-sm d-xl-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#teachCanvas" aria-controls="teachCanvas">Prompts</button>
+        </div>
+        <div class="d-flex flex-wrap gap-3 align-items-center mb-2">
+          <div class="form-check form-switch small">
+            <input class="form-check-input" type="checkbox" id="toggleCSPS">
+            <label class="form-check-label" for="toggleCSPS">CS/PS</label>
+          </div>
+          <div class="form-check form-switch small">
+            <input class="form-check-input" type="checkbox" id="toggleTR">
+            <label class="form-check-label" for="toggleTR">TR</label>
+          </div>
+          <div class="form-check form-switch small">
+            <input class="form-check-input" type="checkbox" id="toggleDWL">
+            <label class="form-check-label" for="toggleDWL">DWL</label>
+          </div>
+        </div>
+        <div class="chart-wrap lg position-relative">
+          <div id="sdPlot" class="w-100 h-100" style="width:100%;height:100%;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Outcomes</h5>
+        <div class="table-responsive">
+          <table class="table table-sm align-middle">
+            <thead><tr><th>Metric</th><th>Baseline</th><th>Outcome</th><th>Δ</th></tr></thead>
+            <tbody id="sdTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm mt-3 d-none d-xl-block">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0">Teaching Prompts</h5>
+          <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#teachCanvas" aria-controls="teachCanvas">Open</button>
+        </div>
+        <div class="mt-2 text-muted small">Use the “Open” button to view prompts in a side panel. On smaller screens, use the top-right button on the chart card.</div>
+      </div>
+    </div>
+
+    <!-- Offcanvas teaching panel (desktop & mobile) -->
+    <div class="offcanvas offcanvas-end offcanvas-teach" tabindex="-1" id="teachCanvas" aria-labelledby="teachCanvasLabel">
+      <div class="offcanvas-header">
+        <h5 id="teachCanvasLabel" class="mb-0">Teaching Prompts</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+          <ol class="mb-3" id="promptList">
+            <li>
+              Baseline: with current parameters, what are p* and q*? Does increasing b_s raise p* or lower it?
+              <div class="hint">Hint: think slopes vs intercepts. Use the form to tweak b_s.</div>
+            </li>
+            <li>
+              Incidence: for a per-unit tax τ, who bears more of the burden here? Why?
+              <div class="hint">Hint: compare ΔCS and ΔPS and the gap p_b - p_s.</div>
+            </li>
+            <li>
+              Elasticity: if you make demand flatter (increase b_d), what happens to DWL for the same τ?
+              <div class="hint">Hint: lost trades triangle depends on quantity change.</div>
+            </li>
+            <li>
+              Quota: set q_cap < q*. Where do p_b and p_s land? What is the quota rent?
+              <div class="hint">Hint: use inverse demand/supply at q_cap.</div>
+            </li>
+            <li>
+              Controls: with a price floor p̄ just above p*, how does traded quantity compare with a per-unit tax of similar wedge size?
+            </li>
+          </ol>
+
+          <div class="border-top pt-3">
+            <h6 class="fw-semibold">Self-Check (auto)</h6>
+            <p class="text-muted small">Checks use the canonical baseline a_d=10, b_d=1, a_s=2, b_s=1 and scenarios described below. You can click to verify if your current form values match the canonical setup.</p>
+            <div class="row g-2 align-items-center">
+              <div class="col-auto"><button class="btn btn-sm btn-primary" id="btnCheckBaseline">Check Baseline</button></div>
+              <div class="col-auto"><span id="checkBaseline" class="check-result"></span></div>
+            </div>
+            <div class="row g-2 align-items-center mt-1">
+              <div class="col-auto"><button class="btn btn-sm btn-primary" id="btnCheckTax">Check τ = 1.0</button></div>
+              <div class="col-auto"><span id="checkTax" class="check-result"></span></div>
+            </div>
+            <div class="row g-2 align-items-center mt-1">
+              <div class="col-auto"><button class="btn btn-sm btn-primary" id="btnCheckQuota">Check q_cap = 3.0</button></div>
+              <div class="col-auto"><span id="checkQuota" class="check-result"></span></div>
+            </div>
+          </div>
+
+          <div class="border-top pt-3 mt-3">
+            <h6 class="fw-semibold">Quick Quiz</h6>
+            <p class="text-muted small">Concept checks; instant feedback, no spoilers.</p>
+
+            <!-- MCQ 1 -->
+            <div class="mb-2">
+              <div class="fw-semibold">1) If demand is less elastic than supply (steeper inverse demand), the specific tax burden is mostly on…</div>
+              <div class="form-check"><input class="form-check-input" type="radio" name="q1" id="q1a" value="buyers"><label class="form-check-label" for="q1a">buyers</label></div>
+              <div class="form-check"><input class="form-check-input" type="radio" name="q1" id="q1b" value="sellers"><label class="form-check-label" for="q1b">sellers</label></div>
+              <div class="form-check"><input class="form-check-input" type="radio" name="q1" id="q1c" value="equal"><label class="form-check-label" for="q1c">equal on both</label></div>
+              <button class="btn btn-sm btn-outline-primary mt-1" id="btnQuiz1">Check</button>
+              <span id="quiz1Res" class="check-result ms-2"></span>
+            </div>
+
+            <!-- MCQ 2 -->
+            <div class="mb-2">
+              <div class="fw-semibold">2) With a binding price ceiling <span data-var="p">P_c</span> below <span data-var="p">P*</span>, realized quantity equals…</div>
+              <div class="form-check"><input class="form-check-input" type="radio" name="q2" id="q2a" value="qd"><label class="form-check-label" for="q2a">Q_d(P_c)</label></div>
+              <div class="form-check"><input class="form-check-input" type="radio" name="q2" id="q2b" value="qs"><label class="form-check-label" for="q2b">Q_s(P_c)</label></div>
+              <div class="form-check"><input class="form-check-input" type="radio" name="q2" id="q2c" value="qstar"><label class="form-check-label" for="q2c">Q*</label></div>
+              <button class="btn btn-sm btn-outline-primary mt-1" id="btnQuiz2">Check</button>
+              <span id="quiz2Res" class="check-result ms-2"></span>
+            </div>
+
+            <!-- MCQ 3 -->
+            <div class="mb-2">
+              <div class="fw-semibold">3) If a quota sets <span data-var="q">q_cap</span> below <span data-var="q">q*</span>, which relation holds?</div>
+              <div class="form-check"><input class="form-check-input" type="radio" name="q3" id="q3a" value="pb_gt_ps"><label class="form-check-label" for="q3a">p_b &gt; p_s</label></div>
+              <div class="form-check"><input class="form-check-input" type="radio" name="q3" id="q3b" value="ps_gt_pb"><label class="form-check-label" for="q3b">p_s &gt; p_b</label></div>
+              <div class="form-check"><input class="form-check-input" type="radio" name="q3" id="q3c" value="equal"><label class="form-check-label" for="q3c">p_b = p_s</label></div>
+              <button class="btn btn-sm btn-outline-primary mt-1" id="btnQuiz3">Check</button>
+              <span id="quiz3Res" class="check-result ms-2"></span>
+            </div>
+
+            <!-- Free response numeric -->
+            <div class="mb-2">
+              <div class="fw-semibold">4) Canonical baseline a_d=10, b_d=1, a_s=2, b_s=1 with τ=1.0. What is <span data-var="DWL">DWL</span>? (enter a number)</div>
+              <div class="input-group input-group-sm" style="max-width: 240px;">
+                <input type="number" step="0.01" class="form-control" id="quizNum" placeholder="e.g., 0.50">
+                <button class="btn btn-outline-primary" id="btnQuizNum">Check</button>
+              </div>
+              <div><span id="quizNumRes" class="check-result"></span></div>
+            </div>
+
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script>
+  function readParams() {
+    return {
+      a_d: parseFloat(document.getElementById('a_d').value),
+      b_d: parseFloat(document.getElementById('b_d').value),
+      a_s: parseFloat(document.getElementById('a_s').value),
+      b_s: parseFloat(document.getElementById('b_s').value),
+      policy: document.getElementById('policy').value,
+      tau: parseFloat(document.getElementById('tau').value),
+      t: parseFloat(document.getElementById('t').value),
+      q_cap: parseFloat(document.getElementById('q_cap').value),
+      p_bar: parseFloat(document.getElementById('p_bar').value),
+    };
+  }
+
+  async function postJSON(url = '', data = {}) {
+    const resp = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    if (!resp.ok) throw new Error('Request failed');
+    return await resp.json();
+  }
+
+  function updateTable(baseline, outcome, deltas) {
+    const rows = [
+      ['p* / p_b', baseline.p_star.toFixed(3), outcome.buyer_price.toFixed(3), (deltas.delta_p_b).toFixed(3)],
+      ['p* / p_s', baseline.p_star.toFixed(3), outcome.seller_price.toFixed(3), (deltas.delta_p_s).toFixed(3)],
+      ['q', baseline.q_star.toFixed(3), outcome.quantity.toFixed(3), (deltas.delta_q).toFixed(3)],
+      ['CS', baseline.cs.toFixed(3), outcome.consumer_surplus.toFixed(3), (deltas.delta_cs).toFixed(3)],
+      ['PS', baseline.ps.toFixed(3), outcome.producer_surplus.toFixed(3), (deltas.delta_ps).toFixed(3)],
+      ['TR', '0.000', (outcome.tax_revenue || 0).toFixed(3), ((outcome.tax_revenue || 0) - 0).toFixed(3)],
+      ['DWL', '0.000', (outcome.deadweight_loss || 0).toFixed(3), ((outcome.deadweight_loss || 0) - 0).toFixed(3)],
+    ];
+    document.getElementById('sdTable').innerHTML = rows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('');
+  }
+
+  function generateCurveData(a_d, b_d, a_s, b_s, baseline, outcome) {
+    // Inverse curves: P_d(Q) = (a_d - Q)/b_d ; P_s(Q) = (Q + a_s)/b_s
+    const q_star = (a_d * b_s - a_s * b_d) / (b_d + b_s);
+    const q_out = outcome && typeof outcome.quantity === 'number' ? outcome.quantity : q_star;
+    const q_max = Math.max( a_d, q_star, q_out, 1 ) * 1.2;
+    const n = 80;
+    const Q = Array.from({length: n}, (_, i) => q_max * i/(n-1));
+    const Pd = Q.map(q => (a_d - q) / b_d);
+    const Ps = Q.map(q => (q + a_s) / b_s);
+    const demand = Q.map((q, i) => ({ x: q, y: Pd[i] }));
+    const supply = Q.map((q, i) => ({ x: q, y: Ps[i] }));
+    return { demand, supply, q_max };
+  }
+
+  const overlayState = { base: null, out: null, params: null };
+  async function run() {
+    const params = readParams();
+    const data = await postJSON('/api/lab/supply-demand', params);
+    const { baseline, outcome, deltas } = data;
+    updateTable(baseline, outcome, deltas);
+    overlayState.base = baseline; overlayState.out = outcome; overlayState.params = params;
+    renderPlot();
+  }
+
+  function renderPlot() {
+    const el = document.getElementById('sdPlot');
+    const state = overlayState; if (!state.base || !state.out || !state.params) return;
+    const Pd = q => (state.params.a_d - q)/state.params.b_d;
+    const Ps = q => (q + state.params.a_s)/state.params.b_s;
+    const q_star = Number(state.base.q_star), p_star = Number(state.base.p_star);
+    const q_max = Math.max(state.params.a_d, q_star, state.out.quantity || q_star, 1) * 1.2;
+    const n = 80; const Q = Array.from({length:n}, (_,i)=> q_max * i/(n-1));
+    const PdArr = Q.map(Pd), PsArr = Q.map(Ps);
+
+    const traces = [
+      { x: Q, y: PdArr, mode: 'lines', name: 'Inverse Demand P(Q)', line: {color:'#0d6efd'} },
+      { x: Q, y: PsArr, mode: 'lines', name: 'Inverse Supply P(Q)', line: {color:'#198754'} }
+    ];
+
+    const shapes = [];
+    const showCSPS = document.getElementById('toggleCSPS').checked;
+    const showTR = document.getElementById('toggleTR').checked;
+    const showDWL = document.getElementById('toggleDWL').checked;
+    const p_int_d = state.params.a_d/state.params.b_d;
+    const p_int_s = state.params.a_s/state.params.b_s;
+    if (showCSPS) {
+      shapes.push({type:'path',xref:'x',yref:'y',path:`M 0 ${p_star} L 0 ${p_int_d} L ${q_star} ${p_star} Z`,fillcolor:'rgba(13,110,253,0.25)',line:{width:0}});
+      shapes.push({type:'path',xref:'x',yref:'y',path:`M 0 ${p_star} L 0 ${p_int_s} L ${q_star} ${p_star} Z`,fillcolor:'rgba(25,135,84,0.25)',line:{width:0}});
+    }
+    const pb = Number(state.out.buyer_price ?? p_star); const ps = Number(state.out.seller_price ?? p_star); const qout = Number(state.out.quantity ?? q_star);
+    if (showTR && pb>ps && qout>0) shapes.push({type:'rect',xref:'x',yref:'y',x0:0,x1:qout,y0:ps,y1:pb,fillcolor:'rgba(255,193,7,0.25)',line:{width:0}});
+    if (showDWL && Math.abs(qout - q_star) > 1e-9) shapes.push({type:'path',xref:'x',yref:'y',path:`M ${qout} ${Pd(qout)} L ${qout} ${Ps(qout)} L ${q_star} ${p_star} Z`,fillcolor:'rgba(220,53,69,0.20)',line:{width:0}});
+
+    const layout = {
+      margin:{l:50,r:10,t:10,b:40},
+      xaxis:{title:'Quantity Q',range:[0, Math.max(1, Math.ceil(q_max*1.05))]},
+      yaxis:{title:'Price P',range:[0, Math.max(1, Math.ceil(Math.max(...PdArr, ...PsArr, pb, ps)*1.10))]},
+      showlegend:true,
+      shapes
+    };
+    Plotly.react(el, traces, layout, {displayModeBar:false, responsive:true});
+  }
+
+  document.getElementById('sdForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try { await run(); } catch (err) { console.error(err); }
+  });
+
+  window.addEventListener('DOMContentLoaded', async () => { await run(); renderPlot(); });
+  function bindToggle(id){
+    document.getElementById(id).addEventListener('change', () => {
+      renderPlot();
+    });
+  }
+  bindToggle('toggleCSPS');
+  bindToggle('toggleTR');
+  bindToggle('toggleDWL');
+
+  // Reset/Copy helpers
+  document.getElementById('btnReset').addEventListener('click', () => {
+    document.getElementById('a_d').value = 10;
+    document.getElementById('b_d').value = 1.0;
+    document.getElementById('a_s').value = 2;
+    document.getElementById('b_s').value = 1.0;
+    document.getElementById('policy').value = 'none';
+    document.getElementById('tau').value = 1.0;
+    document.getElementById('t').value = 0.1;
+    document.getElementById('q_cap').value = 3.0;
+    document.getElementById('p_bar').value = 6.0;
+    run();
+  });
+  document.getElementById('btnCopy').addEventListener('click', async () => {
+    const params = readParams();
+    try { await navigator.clipboard.writeText(JSON.stringify(params, null, 2)); } catch {}
+  });
+
+  // --- Bookmarks (localStorage) ---
+  const BM_KEY = 'sd_bookmarks_v1';
+  function loadBookmarks() { try { return JSON.parse(localStorage.getItem(BM_KEY) || '{}'); } catch { return {}; } }
+  function saveBookmarks(bm) { localStorage.setItem(BM_KEY, JSON.stringify(bm)); }
+  function refreshBmSelect() {
+    const sel = document.getElementById('bmSelect');
+    const bm = loadBookmarks();
+    const names = Object.keys(bm).sort();
+    sel.innerHTML = names.map(n => `<option value="${n}">${n}</option>`).join('');
+  }
+  document.getElementById('btnSaveBm').addEventListener('click', () => {
+    const name = (document.getElementById('bmName').value || '').trim();
+    if (!name) return;
+    const bm = loadBookmarks();
+    bm[name] = readParams();
+    saveBookmarks(bm); refreshBmSelect();
+  });
+  document.getElementById('btnLoadBm').addEventListener('click', () => {
+    const name = document.getElementById('bmSelect').value; if (!name) return;
+    const bm = loadBookmarks()[name]; if (!bm) return;
+    document.getElementById('a_d').value = bm.a_d;
+    document.getElementById('b_d').value = bm.b_d;
+    document.getElementById('a_s').value = bm.a_s;
+    document.getElementById('b_s').value = bm.b_s;
+    document.getElementById('policy').value = bm.policy;
+    document.getElementById('tau').value = bm.tau;
+    document.getElementById('t').value = bm.t;
+    document.getElementById('q_cap').value = bm.q_cap;
+    document.getElementById('p_bar').value = bm.p_bar;
+    run();
+  });
+  document.getElementById('btnDeleteBm').addEventListener('click', () => {
+    const name = document.getElementById('bmSelect').value; if (!name) return;
+    const bm = loadBookmarks(); delete bm[name]; saveBookmarks(bm); refreshBmSelect();
+  });
+  refreshBmSelect();
+
+  // --- Teaching Self-Checks ---
+  function approxEqual(a, b, tol=1e-6) { return Math.abs(a - b) <= tol; }
+  function setResult(el, pass, msg) {
+    el.textContent = msg;
+    el.classList.remove('pass','fail');
+    el.classList.add(pass ? 'pass' : 'fail');
+  }
+
+  document.getElementById('btnCheckBaseline').addEventListener('click', async () => {
+    const el = document.getElementById('checkBaseline');
+    const params = { a_d:10, b_d:1, a_s:2, b_s:1, policy:'none', tau:0, t:0, q_cap:0, p_bar:0 };
+    const data = await postJSON('/api/lab/supply-demand', params);
+    const ok = approxEqual(data.baseline.p_star, 6.0) && approxEqual(data.baseline.q_star, 4.0) && approxEqual(data.baseline.cs, 8.0) && approxEqual(data.baseline.ps, 8.0);
+    setResult(el, ok, ok ? 'Baseline ✓ (p*=6, q*=4, CS=8, PS=8)' : 'Baseline ✗');
+  });
+
+  document.getElementById('btnCheckTax').addEventListener('click', async () => {
+    const el = document.getElementById('checkTax');
+    const params = { a_d:10, b_d:1, a_s:2, b_s:1, policy:'per_unit_tax', tau:1.0, t:0, q_cap:0, p_bar:0 };
+    const data = await postJSON('/api/lab/supply-demand', params);
+    const o = data.outcome;
+    const ok = approxEqual(o.buyer_price, 7.0) && approxEqual(o.seller_price, 6.0) && approxEqual(o.quantity, 3.0) && approxEqual(o.tax_revenue, 3.0) && approxEqual(o.deadweight_loss, 0.5);
+    setResult(el, ok, ok ? 'τ=1 ✓ (p_b=7, p_s=6, q=3, TR=3, DWL=0.5)' : 'τ=1 ✗');
+  });
+
+  document.getElementById('btnCheckQuota').addEventListener('click', async () => {
+    const el = document.getElementById('checkQuota');
+    const params = { a_d:10, b_d:1, a_s:2, b_s:1, policy:'quota', tau:0, t:0, q_cap:3.0, p_bar:0 };
+    const data = await postJSON('/api/lab/supply-demand', params);
+    const o = data.outcome;
+    const ok = approxEqual(o.buyer_price, 7.0) && approxEqual(o.seller_price, 5.0) && approxEqual(o.deadweight_loss, 1.0) && approxEqual(o.quota_rent, 6.0);
+    setResult(el, ok, ok ? 'q_cap=3 ✓ (p_b=7, p_s=5, DWL=1, rent=6)' : 'q_cap=3 ✗');
+  });
+
+  // --- Quiz logic ---
+  document.getElementById('btnQuiz1').addEventListener('click', () => {
+    const val = document.querySelector('input[name="q1"]:checked');
+    const el = document.getElementById('quiz1Res');
+    const pass = val && val.value === 'buyers';
+    setResult(el, pass, pass ? 'Correct: less elastic side bears more.' : 'Try again.');
+  });
+
+  document.getElementById('btnQuiz2').addEventListener('click', () => {
+    const val = document.querySelector('input[name="q2"]:checked');
+    const el = document.getElementById('quiz2Res');
+    const pass = val && val.value === 'qs';
+    setResult(el, pass, pass ? 'Correct: realized quantity equals Q_s(P_c).' : 'Hint: sellers supply at the controlled price.');
+  });
+
+  document.getElementById('btnQuiz3').addEventListener('click', () => {
+    const val = document.querySelector('input[name="q3"]:checked');
+    const el = document.getElementById('quiz3Res');
+    const pass = val && val.value === 'pb_gt_ps';
+    setResult(el, pass, pass ? 'Correct: wedge implies p_b > p_s; rent = (p_b - p_s) q_cap.' : 'Check inverse curves at q_cap.');
+  });
+
+  document.getElementById('btnQuizNum').addEventListener('click', async () => {
+    const el = document.getElementById('quizNumRes');
+    const guess = parseFloat(document.getElementById('quizNum').value);
+    if (Number.isNaN(guess)) { setResult(el, false, 'Enter a number.'); return; }
+    const params = { a_d:10, b_d:1, a_s:2, b_s:1, policy:'per_unit_tax', tau:1.0, t:0, q_cap:0, p_bar:0 };
+    const data = await postJSON('/api/lab/supply-demand', params);
+    const truth = data.outcome.deadweight_loss;
+    const pass = Math.abs(guess - truth) <= 0.01;
+    setResult(el, pass, pass ? 'Correct!' : `Not quite. Target ≈ ${truth.toFixed(2)}`);
+  });
+</script>
+{% endblock %}
+
+
