@@ -1,0 +1,13 @@
+(
+    id: "engine_hammer",
+    display_name: "LV-9 Hammer",
+    category: Engine,
+    dry_mass: 400.0,
+    fuel_capacity: 0.0,
+    thrust_vacuum: 250000.0,
+    isp: 250.0,
+    drag_coefficient: 0.4,
+    reference_area: 1.5,
+    tags: [Engine],
+    cost: 400,
+)

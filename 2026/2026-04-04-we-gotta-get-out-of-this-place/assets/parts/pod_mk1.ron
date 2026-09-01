@@ -1,0 +1,13 @@
+(
+    id: "pod_mk1",
+    display_name: "Mk1 Command Pod",
+    category: Command,
+    dry_mass: 800.0,
+    fuel_capacity: 0.0,
+    thrust_vacuum: 0.0,
+    isp: 0.0,
+    drag_coefficient: 0.4,
+    reference_area: 1.2,
+    tags: [Command, Recovery],
+    cost: 500,
+)

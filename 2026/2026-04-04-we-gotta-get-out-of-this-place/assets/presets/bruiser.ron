@@ -1,0 +1,21 @@
+(
+    id: "bruiser",
+    display_name: "Bruiser Heavy",
+    parts: [
+        (part_id: "pod_mk1", instance_id: "pod_1"),
+        (part_id: "tank_medium", instance_id: "tank_1"),
+        (part_id: "tank_medium", instance_id: "tank_2"),
+        (part_id: "tank_medium", instance_id: "tank_3"),
+        (part_id: "tank_medium", instance_id: "tank_4"),
+        (part_id: "engine_hammer", instance_id: "engine_1"),
+        (part_id: "engine_hammer", instance_id: "engine_2"),
+    ],
+    stages: [
+        (
+            order: 0,
+            engine_ids: ["engine_1", "engine_2"],
+            tank_ids: ["tank_1", "tank_2", "tank_3", "tank_4"],
+            decoupler_ids: [],
+        )
+    ]
+)

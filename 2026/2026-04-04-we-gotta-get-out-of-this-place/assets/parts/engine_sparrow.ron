@@ -1,0 +1,13 @@
+(
+    id: "engine_sparrow",
+    display_name: "LV-1 Sparrow",
+    category: Engine,
+    dry_mass: 50.0,
+    fuel_capacity: 0.0,
+    thrust_vacuum: 20000.0,
+    isp: 320.0,
+    drag_coefficient: 0.2,
+    reference_area: 0.5,
+    tags: [Engine],
+    cost: 100,
+)

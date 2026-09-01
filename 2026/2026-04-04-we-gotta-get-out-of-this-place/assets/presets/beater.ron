@@ -1,0 +1,20 @@
+(
+    id: "beater",
+    display_name: "The Beater",
+    parts: [
+        (part_id: "pod_mk1", instance_id: "pod_1"),
+        (part_id: "tank_medium", instance_id: "tank_1"),
+        (part_id: "tank_medium", instance_id: "tank_2"),
+        (part_id: "tank_small", instance_id: "tank_3"),
+        (part_id: "engine_hammer", instance_id: "engine_1"),
+    ],
+    stages: [
+        // Stage 0 is the launch stage
+        (
+            order: 0,
+            engine_ids: ["engine_1"],
+            tank_ids: ["tank_1", "tank_2", "tank_3"],
+            decoupler_ids: [],
+        )
+    ]
+)

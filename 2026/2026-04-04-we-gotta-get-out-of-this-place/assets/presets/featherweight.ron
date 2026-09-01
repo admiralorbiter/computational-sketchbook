@@ -1,0 +1,17 @@
+(
+    id: "featherweight",
+    display_name: "Featherweight",
+    parts: [
+        (part_id: "pod_mk1", instance_id: "pod_1"),
+        (part_id: "tank_small", instance_id: "tank_1"),
+        (part_id: "engine_sparrow", instance_id: "engine_1"),
+    ],
+    stages: [
+        (
+            order: 0,
+            engine_ids: ["engine_1"],
+            tank_ids: ["tank_1"],
+            decoupler_ids: [],
+        )
+    ]
+)

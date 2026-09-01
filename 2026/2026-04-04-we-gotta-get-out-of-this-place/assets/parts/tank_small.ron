@@ -1,0 +1,13 @@
+(
+    id: "tank_small",
+    display_name: "FL-T100 Small Tank",
+    category: Tank,
+    dry_mass: 50.0,
+    fuel_capacity: 500.0,
+    thrust_vacuum: 0.0,
+    isp: 0.0,
+    drag_coefficient: 0.3,
+    reference_area: 1.0,
+    tags: [Tank],
+    cost: 50,
+)
