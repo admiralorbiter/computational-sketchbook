@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Marauder's Map — Slice 2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-950 text-slate-100 min-h-screen">
+    <div class="max-w-6xl mx-auto px-4 py-6 space-y-6">
+      <header class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between border-b border-slate-800 pb-4">
+        <div>
+          <h1 class="text-2xl font-semibold">Marauder's Map</h1>
+          <p class="text-sm text-slate-400">
+            Slice 2 — locations + relationships on map.
+          </p>
+        </div>
+        <div class="flex flex-col items-stretch gap-2 md:items-end">
+          <div class="flex items-center gap-2">
+            <input
+              id="entity-search"
+              type="search"
+              placeholder="Search entities…"
+              class="w-48 rounded-md bg-slate-950 border border-slate-700 px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-sky-500"
+            />
+          </div>
+          <div id="health-status" class="text-xs font-mono text-slate-300 text-right">
+            Checking health…
+          </div>
+        </div>
+      </header>
+
+      <main class="grid gap-6 md:grid-cols-[minmax(0,3.5fr)_minmax(0,2.5fr)]">
+        <!-- Left: Map-first canvas -->
+        <section class="space-y-3">
+          <div class="flex items-center justify-between gap-2">
+            <h2 class="text-lg font-semibold flex items-center gap-2">
+              Map
+              <span class="text-xs font-normal text-slate-500">(Slice 2 canvas)</span>
+            </h2>
+            <div class="flex items-center gap-2">
+              <button
+                id="new-rel-btn"
+                class="text-xs px-2 py-1 rounded border border-slate-700 text-slate-300 hover:bg-sky-600 hover:border-sky-500 hover:text-white transition-colors"
+              >
+                New relationship
+              </button>
+              <button
+                id="kc-center-btn"
+                class="text-xs px-2 py-1 rounded border border-slate-700 text-slate-300 hover:bg-slate-800"
+              >
+                Center on KC
+              </button>
+            </div>
+          </div>
+          <div
+            id="map-canvas"
+            class="h-[70vh] min-h-[320px] rounded-xl border border-slate-800 bg-slate-900/40 shadow-lg shadow-slate-950/40"
+          ></div>
+        </section>
+
+        <!-- Right: Compact side panel (entities + relationships + editor) -->
+        <section class="space-y-4">
+          <!-- New entity card -->
+          <section class="bg-slate-900/70 border border-slate-800 rounded-xl p-4 space-y-3 shadow-md shadow-slate-950/40">
+            <h2 class="text-sm font-semibold tracking-wide text-slate-200 uppercase">
+              New Entity
+            </h2>
+            <form id="entity-form" class="space-y-3">
+              <div class="space-y-1">
+                <label class="block text-xs text-slate-400" for="name">Name</label>
+                <input
+                  id="name"
+                  name="name"
+                  class="w-full rounded-md bg-slate-950 border border-slate-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  placeholder="e.g., ACME Corp"
+                  required
+                />
+              </div>
+              <div class="space-y-1">
+                <label class="block text-xs text-slate-400" for="entity_type">Type</label>
+                <select
+                  id="entity_type"
+                  name="entity_type"
+                  class="w-full rounded-md bg-slate-950 border border-slate-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                >
+                  <option value="person">Person</option>
+                  <option value="organization">Organization</option>
+                  <option value="place">Place</option>
+                  <option value="event">Event</option>
+                </select>
+              </div>
+              <div class="flex items-center justify-between gap-3 pt-1">
+                <button
+                  type="submit"
+                  class="inline-flex items-center justify-center rounded-md bg-sky-500 hover:bg-sky-400 px-3 py-1.5 text-xs font-medium text-white"
+                >
+                  Add entity
+                </button>
+                <p id="form-status" class="text-[11px] text-slate-400"></p>
+              </div>
+            </form>
+          </section>
+
+          <!-- Entities + relationships -->
+          <section class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 space-y-3 shadow-md shadow-slate-950/40 h-[calc(70vh-0.75rem)] overflow-hidden">
+            <div class="flex items-center justify-between">
+              <h2 class="text-sm font-semibold text-slate-200 uppercase tracking-wide">
+                Entities
+              </h2>
+              <button
+                id="refresh-btn"
+                class="text-[10px] px-2 py-1 rounded border border-slate-700 text-slate-300 hover:bg-slate-800"
+              >
+                Refresh
+              </button>
+            </div>
+
+            <div
+              id="entities-empty"
+              class="hidden text-xs text-slate-400 border border-dashed border-slate-700 rounded-lg p-3"
+            >
+              No entities yet. Add one above to see it appear here.
+            </div>
+
+            <ul
+              id="entities-list"
+              class="space-y-1 max-h-[32vh] overflow-y-auto pr-1"
+            ></ul>
+
+            <section
+              id="entity-rel-panel"
+              class="hidden border-t border-slate-800 pt-3 space-y-2"
+            >
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs font-semibold text-slate-200 uppercase tracking-wide">
+                  Relationships
+                </h3>
+                <button
+                  id="set-location-btn"
+                  class="text-[10px] px-2 py-1 rounded border border-slate-700 text-slate-300 hover:bg-slate-800"
+                >
+                  Set location on map
+                </button>
+              </div>
+              <ul id="entity-rel-list" class="space-y-1 text-xs max-h-[18vh] overflow-y-auto pr-1"></ul>
+
+              <div
+                id="rel-editor"
+                class="hidden mt-2 border border-slate-700 rounded-md p-2 space-y-2 bg-slate-950/90"
+              >
+                <div class="flex items-center justify-between">
+                  <h4 id="rel-editor-title" class="text-[11px] font-semibold text-slate-200">
+                    Relationship
+                  </h4>
+                  <button
+                    id="rel-editor-cancel"
+                    class="text-[10px] text-slate-400 hover:text-slate-200"
+                  >
+                    Cancel
+                  </button>
+                </div>
+                <form id="rel-editor-form" class="space-y-2 text-xs">
+                  <div class="space-y-1">
+                    <label class="block text-slate-300">Type</label>
+                    <select
+                      name="relationship_type"
+                      class="w-full rounded bg-slate-950 border border-slate-700 px-2 py-1"
+                    >
+                      <option value="member_of">member_of</option>
+                      <option value="board_member">board_member</option>
+                      <option value="advisor">advisor</option>
+                      <option value="executive">executive</option>
+                      <option value="related_to">related_to</option>
+                    </select>
+                  </div>
+                  <div class="space-y-1">
+                    <label class="block text-slate-300">Role</label>
+                    <input
+                      name="role"
+                      class="w-full rounded bg-slate-950 border border-slate-700 px-2 py-1"
+                      placeholder="e.g., Chair"
+                    />
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div class="space-y-1">
+                      <label class="block text-slate-300">Start date</label>
+                      <input
+                        name="start_date"
+                        type="date"
+                        class="w-full rounded bg-slate-950 border border-slate-700 px-2 py-1"
+                      />
+                    </div>
+                    <div class="space-y-1">
+                      <label class="block text-slate-300">End date</label>
+                      <input
+                        name="end_date"
+                        type="date"
+                        class="w-full rounded bg-slate-950 border border-slate-700 px-2 py-1"
+                      />
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div class="space-y-1">
+                      <label class="block text-slate-300">Strength (1–5)</label>
+                      <input
+                        name="strength"
+                        type="number"
+                        min="1"
+                        max="5"
+                        class="w-full rounded bg-slate-950 border border-slate-700 px-2 py-1"
+                      />
+                    </div>
+                    <div class="space-y-1">
+                      <label class="block text-slate-300">Confidence (1–5)</label>
+                      <input
+                        name="confidence"
+                        type="number"
+                        min="1"
+                        max="5"
+                        class="w-full rounded bg-slate-950 border border-slate-700 px-2 py-1"
+                      />
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between gap-2 pt-1">
+                    <span
+                      id="rel-editor-error"
+                      class="text-[10px] text-rose-400"
+                    ></span>
+                    <button
+                      id="rel-editor-save"
+                      type="submit"
+                      class="text-[11px] px-2 py-1 rounded bg-sky-600 hover:bg-sky-500 text-white"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </section>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script type="module" src="/static/js/bootstrap.js"></script>
+  </body>
+  </html>
+
+
