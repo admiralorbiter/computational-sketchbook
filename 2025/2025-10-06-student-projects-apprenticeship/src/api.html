@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GradeBridge - API Design & Implementation Guide</title>
+    <link rel="icon" href="data:,">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+
+  </head>
+  <body data-page="api">
+    <div id="headerMount"></div>
+    <main class="container my-4">
+
+<div class="mb-4">
+  <h1 class="h2">API Design & Implementation Guide</h1>
+  <p class="lead text-muted">Learn to design and implement RESTful APIs for GradeBridge. This comprehensive guide covers API patterns, authentication, error handling, and best practices for building robust backend services.</p>
+</div>
+
+<!-- Learning Objectives -->
+<div class="row g-4 mb-5">
+  <div class="col-md-8">
+    <div class="card border-primary">
+      <div class="card-header bg-primary bg-gradient text-white">
+        <h5 class="mb-0"><i class="bi bi-lightbulb me-2"></i>Learning Objectives</h5>
+      </div>
+      <div class="card-body">
+        <ul class="mb-0">
+          <li class="mb-2"><strong>Design</strong> RESTful APIs following industry standards</li>
+          <li class="mb-2"><strong>Implement</strong> authentication and authorization middleware</li>
+          <li class="mb-2"><strong>Handle</strong> errors and validation consistently</li>
+          <li class="mb-2"><strong>Document</strong> APIs for frontend integration</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body text-center">
+        <i class="bi bi-diagram-3 display-4 text-primary mb-3"></i>
+        <h6>REST API Design</h6>
+        <p class="small text-muted">HTTP methods, status codes, JSON responses</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- API Overview -->
+<section class="mb-5">
+  <h2 class="h4 mb-4"><i class="bi bi-gear me-2"></i>API Architecture Overview</h2>
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header bg-info bg-gradient text-white">
+          <h6 class="mb-0">Core Principles</h6>
+        </div>
+        <div class="card-body">
+          <ul class="small">
+            <li><strong>RESTful Design:</strong> Use proper HTTP methods and status codes</li>
+            <li><strong>JSON Responses:</strong> Consistent data format across all endpoints</li>
+            <li><strong>Stateless:</strong> Each request contains all necessary information</li>
+            <li><strong>Versioned:</strong> API versioning for backward compatibility</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header bg-success bg-gradient text-white">
+          <h6 class="mb-0">Security Features</h6>
+        </div>
+        <div class="card-body">
+          <ul class="small">
+            <li><strong>JWT Authentication:</strong> Token-based user sessions</li>
+            <li><strong>Role-Based Access:</strong> Student, Teacher, Admin permissions</li>
+            <li><strong>Input Validation:</strong> Sanitize and validate all inputs</li>
+            <li><strong>Error Handling:</strong> Consistent error response format</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Authentication Section -->
+<section class="mb-5">
+  <h2 class="h4 mb-4"><i class="bi bi-shield-check me-2"></i>Authentication & Authorization</h2>
+
+  <div class="row g-4">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header bg-warning bg-gradient">
+          <h6 class="mb-0">JWT Implementation Guide</h6>
+        </div>
+        <div class="card-body">
+          <h6 class="text-warning">Implementation Steps:</h6>
+          <ol class="small">
+            <li><strong>Install dependencies:</strong> jsonwebtoken, bcryptjs</li>
+            <li><strong>Create auth middleware:</strong> Verify JWT tokens on protected routes</li>
+            <li><strong>Hash passwords:</strong> Use bcrypt with salt rounds (10-12)</li>
+            <li><strong>Generate tokens:</strong> Sign JWT with user ID and role</li>
+            <li><strong>Set expiration:</strong> Access tokens (15min), Refresh tokens (7 days)</li>
+          </ol>
+
+          <div class="mt-3">
+            <strong>Token Structure:</strong>
+            <div class="bg-light p-2 rounded mt-2">
+              <small><code>{"userId": "123", "role": "teacher", "exp": 1640995200}</code></small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header bg-primary bg-gradient text-white">
+          <h6 class="mb-0">Role Hierarchy</h6>
+        </div>
+        <div class="card-body text-center">
+          <div class="mb-3">
+            <span class="badge bg-danger mb-2">Admin</span><br>
+            <small class="text-muted">Full system access</small>
+          </div>
+          <div class="mb-3">
+            <span class="badge bg-warning mb-2">Teacher</span><br>
+            <small class="text-muted">Course & grade management</small>
+          </div>
+          <div class="mb-3">
+            <span class="badge bg-info mb-2">Student</span><br>
+            <small class="text-muted">View grades & assignments</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="apiContent"></div>
+
+<script>
+(async ()=>{
+  const res = await fetch('data/endpoints.json');
+  const data = await res.json();
+  const container = document.getElementById('apiContent');
+  data.endpoints.forEach((e,i)=>{
+    const card = document.createElement('div');
+    card.className='card mb-3';
+    card.innerHTML = `
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <div><span class="badge text-bg-primary me-2">${e.method}</span><code>${e.path}</code></div>
+        <div class="small text-muted">${e.desc||''}</div>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="small text-muted">Request</div>
+            <pre class="bg-body-tertiary p-2 rounded"><code>${e.request ? JSON.stringify(e.request, null, 2) : '{}'}</code></pre>
+          </div>
+          <div class="col-md-6">
+            <div class="small text-muted">Response (200)</div>
+            <pre class="bg-body-tertiary p-2 rounded"><code>${e.response ? JSON.stringify(e.response, null, 2) : '{}'}</code></pre>
+          </div>
+        </div>
+        ${e.errors && e.errors.length ? `
+        <div class="mt-3"><div class="small text-muted">Errors</div>
+          <ul class="small">${e.errors.map(er=>`<li>${er.status} → <code>${JSON.stringify(er.body)}</code></li>`).join('')}</ul>
+        </div>`: ''}
+
+        ${e.deps && e.deps.length ? `
+        <div class="mt-2"><div class="small text-muted">Dependencies</div>
+        <span class="badge text-bg-light border">${e.deps.join('</span> <span class="badge text-bg-light border">')}</span></div>`:''}
+
+        ${e.tests && e.tests.length ? `
+        <div class="mt-2"><div class="small text-muted">Suggested tests</div>
+          <ul class="small">${e.tests.map(t=>`<li>${t}</li>`).join('')}</ul>
+        </div>`:''}
+      </div>
+    `;
+    container.append(card);
+  });
+
+  document.getElementById('btnCopyCurl')?.addEventListener('click', ()=>{
+    const lines = data.endpoints.map(e=>{
+      const base = 'https://localhost:3000';
+      if (e.method==='GET') {
+        return `curl -b cookie.txt -c cookie.txt -X GET ${base}${e.path}`;
+      } else {
+        const body = e.request ? JSON.stringify(e.request).replace(/"/g,'\"') : '{}';
+        return `curl -b cookie.txt -c cookie.txt -H "Content-Type: application/json" -X ${e.method} ${base}${e.path} -d "${body}"`;
+      }
+    });
+    copyText(lines.join('\n\n'));
+  });
+})();
+</script>
+
+    </main>
+    <div id="footerMount"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/app.js"></script>
+
+
+  </body>
+</html>

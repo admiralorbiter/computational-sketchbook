@@ -1,0 +1,254 @@
+{
+  "endpoints": [
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "desc": "Authenticate a user and create a session.",
+      "request": {
+        "email": "x@y.com",
+        "password": "secret"
+      },
+      "response": {
+        "user": {
+          "id": 12,
+          "role": "student",
+          "first_name": "A",
+          "last_name": "B"
+        }
+      },
+      "errors": [
+        {
+          "status": 401,
+          "body": {
+            "error": "Invalid credentials"
+          }
+        }
+      ],
+      "deps": [
+        "DB: users",
+        "bcrypt",
+        "express-session"
+      ],
+      "tests": [
+        "returns 200 and user payload for valid credentials",
+        "returns 401 for invalid password",
+        "rate limited after 5 failed attempts"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/logout",
+      "desc": "Destroy session.",
+      "request": {},
+      "response": {
+        "ok": true
+      },
+      "errors": [],
+      "deps": [
+        "express-session"
+      ],
+      "tests": [
+        "returns 200 when logged in",
+        "idempotent: 200 even if already logged out"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/students/me/courses",
+      "desc": "List courses the current student is enrolled in.",
+      "response": [
+        {
+          "course_id": 1,
+          "name": "Biology",
+          "term": "2025-Fall"
+        }
+      ],
+      "deps": [
+        "DB: enrollments, courses",
+        "auth middleware"
+      ],
+      "tests": [
+        "403 when unauthenticated",
+        "200 with only own enrollments",
+        "no courses returns 200 []"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/students/me/courses/:courseId/grades",
+      "desc": "Detailed grades for a student in a course, including overall.",
+      "response": {
+        "course": {
+          "id": 1,
+          "name": "Biology"
+        },
+        "assignments": [
+          {
+            "id": 10,
+            "title": "Lab 1",
+            "max_points": 50,
+            "points_earned": 45,
+            "due_date": "2025-09-10"
+          }
+        ],
+        "overall": {
+          "points_earned": 345,
+          "max_points": 400,
+          "percent": 86.25
+        }
+      },
+      "deps": [
+        "DB: assignments, grades",
+        "gradeCalc.service"
+      ],
+      "tests": [
+        "403 if not enrolled in the course",
+        "200 includes overall percent and per-assignment"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/teachers/me/courses",
+      "desc": "Courses owned by current teacher.",
+      "response": [
+        {
+          "id": 3,
+          "name": "Physics",
+          "term": "2025-Fall"
+        }
+      ],
+      "deps": [
+        "DB: courses",
+        "auth middleware"
+      ],
+      "tests": [
+        "200 returns courses where teacher_id=me"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/courses",
+      "desc": "Create a course (teacher only).",
+      "request": {
+        "name": "Physics",
+        "term": "2025-Fall"
+      },
+      "response": {
+        "id": 3,
+        "name": "Physics",
+        "term": "2025-Fall"
+      },
+      "errors": [
+        {
+          "status": 422,
+          "body": {
+            "errors": [
+              {
+                "field": "name",
+                "msg": "Required"
+              }
+            ]
+          }
+        }
+      ],
+      "deps": [
+        "RBAC: teacher",
+        "DB: courses",
+        "express-validator"
+      ],
+      "tests": [
+        "422 when missing name",
+        "403 when role != teacher"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/courses/:courseId/enroll",
+      "desc": "Enroll an existing student into a course.",
+      "request": {
+        "student_email": "s1@school.org"
+      },
+      "response": {
+        "enrollment_id": 44
+      },
+      "deps": [
+        "DB: users, enrollments",
+        "RBAC: owns course"
+      ],
+      "tests": [
+        "404 when student not found",
+        "403 when not course owner",
+        "201 on success"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/courses/:courseId/assignments",
+      "desc": "Create an assignment in a course.",
+      "request": {
+        "title": "Quiz 1",
+        "max_points": 20,
+        "due_date": "2025-10-15"
+      },
+      "response": {
+        "id": 11,
+        "title": "Quiz 1",
+        "max_points": 20,
+        "due_date": "2025-10-15"
+      },
+      "deps": [
+        "DB: assignments",
+        "RBAC: owns course"
+      ],
+      "tests": [
+        "422 invalid max_points",
+        "403 when not owner"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/assignments/:assignmentId/grades",
+      "desc": "Create a grade for a student on an assignment.",
+      "request": {
+        "student_id": 22,
+        "points_earned": 18
+      },
+      "response": {
+        "id": 99,
+        "student_id": 22,
+        "points_earned": 18
+      },
+      "deps": [
+        "DB: grades",
+        "RBAC: owns course",
+        "enrollment exists"
+      ],
+      "tests": [
+        "422 negative points",
+        "404 not enrolled",
+        "201 success"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/grades/:gradeId",
+      "desc": "Update points earned for a grade.",
+      "request": {
+        "points_earned": 19
+      },
+      "response": {
+        "id": 99,
+        "student_id": 22,
+        "points_earned": 19
+      },
+      "deps": [
+        "DB: grades",
+        "RBAC: owns course"
+      ],
+      "tests": [
+        "404 grade not found",
+        "200 updated"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+
+/* GradeBridge Project Hub styles (extends Bootstrap) */
+:root {
+  --brand-gradient: linear-gradient(135deg, #6f42c1 0%, #0d6efd 100%);
+}
+html, body {
+  scroll-behavior: smooth;
+}
+body {
+  padding-top: 64px;
+}
+.hero {
+  background: var(--brand-gradient);
+  color: #fff;
+  border-radius: .75rem;
+}
+.hero .btn {
+  background: rgba(255,255,255,.15);
+  border-color: rgba(255,255,255,.35);
+}
+.section-card {
+  border-radius: .75rem;
+}
+.navbar-brand {
+  letter-spacing: .2px;
+}
+.badge-epic {
+  background-color: #6610f2;
+}
+.badge-sprint {
+  background-color: #0d6efd;
+}
+.card.task {
+  border-left: 4px solid #0d6efd;
+}
+.card.task[data-epic="A"] { border-left-color: #6f42c1; }
+.card.task[data-epic="B"] { border-left-color: #0dcaf0; }
+.card.task[data-epic="C"] { border-left-color: #20c997; }
+.card.task[data-epic="D"] { border-left-color: #ffc107; }
+.card.task[data-epic="E"] { border-left-color: #fd7e14; }
+.card.task[data-epic="F"] { border-left-color: #dc3545; }
+.kanban-column {
+  min-height: 380px;
+  background: #f8f9fa;
+  padding: .5rem;
+  border-radius: .5rem;
+  border: 1px dashed #dee2e6;
+}
+[data-bs-theme="dark"] .kanban-column {
+  background: #1f1f24;
+  border-color: #343a40;
+}
+.task-drag-placeholder {
+  border: 2px dashed #0d6efd;
+  border-radius: .5rem;
+  margin: .5rem 0;
+  height: 48px;
+}
+.footer-space {
+  height: 120px;
+}
+pre code {
+  white-space: pre-wrap;
+}
+#siteNavbar .navbar-brand span { filter: drop-shadow(0 2px 6px rgba(0,0,0,.25)); }

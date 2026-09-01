@@ -1,0 +1,60 @@
+<!doctype html>
+<!-- Shared header/nav; injected into each page by app.js -->
+<nav class="navbar navbar-expand-lg fixed-top shadow-sm" id="siteNavbar">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="index.html">
+      <span class="me-2">🎓</span>GradeBridge Project Hub
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain" aria-controls="navMain" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" data-nav="index" href="index.html">Overview</a></li>
+        <li class="nav-item"><a class="nav-link" data-nav="sprints" href="sprints.html">Sprint Planning</a></li>
+        <li class="nav-item"><a class="nav-link" data-nav="tasks" href="tasks.html">Task Breakdown</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="guidesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Implementation Guides</a>
+          <ul class="dropdown-menu" aria-labelledby="guidesDropdown">
+            <li><a class="dropdown-item" href="api.html">API Implementation</a></li>
+            <li><a class="dropdown-item" href="data-model.html">Database Design</a></li>
+            <li><a class="dropdown-item" href="ui.html">Frontend Development</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="refsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Technical References</a>
+          <ul class="dropdown-menu" aria-labelledby="refsDropdown">
+            <li><a class="dropdown-item" href="security.html">Security Guidelines</a></li>
+            <li><a class="dropdown-item" href="testing.html">Testing Strategy</a></li>
+            <li><a class="dropdown-item" href="decisions.html">Architecture Decisions</a></li>
+            <li><a class="dropdown-item" href="roadmap.html">Product Evolution</a></li>
+          </ul>
+        </li>
+      </ul>
+      <div class="d-flex gap-2 align-items-center">
+        <button class="btn btn-sm btn-outline-primary" id="btnSearchIcon" title="Search (opens panel)">
+          <i class="bi bi-search"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-secondary" id="themeToggle" title="Toggle light/dark">
+          <i class="bi bi-sun"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Global Search Offcanvas -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasSearch" aria-labelledby="offcanvasSearchLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasSearchLabel">Search the Project Hub</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="input-group mb-3">
+      <span class="input-group-text">Search</span>
+      <input type="search" id="offcanvasSearchInput" class="form-control" placeholder="keywords (e.g., grades API, sprint 2, security)" />
+      <button class="btn btn-primary" id="offcanvasSearchGo">Go</button>
+    </div>
+    <div id="searchResults" class="list-group small"></div>
+  </div>
+</div>

@@ -1,0 +1,604 @@
+{
+  "epics": {
+    "A": "Project Setup & Foundations",
+    "B": "Teacher CRUD APIs",
+    "C": "Student Views/APIs",
+    "D": "Frontend Pages",
+    "E": "Security, QA & Polish",
+    "F": "Stretch (Feedback, Links, CSV)"
+  },
+  "tasks": [
+    {
+      "id": "A-1",
+      "epic": "A",
+      "title": "Initialize repository & Node project",
+      "description": "Create repo, npm init, .gitignore",
+      "sprint": 1,
+      "assignee": "Backend Lead",
+      "estimate": 1,
+      "deps": [],
+      "tags": [
+        "Goal"
+      ],
+      "due": "2025-10-11",
+      "status": "Done"
+    },
+    {
+      "id": "A-2",
+      "epic": "A",
+      "title": "Add ESLint & Prettier",
+      "description": "Configure linting/formatting, add scripts",
+      "sprint": 1,
+      "assignee": "Backend Lead",
+      "estimate": 2,
+      "deps": [
+        "A-1"
+      ],
+      "tags": [],
+      "due": "2025-10-11",
+      "status": "Done"
+    },
+    {
+      "id": "A-3",
+      "epic": "A",
+      "title": "GitHub Actions CI",
+      "description": "CI for lint + test",
+      "sprint": 1,
+      "assignee": "QA / Full-Stack",
+      "estimate": 2,
+      "deps": [
+        "A-1",
+        "A-2"
+      ],
+      "tags": [],
+      "due": "2025-10-11",
+      "status": "Backlog"
+    },
+    {
+      "id": "A-4",
+      "epic": "A",
+      "title": "Express server skeleton",
+      "description": "Express app, Helmet, /health route",
+      "sprint": 1,
+      "assignee": "Backend Lead",
+      "estimate": 3,
+      "deps": [
+        "A-1"
+      ],
+      "tags": [],
+      "due": "2025-10-11",
+      "status": "Backlog"
+    },
+    {
+      "id": "A-5",
+      "epic": "A",
+      "title": "Knex + DB setup",
+      "description": "Install Knex, sqlite3 (dev), pg (prod), knexfile",
+      "sprint": 1,
+      "assignee": "Full-Stack 1",
+      "estimate": 3,
+      "deps": [
+        "A-4"
+      ],
+      "tags": [],
+      "due": "2025-10-11",
+      "status": "Backlog"
+    },
+    {
+      "id": "A-6",
+      "epic": "A",
+      "title": "Migrations: core tables",
+      "description": "schools, programs, users",
+      "sprint": 1,
+      "assignee": "Full-Stack 1",
+      "estimate": 3,
+      "deps": [
+        "A-5"
+      ],
+      "tags": [],
+      "due": "2025-10-11",
+      "status": "Backlog"
+    },
+    {
+      "id": "A-7",
+      "epic": "A",
+      "title": "Migrations: courses/enrollments",
+      "description": "courses, enrollments + indexes",
+      "sprint": 1,
+      "assignee": "Full-Stack 2",
+      "estimate": 3,
+      "deps": [
+        "A-5"
+      ],
+      "tags": [],
+      "due": "2025-10-11",
+      "status": "Backlog"
+    },
+    {
+      "id": "A-8",
+      "epic": "A",
+      "title": "Migrations: assignments/grades",
+      "description": "assignments, grades + constraints",
+      "sprint": 1,
+      "assignee": "Full-Stack 2",
+      "estimate": 3,
+      "deps": [
+        "A-5"
+      ],
+      "tags": [],
+      "due": "2025-10-11",
+      "status": "Backlog"
+    },
+    {
+      "id": "A-9",
+      "epic": "A",
+      "title": "Seed scripts",
+      "description": "Seed schools, program, users, sample courses",
+      "sprint": 1,
+      "assignee": "QA / Full-Stack",
+      "estimate": 2,
+      "deps": [
+        "A-6",
+        "A-7",
+        "A-8"
+      ],
+      "tags": [],
+      "due": "2025-10-11",
+      "status": "Backlog"
+    },
+    {
+      "id": "A-10",
+      "epic": "A",
+      "title": "Session & auth middleware",
+      "description": "express-session, bcrypt, RBAC skeleton",
+      "sprint": 1,
+      "assignee": "Backend Lead",
+      "estimate": 3,
+      "deps": [
+        "A-4",
+        "A-6"
+      ],
+      "tags": [],
+      "due": "2025-10-11",
+      "status": "Backlog"
+    },
+    {
+      "id": "A-11",
+      "epic": "A",
+      "title": "Auth routes: login/logout",
+      "description": "POST /api/auth/login, /api/auth/logout",
+      "sprint": 1,
+      "assignee": "Backend Lead",
+      "estimate": 2,
+      "deps": [
+        "A-10"
+      ],
+      "tags": [],
+      "due": "2025-10-11",
+      "status": "Backlog"
+    },
+    {
+      "id": "B-1",
+      "epic": "B",
+      "title": "Courses API: list/create",
+      "description": "GET my courses, POST /api/courses",
+      "sprint": 2,
+      "assignee": "Backend Lead",
+      "estimate": 3,
+      "deps": [
+        "A-10",
+        "A-11"
+      ],
+      "tags": [
+        "Goal"
+      ],
+      "due": "2025-10-18",
+      "status": "Backlog"
+    },
+    {
+      "id": "B-2",
+      "epic": "B",
+      "title": "Enrollments API: enroll existing student",
+      "description": "POST /api/courses/:id/enroll",
+      "sprint": 2,
+      "assignee": "Full-Stack 1",
+      "estimate": 3,
+      "deps": [
+        "B-1"
+      ],
+      "tags": [],
+      "due": "2025-10-18",
+      "status": "Backlog"
+    },
+    {
+      "id": "B-3",
+      "epic": "B",
+      "title": "Assignments API: create/list",
+      "description": "POST/GET /api/courses/:id/assignments",
+      "sprint": 2,
+      "assignee": "Full-Stack 2",
+      "estimate": 3,
+      "deps": [
+        "B-1"
+      ],
+      "tags": [],
+      "due": "2025-10-18",
+      "status": "Backlog"
+    },
+    {
+      "id": "B-4",
+      "epic": "B",
+      "title": "Grades API: create/update",
+      "description": "POST /api/assignments/:id/grades, PATCH /api/grades/:id",
+      "sprint": 2,
+      "assignee": "Backend Lead",
+      "estimate": 3,
+      "deps": [
+        "B-3"
+      ],
+      "tags": [],
+      "due": "2025-10-18",
+      "status": "Backlog"
+    },
+    {
+      "id": "B-5",
+      "epic": "B",
+      "title": "Teacher ownership checks",
+      "description": "RBAC: teacher must own course to mutate",
+      "sprint": 2,
+      "assignee": "Backend Lead",
+      "estimate": 2,
+      "deps": [
+        "B-1",
+        "B-2",
+        "B-3",
+        "B-4"
+      ],
+      "tags": [],
+      "due": "2025-10-18",
+      "status": "Backlog"
+    },
+    {
+      "id": "B-6",
+      "epic": "B",
+      "title": "Error handling shapes",
+      "description": "Standardize 422, 403, 404 responses",
+      "sprint": 2,
+      "assignee": "QA / Full-Stack",
+      "estimate": 2,
+      "deps": [
+        "B-1",
+        "B-2",
+        "B-3",
+        "B-4"
+      ],
+      "tags": [],
+      "due": "2025-10-18",
+      "status": "Backlog"
+    },
+    {
+      "id": "C-1",
+      "epic": "C",
+      "title": "Student courses API",
+      "description": "GET /api/students/me/courses",
+      "sprint": 3,
+      "assignee": "Full-Stack 1",
+      "estimate": 2,
+      "deps": [
+        "A-10",
+        "A-11",
+        "B-2"
+      ],
+      "tags": [
+        "Goal"
+      ],
+      "due": "2025-10-25",
+      "status": "Backlog"
+    },
+    {
+      "id": "C-2",
+      "epic": "C",
+      "title": "gradeCalc.service",
+      "description": "Compute course overall % with rules",
+      "sprint": 3,
+      "assignee": "Backend Lead",
+      "estimate": 2,
+      "deps": [
+        "B-4"
+      ],
+      "tags": [],
+      "due": "2025-10-25",
+      "status": "Backlog"
+    },
+    {
+      "id": "C-3",
+      "epic": "C",
+      "title": "Student course grades API",
+      "description": "GET /api/students/me/courses/:id/grades",
+      "sprint": 3,
+      "assignee": "Full-Stack 1",
+      "estimate": 3,
+      "deps": [
+        "C-1",
+        "C-2"
+      ],
+      "tags": [],
+      "due": "2025-10-25",
+      "status": "Backlog"
+    },
+    {
+      "id": "D-1",
+      "epic": "D",
+      "title": "Login page",
+      "description": "Bootstrap form + call /api/auth/login",
+      "sprint": 3,
+      "assignee": "Frontend Lead",
+      "estimate": 2,
+      "deps": [
+        "A-11"
+      ],
+      "tags": [],
+      "due": "2025-10-25",
+      "status": "Backlog"
+    },
+    {
+      "id": "D-2",
+      "epic": "D",
+      "title": "Teacher dashboard",
+      "description": "List my courses + create new",
+      "sprint": 3,
+      "assignee": "Frontend Lead",
+      "estimate": 3,
+      "deps": [
+        "B-1"
+      ],
+      "tags": [],
+      "due": "2025-10-25",
+      "status": "Backlog"
+    },
+    {
+      "id": "D-3",
+      "epic": "D",
+      "title": "Teacher course page: Enrollments tab",
+      "description": "Search/add existing students",
+      "sprint": 3,
+      "assignee": "Full-Stack 2",
+      "estimate": 3,
+      "deps": [
+        "B-2"
+      ],
+      "tags": [],
+      "due": "2025-10-25",
+      "status": "Backlog"
+    },
+    {
+      "id": "D-4",
+      "epic": "D",
+      "title": "Teacher course page: Assignments tab",
+      "description": "Create/list assignments",
+      "sprint": 3,
+      "assignee": "Full-Stack 2",
+      "estimate": 3,
+      "deps": [
+        "B-3"
+      ],
+      "tags": [],
+      "due": "2025-10-25",
+      "status": "Backlog"
+    },
+    {
+      "id": "D-5",
+      "epic": "D",
+      "title": "Teacher course page: Grades tab",
+      "description": "Grid to enter points",
+      "sprint": 3,
+      "assignee": "Frontend Lead",
+      "estimate": 3,
+      "deps": [
+        "B-4"
+      ],
+      "tags": [],
+      "due": "2025-10-25",
+      "status": "Backlog"
+    },
+    {
+      "id": "D-6",
+      "epic": "D",
+      "title": "Student dashboard",
+      "description": "List enrolled courses with quick overall",
+      "sprint": 4,
+      "assignee": "Frontend Lead",
+      "estimate": 2,
+      "deps": [
+        "C-1",
+        "C-3"
+      ],
+      "tags": [],
+      "due": "2025-11-01",
+      "status": "Backlog"
+    },
+    {
+      "id": "D-7",
+      "epic": "D",
+      "title": "Student course page",
+      "description": "Table of assignments + overall",
+      "sprint": 4,
+      "assignee": "Full-Stack 1",
+      "estimate": 3,
+      "deps": [
+        "C-3"
+      ],
+      "tags": [],
+      "due": "2025-11-01",
+      "status": "Backlog"
+    },
+    {
+      "id": "E-1",
+      "epic": "E",
+      "title": "Validation: express-validator",
+      "description": "All inputs validated",
+      "sprint": 4,
+      "assignee": "QA / Full-Stack",
+      "estimate": 3,
+      "deps": [
+        "B-1",
+        "B-2",
+        "B-3",
+        "B-4",
+        "C-3"
+      ],
+      "tags": [],
+      "due": "2025-11-01",
+      "status": "Backlog"
+    },
+    {
+      "id": "E-2",
+      "epic": "E",
+      "title": "CSRF protection",
+      "description": "Add csurf to form posts",
+      "sprint": 4,
+      "assignee": "Full-Stack 2",
+      "estimate": 2,
+      "deps": [
+        "D-1",
+        "D-2",
+        "D-3",
+        "D-4",
+        "D-5",
+        "D-6",
+        "D-7"
+      ],
+      "tags": [],
+      "due": "2025-11-01",
+      "status": "Backlog"
+    },
+    {
+      "id": "E-3",
+      "epic": "E",
+      "title": "Rate limit login",
+      "description": "Limit /api/auth/login",
+      "sprint": 4,
+      "assignee": "Backend Lead",
+      "estimate": 1,
+      "deps": [
+        "A-11"
+      ],
+      "tags": [],
+      "due": "2025-11-01",
+      "status": "Backlog"
+    },
+    {
+      "id": "E-4",
+      "epic": "E",
+      "title": "Cypress E2E tests",
+      "description": "Teacher + Student flows",
+      "sprint": 4,
+      "assignee": "QA / Full-Stack",
+      "estimate": 5,
+      "deps": [
+        "D-7"
+      ],
+      "tags": [],
+      "due": "2025-11-01",
+      "status": "Backlog"
+    },
+    {
+      "id": "E-5",
+      "epic": "E",
+      "title": "Accessibility pass",
+      "description": "Labels, contrast, keyboard nav",
+      "sprint": 4,
+      "assignee": "Frontend Lead",
+      "estimate": 2,
+      "deps": [
+        "D-7"
+      ],
+      "tags": [],
+      "due": "2025-11-01",
+      "status": "Backlog"
+    },
+    {
+      "id": "E-6",
+      "epic": "E",
+      "title": "Deployment script",
+      "description": "Deploy server + DB migrations",
+      "sprint": 4,
+      "assignee": "Full-Stack 1",
+      "estimate": 2,
+      "deps": [
+        "A-5",
+        "A-6",
+        "A-7",
+        "A-8",
+        "B-4",
+        "C-3"
+      ],
+      "tags": [],
+      "due": "2025-11-01",
+      "status": "Backlog"
+    },
+    {
+      "id": "F-1",
+      "epic": "F",
+      "title": "Feedback comments field (API)",
+      "description": "Add field plumbing (already in table)",
+      "sprint": 5,
+      "assignee": "Backend Lead",
+      "estimate": 2,
+      "deps": [
+        "B-4"
+      ],
+      "tags": [],
+      "due": "2025-11-08",
+      "status": "Backlog"
+    },
+    {
+      "id": "F-2",
+      "epic": "F",
+      "title": "Feedback in UI",
+      "description": "Show comment per grade",
+      "sprint": 5,
+      "assignee": "Frontend Lead",
+      "estimate": 2,
+      "deps": [
+        "F-1",
+        "D-7"
+      ],
+      "tags": [],
+      "due": "2025-11-08",
+      "status": "Backlog"
+    },
+    {
+      "id": "F-3",
+      "epic": "F",
+      "title": "Assignment resource links",
+      "description": "UI + validate URL",
+      "sprint": 5,
+      "assignee": "Full-Stack 2",
+      "estimate": 2,
+      "deps": [
+        "B-3"
+      ],
+      "tags": [],
+      "due": "2025-11-08",
+      "status": "Backlog"
+    },
+    {
+      "id": "F-4",
+      "epic": "F",
+      "title": "CSV import/export",
+      "description": "Bulk students/enrollments/grades",
+      "sprint": 5,
+      "assignee": "Full-Stack 1",
+      "estimate": 5,
+      "deps": [
+        "B-2",
+        "B-4",
+        "C-1"
+      ],
+      "tags": [],
+      "due": "2025-11-08",
+      "status": "Backlog"
+    }
+  ]
+}

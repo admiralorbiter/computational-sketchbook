@@ -1,0 +1,82 @@
+{
+  "tables": [
+    {
+      "name": "schools",
+      "columns": [
+        "id PK",
+        "name TEXT NOT NULL",
+        "created_at TIMESTAMP DEFAULT NOW"
+      ]
+    },
+    {
+      "name": "programs",
+      "columns": [
+        "id PK",
+        "name TEXT NOT NULL",
+        "created_at TIMESTAMP DEFAULT NOW"
+      ]
+    },
+    {
+      "name": "users",
+      "columns": [
+        "id PK",
+        "program_id FK programs.id",
+        "school_id FK schools.id (nullable)",
+        "role ENUM(student,teacher,admin) NOT NULL",
+        "email UNIQUE NOT NULL",
+        "password_hash TEXT NOT NULL",
+        "first_name TEXT",
+        "last_name TEXT",
+        "created_at TIMESTAMP DEFAULT NOW"
+      ]
+    },
+    {
+      "name": "courses",
+      "columns": [
+        "id PK",
+        "program_id FK programs.id",
+        "school_id FK schools.id",
+        "teacher_id FK users.id",
+        "name TEXT",
+        "term TEXT",
+        "created_at TIMESTAMP DEFAULT NOW"
+      ]
+    },
+    {
+      "name": "enrollments",
+      "columns": [
+        "id PK",
+        "course_id FK courses.id",
+        "student_id FK users.id",
+        "created_at TIMESTAMP DEFAULT NOW",
+        "UNIQUE(course_id, student_id)"
+      ]
+    },
+    {
+      "name": "assignments",
+      "columns": [
+        "id PK",
+        "course_id FK courses.id",
+        "title TEXT NOT NULL",
+        "description TEXT",
+        "max_points INT > 0",
+        "due_date DATE",
+        "resource_url TEXT",
+        "created_at TIMESTAMP DEFAULT NOW"
+      ]
+    },
+    {
+      "name": "grades",
+      "columns": [
+        "id PK",
+        "assignment_id FK assignments.id",
+        "student_id FK users.id",
+        "points_earned INT >= 0",
+        "feedback TEXT",
+        "graded_at TIMESTAMP DEFAULT NOW",
+        "UNIQUE(assignment_id, student_id)"
+      ]
+    }
+  ],
+  "gradeRule": "percent = 100 * sum(points_earned) / sum(max_points for due or graded). Missing-and-past-due counts as 0; not-yet-due excluded."
+}

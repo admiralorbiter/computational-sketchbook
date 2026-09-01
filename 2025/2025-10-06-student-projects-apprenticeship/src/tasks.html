@@ -1,0 +1,1320 @@
+<!doctype html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GradeBridge Project Tasks - Complete Development Guide</title>
+    <link rel="icon" href="data:,">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+
+  </head>
+  <body data-page="tasks">
+    <div id="headerMount"></div>
+    <main class="container my-4">
+
+<div class="mb-4">
+  <h1 class="h2">Complete Task Breakdown</h1>
+  <p class="lead text-muted">Detailed technical tasks for building GradeBridge as a professional software engineering team. Each task includes specific requirements and implementation guidance.</p>
+</div>
+
+<!-- Sprint Overview Cards -->
+<div class="row g-3 mb-5">
+  <div class="col-md-4">
+    <div class="card border-primary h-100">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Sprint 1: Foundation</h5>
+      </div>
+      <div class="card-body">
+        <p class="mb-2">Project setup and planning</p>
+        <div class="d-flex justify-content-between">
+          <small class="text-muted">Tasks: 4</small>
+          <small class="text-muted">Focus: Setup</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card border-info h-100">
+      <div class="card-header bg-info text-white">
+        <h5 class="mb-0">Sprint 2: Architecture</h5>
+      </div>
+      <div class="card-body">
+        <p class="mb-2">Data design and core structure</p>
+        <div class="d-flex justify-content-between">
+          <small class="text-muted">Tasks: 5</small>
+          <small class="text-muted">Focus: Design</small>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="col-md-4">
+      <div class="card border-success h-100">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0">Sprint 3: Backend Core</h5>
+        </div>
+        <div class="card-body">
+          <p class="mb-2">Server implementation and authentication</p>
+          <div class="d-flex justify-content-between">
+            <small class="text-muted">Tasks: 6</small>
+            <small class="text-muted">Focus: Backend</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-warning h-100">
+        <div class="card-header bg-warning">
+          <h5 class="mb-0">Sprint 4: Frontend</h5>
+        </div>
+        <div class="card-body">
+          <p class="mb-2">User interface implementation</p>
+          <div class="d-flex justify-content-between">
+            <small class="text-muted">Tasks: 6</small>
+            <small class="text-muted">Focus: Frontend</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-danger h-100">
+        <div class="card-header bg-danger text-white">
+          <h5 class="mb-0">Sprint 5: Integration</h5>
+        </div>
+        <div class="card-body">
+          <p class="mb-2">Full-stack integration & QA</p>
+          <div class="d-flex justify-content-between">
+            <small class="text-muted">Tasks: 4</small>
+            <small class="text-muted">Focus: Integration</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-secondary h-100">
+        <div class="card-header bg-secondary text-white">
+          <h5 class="mb-0">Sprint 6: Deployment</h5>
+        </div>
+        <div class="card-body">
+          <p class="mb-2">Production readiness & launch</p>
+          <div class="d-flex justify-content-between">
+            <small class="text-muted">Tasks: 4</small>
+            <small class="text-muted">Focus: Production</small>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<!-- Detailed Task Lists by Sprint -->
+<div class="accordion" id="sprintAccordion">
+
+  <!-- Sprint 1: Foundation -->
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="sprint1Heading">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#sprint1Collapse" aria-expanded="true" aria-controls="sprint1Collapse">
+        <strong>Sprint 1: Foundation & Setup</strong> - Project Initialization and Team Setup
+      </button>
+    </h2>
+    <div id="sprint1Collapse" class="accordion-collapse collapse show" aria-labelledby="sprint1Heading" data-bs-parent="#sprintAccordion">
+      <div class="accordion-body">
+        <div class="row">
+          <div class="col-md-8">
+            <h6>Sprint Goals:</h6>
+            <ul>
+              <li>Establish project structure and development environment</li>
+              <li>Set up version control and team collaboration tools</li>
+              <li>Create initial project documentation</li>
+              <li>Plan team roles and communication processes</li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <div class="card bg-light">
+              <div class="card-body text-center">
+                <h6>Duration</h6>
+                <p class="mb-0">3 weeks</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+        <div class="row g-3">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 1.1: Project Structure Setup</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Create organized directory structure for full-stack application</li>
+                      <li>Set up package.json with all necessary dependencies</li>
+                      <li>Configure development environment (Node.js, npm)</li>
+                      <li>Create basic HTML structure with Bootstrap integration</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use standard Node.js project structure: /src, /public, /tests</li>
+                      <li>Include Express, Bootstrap, testing frameworks in dependencies</li>
+                      <li>Set up ESLint and Prettier for code quality</li>
+                      <li>Create responsive layout with Bootstrap grid system</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Working development environment, basic HTML structure, package.json configuration
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 1.2: Version Control & Collaboration Setup</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Initialize Git repository with proper .gitignore</li>
+                      <li>Set up GitHub repository for team collaboration</li>
+                      <li>Configure branch protection and pull request workflows</li>
+                      <li>Establish coding standards and contribution guidelines</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Create main, develop, and feature branches</li>
+                      <li>Set up GitHub Actions for automated testing</li>
+                      <li>Document coding standards in CONTRIBUTING.md</li>
+                      <li>Configure branch protection rules for main branch</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> GitHub repository, branch strategy, contribution guidelines, automated CI/CD pipeline
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 1.3: Technical Documentation Framework</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Create comprehensive README with project overview</li>
+                      <li>Set up API documentation structure</li>
+                      <li>Document data model and database schema</li>
+                      <li>Create UI/UX design specifications</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use Markdown for all documentation</li>
+                      <li>Create separate docs for API, database, and UI</li>
+                      <li>Include setup and deployment instructions</li>
+                      <li>Add architecture decision records (ADRs)</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Complete project documentation structure, README, API docs, data model docs, UI specifications
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 1.4: Team Organization & Planning</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Define team roles and responsibilities</li>
+                      <li>Set up communication channels and meeting schedule</li>
+                      <li>Create sprint planning and retrospective processes</li>
+                      <li>Establish code review and testing procedures</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Assign roles: Frontend, Backend, DevOps, QA</li>
+                      <li>Set up daily standups and weekly reviews</li>
+                      <li>Create task breakdown and estimation process</li>
+                      <li>Establish peer review requirements for all code</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Team charter, role definitions, meeting schedule, development process documentation
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 2: Architecture -->
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="sprint2Heading">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sprint2Collapse" aria-expanded="false" aria-controls="sprint2Collapse">
+        <strong>Sprint 2: Architecture & Data Design</strong> - Database Schema and API Planning
+      </button>
+    </h2>
+    <div id="sprint2Collapse" class="accordion-collapse collapse" aria-labelledby="sprint2Heading" data-bs-parent="#sprintAccordion">
+      <div class="accordion-body">
+        <div class="row">
+          <div class="col-md-8">
+            <h6>Sprint Goals:</h6>
+            <ul>
+              <li>Design and document complete data model</li>
+              <li>Create comprehensive API specification</li>
+              <li>Set up database schema and migrations</li>
+              <li>Plan authentication and authorization system</li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <div class="card bg-light">
+              <div class="card-body text-center">
+                <h6>Duration</h6>
+                <p class="mb-0">3 weeks</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+        <div class="row g-3">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 2.1: Data Model Design</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Design entities: Users, Schools, Courses, Assignments, Grades, Enrollments</li>
+                      <li>Define relationships and constraints between entities</li>
+                      <li>Document data types, validation rules, and business logic</li>
+                      <li>Plan for multi-school support and scalability</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use Entity-Relationship diagrams for visualization</li>
+                      <li>Consider normalization and data integrity constraints</li>
+                      <li>Plan for role-based access (Student, Teacher, Admin)</li>
+                      <li>Design for grade calculation algorithms</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> ERD diagrams, data dictionary, entity specifications, relationship definitions
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 2.2: Database Schema Implementation</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Create database migration files for all tables</li>
+                      <li>Set up Knex.js for database operations</li>
+                      <li>Configure SQLite for development, PostgreSQL for production</li>
+                      <li>Implement database seeding for development data</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use Knex migrations for version-controlled schema changes</li>
+                      <li>Create separate migration files for each table</li>
+                      <li>Set up environment-based database configuration</li>
+                      <li>Include sample data for testing and development</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Knex migration files, database configuration, seed data, connection setup
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 2.3: API Specification Design</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Design RESTful API endpoints for all major operations</li>
+                      <li>Document request/response formats and status codes</li>
+                      <li>Plan authentication and authorization middleware</li>
+                      <li>Design error handling and validation patterns</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use OpenAPI/Swagger for API documentation</li>
+                      <li>Follow REST conventions (GET, POST, PUT, DELETE)</li>
+                      <li>Plan for pagination, filtering, and sorting</li>
+                      <li>Design consistent error response formats</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Complete API specification, endpoint documentation, request/response examples
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 2.4: Authentication System Design</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Design user registration and login system</li>
+                      <li>Plan role-based access control (Student/Teacher/Admin)</li>
+                      <li>Design session management and security</li>
+                      <li>Plan password security and account management</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use bcrypt for password hashing</li>
+                      <li>Implement JWT or session-based authentication</li>
+                      <li>Design middleware for route protection</li>
+                      <li>Plan for secure password reset functionality</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Authentication flow diagrams, security specifications, middleware design
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 2.5: Grade Calculation Engine Design</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Design algorithms for grade calculation and weighting</li>
+                      <li>Plan support for different grading scales and curves</li>
+                      <li>Design final grade computation logic</li>
+                      <li>Plan for gradebook analytics and reporting</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Support percentage-based and letter-grade systems</li>
+                      <li>Design flexible weighting algorithms</li>
+                      <li>Plan for category-based grade organization</li>
+                      <li>Consider statistical analysis for grade distributions</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Grade calculation specifications, algorithm descriptions, test scenarios
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 3: Backend Core - Continue this pattern for all sprints -->
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="sprint3Heading">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sprint3Collapse" aria-expanded="false" aria-controls="sprint3Collapse">
+        <strong>Sprint 3: Backend Core</strong> - Server Implementation and Authentication
+      </button>
+    </h2>
+    <div id="sprint3Collapse" class="accordion-collapse collapse" aria-labelledby="sprint3Heading" data-bs-parent="#sprintAccordion">
+      <div class="accordion-body">
+        <div class="row">
+          <div class="col-md-8">
+            <h6>Sprint Goals:</h6>
+            <ul>
+              <li>Implement Express.js server with proper middleware</li>
+              <li>Build authentication and user management system</li>
+              <li>Create core API endpoints for data operations</li>
+              <li>Implement data validation and error handling</li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <div class="card bg-light">
+              <div class="card-body text-center">
+                <h6>Duration</h6>
+                <p class="mb-0">3 weeks</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+        <div class="row g-3">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 3.1: Express Server Setup</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Set up Express.js application with proper structure</li>
+                      <li>Configure middleware for CORS, body parsing, logging</li>
+                      <li>Set up environment-based configuration</li>
+                      <li>Create basic health check endpoint</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use express.Router for organized route handling</li>
+                      <li>Set up Morgan for request logging</li>
+                      <li>Create separate config files for different environments</li>
+                      <li>Implement graceful error handling middleware</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Express app structure, middleware configuration, environment setup, basic server functionality
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 3.2: User Authentication System</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Implement user registration and login endpoints</li>
+                      <li>Create JWT-based authentication middleware</li>
+                      <li>Set up password hashing and validation</li>
+                      <li>Implement role-based access control</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use bcrypt for secure password storage</li>
+                      <li>Implement refresh token pattern for security</li>
+                      <li>Create middleware to verify JWT on protected routes</li>
+                      <li>Set up user roles in database schema</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Authentication endpoints, JWT middleware, password security, role management
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 3.3: User Management API</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Create CRUD endpoints for user management</li>
+                      <li>Implement profile update functionality</li>
+                      <li>Add password reset and account management</li>
+                      <li>Create user search and filtering capabilities</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use consistent RESTful endpoint patterns</li>
+                      <li>Implement proper input validation with Joi or similar</li>
+                      <li>Add pagination for user listings</li>
+                      <li>Create separate endpoints for admin vs regular users</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Complete user management API, validation schemas, admin controls
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 3.4: Course Management System</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Create course creation and management endpoints</li>
+                      <li>Implement course enrollment functionality</li>
+                      <li>Add course information and metadata handling</li>
+                      <li>Create course search and discovery features</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Design course schema with proper relationships</li>
+                      <li>Implement enrollment validation and limits</li>
+                      <li>Add course categories and search functionality</li>
+                      <li>Create teacher assignment to courses</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Course API endpoints, enrollment system, course search functionality
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 3.5: Assignment Management API</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Create assignment creation and management endpoints</li>
+                      <li>Implement assignment submission handling</li>
+                      <li>Add grading and feedback functionality</li>
+                      <li>Create assignment analytics and reporting</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Design flexible assignment types (individual, group)</li>
+                      <li>Implement file upload handling for submissions</li>
+                      <li>Create grading rubrics and criteria</li>
+                      <li>Add due date management and late submission handling</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Assignment API, submission system, grading interface, analytics endpoints
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 3.6: Grade Management System</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Implement grade recording and calculation</li>
+                      <li>Create gradebook viewing and management</li>
+                      <li>Add grade analytics and reporting features</li>
+                      <li>Implement grade export functionality</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Create flexible grade calculation algorithms</li>
+                      <li>Implement weighted grading systems</li>
+                      <li>Add grade curve and adjustment capabilities</li>
+                      <li>Create export formats (CSV, PDF) for grades</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Grade calculation engine, gradebook API, analytics endpoints, export functionality
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 4: Frontend Development -->
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="sprint4Heading">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sprint4Collapse" aria-expanded="false" aria-controls="sprint4Collapse">
+        <strong>Sprint 4: Frontend Development</strong> - User Interface Implementation
+      </button>
+    </h2>
+    <div id="sprint4Collapse" class="accordion-collapse collapse" aria-labelledby="sprint4Heading" data-bs-parent="#sprintAccordion">
+      <div class="accordion-body">
+        <div class="row">
+          <div class="col-md-8">
+            <h6>Sprint Goals:</h6>
+            <ul>
+              <li>Create responsive, user-friendly interfaces for all user types</li>
+              <li>Implement intuitive navigation and information architecture</li>
+              <li>Build interactive forms for data entry and management</li>
+              <li>Ensure accessibility and cross-browser compatibility</li>
+              <li>Integrate with backend APIs for dynamic data display</li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <div class="card bg-light">
+              <div class="card-body text-center">
+                <h6>Duration</h6>
+                <p class="mb-0">3 weeks</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+        <div class="row g-3">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 4.1: Project Structure & Base Templates</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Set up HTML/CSS/JavaScript project structure</li>
+                      <li>Create base templates with Bootstrap integration</li>
+                      <li>Implement responsive navigation header and footer</li>
+                      <li>Set up CSS custom properties for consistent theming</li>
+                      <li>Create utility CSS classes for common patterns</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use Bootstrap 5 for responsive grid system and components</li>
+                      <li>Create partial HTML files for header/footer (injected via JS)</li>
+                      <li>Set up CSS custom properties for colors, fonts, and spacing</li>
+                      <li>Use CSS Grid and Flexbox for complex layouts</li>
+                      <li>Implement mobile-first responsive design approach</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Complete project structure, base templates, responsive navigation, consistent CSS framework
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 4.2: Student Dashboard Interface</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Create personalized student dashboard with course overview</li>
+                      <li>Display current grades and assignment status</li>
+                      <li>Show upcoming assignments and due dates</li>
+                      <li>Implement grade visualization (charts/graphs)</li>
+                      <li>Add navigation to detailed course views</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use Bootstrap cards for course summaries</li>
+                      <li>Implement progress bars for grade visualization</li>
+                      <li>Create responsive grid layout for course cards</li>
+                      <li>Add color coding for different grade ranges (A, B, C, etc.)</li>
+                      <li>Include "View Details" buttons linking to course pages</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Student dashboard page, course overview cards, grade visualization components, responsive layout
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 4.3: Teacher Dashboard Interface</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Create comprehensive teacher dashboard for course management</li>
+                      <li>Display class rosters and student information</li>
+                      <li>Show assignment status and grading progress</li>
+                      <li>Provide quick access to grade entry and management</li>
+                      <li>Include analytics and reporting widgets</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use Bootstrap tables for student rosters</li>
+                      <li>Create tabbed interface for different course sections</li>
+                      <li>Implement expandable sections for detailed views</li>
+                      <li>Add action buttons for common teacher tasks</li>
+                      <li>Include summary statistics and visual indicators</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Teacher dashboard page, class management interface, student roster views, quick action buttons
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 4.4: Course Detail Pages</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Create detailed course view for students and teachers</li>
+                      <li>Display course information, syllabus, and materials</li>
+                      <li>Show assignment list with due dates and status</li>
+                      <li>Implement grade breakdown and calculation display</li>
+                      <li>Add course-specific navigation and breadcrumbs</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use Bootstrap tabs for organizing course content</li>
+                      <li>Create responsive data tables for assignments and grades</li>
+                      <li>Implement sorting and filtering for assignment lists</li>
+                      <li>Add visual progress indicators for course completion</li>
+                      <li>Include file upload/download functionality for resources</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Course detail pages, assignment listings, grade displays, resource management interface
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 4.5: Form Components & Data Entry</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Create forms for assignment creation and editing</li>
+                      <li>Implement grade entry forms with validation</li>
+                      <li>Build user profile management forms</li>
+                      <li>Add course creation and enrollment forms</li>
+                      <li>Implement form validation and error handling</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use Bootstrap form components and validation classes</li>
+                      <li>Implement client-side validation with JavaScript</li>
+                      <li>Create reusable form field components</li>
+                      <li>Add date pickers for due dates and deadlines</li>
+                      <li>Implement file upload for assignment attachments</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Assignment forms, grade entry forms, user profile forms, course management forms, validation system
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 4.6: Interactive Components & State Management</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Implement dynamic grade calculation displays</li>
+                      <li>Create interactive assignment submission interface</li>
+                      <li>Add real-time notifications and status updates</li>
+                      <li>Implement modal dialogs for detailed views</li>
+                      <li>Add loading states and error handling for API calls</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use vanilla JavaScript for state management</li>
+                      <li>Implement fetch API for backend communication</li>
+                      <li>Create reusable modal and notification components</li>
+                      <li>Add loading spinners and skeleton screens</li>
+                      <li>Implement optimistic updates for better UX</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Interactive components, state management system, modal dialogs, notification system, loading states
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 5: Integration & Testing -->
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="sprint5Heading">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sprint5Collapse" aria-expanded="false" aria-controls="sprint5Collapse">
+        <strong>Sprint 5: Integration & Testing</strong> - Full-Stack Integration & Quality Assurance
+      </button>
+    </h2>
+    <div id="sprint5Collapse" class="accordion-collapse collapse" aria-labelledby="sprint5Heading" data-bs-parent="#sprintAccordion">
+      <div class="accordion-body">
+        <div class="row">
+          <div class="col-md-8">
+            <h6>Sprint Goals:</h6>
+            <ul>
+              <li>Integrate frontend and backend systems seamlessly</li>
+              <li>Implement comprehensive testing strategies</li>
+              <li>Ensure system reliability and performance</li>
+              <li>Validate end-to-end user workflows</li>
+              <li>Establish quality assurance processes</li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <div class="card bg-light">
+              <div class="card-body text-center">
+                <h6>Duration</h6>
+                <p class="mb-0">3 weeks</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+        <div class="row g-3">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 5.1: API Integration & Data Flow</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Connect frontend components to backend API endpoints</li>
+                      <li>Implement proper error handling for API failures</li>
+                      <li>Set up data synchronization between components</li>
+                      <li>Add loading states and user feedback for API calls</li>
+                      <li>Implement optimistic updates for better UX</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Create API service layer for consistent data access</li>
+                      <li>Implement retry logic for failed requests</li>
+                      <li>Add request/response interceptors for auth tokens</li>
+                      <li>Use async/await patterns for clean error handling</li>
+                      <li>Implement proper loading and error states in UI</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> API service layer, error handling system, data synchronization, loading states
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 5.2: End-to-End Testing Framework</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Set up testing framework (Jest, Mocha, or similar)</li>
+                      <li>Create unit tests for critical functions and components</li>
+                      <li>Implement integration tests for API endpoints</li>
+                      <li>Add end-to-end user workflow tests</li>
+                      <li>Set up test coverage reporting</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use Jest for JavaScript testing framework</li>
+                      <li>Create test utilities for common assertions</li>
+                      <li>Mock external dependencies (database, APIs)</li>
+                      <li>Test both happy path and error scenarios</li>
+                      <li>Set up CI/CD pipeline integration</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Test framework setup, unit tests, integration tests, E2E tests, coverage reports
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 5.3: Performance Optimization</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Optimize database queries and API response times</li>
+                      <li>Implement frontend performance best practices</li>
+                      <li>Add caching strategies for frequently accessed data</li>
+                      <li>Set up performance monitoring and alerting</li>
+                      <li>Optimize bundle sizes and loading times</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use database indexes for query optimization</li>
+                      <li>Implement Redis or similar for caching</li>
+                      <li>Add code splitting for JavaScript bundles</li>
+                      <li>Use CDN for static assets</li>
+                      <li>Set up performance monitoring with tools like New Relic</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Performance optimizations, caching strategy, monitoring setup, bundle optimization
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 5.4: Security Testing & Validation</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Conduct security audit of authentication system</li>
+                      <li>Test for common vulnerabilities (XSS, CSRF, SQL injection)</li>
+                      <li>Implement input validation and sanitization</li>
+                      <li>Set up security monitoring and logging</li>
+                      <li>Add rate limiting and DDoS protection</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use OWASP guidelines for security testing</li>
+                      <li>Implement helmet.js for security headers</li>
+                      <li>Add input sanitization with libraries like DOMPurify</li>
+                      <li>Set up security scanning in CI/CD pipeline</li>
+                      <li>Implement proper session management</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Security audit report, vulnerability fixes, monitoring setup, protection measures
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sprint 6: Deployment & Documentation -->
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="sprint6Heading">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sprint6Collapse" aria-expanded="false" aria-controls="sprint6Collapse">
+        <strong>Sprint 6: Deployment & Documentation</strong> - Production Readiness & Launch
+      </button>
+    </h2>
+    <div id="sprint6Collapse" class="accordion-collapse collapse" aria-labelledby="sprint6Heading" data-bs-parent="#sprintAccordion">
+      <div class="accordion-body">
+        <div class="row">
+          <div class="col-md-8">
+            <h6>Sprint Goals:</h6>
+            <ul>
+              <li>Set up production deployment infrastructure</li>
+              <li>Create comprehensive documentation for users and developers</li>
+              <li>Implement monitoring and logging systems</li>
+              <li>Prepare for launch and user onboarding</li>
+              <li>Establish maintenance and support processes</li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <div class="card bg-light">
+              <div class="card-body text-center">
+                <h6>Duration</h6>
+                <p class="mb-0">3 weeks</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+        <div class="row g-3">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 6.1: Deployment Infrastructure Setup</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Set up cloud infrastructure (AWS, Azure, or similar)</li>
+                      <li>Configure production database (PostgreSQL)</li>
+                      <li>Set up CI/CD pipeline for automated deployments</li>
+                      <li>Implement environment management (dev/staging/prod)</li>
+                      <li>Add monitoring and alerting systems</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use Docker for containerized deployments</li>
+                      <li>Set up automated testing in CI/CD pipeline</li>
+                      <li>Implement blue-green or rolling deployment strategies</li>
+                      <li>Add health checks and auto-scaling</li>
+                      <li>Use infrastructure as code (Terraform/CloudFormation)</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Cloud infrastructure, CI/CD pipeline, environment management, monitoring setup
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 6.2: User Documentation Creation</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Create comprehensive user guides for students and teachers</li>
+                      <li>Document all features and workflows</li>
+                      <li>Add screenshots and step-by-step instructions</li>
+                      <li>Create video tutorials for complex features</li>
+                      <li>Set up help system and FAQ</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use Markdown for documentation source</li>
+                      <li>Create separate guides for different user roles</li>
+                      <li>Add search functionality to help system</li>
+                      <li>Include troubleshooting guides</li>
+                      <li>Set up feedback mechanism for documentation</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> User manuals, video tutorials, help system, FAQ documentation
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 6.3: Developer Documentation & APIs</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Create comprehensive API documentation</li>
+                      <li>Document database schema and relationships</li>
+                      <li>Add code comments and architecture explanations</li>
+                      <li>Create deployment and maintenance guides</li>
+                      <li>Set up API playground for testing</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Use OpenAPI/Swagger for API documentation</li>
+                      <li>Create ERD diagrams for database schema</li>
+                      <li>Add JSDoc comments to code</li>
+                      <li>Include deployment scripts and configurations</li>
+                      <li>Set up Postman collection for API testing</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> API documentation, database schema docs, code documentation, deployment guides
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Task 6.4: Launch Preparation & Training</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h6>Requirements:</h6>
+                    <ul>
+                      <li>Create user onboarding flows and tutorials</li>
+                      <li>Set up admin panel for user management</li>
+                      <li>Prepare training materials for teachers</li>
+                      <li>Create launch checklist and go-live procedures</li>
+                      <li>Set up support channels and helpdesk</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Implementation Hints:</h6>
+                    <ul>
+                      <li>Create interactive onboarding wizard</li>
+                      <li>Set up role-based dashboards for different users</li>
+                      <li>Create teacher training modules</li>
+                      <li>Document backup and recovery procedures</li>
+                      <li>Set up monitoring for launch day issues</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="mt-3">
+                  <strong>Deliverables:</strong> Onboarding system, admin panel, training materials, launch procedures, support setup
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+    </main>
+    <div id="footerMount"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/app.js"></script>
+  </body>
+</html>

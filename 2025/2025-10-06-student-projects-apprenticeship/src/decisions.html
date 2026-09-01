@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GradeBridge - Architecture Decisions & Best Practices</title>
+    <link rel="icon" href="data:,">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+
+  </head>
+  <body data-page="decisions">
+    <div id="headerMount"></div>
+    <main class="container my-4">
+
+<div class="mb-4">
+  <h1 class="h2">Architecture Decisions & Best Practices</h1>
+  <p class="lead text-muted">Learn the key architectural decisions behind GradeBridge and understand the rationale for our technology choices. This guide will help you make informed decisions when building similar applications.</p>
+</div>
+
+<!-- Learning Objectives -->
+<div class="row g-4 mb-5">
+  <div class="col-md-8">
+    <div class="card border-primary">
+      <div class="card-header bg-primary bg-gradient text-white">
+        <h5 class="mb-0"><i class="bi bi-lightbulb me-2"></i>Learning Objectives</h5>
+      </div>
+  <div class="card-body">
+        <ul class="mb-0">
+          <li class="mb-2"><strong>Understand</strong> why we chose specific technologies and patterns</li>
+          <li class="mb-2"><strong>Learn</strong> to evaluate trade-offs in software architecture</li>
+          <li class="mb-2"><strong>Apply</strong> these patterns to your own projects</li>
+          <li class="mb-2"><strong>Avoid</strong> common pitfalls in full-stack development</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body text-center">
+        <i class="bi bi-diagram-3 display-4 text-primary mb-3"></i>
+        <h6>Architecture Patterns</h6>
+        <p class="small text-muted">MVC, REST API, Microservices considerations</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Key Architecture Decisions -->
+<section class="mb-5">
+  <h2 class="h4 mb-4"><i class="bi bi-gear me-2"></i>Key Architecture Decisions</h2>
+
+  <div class="row g-4">
+    <!-- Technology Stack Decision -->
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-header bg-success bg-gradient text-white">
+          <h6 class="mb-0">ADR 001: Technology Stack Selection</h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <span class="badge bg-success">Status: Accepted</span>
+            <small class="text-muted ms-2">Date: Project Start</small>
+          </div>
+
+          <h6 class="text-success">Context</h6>
+          <p class="small">We needed to choose a technology stack that would be both educational for students learning full-stack development and production-ready for a grade management system.</p>
+
+          <h6 class="text-success">Decision</h6>
+          <p class="small">We selected a JavaScript-focused stack: <strong>Node.js + Express</strong> for the backend, <strong>HTML/CSS/JavaScript + Bootstrap</strong> for the frontend, and <strong>SQLite → PostgreSQL</strong> for the database with <strong>Knex.js</strong> as the query builder.</p>
+
+          <h6 class="text-success">Consequences</h6>
+          <ul class="small mb-0">
+            <li><strong>Positive:</strong> Single language (JavaScript) across the entire stack reduces context switching</li>
+            <li><strong>Positive:</strong> Large ecosystem of packages and community support</li>
+            <li><strong>Positive:</strong> Easy transition from development (SQLite) to production (PostgreSQL)</li>
+            <li><strong>Trade-off:</strong> Node.js single-threaded nature requires careful async handling</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Database Choice Decision -->
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-header bg-info bg-gradient text-white">
+          <h6 class="mb-0">ADR 002: Database Strategy</h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <span class="badge bg-info">Status: Accepted</span>
+            <small class="text-muted ms-2">Date: Sprint 2</small>
+          </div>
+
+          <h6 class="text-info">Context</h6>
+          <p class="small">Grade management systems require complex relationships between users, courses, assignments, and grades. We needed a database that supports these relationships while being easy for students to learn and deploy.</p>
+
+          <h6 class="text-info">Decision</h6>
+          <p class="small">Use <strong>SQLite for development</strong> and <strong>PostgreSQL for production</strong> with <strong>Knex.js</strong> for database operations and migrations.</p>
+
+          <h6 class="text-info">Consequences</h6>
+          <ul class="small mb-0">
+            <li><strong>Positive:</strong> SQLite simplicity for development and learning</li>
+            <li><strong>Positive:</strong> PostgreSQL robustness for production workloads</li>
+            <li><strong>Positive:</strong> Knex.js provides SQL-agnostic query building</li>
+            <li><strong>Trade-off:</strong> Need to manage schema migrations carefully</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Authentication Decision -->
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-header bg-warning bg-gradient">
+          <h6 class="mb-0">ADR 003: Authentication Strategy</h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <span class="badge bg-warning">Status: Accepted</span>
+            <small class="text-muted ms-2">Date: Sprint 2</small>
+          </div>
+
+          <h6 class="text-warning">Context</h6>
+          <p class="small">Educational institutions require secure user management with different roles (students, teachers, admins). We needed an authentication system that's both secure and educational.</p>
+
+          <h6 class="text-warning">Decision</h6>
+          <p class="small">Implement <strong>JWT-based authentication</strong> with <strong>bcrypt password hashing</strong> and support for <strong>role-based access control</strong> (Student/Teacher/Admin roles).</p>
+
+          <h6 class="text-warning">Consequences</h6>
+          <ul class="small mb-0">
+            <li><strong>Positive:</strong> Stateless JWT tokens scale well horizontally</li>
+            <li><strong>Positive:</strong> bcrypt provides strong password security</li>
+            <li><strong>Positive:</strong> RBAC supports complex permission models</li>
+            <li><strong>Trade-off:</strong> JWT tokens can't be easily revoked server-side</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Design Decision -->
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-header bg-danger bg-gradient text-white">
+          <h6 class="mb-0">ADR 004: API Architecture</h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <span class="badge bg-danger">Status: Accepted</span>
+            <small class="text-muted ms-2">Date: Sprint 2</small>
+          </div>
+
+          <h6 class="text-danger">Context</h6>
+          <p class="small">We needed a clear separation between frontend and backend concerns while maintaining API consistency and developer experience.</p>
+
+          <h6 class="text-danger">Decision</h6>
+          <p class="small">Implement a <strong>RESTful API</strong> with <strong>JSON responses</strong>, consistent <strong>HTTP status codes</strong>, and comprehensive <strong>error handling</strong>.</p>
+
+          <h6 class="text-danger">Consequences</h6>
+          <ul class="small mb-0">
+            <li><strong>Positive:</strong> REST APIs are widely understood and documented</li>
+            <li><strong>Positive:</strong> JSON is universally supported across platforms</li>
+            <li><strong>Positive:</strong> HTTP status codes provide clear success/error semantics</li>
+            <li><strong>Trade-off:</strong> REST can be more verbose than GraphQL for complex queries</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Best Practices Section -->
+<section class="mb-5">
+  <h2 class="h4 mb-4"><i class="bi bi-check-circle me-2"></i>Architecture Best Practices</h2>
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0"><i class="bi bi-code-slash me-2"></i>Code Organization</h6>
+        </div>
+        <div class="card-body">
+          <ul class="small">
+            <li><strong>Separation of Concerns:</strong> Keep business logic separate from API routes</li>
+            <li><strong>MVC Pattern:</strong> Models for data, Views for presentation, Controllers for logic</li>
+            <li><strong>Consistent Naming:</strong> Use clear, descriptive names for functions and variables</li>
+            <li><strong>Single Responsibility:</strong> Each module should have one clear purpose</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0"><i class="bi bi-shield-check me-2"></i>Security Considerations</h6>
+        </div>
+        <div class="card-body">
+          <ul class="small">
+            <li><strong>Input Validation:</strong> Always validate and sanitize user input</li>
+            <li><strong>Password Security:</strong> Use bcrypt with salt rounds for password hashing</li>
+            <li><strong>Session Management:</strong> Implement secure session handling with expiration</li>
+            <li><strong>HTTPS Only:</strong> Always use HTTPS in production environments</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0"><i class="bi bi-database me-2"></i>Database Design</h6>
+        </div>
+        <div class="card-body">
+          <ul class="small">
+            <li><strong>Normalization:</strong> Design tables to minimize data redundancy</li>
+            <li><strong>Foreign Keys:</strong> Use constraints to maintain referential integrity</li>
+            <li><strong>Migrations:</strong> Use version-controlled schema changes</li>
+            <li><strong>Indexing:</strong> Add indexes on frequently queried columns</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0"><i class="bi bi-bug me-2"></i>Error Handling</h6>
+        </div>
+        <div class="card-body">
+          <ul class="small">
+            <li><strong>Consistent Errors:</strong> Use standard HTTP status codes</li>
+            <li><strong>Descriptive Messages:</strong> Provide actionable error information</li>
+            <li><strong>Logging:</strong> Implement proper logging for debugging</li>
+            <li><strong>User-Friendly:</strong> Show appropriate messages to end users</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Common Pitfalls Section -->
+<section class="mb-5">
+  <h2 class="h4 mb-4"><i class="bi bi-exclamation-triangle me-2"></i>Common Pitfalls to Avoid</h2>
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card border-warning">
+        <div class="card-header bg-warning bg-gradient text-white">
+          <h6 class="mb-0">Technical Debt Warnings</h6>
+        </div>
+        <div class="card-body">
+          <ul class="small text-muted">
+            <li><strong>Skipping validation:</strong> Always validate input to prevent security issues</li>
+            <li><strong>Hardcoding secrets:</strong> Never commit API keys or passwords to version control</li>
+            <li><strong>Ignoring errors:</strong> Proper error handling prevents silent failures</li>
+            <li><strong>No testing:</strong> Write tests to catch bugs early in development</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card border-info">
+        <div class="card-header bg-info bg-gradient text-white">
+          <h6 class="mb-0">Learning Opportunities</h6>
+        </div>
+      <div class="card-body">
+          <ul class="small text-muted">
+            <li><strong>Read the docs:</strong> RTFM - documentation is your best friend</li>
+            <li><strong>Ask questions:</strong> Don't struggle alone; use Stack Overflow and communities</li>
+            <li><strong>Start simple:</strong> Build MVP first, then add complexity</li>
+            <li><strong>Code reviews:</strong> Learn from others and share knowledge</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Implementation Tips -->
+<section class="mb-5">
+  <div class="card">
+    <div class="card-header bg-primary bg-gradient text-white">
+      <h5 class="mb-0"><i class="bi bi-lightbulb me-2"></i>Implementation Tips for Students</h5>
+    </div>
+    <div class="card-body">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <h6 class="text-primary">Start Small</h6>
+          <p class="small">Begin with a simple "Hello World" version of each component, then gradually add features. This helps you understand the basics before tackling complexity.</p>
+        </div>
+        <div class="col-md-4">
+          <h6 class="text-success">Test Frequently</h6>
+          <p class="small">Write tests as you develop features. It's much easier to catch and fix bugs in small, isolated pieces of code.</p>
+        </div>
+        <div class="col-md-4">
+          <h6 class="text-warning">Document Everything</h6>
+          <p class="small">Keep track of your decisions, challenges, and solutions. Future you (and your teammates) will thank you!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    </main>
+    <div id="footerMount"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/app.js"></script>
+  </body>
+</html>

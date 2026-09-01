@@ -1,0 +1,39 @@
+{
+  "risks": [
+    {
+      "id": "R-01",
+      "title": "Scope creep",
+      "impact": "M",
+      "likelihood": "M",
+      "mitigation": "Lock MVP; weekly triage; move extras to roadmap."
+    },
+    {
+      "id": "R-02",
+      "title": "Security oversights",
+      "impact": "H",
+      "likelihood": "M",
+      "mitigation": "Helmet, CSRF, rate-limits, code reviews, tests."
+    },
+    {
+      "id": "R-03",
+      "title": "Multi-school data leakage",
+      "impact": "H",
+      "likelihood": "L",
+      "mitigation": "Tenant checks in RBAC; program_id filters; tests."
+    },
+    {
+      "id": "R-04",
+      "title": "Team bandwidth/holidays",
+      "impact": "M",
+      "likelihood": "M",
+      "mitigation": "Plan buffer; align sprints with school calendar."
+    },
+    {
+      "id": "R-05",
+      "title": "DB migration errors",
+      "impact": "M",
+      "likelihood": "M",
+      "mitigation": "Use Knex migrations + test seeds; backups before deploy."
+    }
+  ]
+}

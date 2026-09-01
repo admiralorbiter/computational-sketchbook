@@ -1,0 +1,36 @@
+{
+  "adrs": [
+    {
+      "id": "ADR-001",
+      "title": "Use Node.js + Express (JavaScript) for backend",
+      "status": "Accepted",
+      "context": "Team familiarity with JS; desire to keep stack simple.",
+      "decision": "Use Express with cookie-based sessions; vanilla JS front-end + Bootstrap.",
+      "consequences": "No SPA framework; faster startup; some manual DOM work."
+    },
+    {
+      "id": "ADR-002",
+      "title": "SQLite in dev, PostgreSQL in prod",
+      "status": "Accepted",
+      "context": "Local dev convenience; production robustness.",
+      "decision": "Knex as query builder; migration parity.",
+      "consequences": "Be mindful of SQL differences; use tests."
+    },
+    {
+      "id": "ADR-003",
+      "title": "Session-based auth with RBAC",
+      "status": "Accepted",
+      "context": "Students/teachers log in via browser; simplicity vs JWT.",
+      "decision": "express-session + RBAC middleware (student/teacher/admin).",
+      "consequences": "Must set cookie security flags; CSRF protection needed."
+    },
+    {
+      "id": "ADR-004",
+      "title": "Overall grade rule (missing-after-due is 0)",
+      "status": "Accepted",
+      "context": "Simple, predictable rule for MVP.",
+      "decision": "Exclude not-yet-due; count past-due missing as zero.",
+      "consequences": "Communicate clearly in UI; teacher override may be future feature."
+    }
+  ]
+}

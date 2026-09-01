@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GradeBridge - Database Design & Implementation Guide</title>
+    <link rel="icon" href="data:,">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+
+  </head>
+  <body data-page="data-model">
+    <div id="headerMount"></div>
+    <main class="container my-4">
+
+<div class="mb-4">
+  <h1 class="h2">Database Design & Implementation Guide</h1>
+  <p class="lead text-muted">Learn to design and implement robust database schemas for GradeBridge. This guide covers entity relationships, normalization principles, and practical implementation strategies.</p>
+</div>
+
+<!-- Learning Objectives -->
+<div class="row g-4 mb-5">
+  <div class="col-md-8">
+    <div class="card border-primary">
+      <div class="card-header bg-primary bg-gradient text-white">
+        <h5 class="mb-0"><i class="bi bi-lightbulb me-2"></i>Learning Objectives</h5>
+      </div>
+      <div class="card-body">
+        <ul class="mb-0">
+          <li class="mb-2"><strong>Design</strong> normalized database schemas with proper relationships</li>
+          <li class="mb-2"><strong>Understand</strong> entity-relationship modeling principles</li>
+          <li class="mb-2"><strong>Implement</strong> database migrations and seed data</li>
+          <li class="mb-2"><strong>Apply</strong> indexing and performance optimization techniques</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-body text-center">
+        <i class="bi bi-database display-4 text-primary mb-3"></i>
+        <h6>Database Design</h6>
+        <p class="small text-muted">Schemas, relationships, migrations</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Database Design Principles -->
+<section class="mb-5">
+  <h2 class="h4 mb-4"><i class="bi bi-diagram-3 me-2"></i>Database Design Principles</h2>
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header bg-info bg-gradient text-white">
+          <h6 class="mb-0">Normalization Rules</h6>
+        </div>
+        <div class="card-body">
+          <ul class="small">
+            <li><strong>1NF:</strong> Eliminate repeating groups, each cell contains atomic values</li>
+            <li><strong>2NF:</strong> Remove partial dependencies, every non-key attribute depends on the entire primary key</li>
+            <li><strong>3NF:</strong> Remove transitive dependencies, non-key attributes don't depend on other non-key attributes</li>
+            <li><strong>BCNF:</strong> Every determinant is a candidate key (advanced normalization)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header bg-success bg-gradient text-white">
+          <h6 class="mb-0">Relationship Types</h6>
+        </div>
+        <div class="card-body">
+          <ul class="small">
+            <li><strong>One-to-One:</strong> Each record in A relates to at most one record in B</li>
+            <li><strong>One-to-Many:</strong> Each record in A can relate to multiple records in B</li>
+            <li><strong>Many-to-Many:</strong> Multiple records in A relate to multiple records in B (requires junction table)</li>
+            <li><strong>Self-Referential:</strong> A table relates to itself (hierarchies, categories)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<h2 class="h4 mb-3">Entity-Relationship Diagram</h2>
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-header">Entity-Relationship Overview</div>
+      <div class="card-body">
+        <svg viewBox="0 0 740 520" width="100%" height="auto" role="img" aria-label="ERD">
+          <defs>
+            <style>
+              .tbl { fill: #f8f9fa; stroke: #6c757d; }
+              .title { font-weight: 700; }
+              .col { font-size: 12px; }
+              .line { stroke: #6c757d; stroke-width: 1.5; marker-end: url(#arrow); }
+            </style>
+            <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#6c757d"></path>
+            </marker>
+          </defs>
+
+          <!-- Tables -->
+          <g transform="translate(20,20)">
+            <rect class="tbl" width="200" height="100" rx="8"></rect>
+            <text x="10" y="20" class="title">users</text>
+            <text x="10" y="40" class="col">id PK • program_id FK</text>
+            <text x="10" y="58" class="col">school_id FK • role</text>
+            <text x="10" y="76" class="col">email • password_hash</text>
+          </g>
+
+          <g transform="translate(260,20)">
+            <rect class="tbl" width="200" height="80" rx="8"></rect>
+            <text x="10" y="20" class="title">schools</text>
+            <text x="10" y="40" class="col">id PK • name</text>
+            <text x="10" y="58" class="col">created_at</text>
+          </g>
+
+          <g transform="translate(500,20)">
+            <rect class="tbl" width="200" height="80" rx="8"></rect>
+            <text x="10" y="20" class="title">programs</text>
+            <text x="10" y="40" class="col">id PK • name</text>
+            <text x="10" y="58" class="col">created_at</text>
+          </g>
+
+          <g transform="translate(20,180)">
+            <rect class="tbl" width="220" height="100" rx="8"></rect>
+            <text x="10" y="20" class="title">courses</text>
+            <text x="10" y="40" class="col">id PK • program_id</text>
+            <text x="10" y="58" class="col">school_id • teacher_id FK users</text>
+            <text x="10" y="76" class="col">name • term</text>
+          </g>
+
+          <g transform="translate(300,180)">
+            <rect class="tbl" width="200" height="100" rx="8"></rect>
+            <text x="10" y="20" class="title">enrollments</text>
+            <text x="10" y="40" class="col">id PK • course_id FK</text>
+            <text x="10" y="58" class="col">student_id FK users</text>
+            <text x="10" y="76" class="col">UNIQUE(course,student)</text>
+          </g>
+
+          <g transform="translate(20,340)">
+            <rect class="tbl" width="220" height="100" rx="8"></rect>
+            <text x="10" y="20" class="title">assignments</text>
+            <text x="10" y="40" class="col">id PK • course_id FK</text>
+            <text x="10" y="58" class="col">title • max_points • due_date</text>
+            <text x="10" y="76" class="col">resource_url</text>
+          </g>
+
+          <g transform="translate(300,340)">
+            <rect class="tbl" width="200" height="100" rx="8"></rect>
+            <text x="10" y="20" class="title">grades</text>
+            <text x="10" y="40" class="col">id PK • assignment_id FK</text>
+            <text x="10" y="58" class="col">student_id FK users</text>
+            <text x="10" y="76" class="col">points_earned • feedback</text>
+          </g>
+
+          <!-- Relationships -->
+          <line class="line" x1="120" y1="120" x2="130" y2="180"></line>
+          <line class="line" x1="220" y1="230" x2="300" y2="230"></line>
+          <line class="line" x1="120" y1="280" x2="130" y2="340"></line>
+          <line class="line" x1="220" y1="390" x2="300" y2="390"></line>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card h-100">
+      <div class="card-header">Schema (summary)</div>
+      <div class="card-body">
+        <pre class="bg-body-tertiary p-2 rounded"><code id="schemaText">Loading…</code></pre>
+        <div class="text-end">
+          <button class="btn btn-sm btn-outline-secondary" onclick="copyText(document.getElementById('schemaText').textContent)">Copy</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Implementation Guidance -->
+<section class="mb-5">
+  <h2 class="h4 mb-4"><i class="bi bi-code-slash me-2"></i>Implementation Guidance</h2>
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header bg-warning bg-gradient">
+          <h6 class="mb-0">Knex.js Migration Strategy</h6>
+        </div>
+        <div class="card-body">
+          <h6 class="text-warning">Migration Files Structure:</h6>
+          <ul class="small">
+            <li><strong>Up migrations:</strong> Create/modify tables and columns</li>
+            <li><strong>Down migrations:</strong> Reverse the changes (for rollbacks)</li>
+            <li><strong>Naming convention:</strong> YYYYMMDD_HHMMSS_description.js</li>
+            <li><strong>Version control:</strong> Never modify existing migrations</li>
+          </ul>
+
+          <div class="mt-3">
+            <strong>Example Migration:</strong>
+            <div class="bg-light p-2 rounded mt-2">
+              <small><code>exports.up = (knex) => knex.schema.createTable('users', (table) => {
+  table.increments('id').primary();
+  table.string('email').unique().notNullable();
+  table.string('password_hash').notNullable();
+  table.enum('role', ['student', 'teacher', 'admin']);
+});</code></small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header bg-primary bg-gradient text-white">
+          <h6 class="mb-0">Seed Data Strategy</h6>
+        </div>
+        <div class="card-body">
+          <ul class="small">
+            <li><strong>Development data:</strong> Sample users, courses, and assignments</li>
+            <li><strong>Environment-specific:</strong> Different seeds for dev/staging/production</li>
+            <li><strong>Relationships:</strong> Maintain referential integrity in seed data</li>
+            <li><strong>Updates:</strong> Seed files should be idempotent (safe to run multiple times)</li>
+          </ul>
+
+          <div class="mt-3">
+            <strong>Best Practices:</strong>
+            <ul class="small mt-2">
+              <li>Use faker.js for realistic test data</li>
+              <li>Create admin users for testing</li>
+              <li>Include various grade scenarios</li>
+              <li>Document seed data purpose</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Common Patterns -->
+<section class="mb-5">
+  <h2 class="h4 mb-4"><i class="bi bi-lightbulb me-2"></i>Common Database Patterns</h2>
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card border-info">
+        <div class="card-header bg-info bg-gradient text-white">
+          <h6 class="mb-0">Grade Calculation Pattern</h6>
+        </div>
+        <div class="card-body">
+          <p class="small text-muted mb-3">Store raw scores and calculate final grades dynamically</p>
+          <ul class="small">
+            <li><strong>Raw scores:</strong> Store individual assignment scores</li>
+            <li><strong>Weight categories:</strong> Define category weights (Homework: 30%, Exams: 70%)</li>
+            <li><strong>Calculated fields:</strong> Compute final grades using database functions</li>
+            <li><strong>Grade overrides:</strong> Allow manual grade adjustments</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card border-success">
+        <div class="card-header bg-success bg-gradient text-white">
+          <h6 class="mb-0">Enrollment Pattern</h6>
+        </div>
+        <div class="card-body">
+          <p class="small text-muted mb-3">Handle student-course relationships efficiently</p>
+          <ul class="small">
+            <li><strong>Junction table:</strong> Separate table for student-course relationships</li>
+            <li><strong>Enrollment dates:</strong> Track when students join/leave courses</li>
+            <li><strong>Status tracking:</strong> Active, completed, dropped, withdrawn</li>
+            <li><strong>Bulk operations:</strong> Efficient enrollment management</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Performance Considerations -->
+<section class="mb-5">
+  <div class="card">
+    <div class="card-header bg-primary bg-gradient text-white">
+      <h5 class="mb-0"><i class="bi bi-speedometer me-2"></i>Performance Optimization Tips</h5>
+    </div>
+    <div class="card-body">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <h6 class="text-primary">Indexing Strategy</h6>
+          <ul class="small">
+            <li>Primary keys (auto-indexed)</li>
+            <li>Foreign key columns</li>
+            <li>Frequently filtered columns</li>
+            <li>Composite indexes for complex queries</li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <h6 class="text-success">Query Optimization</h6>
+          <ul class="small">
+            <li>Use JOINs instead of multiple queries</li>
+            <li>Avoid SELECT * in production</li>
+            <li>Use database transactions for consistency</li>
+            <li>Implement pagination for large datasets</li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <h6 class="text-warning">Monitoring</h6>
+          <ul class="small">
+            <li>Track slow queries</li>
+            <li>Monitor table sizes and growth</li>
+            <li>Set up alerts for performance issues</li>
+            <li>Regular maintenance (VACUUM, ANALYZE)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Implementation Tips for Students -->
+<section class="mb-5">
+  <div class="card border-primary">
+    <div class="card-header bg-primary bg-gradient text-white">
+      <h5 class="mb-0"><i class="bi bi-lightbulb me-2"></i>Implementation Tips for Students</h5>
+    </div>
+    <div class="card-body">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <h6 class="text-primary">Start Simple</h6>
+          <p class="small">Begin with basic CRUD operations for each entity. Add relationships and complex queries gradually as you understand the data flow.</p>
+        </div>
+        <div class="col-md-4">
+          <h6 class="text-success">Test Thoroughly</h6>
+          <p class="small">Create comprehensive tests for your database operations. Test edge cases, constraints, and data integrity.</p>
+        </div>
+        <div class="col-md-4">
+          <h6 class="text-warning">Plan for Scale</h6>
+          <p class="small">Design your schema to handle growth. Consider how the system will perform with hundreds or thousands of users.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+fetch('data/schema.json').then(r=>r.json()).then(s=>{
+  const txt = [
+    ...s.tables.map(t=> t.name + ": " + t.columns.join(", ")),
+    "",
+    "Grade rule: " + s.gradeRule
+  ].join("\n");
+  document.getElementById('schemaText').textContent = txt;
+});
+</script>
+
+    </main>
+    <div id="footerMount"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/app.js"></script>
+
+
+  </body>
+</html>

@@ -1,0 +1,39 @@
+{
+  "tests": [
+    {
+      "id": "TST-API-01",
+      "area": "Auth",
+      "title": "Login succeeds with valid credentials",
+      "type": "integration",
+      "status": "Planned"
+    },
+    {
+      "id": "TST-API-02",
+      "area": "Auth",
+      "title": "Login rate-limited after 5 failures",
+      "type": "integration",
+      "status": "Planned"
+    },
+    {
+      "id": "TST-API-03",
+      "area": "Students",
+      "title": "Student cannot access another student's grades",
+      "type": "integration",
+      "status": "Planned"
+    },
+    {
+      "id": "TST-E2E-01",
+      "area": "Flows",
+      "title": "Teacher creates course \u2192 assignment \u2192 enrolls student \u2192 enters grade",
+      "type": "e2e",
+      "status": "Planned"
+    },
+    {
+      "id": "TST-E2E-02",
+      "area": "Flows",
+      "title": "Student logs in and views overall grade",
+      "type": "e2e",
+      "status": "Planned"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "team": [
+    {
+      "id": "T1",
+      "name": "Backend Lead",
+      "role": "Backend"
+    },
+    {
+      "id": "T2",
+      "name": "Frontend Lead",
+      "role": "Frontend"
+    },
+    {
+      "id": "T3",
+      "name": "QA / Full-Stack",
+      "role": "QA"
+    },
+    {
+      "id": "T4",
+      "name": "Full-Stack 1",
+      "role": "Full-Stack"
+    },
+    {
+      "id": "T5",
+      "name": "Full-Stack 2",
+      "role": "Full-Stack"
+    }
+  ]
+}

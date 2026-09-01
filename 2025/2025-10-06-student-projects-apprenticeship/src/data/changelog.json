@@ -1,0 +1,12 @@
+{
+  "releases": [
+    {
+      "version": "0.1.0",
+      "date": "2025-10-06",
+      "changes": [
+        "Initial project hub with sprints, Kanban, API docs, data model, security, testing, ADRs, risks, roadmap, changelog, settings.",
+        "Pre-populated tasks and goals for 5 sprints."
+      ]
+    }
+  ]
+}

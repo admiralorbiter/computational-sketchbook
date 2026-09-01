@@ -1,0 +1,41 @@
+site_name: Classroom Projects Microsite
+nav:
+  - Home: README.md
+  - Teacher Guide: TEACHER_GUIDE.md
+  - Schedule: SCHEDULE.md
+  - Roles: ROLES.md
+  - Assessment Rubric: ASSESSMENT_RUBRIC.md
+  - Code Standards: CODE_STANDARDS.md
+  - Contributing: CONTRIBUTING.md
+  - Student Guide: STUDENT_GUIDE.md
+  - Grade Calculator:
+      - Overview: grade-calculator/README.md
+      - Requirements: grade-calculator/REQUIREMENTS.md
+      - UI Spec: grade-calculator/UI_SPEC.md
+      - Data Model: grade-calculator/DATA_MODEL.md
+      - Calculation Logic: grade-calculator/CALCULATION_LOGIC.md
+      - Storage: grade-calculator/STORAGE.md
+      - Testing: grade-calculator/TESTING.md
+      - Milestones: grade-calculator/MILESTONES.md
+      - Setup: grade-calculator/SETUP.md
+      - User Flow: grade-calculator/USER_FLOW.md
+      - FAQ: grade-calculator/FAQ.md
+      - Extensions: grade-calculator/EXTENSIONS.md
+  - Countdown Timer:
+      - Overview: countdown-timer/README.md
+      - Requirements: countdown-timer/REQUIREMENTS.md
+      - UI Spec: countdown-timer/UI_SPEC.md
+      - Data Model: countdown-timer/DATA_MODEL.md
+      - Timer Logic: countdown-timer/TIMER_LOGIC.md
+      - Storage: countdown-timer/STORAGE.md
+      - Testing: countdown-timer/TESTING.md
+      - Milestones: countdown-timer/MILESTONES.md
+      - Setup: countdown-timer/SETUP.md
+      - User Flow: countdown-timer/USER_FLOW.md
+      - FAQ: countdown-timer/FAQ.md
+      - Extensions: countdown-timer/EXTENSIONS.md
+theme:
+  name: mkdocs
+markdown_extensions:
+  - toc:
+      permalink: true
