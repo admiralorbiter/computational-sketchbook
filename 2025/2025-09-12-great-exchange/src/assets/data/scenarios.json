@@ -1,0 +1,42 @@
+{
+  "simulations": [
+    {
+      "id": "basic-barter",
+      "name": "Basic Barter",
+      "description": "Simple barter system demonstrating the double coincidence of wants problem",
+      "parameters": {
+        "population": 6,
+        "meetingProbability": 0.3,
+        "storageCosts": [1, 4],
+        "maxIterations": 500,
+        "simulationType": "basic-barter"
+      }
+    },
+    {
+      "id": "storage-costs",
+      "name": "Storage Costs",
+      "description": "Three-commodity system with differentiated storage costs driving money emergence",
+      "parameters": {
+        "population": 9,
+        "meetingProbability": 0.25,
+        "storageCosts": [1, 4, 9],
+        "maxIterations": 1000,
+        "simulationType": "storage-costs"
+      }
+    },
+    {
+      "id": "emergence-patterns",
+      "name": "Emergence Patterns",
+      "description": "Full money emergence with recognition costs and convergence analysis",
+      "parameters": {
+        "population": 15,
+        "meetingProbability": 0.2,
+        "storageCosts": [1, 4, 9],
+        "recognitionCost": 0.15,
+        "convergenceThreshold": 0.8,
+        "maxIterations": 2000,
+        "simulationType": "emergence-patterns"
+      }
+    }
+  ]
+}

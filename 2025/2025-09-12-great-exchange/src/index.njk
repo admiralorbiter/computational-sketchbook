@@ -1,0 +1,177 @@
+---
+layout: layouts/simulation.njk
+title: "The Great Exchange"
+subtitle: "Interactive Economic History Lab"
+description: "Teaching Money Emergence Through the Kiyotaki-Wright Model"
+pageClass: "lab-homepage"
+---
+
+<div class="lab-hero">
+    <div class="hero-content">
+        <div class="disclaimer" style="background-color: #fff3cd; border: 2px solid #ffc107; padding: 1rem; margin-bottom: 2rem; border-radius: 0.5rem;">
+            <strong>⚠️ Work in Progress:</strong> This interactive lab is currently under development. Some features may be incomplete or unavailable. Content and functionality are subject to change.
+        </div>
+        <h1 class="hero-title">The Great Exchange</h1>
+        <p class="hero-subtitle">Interactive Economic History Lab</p>
+        <p class="hero-description">
+            Experience the emergence of money through character-driven storytelling, 
+            agent-based simulations, and progressive learning activities set in 
+            ancient Mesopotamia circa 3500 BCE.
+        </p>
+        <div class="hero-actions">
+            <a href="/great-exchange/chapters/01-the-problem/" class="button large primary">
+                Start the Journey
+            </a>
+            <a href="/great-exchange/simulations/" class="button large secondary">
+                Jump to Simulations
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="lab-overview">
+    <div class="grid-container">
+        <div class="grid-x grid-margin-x">
+            <div class="cell large-4">
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Narrative Learning</h3>
+                    <p>
+                        Follow Kael, Tira, and Jorek as they navigate the challenges 
+                        of ancient trade and discover how money emerges from individual 
+                        decisions and social learning.
+                    </p>
+                </div>
+            </div>
+            <div class="cell large-4">
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <h3>Interactive Simulations</h3>
+                    <p>
+                        Run agent-based simulations based on the Kiyotaki-Wright model 
+                        to see how storage costs and search frictions lead to the 
+                        emergence of commodity money.
+                    </p>
+                </div>
+            </div>
+            <div class="cell large-4">
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Real-Time Analytics</h3>
+                    <p>
+                        Watch as trading efficiency improves by 40-60% when over 80% 
+                        of trades begin using the low-storage-cost commodity as money.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="lab-characters">
+    <div class="grid-container">
+        <h2>Meet the Characters</h2>
+        <div class="grid-x grid-margin-x">
+            {% for character in civilization.characters %}
+            <div class="cell large-4">
+                <div class="character-card">
+                    <div class="character-avatar">{{ character.name | first }}</div>
+                    <h4>{{ character.name }}</h4>
+                    <p class="character-title">{{ character.title }}</p>
+                    <p class="character-description">{{ character.description }}</p>
+                    <div class="character-details">
+                        <div class="detail">
+                            <strong>Produces:</strong> {{ character.production | join(", ") }}
+                        </div>
+                        <div class="detail">
+                            <strong>Needs:</strong> {{ character.consumption | join(", ") }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="lab-learning-path">
+    <div class="grid-container">
+        <h2>Learning Path</h2>
+        <div class="learning-steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>The Problem</h4>
+                    <p>Discover the double coincidence of wants problem through failed trades at the Festival of Failed Trades.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>First Exchange</h4>
+                    <p>Experience basic bilateral matching and understand why direct exchange often fails.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h4>Storage Costs</h4>
+                    <p>Learn how different commodities have different storage costs that affect trading decisions.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h4>Speculation</h4>
+                    <p>See how agents begin accepting goods they don't personally consume to facilitate future trades.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h4>Emergence</h4>
+                    <p>Witness the emergence of money as one commodity becomes the preferred medium of exchange.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">6</div>
+                <div class="step-content">
+                    <h4>Modern Connections</h4>
+                    <p>Connect ancient monetary emergence to contemporary economic phenomena and digital currencies.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="lab-simulations">
+    <div class="grid-container">
+        <h2>Interactive Simulations</h2>
+        <div class="grid-x grid-margin-x">
+            {% for level in scenarios.simulationLevels %}
+            <div class="cell large-6">
+                <div class="simulation-card">
+                    <h4>{{ level.name }}</h4>
+                    <p class="simulation-description">{{ level.description }}</p>
+                    <div class="simulation-meta">
+                        <span class="complexity">Complexity: {{ level.complexity }}/4</span>
+                        <span class="agents">{{ level.agents }} Agent Types</span>
+                        <span class="commodities">{{ level.commodities }} Commodities</span>
+                    </div>
+                    <div class="simulation-objectives">
+                        <h6>Learning Objectives:</h6>
+                        <ul>
+                            {% for objective in level.learningObjectives %}
+                            <li>{{ objective }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <a href="/great-exchange/simulations/{{ level.id }}/" class="button">
+                        Try Simulation
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

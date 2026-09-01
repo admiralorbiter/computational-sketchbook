@@ -1,0 +1,369 @@
+---
+layout: layouts/simulation.njk
+title: "Money Emergence Patterns"
+subtitle: "Witness the Birth of Money Through Agent-Based Modeling"
+description: "Advanced simulation showing how money emerges from individual decisions"
+simulationType: "emergence-patterns"
+---
+
+<div class="simulation-content">
+    <div class="simulation-description">
+        <h3>Money Emergence Simulation</h3>
+        <p>
+            This advanced simulation demonstrates how <strong>money emerges naturally</strong> from individual 
+            trading decisions. You'll witness the complete Kiyotaki-Wright model in action, showing how 
+            storage costs, speculation, and social learning lead to the emergence of commodity money.
+        </p>
+        
+        <div class="learning-objectives">
+            <h4>Learning Objectives</h4>
+            <ul>
+                <li>Observe the complete money emergence process</li>
+                <li>Understand how network effects drive convergence</li>
+                <li>See how individual decisions create social institutions</li>
+                <li>Experience the Kiyotaki-Wright model in action</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="simulation-interface">
+        <div class="simulation-controls">
+            <div class="control-group">
+                <label for="population-slider">Population Size</label>
+                <input type="range" id="population-slider" min="12" max="30" value="15" step="3">
+                <span id="population-value">15</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="meeting-probability">Meeting Probability</label>
+                <input type="range" id="meeting-probability" min="0.1" max="0.4" value="0.2" step="0.05">
+                <span id="meeting-probability-value">0.2</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="recognition-cost">Recognition Cost</label>
+                <input type="range" id="recognition-cost" min="0.05" max="0.3" value="0.15" step="0.05">
+                <span id="recognition-cost-value">0.15</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="convergence-threshold">Convergence Threshold</label>
+                <input type="range" id="convergence-threshold" min="0.6" max="0.9" value="0.8" step="0.05">
+                <span id="convergence-threshold-value">0.8</span>
+            </div>
+        </div>
+
+        <div class="simulation-visualization" id="simulation-visualization">
+            <!-- Visualization will be inserted here by JavaScript -->
+        </div>
+
+        <div class="simulation-results">
+            <div class="results-summary">
+                <h4>Simulation Results</h4>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Iteration:</span>
+                        <span class="result-value" id="current-iteration">0</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Trades:</span>
+                        <span class="result-value" id="total-trades">0</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Trading Efficiency:</span>
+                        <span class="result-value" id="trading-efficiency">0%</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Money Circulation:</span>
+                        <span class="result-value" id="money-circulation">0%</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Convergence Step:</span>
+                        <span class="result-value" id="convergence-step">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Welfare Gain:</span>
+                        <span class="result-value" id="welfare-gain">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="emergence-analysis">
+                <h4>Money Emergence Analysis</h4>
+                <div class="emergence-metrics">
+                    <div class="metric-card">
+                        <h5>Convergence Progress</h5>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="convergence-progress" style="width: 0%"></div>
+                        </div>
+                        <p class="progress-text" id="convergence-text">0% converged</p>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <h5>Efficiency Improvement</h5>
+                        <div class="efficiency-chart" id="efficiency-chart">
+                            <!-- Chart will be inserted here -->
+                        </div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <h5>Money Usage by Commodity</h5>
+                        <div class="money-usage-chart" id="money-usage-chart">
+                            <!-- Chart will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="simulation-analysis">
+        <h3>Analysis Questions</h3>
+        <div class="analysis-questions">
+            <div class="question">
+                <h4>1. The Emergence Process</h4>
+                <p>Describe the process you observe as money emerges. What are the key stages, and how long does convergence take?</p>
+                <div class="answer-area" contenteditable="true" placeholder="Type your observations here..."></div>
+            </div>
+            
+            <div class="question">
+                <h4>2. Network Effects</h4>
+                <p>How do you see network effects driving the convergence process? What happens as more agents adopt the same trading strategy?</p>
+                <div class="answer-area" contenteditable="true" placeholder="Type your analysis here..."></div>
+            </div>
+            
+            <div class="question">
+                <h4>3. Efficiency and Welfare</h4>
+                <p>What improvements in trading efficiency and welfare do you observe? How do these relate to the emergence of money?</p>
+                <div class="answer-area" contenteditable="true" placeholder="Type your thoughts here..."></div>
+            </div>
+            
+            <div class="question">
+                <h4>4. Modern Connections</h4>
+                <p>How does this ancient process of money emergence relate to modern monetary systems? What principles remain the same?</p>
+                <div class="answer-area" contenteditable="true" placeholder="Type your insights here..."></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="simulation-navigation">
+        <a href="/great-exchange/chapters/05-emergence/" class="button secondary">← Back to Chapter 5</a>
+        <a href="/great-exchange/" class="button primary">Return to Lab Home →</a>
+    </div>
+</div>
+
+<script>
+// Initialize the emergence patterns simulation
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize simulation
+    const simulation = new KiyotakiWrightSimulation({
+        population: 15,
+        meetingProbability: 0.25, // Slightly higher meeting probability
+        storageCosts: [1, 4, 9], // Barley, Copper, Wool
+        recognitionCost: 0.1, // Lower recognition cost to encourage trading
+        convergenceThreshold: 0.8,
+        maxIterations: 2000,
+        speed: 10, // Faster simulation for testing
+        simulationType: 'emergence-patterns' // This enables full money emergence
+    });
+    
+    // Initialize visualization
+    const visualization = new SimulationVisualization('simulation-visualization', simulation);
+    
+    // Set up control handlers
+    setupControls(simulation, visualization);
+    
+    // Set up simulation controls
+    setupSimulationControls(simulation, visualization);
+    
+    // Initialize additional charts
+    initializeEmergenceCharts(simulation);
+});
+
+function setupControls(simulation, visualization) {
+    // Population slider
+    const populationSlider = document.getElementById('population-slider');
+    const populationValue = document.getElementById('population-value');
+    
+    populationSlider.addEventListener('input', function() {
+        const value = parseInt(this.value);
+        populationValue.textContent = value;
+        simulation.config.population = value;
+        simulation.reset();
+        simulation.initializeAgents();
+    });
+    
+    // Meeting probability slider
+    const meetingSlider = document.getElementById('meeting-probability');
+    const meetingValue = document.getElementById('meeting-probability-value');
+    
+    meetingSlider.addEventListener('input', function() {
+        const value = parseFloat(this.value);
+        meetingValue.textContent = value;
+        simulation.config.meetingProbability = value;
+    });
+    
+    // Recognition cost slider
+    const recognitionSlider = document.getElementById('recognition-cost');
+    const recognitionValue = document.getElementById('recognition-cost-value');
+    
+    recognitionSlider.addEventListener('input', function() {
+        const value = parseFloat(this.value);
+        recognitionValue.textContent = value;
+        simulation.config.recognitionCost = value;
+    });
+    
+    // Convergence threshold slider
+    const convergenceSlider = document.getElementById('convergence-threshold');
+    const convergenceValue = document.getElementById('convergence-threshold-value');
+    
+    convergenceSlider.addEventListener('input', function() {
+        const value = parseFloat(this.value);
+        convergenceValue.textContent = value;
+        simulation.config.convergenceThreshold = value;
+    });
+}
+
+function setupSimulationControls(simulation, visualization) {
+    // Start button
+    document.getElementById('start-simulation').addEventListener('click', function() {
+        simulation.start();
+        this.disabled = true;
+        document.getElementById('pause-simulation').disabled = false;
+    });
+    
+    // Pause button
+    document.getElementById('pause-simulation').addEventListener('click', function() {
+        simulation.stop();
+        this.disabled = true;
+        document.getElementById('start-simulation').disabled = false;
+    });
+    
+    // Reset button
+    document.getElementById('reset-simulation').addEventListener('click', function() {
+        simulation.reset();
+        visualization.reset();
+        updateResults(simulation);
+    });
+    
+    // Update results periodically
+    setInterval(() => {
+        if (simulation.isRunning) {
+            updateResults(simulation);
+            visualization.update();
+        }
+    }, 1000);
+}
+
+function initializeEmergenceCharts(simulation) {
+    // Initialize efficiency chart
+    const efficiencyElement = document.getElementById('efficiency-chart');
+    if (!efficiencyElement) return; // Skip if element doesn't exist
+    
+    const efficiencyCtx = efficiencyElement.getContext('2d');
+    const efficiencyChart = new Chart(efficiencyCtx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Efficiency',
+                data: [],
+                borderColor: '#4CAF50',
+                backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 1
+                }
+            }
+        }
+    });
+    
+    // Initialize money usage chart
+    const moneyUsageElement = document.getElementById('money-usage-chart');
+    if (!moneyUsageElement) return; // Skip if element doesn't exist
+    
+    const moneyUsageCtx = moneyUsageElement.getContext('2d');
+    const moneyUsageChart = new Chart(moneyUsageCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Barley', 'Copper Tools', 'Wool Textiles'],
+            datasets: [{
+                data: [0, 0, 0],
+                backgroundColor: ['#D4AF37', '#B87333', '#8B4513']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+    
+    // Store charts for updates
+    window.efficiencyChart = efficiencyChart;
+    window.moneyUsageChart = moneyUsageChart;
+}
+
+function updateResults(simulation) {
+    const data = simulation.getSimulationData();
+    
+    // Update basic metrics
+    document.getElementById('current-iteration').textContent = data.iteration;
+    document.getElementById('total-trades').textContent = data.trades.length;
+    document.getElementById('trading-efficiency').textContent = 
+        (data.metrics.efficiency * 100).toFixed(1) + '%';
+    document.getElementById('money-circulation').textContent = 
+        (data.metrics.monetaryCirculation * 100).toFixed(1) + '%';
+    document.getElementById('convergence-step').textContent = 
+        data.metrics.convergenceStep || '-';
+    document.getElementById('welfare-gain').textContent = 
+        (data.metrics.welfareGain || 0).toFixed(1) + '%';
+    
+    // Update convergence progress
+    const convergenceProgress = (data.metrics.monetaryCirculation / simulation.config.convergenceThreshold) * 100;
+    document.getElementById('convergence-progress').style.width = Math.min(convergenceProgress, 100) + '%';
+    document.getElementById('convergence-text').textContent = 
+        Math.min(convergenceProgress, 100).toFixed(1) + '% converged';
+    
+    // Update charts
+    updateEmergenceCharts(data);
+}
+
+function updateEmergenceCharts(data) {
+    // Update efficiency chart
+    if (window.efficiencyChart) {
+        const recentData = data.trades.slice(-50);
+        const efficiencyData = recentData.map((trade, index) => ({
+            x: index,
+            y: trade.successful ? 1 : 0
+        }));
+        
+        window.efficiencyChart.data.labels = efficiencyData.map((_, i) => i);
+        window.efficiencyChart.data.datasets[0].data = efficiencyData.map(d => d.y);
+        window.efficiencyChart.update();
+    }
+    
+    // Update money usage chart
+    if (window.moneyUsageChart) {
+        const recentTrades = data.trades.slice(-50);
+        const moneyUsage = [0, 0, 0];
+        
+        recentTrades.forEach(trade => {
+            if (trade.usedMoney) {
+                if (trade.commodity1 === 0 || trade.commodity2 === 0) moneyUsage[0]++;
+                if (trade.commodity1 === 1 || trade.commodity2 === 1) moneyUsage[1]++;
+                if (trade.commodity1 === 2 || trade.commodity2 === 2) moneyUsage[2]++;
+            }
+        });
+        
+        window.moneyUsageChart.data.datasets[0].data = moneyUsage;
+        window.moneyUsageChart.update();
+    }
+}
+</script>

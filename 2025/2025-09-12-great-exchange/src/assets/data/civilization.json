@@ -1,0 +1,36 @@
+{
+  "characters": [
+    {
+      "id": "kael",
+      "name": "Kael",
+      "title": "Grain Farmer",
+      "description": "A practical farmer who grows barley and needs tools and textiles",
+      "personality": "practical",
+      "production": "barley",
+      "consumption": ["copper_tools", "wool_textiles"]
+    },
+    {
+      "id": "tira",
+      "name": "Tira", 
+      "title": "Copper Smith",
+      "description": "An innovative metalworker who crafts tools and needs grain and textiles",
+      "personality": "innovative",
+      "production": "copper_tools",
+      "consumption": ["barley", "wool_textiles"]
+    },
+    {
+      "id": "jorek",
+      "name": "Jorek",
+      "title": "Shepherd",
+      "description": "An adaptive shepherd who produces textiles and needs grain and tools",
+      "personality": "adaptive",
+      "production": "wool_textiles",
+      "consumption": ["barley", "copper_tools"]
+    }
+  ],
+  "historicalContext": {
+    "period": "Bronze Age",
+    "location": "Ancient Mesopotamia",
+    "description": "A time when specialized crafts emerged and the need for trade became essential for survival"
+  }
+}

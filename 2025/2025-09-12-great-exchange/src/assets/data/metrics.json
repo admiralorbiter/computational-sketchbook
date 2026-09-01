@@ -1,0 +1,64 @@
+{
+  "successIndicators": {
+    "basicBarter": {
+      "efficiency": {
+        "low": "< 30%",
+        "medium": "30-60%",
+        "high": "> 60%"
+      },
+      "failedTrades": {
+        "low": "< 100",
+        "medium": "100-300",
+        "high": "> 300"
+      }
+    },
+    "storageCosts": {
+      "efficiency": {
+        "low": "< 50%",
+        "medium": "50-80%",
+        "high": "> 80%"
+      },
+      "moneyCirculation": {
+        "low": "< 20%",
+        "medium": "20-60%",
+        "high": "> 60%"
+      },
+      "commodityDiversity": {
+        "low": "1 commodity",
+        "medium": "2 commodities",
+        "high": "3 commodities"
+      }
+    },
+    "emergencePatterns": {
+      "efficiency": {
+        "low": "< 70%",
+        "medium": "70-90%",
+        "high": "> 90%"
+      },
+      "moneyCirculation": {
+        "low": "< 40%",
+        "medium": "40-80%",
+        "high": "> 80%"
+      },
+      "convergence": {
+        "low": "< 0.6",
+        "medium": "0.6-0.8",
+        "high": "> 0.8"
+      }
+    }
+  },
+  "assessmentRubrics": {
+    "understanding": {
+      "excellent": "Can explain the economic principles and predict outcomes",
+      "good": "Understands most concepts with minor gaps",
+      "developing": "Shows basic understanding but needs more practice",
+      "needsWork": "Struggles with core concepts"
+    },
+    "analysis": {
+      "excellent": "Can analyze patterns and draw meaningful conclusions",
+      "good": "Identifies most patterns correctly",
+      "developing": "Shows some analytical thinking",
+      "needsWork": "Difficulty analyzing results"
+    }
+  }
+}

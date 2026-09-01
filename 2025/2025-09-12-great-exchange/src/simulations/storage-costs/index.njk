@@ -1,0 +1,281 @@
+---
+layout: layouts/simulation.njk
+title: "Storage Costs Simulation"
+subtitle: "Explore How Storage Costs Affect Trading Decisions"
+description: "Complete circular production system with differentiated storage costs"
+simulationType: "storage-costs"
+---
+
+<div class="simulation-content">
+    <div class="simulation-description">
+        <h3>Storage Costs and Trading Decisions</h3>
+        <p>
+            This simulation demonstrates how <strong>storage costs</strong> affect trading decisions and lead to 
+            the emergence of preferred intermediary goods. You'll see how different commodities become 
+            more or less suitable for indirect trading based on their storage characteristics.
+        </p>
+        
+        <div class="learning-objectives">
+            <h4>Learning Objectives</h4>
+            <ul>
+                <li>Understand how storage costs affect trading decisions</li>
+                <li>Observe the emergence of preferred intermediary goods</li>
+                <li>Learn why some goods become "money" while others don't</li>
+                <li>Experience the three-agent circular production economy</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="simulation-interface">
+        <div class="simulation-controls">
+            <div class="control-group">
+                <label for="population-slider">Population Size</label>
+                <input type="range" id="population-slider" min="9" max="21" value="9" step="3">
+                <span id="population-value">9</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="meeting-probability">Meeting Probability</label>
+                <input type="range" id="meeting-probability" min="0.1" max="0.4" value="0.25" step="0.05">
+                <span id="meeting-probability-value">0.25</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="barley-cost">Barley Storage Cost</label>
+                <input type="range" id="barley-cost" min="1" max="5" value="1" step="1">
+                <span id="barley-cost-value">1</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="copper-cost">Copper Storage Cost</label>
+                <input type="range" id="copper-cost" min="2" max="8" value="4" step="1">
+                <span id="copper-cost-value">4</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="wool-cost">Wool Storage Cost</label>
+                <input type="range" id="wool-cost" min="5" max="15" value="9" step="1">
+                <span id="wool-cost-value">9</span>
+            </div>
+        </div>
+
+        <div class="simulation-visualization" id="simulation-visualization">
+            <!-- Visualization will be inserted here by JavaScript -->
+        </div>
+
+        <div class="simulation-results">
+            <div class="results-summary">
+                <h4>Simulation Results</h4>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Iteration:</span>
+                        <span class="result-value" id="current-iteration">0</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Total Trades:</span>
+                        <span class="result-value" id="total-trades">0</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Trading Efficiency:</span>
+                        <span class="result-value" id="trading-efficiency">0%</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Money Circulation:</span>
+                        <span class="result-value" id="money-circulation">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="commodity-analysis">
+                <h4>Commodity Usage Analysis</h4>
+                <div class="commodity-stats">
+                    <div class="commodity-stat">
+                        <span class="commodity-name">🌾 Barley</span>
+                        <div class="usage-bar">
+                            <div class="usage-fill" id="barley-usage" style="width: 0%"></div>
+                        </div>
+                        <span class="usage-percentage" id="barley-percentage">0%</span>
+                    </div>
+                    <div class="commodity-stat">
+                        <span class="commodity-name">🔨 Copper Tools</span>
+                        <div class="usage-bar">
+                            <div class="usage-fill" id="copper-usage" style="width: 0%"></div>
+                        </div>
+                        <span class="usage-percentage" id="copper-percentage">0%</span>
+                    </div>
+                    <div class="commodity-stat">
+                        <span class="commodity-name">🧶 Wool Textiles</span>
+                        <div class="usage-bar">
+                            <div class="usage-fill" id="wool-usage" style="width: 0%"></div>
+                        </div>
+                        <span class="usage-percentage" id="wool-percentage">0%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="simulation-analysis">
+        <h3>Analysis Questions</h3>
+        <div class="analysis-questions">
+            <div class="question">
+                <h4>1. Storage Cost Effects</h4>
+                <p>Which commodity becomes most popular for indirect trading? How does this relate to its storage cost?</p>
+                <div class="answer-area" contenteditable="true" placeholder="Type your observations here..."></div>
+            </div>
+            
+            <div class="question">
+                <h4>2. The Emergence of Money</h4>
+                <p>As the simulation progresses, do you see one commodity emerging as the preferred "money"? What characteristics make it suitable for this role?</p>
+                <div class="answer-area" contenteditable="true" placeholder="Type your analysis here..."></div>
+            </div>
+            
+            <div class="question">
+                <h4>3. Efficiency Improvements</h4>
+                <p>How does the emergence of a common medium of exchange affect trading efficiency? What percentage improvement do you observe?</p>
+                <div class="answer-area" contenteditable="true" placeholder="Type your thoughts here..."></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="simulation-navigation">
+        <a href="/great-exchange/chapters/03-storage-costs/" class="button secondary">← Back to Chapter 3</a>
+        <a href="/great-exchange/simulations/emergence-patterns/" class="button primary">Next: Emergence Patterns →</a>
+    </div>
+</div>
+
+<script>
+// Initialize the storage costs simulation
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize simulation
+    const simulation = new KiyotakiWrightSimulation({
+        population: 9,
+        meetingProbability: 0.25,
+        storageCosts: [1, 4, 9], // Barley, Copper, Wool
+        maxIterations: 1000,
+        simulationType: 'storage-costs' // This enables speculative trading
+    });
+    
+    // Initialize visualization
+    const visualization = new SimulationVisualization('simulation-visualization', simulation);
+    
+    // Set up control handlers
+    setupControls(simulation, visualization);
+    
+    // Set up simulation controls
+    setupSimulationControls(simulation, visualization);
+});
+
+function setupControls(simulation, visualization) {
+    // Population slider
+    const populationSlider = document.getElementById('population-slider');
+    const populationValue = document.getElementById('population-value');
+    
+    populationSlider.addEventListener('input', function() {
+        const value = parseInt(this.value);
+        populationValue.textContent = value;
+        simulation.config.population = value;
+        simulation.reset();
+        simulation.initializeAgents();
+    });
+    
+    // Meeting probability slider
+    const meetingSlider = document.getElementById('meeting-probability');
+    const meetingValue = document.getElementById('meeting-probability-value');
+    
+    meetingSlider.addEventListener('input', function() {
+        const value = parseFloat(this.value);
+        meetingValue.textContent = value;
+        simulation.config.meetingProbability = value;
+    });
+    
+    // Storage cost sliders
+    setupStorageCostSlider('barley-cost', 'barley-cost-value', 0, simulation);
+    setupStorageCostSlider('copper-cost', 'copper-cost-value', 1, simulation);
+    setupStorageCostSlider('wool-cost', 'wool-cost-value', 2, simulation);
+}
+
+function setupStorageCostSlider(sliderId, valueId, commodityIndex, simulation) {
+    const slider = document.getElementById(sliderId);
+    const valueDisplay = document.getElementById(valueId);
+    
+    slider.addEventListener('input', function() {
+        const value = parseInt(this.value);
+        valueDisplay.textContent = value;
+        simulation.config.storageCosts[commodityIndex] = value;
+        simulation.commodities[commodityIndex].storageCost = value;
+    });
+}
+
+function setupSimulationControls(simulation, visualization) {
+    // Start button
+    document.getElementById('start-simulation').addEventListener('click', function() {
+        simulation.start();
+        this.disabled = true;
+        document.getElementById('pause-simulation').disabled = false;
+    });
+    
+    // Pause button
+    document.getElementById('pause-simulation').addEventListener('click', function() {
+        simulation.stop();
+        this.disabled = true;
+        document.getElementById('start-simulation').disabled = false;
+    });
+    
+    // Reset button
+    document.getElementById('reset-simulation').addEventListener('click', function() {
+        simulation.reset();
+        visualization.reset();
+        updateResults(simulation);
+    });
+    
+    // Update results periodically
+    setInterval(() => {
+        if (simulation.isRunning) {
+            updateResults(simulation);
+            visualization.update();
+        }
+    }, 1000);
+}
+
+function updateResults(simulation) {
+    const data = simulation.getSimulationData();
+    
+    // Update basic metrics
+    document.getElementById('current-iteration').textContent = data.iteration;
+    document.getElementById('total-trades').textContent = data.trades.length;
+    document.getElementById('trading-efficiency').textContent = 
+        (data.metrics.efficiency * 100).toFixed(1) + '%';
+    document.getElementById('money-circulation').textContent = 
+        (data.metrics.monetaryCirculation * 100).toFixed(1) + '%';
+    
+    // Update commodity usage
+    updateCommodityUsage(data.trades, data.commodities);
+}
+
+function updateCommodityUsage(trades, commodities) {
+    if (trades.length === 0) return;
+    
+    const recentTrades = trades.slice(-50); // Last 50 trades
+    const totalTrades = recentTrades.length;
+    
+    commodities.forEach((commodity, index) => {
+        const commodityTrades = recentTrades.filter(trade => 
+            trade.commodity1 === commodity.id || trade.commodity2 === commodity.id
+        );
+        const usagePercentage = (commodityTrades.length / totalTrades) * 100;
+        
+        const usageBar = document.getElementById(`${commodity.name.replace('_', '-')}-usage`);
+        const usagePercentageDisplay = document.getElementById(`${commodity.name.replace('_', '-')}-percentage`);
+        
+        if (usageBar) {
+            usageBar.style.width = usagePercentage + '%';
+            usageBar.style.backgroundColor = commodity.color;
+        }
+        
+        if (usagePercentageDisplay) {
+            usagePercentageDisplay.textContent = usagePercentage.toFixed(1) + '%';
+        }
+    });
+}
+</script>

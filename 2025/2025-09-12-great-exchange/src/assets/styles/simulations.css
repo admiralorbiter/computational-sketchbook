@@ -1,0 +1,558 @@
+/**
+ * Simulation Interface Styling
+ * Styles for interactive simulation components
+ */
+
+/* Simulation Main Container */
+.simulation-main {
+  min-height: calc(100vh - 200px);
+  background: #f8f9fa;
+}
+
+.simulation-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+/* Simulation Header */
+.simulation-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.simulation-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.simulation-metrics {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.metric-label {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin-bottom: 0.25rem;
+}
+
+.metric-value {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Progress Panel */
+.progress-panel {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin-bottom: 1rem;
+}
+
+.progress-panel h4 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.progress-indicator {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.progress-step {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.progress-step:hover {
+  background: #f8f9fa;
+}
+
+.progress-step.active {
+  background: #e3f2fd;
+  border-left: 4px solid #2196f3;
+}
+
+.progress-step.completed {
+  background: #e8f5e8;
+  border-left: 4px solid #4caf50;
+}
+
+.step-number {
+  background: #6c757d;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+}
+
+.progress-step.active .step-number {
+  background: #2196f3;
+}
+
+.progress-step.completed .step-number {
+  background: #4caf50;
+}
+
+.step-title {
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+/* Simulation Controls */
+.simulation-controls {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.simulation-controls h5 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.simulation-speed {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.simulation-speed label {
+  font-size: 0.9rem;
+  color: #495057;
+  margin: 0;
+}
+
+.simulation-speed input[type="range"] {
+  flex: 1;
+  min-width: 100px;
+}
+
+#speed-value {
+  font-size: 0.9rem;
+  color: #495057;
+  min-width: 40px;
+}
+
+/* Metrics Dashboard */
+.metrics-dashboard {
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.metric-card {
+  background: white;
+  padding: 1rem;
+  border-radius: 6px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.metric-card h6 {
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+/* Network Graph */
+.network-container {
+  padding: 1.5rem;
+  background: white;
+}
+
+.network-container h5 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.network-graph {
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  background: #fafafa;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Commodity Flow */
+.flow-container {
+  padding: 1.5rem;
+  background: white;
+  border-top: 1px solid #e9ecef;
+}
+
+.flow-container h5 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.commodity-flow {
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Efficiency Chart */
+.efficiency-container {
+  padding: 1.5rem;
+  background: white;
+  border-top: 1px solid #e9ecef;
+}
+
+.efficiency-container h5 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.efficiency-chart {
+  height: 300px;
+  position: relative;
+}
+
+/* Convergence Chart */
+.convergence-container {
+  padding: 1.5rem;
+  background: white;
+  border-top: 1px solid #e9ecef;
+}
+
+.convergence-container h5 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.convergence-chart {
+  height: 300px;
+  position: relative;
+}
+
+/* Simulation Content */
+.simulation-content {
+  padding: 2rem;
+}
+
+/* Agent Cards */
+.agent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.agent-card {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.agent-card:hover {
+  border-color: #667eea;
+  transform: translateY(-2px);
+}
+
+.agent-card h6 {
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.agent-holdings {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.holding-badge {
+  background: #e9ecef;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: #495057;
+}
+
+/* Trading Log */
+.trading-log {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.trading-log-header {
+  background: #e9ecef;
+  padding: 0.75rem 1rem;
+  font-weight: bold;
+  color: #495057;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.trading-log-content {
+  padding: 1rem;
+}
+
+.trade-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.trade-entry:last-child {
+  border-bottom: none;
+}
+
+.trade-info {
+  flex: 1;
+}
+
+.trade-participants {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.trade-details {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.trade-status {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.trade-status.successful {
+  background: #d4edda;
+  color: #155724;
+}
+
+.trade-status.failed {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.trade-status.money {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+/* Parameter Controls */
+.parameter-controls {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.parameter-controls h6 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.parameter-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.parameter-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.parameter-item label {
+  font-size: 0.9rem;
+  color: #495057;
+  margin-bottom: 0.25rem;
+}
+
+.parameter-item input,
+.parameter-item select {
+  padding: 0.5rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.parameter-item input:focus,
+.parameter-item select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .simulation-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .simulation-metrics {
+    gap: 1rem;
+  }
+  
+  .agent-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .parameter-group {
+    grid-template-columns: 1fr;
+  }
+  
+  .button-group {
+    flex-direction: column;
+  }
+  
+  .simulation-speed {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Loading States */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: #6c757d;
+}
+
+.loading::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e9ecef;
+  border-top: 2px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 0.5rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error States */
+.error {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #f5c6cb;
+  margin: 1rem 0;
+}
+
+/* Success States */
+.success {
+  background: #d4edda;
+  color: #155724;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #c3e6cb;
+  margin: 1rem 0;
+}
+
+/* Accessibility Improvements */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus indicators */
+button:focus,
+input:focus,
+select:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .agent-card,
+  .metric-card {
+    border: 2px solid #000;
+  }
+  
+  .progress-step.active {
+    background: #000;
+    color: #fff;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .agent-card,
+  .progress-step {
+    transition: none;
+  }
+  
+  .agent-card:hover,
+  .progress-step:hover {
+    transform: none;
+  }
+  
+  .loading::before {
+    animation: none;
+  }
+}

@@ -1,0 +1,236 @@
+---
+layout: layouts/simulation.njk
+title: "Basic Barter Simulation"
+subtitle: "Experience the Double Coincidence of Wants Problem"
+description: "Simplified two-good, two-agent scenario to establish fundamental concepts"
+simulationType: "basic-barter"
+---
+
+<div class="simulation-content">
+    <div class="simulation-description">
+        <h3>Welcome to the Basic Barter Simulation</h3>
+        <p>
+            This simulation demonstrates the fundamental problem of barter: the <strong>double coincidence of wants</strong>. 
+            You'll experience how difficult it is to find someone who has what you need and wants what you have.
+        </p>
+        
+        <div class="learning-objectives">
+            <h4>Learning Objectives</h4>
+            <ul>
+                <li>Understand the double coincidence of wants problem</li>
+                <li>Experience trading inefficiencies firsthand</li>
+                <li>Learn basic storage cost concepts</li>
+                <li>Observe how random bilateral matching leads to failed trades</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="simulation-interface">
+        <div class="simulation-controls">
+            <div class="control-group">
+                <label for="population-slider">Population Size</label>
+                <input type="range" id="population-slider" min="4" max="12" value="6" step="2">
+                <span id="population-value">6</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="meeting-probability">Meeting Probability</label>
+                <input type="range" id="meeting-probability" min="0.1" max="0.5" value="0.3" step="0.05">
+                <span id="meeting-probability-value">0.3</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="simulation-speed">Simulation Speed</label>
+                <input type="range" id="simulation-speed" min="0.5" max="3" value="1" step="0.1">
+                <span id="simulation-speed-value">1.0x</span>
+            </div>
+        </div>
+
+        <div class="simulation-visualization" id="simulation-visualization">
+            <!-- Visualization will be inserted here by JavaScript -->
+        </div>
+
+        <div class="simulation-results">
+            <div class="results-summary">
+                <h4>Simulation Results</h4>
+                <div class="results-grid">
+                    <div class="result-item">
+                        <span class="result-label">Total Trades:</span>
+                        <span class="result-value" id="total-trades">0</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Successful Trades:</span>
+                        <span class="result-value" id="successful-trades">0</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Trading Efficiency:</span>
+                        <span class="result-value" id="trading-efficiency">0%</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Failed Trades:</span>
+                        <span class="result-value" id="failed-trades">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="trading-log">
+                <h4>Trading Log</h4>
+                <div class="log-content" id="trading-log-content">
+                    <p class="log-entry">Simulation not started yet. Click "Start" to begin.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="simulation-analysis">
+        <h3>Analysis Questions</h3>
+        <div class="analysis-questions">
+            <div class="question">
+                <h4>1. The Double Coincidence Problem</h4>
+                <p>Observe the trading attempts in the simulation. How often do agents find someone who both has what they need AND wants what they have?</p>
+                <div class="answer-area" contenteditable="true" placeholder="Type your observations here..."></div>
+            </div>
+            
+            <div class="question">
+                <h4>2. Trading Efficiency</h4>
+                <p>What percentage of trading attempts are successful? Why do you think this percentage is so low?</p>
+                <div class="answer-area" contenteditable="true" placeholder="Type your analysis here..."></div>
+            </div>
+            
+            <div class="question">
+                <h4>3. The Need for Innovation</h4>
+                <p>Based on what you've observed, why do you think societies eventually developed money? What problems does money solve?</p>
+                <div class="answer-area" contenteditable="true" placeholder="Type your thoughts here..."></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="simulation-navigation">
+        <a href="/great-exchange/chapters/01-the-problem/" class="button secondary">← Back to Chapter 1</a>
+        <a href="/great-exchange/simulations/storage-costs/" class="button primary">Next: Storage Costs →</a>
+    </div>
+</div>
+
+<script>
+// Initialize the basic barter simulation
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize simulation
+    const simulation = new KiyotakiWrightSimulation({
+        population: 6,
+        meetingProbability: 0.3,
+        storageCosts: [1, 4], // Only two goods for basic simulation
+        maxIterations: 500,
+        simulationType: 'basic-barter' // This disables speculative trading
+    });
+    
+    // Initialize visualization
+    const visualization = new SimulationVisualization('simulation-visualization', simulation);
+    
+    // Set up control handlers
+    setupControls(simulation, visualization);
+    
+    // Set up simulation controls
+    setupSimulationControls(simulation, visualization);
+});
+
+function setupControls(simulation, visualization) {
+    // Population slider
+    const populationSlider = document.getElementById('population-slider');
+    const populationValue = document.getElementById('population-value');
+    
+    populationSlider.addEventListener('input', function() {
+        const value = parseInt(this.value);
+        populationValue.textContent = value;
+        simulation.config.population = value;
+        simulation.reset();
+        simulation.initializeAgents();
+    });
+    
+    // Meeting probability slider
+    const meetingSlider = document.getElementById('meeting-probability');
+    const meetingValue = document.getElementById('meeting-probability-value');
+    
+    meetingSlider.addEventListener('input', function() {
+        const value = parseFloat(this.value);
+        meetingValue.textContent = value;
+        simulation.config.meetingProbability = value;
+    });
+    
+    // Speed slider
+    const speedSlider = document.getElementById('simulation-speed');
+    const speedValue = document.getElementById('simulation-speed-value');
+    
+    speedSlider.addEventListener('input', function() {
+        const value = parseFloat(this.value);
+        speedValue.textContent = value + 'x';
+        simulation.config.speed = value;
+    });
+}
+
+function setupSimulationControls(simulation, visualization) {
+    // Start button
+    document.getElementById('start-simulation').addEventListener('click', function() {
+        simulation.start();
+        this.disabled = true;
+        document.getElementById('pause-simulation').disabled = false;
+    });
+    
+    // Pause button
+    document.getElementById('pause-simulation').addEventListener('click', function() {
+        simulation.stop();
+        this.disabled = true;
+        document.getElementById('start-simulation').disabled = false;
+    });
+    
+    // Reset button
+    document.getElementById('reset-simulation').addEventListener('click', function() {
+        simulation.reset();
+        visualization.reset();
+        updateResults(simulation);
+    });
+    
+    // Update results periodically
+    setInterval(() => {
+        if (simulation.isRunning) {
+            updateResults(simulation);
+            visualization.update();
+        }
+    }, 1000);
+}
+
+function updateResults(simulation) {
+    const data = simulation.getSimulationData();
+    
+    document.getElementById('total-trades').textContent = data.trades.length;
+    document.getElementById('successful-trades').textContent = 
+        data.trades.filter(trade => trade.successful).length;
+    document.getElementById('trading-efficiency').textContent = 
+        (data.metrics.efficiency * 100).toFixed(1) + '%';
+    document.getElementById('failed-trades').textContent = 
+        data.trades.filter(trade => !trade.successful).length;
+    
+    // Update trading log
+    updateTradingLog(data.trades);
+}
+
+function updateTradingLog(trades) {
+    const logContent = document.getElementById('trading-log-content');
+    const recentTrades = trades.slice(-10).reverse();
+    
+    logContent.innerHTML = recentTrades.map(trade => {
+        const status = trade.successful ? 'successful' : 'failed';
+        const statusText = trade.successful ? '✓' : '✗';
+        return `
+            <div class="log-entry ${status}">
+                <span class="log-time">${trade.iteration}</span>
+                <span class="log-details">Agent ${trade.agent1} ↔ Agent ${trade.agent2}</span>
+                <span class="log-status">${statusText}</span>
+            </div>
+        `;
+    }).join('');
+    
+    if (trades.length === 0) {
+        logContent.innerHTML = '<p class="log-entry">Simulation not started yet. Click "Start" to begin.</p>';
+    }
+}
+</script>

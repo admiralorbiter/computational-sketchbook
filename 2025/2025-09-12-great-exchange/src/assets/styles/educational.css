@@ -1,0 +1,390 @@
+/**
+ * Educational Lab Styling
+ * Foundation-based styles for The Great Exchange lab
+ */
+
+/* Lab Header */
+.lab-header {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  color: white;
+  padding: 1rem 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.lab-header .top-bar {
+  background: transparent;
+  padding: 0;
+}
+
+.lab-header .menu-text a {
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.lab-header .menu a {
+  color: rgba(255,255,255,0.9);
+  transition: color 0.3s ease;
+}
+
+.lab-header .menu a:hover {
+  color: white;
+}
+
+/* Lab Hero Section */
+.lab-hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  opacity: 0.9;
+}
+
+.hero-description {
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Lab Overview */
+.lab-overview {
+  padding: 3rem 0;
+  background: #f8f9fa;
+}
+
+.feature-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  text-align: center;
+  height: 100%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.feature-card h3 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.feature-card p {
+  color: #6c757d;
+  line-height: 1.6;
+}
+
+/* Lab Characters */
+.lab-characters {
+  padding: 3rem 0;
+  background: white;
+}
+
+.lab-characters h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+}
+
+.character-card {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  height: 100%;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.character-card:hover {
+  border-color: #667eea;
+  transform: translateY(-2px);
+}
+
+.character-avatar {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.character-card h4 {
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.character-title {
+  color: #6c757d;
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+.character-description {
+  color: #495057;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.character-details {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.character-details .detail {
+  margin-bottom: 0.5rem;
+}
+
+/* Learning Path */
+.lab-learning-path {
+  padding: 3rem 0;
+  background: #f8f9fa;
+}
+
+.lab-learning-path h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+}
+
+.learning-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.step:hover {
+  transform: translateX(10px);
+}
+
+.step-number {
+  background: #667eea;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 1.5rem;
+  flex-shrink: 0;
+}
+
+.step-content h4 {
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.step-content p {
+  color: #6c757d;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Lab Simulations */
+.lab-simulations {
+  padding: 3rem 0;
+  background: white;
+}
+
+.lab-simulations h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+}
+
+.simulation-card {
+  background: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
+  height: 100%;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.simulation-card:hover {
+  border-color: #667eea;
+  transform: translateY(-2px);
+}
+
+.simulation-card h4 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.simulation-description {
+  color: #6c757d;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.simulation-meta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.simulation-meta span {
+  background: #e9ecef;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: #495057;
+}
+
+.simulation-objectives h6 {
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.simulation-objectives ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.simulation-objectives li {
+  margin-bottom: 0.25rem;
+}
+
+/* Lab Footer */
+.lab-footer {
+  background: #2c3e50;
+  color: white;
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.lab-footer p {
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.2rem;
+  }
+  
+  .hero-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .learning-steps {
+    padding: 0 1rem;
+  }
+  
+  .step {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .step-number {
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+  
+  .simulation-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* Accessibility Improvements */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus indicators */
+button:focus,
+a:focus,
+input:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .feature-card,
+  .character-card,
+  .simulation-card {
+    border: 2px solid #000;
+  }
+  
+  .step-number {
+    background: #000;
+    color: #fff;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .feature-card,
+  .character-card,
+  .simulation-card,
+  .step {
+    transition: none;
+  }
+  
+  .feature-card:hover,
+  .character-card:hover,
+  .simulation-card:hover,
+  .step:hover {
+    transform: none;
+  }
+}
