@@ -1,0 +1,795 @@
+{
+  "feature_distribution": {
+    "points": {
+      "total_features": 970588,
+      "features_with_geometry": 970588,
+      "geometry_coverage_pct": 100.0,
+      "categorical_analysis": {
+        "highway": {
+          "total_with_value": 168680,
+          "completeness_pct": 17.37915572828018,
+          "top_values": [
+            [
+              "crossing",
+              66380
+            ],
+            [
+              "street_lamp",
+              54357
+            ],
+            [
+              "turning_circle",
+              23062
+            ],
+            [
+              "traffic_signals",
+              7813
+            ],
+            [
+              "stop",
+              5447
+            ],
+            [
+              "bus_stop",
+              5414
+            ],
+            [
+              "motorway_junction",
+              2475
+            ],
+            [
+              "turning_loop",
+              1990
+            ],
+            [
+              "give_way",
+              1175
+            ],
+            [
+              "trailhead",
+              567
+            ]
+          ]
+        }
+      }
+    },
+    "lines": {
+      "total_features": 1286119,
+      "features_with_geometry": 1286119,
+      "geometry_coverage_pct": 100.0,
+      "categorical_analysis": {
+        "highway": {
+          "total_with_value": 1099680,
+          "completeness_pct": 85.50375198562496,
+          "top_values": [
+            [
+              "service",
+              547444
+            ],
+            [
+              "residential",
+              280098
+            ],
+            [
+              "footway",
+              152370
+            ],
+            [
+              "unclassified",
+              27465
+            ],
+            [
+              "track",
+              26057
+            ],
+            [
+              "tertiary",
+              20864
+            ],
+            [
+              "secondary",
+              16715
+            ],
+            [
+              "primary",
+              12281
+            ],
+            [
+              "path",
+              9306
+            ],
+            [
+              "motorway_link",
+              7080
+            ]
+          ]
+        }
+      }
+    },
+    "multipolygons": {
+      "total_features": 874841,
+      "features_with_geometry": 874841,
+      "geometry_coverage_pct": 100.0,
+      "categorical_analysis": {
+        "building": {
+          "total_with_value": 566260,
+          "completeness_pct": 64.72719042660323,
+          "top_values": [
+            [
+              "yes",
+              315080
+            ],
+            [
+              "house",
+              122755
+            ],
+            [
+              "detached",
+              89362
+            ],
+            [
+              "garage",
+              8071
+            ],
+            [
+              "residential",
+              7292
+            ],
+            [
+              "apartments",
+              6554
+            ],
+            [
+              "commercial",
+              5986
+            ],
+            [
+              "shed",
+              4475
+            ],
+            [
+              "roof",
+              3659
+            ],
+            [
+              "retail",
+              3026
+            ]
+          ]
+        },
+        "amenity": {
+          "total_with_value": 53986,
+          "completeness_pct": 6.170949921185678,
+          "top_values": [
+            [
+              "parking",
+              24681
+            ],
+            [
+              "parking_space",
+              17114
+            ],
+            [
+              "place_of_worship",
+              2846
+            ],
+            [
+              "shelter",
+              1899
+            ],
+            [
+              "fast_food",
+              1510
+            ],
+            [
+              "school",
+              1509
+            ],
+            [
+              "restaurant",
+              1379
+            ],
+            [
+              "fuel",
+              1267
+            ],
+            [
+              "toilets",
+              998
+            ],
+            [
+              "bank",
+              783
+            ]
+          ]
+        },
+        "natural": {
+          "total_with_value": 87023,
+          "completeness_pct": 9.947293279578803,
+          "top_values": [
+            [
+              "water",
+              34137
+            ],
+            [
+              "wood",
+              29625
+            ],
+            [
+              "scrub",
+              10239
+            ],
+            [
+              "sand",
+              5759
+            ],
+            [
+              "grassland",
+              4696
+            ],
+            [
+              "wetland",
+              1564
+            ],
+            [
+              "bare_rock",
+              379
+            ],
+            [
+              "scree",
+              306
+            ],
+            [
+              "beach",
+              160
+            ],
+            [
+              "shoal",
+              158
+            ]
+          ]
+        },
+        "landuse": {
+          "total_with_value": 116230,
+          "completeness_pct": 13.285842798862879,
+          "top_values": [
+            [
+              "grass",
+              32569
+            ],
+            [
+              "residential",
+              24313
+            ],
+            [
+              "farmland",
+              19735
+            ],
+            [
+              "meadow",
+              15413
+            ],
+            [
+              "commercial",
+              7031
+            ],
+            [
+              "cemetery",
+              5096
+            ],
+            [
+              "forest",
+              4202
+            ],
+            [
+              "farmyard",
+              2696
+            ],
+            [
+              "industrial",
+              2640
+            ],
+            [
+              "retail",
+              2535
+            ]
+          ]
+        },
+        "tourism": {
+          "total_with_value": 2023,
+          "completeness_pct": 0.23124201997848753,
+          "top_values": [
+            [
+              "hotel",
+              749
+            ],
+            [
+              "camp_site",
+              266
+            ],
+            [
+              "motel",
+              254
+            ],
+            [
+              "museum",
+              206
+            ],
+            [
+              "camp_pitch",
+              184
+            ],
+            [
+              "attraction",
+              105
+            ],
+            [
+              "picnic_site",
+              93
+            ],
+            [
+              "information",
+              89
+            ],
+            [
+              "caravan_site",
+              47
+            ],
+            [
+              "guest_house",
+              30
+            ]
+          ]
+        },
+        "shop": {
+          "total_with_value": 3408,
+          "completeness_pct": 0.3895565022672692,
+          "top_values": [
+            [
+              "convenience",
+              825
+            ],
+            [
+              "storage_rental",
+              513
+            ],
+            [
+              "car_repair",
+              509
+            ],
+            [
+              "supermarket",
+              450
+            ],
+            [
+              "car",
+              337
+            ],
+            [
+              "variety_store",
+              234
+            ],
+            [
+              "car_parts",
+              191
+            ],
+            [
+              "doityourself",
+              128
+            ],
+            [
+              "hairdresser",
+              113
+            ],
+            [
+              "chemist",
+              108
+            ]
+          ]
+        }
+      }
+    },
+    "multilinestrings": {
+      "total_features": 3168,
+      "features_with_geometry": 3168,
+      "geometry_coverage_pct": 100.0,
+      "categorical_analysis": {}
+    },
+    "other_relations": {
+      "total_features": 10055,
+      "features_with_geometry": 10055,
+      "geometry_coverage_pct": 100.0,
+      "categorical_analysis": {}
+    }
+  },
+  "osm_tag_patterns": {
+    "points": {
+      "total_tagged_features": 374151,
+      "unique_tag_combinations": 100,
+      "location_tag_patterns": {
+        "city": 1936,
+        "postcode": 1487,
+        "addr:": 1487
+      },
+      "tag_complexity_distribution": {
+        "1_tags": 267220,
+        "6_tags": 32603,
+        "2_tags": 38118,
+        "3_tags": 26988,
+        "5_tags": 3821,
+        "4_tags": 4406,
+        "9_tags": 504,
+        "10_tags": 491
+      }
+    },
+    "lines": {
+      "total_tagged_features": 471319,
+      "unique_tag_combinations": 100,
+      "location_tag_patterns": {
+        "city": 10330,
+        "county": 9195
+      },
+      "tag_complexity_distribution": {
+        "1_tags": 311297,
+        "2_tags": 107111,
+        "3_tags": 38863,
+        "6_tags": 10315,
+        "4_tags": 2118,
+        "5_tags": 1615
+      }
+    },
+    "multipolygons": {
+      "total_tagged_features": 82027,
+      "unique_tag_combinations": 100,
+      "location_tag_patterns": {
+        "city": 2454,
+        "state": 1044,
+        "addr:": 1776,
+        "postcode": 915,
+        "country": 94
+      },
+      "tag_complexity_distribution": {
+        "1_tags": 57907,
+        "2_tags": 20607,
+        "3_tags": 2563,
+        "6_tags": 856,
+        "4_tags": 94
+      }
+    },
+    "multilinestrings": {
+      "total_tagged_features": 722,
+      "unique_tag_combinations": 100,
+      "location_tag_patterns": {
+        "state": 122,
+        "county": 5,
+        "city": 6
+      },
+      "tag_complexity_distribution": {
+        "2_tags": 150,
+        "1_tags": 225,
+        "4_tags": 52,
+        "5_tags": 61,
+        "3_tags": 119,
+        "6_tags": 111,
+        "7_tags": 2,
+        "13_tags": 2
+      }
+    },
+    "other_relations": {
+      "total_tagged_features": 9785,
+      "unique_tag_combinations": 100,
+      "location_tag_patterns": {
+        "city": 89,
+        "state": 6,
+        "place": 1
+      },
+      "tag_complexity_distribution": {
+        "1_tags": 9445,
+        "3_tags": 144,
+        "2_tags": 158,
+        "4_tags": 36,
+        "6_tags": 2
+      }
+    }
+  },
+  "data_quality_patterns": {
+    "points": {
+      "total_features": 970588,
+      "named_features": 45394,
+      "named_percentage": 4.676958709565747,
+      "tagged_features": 867883,
+      "tagged_percentage": 89.41827016200489,
+      "high_quality_features": 44555,
+      "high_quality_percentage": 4.590516264367579,
+      "quality_indicators": {
+        "highway_features": 169002
+      }
+    },
+    "lines": {
+      "total_features": 1286119,
+      "named_features": 314961,
+      "named_percentage": 24.489257992456377,
+      "tagged_features": 1033056,
+      "tagged_percentage": 80.32351594214843,
+      "high_quality_features": 283602,
+      "high_quality_percentage": 22.050992171019946,
+      "quality_indicators": {
+        "highway_features": 1126872
+      }
+    },
+    "multipolygons": {
+      "total_features": 874841,
+      "named_features": 52980,
+      "named_percentage": 6.055957596866173,
+      "tagged_features": 254931,
+      "tagged_percentage": 29.14026663130786,
+      "high_quality_features": 37189,
+      "high_quality_percentage": 4.250943885803249,
+      "quality_indicators": {
+        "building_features": 587043,
+        "amenity_features": 59657,
+        "natural_features": 87260,
+        "landuse_features": 121251
+      }
+    },
+    "multilinestrings": {
+      "total_features": 3168,
+      "named_features": 997,
+      "named_percentage": 31.470959595959595,
+      "tagged_features": 3165,
+      "tagged_percentage": 99.90530303030303,
+      "high_quality_features": 997,
+      "high_quality_percentage": 31.470959595959595,
+      "quality_indicators": {}
+    },
+    "other_relations": {
+      "total_features": 10055,
+      "named_features": 476,
+      "named_percentage": 4.733963202386872,
+      "tagged_features": 9953,
+      "tagged_percentage": 98.98557931377424,
+      "high_quality_features": 415,
+      "high_quality_percentage": 4.127299850820487,
+      "quality_indicators": {}
+    }
+  },
+  "missouri_characteristics": {
+    "highway_analysis": {
+      "lines": [
+        [
+          "service",
+          547444
+        ],
+        [
+          "residential",
+          280098
+        ],
+        [
+          "footway",
+          152370
+        ],
+        [
+          "unclassified",
+          27465
+        ],
+        [
+          "track",
+          26057
+        ],
+        [
+          "tertiary",
+          20864
+        ],
+        [
+          "secondary",
+          16715
+        ],
+        [
+          "primary",
+          12281
+        ],
+        [
+          "path",
+          9306
+        ],
+        [
+          "motorway_link",
+          7080
+        ],
+        [
+          "motorway",
+          6223
+        ],
+        [
+          "cycleway",
+          6078
+        ],
+        [
+          "trunk",
+          4091
+        ],
+        [
+          "steps",
+          3050
+        ],
+        [
+          "primary_link",
+          2204
+        ],
+        [
+          "trunk_link",
+          1956
+        ],
+        [
+          "secondary_link",
+          1224
+        ],
+        [
+          "tertiary_link",
+          733
+        ],
+        [
+          "construction",
+          301
+        ],
+        [
+          "corridor",
+          278
+        ],
+        [
+          "bridleway",
+          254
+        ],
+        [
+          "pedestrian",
+          211
+        ],
+        [
+          "proposed",
+          183
+        ],
+        [
+          "living_street",
+          151
+        ],
+        [
+          "services",
+          94
+        ],
+        [
+          "raceway",
+          86
+        ],
+        [
+          "rest_area",
+          31
+        ],
+        [
+          "road",
+          24
+        ],
+        [
+          "busway",
+          12
+        ],
+        [
+          "elevator",
+          6
+        ],
+        [
+          "turning_circle",
+          1
+        ],
+        [
+          "residential_link",
+          1
+        ]
+      ]
+    },
+    "water_features": {
+      "lines": [
+        [
+          "stream",
+          45275
+        ],
+        [
+          "ditch",
+          7311
+        ],
+        [
+          "drain",
+          4956
+        ],
+        [
+          "river",
+          3075
+        ],
+        [
+          "dam",
+          1252
+        ],
+        [
+          "canal",
+          296
+        ],
+        [
+          "weir",
+          57
+        ],
+        [
+          "lock_gate",
+          17
+        ],
+        [
+          "flowline",
+          14
+        ],
+        [
+          "dock",
+          13
+        ],
+        [
+          "boatyard",
+          9
+        ],
+        [
+          "link",
+          8
+        ],
+        [
+          "tidal_channel",
+          3
+        ],
+        [
+          "yes",
+          1
+        ],
+        [
+          "rapids",
+          1
+        ],
+        [
+          "pressurised",
+          1
+        ],
+        [
+          "floodgate",
+          1
+        ],
+        [
+          "floating_barrier",
+          1
+        ],
+        [
+          "draine",
+          1
+        ]
+      ]
+    },
+    "administrative_features": {
+      "multipolygons": [
+        [
+          "8",
+          971
+        ],
+        [
+          "6",
+          116
+        ],
+        [
+          "10",
+          80
+        ],
+        [
+          "7",
+          66
+        ],
+        [
+          "4",
+          1
+        ]
+      ]
+    },
+    "urban_vs_rural": {}
+  }
+}

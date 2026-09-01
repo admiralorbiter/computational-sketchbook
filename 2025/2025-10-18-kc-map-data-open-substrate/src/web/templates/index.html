@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kansas City Data Platform</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Font Awesome Pro -->
+    <script src="https://kit.fontawesome.com/052a51df03.js" crossorigin="anonymous"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <h1>Kansas City Data Platform</h1>
+            <nav class="view-tabs">
+                <a href="/" class="nav-tab active">Map View</a>
+                <a href="/analysis" class="nav-tab">Analysis View</a>
+            </nav>
+            <div class="header-controls">
+                <button id="settings-btn" class="settings-btn" title="Consolidation Settings">
+                    <i class="fas fa-cog"></i> Settings
+                </button>
+            </div>
+            <div class="stats" id="stats">
+                <span>Loading...</span>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h3>Layer Controls</h3>
+                <div class="header-controls">
+                    <button class="toggle-sidebar" onclick="toggleSidebar()">×</button>
+                </div>
+            </div>
+            
+            <div class="layer-controls">
+                <div class="layer-group">
+                    <h4>Data Layers</h4>
+                    <label class="layer-item">
+                        <input type="checkbox" id="layer-service_requests" checked>
+                        <span class="layer-name">311 Service Requests</span>
+                        <span class="layer-count" id="count-service_requests">-</span>
+                    </label>
+                    <label class="layer-item">
+                        <input type="checkbox" id="layer-crime">
+                        <span class="layer-name">Crime Incidents</span>
+                        <span class="layer-count" id="count-crime">-</span>
+                    </label>
+                    <label class="layer-item">
+                        <input type="checkbox" id="layer-businesses">
+                        <span class="layer-name">Businesses</span>
+                        <span class="layer-count" id="count-businesses">-</span>
+                    </label>
+                    <label class="layer-item">
+                        <input type="checkbox" id="layer-dangerous_buildings">
+                        <span class="layer-name">Dangerous Buildings</span>
+                        <span class="layer-count" id="count-dangerous_buildings">-</span>
+                    </label>
+                    <label class="layer-item">
+                        <input type="checkbox" id="layer-inspections">
+                        <span class="layer-name">Food Inspections</span>
+                        <span class="layer-count" id="count-inspections">-</span>
+                    </label>
+                    <label class="layer-item">
+                        <input type="checkbox" id="layer-landbank_properties">
+                        <span class="layer-name">Land Bank Properties</span>
+                        <span class="layer-count" id="count-landbank_properties">-</span>
+                    </label>
+                </div>
+                
+                <div class="layer-group">
+                    <h4>OSM Data</h4>
+                    <label class="layer-item">
+                        <input type="checkbox" id="layer-points" checked>
+                        <span class="layer-name">Points</span>
+                        <span class="layer-count" id="count-points">-</span>
+                    </label>
+                </div>
+                
+                <div class="layer-group">
+                    <h4>Census Boundaries</h4>
+                    <label class="layer-item">
+                        <input type="checkbox" id="layer-block_groups">
+                        <span class="layer-name">Block Groups</span>
+                        <span class="layer-count" id="count-block_groups">-</span>
+                    </label>
+                    <button id="toggle-variable-search" class="toggle-variable-search" title="Search available variables">🔍 Search Variables</button>
+                    <div class="metric-selector" id="metric-selector">
+                        <div class="metric-option">
+                            <label>
+                                <input type="radio" name="choropleth-metric" value="median_household_income" checked>
+                                <span>Median Household Income</span>
+                            </label>
+                        </div>
+                        <div class="metric-option">
+                            <label>
+                                <input type="radio" name="choropleth-metric" value="population">
+                                <span>Population</span>
+                            </label>
+                        </div>
+                        <div class="metric-option">
+                            <label>
+                                <input type="radio" name="choropleth-metric" value="median_age">
+                                <span>Median Age</span>
+                            </label>
+                        </div>
+                        <div class="metric-option">
+                            <label>
+                                <input type="radio" name="choropleth-metric" value="none">
+                                <span>None (gray)</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="variable-search" id="variable-search" style="display: none;">
+                        <input type="text" id="variable-search-input" placeholder="Search variables...">
+                        <div id="variable-list" class="variable-list">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+                    <label class="layer-item">
+                        <input type="checkbox" id="layer-blocks">
+                        <span class="layer-name">Blocks</span>
+                        <span class="layer-count" id="count-blocks">-</span>
+                    </label>
+                </div>
+            </div>
+            
+            
+            <div class="consolidation-control">
+                <h4>Consolidation</h4>
+                <label class="consolidation-toggle">
+                    <input type="checkbox" id="consolidate-toggle" checked>
+                    <span class="toggle-text">Consolidate by address</span>
+                </label>
+                <p class="consolidation-help">Groups multiple records at the same location. Uncheck layers to exclude them from consolidation.</p>
+            </div>
+            
+            <!-- Filters Section -->
+            <div class="sidebar-section">
+                <h3>Filters <span id="filter-indicator" class="filter-indicator">0</span></h3>
+                <div id="filter-container">
+                    <!-- Dynamic filters populated by JS -->
+                </div>
+                <div id="active-filters-summary" class="active-filters-summary" style="display: none;">
+                    <h5>Active Filters:</h5>
+                    <div id="active-filters-list"></div>
+                </div>
+                <button id="clear-filters" class="btn-secondary">Clear All Filters</button>
+            </div>
+            
+            <div class="map-info">
+                <h4>Map Info</h4>
+                <div class="info-item">
+                    <span class="info-label">Zoom:</span>
+                    <span class="info-value" id="map-zoom">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Features:</span>
+                    <span class="info-value" id="map-features">0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Bounds:</span>
+                    <span class="info-value" id="map-bounds">-</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <button id="reset-button" class="reset-button">Reset to Kansas City</button>
+            </div>
+        </div>
+
+        <!-- Map Container -->
+        <div class="map-container">
+            <div id="map"></div>
+            
+        <!-- Spatial Filter Tools -->
+        <div class="map-tools">
+            <button id="draw-circle-btn" class="tool-btn" title="Select by radius">
+                <i class="fas fa-circle"></i> Radius Select
+            </button>
+            <button id="clear-spatial-filter" class="tool-btn" title="Clear selection">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <!-- Radius Mode Badge -->
+        <div id="radius-mode-badge" class="radius-mode-badge" style="display: none;">
+            <i class="fas fa-bullseye"></i> Radius Mode Active
+        </div>
+        </div>
+        
+        <!-- Details Sidebar (Right) -->
+        <div id="details-sidebar" class="details-sidebar">
+            <div class="sidebar-header">
+                <h3 id="sidebar-title">Location Details</h3>
+                <button id="close-sidebar" class="close-btn">&times;</button>
+            </div>
+            <div class="sidebar-content" id="sidebar-content">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+        </div>
+        
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="settings-modal" style="display: none;">
+            <div class="settings-content">
+                <div class="settings-header">
+                    <h3>Consolidation Settings</h3>
+                    <button class="close-settings" onclick="closeSettings()">×</button>
+                </div>
+                
+                <div class="settings-body">
+                    <div class="setting-group">
+                        <h4>Consolidation Preset</h4>
+                        <div class="preset-options">
+                    <label class="preset-option">
+                        <input type="radio" name="preset" value="aggressive" id="preset-aggressive">
+                        <span>Aggressive</span>
+                        <small>Groups within ~110m radius - moderate consolidation</small>
+                    </label>
+                    <label class="preset-option">
+                        <input type="radio" name="preset" value="balanced" id="preset-balanced" checked>
+                        <span>Balanced</span>
+                        <small>Groups within ~55m radius - minimal consolidation</small>
+                    </label>
+                    <label class="preset-option">
+                        <input type="radio" name="preset" value="loose" id="preset-loose">
+                        <span>Loose</span>
+                        <small>Groups within ~22m radius - very minimal consolidation</small>
+                    </label>
+                            <label class="preset-option">
+                                <input type="radio" name="preset" value="custom" id="preset-custom">
+                                <span>Custom</span>
+                                <small>Use custom settings below</small>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group" id="custom-settings" style="display: none;">
+                        <h4>Custom Settings</h4>
+                        <div class="setting-item">
+                            <label for="address-tolerance">Address Grouping Tolerance</label>
+                            <input type="range" id="address-tolerance" min="0.0001" max="0.002" step="0.0001" value="0.0005">
+                            <span class="setting-value" id="address-tolerance-value">0.005</span>
+                        </div>
+                        <div class="setting-item">
+                            <label for="coordinate-precision">Coordinate Precision</label>
+                            <input type="range" id="coordinate-precision" min="1" max="5" step="1" value="3">
+                            <span class="setting-value" id="coordinate-precision-value">3</span>
+                        </div>
+                        <div class="setting-item">
+                            <label for="min-records">Minimum Records to Group</label>
+                            <input type="range" id="min-records" min="1" max="10" step="1" value="2">
+                            <span class="setting-value" id="min-records-value">2</span>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <h4>Advanced Options</h4>
+                        <label class="setting-checkbox">
+                            <input type="checkbox" id="consolidation-enabled" checked>
+                            <span>Enable consolidation</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="settings-footer">
+                    <button class="btn-secondary" onclick="resetSettings()">Reset to Defaults</button>
+                    <button class="btn-primary" onclick="applySettings()">Apply Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    
+    <!-- Land Bank Layer Components -->
+    <script src="{{ url_for('static', filename='js/layers/landbank-layer.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/components/landbank-popup.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/filters/landbank-filters.js') }}"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
