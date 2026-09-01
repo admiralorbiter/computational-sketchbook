@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kansas-Missouri OSM Map</title>
+    
+    <!-- MapLibre GL JS CSS -->
+    <link href="https://unpkg.com/maplibre-gl@^5.14.0/dist/maplibre-gl.css" rel="stylesheet" />
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        
+        #map {
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        .map-overlay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 1;
+            max-width: 300px;
+        }
+        
+        .layer-controls {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .layer-controls label {
+            display: block;
+            margin: 5px 0;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .layer-controls input[type="checkbox"] {
+            margin-right: 5px;
+        }
+        
+        .building-info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 1;
+            display: none;
+            max-width: 250px;
+        }
+        
+        .building-info h4 {
+            margin: 0 0 5px 0;
+            font-size: 14px;
+        }
+        
+        .building-info p {
+            margin: 3px 0;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .search-box {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 1;
+            min-width: 250px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+        
+        .search-results {
+            margin-top: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .search-result-item {
+            padding: 8px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            font-size: 12px;
+        }
+        
+        .search-result-item:hover {
+            background: #f0f0f0;
+        }
+        
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .search-loading {
+            display: none;
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .poi-legend-panel {
+            position: absolute;
+            top: 70px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 1;
+            min-width: 220px;
+            max-width: 280px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .poi-legend-panel.collapsed {
+            max-height: 40px;
+        }
+        
+        .poi-legend-header {
+            padding: 10px 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 13px;
+            user-select: none;
+        }
+        
+        .poi-legend-header:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+        
+        .poi-legend-toggle {
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+        
+        .poi-legend-panel.collapsed .poi-legend-toggle {
+            transform: rotate(180deg);
+        }
+        
+        .poi-legend-content {
+            padding: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .poi-legend-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 0;
+            font-size: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .poi-legend-item:last-child {
+            border-bottom: none;
+        }
+        
+        .poi-legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        
+        .poi-legend-name {
+            flex: 1;
+            color: #333;
+        }
+        
+        .poi-legend-count {
+            color: #999;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+        
+        .poi-legend-empty {
+            text-align: center;
+            color: #999;
+            font-size: 11px;
+            padding: 10px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div class="map-overlay">
+        <h3 style="margin: 0 0 5px 0;">Kansas City 3D Map</h3>
+        <p style="margin: 0; font-size: 12px; color: #666;">Loading tiles from local server...</p>
+        <p style="margin: 5px 0 0 0; font-size: 11px; color: #888;">
+            Right-click + drag to rotate | Scroll to zoom | Click POI/places for info | Hover zipcodes for data
+        </p>
+        <div class="layer-controls">
+            <label><input type="checkbox" id="toggle-buildings" checked> Buildings</label>
+            <label><input type="checkbox" id="toggle-roads" checked> Roads</label>
+            <label><input type="checkbox" id="toggle-water" checked> Water</label>
+            <label><input type="checkbox" id="toggle-landuse" checked> Land Use</label>
+            <label><input type="checkbox" id="toggle-poi" checked> Points of Interest</label>
+            <label><input type="checkbox" id="toggle-places" checked> Places</label>
+            <label><input type="checkbox" id="toggle-census" checked> Census Data</label>
+        </div>
+        <div class="poi-controls" id="poi-controls" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd; display: none;">
+            <label style="display: block; margin-bottom: 5px; font-size: 12px; font-weight: bold;">Filter by Type:</label>
+            <select id="poi-filter" style="width: 100%; padding: 5px; font-size: 12px;">
+                <option value="all">All POI Types</option>
+            </select>
+            <div id="poi-legend" style="margin-top: 8px; font-size: 11px; max-height: 150px; overflow-y: auto;">
+                <div style="font-weight: bold; margin-bottom: 4px;">Color Legend:</div>
+                <div id="poi-legend-items"></div>
+            </div>
+        </div>
+        <div class="census-controls" id="census-controls" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #ddd;">
+            <label style="display: block; margin-bottom: 5px; font-size: 12px; font-weight: bold;">Variable:</label>
+            <select id="census-variable" style="width: 100%; padding: 5px; font-size: 12px;">
+                <option value="B19013_001E">Median Household Income</option>
+                <option value="B01001_001E">Total Population</option>
+                <option value="B25077_001E">Median Home Value</option>
+                <option value="B01002_001E">Median Age</option>
+            </select>
+        </div>
+        <div class="census-legend" id="census-legend" style="margin-top: 10px; padding: 5px; background: rgba(255,255,255,0.9); border-radius: 3px; font-size: 11px; display: none;">
+            <div style="font-weight: bold; margin-bottom: 5px;" id="legend-title">Median Household Income</div>
+            <div id="legend-scale"></div>
+        </div>
+        <div class="zipcode-info" id="zipcode-info" style="margin-top: 10px; padding: 8px; background: rgba(255,255,255,0.95); border-radius: 3px; font-size: 11px; border: 1px solid #ddd; display: none;">
+            <div style="font-weight: bold; margin-bottom: 6px; font-size: 12px; color: #333;" id="zipcode-title">Zipcode Information</div>
+            <div id="zipcode-details" style="line-height: 1.6; color: #555;">
+                <div style="font-style: italic; color: #999;">Hover or click on a zipcode area</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="search-box">
+        <input type="text" id="address-search" placeholder="Search for an address or place..." autocomplete="off">
+        <div class="search-loading" id="search-loading">Searching...</div>
+        <div class="search-results" id="search-results"></div>
+    </div>
+    
+    <div class="building-info" id="building-info">
+        <h4>Building Information</h4>
+        <p id="building-height">Height: -</p>
+        <p id="building-levels">Levels: -</p>
+        <p id="building-type">Type: -</p>
+    </div>
+    
+    <div class="poi-legend-panel" id="poi-legend-panel" style="display: none;">
+        <div class="poi-legend-header" id="poi-legend-toggle">
+            <span>📍 POI Legend</span>
+            <span class="poi-legend-toggle">▼</span>
+        </div>
+        <div class="poi-legend-content" id="poi-legend-content">
+            <div class="poi-legend-empty">Zoom in to see POI types</div>
+        </div>
+    </div>
+
+    <!-- MapLibre GL JS -->
+    <script src="https://unpkg.com/maplibre-gl@^5.14.0/dist/maplibre-gl.js"></script>
+    
+    <script>
+        // Performance optimizations - RTL plugin is optional
+        try {
+            maplibregl.setRTLTextPlugin('https://unpkg.com/@mapbox/mapbox-gl-rtl-text@0.2.3/mapbox-gl-rtl-text.min.js');
+        } catch (e) {
+            // RTL plugin not critical, continue without it
+            console.warn('RTL plugin not available (this is OK)');
+        }
+
+        // Initialize the map with 3D support and performance settings
+        const map = new maplibregl.Map({
+            container: 'map',
+            // Performance optimizations
+            antialias: true,
+            preserveDrawingBuffer: false,
+            fadeDuration: 0,
+            style: {
+                version: 8,
+                sources: {
+                    // Try KC enhanced first, fallback to original
+                    'kc-enhanced': {
+                        type: 'vector',
+                        tiles: [`http://localhost:8080/data/kc-enhanced/{z}/{x}/{y}.pbf`],
+                        minzoom: 0,
+                        maxzoom: 15
+                    },
+                    'ks-mo': {
+                        type: 'vector',
+                        tiles: [`http://localhost:8080/data/ks-mo/{z}/{x}/{y}.pbf`],
+                        minzoom: 0,
+                        maxzoom: 15  // Planetiler max is 15
+                    },
+                    // Terrain/elevation data source - AWS Terrain Tiles (free, no API key needed)
+                    'terrain-rgb': {
+                        type: 'raster-dem',
+                        tiles: [
+                            'https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'
+                        ],
+                        tileSize: 256,
+                        maxzoom: 14,
+                        attribution: 'AWS Terrain Tiles'
+                    }
+                },
+                layers: [
+                    {
+                        id: 'background',
+                        type: 'background',
+                        paint: {
+                            'background-color': '#ffffff'  // White instead of gray for better appearance
+                        }
+                    },
+                    {
+                        id: 'water',
+                        type: 'fill',
+                        source: 'kc-enhanced',
+                        'source-layer': 'water',
+                        paint: {
+                            'fill-color': '#4a90e2',
+                            'fill-opacity': 0.6
+                        }
+                    },
+                    {
+                        id: 'landuse',
+                        type: 'fill',
+                        source: 'kc-enhanced',
+                        'source-layer': 'landuse',
+                        paint: {
+                            'fill-color': '#e8e8e8',
+                            'fill-opacity': 0.4
+                        }
+                    },
+                    {
+                        id: 'roads',
+                        type: 'line',
+                        source: 'kc-enhanced',
+                        'source-layer': 'transportation',
+                        paint: {
+                            'line-color': '#666',
+                            'line-width': [
+                                'interpolate',
+                                ['linear'],
+                                ['zoom'],
+                                10, 1,
+                                12, 2,
+                                14, 4,
+                                16, 6,
+                                18, 8,
+                                20, 10
+                            ]
+                        }
+                    },
+                    {
+                        id: 'buildings-3d',
+                        type: 'fill-extrusion',
+                        source: 'kc-enhanced',
+                        'source-layer': 'building',
+                        minzoom: 10,  // Show buildings at lower zoom for street view
+                        paint: {
+                            'fill-extrusion-color': '#d0d0d0',
+                            'fill-extrusion-height': [
+                                'case',
+                                ['has', 'render_height'],
+                                ['get', 'render_height'],
+                                ['has', 'height'],
+                                ['get', 'height'],
+                                ['has', 'building:levels'],
+                                ['*', ['get', 'building:levels'], 3],
+                                8
+                            ],
+                            'fill-extrusion-base': 0,
+                            'fill-extrusion-opacity': 0.9
+                        }
+                    },
+                    {
+                        id: 'places',
+                        type: 'symbol',
+                        source: 'kc-enhanced',
+                        'source-layer': 'place',
+                        minzoom: 0,
+                        layout: {
+                            'text-field': ['get', 'name'],
+                            'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
+                            'text-size': [
+                                'interpolate',
+                                ['linear'],
+                                ['zoom'],
+                                0, 10,
+                                10, 12,
+                                14, 14
+                            ],
+                            'text-anchor': 'center',
+                            'text-allow-overlap': false,
+                            'text-ignore-placement': false
+                        },
+                        paint: {
+                            'text-color': '#333',
+                            'text-halo-color': '#fff',
+                            'text-halo-width': 2,
+                            'text-halo-blur': 1
+                        }
+                    },
+                    {
+                        id: 'poi',
+                        type: 'circle',
+                        source: 'kc-enhanced',
+                        'source-layer': 'poi',
+                        minzoom: 12,  // POI only shows at zoom 12+ per MBTiles metadata
+                        paint: {
+                            'circle-radius': [
+                                'interpolate',
+                                ['linear'],
+                                ['zoom'],
+                                12, 3,
+                                14, 5,
+                                16, 8
+                            ],
+                            'circle-color': [
+                                'case',
+                                ['has', 'class'],
+                                [
+                                    'match',
+                                    ['get', 'class'],
+                                    'hospital', '#e74c3c',
+                                    'clinic', '#c0392b',
+                                    'pharmacy', '#e67e22',
+                                    'restaurant', '#f39c12',
+                                    'cafe', '#f1c40f',
+                                    'bar', '#d35400',
+                                    'hotel', '#3498db',
+                                    'school', '#9b59b6',
+                                    'university', '#8e44ad',
+                                    'parking', '#95a5a6',
+                                    'gas_station', '#34495e',
+                                    'bank', '#16a085',
+                                    'atm', '#1abc9c',
+                                    'shop', '#e91e63',
+                                    'supermarket', '#c2185b',
+                                    'place_of_worship', '#7f8c8d',
+                                    'museum', '#27ae60',
+                                    'theatre', '#2980b9',
+                                    'sport', '#2ecc71',
+                                    'attraction', '#e74c3c',
+                                    '#ff6b6b' // default color
+                                ],
+                                '#ff6b6b' // fallback
+                            ],
+                            'circle-stroke-color': '#fff',
+                            'circle-stroke-width': 1,
+                            'circle-opacity': 0.8
+                        }
+                    },
+                    {
+                        id: 'poi-hit-area',
+                        type: 'circle',
+                        source: 'kc-enhanced',
+                        'source-layer': 'poi',
+                        minzoom: 12,
+                        paint: {
+                            'circle-radius': [
+                                'interpolate',
+                                ['linear'],
+                                ['zoom'],
+                                12, 20,
+                                14, 25,
+                                16, 30
+                            ],
+                            'circle-opacity': 0
+                        }
+                    },
+                    {
+                        id: 'poi-labels',
+                        type: 'symbol',
+                        source: 'kc-enhanced',
+                        'source-layer': 'poi',
+                        minzoom: 14,  // Labels only at higher zoom
+                        layout: {
+                            'text-field': ['get', 'name'],
+                            'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
+                            'text-size': 11,
+                            'text-anchor': 'top',
+                            'text-offset': [0, 0.5],
+                            'text-allow-overlap': false,
+                            'text-ignore-placement': false
+                        },
+                        paint: {
+                            'text-color': '#333',
+                            'text-halo-color': '#fff',
+                            'text-halo-width': 1.5,
+                            'text-halo-blur': 1
+                        }
+                    }
+                ],
+                // Enable 3D terrain (optional - will be added after map loads if available)
+                // terrain: {
+                //     source: 'terrain-rgb',
+                //     exaggeration: 1.5
+                // }
+            },
+            center: [-94.5786, 39.0997], // Kansas City area for better 3D view
+            zoom: 13,
+            pitch: 40, // Reduced pitch for less distortion (was 50)
+            bearing: 0, // Rotation angle
+            // Performance settings
+            maxPitch: 60,
+            maxZoom: 22,  // Allow overzooming beyond tile maxzoom for closer views
+            minZoom: 10,
+            // Optimize rendering
+            renderWorldCopies: false
+        });
+
+        // Removed tile prefetching - was causing errors
+
+        // Add navigation controls
+        map.addControl(new maplibregl.NavigationControl(), 'top-right');
+
+        // Add terrain control (if available)
+        if (maplibregl.TerrainControl) {
+            map.addControl(new maplibregl.TerrainControl(), 'top-right');
+        }
+
+        // Census data state
+        let censusData = null;
+        let currentVariable = 'B19013_001E';
+        const variableNames = {
+            'B19013_001E': 'Median Household Income',
+            'B01001_001E': 'Total Population',
+            'B25077_001E': 'Median Home Value',
+            'B01002_001E': 'Median Age'
+        };
+
+        // Color scales for different variables
+        function getColorScale(variable) {
+            switch(variable) {
+                case 'B19013_001E': // Income - YlOrRd
+                    return [
+                        [0, '#ffffcc'],
+                        [30000, '#ffeda0'],
+                        [50000, '#fed976'],
+                        [70000, '#feb24c'],
+                        [90000, '#fd8d3c'],
+                        [110000, '#fc4e2a'],
+                        [150000, '#e31a1c'],
+                        [200000, '#bd0026']
+                    ];
+                case 'B01001_001E': // Population - Blues
+                    return [
+                        [0, '#f7fbff'],
+                        [1000, '#deebf7'],
+                        [5000, '#c6dbef'],
+                        [10000, '#9ecae1'],
+                        [20000, '#6baed6'],
+                        [30000, '#4292c6'],
+                        [50000, '#2171b5'],
+                        [100000, '#084594']
+                    ];
+                case 'B25077_001E': // Home Value - Purples
+                    return [
+                        [0, '#fcfbfd'],
+                        [50000, '#efedf5'],
+                        [100000, '#dadaeb'],
+                        [150000, '#bcbddc'],
+                        [200000, '#9e9ac8'],
+                        [250000, '#807dba'],
+                        [300000, '#6a51a3'],
+                        [400000, '#54278f']
+                    ];
+                case 'B01002_001E': // Age - Oranges
+                    return [
+                        [0, '#fff5eb'],
+                        [25, '#fee6ce'],
+                        [30, '#fdd0a2'],
+                        [35, '#fdae6b'],
+                        [40, '#fd8d3c'],
+                        [45, '#f16913'],
+                        [50, '#d94801'],
+                        [60, '#8c2d04']
+                    ];
+                default:
+                    return [
+                        [0, '#f7f7f7'],
+                        [100, '#cccccc'],
+                        [500, '#969696'],
+                        [1000, '#636363'],
+                        [5000, '#252525']
+                    ];
+            }
+        }
+
+        // Load census data (with optional bounds for viewport-based loading)
+        async function loadCensusData(useBounds = false) {
+            try {
+                let url = '/api/v1/data/census/geojson';
+                
+                // Add bounds if requested and map is loaded
+                if (useBounds && map.loaded()) {
+                    const bounds = map.getBounds();
+                    const minLon = bounds.getWest();
+                    const minLat = bounds.getSouth();
+                    const maxLon = bounds.getEast();
+                    const maxLat = bounds.getNorth();
+                    url += `?bounds=${minLon},${minLat},${maxLon},${maxLat}`;
+                }
+                
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Failed to load census data');
+                }
+                censusData = await response.json();
+                
+                // Add source to map
+                if (map.getSource('census-zipcodes')) {
+                    map.getSource('census-zipcodes').setData(censusData);
+                } else {
+                    map.addSource('census-zipcodes', {
+                        type: 'geojson',
+                        data: censusData
+                    });
+                }
+                
+                // Add or update layers
+                updateCensusLayers();
+                
+                console.log('Census data loaded:', censusData.features.length, 'zipcodes');
+                // Show zipcode info panel when census data is loaded
+                document.getElementById('zipcode-info').style.display = 'block';
+            } catch (error) {
+                console.error('Error loading census data:', error);
+                document.querySelector('.map-overlay p').textContent = 'Error loading census data. Make sure geometry is converted to WKT.';
+            }
+        }
+
+        // Debounce function for viewport updates
+        let viewportUpdateTimeout = null;
+        function debounceViewportUpdate() {
+            if (viewportUpdateTimeout) {
+                clearTimeout(viewportUpdateTimeout);
+            }
+            viewportUpdateTimeout = setTimeout(() => {
+                // Only reload if census layer is visible
+                if (document.getElementById('toggle-census').checked) {
+                    loadCensusData(true);
+                }
+            }, 500); // Wait 500ms after map stops moving
+        }
+
+        // Update census layers with current variable
+        function updateCensusLayers() {
+            if (!censusData || !map.getSource('census-zipcodes')) return;
+
+            const colorScale = getColorScale(currentVariable);
+            
+            // Calculate min/max for the current variable
+            const values = censusData.features
+                .map(f => f.properties[currentVariable])
+                .filter(v => v != null && !isNaN(v));
+            
+            if (values.length === 0) return;
+            
+            const min = Math.min(...values);
+            const max = Math.max(...values);
+
+            // Remove existing layers if they exist
+            if (map.getLayer('census-zipcodes-fill')) {
+                map.removeLayer('census-zipcodes-fill');
+            }
+            if (map.getLayer('census-zipcodes-outline')) {
+                map.removeLayer('census-zipcodes-outline');
+            }
+
+            // Add fill layer
+            map.addLayer({
+                id: 'census-zipcodes-fill',
+                type: 'fill',
+                source: 'census-zipcodes',
+                paint: {
+                    'fill-color': [
+                        'interpolate',
+                        ['linear'],
+                        ['get', currentVariable],
+                        ...colorScale.flat()
+                    ],
+                    'fill-opacity': 0.6
+                }
+            }, 'buildings-3d'); // Insert before buildings
+
+            // Add outline layer
+            map.addLayer({
+                id: 'census-zipcodes-outline',
+                type: 'line',
+                source: 'census-zipcodes',
+                paint: {
+                    'line-color': '#666',
+                    'line-width': 1,
+                    'line-opacity': 0.8
+                }
+            }, 'census-zipcodes-fill');
+
+            // Update legend
+            updateLegend(currentVariable, min, max, colorScale);
+        }
+
+        // Update legend
+        function updateLegend(variable, min, max, colorScale) {
+            const legendTitle = document.getElementById('legend-title');
+            const legendScale = document.getElementById('legend-scale');
+            const legendDiv = document.getElementById('census-legend');
+            
+            legendTitle.textContent = variableNames[variable] || variable;
+            
+            // Create color scale visualization
+            let html = '<div style="display: flex; align-items: center; margin-top: 5px;">';
+            html += '<div style="width: 20px; height: 100px; background: linear-gradient(to top, ';
+            colorScale.forEach(([value, color], i) => {
+                if (i > 0) html += ', ';
+                html += color;
+            });
+            html += '); border: 1px solid #ccc; margin-right: 5px;"></div>';
+            html += '<div style="display: flex; flex-direction: column; justify-content: space-between; height: 100px; font-size: 10px;">';
+            html += `<div>${formatValue(max, variable)}</div>`;
+            html += `<div>${formatValue(min, variable)}</div>`;
+            html += '</div></div>';
+            
+            legendScale.innerHTML = html;
+            legendDiv.style.display = 'block';
+        }
+
+        // Format value based on variable type
+        function formatValue(value, variable) {
+            if (variable === 'B19013_001E' || variable === 'B25077_001E') {
+                return '$' + Math.round(value).toLocaleString();
+            } else if (variable === 'B01001_001E') {
+                return Math.round(value).toLocaleString();
+            } else {
+                return Math.round(value * 10) / 10;
+            }
+        }
+
+        // Handle map load events
+        map.on('load', () => {
+            console.log('Map loaded successfully');
+            
+            // Initialize POI legend panel if POI layer is enabled
+            poiLegendPanel = document.getElementById('poi-legend-panel');
+            poiLegendToggle = document.getElementById('poi-legend-toggle');
+            
+            if (poiLegendToggle && poiLegendPanel) {
+                poiLegendToggle.addEventListener('click', () => {
+                    poiLegendPanel.classList.toggle('collapsed');
+                });
+                
+                // Show legend if POI is already checked
+                if (document.getElementById('toggle-poi').checked) {
+                    poiLegendPanel.style.display = 'block';
+                    setTimeout(() => {
+                        schedulePoiSummaryRefresh(50);
+                    }, 1000);
+                }
+            }
+            document.querySelector('.map-overlay p').textContent = '3D Map loaded - Right-click + drag to rotate, scroll to zoom';
+            
+            // Load census data (load all initially, then use viewport-based on move)
+            loadCensusData(false);
+            
+            // Update census data when viewport changes (debounced)
+            map.on('moveend', debounceViewportUpdate);
+            map.on('zoomend', debounceViewportUpdate);
+            
+            // Terrain settings - set to false to disable terrain entirely
+            const ENABLE_TERRAIN = true;
+            const TERRAIN_EXAGGERATION = 0.1; // Very subtle - just enough to add slight depth
+            
+            // Try to enable terrain after map loads with reduced exaggeration
+            if (ENABLE_TERRAIN) {
+                setTimeout(() => {
+                    try {
+                        const terrainSource = map.getSource('terrain-rgb');
+                        if (terrainSource) {
+                            // Very low exaggeration for realistic appearance - Kansas City is relatively flat
+                            map.setTerrain({
+                                source: 'terrain-rgb',
+                                exaggeration: TERRAIN_EXAGGERATION
+                            });
+                            console.log(`3D terrain enabled with exaggeration: ${TERRAIN_EXAGGERATION}`);
+                        } else {
+                            console.log('Terrain source not available - continuing without terrain');
+                        }
+                    } catch (err) {
+                        console.warn('Could not enable terrain (this is OK):', err.message);
+                    }
+                }, 2000);
+            } else {
+                console.log('Terrain disabled by configuration');
+            }
+            
+            // Sky configuration removed - causing errors and not critical for 3D visualization
+            
+            // Performance monitoring
+            let frameCount = 0;
+            let lastTime = performance.now();
+            
+            const monitorPerformance = () => {
+                frameCount++;
+                const currentTime = performance.now();
+                if (currentTime >= lastTime + 1000) {
+                    const fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
+                    if (fps < 30) {
+                        console.warn(`Low FPS detected: ${fps}. Consider reducing detail or zoom level.`);
+                    }
+                    frameCount = 0;
+                    lastTime = currentTime;
+                }
+                requestAnimationFrame(monitorPerformance);
+            };
+            
+            // Start performance monitoring
+            requestAnimationFrame(monitorPerformance);
+            
+            // Check available source layers and fix layer names if needed
+            const checkSource = (sourceId) => {
+                try {
+                    const source = map.getSource(sourceId);
+                    if (source && source.vectorLayerIds) {
+                        const layers = source.vectorLayerIds;
+                        console.log(`Available layers in ${sourceId}:`, layers);
+                        
+                        // Fix building layer if needed
+                        if (map.getLayer('buildings-3d')) {
+                            if (layers.includes('buildings') && !layers.includes('building')) {
+                                console.log('Switching building layer to "buildings"');
+                                map.setLayoutProperty('buildings-3d', 'source-layer', 'buildings');
+                            }
+                        }
+                        
+                        // Fix other layers if needed
+                        ['water', 'landuse', 'roads', 'poi', 'poi-hit-area', 'poi-labels', 'places'].forEach(layerId => {
+                            if (map.getLayer(layerId)) {
+                                const currentSource = map.getLayer(layerId).source;
+                                if (currentSource === sourceId) {
+                                    // Check if source-layer exists
+                                    const currentSourceLayer = map.getLayer(layerId)['source-layer'];
+                                    if (!layers.includes(currentSourceLayer)) {
+                                        console.warn(`Layer ${layerId} source-layer "${currentSourceLayer}" not found. Available:`, layers);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                } catch (err) {
+                    console.warn(`Could not check source ${sourceId}:`, err.message);
+                }
+            };
+            
+            // Check source after it loads
+            map.on('sourcedata', (e) => {
+                if (e.isSourceLoaded && (e.sourceId === 'kc-enhanced' || e.sourceId === 'ks-mo')) {
+                    const sourceToCheck = e.sourceId === 'kc-enhanced' ? 'kc-enhanced' : 'ks-mo';
+                    checkSource(sourceToCheck);
+                }
+            });
+        });
+
+        // Add keyboard controls for 3D navigation
+        document.addEventListener('keydown', (e) => {
+            const currentPitch = map.getPitch();
+            const currentBearing = map.getBearing();
+            
+            switch(e.key) {
+                case 'ArrowUp':
+                    map.setPitch(Math.min(currentPitch + 5, 60));
+                    break;
+                case 'ArrowDown':
+                    map.setPitch(Math.max(currentPitch - 5, 0));
+                    break;
+                case 'ArrowLeft':
+                    map.setBearing(currentBearing - 15);
+                    break;
+                case 'ArrowRight':
+                    map.setBearing(currentBearing + 15);
+                    break;
+            }
+        });
+
+        // Building hover and click interactivity
+        const buildingInfo = document.getElementById('building-info');
+        const buildingHeightEl = document.getElementById('building-height');
+        const buildingLevelsEl = document.getElementById('building-levels');
+        const buildingTypeEl = document.getElementById('building-type');
+
+        // Change cursor on hover over buildings
+        map.on('mouseenter', 'buildings-3d', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+
+        map.on('mouseleave', 'buildings-3d', () => {
+            map.getCanvas().style.cursor = '';
+            buildingInfo.style.display = 'none';
+        });
+
+        // Show building info on click
+        map.on('click', 'buildings-3d', (e) => {
+            const features = e.features;
+            if (features.length > 0) {
+                const props = features[0].properties;
+                const height = props.render_height || props.height || (props['building:levels'] ? props['building:levels'] * 3 : 'Unknown');
+                const levels = props['building:levels'] || 'Unknown';
+                const type = props.building || props['building:use'] || 'Unknown';
+                
+                buildingHeightEl.textContent = `Height: ${height}${typeof height === 'number' ? 'm' : ''}`;
+                buildingLevelsEl.textContent = `Levels: ${levels}`;
+                buildingTypeEl.textContent = `Type: ${type}`;
+                
+                buildingInfo.style.display = 'block';
+            }
+        });
+
+        // Layer toggles
+        document.getElementById('toggle-buildings').addEventListener('change', (e) => {
+            map.setLayoutProperty('buildings-3d', 'visibility', e.target.checked ? 'visible' : 'none');
+        });
+
+        document.getElementById('toggle-roads').addEventListener('change', (e) => {
+            if (map.getLayer('roads')) {
+                map.setLayoutProperty('roads', 'visibility', e.target.checked ? 'visible' : 'none');
+            }
+        });
+
+        document.getElementById('toggle-water').addEventListener('change', (e) => {
+            if (map.getLayer('water')) {
+                map.setLayoutProperty('water', 'visibility', e.target.checked ? 'visible' : 'none');
+            }
+        });
+
+        document.getElementById('toggle-landuse').addEventListener('change', (e) => {
+            map.setLayoutProperty('landuse', 'visibility', e.target.checked ? 'visible' : 'none');
+        });
+
+        // POI type tracking and filtering
+        let poiTypes = new Set();
+        let poiLegendPanel = null;
+        let poiLegendToggle = null;
+        let poiQueryCenter = null; // Center point for POI queries (map center or clicked point)
+        let poiTypeColors = {
+            'hospital': { color: '#e74c3c', name: 'Hospital' },
+            'clinic': { color: '#c0392b', name: 'Clinic' },
+            'pharmacy': { color: '#e67e22', name: 'Pharmacy' },
+            'restaurant': { color: '#f39c12', name: 'Restaurant' },
+            'cafe': { color: '#f1c40f', name: 'Cafe' },
+            'bar': { color: '#d35400', name: 'Bar' },
+            'hotel': { color: '#3498db', name: 'Hotel' },
+            'school': { color: '#9b59b6', name: 'School' },
+            'university': { color: '#8e44ad', name: 'University' },
+            'parking': { color: '#95a5a6', name: 'Parking' },
+            'gas_station': { color: '#34495e', name: 'Gas Station' },
+            'bank': { color: '#16a085', name: 'Bank' },
+            'atm': { color: '#1abc9c', name: 'ATM' },
+            'shop': { color: '#e91e63', name: 'Shop' },
+            'supermarket': { color: '#c2185b', name: 'Supermarket' },
+            'place_of_worship': { color: '#7f8c8d', name: 'Place of Worship' },
+            'museum': { color: '#27ae60', name: 'Museum' },
+            'theatre': { color: '#2980b9', name: 'Theatre' },
+            'sport': { color: '#2ecc71', name: 'Sport' },
+            'attraction': { color: '#e74c3c', name: 'Attraction' }
+        };
+
+        // POI summary state (robust, server-driven)
+        let poiSummaryCounts = {};
+        let poiSummaryTotal = 0;
+        let poiSummaryAbortController = null;
+        let poiSummaryTimer = null;
+        let poiQueryCenterLocked = false; // Whether center is locked by user click
+
+        function clampPoiZoom(z) {
+            const zi = Math.floor(z);
+            return Math.min(15, Math.max(12, zi));
+        }
+
+        // Get POI query bounds - use visible map bounds or center + radius if locked
+        function getBoundsString() {
+            // Safety check: ensure map is loaded and ready
+            if (!map || !map.loaded() || !map.getBounds) {
+                // Return a default bounds if map isn't ready (shouldn't happen, but safety first)
+                return '-94.6,39.0,-94.5,39.1'; // Default KC bounds
+            }
+            
+            const zoom = map.getZoom();
+            const clampedZoom = clampPoiZoom(zoom);
+            
+            // If center is locked (user clicked), use a radius around that point
+            if (poiQueryCenter && poiQueryCenterLocked) {
+                // Calculate radius based on clamped zoom (matches API zoom)
+                // At zoom 12: ~0.015 degrees (~1.7km)
+                // At zoom 14: ~0.0075 degrees (~830m)
+                // At zoom 15: ~0.005 degrees (~555m)
+                const radius = Math.max(0.003, 0.03 / Math.pow(2, clampedZoom - 12));
+                return `${poiQueryCenter.lng - radius},${poiQueryCenter.lat - radius},${poiQueryCenter.lng + radius},${poiQueryCenter.lat + radius}`;
+            }
+            
+            // Otherwise, use the visible map bounds (expanded slightly for better coverage)
+            try {
+                const bounds = map.getBounds();
+                const ne = bounds.getNorthEast();
+                const sw = bounds.getSouthWest();
+                
+                // Expand bounds slightly (5% padding) to ensure we capture POIs near edges
+                const lngPadding = (ne.lng - sw.lng) * 0.05;
+                const latPadding = (ne.lat - sw.lat) * 0.05;
+                
+                return `${sw.lng - lngPadding},${sw.lat - latPadding},${ne.lng + lngPadding},${ne.lat + latPadding}`;
+            } catch (error) {
+                console.warn('Error getting map bounds, using default:', error);
+                // Fallback to default bounds if getBounds() fails
+                return '-94.6,39.0,-94.5,39.1';
+            }
+        }
+
+        // Refresh POI summary when map changes (debounced)
+        // Use a single handler to avoid race conditions
+        let poiSummaryRefreshScheduled = false;
+        
+        function schedulePoiSummaryRefreshOnce(delay = 300) {
+            if (poiSummaryRefreshScheduled) return;
+            poiSummaryRefreshScheduled = true;
+            
+            if (poiSummaryTimer) clearTimeout(poiSummaryTimer);
+            poiSummaryTimer = setTimeout(() => {
+                poiSummaryRefreshScheduled = false; // Always reset flag, even on error
+                try {
+                    if (document.getElementById('toggle-poi')?.checked) {
+                        // Reset to map bounds if not locked by user click
+                        if (!poiQueryCenterLocked) {
+                            poiQueryCenter = null; // Will use visible map bounds
+                        }
+                        refreshPoiSummary().catch(err => {
+                            console.warn('Error in refreshPoiSummary:', err);
+                        });
+                    }
+                } catch (error) {
+                    console.warn('Error in schedulePoiSummaryRefreshOnce:', error);
+                }
+            }, delay);
+        }
+
+        // Legacy function - kept for backward compatibility with existing calls
+        function schedulePoiSummaryRefresh(delay = 250) {
+            schedulePoiSummaryRefreshOnce(delay);
+        }
+
+        async function refreshPoiSummary() {
+            // Safety checks: ensure map and source exist
+            if (!map || !map.getSource) {
+                return;
+            }
+            
+            try {
+                if (!map.getSource('kc-enhanced')) {
+                    return;
+                }
+            } catch (e) {
+                // Source not ready yet
+                return;
+            }
+
+            const zoom = map.getZoom();
+            if (zoom < 12) {
+                poiSummaryCounts = {};
+                poiSummaryTotal = 0;
+                poiTypes.clear();
+                updatePoiFilter();
+                updateFloatingPoiLegend();
+                return;
+            }
+
+            // Abort any in-flight request
+            if (poiSummaryAbortController) {
+                try { poiSummaryAbortController.abort(); } catch (e) { /* ignore */ }
+            }
+            poiSummaryAbortController = new AbortController();
+
+            try {
+                const clampedZoom = clampPoiZoom(zoom);
+                const params = new URLSearchParams({
+                    bounds: getBoundsString(),
+                    source: 'kc-enhanced',
+                    zoom: String(clampedZoom),
+                    summary: 'class'
+                });
+
+                const response = await fetch(`/api/v1/osm/poi?${params.toString()}`, {
+                    signal: poiSummaryAbortController.signal
+                });
+
+                if (!response.ok) {
+                    throw new Error(`POI summary request failed: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Preferred: server-side summary response
+                if (data && data.counts && typeof data.counts === 'object') {
+                    poiSummaryCounts = data.counts || {};
+                    poiSummaryTotal = data.total || 0;
+                } else if (data && Array.isArray(data.features)) {
+                    // Backward-compatible: full FeatureCollection response
+                    poiSummaryCounts = {};
+                    poiSummaryTotal = 0;
+                    data.features.forEach(f => {
+                        const cls = f?.properties?.class;
+                        if (cls != null && cls !== '') {
+                            poiSummaryCounts[cls] = (poiSummaryCounts[cls] || 0) + 1;
+                            poiSummaryTotal += 1;
+                        }
+                    });
+                } else {
+                    poiSummaryCounts = {};
+                    poiSummaryTotal = 0;
+                }
+
+                poiTypes.clear();
+                Object.keys(poiSummaryCounts).forEach(k => {
+                    if (k != null && k !== '') poiTypes.add(k);
+                });
+
+                // Update UI immediately
+                updatePoiFilter();
+                updateFloatingPoiLegend();
+
+                // Final fallback: if API returns nothing but POIs are clearly rendered, count from rendered features
+                if (poiSummaryTotal === 0) {
+                    const rendered = map.queryRenderedFeatures({ layers: ['poi'] }) || [];
+                    if (rendered.length > 0) {
+                        poiSummaryCounts = {};
+                        poiSummaryTotal = 0;
+                        rendered.forEach(f => {
+                            const cls = f?.properties?.class;
+                            if (cls != null && cls !== '') {
+                                poiSummaryCounts[cls] = (poiSummaryCounts[cls] || 0) + 1;
+                                poiSummaryTotal += 1;
+                            }
+                        });
+                        poiTypes.clear();
+                        Object.keys(poiSummaryCounts).forEach(k => {
+                            if (k != null && k !== '') poiTypes.add(k);
+                        });
+                        updatePoiFilter();
+                        updateFloatingPoiLegend();
+                    }
+                }
+            } catch (error) {
+                if (error?.name === 'AbortError') return;
+                console.warn('Error fetching POI summary:', error);
+                // Fallback: keep previous summary rather than wiping UI
+            }
+        }
+
+        // Update POI filter dropdown
+        function updatePoiFilter() {
+            const filterSelect = document.getElementById('poi-filter');
+            const currentValue = filterSelect.value;
+            
+            // Clear existing options except "All"
+            filterSelect.innerHTML = '<option value="all">All POI Types</option>';
+            
+            // Add options for each POI type found
+            Array.from(poiTypes).sort().forEach(poiClass => {
+                const option = document.createElement('option');
+                option.value = poiClass;
+                const displayName = poiTypeColors[poiClass]?.name || poiClass.charAt(0).toUpperCase() + poiClass.slice(1).replace(/_/g, ' ');
+                option.textContent = displayName;
+                filterSelect.appendChild(option);
+            });
+            
+            // Restore previous selection if it still exists
+            if (currentValue && Array.from(poiTypes).includes(currentValue)) {
+                filterSelect.value = currentValue;
+            }
+            
+            updatePoiLegend();
+        }
+
+        // Update POI legend (both in controls and floating panel)
+        function updatePoiLegend() {
+            // Update the small legend in controls panel
+            const legendContainer = document.getElementById('poi-legend-items');
+            if (legendContainer) {
+                legendContainer.innerHTML = '';
+                
+                const selectedType = document.getElementById('poi-filter').value;
+                const typesToShow = selectedType === 'all' ? Array.from(poiTypes) : [selectedType];
+                
+                typesToShow.forEach(poiClass => {
+                    const color = poiTypeColors[poiClass]?.color || '#ff6b6b';
+                    const name = poiTypeColors[poiClass]?.name || poiClass.charAt(0).toUpperCase() + poiClass.slice(1).replace(/_/g, ' ');
+                    
+                    const item = document.createElement('div');
+                    item.style.marginBottom = '3px';
+                    item.innerHTML = `<span style="display: inline-block; width: 12px; height: 12px; background: ${color}; border: 1px solid #fff; border-radius: 50%; margin-right: 5px;"></span>${name}`;
+                    legendContainer.appendChild(item);
+                });
+            }
+            
+            // Update the floating legend panel
+            updateFloatingPoiLegend();
+        }
+        
+        // Update floating POI legend panel (render-only, uses server summary)
+        function updateFloatingPoiLegend() {
+            const legendContent = document.getElementById('poi-legend-content');
+            if (!legendContent) return;
+            
+            const zoom = map.getZoom();
+            if (zoom < 12) {
+                legendContent.innerHTML = '<div class="poi-legend-empty">Zoom in to level 12+ to see POIs</div>';
+                return;
+            }
+            
+            if (!poiSummaryCounts || Object.keys(poiSummaryCounts).length === 0) {
+                legendContent.innerHTML = '<div class="poi-legend-empty">No POI types found in this area</div>';
+                return;
+            }
+            
+            // Sort POI types by count (descending), then alphabetically
+            const selectedType = document.getElementById('poi-filter')?.value || 'all';
+            const types = selectedType === 'all' ? Object.keys(poiSummaryCounts) : [selectedType];
+
+            const sortedTypes = types.sort((a, b) => {
+                const countDiff = (poiSummaryCounts[b] || 0) - (poiSummaryCounts[a] || 0);
+                if (countDiff !== 0) return countDiff;
+                return a.localeCompare(b);
+            });
+            
+            legendContent.innerHTML = '';
+            
+            sortedTypes.forEach(poiClass => {
+                const color = poiTypeColors[poiClass]?.color || '#ff6b6b';
+                const name = poiTypeColors[poiClass]?.name || poiClass.charAt(0).toUpperCase() + poiClass.slice(1).replace(/_/g, ' ');
+                const count = poiSummaryCounts[poiClass] || 0;
+                
+                const item = document.createElement('div');
+                item.className = 'poi-legend-item';
+                item.innerHTML = `
+                    <div class="poi-legend-color" style="background: ${color};"></div>
+                    <span class="poi-legend-name">${name}</span>
+                    ${count > 0 ? `<span class="poi-legend-count">(${count})</span>` : ''}
+                `;
+                legendContent.appendChild(item);
+            });
+        }
+        
+        // Toggle floating legend panel (variables already initialized in map.on('load'))
+
+        // Apply POI filter
+        function applyPoiFilter() {
+            const selectedType = document.getElementById('poi-filter').value;
+            
+            if (selectedType === 'all') {
+                // Show all POIs
+                map.setFilter('poi', null);
+                map.setFilter('poi-hit-area', null);
+            } else {
+                // Filter by selected type
+                map.setFilter('poi', ['==', ['get', 'class'], selectedType]);
+                map.setFilter('poi-hit-area', ['==', ['get', 'class'], selectedType]);
+            }
+            
+            updatePoiLegend();
+            // Re-render legend based on selection (counts already fetched)
+            updateFloatingPoiLegend();
+        }
+
+        document.getElementById('toggle-poi').addEventListener('change', (e) => {
+            const visible = e.target.checked ? 'visible' : 'none';
+            if (map.getLayer('poi')) {
+                map.setLayoutProperty('poi', 'visibility', visible);
+            }
+            if (map.getLayer('poi-hit-area')) {
+                map.setLayoutProperty('poi-hit-area', 'visibility', visible);
+            }
+            if (map.getLayer('poi-labels')) {
+                map.setLayoutProperty('poi-labels', 'visibility', visible);
+            }
+            
+            // Show/hide POI controls
+            document.getElementById('poi-controls').style.display = e.target.checked ? 'block' : 'none';
+            
+            // Show/hide floating legend panel
+            poiLegendPanel.style.display = e.target.checked ? 'block' : 'none';
+            
+            // Refresh POI summary when layer is enabled
+            if (e.target.checked) {
+                schedulePoiSummaryRefresh(200);
+            } else {
+                // Clear legend when disabled
+                document.getElementById('poi-legend-content').innerHTML = '<div class="poi-legend-empty">POI layer disabled</div>';
+            }
+        });
+
+        // POI filter change handler
+        document.getElementById('poi-filter').addEventListener('change', applyPoiFilter);
+        
+        // Update legend counts when map moves or zooms (consolidated handlers)
+        // These handlers are safe - refreshPoiSummary() has its own safety checks
+        map.on('idle', () => {
+            schedulePoiSummaryRefreshOnce(200);
+        });
+        
+        map.on('moveend', () => {
+            schedulePoiSummaryRefreshOnce(300);
+        });
+        
+        map.on('zoomend', () => {
+            schedulePoiSummaryRefreshOnce(350);
+        });
+        
+        // Also update when data loads
+        map.on('sourcedata', (e) => {
+            if (e.isSourceLoaded && e.sourceId === 'kc-enhanced' && document.getElementById('toggle-poi')?.checked) {
+                schedulePoiSummaryRefreshOnce(150);
+            }
+        });
+
+        document.getElementById('toggle-places').addEventListener('change', (e) => {
+            if (map.getLayer('places')) {
+                map.setLayoutProperty('places', 'visibility', e.target.checked ? 'visible' : 'none');
+            }
+        });
+
+        // Census layer toggle
+        document.getElementById('toggle-census').addEventListener('change', (e) => {
+            const visible = e.target.checked ? 'visible' : 'none';
+            if (map.getLayer('census-zipcodes-fill')) {
+                map.setLayoutProperty('census-zipcodes-fill', 'visibility', visible);
+            }
+            if (map.getLayer('census-zipcodes-outline')) {
+                map.setLayoutProperty('census-zipcodes-outline', 'visibility', visible);
+            }
+            document.getElementById('census-controls').style.display = e.target.checked ? 'block' : 'none';
+            document.getElementById('census-legend').style.display = e.target.checked ? 'block' : 'none';
+            // Keep zipcode info panel visible even if census layer is toggled off
+        });
+
+        // Census variable selector
+        document.getElementById('census-variable').addEventListener('change', (e) => {
+            currentVariable = e.target.value;
+            updateCensusLayers();
+        });
+
+        // POI/Place popup for detailed info
+        const featurePopup = new maplibregl.Popup({
+            closeButton: true,
+            closeOnClick: false
+        });
+
+        // Zipcode info panel elements
+        const zipcodeInfoPanel = document.getElementById('zipcode-info');
+        const zipcodeTitle = document.getElementById('zipcode-title');
+        const zipcodeDetails = document.getElementById('zipcode-details');
+
+        // Function to update zipcode info panel
+        function updateZipcodeInfo(props) {
+            if (!props || !props.ZIPCODE) {
+                zipcodeInfoPanel.style.display = 'none';
+                return;
+            }
+
+            const zipcode = props.ZIPCODE;
+            zipcodeTitle.textContent = `Zipcode: ${zipcode}`;
+            
+            let html = '';
+            
+            // Show key statistics
+            if (props.B01001_001E != null) {
+                html += `<div style="margin-bottom: 4px;"><strong>Population:</strong> ${Math.round(props.B01001_001E).toLocaleString()}</div>`;
+            }
+            if (props.B19013_001E != null) {
+                html += `<div style="margin-bottom: 4px;"><strong>Median Income:</strong> $${Math.round(props.B19013_001E).toLocaleString()}</div>`;
+            }
+            if (props.B25077_001E != null) {
+                html += `<div style="margin-bottom: 4px;"><strong>Median Home Value:</strong> $${Math.round(props.B25077_001E).toLocaleString()}</div>`;
+            }
+            if (props.B01002_001E != null) {
+                html += `<div style="margin-bottom: 4px;"><strong>Median Age:</strong> ${Math.round(props.B01002_001E * 10) / 10} years</div>`;
+            }
+            if (props.B25003_002E != null && props.B25003_001E != null) {
+                const ownerPct = (props.B25003_002E / props.B25003_001E * 100).toFixed(1);
+                html += `<div style="margin-bottom: 4px;"><strong>Owner Occupied:</strong> ${ownerPct}%</div>`;
+            }
+            
+            if (!html) {
+                html = '<div style="font-style: italic; color: #999;">No data available</div>';
+            }
+            
+            zipcodeDetails.innerHTML = html;
+            zipcodeInfoPanel.style.display = 'block';
+        }
+
+        // Function to show POI info (shared between handlers)
+        function showPoiInfo(e) {
+            // MapLibre events don't have preventDefault/stopPropagation
+            // Check if features exist
+            if (!e.features || e.features.length === 0) {
+                return;
+            }
+            
+            const props = e.features[0].properties;
+            const name = props.name || 'Unnamed POI';
+            const poiClass = props.class || 'Unknown';
+            const subclass = props.subclass || '';
+            
+            let html = `<div style="font-weight: bold; margin-bottom: 8px;">${name}</div>`;
+            html += '<div style="font-size: 12px; line-height: 1.6;">';
+            html += `<div><strong>Type:</strong> ${poiClass}${subclass ? ` (${subclass})` : ''}</div>`;
+            if (props.rank) {
+                html += `<div><strong>Rank:</strong> ${props.rank}</div>`;
+            }
+            html += '</div>';
+            
+            featurePopup.setLngLat(e.lngLat)
+                .setHTML(html)
+                .addTo(map);
+            
+            // Also update zipcode info if available at this location
+            const censusFeatures = map.queryRenderedFeatures(e.point, {
+                layers: ['census-zipcodes-fill']
+            });
+            if (censusFeatures.length > 0) {
+                updateZipcodeInfo(censusFeatures[0].properties);
+            }
+        }
+
+        // Show POI information on click - use hit area layer for easier clicking
+        map.on('click', 'poi-hit-area', (e) => {
+            showPoiInfo(e);
+            // Update query center to clicked POI location and lock it
+            poiQueryCenter = e.lngLat;
+            poiQueryCenterLocked = true;
+            // Refresh legend with new center
+            schedulePoiSummaryRefresh(100);
+        });
+        
+        // Fallback: also handle clicks on the visible POI layer
+        map.on('click', 'poi', (e) => {
+            showPoiInfo(e);
+            // Update query center to clicked POI location and lock it
+            poiQueryCenter = e.lngLat;
+            poiQueryCenterLocked = true;
+            // Refresh legend with new center
+            schedulePoiSummaryRefresh(100);
+        });
+        
+        // Allow clicking on map to set query center
+        // Double-click to unlock and return to using visible bounds
+        let lastClickTime = 0;
+        map.on('click', (e) => {
+            const now = Date.now();
+            const isDoubleClick = (now - lastClickTime) < 300;
+            lastClickTime = now;
+            
+            // Double-click unlocks and returns to visible bounds
+            if (isDoubleClick && poiQueryCenterLocked) {
+                poiQueryCenterLocked = false;
+                poiQueryCenter = null;
+                if (document.getElementById('toggle-poi')?.checked) {
+                    schedulePoiSummaryRefreshOnce(100);
+                }
+                return;
+            }
+            
+            // Only set center if not clicking on a POI, place, or building
+            const features = map.queryRenderedFeatures(e.point, {
+                layers: ['poi', 'poi-hit-area', 'places', 'buildings-3d', 'census-zipcodes-fill']
+            });
+            
+            const hasPoiPlace = features.some(f => 
+                f.layer.id === 'poi' || 
+                f.layer.id === 'poi-hit-area' || 
+                f.layer.id === 'places'
+            );
+            
+            if (!hasPoiPlace) {
+                // Clicked on empty space or non-POI feature - set new query center and lock it
+                poiQueryCenter = e.lngLat;
+                poiQueryCenterLocked = true;
+                if (document.getElementById('toggle-poi')?.checked) {
+                    schedulePoiSummaryRefreshOnce(100);
+                }
+            }
+        });
+
+        // Show place information on click
+        map.on('click', 'places', (e) => {
+            // Check if features exist
+            if (!e.features || e.features.length === 0) {
+                return;
+            }
+            
+            const props = e.features[0].properties;
+            const name = props.name || 'Unnamed Place';
+            const placeClass = props.class || 'Unknown';
+            const rank = props.rank || '';
+            
+            let html = `<div style="font-weight: bold; margin-bottom: 8px;">${name}</div>`;
+            html += '<div style="font-size: 12px; line-height: 1.6;">';
+            html += `<div><strong>Type:</strong> ${placeClass}</div>`;
+            if (rank) {
+                html += `<div><strong>Rank:</strong> ${rank}</div>`;
+            }
+            html += '</div>';
+            
+            featurePopup.setLngLat(e.lngLat)
+                .setHTML(html)
+                .addTo(map);
+            
+            // Also update zipcode info if available at this location
+            const censusFeatures = map.queryRenderedFeatures(e.point, {
+                layers: ['census-zipcodes-fill']
+            });
+            if (censusFeatures.length > 0) {
+                updateZipcodeInfo(censusFeatures[0].properties);
+            }
+        });
+
+        // Change cursor on POI/place hover (use hit area for better detection)
+        map.on('mouseenter', 'poi-hit-area', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+        map.on('mouseleave', 'poi-hit-area', () => {
+            map.getCanvas().style.cursor = '';
+        });
+        
+        // Also handle visible POI layer for hover feedback
+        map.on('mouseenter', 'poi', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+        map.on('mouseleave', 'poi', () => {
+            map.getCanvas().style.cursor = '';
+        });
+
+        map.on('mouseenter', 'places', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+        map.on('mouseleave', 'places', () => {
+            map.getCanvas().style.cursor = '';
+        });
+
+        // Update zipcode info on hover over census areas
+        map.on('mousemove', 'census-zipcodes-fill', (e) => {
+            if (e.features && e.features.length > 0) {
+                updateZipcodeInfo(e.features[0].properties);
+            }
+        });
+
+        // Update zipcode info on click (but don't show popup, let POI/places handle their own)
+        map.on('click', 'census-zipcodes-fill', (e) => {
+            // Only update if we didn't click on a POI or place
+            const poiFeatures = map.queryRenderedFeatures(e.point, {
+                layers: ['poi', 'poi-hit-area', 'places']
+            });
+            
+            if (poiFeatures.length === 0 && e.features && e.features.length > 0) {
+                updateZipcodeInfo(e.features[0].properties);
+            }
+        });
+
+        // Hide zipcode info when mouse leaves census area
+        map.on('mouseleave', 'census-zipcodes-fill', () => {
+            // Keep the info visible after click, only hide on mouseleave if not clicked
+            // We'll handle this with a flag or just leave it visible
+        });
+
+        // Change cursor on hover
+        map.on('mouseenter', 'census-zipcodes-fill', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+
+        // Update zipcode info when clicking anywhere on the map (if census data is available)
+        // This is a fallback for clicks that don't hit specific features
+        map.on('click', (e) => {
+            // Check if we clicked on a POI, place, or building first
+            const featureLayers = map.queryRenderedFeatures(e.point, {
+                layers: ['poi', 'poi-hit-area', 'places', 'buildings-3d', 'census-zipcodes-fill']
+            });
+            
+            // If we clicked on a census area and not on POI/place/building, update zipcode info
+            const censusFeature = featureLayers.find(f => f.layer.id === 'census-zipcodes-fill');
+            const hasPoiPlace = featureLayers.some(f => f.layer.id === 'poi' || f.layer.id === 'poi-hit-area' || f.layer.id === 'places' || f.layer.id === 'buildings-3d');
+            
+            if (censusFeature && !hasPoiPlace) {
+                updateZipcodeInfo(censusFeature.properties);
+            }
+        });
+
+        // Update zipcode info on mouse move (optional - can be removed if too frequent)
+        let zipcodeHoverTimeout;
+        map.on('mousemove', (e) => {
+            // Only update on hover if census layer is visible and we're not over POI/places
+            if (!map.getLayer('census-zipcodes-fill') || 
+                map.getLayoutProperty('census-zipcodes-fill', 'visibility') === 'none') {
+                return;
+            }
+
+            // Debounce the hover updates
+            clearTimeout(zipcodeHoverTimeout);
+            zipcodeHoverTimeout = setTimeout(() => {
+                const features = map.queryRenderedFeatures(e.point, {
+                    layers: ['census-zipcodes-fill']
+                });
+                
+                if (features.length > 0) {
+                    updateZipcodeInfo(features[0].properties);
+                }
+            }, 100); // 100ms debounce
+        });
+
+        // Address search functionality using Nominatim
+        const searchInput = document.getElementById('address-search');
+        const searchResults = document.getElementById('search-results');
+        const searchLoading = document.getElementById('search-loading');
+        let searchTimeout;
+        let currentMarker = null;
+
+        // Create a marker for search results
+        const createMarker = (lng, lat) => {
+            // Remove existing marker
+            if (currentMarker) {
+                currentMarker.remove();
+            }
+            
+            // Create new marker
+            const el = document.createElement('div');
+            el.className = 'search-marker';
+            el.style.width = '20px';
+            el.style.height = '20px';
+            el.style.borderRadius = '50%';
+            el.style.backgroundColor = '#ff6b6b';
+            el.style.border = '3px solid white';
+            el.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)';
+            el.style.cursor = 'pointer';
+            
+            currentMarker = new maplibregl.Marker({ element: el })
+                .setLngLat([lng, lat])
+                .addTo(map);
+            
+            return currentMarker;
+        };
+
+        // Geocode address using Nominatim
+        const searchAddress = async (query) => {
+            if (!query || query.length < 3) {
+                searchResults.style.display = 'none';
+                return;
+            }
+
+            searchLoading.style.display = 'block';
+            searchResults.style.display = 'none';
+            searchResults.innerHTML = '';
+
+            try {
+                // Use Nominatim geocoding API (free, open source)
+                const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&bounded=1&viewbox=-95.0,38.8,-94.2,39.3`;
+                
+                const response = await fetch(url, {
+                    headers: {
+                        'User-Agent': 'KansasCity3DMap/1.0' // Required by Nominatim
+                    }
+                });
+                
+                const data = await response.json();
+                searchLoading.style.display = 'none';
+
+                if (data.length === 0) {
+                    searchResults.innerHTML = '<div class="search-result-item" style="color: #999;">No results found</div>';
+                    searchResults.style.display = 'block';
+                    return;
+                }
+
+                // Display results
+                data.forEach((result, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'search-result-item';
+                    item.textContent = result.display_name;
+                    item.onclick = () => {
+                        const lng = parseFloat(result.lon);
+                        const lat = parseFloat(result.lat);
+                        
+                        // Create marker
+                        createMarker(lng, lat);
+                        
+                        // Fly to location
+                        map.flyTo({
+                            center: [lng, lat],
+                            zoom: 16,
+                            pitch: 45,
+                            duration: 2000
+                        });
+                        
+                        // Hide results
+                        searchResults.style.display = 'none';
+                        searchInput.value = result.display_name;
+                    };
+                    searchResults.appendChild(item);
+                });
+
+                searchResults.style.display = 'block';
+            } catch (error) {
+                console.error('Geocoding error:', error);
+                searchLoading.style.display = 'none';
+                searchResults.innerHTML = '<div class="search-result-item" style="color: #ff6b6b;">Error searching. Please try again.</div>';
+                searchResults.style.display = 'block';
+            }
+        };
+
+        // Debounced search
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            const query = e.target.value.trim();
+            
+            if (query.length < 3) {
+                searchResults.style.display = 'none';
+                return;
+            }
+            
+            searchTimeout = setTimeout(() => {
+                searchAddress(query);
+            }, 500); // Wait 500ms after user stops typing
+        });
+
+        // Clear results when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-box')) {
+                searchResults.style.display = 'none';
+            }
+        });
+
+        // Handle Enter key
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const query = searchInput.value.trim();
+                if (query.length >= 3) {
+                    searchAddress(query);
+                }
+            }
+        });
+
+        // Optimize rendering during camera movements
+        map.on('movestart', () => {
+            // Reduce detail during movement for better performance
+            if (map.getLayer('buildings-3d')) {
+                map.setPaintProperty('buildings-3d', 'fill-extrusion-opacity', 0.7);
+            }
+        });
+
+        map.on('moveend', () => {
+            // Restore full detail when movement stops
+            if (map.getLayer('buildings-3d')) {
+                map.setPaintProperty('buildings-3d', 'fill-extrusion-opacity', 0.9);
+            }
+        });
+
+        map.on('error', (e) => {
+            console.error('Map error:', e);
+            console.error('Error type:', e.type);
+            console.error('Error error:', e.error);
+            if (e.error) {
+                console.error('Error message:', e.error.message);
+                console.error('Error stack:', e.error.stack);
+            }
+            // Try to get more details
+            try {
+                console.error('Full error object:', JSON.stringify(e, Object.getOwnPropertyNames(e), 2));
+            } catch (err) {
+                console.error('Could not stringify error:', err);
+            }
+            const errorMsg = e.error ? (e.error.message || String(e.error)) : (e.message || 'Unknown error');
+            const overlay = document.querySelector('.map-overlay p');
+            if (overlay) {
+                overlay.textContent = `Error: ${errorMsg.substring(0, 100)}. Check console.`;
+            }
+        });
+
+        // Handle source errors more gracefully
+        map.on('sourcedata', (e) => {
+            if (e.isSourceLoaded && e.sourceId === 'terrain-rgb' && e.tile) {
+                // Terrain tile loaded successfully
+            }
+        });
+
+        map.on('data', (e) => {
+            if (e.isSourceLoaded && e.source && e.source.type === 'raster-dem') {
+                // Terrain source loaded
+                console.log('Terrain source loaded');
+            }
+        });
+    </script>
+</body>
+</html>
+
+

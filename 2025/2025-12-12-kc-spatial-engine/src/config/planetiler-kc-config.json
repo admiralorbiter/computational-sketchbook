@@ -1,0 +1,24 @@
+{
+  "description": "Kansas City metro area enhanced processing configuration for Planetiler",
+  "bounds": {
+    "minLon": -95.2,
+    "minLat": 38.8,
+    "maxLon": -94.0,
+    "maxLat": 39.5
+  },
+  "processing": {
+    "maxzoom": 15,
+    "minzoom": 0,
+    "buildingHeightDefaults": {
+      "residential": 8,
+      "commercial": 15,
+      "industrial": 12,
+      "retail": 10,
+      "office": 20,
+      "default": 8
+    }
+  },
+  "notes": "This configuration is used with Planetiler's OpenMapTiles profile.",
+  "command": "java -jar data/planetiler.jar --osm-path=data/ks-mo.osm.pbf --output=data/processed/tiles/kc-enhanced.mbtiles --bounds=-95.2,38.8,-94.0,39.5 --download --maxzoom=15"
+}
+

@@ -1,0 +1,29 @@
+{
+  "name": "maplibre-osm-mvp",
+  "version": "1.0.0",
+  "description": "MVP for displaying OSM PBF data using MapLibre GL JS",
+  "main": "src/server/index.js",
+  "scripts": {
+    "start": "node src/server/index.js",
+    "dev": "node src/server/index.js"
+  },
+  "keywords": [
+    "maplibre",
+    "osm",
+    "map",
+    "tileserver"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mapbox/mbtiles": "^0.12.1",
+    "@mapbox/vector-tile": "^2.0.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.18.2",
+    "pbf": "^4.0.1"
+  },
+  "optionalDependencies": {
+    "better-sqlite3": "^9.2.2"
+  }
+}
