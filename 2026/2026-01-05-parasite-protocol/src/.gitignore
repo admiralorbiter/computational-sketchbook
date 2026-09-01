@@ -1,0 +1,88 @@
+# Rust build artifacts
+/target/
+**/*.rs.bk
+*.pdb
+
+# Cargo
+# Uncomment if you want to ignore Cargo.lock for libraries
+# For binaries, Cargo.lock is usually committed
+# Cargo.lock
+
+# IDE - Visual Studio Code
+.vscode/
+*.code-workspace
+
+# IDE - RustRover / IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# IDE - Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# IDE - Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# OS - Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# OS - macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# OS - Linux
+*~
+.directory
+.Trash-*
+
+# Editor backup files
+*~
+*.swp
+*.swo
+*#
+.#*
+
+# Debugging
+*.pdb
+*.dSYM/
+
+# Profiling
+*.profdata
+perf.data*
+
+# Bevy specific (if any)
+# Bevy hot-reload can create these
+*.hot-reload
+
+# Asset pipeline artifacts (if you add asset processing)
+# Uncomment and add as needed
+# /assets/processed/
+# /assets/cache/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Environment variables
+.env
+.env.local
+
+# Generated documentation (if you don't want to commit it)
+# /target/doc/
+
