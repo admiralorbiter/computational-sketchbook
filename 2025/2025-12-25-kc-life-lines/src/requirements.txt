@@ -1,0 +1,22 @@
+# Core data processing
+pandas>=2.0.0
+geopandas>=0.14.0
+pyarrow>=14.0.0
+fastparquet>=2023.10.0
+
+# API and HTTP requests
+requests>=2.31.0
+
+# Configuration management
+python-dotenv>=1.0.0
+pyyaml>=6.0
+
+# Geospatial operations
+shapely>=2.0.0
+fiona>=1.9.0
+
+# Optional: Fast analytics
+# duckdb>=0.9.0
+
+# Utilities
+tqdm>=4.66.0
