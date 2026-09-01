@@ -1,0 +1,19 @@
+{
+  "id": "neon-chalkboard",
+  "name": "Neon Chalkboard",
+  "description": "Neon green and cyan accents on dark background",
+  "colors": {
+    "bg_color": "#0f1115",
+    "fg_color": "#F4F4F4",
+    "accent_green": "#39FF14",
+    "accent_cyan": "#00E5FF",
+    "card_bg": "#1a1d24",
+    "border_color": "#2a2d35"
+  },
+  "fonts": {
+    "heading": "Arial, sans-serif",
+    "body": "Arial, sans-serif",
+    "mono": "'Courier New', monospace"
+  }
+}
+

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeTime - Show View</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        #show-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+        
+        #fps-counter {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #39FF14;
+            border-radius: 4px;
+            color: #39FF14;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        
+        #error-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 30px;
+            background: rgba(255, 68, 68, 0.9);
+            border: 2px solid #FF4444;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            z-index: 2000;
+            text-align: center;
+            display: none;
+            max-width: 80%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        #error-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="show-canvas"></canvas>
+    <div id="fps-counter">FPS: --</div>
+    <div id="error-message"></div>
+    
+    <!-- Socket.io client from CDN -->
+    <script type="module" src="https://cdn.socket.io/4.5.4/socket.io.esm.min.js"></script>
+    <!-- Main controller -->
+    <script type="module" src="/static/show/show.js"></script>
+</body>
+</html>
+

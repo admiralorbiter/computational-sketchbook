@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrimeTime - Operator UI</title>
+    <link rel="stylesheet" href="/static/operator/styles/main.css">
+</head>
+<body>
+    <main class="container">
+        <h1>PrimeTime Operator UI</h1>
+        
+        <div class="layout-wrapper">
+            <div class="controls-section">
+                <welcome-card 
+                    title="Welcome to PrimeTime"
+                    message="The show control system is ready. WebSocket connection will be established automatically.">
+                </welcome-card>
+                
+                <div class="connection-panel">
+                    <div id="status" class="status-indicator">
+                        <span id="connection-status">Connecting...</span>
+                    </div>
+                    <div class="test-connection">
+                        <button id="test-connection-btn" class="btn btn-primary">Test Connection</button>
+                        <div id="ping-result" class="ping-result"></div>
+                    </div>
+                </div>
+                
+                <preset-selector></preset-selector>
+                <scene-controls></scene-controls>
+            </div>
+            
+            <div class="preview-section">
+                <div class="preview-panel">
+                    <div class="preview-header">
+                        <h2>Show Preview</h2>
+                        <button id="toggle-fullscreen-btn" class="btn btn-small">Toggle Fullscreen</button>
+                    </div>
+                    <div class="preview-container">
+                        <iframe id="show-preview" src="/show" frameborder="0"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Socket.io client from CDN -->
+    <script type="module" src="https://cdn.socket.io/4.5.4/socket.io.esm.min.js"></script>
+    <!-- Web Components -->
+    <script type="module" src="/static/operator/components/welcome-card.js"></script>
+    <script type="module" src="/static/operator/components/preset-selector.js"></script>
+    <script type="module" src="/static/operator/components/scene-controls.js"></script>
+    <!-- Main controller -->
+    <script type="module" src="/static/operator/operator.js"></script>
+</body>
+</html>
+
