@@ -1,4 +1,4 @@
-﻿# Catalog of Consolidated Experiments
+# Catalog of Consolidated Experiments
 
 | Date | Slug | Domain / Tech | Original Repo | Summary |
 | :--- | :--- | :--- | :--- | :--- |
@@ -41,3 +41,4 @@
 | **2026-08-01** | `2026-08-01-spherical-maze-lab` | Math Game / Non-Euclidean $S^2$ / Pygame | `the_x_files/non-euclidean-geo` | Interactive spherical geometry maze rotating the $S^2$ sphere via azimuthal projection underneath a fixed player observer. |
 | **2026-08-01** | `2026-08-01-the-binary-house` | Math Game / 2-Adic Ultrametric / Pygame | `the_x_files/binary-house` | Stealth puzzle game where movement, stealth, and room connectivity are governed by 2-adic / ultrametric tree ancestry rather than Euclidean distance. |
 | **2026-08-01** | `2026-08-01-momentum-maze` | Physics Game / Phase Space $(x, p)$ / Pygame | `the_x_files/momentum-maze` | Interactive phase-portrait maze navigating position and momentum under Hamiltonian vector fields. |
+| **2026-09-04** | `2026-09-04-kc-concentric-gastronomy` | Geospatial / Gastronomy / Canvas / Chart.js | `computational-sketchbook` | Spatial dining decision explorer centered at 1609 E 75th Terrace categorizing 42 South KC restaurants across 3 concentric distance zones, featuring a custom Canvas radar, craving randomizer, Chart.js analytics, and local storage hit list. |

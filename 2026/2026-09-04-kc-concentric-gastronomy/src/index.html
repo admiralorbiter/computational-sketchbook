@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KC Concentric Gastronomy Explorer | 1609 E 75th Terrace</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            warmbg: '#FDFBF7',
+            cardbg: '#FFFFFF',
+            brandprimary: '#9A3412', // Warm Terracotta
+            brandsecondary: '#D97706', // Deep Amber
+            branddark: '#27272A', // Slate Dark
+            zone1: '#059669', // Emerald Green for 0-2 miles
+            zone2: '#2563EB', // Blue for 2-5 miles
+            zone3: '#7C3AED', // Purple for 5+ miles
+            tiercheap: '#16A34A',
+            tiermid: '#D97706',
+            tierhigh: '#DC2626'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FDFBF7;
+      color: #27272A;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+    .chart-container {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      height: 280px;
+      max-height: 350px;
+    }
+    @media (min-width: 768px) {
+      .chart-container {
+        height: 320px;
+      }
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+  <!-- Chosen Palette: Warm Concentric Harmony (Terracotta #9A3412, Amber #D97706, Emerald #059669, Slate #27272A, Warm Neutral BG #FDFBF7) -->
+
+  <!-- Application Structure Plan: 
+       The application is structured into 5 logical interactive hubs:
+       1. Hero & Epicenter Context Header: Highlights the 1609 E 75th Terrace coordinate, key stats (42 curated spots across 3 distance rings), and quick search capabilities.
+       2. Interactive Concentric Spatial Radar (Canvas): A custom dynamic radial visualization allowing users to visually click nodes across Ring 1 (0-2mi), Ring 2 (2-5mi), and Ring 3 (5+mi) to quickly view spot previews.
+       3. "What Should I Eat?" Decision Matrix & Craving Wheel: Interactive filter preset generator to solve choice paralysis based on budget, mood, or speed.
+       4. Visual Analytics & Cuisine Breakdown: Interactive Chart.js graphs displaying spatial price distribution and cuisine diversity by ring.
+       5. Comprehensive Filterable Dining Directory & Personal Hit List: Dynamic card grid & table with search, category toggles, detail modal, and persistent local storage bookmarking ("My Hit List").
+  -->
+
+  <!-- Visualization & Content Choices:
+       - Radial Spatial Isochrone Map -> Interactive Canvas element -> Enables visual proximity calculation centered at 75th Ter without heavy map API keys.
+       - Cuisine & Price Distribution -> Chart.js Bar & Doughnut charts -> Visual insight into how dining types shift from hyper-local neighborhood spots (Zone 1) to destination fine dining (Zone 3).
+       - Restaurant Detail Cards & Modal -> Dynamic HTML DOM Rendering + Vanilla JS State -> Allows reading deep report context (signature items, historical background like gas station gyros or plate breaking) on demand.
+       - Priority Hit List -> Vanilla JS + localStorage -> Solves user's core request of building a decision priority system for future dining.
+  -->
+
+  <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+  <!-- Header / Navigation Bar -->
+  <header class="bg-white border-b border-stone-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap justify-between items-center gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="bg-brandprimary text-white rounded-lg p-2 font-bold text-xl flex items-center justify-center w-10 h-10 shadow-sm">
+          📍
+        </div>
+        <div>
+          <h1 class="text-xl font-bold text-stone-900 leading-tight">KC Concentric Gastronomy</h1>
+          <p class="text-xs text-stone-500 font-medium">Epicenter: <span class="text-brandprimary font-semibold">1609 E 75th Terrace, Kansas City, MO</span></p>
+        </div>
+      </div>
+
+      <!-- Quick Nav Buttons -->
+      <nav class="flex items-center space-x-1 sm:space-x-2 text-sm">
+        <button onclick="scrollToSection('spatial-explorer')" class="px-3 py-1.5 rounded-md font-medium text-stone-600 hover:bg-stone-100 hover:text-stone-900 transition">📍 Proximity Map</button>
+        <button onclick="scrollToSection('decision-matrix')" class="px-3 py-1.5 rounded-md font-medium text-stone-600 hover:bg-stone-100 hover:text-stone-900 transition">🎲 Craving Wheel</button>
+        <button onclick="scrollToSection('directory-section')" class="px-3 py-1.5 rounded-md font-medium text-stone-600 hover:bg-stone-100 hover:text-stone-900 transition">🍽️ Full Directory</button>
+        <button onclick="openHitListModal()" class="px-3 py-1.5 rounded-md font-medium bg-brandprimary text-white hover:bg-orange-800 transition shadow-sm flex items-center gap-1">
+          <span>⭐ Priority Hit List</span>
+          <span id="hitlist-count-badge" class="bg-white text-brandprimary text-xs font-bold px-1.5 py-0.5 rounded-full ml-1">0</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+
+    <!-- Overview Hero & Intro Paragraph -->
+    <section class="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200 shadow-sm">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+        <div class="lg:col-span-2 space-y-3">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-100 text-brandprimary text-xs font-semibold">
+            <span>🗺️ Spatial Isochrone Framework</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">
+            Explore South Kansas City Cuisine From The Inside Out
+          </h2>
+          <p class="text-stone-600 text-sm sm:text-base leading-relaxed">
+            Welcome to your personalized gastronomic decision system centered at <strong>1609 E 75th Terrace</strong>. This application transforms local spatial analysis into an interactive journey through three expanding concentric distance rings: from hyper-local Waldo & Troost corridor gems (0–2 mi), to Brookside and Prairie Village enclaves (2–5 mi), out to metropolitan destination dining (5+ mi). Filter by price tier, cuisine, or specific signature craving to effortlessly decide where to eat next.
+          </p>
+          <div class="pt-2 flex flex-wrap gap-4 text-xs font-medium text-stone-500">
+            <span class="flex items-center gap-1.5"><strong class="text-zone1 text-sm font-bold">18</strong> Spots in Zone 1 (0-2 mi)</span>
+            <span class="flex items-center gap-1.5"><strong class="text-zone2 text-sm font-bold">14</strong> Spots in Zone 2 (2-5 mi)</span>
+            <span class="flex items-center gap-1.5"><strong class="text-zone3 text-sm font-bold">10</strong> Spots in Zone 3 (5+ mi)</span>
+          </div>
+        </div>
+
+        <!-- Metric KPI Cards -->
+        <div class="grid grid-cols-2 gap-3 bg-stone-50 p-4 rounded-xl border border-stone-200">
+          <div class="bg-white p-3.5 rounded-lg border border-stone-100 shadow-sm">
+            <p class="text-xs text-stone-500 font-medium">Total Curated Venues</p>
+            <p id="total-venues-kpi" class="text-2xl font-bold text-brandprimary">42</p>
+            <p class="text-[10px] text-stone-400 mt-1">Across 12 Unique Cuisines</p>
+          </div>
+          <div class="bg-white p-3.5 rounded-lg border border-stone-100 shadow-sm">
+            <p class="text-xs text-stone-500 font-medium">Budget Friendly ($)</p>
+            <p class="text-2xl font-bold text-emerald-600">12</p>
+            <p class="text-[10px] text-stone-400 mt-1">High quality under $15</p>
+          </div>
+          <div class="bg-white p-3.5 rounded-lg border border-stone-100 shadow-sm">
+            <p class="text-xs text-stone-500 font-medium">Mid-Level Dining ($$)</p>
+            <p class="text-2xl font-bold text-amber-600">18</p>
+            <p class="text-[10px] text-stone-400 mt-1">Casual & Date Nights</p>
+          </div>
+          <div class="bg-white p-3.5 rounded-lg border border-stone-100 shadow-sm">
+            <p class="text-xs text-stone-500 font-medium">Fine Dining ($$$)</p>
+            <p class="text-2xl font-bold text-purple-600">12</p>
+            <p class="text-[10px] text-stone-400 mt-1">Chef-driven & Elevated</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 1: Interactive Spatial Concentric Isochrone Radar -->
+    <section id="spatial-explorer" class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm space-y-4">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-stone-100 pb-4">
+        <div>
+          <h3 class="text-xl font-bold text-stone-900 flex items-center gap-2">
+            <span>🎯</span> Interactive Concentric Proximity Map
+          </h3>
+          <p class="text-sm text-stone-600">
+            Click on any restaurant node on the concentric radar canvas below to inspect venue details and signature items by distance zone.
+          </p>
+        </div>
+        <div class="flex items-center space-x-4 text-xs font-semibold">
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span> Zone 1 (0-2 mi)</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-500 inline-block"></span> Zone 2 (2-5 mi)</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-purple-500 inline-block"></span> Zone 3 (5+ mi)</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        <!-- Interactive Canvas Radar -->
+        <div class="lg:col-span-7 flex flex-col items-center justify-center bg-stone-900 p-4 rounded-xl relative overflow-hidden shadow-inner">
+          <canvas id="concentricCanvas" width="550" height="480" class="max-w-full cursor-pointer"></canvas>
+          <div class="absolute bottom-3 left-3 bg-stone-800/80 backdrop-blur-md px-3 py-1.5 rounded text-white text-[11px] font-mono border border-stone-700">
+            Center: 75th & Troost Epicenter (0.0 mi)
+          </div>
+        </div>
+
+        <!-- Spotlight Side Card -->
+        <div class="lg:col-span-5 bg-stone-50 p-5 rounded-xl border border-stone-200 h-full flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-start mb-2">
+              <span id="spotlight-zone" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+                Zone 1 (0–2 Miles)
+              </span>
+              <span id="spotlight-price" class="font-bold text-sm text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                $$
+              </span>
+            </div>
+            <h4 id="spotlight-title" class="text-xl font-extrabold text-stone-900 mb-1">Select a restaurant on the map</h4>
+            <p id="spotlight-address" class="text-xs text-stone-500 font-mono mb-3">Click any point on the left radar canvas</p>
+
+            <div class="space-y-3 text-sm">
+              <div class="bg-white p-3 rounded-lg border border-stone-200">
+                <span class="text-xs text-stone-400 block font-semibold uppercase tracking-wider mb-1">Cuisine Type</span>
+                <span id="spotlight-cuisine" class="font-semibold text-stone-800">--</span>
+              </div>
+              <div class="bg-white p-3 rounded-lg border border-stone-200">
+                <span class="text-xs text-stone-400 block font-semibold uppercase tracking-wider mb-1">Signature Dish / Must-Try</span>
+                <span id="spotlight-signature" class="font-semibold text-brandprimary">--</span>
+              </div>
+              <div class="bg-white p-3 rounded-lg border border-stone-200">
+                <span class="text-xs text-stone-400 block font-semibold uppercase tracking-wider mb-1">Report Commentary & Highlights</span>
+                <p id="spotlight-desc" class="text-xs text-stone-600 leading-relaxed">
+                  Hover or click any node to read spatial insights, history, and chef details from the research report.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-4 border-t border-stone-200 flex gap-2">
+            <button id="spotlight-add-hitlist-btn" onclick="addCurrentSpotlightToHitList()" class="w-full py-2 px-3 bg-brandprimary text-white text-xs font-semibold rounded-lg hover:bg-orange-800 transition flex items-center justify-center gap-1.5">
+              <span>⭐ Save to Hit List</span>
+            </button>
+            <button id="spotlight-view-full-btn" onclick="viewSpotlightInDirectory()" class="w-full py-2 px-3 bg-stone-200 text-stone-800 text-xs font-semibold rounded-lg hover:bg-stone-300 transition">
+              🔍 Find in List
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: Decision Matrix & Craving Wheel -->
+    <section id="decision-matrix" class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm space-y-4">
+      <div class="border-b border-stone-100 pb-3">
+        <h3 class="text-xl font-bold text-stone-900 flex items-center gap-2">
+          <span>🎲</span> "What Should I Eat Today?" Decision Generator
+        </h3>
+        <p class="text-sm text-stone-600">
+          Overcome decision fatigue by picking your current mood, proximity preference, or budget tier to instantly generate a curated recommendation.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Filter 1: Distance -->
+        <div>
+          <label class="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">Proximity Radius</label>
+          <select id="wheel-zone" class="w-full bg-stone-50 border border-stone-300 rounded-lg p-2.5 text-sm text-stone-800 focus:ring-2 focus:ring-brandprimary focus:border-brandprimary">
+            <option value="ALL">Any Distance (0 - 10+ miles)</option>
+            <option value="1">Zone 1: Hyper-Local (0 - 2 mi)</option>
+            <option value="2">Zone 2: Near Outskirts (2 - 5 mi)</option>
+            <option value="3">Zone 3: Destination (5+ mi)</option>
+          </select>
+        </div>
+
+        <!-- Filter 2: Budget -->
+        <div>
+          <label class="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">Budget Tier</label>
+          <select id="wheel-price" class="w-full bg-stone-50 border border-stone-300 rounded-lg p-2.5 text-sm text-stone-800 focus:ring-2 focus:ring-brandprimary focus:border-brandprimary">
+            <option value="ALL">Any Price Level</option>
+            <option value="$">Cheap / Fast-Casual ($)</option>
+            <option value="$$">Mid-Level / Elevated Casual ($$)</option>
+            <option value="$$$">High-End / Fine Dining ($$$)</option>
+          </select>
+        </div>
+
+        <!-- Filter 3: Craving Theme -->
+        <div>
+          <label class="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">Craving & Vibe</label>
+          <select id="wheel-vibe" class="w-full bg-stone-50 border border-stone-300 rounded-lg p-2.5 text-sm text-stone-800 focus:ring-2 focus:ring-brandprimary focus:border-brandprimary">
+            <option value="ALL">All Moods & Flavors</option>
+            <option value="bbq">Smoky KC Barbecue</option>
+            <option value="italian">Fresh Pasta & Italian</option>
+            <option value="mexican">Authentic Tacos & Mexican</option>
+            <option value="bakery">Bakery & Sweets</option>
+            <option value="mediterranean">Middle Eastern & Greek</option>
+            <option value="chicken">Fried Chicken & Burgers</option>
+          </select>
+        </div>
+
+        <!-- Action Button -->
+        <div class="flex items-end">
+          <button onclick="spinCravingWheel()" class="w-full py-2.5 px-4 bg-brandsecondary text-white font-bold rounded-lg hover:bg-amber-600 transition shadow-md flex items-center justify-center gap-2">
+            <span>✨ Surprise Me / Pick Spot</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Recommendation Display Output -->
+      <div id="decision-result-container" class="hidden mt-4 p-5 bg-orange-50/70 border border-orange-200 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <span id="result-badge-zone" class="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-600 text-white">Zone 1</span>
+            <span id="result-badge-price" class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-600 text-white">$$</span>
+            <span id="result-badge-cuisine" class="px-2 py-0.5 rounded text-[11px] font-bold bg-stone-700 text-white">BBQ</span>
+          </div>
+          <h4 id="result-title" class="text-xl font-black text-stone-900">--</h4>
+          <p id="result-signature" class="text-sm font-semibold text-brandprimary">--</p>
+          <p id="result-address" class="text-xs text-stone-500 font-mono">--</p>
+        </div>
+        <div class="flex sm:flex-col gap-2 w-full sm:w-auto">
+          <button id="result-hitlist-btn" onclick="saveResultToHitList()" class="px-4 py-2 bg-brandprimary text-white text-xs font-bold rounded-lg hover:bg-orange-800 transition shadow-sm w-full">
+            ⭐ Add to Hit List
+          </button>
+          <button id="result-directory-btn" onclick="scrollToDirectoryWithFilter()" class="px-4 py-2 bg-white text-stone-800 border border-stone-300 text-xs font-bold rounded-lg hover:bg-stone-100 transition w-full">
+            📖 View Details
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: Visual Analytics (Chart.js Containers) -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      
+      <!-- Chart 1: Cuisine Variety by Proximity Ring -->
+      <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm flex flex-col justify-between">
+        <div>
+          <h3 class="text-lg font-bold text-stone-900 flex items-center gap-2">
+            <span>📊</span> Cuisine Distribution by Zone
+          </h3>
+          <p class="text-xs text-stone-500 mb-4">
+            Analysis of culinary density as distance expands outward from 75th Terrace.
+          </p>
+        </div>
+        <div class="chart-container">
+          <canvas id="cuisineChart"></canvas>
+        </div>
+        <p class="text-[11px] text-stone-400 mt-2 text-center">
+          *Zone 1 features high Middle Eastern & Fast Casual density; Zone 3 shifts to Barbecue & Fine Dining.
+        </p>
+      </div>
+
+      <!-- Chart 2: Price Tier Proportions -->
+      <div class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm flex flex-col justify-between">
+        <div>
+          <h3 class="text-lg font-bold text-stone-900 flex items-center gap-2">
+            <span>💰</span> Price Accessibility Breakdown
+          </h3>
+          <p class="text-xs text-stone-500 mb-4">
+            Economic accessibility ratio across all 42 mapped venues.
+          </p>
+        </div>
+        <div class="chart-container">
+          <canvas id="priceChart"></canvas>
+        </div>
+        <p class="text-[11px] text-stone-400 mt-2 text-center">
+          *43% of venues fall into mid-level dining ($$), making South KC an accessible dining hub.
+        </p>
+      </div>
+
+    </section>
+
+    <!-- SECTION 4: Comprehensive Interactive Dining Directory -->
+    <section id="directory-section" class="bg-white rounded-2xl p-6 border border-stone-200 shadow-sm space-y-6">
+      
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-stone-100 pb-4">
+        <div>
+          <h3 class="text-xl font-bold text-stone-900 flex items-center gap-2">
+            <span>📖</span> Concentric Gastronomy Directory
+          </h3>
+          <p class="text-sm text-stone-600">
+            Search, filter, and prioritize all 42 analyzed spots. Click any card to inspect full details and report highlights.
+          </p>
+        </div>
+
+        <!-- Directory Controls & Filters -->
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="relative">
+            <input type="text" id="directory-search" placeholder="Search dish, name, or street..." oninput="filterDirectory()" class="w-48 sm:w-64 bg-stone-50 border border-stone-300 rounded-lg pl-8 pr-3 py-1.5 text-xs text-stone-800 focus:ring-2 focus:ring-brandprimary focus:border-brandprimary" />
+            <span class="absolute left-2.5 top-2 text-stone-400 text-xs">🔍</span>
+          </div>
+
+          <button onclick="toggleViewMode('grid')" id="btn-view-grid" class="p-1.5 bg-stone-200 text-stone-800 rounded-lg text-xs font-bold">🔳 Grid</button>
+          <button onclick="toggleViewMode('table')" id="btn-view-table" class="p-1.5 bg-stone-100 text-stone-500 rounded-lg text-xs font-bold">📋 Table</button>
+        </div>
+      </div>
+
+      <!-- Filter Buttons Bar -->
+      <div class="flex flex-wrap items-center gap-2 text-xs">
+        <span class="font-bold text-stone-700 mr-1">Filter Ring:</span>
+        <button onclick="setZoneFilter('ALL')" class="zone-btn active px-3 py-1 rounded-full border border-stone-300 bg-stone-800 text-white font-medium" data-zone="ALL">All Zones</button>
+        <button onclick="setZoneFilter('1')" class="zone-btn px-3 py-1 rounded-full border border-emerald-300 text-emerald-800 bg-emerald-50 font-medium" data-zone="1">Zone 1 (0-2 mi)</button>
+        <button onclick="setZoneFilter('2')" class="zone-btn px-3 py-1 rounded-full border border-blue-300 text-blue-800 bg-blue-50 font-medium" data-zone="2">Zone 2 (2-5 mi)</button>
+        <button onclick="setZoneFilter('3')" class="zone-btn px-3 py-1 rounded-full border border-purple-300 text-purple-800 bg-purple-50 font-medium" data-zone="3">Zone 3 (5+ mi)</button>
+
+        <span class="font-bold text-stone-700 ml-3 mr-1">Price:</span>
+        <button onclick="setPriceFilter('ALL')" class="price-btn active px-3 py-1 rounded-full border border-stone-300 bg-stone-800 text-white font-medium" data-price="ALL">All Prices</button>
+        <button onclick="setPriceFilter('$')" class="price-btn px-3 py-1 rounded-full border border-stone-300 text-stone-700 font-medium" data-price="$">$ Cheap</button>
+        <button onclick="setPriceFilter('$$')" class="price-btn px-3 py-1 rounded-full border border-stone-300 text-stone-700 font-medium" data-price="$$">$$ Mid</button>
+        <button onclick="setPriceFilter('$$$')" class="price-btn px-3 py-1 rounded-full border border-stone-300 text-stone-700 font-medium" data-price="$$$">$$$ Fine</button>
+      </div>
+
+      <!-- Render Target Container: Grid View -->
+      <div id="directory-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Cards dynamic JS render -->
+      </div>
+
+      <!-- Render Target Container: Table View (Hidden by default) -->
+      <div id="directory-table-wrapper" class="hidden overflow-x-auto border border-stone-200 rounded-xl">
+        <table class="w-full text-left text-xs text-stone-700">
+          <thead class="bg-stone-100 text-stone-900 font-bold uppercase tracking-wider border-b border-stone-200">
+            <tr>
+              <th class="p-3">Restaurant Name</th>
+              <th class="p-3">Zone / Proximity</th>
+              <th class="p-3">Price</th>
+              <th class="p-3">Cuisine</th>
+              <th class="p-3">Signature Dish / Highlight</th>
+              <th class="p-3 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody id="directory-table-body" class="divide-y divide-stone-200">
+            <!-- Rows dynamic JS render -->
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-stone-900 text-stone-400 text-xs py-8 border-t border-stone-800 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div>
+        <p class="font-bold text-stone-200">Concentric Gastronomy of South Kansas City</p>
+        <p class="text-[11px] text-stone-500 mt-0.5">Spatial research model centered at 1609 E 75th Terrace, KCMO.</p>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button onclick="scrollToSection('spatial-explorer')" class="hover:text-white transition">Back to Top</button>
+        <button onclick="openHitListModal()" class="hover:text-white transition">My Priority Hit List</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL 1: Detail Spotlight Modal -->
+  <div id="detail-modal" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-4 relative border border-stone-200 max-h-[90vh] overflow-y-auto">
+      <button onclick="closeDetailModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-800 text-lg font-bold">✕</button>
+      
+      <div class="flex items-center gap-2">
+        <span id="modal-zone" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">Zone 1</span>
+        <span id="modal-price" class="px-2 py-0.5 rounded text-xs font-bold bg-amber-100 text-amber-900">$$</span>
+        <span id="modal-cuisine" class="px-2 py-0.5 rounded text-xs font-bold bg-stone-100 text-stone-800">Cuisine</span>
+      </div>
+
+      <h3 id="modal-title" class="text-2xl font-black text-stone-900">--</h3>
+      <p id="modal-address" class="text-xs text-stone-500 font-mono">--</p>
+
+      <div class="space-y-3 pt-2">
+        <div class="bg-orange-50 p-3.5 rounded-xl border border-orange-200">
+          <span class="text-xs font-bold text-brandprimary uppercase tracking-wider block mb-1">⭐ Signature Item / Must-Order</span>
+          <p id="modal-signature" class="text-sm font-semibold text-stone-900">--</p>
+        </div>
+
+        <div class="bg-stone-50 p-3.5 rounded-xl border border-stone-200">
+          <span class="text-xs font-bold text-stone-500 uppercase tracking-wider block mb-1">📖 Report Background & Highlights</span>
+          <p id="modal-description" class="text-xs text-stone-700 leading-relaxed">--</p>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-stone-200 flex justify-end gap-3">
+        <button onclick="closeDetailModal()" class="px-4 py-2 bg-stone-200 text-stone-800 font-bold text-xs rounded-lg hover:bg-stone-300 transition">Close</button>
+        <button id="modal-hitlist-btn" onclick="toggleHitListFromModal()" class="px-4 py-2 bg-brandprimary text-white font-bold text-xs rounded-lg hover:bg-orange-800 transition shadow-sm">
+          ⭐ Save to Hit List
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Priority Hit List Drawer / Modal -->
+  <div id="hitlist-modal" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 relative border border-stone-200 max-h-[90vh] overflow-y-auto">
+      <button onclick="closeHitListModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-800 text-lg font-bold">✕</button>
+
+      <div class="flex items-center justify-between border-b border-stone-100 pb-3">
+        <div>
+          <h3 class="text-xl font-bold text-stone-900 flex items-center gap-2">
+            <span>⭐</span> My Priority Dining Hit List
+          </h3>
+          <p class="text-xs text-stone-500">Your saved restaurant queue for future outings.</p>
+        </div>
+        <button onclick="clearHitList()" class="text-xs text-red-600 hover:underline font-semibold">Clear All</button>
+      </div>
+
+      <div id="hitlist-items-container" class="space-y-3 min-h-[150px]">
+        <!-- Hit list dynamic items -->
+      </div>
+
+      <div class="pt-3 border-t border-stone-200 flex justify-between items-center">
+        <span class="text-xs text-stone-500" id="hitlist-summary-text">0 items saved</span>
+        <button onclick="closeHitListModal()" class="px-4 py-2 bg-stone-900 text-white font-bold text-xs rounded-lg hover:bg-stone-800 transition">Done</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- JavaScript Application Logic -->
+  <script>
+    // Full Dataset Extracted & Synthesized from the Source Report
+    const RESTAURANT_DATA = [
+      // ZONE 1 (0-2 Miles)
+      {
+        id: "1",
+        name: "Baba's Pantry",
+        zone: 1,
+        zoneText: "Zone 1 (0–2 mi)",
+        price: "$",
+        priceCategory: "Cheap",
+        cuisine: "Palestinian / Middle Eastern",
+        address: "1019 E 63rd St, Kansas City, MO",
+        signature: "Chicken Shawarma & House Hummus w/ Shatta Hot Sauce",
+        description: "Bon Appétit & Southern Living acclaimed Palestinian deli by Chef Yahia Kamal. Offers scratch falafel, labneh, sweet shatta, rose water lemonade, and knafeh.",
+        coords: { angle: 45, radius: 0.35 }
+      },
+      {
+        id: "2",
+        name: "Barbacoa",
+        zone: 1,
+        zoneText: "Zone 1 (0–2 mi)",
+        price: "$$$",
+        priceCategory: "High",
+        cuisine: "Mexican / Wood-Fired BBQ",
+        address: "5500 Troost Ave, Kansas City, MO",
+        signature: "Smoked Brisket Tacos & Chicken Taquitos in Mole",
+        description: "Helmed by Chef Roman Raya. Modern wood-fired Mexican BBQ house operating off an offset smoker, abandoning heavy sweet sauces for pure smoke and spice.",
+        coords: { angle: 110, radius: 0.45 }
+      },
+      {
+        id: "3",
+        name: "Blackhole Bakery",
+        zone: 1,
+        zoneText: "Zone 1 (0–2 mi)",
+        price: "$",
+        priceCategory: "Cheap",
+        cuisine: "Bakery / French & Japanese",
+        address: "5531 Troost Ave, Kansas City, MO",
+        signature: "Mochi Donuts & Crab Rangoon Croissant Puff",
+        description: "Mastery of French laminated doughs and bouncy rice-flour mochi donuts. Famous for savory croissant creations like biscuits & gravy and caramelized onion puffs.",
+        coords: { angle: 140, radius: 0.4 }
+      },
+      {
+        id: "4",
+        name: "Go Chicken Go",
+        zone: 1,
+        zoneText: "Zone 1 (0–2 mi)",
+        price: "$",
+        priceCategory: "Cheap",
+        cuisine: "Fried Chicken / Fast Casual",
+        address: "5101 Troost Ave, Kansas City, MO",
+        signature: "Mixed Chicken Box, Fried Gizzards & Proprietary G-Sauce",
+        description: "Iconic KC fried chicken institution operating since 1969. Celebrated for crispy gizzards, livers, and tangy pepper-driven G-Sauce.",
+        coords: { angle: 180, radius: 0.5 }
+      },
+      {
+        id: "5",
+        name: "Niecie's Restaurant",
+        zone: 1,
+        zoneText: "Zone 1 (0–2 mi)",
+        price: "$",
+        priceCategory: "Cheap",
+        cuisine: "Soul Food / Southern",
+        address: "6441 Troost Ave, Kansas City, MO",
+        signature: "Chicken & Waffles, Pig Ear Sandwich, Oxtails",
+        description: "Founded in 1985 by Denise Ward under motto 'Good Food, Served Right'. Rotating daily comfort specials including beef oxtails and fried catfish.",
+        coords: { angle: 90, radius: 0.3 }
+      },
+      {
+        id: "6",
+        name: "Papu's Cafe",
+        zone: 1,
+        zoneText: "Zone 1 (0–2 mi)",
+        price: "$",
+        priceCategory: "Cheap",
+        cuisine: "Greek / Middle Eastern",
+        address: "604 W 75th St, Kansas City, MO",
+        signature: "Spit-Roasted Gyro Platter & Scratch Tzatziki",
+        description: "Unconventionally situated inside a Shell gas station. Delivers some of KC's most authentic spit-roasted gyros and falafel platters under $15.",
+        coords: { angle: 260, radius: 0.25 }
+      },
+      {
+        id: "7",
+        name: "Taco Cacao",
+        zone: 1,
+        zoneText: "Zone 1 (0–2 mi)",
+        price: "$",
+        priceCategory: "Cheap",
+        cuisine: "Mexican / Food Truck",
+        address: "7927 Wornall Rd, Kansas City, MO",
+        signature: "Pork Al Pastor Tacos & Beef Birria w/ Consommé",
+        description: "Mobile street taco truck offering homemade marinades, slow-roasted birria consommé, and fresh pineapple pico de gallo ($3.33/taco).",
+        coords: { angle: 220, radius: 0.35 }
+      },
+      {
+        id: "8",
+        name: "Hemma Hemma",
+        zone: 1,
+        zoneText: "Zone 1 (0–2 mi)",
+        price: "$$",
+        priceCategory: "Mid",
+        cuisine: "Modern Comfort / Cafe",
+        address: "7122 Wornall Rd, Kansas City, MO",
+        signature: "Brookside Buddha Bowl & Pickle-Brined Fried Chicken Sandwich",
+        description: "Bridges healthy dining and rich comfort food. Features masa pancakes, pastrami burritos, and healthy matcha/espresso drinks.",
+        coords: { angle: 240, radius: 0.2 }
+      },
+      {
+        id: "9",
+        name: "Waldo Pizza",
+        zone: 1,
+        zoneText: "Zone 1 (0–2 mi)",
+        price: "$$",
+        priceCategory: "Mid",
+        cuisine: "Midwestern Pizza",
+        address: "7433 Broadway St, Kansas City, MO",
+        signature: "St. Louis-Style Thin Crust w/ Provel Cheese",
+        description: "Waldo neighborhood cornerstone. Masters cracker-thin St. Louis crust brushed with garlic butter and buttery Provel cheese.",
+        coords: { angle: 280, radius: 0.3 }
+      },
+      {
+        id: "10",
+        name: "Summit Grill",
+        zone: 1,
+        zoneText: "Zone 1 (0–2 mi)",
+        price: "$$",
+        priceCategory: "Mid",
+        cuisine: "American Bar & Grill",
+        address: "520 W 75th St, Kansas City, MO",
+        signature: "Hand-Cut Steaks & Summit Angus Burger",
+        description: "Elevated neighborhood dining by Andy Lock, Domhnall Molloy, and Chef Po Wang. Known for classic steaks and lively atmosphere.",
+        coords: { angle: 310, radius: 0.3 }
+      },
+      {
+        id: "11",
+        name: "South of Summit Taqueria",
+        zone: 1,
+        zoneText: "Zone 1 (0–2 mi)",
+        price: "$$",
+        priceCategory: "Mid",
+        cuisine: "Coastal Mexican",
+        address: "516 W 75th St, Kansas City, MO",
+        signature: "Coastal Street Tacos & House Margaritas",
+        description: "Sister concept to Summit Grill offering extensive tequila selections, street tacos, and daily happy hour specials.",
+        coords: { angle: 325, radius: 0.35 }
+      },
+      {
+        id: "12",
+        name: "Tasso's Greek Restaurant",
+        zone: 1,
+        zoneText: "Zone 1 (0–2 mi)",
+        price: "$$",
+        priceCategory: "Mid",
+        cuisine: "Greek / Mediterranean",
+        address: "8411 Wornall Rd, Kansas City, MO",
+        signature: "Traditional Moussaka & Interactive Plate Breaking ($3)",
+        description: "Operating since 1976. Features generous moussaka, live Mediterranean music, belly dancing, and celebratory plate breaking.",
+        coords: { angle: 200, radius: 0.45 }
+      },
+      {
+        id: "13",
+        name: "BB's Lawnside BBQ",
+        zone: 1,
+        zoneText: "Zone 1 (0–2 mi)",
+        price: "$$",
+        priceCategory: "Mid",
+        cuisine: "BBQ / Cajun Fusion",
+        address: "1205 E 85th St, Kansas City, MO",
+        signature: "Bar-B-Q Sundae in Mason Jar & Gumbo",
+        description: "Merges KC hickory-smoked meats with dark-roux Louisiana gumbo and nightly live blues music in an old roadhouse.",
+        coords: { angle: 160, radius: 0.55 }
+      },
+      {
+        id: "14",
+        name: "Chixen KC",
+        zone: 1,
+        zoneText: "Zone 1 (0–2 mi)",
+        price: "$",
+        priceCategory: "Cheap",
+        cuisine: "American / Halal Burgers",
+        address: "7502 Troost Ave, Kansas City, MO",
+        signature: "Smash Chicken Burger & Jerk Chicken Chili Fries",
+        description: "Hyper-local Troost spot specializing in fresh-ground smash chicken burgers and spiced jerk fries.",
+        coords: { angle: 100, radius: 0.25 }
+      },
+      {
+        id: "15",
+        name: "High Hopes Ice Cream",
+        zone: 1,
+        zoneText: "Zone 1 (0–2 mi)",
+        price: "$",
+        priceCategory: "Cheap",
+        cuisine: "Dessert / Ice Cream",
+        address: "5536 Troost Ave, Kansas City, MO",
+        signature: "Small-Batch Creative Craft Ice Cream",
+        description: "Troost corridor ice cream parlor creating small-batch inventive seasonal flavors.",
+        coords: { angle: 130, radius: 0.45 }
+      },
+      {
+        id: "16",
+        name: "Jovito's Italian Cafe & Deli",
+        zone: 1,
+        zoneText: "Zone 1 (0–2 mi)",
+        price: "$$",
+        priceCategory: "Mid",
+        cuisine: "Italian Deli",
+        address: "7408 Wornall Rd, Kansas City, MO",
+        signature: "Hearty Italian Paninis & Scratch Calzones",
+        description: "Warm neighborhood Italian deli serving toasted paninis, calzones, and pasta specials.",
+        coords: { angle: 250, radius: 0.38 }
+      },
+      {
+        id: "17",
+        name: "Crows Coffee",
+        zone: 1,
+        zoneText: "Zone 1 (0–2 mi)",
+        price: "$",
+        priceCategory: "Cheap",
+        cuisine: "Cafe",
+        address: "7440 Washington St, Kansas City, MO",
+        signature: "Housemade Pastries & Espresso Lattes",
+        description: "Comfortable neighborhood coffee spot with workspace, scratch pastries, and burritos.",
+        coords: { angle: 290, radius: 0.25 }
+      },
+      {
+        id: "18",
+        name: "Luna's Chicken N Seafood",
+        zone: 1,
+        zoneText: "Zone 1 (0–2 mi)",
+        price: "$",
+        priceCategory: "Cheap",
+        cuisine: "Fried Chicken / Seafood",
+        address: "Troost Ave & 75th St, Kansas City, MO",
+        signature: "Crispy Fried Chicken & Catfish Baskets",
+        description: "Affordable fried chicken and seafood staple serving South Troost residents.",
+        coords: { angle: 80, radius: 0.2 }
+      },
+
+      // ZONE 2 (2-5 Miles)
+      {
+        id: "19",
+        name: "Bacaro Primo",
+        zone: 2,
+        zoneText: "Zone 2 (2–5 mi)",
+        price: "$$$",
+        priceCategory: "High",
+        cuisine: "Italian",
+        address: "323 E 55th St, Kansas City, MO",
+        signature: "Hand-Cut Tartare & 'Rosa' Nduja Honey Pizza",
+        description: "Intimate Crestwood Italian eatery by Todd Schulte & Cory Dannehl. Features fresh paccheri bolognese and wood-fired pizzas.",
+        coords: { angle: 10, radius: 0.65 }
+      },
+      {
+        id: "20",
+        name: "Earl's Premier",
+        zone: 2,
+        zoneText: "Zone 2 (2–5 mi)",
+        price: "$$$",
+        priceCategory: "High",
+        cuisine: "Coastal Seafood / Oyster Bar",
+        address: "651 E 59th St, Kansas City, MO",
+        signature: "Daily Fresh Maine Oysters & Maryland Crab Cake",
+        description: "Brings Maine coastal oyster bar standards to Brookside. Flown-in East/West coast oysters and clam chowder with fried saltines.",
+        coords: { angle: 30, radius: 0.68 }
+      },
+      {
+        id: "21",
+        name: "Sayachi",
+        zone: 2,
+        zoneText: "Zone 2 (2–5 mi)",
+        price: "$$$",
+        priceCategory: "High",
+        cuisine: "Japanese / Sushi & Ramen",
+        address: "6322 Brookside Plz, Kansas City, MO",
+        signature: "Bluefin Otoro Nigiri & Ebisu Pork Ramen",
+        description: "Refined Brookside sushi venue offering premium otoro, Hokkaido scallops, and Ebisu pork belly soy ramen.",
+        coords: { angle: 350, radius: 0.65 }
+      },
+      {
+        id: "22",
+        name: "French Custard",
+        zone: 2,
+        zoneText: "Zone 2 (2–5 mi)",
+        price: "$",
+        priceCategory: "Cheap",
+        cuisine: "Dessert / French Custard",
+        address: "5905 Main St, Kansas City, MO",
+        signature: "Malted Fudge Cookie Dough & St. Louis Gooey Butter Custard",
+        description: "Small-batch ultra-premium custard built on classic French techniques with rotating gourmet flavors.",
+        coords: { angle: 330, radius: 0.62 }
+      },
+      {
+        id: "23",
+        name: "Scratch Gourmet Kitchen",
+        zone: 2,
+        zoneText: "Zone 2 (2–5 mi)",
+        price: "$$$",
+        priceCategory: "High",
+        cuisine: "Modern American",
+        address: "3939 W 69th Ter, Prairie Village, KS",
+        signature: "Housemade Scratch Pastas & Allocated Bourbon",
+        description: "Occupies former Story space in Prairie Village. Grounded in hours-long stocks, scratch sauces, and rare bourbon pairings.",
+        coords: { angle: 280, radius: 0.75 }
+      },
+      {
+        id: "24",
+        name: "The Restaurant at 1900",
+        zone: 2,
+        zoneText: "Zone 2 (2–5 mi)",
+        price: "$$$",
+        priceCategory: "High",
+        cuisine: "Fine American / French",
+        address: "1900 Shawnee Mission Pkwy, Mission Woods, KS",
+        signature: "Oyster Mushroom Ravioli & Sea Salt Crusted Walleye",
+        description: "James Beard-nominated Chef Linda Duerr inside restored 1960s modernist Lee Jeans landmark.",
+        coords: { angle: 300, radius: 0.85 }
+      },
+      {
+        id: "25",
+        name: "Jasper's Italian Restaurant",
+        zone: 2,
+        zoneText: "Zone 2 (2–5 mi)",
+        price: "$$$",
+        priceCategory: "High",
+        cuisine: "Fine Italian",
+        address: "1201 W 103rd St, Kansas City, MO",
+        signature: "Scampi Livornese & Lobster Bisque w/ Sweet Foam",
+        description: "KC fine dining institution since 1954. White tablecloth northern and southern Italian classic service.",
+        coords: { angle: 210, radius: 0.82 }
+      },
+      {
+        id: "26",
+        name: "Marco Polo's Deli",
+        zone: 2,
+        zoneText: "Zone 2 (2–5 mi)",
+        price: "$",
+        priceCategory: "Cheap",
+        cuisine: "Italian Deli",
+        address: "1201 W 103rd St, Kansas City, MO",
+        signature: "Fat Marco Polo Hero (Mortadella, Salami, Capicola)",
+        description: "Adjoining casual daytime deli to Jasper's, offering robust Italian heroes and pasta salads.",
+        coords: { angle: 212, radius: 0.84 }
+      },
+      {
+        id: "27",
+        name: "Bella Napoli",
+        zone: 2,
+        zoneText: "Zone 2 (2–5 mi)",
+        price: "$$",
+        priceCategory: "Mid",
+        cuisine: "Authentic Italian",
+        address: "6229 Brookside Blvd, Kansas City, MO",
+        signature: "Tagliatelle Bolognese & Italian Wine Selection",
+        description: "Brookside institution for over 20 years with market deli and authentic regional pasta.",
+        coords: { angle: 340, radius: 0.64 }
+      },
+      {
+        id: "28",
+        name: "Aixois",
+        zone: 2,
+        zoneText: "Zone 2 (2–5 mi)",
+        price: "$$",
+        priceCategory: "Mid",
+        cuisine: "French Bistro",
+        address: "251 E 55th St, Kansas City, MO",
+        signature: "Classic French Bistro Fare & Trolley Trail Patio Dining",
+        description: "Classic French bistro along Brookside Trolley Trail boasting one of the city's finest outdoor dining patios.",
+        coords: { angle: 5, radius: 0.66 }
+      },
+      {
+        id: "29",
+        name: "French Market",
+        zone: 2,
+        zoneText: "Zone 2 (2–5 mi)",
+        price: "$$",
+        priceCategory: "Mid",
+        cuisine: "French Cafe & Grocery",
+        address: "6943 Tomahawk Rd, Prairie Village, KS",
+        signature: "Sweet & Savory Crêpes & Croque Monsieur",
+        description: "Prairie Village cafe serving authentic crêpes, quiche lorraine, and imported European groceries.",
+        coords: { angle: 275, radius: 0.72 }
+      },
+      {
+        id: "30",
+        name: "Front Range Coffeehouse",
+        zone: 2,
+        zoneText: "Zone 2 (2–5 mi)",
+        price: "$",
+        priceCategory: "Cheap",
+        cuisine: "Rustic Cafe / Cocktail Bar",
+        address: "2718 W 53rd St, Fairway, KS",
+        signature: "Specialty Espresso & Evening Craft Cocktails",
+        description: "Rustic mountain cabin cafe in Fairway transitioning from daytime coffee to evening cocktails.",
+        coords: { angle: 315, radius: 0.78 }
+      },
+      {
+        id: "31",
+        name: "Charleston's Restaurant",
+        zone: 2,
+        zoneText: "Zone 2 (2–5 mi)",
+        price: "$$$",
+        priceCategory: "High",
+        cuisine: "Classic American",
+        address: "8817 State Line Rd, Kansas City, MO",
+        signature: "Slow-Roasted Prime Rib & Scratch Baked Goods",
+        description: "Ward Parkway area favorite for reliable high-end American dining and prime rib.",
+        coords: { angle: 235, radius: 0.7 }
+      },
+      {
+        id: "32",
+        name: "The Garage",
+        zone: 2,
+        zoneText: "Zone 2 (2–5 mi)",
+        price: "$$",
+        priceCategory: "Mid",
+        cuisine: "American / Arcade Bar",
+        address: "8811 State Line Rd, Kansas City, MO",
+        signature: "Custom Fork & Knife Hotdogs & Craft Beers",
+        description: "Casual joint pairing gourmet burgers and hot dogs with retro arcade games.",
+        coords: { angle: 237, radius: 0.72 }
+      },
+
+      // ZONE 3 (5+ Miles - Destination Dining)
+      {
+        id: "33",
+        name: "LC's Bar-B-Q",
+        zone: 3,
+        zoneText: "Zone 3 (5+ mi)",
+        price: "$$",
+        priceCategory: "Mid",
+        cuisine: "Traditional KC BBQ",
+        address: "5800 Blue Pkwy, Kansas City, MO",
+        signature: "Deeply Smoked Beef & Pork Burnt Ends",
+        description: "Pure traditionalist KC pit. Decades-old brick pit near stadium corridor imparting intense hickory smoke.",
+        coords: { angle: 70, radius: 0.92 }
+      },
+      {
+        id: "34",
+        name: "Q39 Midtown",
+        zone: 3,
+        zoneText: "Zone 3 (5+ mi)",
+        price: "$$",
+        priceCategory: "Mid",
+        cuisine: "Chef-Driven BBQ",
+        address: "1000 W 39th St, Kansas City, MO",
+        signature: "35-Day Aged Competition Brisket & Mr. Burns Sandwich",
+        description: "Revolutionized KC BBQ by introducing chef-driven plating and competition level quality control.",
+        coords: { angle: 335, radius: 0.95 }
+      },
+      {
+        id: "35",
+        name: "Buck Tui BBQ",
+        zone: 3,
+        zoneText: "Zone 3 (5+ mi)",
+        price: "$$",
+        priceCategory: "Mid",
+        cuisine: "Thai BBQ Fusion",
+        address: "6737 W 75th St, Overland Park, KS",
+        signature: "Brisket Phad Thai & Red Curry Burnt Ends",
+        description: "Chefs Ted & Pam Liberda synthesize low-and-slow KC barbecue with vibrant Northern Thai flavors.",
+        coords: { angle: 260, radius: 0.9 }
+      },
+      {
+        id: "36",
+        name: "Jack Stack BBQ (Plaza)",
+        zone: 3,
+        zoneText: "Zone 3 (5+ mi)",
+        price: "$$$",
+        priceCategory: "High",
+        cuisine: "Upscale BBQ",
+        address: "4747 Wyandotte St, Kansas City, MO",
+        signature: "Crown Prime Beef Rib & Hickory Lamb Ribs",
+        description: "Polished full-service barbecue landmark known for massive prime beef ribs and craft cocktails.",
+        coords: { angle: 345, radius: 0.92 }
+      },
+      {
+        id: "37",
+        name: "Corvino Supper Club",
+        zone: 3,
+        zoneText: "Zone 3 (5+ mi)",
+        price: "$$$",
+        priceCategory: "High",
+        cuisine: "Fine American / Tasting",
+        address: "1830 Walnut St, Kansas City, MO",
+        signature: "Chef Tasting Menu & Famous Late-Night Cheeseburger",
+        description: "Crossroads luxury dining by Chef Michael Corvino featuring live jazz, raw oyster bar, and elite tasting menu.",
+        coords: { angle: 355, radius: 0.98 }
+      },
+      {
+        id: "38",
+        name: "The Savoy",
+        zone: 3,
+        zoneText: "Zone 3 (5+ mi)",
+        price: "$$$",
+        priceCategory: "High",
+        cuisine: "Progressive American",
+        address: "219 W 9th St, Kansas City, MO",
+        signature: "Seasonal Seafood & Classic Steakhouse Cuts",
+        description: "Historic 1903 Hotel Savoy dining room executing progressive Midwestern fine dining.",
+        coords: { angle: 358, radius: 1.0 }
+      },
+      {
+        id: "39",
+        name: "MuNi KC",
+        zone: 3,
+        zoneText: "Zone 3 (5+ mi)",
+        price: "$$",
+        priceCategory: "Mid",
+        cuisine: "Mexican / Thai Fusion",
+        address: "316 Delaware St, Kansas City, MO",
+        signature: "Fusion Cocktails & Weekend River Market Brunch",
+        description: "Vibrant River Market venue serving creative Mexican-Thai fusion plates.",
+        coords: { angle: 2, radius: 1.0 }
+      },
+      {
+        id: "40",
+        name: "The Combine",
+        zone: 3,
+        zoneText: "Zone 3 (5+ mi)",
+        price: "$$",
+        priceCategory: "Mid",
+        cuisine: "Pizza & Deli / Rooftop",
+        address: "2999 Troost Ave, Kansas City, MO",
+        signature: "NY-Style Crisp Pizza & Skyline Rooftop Lounge",
+        description: "Neighborhood spot on Troost featuring crisp pizzas, deli sandwiches, and downtown views.",
+        coords: { angle: 40, radius: 0.9 }
+      },
+      {
+        id: "41",
+        name: "Cliff's Taphouse",
+        zone: 3,
+        zoneText: "Zone 3 (5+ mi)",
+        price: "$$",
+        priceCategory: "Mid",
+        cuisine: "American / Vegan Friendly",
+        address: "3044 Gillham Rd, Kansas City, MO",
+        signature: "Vegan Wine Dinners & Buffalo Cauliflower Bites",
+        description: "Gillham corridor taphouse focused on high vegan inclusivity alongside craft burgers.",
+        coords: { angle: 20, radius: 0.92 }
+      },
+      {
+        id: "42",
+        name: "Cupini's",
+        zone: 3,
+        zoneText: "Zone 3 (5+ mi)",
+        price: "$$",
+        priceCategory: "Mid",
+        cuisine: "Italian Deli & Bakery",
+        address: "1809 Westport Rd, Kansas City, MO",
+        signature: "Handmade Lasagna & Chicken Prosciutto Tortelloni",
+        description: "Founded by Franco Cupini. Celebrated for scratch handmade pasta sheets and Italian bakery.",
+        coords: { angle: 320, radius: 0.94 }
+      }
+    ];
+
+    // Application State Management
+    let state = {
+      currentZoneFilter: 'ALL',
+      currentPriceFilter: 'ALL',
+      searchQuery: '',
+      viewMode: 'grid',
+      hitList: JSON.parse(localStorage.getItem('kc_dining_hitlist') || '[]'),
+      selectedSpotlightId: '1',
+      lastWheelResult: null
+    };
+
+    // DOM Loaded Initialization
+    document.addEventListener('DOMContentLoaded', () => {
+      initCharts();
+      initCanvasRadar();
+      renderDirectory();
+      updateHitListUI();
+      selectSpotlight('1');
+    });
+
+    // Navigation Smooth Scroll
+    function scrollToSection(id) {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // -------------------------------------------------------------
+    // CANVAS CONCENTRIC RADAR VISUALIZER
+    // -------------------------------------------------------------
+    function initCanvasRadar() {
+      const canvas = document.getElementById('concentricCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+      const centerX = width / 2;
+      const centerY = height / 2;
+      const maxRadius = Math.min(centerX, centerY) - 30;
+
+      function drawRadar() {
+        ctx.clearRect(0, 0, width, height);
+
+        // Background Radial Isochrones
+        const r1 = maxRadius * 0.45;
+        const r2 = maxRadius * 0.75;
+        const r3 = maxRadius * 1.0;
+
+        // Zone 3 Ring
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, r3, 0, 2 * Math.PI);
+        ctx.fillStyle = 'rgba(124, 58, 237, 0.05)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(124, 58, 237, 0.4)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.stroke();
+
+        // Zone 2 Ring
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, r2, 0, 2 * Math.PI);
+        ctx.fillStyle = 'rgba(37, 99, 235, 0.08)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(37, 99, 235, 0.5)';
+        ctx.stroke();
+
+        // Zone 1 Ring
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, r1, 0, 2 * Math.PI);
+        ctx.fillStyle = 'rgba(5, 150, 105, 0.12)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(5, 150, 105, 0.7)';
+        ctx.setLineDash([]);
+        ctx.stroke();
+
+        // Axis crosshairs
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY - maxRadius);
+        ctx.lineTo(centerX, centerY + maxRadius);
+        ctx.moveTo(centerX - maxRadius, centerY);
+        ctx.lineTo(centerX + maxRadius, centerY);
+        ctx.stroke();
+
+        // Center Epicenter Marker (75th & Troost)
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 7, 0, 2 * Math.PI);
+        ctx.fillStyle = '#9A3412';
+        ctx.fill();
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Ring Labels
+        ctx.font = '10px sans-serif';
+        ctx.fillStyle = '#A1A1AA';
+        ctx.fillText('Zone 1 (0-2mi)', centerX + 5, centerY - r1 + 12);
+        ctx.fillText('Zone 2 (2-5mi)', centerX + 5, centerY - r2 + 12);
+        ctx.fillText('Zone 3 (5+mi)', centerX + 5, centerY - r3 + 12);
+
+        // Draw Nodes for Each Restaurant
+        RESTAURANT_DATA.forEach(item => {
+          const rad = (item.coords.angle - 90) * (Math.PI / 180);
+          const dist = item.coords.radius * maxRadius;
+          const x = centerX + dist * Math.cos(rad);
+          const y = centerY + dist * Math.sin(rad);
+
+          item._canvasX = x;
+          item._canvasY = y;
+
+          const isSelected = item.id === state.selectedSpotlightId;
+
+          // Color based on zone
+          let nodeColor = '#059669';
+          if (item.zone === 2) nodeColor = '#2563EB';
+          if (item.zone === 3) nodeColor = '#7C3AED';
+
+          ctx.beginPath();
+          ctx.arc(x, y, isSelected ? 8 : 5, 0, 2 * Math.PI);
+          ctx.fillStyle = isSelected ? '#F59E0B' : nodeColor;
+          ctx.fill();
+          ctx.strokeStyle = '#FFFFFF';
+          ctx.lineWidth = isSelected ? 2.5 : 1;
+          ctx.stroke();
+
+          if (isSelected) {
+            ctx.font = 'bold 11px sans-serif';
+            ctx.fillStyle = '#F59E0B';
+            ctx.fillText(item.name, x + 10, y + 4);
+          }
+        });
+      }
+
+      drawRadar();
+
+      // Click Interaction on Canvas
+      canvas.addEventListener('click', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const clickX = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const clickY = (e.clientY - rect.top) * (canvas.height / rect.height);
+
+        let closest = null;
+        let minDist = 20; // Click radius threshold
+
+        RESTAURANT_DATA.forEach(item => {
+          const dx = clickX - item._canvasX;
+          const dy = clickY - item._canvasY;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < minDist) {
+            minDist = dist;
+            closest = item;
+          }
+        });
+
+        if (closest) {
+          selectSpotlight(closest.id);
+          drawRadar();
+        }
+      });
+    }
+
+    function selectSpotlight(id) {
+      const item = RESTAURANT_DATA.find(r => r.id === id);
+      if (!item) return;
+
+      state.selectedSpotlightId = id;
+
+      document.getElementById('spotlight-title').innerText = item.name;
+      document.getElementById('spotlight-address').innerText = item.address;
+      document.getElementById('spotlight-cuisine').innerText = item.cuisine;
+      document.getElementById('spotlight-signature').innerText = item.signature;
+      document.getElementById('spotlight-desc').innerText = item.description;
+
+      const zoneBadge = document.getElementById('spotlight-zone');
+      zoneBadge.innerText = item.zoneText;
+      zoneBadge.className = `px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+        item.zone === 1 ? 'bg-emerald-100 text-emerald-800' :
+        item.zone === 2 ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
+      }`;
+
+      document.getElementById('spotlight-price').innerText = item.price;
+
+      initCanvasRadar(); // Redraw canvas to highlight selected point
+    }
+
+    function addCurrentSpotlightToHitList() {
+      addToHitList(state.selectedSpotlightId);
+    }
+
+    function viewSpotlightInDirectory() {
+      scrollToSection('directory-section');
+      document.getElementById('directory-search').value = RESTAURANT_DATA.find(r => r.id === state.selectedSpotlightId)?.name || '';
+      filterDirectory();
+    }
+
+    // -------------------------------------------------------------
+    // CHART.JS ANALYTICS INITIALIZATION
+    // -------------------------------------------------------------
+    function initCharts() {
+      // Cuisine Distribution Stacked/Grouped Bar
+      const ctxCuisine = document.getElementById('cuisineChart')?.getContext('2d');
+      if (ctxCuisine) {
+        new Chart(ctxCuisine, {
+          type: 'bar',
+          data: {
+            labels: ['BBQ & Smoke', 'Italian/Pasta', 'Middle East/Greek', 'Mexican/Tacos', 'Bakery/Dessert', 'American/Fine'],
+            datasets: [
+              {
+                label: 'Zone 1 (0-2 mi)',
+                data: [2, 2, 4, 3, 3, 4],
+                backgroundColor: '#059669'
+              },
+              {
+                label: 'Zone 2 (2-5 mi)',
+                data: [0, 4, 0, 1, 2, 7],
+                backgroundColor: '#2563EB'
+              },
+              {
+                label: 'Zone 3 (5+ mi)',
+                data: [4, 2, 0, 1, 0, 3],
+                backgroundColor: '#7C3AED'
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+              tooltip: { callbacks: { title: (items) => items[0].label } }
+            },
+            scales: {
+              x: { stacked: true, grid: { display: false } },
+              y: { stacked: true, beginAtZero: true, ticks: { stepSize: 2 } }
+            }
+          }
+        });
+      }
+
+      // Price Tier Distribution Doughnut
+      const ctxPrice = document.getElementById('priceChart')?.getContext('2d');
+      if (ctxPrice) {
+        new Chart(ctxPrice, {
+          type: 'doughnut',
+          data: {
+            labels: ['Cheap / Fast Casual ($)', 'Mid-Level Casual ($$)', 'Fine Dining ($$$)'],
+            datasets: [{
+              data: [12, 18, 12],
+              backgroundColor: ['#16A34A', '#D97706', '#DC2626'],
+              borderWidth: 2,
+              borderColor: '#FFFFFF'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+            },
+            cutout: '65%'
+          }
+        });
+      }
+    }
+
+    // -------------------------------------------------------------
+    // CRAVING WHEEL / DECISION GENERATOR
+    // -------------------------------------------------------------
+    function spinCravingWheel() {
+      const zoneVal = document.getElementById('wheel-zone').value;
+      const priceVal = document.getElementById('wheel-price').value;
+      const vibeVal = document.getElementById('wheel-vibe').value;
+
+      let filtered = RESTAURANT_DATA.filter(item => {
+        if (zoneVal !== 'ALL' && item.zone.toString() !== zoneVal) return false;
+        if (priceVal !== 'ALL' && item.price !== priceVal) return false;
+        if (vibeVal !== 'ALL') {
+          const text = (item.cuisine + ' ' + item.signature + ' ' + item.name).toLowerCase();
+          if (vibeVal === 'bbq' && !text.includes('bbq') && !text.includes('barbecue') && !text.includes('smoked')) return false;
+          if (vibeVal === 'italian' && !text.includes('italian') && !text.includes('pizza') && !text.includes('pasta')) return false;
+          if (vibeVal === 'mexican' && !text.includes('mexican') && !text.includes('taco')) return false;
+          if (vibeVal === 'bakery' && !text.includes('bakery') && !text.includes('custard') && !text.includes('ice cream')) return false;
+          if (vibeVal === 'mediterranean' && !text.includes('greek') && !text.includes('palestinian') && !text.includes('middle eastern')) return false;
+          if (vibeVal === 'chicken' && !text.includes('chicken') && !text.includes('burger')) return false;
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        alert('No exact matches for that specific combination! Broadening search criteria...');
+        filtered = RESTAURANT_DATA;
+      }
+
+      const randomSpot = filtered[Math.floor(Math.random() * filtered.length)];
+      state.lastWheelResult = randomSpot;
+
+      const container = document.getElementById('decision-result-container');
+      container.classList.remove('hidden');
+
+      document.getElementById('result-title').innerText = randomSpot.name;
+      document.getElementById('result-signature').innerText = '🔥 ' + randomSpot.signature;
+      document.getElementById('result-address').innerText = randomSpot.address;
+      document.getElementById('result-badge-zone').innerText = randomSpot.zoneText;
+      document.getElementById('result-badge-price').innerText = randomSpot.price;
+      document.getElementById('result-badge-cuisine').innerText = randomSpot.cuisine;
+
+      selectSpotlight(randomSpot.id);
+    }
+
+    function saveResultToHitList() {
+      if (state.lastWheelResult) {
+        addToHitList(state.lastWheelResult.id);
+      }
+    }
+
+    function scrollToDirectoryWithFilter() {
+      if (state.lastWheelResult) {
+        scrollToSection('directory-section');
+        document.getElementById('directory-search').value = state.lastWheelResult.name;
+        filterDirectory();
+      }
+    }
+
+    // -------------------------------------------------------------
+    // DIRECTORY FILTERING & RENDERING
+    // -------------------------------------------------------------
+    function setZoneFilter(zone) {
+      state.currentZoneFilter = zone;
+      document.querySelectorAll('.zone-btn').forEach(btn => {
+        if (btn.getAttribute('data-zone') === zone) {
+          btn.className = "zone-btn active px-3 py-1 rounded-full border border-stone-800 bg-stone-800 text-white font-medium";
+        } else {
+          btn.className = "zone-btn px-3 py-1 rounded-full border border-stone-300 text-stone-700 font-medium hover:bg-stone-100";
+        }
+      });
+      renderDirectory();
+    }
+
+    function setPriceFilter(price) {
+      state.currentPriceFilter = price;
+      document.querySelectorAll('.price-btn').forEach(btn => {
+        if (btn.getAttribute('data-price') === price) {
+          btn.className = "price-btn active px-3 py-1 rounded-full border border-stone-800 bg-stone-800 text-white font-medium";
+        } else {
+          btn.className = "price-btn px-3 py-1 rounded-full border border-stone-300 text-stone-700 font-medium hover:bg-stone-100";
+        }
+      });
+      renderDirectory();
+    }
+
+    function filterDirectory() {
+      state.searchQuery = document.getElementById('directory-search').value.toLowerCase();
+      renderDirectory();
+    }
+
+    function toggleViewMode(mode) {
+      state.viewMode = mode;
+      const gridBtn = document.getElementById('btn-view-grid');
+      const tableBtn = document.getElementById('btn-view-table');
+
+      if (mode === 'grid') {
+        gridBtn.className = "p-1.5 bg-stone-200 text-stone-800 rounded-lg text-xs font-bold";
+        tableBtn.className = "p-1.5 bg-stone-100 text-stone-500 rounded-lg text-xs font-bold";
+        document.getElementById('directory-grid').classList.remove('hidden');
+        document.getElementById('directory-table-wrapper').classList.add('hidden');
+      } else {
+        tableBtn.className = "p-1.5 bg-stone-200 text-stone-800 rounded-lg text-xs font-bold";
+        gridBtn.className = "p-1.5 bg-stone-100 text-stone-500 rounded-lg text-xs font-bold";
+        document.getElementById('directory-grid').classList.add('hidden');
+        document.getElementById('directory-table-wrapper').classList.remove('hidden');
+      }
+      renderDirectory();
+    }
+
+    function getFilteredData() {
+      return RESTAURANT_DATA.filter(item => {
+        if (state.currentZoneFilter !== 'ALL' && item.zone.toString() !== state.currentZoneFilter) return false;
+        if (state.currentPriceFilter !== 'ALL' && item.price !== state.currentPriceFilter) return false;
+        if (state.searchQuery) {
+          const matchString = (item.name + ' ' + item.cuisine + ' ' + item.signature + ' ' + item.address + ' ' + item.description).toLowerCase();
+          if (!matchString.includes(state.searchQuery)) return false;
+        }
+        return true;
+      });
+    }
+
+    function renderDirectory() {
+      const filtered = getFilteredData();
+
+      // Render Grid Cards
+      const gridContainer = document.getElementById('directory-grid');
+      if (gridContainer) {
+        if (filtered.length === 0) {
+          gridContainer.innerHTML = `<div class="col-span-full text-center py-12 text-stone-400">No restaurants match your filter query.</div>`;
+        } else {
+          gridContainer.innerHTML = filtered.map(item => {
+            const isHit = state.hitList.includes(item.id);
+            const zoneColorClass = item.zone === 1 ? 'bg-emerald-100 text-emerald-800' :
+                                   item.zone === 2 ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800';
+
+            return `
+              <div class="bg-white rounded-xl border border-stone-200 p-5 flex flex-col justify-between hover:shadow-md transition">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold ${zoneColorClass}">
+                      Zone ${item.zone}
+                    </span>
+                    <span class="font-extrabold text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                      ${item.price}
+                    </span>
+                  </div>
+
+                  <h4 class="text-lg font-bold text-stone-900 leading-snug mb-1">${item.name}</h4>
+                  <p class="text-[11px] text-stone-500 font-mono mb-3">${item.address}</p>
+
+                  <div class="space-y-2 text-xs">
+                    <p class="text-stone-600 font-medium">
+                      <span class="text-stone-400">Cuisine:</span> ${item.cuisine}
+                    </p>
+                    <div class="bg-orange-50/70 p-2.5 rounded-lg border border-orange-200">
+                      <span class="text-[10px] uppercase font-bold text-brandprimary block mb-0.5">Signature Item</span>
+                      <p class="font-semibold text-stone-800">${item.signature}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between gap-2">
+                  <button onclick="openDetailModal('${item.id}')" class="text-xs font-bold text-stone-700 hover:text-brandprimary transition">
+                    📖 Details
+                  </button>
+                  <button onclick="addToHitList('${item.id}')" class="px-3 py-1.5 rounded-lg text-xs font-bold ${isHit ? 'bg-amber-100 text-amber-900 border border-amber-300' : 'bg-stone-100 text-stone-700 hover:bg-stone-200'} transition">
+                    ${isHit ? '⭐ Saved' : '+ Hit List'}
+                  </button>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      // Render Table Rows
+      const tableBody = document.getElementById('directory-table-body');
+      if (tableBody) {
+        tableBody.innerHTML = filtered.map(item => {
+          const isHit = state.hitList.includes(item.id);
+          return `
+            <tr class="hover:bg-stone-50 transition">
+              <td class="p-3 font-bold text-stone-900">${item.name}</td>
+              <td class="p-3">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.zone === 1 ? 'bg-emerald-100 text-emerald-800' : item.zone === 2 ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'}">
+                  Zone ${item.zone}
+                </span>
+              </td>
+              <td class="p-3 font-bold text-amber-700">${item.price}</td>
+              <td class="p-3 font-medium">${item.cuisine}</td>
+              <td class="p-3 font-semibold text-brandprimary">${item.signature}</td>
+              <td class="p-3 text-right">
+                <button onclick="openDetailModal('${item.id}')" class="px-2 py-1 text-xs font-bold text-stone-600 hover:text-stone-900">Details</button>
+                <button onclick="addToHitList('${item.id}')" class="px-2 py-1 text-xs font-bold ${isHit ? 'text-amber-700' : 'text-stone-500'}">${isHit ? '⭐ Saved' : '+ Hit List'}</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+
+    // -------------------------------------------------------------
+    // PRIORITY HIT LIST & MODALS LOGIC
+    // -------------------------------------------------------------
+    function addToHitList(id) {
+      if (!state.hitList.includes(id)) {
+        state.hitList.push(id);
+      } else {
+        state.hitList = state.hitList.filter(item => item !== id);
+      }
+      localStorage.setItem('kc_dining_hitlist', JSON.stringify(state.hitList));
+      updateHitListUI();
+      renderDirectory();
+    }
+
+    function updateHitListUI() {
+      const badge = document.getElementById('hitlist-count-badge');
+      if (badge) badge.innerText = state.hitList.length;
+
+      const summaryText = document.getElementById('hitlist-summary-text');
+      if (summaryText) summaryText.innerText = `${state.hitList.length} total spots saved for priority dining.`;
+
+      const container = document.getElementById('hitlist-items-container');
+      if (container) {
+        if (state.hitList.length === 0) {
+          container.innerHTML = `<p class="text-stone-400 text-xs text-center py-8">Your Hit List is currently empty. Click '+ Hit List' on any restaurant card to bookmark spots!</p>`;
+        } else {
+          container.innerHTML = state.hitList.map(id => {
+            const item = RESTAURANT_DATA.find(r => r.id === id);
+            if (!item) return '';
+            return `
+              <div class="flex items-center justify-between p-3 bg-stone-50 rounded-xl border border-stone-200">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold text-stone-900">${item.name}</span>
+                    <span class="text-[10px] px-1.5 py-0.5 rounded bg-stone-200 text-stone-700 font-bold">${item.price}</span>
+                    <span class="text-[10px] text-stone-500 font-medium">Zone ${item.zone}</span>
+                  </div>
+                  <p class="text-xs font-semibold text-brandprimary mt-0.5">🔥 ${item.signature}</p>
+                </div>
+                <button onclick="addToHitList('${item.id}')" class="text-red-500 hover:text-red-700 text-xs font-bold p-1">Remove</button>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+    }
+
+    function clearHitList() {
+      state.hitList = [];
+      localStorage.removeItem('kc_dining_hitlist');
+      updateHitListUI();
+      renderDirectory();
+    }
+
+    function openHitListModal() {
+      updateHitListUI();
+      document.getElementById('hitlist-modal').classList.remove('hidden');
+    }
+
+    function closeHitListModal() {
+      document.getElementById('hitlist-modal').classList.add('hidden');
+    }
+
+    // DETAIL MODAL FUNCTIONS
+    let currentModalId = null;
+
+    function openDetailModal(id) {
+      const item = RESTAURANT_DATA.find(r => r.id === id);
+      if (!item) return;
+
+      currentModalId = id;
+      document.getElementById('modal-title').innerText = item.name;
+      document.getElementById('modal-address').innerText = item.address;
+      document.getElementById('modal-signature').innerText = item.signature;
+      document.getElementById('modal-description').innerText = item.description;
+
+      document.getElementById('modal-zone').innerText = item.zoneText;
+      document.getElementById('modal-zone').className = `px-2.5 py-0.5 rounded-full text-xs font-bold ${
+        item.zone === 1 ? 'bg-emerald-100 text-emerald-800' :
+        item.zone === 2 ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
+      }`;
+
+      document.getElementById('modal-price').innerText = item.price;
+      document.getElementById('modal-cuisine').innerText = item.cuisine;
+
+      const btn = document.getElementById('modal-hitlist-btn');
+      const isHit = state.hitList.includes(id);
+      btn.innerText = isHit ? '⭐ Saved in Hit List' : '⭐ Save to Hit List';
+      btn.className = isHit ? 'px-4 py-2 bg-amber-600 text-white font-bold text-xs rounded-lg hover:bg-amber-700 transition' : 'px-4 py-2 bg-brandprimary text-white font-bold text-xs rounded-lg hover:bg-orange-800 transition shadow-sm';
+
+      document.getElementById('detail-modal').classList.remove('hidden');
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detail-modal').classList.add('hidden');
+    }
+
+    function toggleHitListFromModal() {
+      if (currentModalId) {
+        addToHitList(currentModalId);
+        openDetailModal(currentModalId); // refresh modal state
+      }
+    }
+  </script>
+</body>
+</html>
