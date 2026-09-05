@@ -1,0 +1,142 @@
+[
+  {
+    "id": "ex-01",
+    "title": "Who counts as staff?",
+    "difficulty": 1,
+    "domain": "School Session & Volunteer Platform",
+    "raw_requirement": "The system should allow staff to quickly update a completed session.",
+    "type": "functional",
+    "source": "Program Operations",
+    "rationale": "Correct attendance and reporting mistakes",
+    "expected_issues": ["weak-modal", "undefined-actor", "vague-speed", "undefined-term"],
+    "guided_questions": [
+      "Does 'should' mean mandatory or optional?",
+      "Which specific staff roles qualify to make updates?",
+      "What measurable response time does 'quickly' imply?",
+      "Can all completed sessions be changed, or only open reporting periods?"
+    ],
+    "improved_statement": "When an authorized Program Administrator discovers an attendance error, the session-management system shall permit the administrator to amend student or volunteer attendance while the reporting period remains open.",
+    "swebok_link": "3.1-basic-analysis.html"
+  },
+  {
+    "id": "ex-02",
+    "title": "Prompt report delivery",
+    "difficulty": 1,
+    "domain": "School Session & Volunteer Platform",
+    "raw_requirement": "Staff shall receive session reports promptly.",
+    "type": "functional",
+    "source": "District Coordinator",
+    "rationale": "Verify monthly participation numbers",
+    "expected_issues": ["undefined-actor", "vague-speed", "missing-trigger"],
+    "guided_questions": [
+      "Which staff roles receive the reports?",
+      "What does 'promptly' mean in terms of delivery SLA?",
+      "What trigger initiates report generation?"
+    ],
+    "improved_statement": "WHEN a session reporting period closes, the reporting service shall deliver the monthly participation report via email to Program Administrators within 1 hour.",
+    "swebok_link": "9.4-controlled-nl.html"
+  },
+  {
+    "id": "ex-03",
+    "title": "Easy session editor",
+    "difficulty": 2,
+    "domain": "School Session & Volunteer Platform",
+    "raw_requirement": "The session management editor must be simple and intuitive to use.",
+    "type": "quality-attribute",
+    "source": "Volunteer Coordinator",
+    "rationale": "Reduce training time for temporary volunteers",
+    "expected_issues": ["vague-usability", "missing-scope"],
+    "guided_questions": [
+      "Who are the target users evaluating usability?",
+      "What specific task completion metric defines 'simple'?"
+    ],
+    "improved_statement": "First-time volunteer coordinators shall complete a session attendance entry in under 3 minutes with zero training during acceptance testing.",
+    "swebok_link": "9.7-quality-attr-scenarios.html"
+  },
+  {
+    "id": "ex-04",
+    "title": "Multiple hidden actions",
+    "difficulty": 2,
+    "domain": "School Session & Volunteer Platform",
+    "raw_requirement": "The system shall update attendance and notify volunteers and regenerate reports and update the audit log.",
+    "type": "functional",
+    "source": "Data Analytics Lead",
+    "rationale": "Keep downstream metrics synchronized",
+    "expected_issues": ["hidden-conjunction"],
+    "guided_questions": [
+      "How many distinct system capabilities are combined here?",
+      "Should failure to notify a volunteer prevent updating the audit log?"
+    ],
+    "improved_statement": "Split into 4 distinct requirements: 1. Update session attendance, 2. Notify assigned volunteers, 3. Trigger asynchronous report regeneration, 4. Append entry to audit log.",
+    "swebok_link": "3.1-basic-analysis.html"
+  },
+  {
+    "id": "ex-05",
+    "title": "Unmeasured performance bound",
+    "difficulty": 3,
+    "domain": "Online Commerce",
+    "raw_requirement": "The checkout service must be fast and scalable under peak traffic.",
+    "type": "quality-attribute",
+    "source": "E-Commerce Operations",
+    "rationale": "Prevent shopping cart abandonment",
+    "expected_issues": ["vague-speed", "vague-scale"],
+    "guided_questions": [
+      "What exact throughput (requests/second) constitutes peak traffic?",
+      "What is the maximum acceptable latency at 99th percentile?"
+    ],
+    "improved_statement": "The checkout service shall process up to 2,000 concurrent transactions per second with 99th percentile latency below 300ms.",
+    "swebok_link": "1.7-qos-constraints.html"
+  },
+  {
+    "id": "ex-06",
+    "title": "Solution posing as requirement",
+    "difficulty": 3,
+    "domain": "Banking",
+    "raw_requirement": "Add a React dropdown button on the account screen to export CSV files.",
+    "type": "functional",
+    "source": "Branch Manager",
+    "rationale": "Enable offline transaction analysis",
+    "expected_issues": ["solution-not-need", "technology-name"],
+    "guided_questions": [
+      "Is React mandatory or an implementation design detail?",
+      "What core user capability is required regardless of UI widget?"
+    ],
+    "improved_statement": "The account service shall permit authenticated account holders to export transaction history in CSV format.",
+    "swebok_link": "1.3-product-vs-project.html"
+  },
+  {
+    "id": "ex-07",
+    "title": "Missing permission and audit",
+    "difficulty": 4,
+    "domain": "Public Services",
+    "raw_requirement": "Users can change applicant status anytime.",
+    "type": "functional",
+    "source": "State Auditor",
+    "rationale": "Maintain applicant workflow flexibility",
+    "expected_issues": ["universal-claim", "undefined-actor", "missing-permission", "missing-data-rule"],
+    "guided_questions": [
+      "Can ANY public user change status, or only certified caseworkers?",
+      "Is status modification permitted after a case is closed?",
+      "What audit trail is required when status changes?"
+    ],
+    "improved_statement": "WHEN an application is in active review, authorized caseworkers may modify applicant status; the system shall log the caseworker ID, prior status, new status, and timestamp in an audit record.",
+    "swebok_link": "9.5-sociotechnical.html"
+  },
+  {
+    "id": "ex-08",
+    "title": "Missing failure behavior",
+    "difficulty": 5,
+    "domain": "School Session & Volunteer Platform",
+    "raw_requirement": "The system shall save volunteer background-check status from the external API.",
+    "type": "functional",
+    "source": "Compliance Officer",
+    "rationale": "Ensure un-cleared volunteers are not assigned",
+    "expected_issues": ["missing-failure", "missing-scope"],
+    "guided_questions": [
+      "What should happen if the external API returns an error or times out?",
+      "Can a volunteer be assigned to a session while verification is pending?"
+    ],
+    "improved_statement": "WHEN an external background-check API returns verification status, the Compliance Service shall update the volunteer record. If the API fails or times out, the volunteer status shall remain 'Pending Review' and an administrator alert shall be logged.",
+    "swebok_link": "3.1-basic-analysis.html"
+  }
+]

@@ -1,0 +1,182 @@
+[
+  {
+    "id": "weak-modal",
+    "pattern": "\\b(should|could|may|might)\\b",
+    "severity": "medium",
+    "message": "Clarify whether this behavior is mandatory ('shall') or optional.",
+    "poor": "The system should send an email when a session changes.",
+    "improved": "The system shall send an email notification when session attendance is amended.",
+    "swebok_link": "3.1-basic-analysis.html"
+  },
+  {
+    "id": "vague-speed",
+    "pattern": "\\b(quickly|fast|rapidly|responsive|instantly|promptly)\\b",
+    "severity": "medium",
+    "message": "Specify a measurable response or completion threshold.",
+    "poor": "Staff shall quickly update session attendance.",
+    "improved": "The system shall complete session attendance updates within 500ms under 99th percentile load.",
+    "swebok_link": "1.5-nonfunctional-requirements.html"
+  },
+  {
+    "id": "vague-usability",
+    "pattern": "\\b(easy|simple|intuitive|user-friendly|seamless|convenient)\\b",
+    "severity": "medium",
+    "message": "Define the observable quality and how it will be evaluated.",
+    "poor": "The session editor must be easy to use.",
+    "improved": "First-time program staff shall complete an attendance amendment in under 2 minutes without external assistance during trial testing.",
+    "swebok_link": "9.7-quality-attr-scenarios.html"
+  },
+  {
+    "id": "vague-security",
+    "pattern": "\\b(secure|safe|protected|tamper-proof)\\b",
+    "severity": "high",
+    "message": "Define the security invariant, authentication role, or encryption requirement explicitly.",
+    "poor": "Attendance records must be stored securely.",
+    "improved": "Attendance audit history shall be encrypted at rest using AES-256 and restricted to authorized Program Administrators.",
+    "swebok_link": "9.1-layered-taxonomy.html"
+  },
+  {
+    "id": "vague-scale",
+    "pattern": "\\b(scalable|performant|efficient|high-capacity)\\b",
+    "severity": "medium",
+    "message": "Specify concrete throughput or capacity bounds.",
+    "poor": "The reporting system must be scalable.",
+    "improved": "The reporting job shall process up to 50,000 session records within a 15-minute maintenance window.",
+    "swebok_link": "1.7-qos-constraints.html"
+  },
+  {
+    "id": "universal-claim",
+    "pattern": "\\b(all|always|never|every|any)\\b",
+    "severity": "low",
+    "message": "Check for boundary conditions, locked states, or exception paths.",
+    "poor": "All completed sessions can be edited at any time.",
+    "improved": "Completed sessions may be edited while the reporting period remains open.",
+    "swebok_link": "3.1-basic-analysis.html"
+  },
+  {
+    "id": "undefined-actor",
+    "pattern": "\\b(users|staff|administrators|people|personnel)\\b",
+    "severity": "high",
+    "message": "Specify the exact system role or permission tier.",
+    "poor": "Staff shall receive session reports.",
+    "improved": "The session-management system shall deliver monthly reports to users with the Program Administrator role.",
+    "swebok_link": "9.5-sociotechnical.html"
+  },
+  {
+    "id": "hidden-conjunction",
+    "pattern": "(.*?\\band\\b.*?){2,}",
+    "severity": "high",
+    "message": "This statement contains multiple conjunctions. Check if it combines several distinct requirements.",
+    "poor": "The system shall update attendance and notify volunteers and regenerate reports.",
+    "improved": "Split into 3 distinct atomic requirements: 1. Update attendance, 2. Notify volunteers, 3. Regenerate reports.",
+    "swebok_link": "3.1-basic-analysis.html"
+  },
+  {
+    "id": "pronoun-ambiguity",
+    "pattern": "\\b(it|they|them|this|these|those)\\b",
+    "severity": "medium",
+    "message": "Replace ambiguous pronouns with explicit noun phrases.",
+    "poor": "When the report is generated, it shall be sent to them.",
+    "improved": "When the report is generated, the system shall email the report to Program Administrators.",
+    "swebok_link": "4.2-structured-nl.html"
+  },
+  {
+    "id": "passive-voice",
+    "pattern": "\\b(shall be|should be|must be|is|are)\\s+(\\w+ed|created|saved|deleted|updated)\\b",
+    "severity": "low",
+    "message": "Identify who or what performs the action (use active voice).",
+    "poor": "An audit log shall be created.",
+    "improved": "The session-management service shall record an entry in the audit log.",
+    "swebok_link": "9.4-controlled-nl.html"
+  },
+  {
+    "id": "missing-trigger",
+    "pattern": "^(?!.*(when|while|where|if|upon|after)).*$",
+    "severity": "medium",
+    "message": "Consider adding an explicit trigger or state condition (EARS syntax).",
+    "poor": "The system permits attendance edits.",
+    "improved": "WHEN an authorized administrator requests an edit, the system shall permit attendance updates.",
+    "swebok_link": "9.4-controlled-nl.html"
+  },
+  {
+    "id": "negative-only",
+    "pattern": "\\b(shall not|must not|cannot|should not)\\b",
+    "severity": "medium",
+    "message": "Check if the positive required alternative or failure response is defined.",
+    "poor": "Users shall not edit completed sessions.",
+    "improved": "When a non-administrator attempts to edit a completed session, the system shall reject the request and display an access-denied message.",
+    "swebok_link": "3.1-basic-analysis.html"
+  },
+  {
+    "id": "technology-name",
+    "pattern": "\\b(python|oracle|chrome|aws|postgres|react|java|docker)\\b",
+    "severity": "low",
+    "message": "Verify if naming this technology is a mandatory constraint or a premature design decision.",
+    "poor": "The system shall store attendance in a Postgres database.",
+    "improved": "The system shall persist attendance records in an append-only relational store.",
+    "swebok_link": "1.6-technology-constraints.html"
+  },
+  {
+    "id": "unmeasured-threshold",
+    "pattern": "\\b(large|recent|excessive|adequate|appropriate|normal)\\b",
+    "severity": "medium",
+    "message": "Replace qualitative descriptors with exact numerical boundaries.",
+    "poor": "Staff shall be notified of large attendance changes.",
+    "improved": "Staff shall be notified when attendance figures change by more than 15% after initial publishing.",
+    "swebok_link": "3.1-basic-analysis.html"
+  },
+  {
+    "id": "missing-failure",
+    "pattern": "\\b(update|save|delete|create)\\b(?!.*(fail|error|reject|retry|fallback))",
+    "severity": "medium",
+    "message": "Define system behavior when the operation fails or input is invalid.",
+    "poor": "The system shall save attendance corrections.",
+    "improved": "The system shall save attendance corrections; if network connectivity fails, the change shall be queued locally for auto-retry.",
+    "swebok_link": "3.1-basic-analysis.html"
+  },
+  {
+    "id": "undefined-term",
+    "pattern": "\\b(completed session|reporting period|locked state|audit history)\\b",
+    "severity": "low",
+    "message": "Ensure this domain-specific term is defined in the project glossary.",
+    "poor": "Staff can update a completed session.",
+    "improved": "Verify definition of 'completed session' in project domain glossary.",
+    "swebok_link": "2.1-sources.html"
+  },
+  {
+    "id": "solution-not-need",
+    "pattern": "\\b(add a button|click|dropdown|modal|popup|table|screen)\\b",
+    "severity": "low",
+    "message": "Focus on the required capability or policy rather than specific UI widgets.",
+    "poor": "Add an edit button to the session screen.",
+    "improved": "The session interface shall provide an attendance modification action for authorized roles.",
+    "swebok_link": "1.3-product-vs-project.html"
+  },
+  {
+    "id": "missing-scope",
+    "pattern": "\\bthe system\\b(?!\\s+[a-zA-Z0-9_-]+)",
+    "severity": "low",
+    "message": "Specify which exact system module, service, or interface component.",
+    "poor": "The system shall process requests.",
+    "improved": "The Session Management Service shall process attendance change requests.",
+    "swebok_link": "1.9-system-vs-software.html"
+  },
+  {
+    "id": "missing-data-rule",
+    "pattern": "\\b(store|save|retain|persist)\\b(?!.*(history|retention|version|audit))",
+    "severity": "medium",
+    "message": "Define audit logging and data retention requirements for saved records.",
+    "poor": "Save attendance corrections.",
+    "improved": "Save attendance corrections in an append-only audit trail preserving prior values for 7 years.",
+    "swebok_link": "9.1-layered-taxonomy.html"
+  },
+  {
+    "id": "missing-permission",
+    "pattern": "\\b(edit|delete|approve|amend|modify)\\b(?!.*(authorized|role|permission|allow))",
+    "severity": "high",
+    "message": "Specify permission authorization rules for state-modifying actions.",
+    "poor": "Allow attendance to be edited.",
+    "improved": "The system shall permit users with the Program Administrator role to amend attendance.",
+    "swebok_link": "9.5-sociotechnical.html"
+  }
+]

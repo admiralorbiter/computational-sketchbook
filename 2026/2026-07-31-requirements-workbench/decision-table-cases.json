@@ -1,0 +1,91 @@
+[
+  {
+    "id": "case-01",
+    "title": "Attendance Editing Permissions (Pathways)",
+    "domain": "School Session & Volunteer Platform",
+    "conditions": [
+      { "name": "User Role", "values": ["Program Administrator", "School Staff", "Volunteer"] },
+      { "name": "Session Status", "values": ["Confirmed", "Completed", "Cancelled"] },
+      { "name": "Reporting Period", "values": ["Open", "Locked"] }
+    ],
+    "actions": [
+      { "name": "Allow Attendance Edit" },
+      { "name": "Require Correction Reason" },
+      { "name": "Record Audit History" },
+      { "name": "Notify Program Administrator" },
+      { "name": "Reject Request" }
+    ],
+    "sample_rules": [
+      { "combo": ["Program Administrator", "Completed", "Open"], "outcomes": ["Yes", "Yes", "Yes", "No", "No"] },
+      { "combo": ["Program Administrator", "Completed", "Locked"], "outcomes": ["No", "No", "No", "No", "Yes"] },
+      { "combo": ["School Staff", "Completed", "Open"], "outcomes": ["No", "No", "No", "Yes", "Yes"] },
+      { "combo": ["Volunteer", "Completed", "Open"], "outcomes": ["No", "No", "No", "No", "Yes"] }
+    ]
+  },
+  {
+    "id": "case-02",
+    "title": "ATM Cash Withdrawal Rules",
+    "domain": "Banking",
+    "conditions": [
+      { "name": "Account Status", "values": ["Active", "Suspended", "Closed"] },
+      { "name": "Account Balance", "values": ["Sufficient", "Insufficient"] },
+      { "name": "Card Validity", "values": ["Valid", "Expired", "Stolen"] }
+    ],
+    "actions": [
+      { "name": "Dispense Cash" },
+      { "name": "Display Insufficient Balance Message" },
+      { "name": "Retain Card" },
+      { "name": "Return Card" },
+      { "name": "Reject Transaction" }
+    ]
+  },
+  {
+    "id": "case-03",
+    "title": "Student Course Registration",
+    "domain": "Education",
+    "conditions": [
+      { "name": "Tuition Status", "values": ["Paid", "Unpaid"] },
+      { "name": "Prerequisites Met", "values": ["Yes", "No"] },
+      { "name": "Course Seats Available", "values": ["Yes", "No"] },
+      { "name": "Advisor Override", "values": ["Yes", "No"] }
+    ],
+    "actions": [
+      { "name": "Confirm Registration" },
+      { "name": "Place on Waitlist" },
+      { "name": "Require Financial Hold Clearance" },
+      { "name": "Reject Registration" }
+    ]
+  },
+  {
+    "id": "case-04",
+    "title": "Password Reset & Account Lockout",
+    "domain": "Security",
+    "conditions": [
+      { "name": "Account Status", "values": ["Active", "Locked"] },
+      { "name": "Failed Attempts", "values": ["Under 5", "5 or More"] },
+      { "name": "Token Status", "values": ["Valid", "Expired", "Invalid"] }
+    ],
+    "actions": [
+      { "name": "Reset Password" },
+      { "name": "Lock Account" },
+      { "name": "Send Security Alert" },
+      { "name": "Reject Reset Request" }
+    ]
+  },
+  {
+    "id": "case-05",
+    "title": "Volunteer Event Cancellation",
+    "domain": "School Session & Volunteer Platform",
+    "conditions": [
+      { "name": "Time Before Event", "values": ["Over 24 Hours", "Under 24 Hours"] },
+      { "name": "Event Attendance", "values": ["Minimum Met", "Below Minimum"] },
+      { "name": "Weather Emergency", "values": ["Declared", "None"] }
+    ],
+    "actions": [
+      { "name": "Proceed with Event" },
+      { "name": "Auto-Cancel Event" },
+      { "name": "Notify Registered Volunteers" },
+      { "name": "Notify School Coordinator" }
+    ]
+  }
+]

@@ -1,0 +1,36 @@
+{
+  "id": "capstone-attendance",
+  "title": "Capstone Journey: Correcting Session Attendance",
+  "domain": "Pathways Community Programs Hub",
+  "overview": "Cross-tool journey transforming a vague stakeholder complaint into a reviewed requirement, a complete decision table, a traceable evidence graph, and analyzing a late-reporting policy change.",
+  "parts": [
+    {
+      "part": 1,
+      "tool": "Requirement Clinic",
+      "prompt": "Stakeholder complaint: 'We need staff to be able to fix attendance after a session is completed.'",
+      "task": "Identify ambiguities (who counts as staff, what modal obligation, what reporting period boundaries) and produce a structured EARS requirement statement.",
+      "output_id": "REQ-ATT-001"
+    },
+    {
+      "part": 2,
+      "tool": "Decision Table Studio",
+      "prompt": "The single sentence does not define behavior for School Staff, Volunteers, Cancelled sessions, or Locked reporting periods.",
+      "task": "Complete the 18-combination rule space, mark impossible combinations, and export Gherkin acceptance scenarios.",
+      "output_id": "DT-ATT-001"
+    },
+    {
+      "part": 3,
+      "tool": "Evidence Map",
+      "prompt": "Connect REQ-ATT-001 and its acceptance scenarios to upstream goals, architectural decisions, components, and metrics.",
+      "task": "Map the 30-node Pathways graph connecting Goal -> Need -> Req -> Decision -> Test -> Metric.",
+      "output_id": "GRAPH-ATT-001"
+    },
+    {
+      "part": 4,
+      "tool": "Change Impact Simulation",
+      "prompt": "Change Event: 'Pathways events sometimes submit attendance 2 weeks after the reporting period is locked.'",
+      "task": "Run BFS impact simulation on REQ-ATT-001 to identify all downstream tests, components, and metrics affected by changing the period lock policy.",
+      "output_id": "IMPACT-ATT-001"
+    }
+  ]
+}

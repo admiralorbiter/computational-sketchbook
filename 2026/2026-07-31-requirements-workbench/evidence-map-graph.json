@@ -1,0 +1,80 @@
+{
+  "title": "Community Programs Hub (Pathways) Evidence Graph",
+  "nodes": [
+    { "id": "G-1", "type": "goal", "title": "Improve accuracy of participation reporting", "status": "active" },
+    { "id": "G-2", "type": "goal", "title": "Allow corrections without compromising auditability", "status": "active" },
+    { "id": "G-3", "type": "goal", "title": "Reduce staff error-resolution turnaround time", "status": "active" },
+
+    { "id": "N-1", "type": "need", "title": "Program staff need to correct attendance errors", "status": "active" },
+    { "id": "N-2", "type": "need", "title": "Data staff need to know when figures change", "status": "active" },
+    { "id": "N-3", "type": "need", "title": "School staff need a process for reporting corrections", "status": "active" },
+    { "id": "N-4", "type": "need", "title": "Leadership needs reports to remain reproducible", "status": "active" },
+
+    { "id": "R-1", "type": "requirement", "title": "Program administrators may amend attendance during open reporting period", "status": "approved" },
+    { "id": "R-2", "type": "requirement", "title": "Completed-session corrections require a reason", "status": "approved" },
+    { "id": "R-3", "type": "requirement", "title": "System records old and new attendance values", "status": "approved" },
+    { "id": "R-4", "type": "requirement", "title": "School staff cannot directly edit completed-session attendance", "status": "approved" },
+    { "id": "R-5", "type": "requirement", "title": "School staff may submit a correction request", "status": "approved" },
+    { "id": "R-6", "type": "requirement", "title": "Locked reporting periods prevent attendance editing", "status": "approved" },
+    { "id": "R-7", "type": "requirement", "title": "Approved corrections trigger report recalculation", "status": "approved" },
+    { "id": "R-8", "type": "requirement", "title": "Changes to published totals generate notification", "status": "approved" },
+
+    { "id": "A-1", "type": "assumption", "title": "Reporting periods have a clearly recorded status", "status": "confirmed" },
+    { "id": "A-2", "type": "assumption", "title": "Every user has exactly one relevant permission role", "status": "contested" },
+    { "id": "A-3", "type": "assumption", "title": "Attendance changes are attributed to an authenticated user", "status": "confirmed" },
+
+    { "id": "D-1", "type": "decision", "title": "Store corrections in append-only audit table", "status": "approved" },
+    { "id": "D-2", "type": "decision", "title": "Add a correction-request workflow for school staff", "status": "approved" },
+    { "id": "D-3", "type": "decision", "title": "Recalculate reports asynchronously via background job", "status": "approved" },
+    { "id": "D-4", "type": "decision", "title": "Display correction history on session page", "status": "approved" },
+
+    { "id": "C-1", "type": "component", "title": "Attendance Editor UI", "status": "implemented" },
+    { "id": "C-2", "type": "component", "title": "Correction Request Form", "status": "implemented" },
+    { "id": "C-3", "type": "component", "title": "Permission Service", "status": "implemented" },
+    { "id": "C-4", "type": "component", "title": "Audit Service", "status": "implemented" },
+    { "id": "C-5", "type": "component", "title": "Reporting Job", "status": "implemented" },
+    { "id": "C-6", "type": "component", "title": "Notification Service", "status": "implemented" },
+
+    { "id": "T-1", "type": "test", "title": "Administrator edits completed-session attendance", "status": "passing" },
+    { "id": "T-2", "type": "test", "title": "School staff edit is rejected", "status": "passing" },
+    { "id": "T-3", "type": "test", "title": "Locked-period edit is rejected", "status": "passing" },
+    { "id": "T-4", "type": "test", "title": "Audit record created with old/new values", "status": "passing" },
+    { "id": "T-5", "type": "test", "title": "Report is recalculated asynchronously", "status": "passing" },
+    { "id": "T-6", "type": "test", "title": "Notification sent when published figures change", "status": "passing" },
+
+    { "id": "M-1", "type": "metric", "title": "Percentage of completed sessions with attendance", "status": "monitored" },
+    { "id": "M-2", "type": "metric", "title": "Number of post-completion corrections", "status": "monitored" },
+    { "id": "M-3", "type": "metric", "title": "Correction-request processing time", "status": "monitored" },
+    { "id": "M-4", "type": "metric", "title": "Percentage of corrections with valid audit records", "status": "monitored" },
+
+    { "id": "I-1", "type": "incident", "title": "INC-88: Attendance changed post-quarterly distribution without recipient notification", "status": "open" }
+  ],
+  "edges": [
+    { "source": "G-1", "target": "N-1", "type": "derived-from" },
+    { "source": "G-1", "target": "N-2", "type": "derived-from" },
+    { "source": "G-2", "target": "N-4", "type": "derived-from" },
+    { "source": "N-1", "target": "R-1", "type": "satisfies" },
+    { "source": "N-1", "target": "R-2", "type": "satisfies" },
+    { "source": "N-4", "target": "R-3", "type": "satisfies" },
+    { "source": "N-3", "target": "R-5", "type": "satisfies" },
+    { "source": "N-2", "target": "R-8", "type": "satisfies" },
+    { "source": "R-1", "target": "A-1", "type": "assumes" },
+    { "source": "R-4", "target": "A-2", "type": "assumes" },
+    { "source": "R-3", "target": "D-1", "type": "implemented-by" },
+    { "source": "R-5", "target": "D-2", "type": "implemented-by" },
+    { "source": "R-7", "target": "D-3", "type": "implemented-by" },
+    { "source": "D-1", "target": "C-4", "type": "implemented-by" },
+    { "source": "D-2", "target": "C-2", "type": "implemented-by" },
+    { "source": "D-3", "target": "C-5", "type": "implemented-by" },
+    { "source": "R-8", "target": "C-6", "type": "implemented-by" },
+    { "source": "R-1", "target": "T-1", "type": "verified-by" },
+    { "source": "R-4", "target": "T-2", "type": "verified-by" },
+    { "source": "R-6", "target": "T-3", "type": "verified-by" },
+    { "source": "R-3", "target": "T-4", "type": "verified-by" },
+    { "source": "R-7", "target": "T-5", "type": "verified-by" },
+    { "source": "R-8", "target": "T-6", "type": "verified-by" },
+    { "source": "R-1", "target": "M-1", "type": "monitored-by" },
+    { "source": "R-3", "target": "M-4", "type": "monitored-by" },
+    { "source": "I-1", "target": "R-8", "type": "triggered-by" }
+  ]
+}
