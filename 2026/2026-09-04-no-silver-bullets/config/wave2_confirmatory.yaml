@@ -1,0 +1,14 @@
+# R2 Wave 2 Confirmatory Research Configuration
+contract_id: "NSB-R2-WAVE2-B-CONFIRMATORY"
+mode: "wave2_confirmatory"
+benchmark_version: "v002_wave2"
+benchmark_split: "confirmatory"
+criteria_contract_path: "config/contracts/r2_wave2_criteria.yaml"
+
+resource_limits:
+  max_wall_seconds: 1800.0
+  max_cpu_seconds: 1800.0
+  max_rss_mb: 2048
+
+tracks_enabled:
+  - "track_b"

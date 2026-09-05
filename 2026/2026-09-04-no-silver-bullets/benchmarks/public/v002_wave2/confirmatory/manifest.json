@@ -1,0 +1,10 @@
+{
+  "benchmark_version": "v002_wave2",
+  "split": "confirmatory",
+  "master_seed": 20260904,
+  "total_instances": 150,
+  "public_file": "benchmarks\\public\\v002_wave2\\confirmatory\\instances.jsonl",
+  "public_sha256": "4c934876f62f3dbf9392fc6142cf6afe3f147dd9cea02842df833da305176ef0",
+  "sealed_file": "benchmarks\\sealed\\v002_wave2\\confirmatory\\truth.jsonl",
+  "sealed_sha256": "db0981a7d95fd883e1dd541247e886022167b71aa2ba8862600bf45743c865e2"
+}

@@ -1,0 +1,284 @@
+{
+  "G0": {
+    "gate": "R3-G0",
+    "passed": true,
+    "message": "CADO-NFS environment verified",
+    "fingerprint": {
+      "platform": "linux",
+      "is_linux": true,
+      "is_windows": false,
+      "has_wsl": false,
+      "nsb_git_commit": "c3d69c6b1929680b3f22c43ae8ac716a3d058f4d",
+      "nsb_git_dirty": false,
+      "python_version": "3.12.3",
+      "python_executable": "/home/admir/.venv-nsb/bin/python",
+      "python_build": [
+        "main",
+        "Jul 15 2026 23:46:41"
+      ],
+      "python_compiler": "GCC 13.3.0",
+      "python_dependency_locks": {
+        "poetry.lock": "not_found",
+        "pyproject.toml": "45ec363afdd326ebcf96529c8a187aa8f93f9df728b822d3417ba853c6f15818"
+      },
+      "installed_python_packages": {
+        "nsb": "0.1.0",
+        "markupsafe": "3.0.3",
+        "click": "8.5.0",
+        "werkzeug": "3.1.8",
+        "gmpy2": "2.3.1",
+        "charset-normalizer": "3.5.1",
+        "iniconfig": "2.3.0",
+        "numpy": "2.5.2",
+        "pydantic": "2.13.5",
+        "requests": "2.34.2",
+        "typing-inspection": "0.4.4",
+        "pytest": "9.1.1",
+        "psutil": "7.2.2",
+        "python-sat": "1.9.dev15",
+        "scipy": "1.18.1",
+        "pydantic_core": "2.46.5",
+        "z3-solver": "5.1.0.0",
+        "packaging": "26.3",
+        "idna": "3.19",
+        "pygments": "2.21.0",
+        "flask": "3.1.3",
+        "pluggy": "1.6.0",
+        "pip": "26.2.1",
+        "six": "1.17.0",
+        "typing_extensions": "4.16.0",
+        "pyyaml": "6.0.3",
+        "coverage": "7.16.0",
+        "certifi": "2026.7.22",
+        "jinja2": "3.1.6",
+        "pytest-cov": "7.1.0",
+        "blinker": "1.9.0",
+        "urllib3": "2.7.0",
+        "itsdangerous": "2.2.0",
+        "annotated-types": "0.8.0"
+      },
+      "installed_python_packages_hash": "9ec3edbe8a9812667b5839b315d45ca29818ba93717a1b085dab663ae53156c5",
+      "cpu_architecture": "x86_64",
+      "cpu_model": "AMD Ryzen 7 5800X 8-Core Processor",
+      "cpu_count": 16,
+      "ram": {
+        "total_bytes": 25159155712,
+        "available_bytes": 24401674240,
+        "total_mb": 23993.64,
+        "available_mb": 23271.25
+      },
+      "os_system": "Linux",
+      "os_release": "6.18.33.2-microsoft-standard-WSL2",
+      "os_version": "#1 SMP PREEMPT_DYNAMIC Thu Jun 18 21:54:43 UTC 2026",
+      "uname": {
+        "system": "Linux",
+        "node": "DESKTOP-O7QMNS3",
+        "release": "6.18.33.2-microsoft-standard-WSL2",
+        "version": "#1 SMP PREEMPT_DYNAMIC Thu Jun 18 21:54:43 UTC 2026",
+        "machine": "x86_64",
+        "processor": "x86_64"
+      },
+      "cado_root": "/opt/cado-nfs",
+      "cado_root_exists": true,
+      "pinned_git_commit": "73ca6b6847118b05b15eeec27c86f45cef82a19e",
+      "detected_git_commit": "73ca6b6847118b05b15eeec27c86f45cef82a19e",
+      "is_git_clean": true,
+      "toolchain": {
+        "gcc": "13.3.0",
+        "cmake": "cmake version 3.28.3",
+        "git": "git version 2.43.0"
+      },
+      "gmp_mpfr": {
+        "gmp": "6.3.0",
+        "mpfr": "4.2.1"
+      },
+      "cmake_cache": {
+        "cache_path": "/opt/cado-nfs/build/nsb-r3/CMakeCache.txt",
+        "exists": true,
+        "sha256": "154127fda0ed3b11ee1b00fde0344da3ede6cd47365bcdaa47cbaea14503b9af",
+        "effective_cmake_flags": {
+          "CMAKE_BUILD_TYPE": "Release",
+          "CMAKE_CXX_COMPILER": "/usr/bin/c++",
+          "CMAKE_CXX_FLAGS": "",
+          "CMAKE_CXX_FLAGS_DEBUG": "-g",
+          "CMAKE_CXX_FLAGS_RELEASE": "-O3 -DNDEBUG",
+          "CMAKE_C_COMPILER": "/usr/bin/cc",
+          "CMAKE_C_FLAGS": "",
+          "CMAKE_C_FLAGS_DEBUG": "-g",
+          "CMAKE_C_FLAGS_RELEASE": "-O3 -DNDEBUG",
+          "CMAKE_EXE_LINKER_FLAGS": "",
+          "CMAKE_MODULE_LINKER_FLAGS": "",
+          "CMAKE_SHARED_LINKER_FLAGS": "",
+          "CMAKE_GENERATOR": "Unix Makefiles"
+        }
+      },
+      "relevant_env_vars": {
+        "CADO_NFS_ROOT": "/opt/cado-nfs",
+        "PYTHONPATH": "src"
+      },
+      "binaries_present": [
+        "polyselect",
+        "polyselect_ropt",
+        "score",
+        "makefb",
+        "las",
+        "check_rels"
+      ],
+      "missing_binaries": [],
+      "binary_hashes": {
+        "polyselect": {
+          "path": "/opt/cado-nfs/build/nsb-r3/polyselect/polyselect",
+          "sha256": "7ebc096f5e7830663acd43d7e83e973f4132ea4971c035b8ec70d1e106d5fbdb"
+        },
+        "polyselect_ropt": {
+          "path": "/opt/cado-nfs/build/nsb-r3/polyselect/polyselect_ropt",
+          "sha256": "4e8f00182ea7ac8912183b9d2c002a2f5c30d634a562e18165412ca1d8b9d273"
+        },
+        "score": {
+          "path": "/opt/cado-nfs/build/nsb-r3/polyselect/score",
+          "sha256": "49bcf15da4c9103f063c152720cc14c0d30450685c7f2fb2f4b4eaa46620d428"
+        },
+        "makefb": {
+          "path": "/opt/cado-nfs/build/nsb-r3/sieve/makefb",
+          "sha256": "327f56b89dae2aaa50b37bfbce84d1561ccb438171a144664272e5944f4a0d76"
+        },
+        "las": {
+          "path": "/opt/cado-nfs/build/nsb-r3/sieve/las",
+          "sha256": "7207656efc4e89748c499bda821d63be027a69811035a3413aadcc9f56da87f9"
+        },
+        "check_rels": {
+          "path": "/opt/cado-nfs/build/nsb-r3/misc/check_rels",
+          "sha256": "234cd00682adf30ed4b6e9669224ec14b7397e19ee28633162889598cf792d3d"
+        }
+      }
+    }
+  },
+  "G1": {
+    "gate": "R3-G1",
+    "passed": true,
+    "modulus_n": "100000000000000000000000000047894685265564092504022465716177",
+    "digit_count": 60,
+    "profile_name": "canary_plumbing_c60",
+    "sieve_profile": {
+      "profile_name": "canary_plumbing_c60",
+      "target_digits": 60,
+      "i_param": 11,
+      "lim0": 500000,
+      "lim1": 1000000,
+      "lpb0": 22,
+      "lpb1": 22,
+      "mfb0": 44,
+      "mfb1": 44,
+      "ncurves0": 2,
+      "ncurves1": 2,
+      "sqside": 1,
+      "qmin": 500000,
+      "qrange": 200
+    },
+    "certified_pair": "n: 100000000000000000000000000047894685265564092504022465716177\nskew: 133.4430\nc0: 12256954669011\nc1: 1006054324218\nc2: 474377302\nc3: -40842601\nc4: 276390\nc5: -720\nY0: -210880090722\nY1: 492179\n# m: 4382348698339425290392316618614448130645460109470864815265\n# n: 100000000000000000000000000047894685265564092504022465716177\n# Y0: -210855973951\n# Y1: 492179\n# c0: 1081207651380\n# c1: 24380735251\n# c2: -2392914789\n# c3: -3957361\n# c4: 99990\n# c5: -720\n# skew: 66.690\n# exp_e: 13.4\n# lognorm: 18.47\n# murphy_e: 1.533e-05\n",
+    "polyselect": {
+      "degree1": 5,
+      "degree2": 1,
+      "skew": 133.443,
+      "cpu_seconds": 14.13,
+      "wall_seconds": 14.1379
+    },
+    "scoring": {
+      "murphy_e": 1.53e-05,
+      "lognorm": 18.47,
+      "exp_e": 13.67,
+      "skew": 133.44,
+      "rroots": 3,
+      "cpu_seconds": 0.0019
+    },
+    "sieving": {
+      "q_start": 500000,
+      "q_range": 200,
+      "unique_relations": 5494,
+      "total_relations": 5494,
+      "relations_hash": "e56879f8b1ab44749c9236aa5f30686b5359abbd05ef23aea2b0912a2cfd7955",
+      "checked_with_check_rels": true,
+      "conservation_checked": true,
+      "cpu_seconds": 1.2323,
+      "relations_per_cpu_second": 4458.33
+    },
+    "total_cpu_seconds": 15.3642,
+    "total_wall_seconds": 15.8676
+  },
+  "G2": {
+    "gate": "R3-G2",
+    "gate_name": "R3-G2 Deterministic Rerun Canary",
+    "passed": true,
+    "profile_name": "canary_plumbing_c60",
+    "sieve_profile": {
+      "profile_name": "canary_plumbing_c60",
+      "target_digits": 60,
+      "i_param": 11,
+      "lim0": 500000,
+      "lim1": 1000000,
+      "lpb0": 22,
+      "lpb1": 22,
+      "mfb0": 44,
+      "mfb1": 44,
+      "ncurves0": 2,
+      "ncurves1": 2,
+      "sqside": 1,
+      "qmin": 500000,
+      "qrange": 200
+    },
+    "q_start": 500000,
+    "q_range": 200,
+    "counterbalanced_order": [
+      "A1",
+      "B1",
+      "B2",
+      "A2"
+    ],
+    "relation_record_hash": "e56879f8b1ab44749c9236aa5f30686b5359abbd05ef23aea2b0912a2cfd7955",
+    "relation_set_hash": "e56879f8b1ab44749c9236aa5f30686b5359abbd05ef23aea2b0912a2cfd7955",
+    "ab_pairs_hash": "33c39da676d594ae9d3f94c041e1633fab35aca099a67de52275b7bdfd50d72e",
+    "unique_relations": 5494,
+    "expected_relations_hash": "e56879f8b1ab44749c9236aa5f30686b5359abbd05ef23aea2b0912a2cfd7955",
+    "cross_gate_hash_match": true,
+    "runs": {
+      "A1": {
+        "unique_relations": 5494,
+        "total_relations": 5494,
+        "relations_hash": "e56879f8b1ab44749c9236aa5f30686b5359abbd05ef23aea2b0912a2cfd7955",
+        "ab_pairs_hash": "33c39da676d594ae9d3f94c041e1633fab35aca099a67de52275b7bdfd50d72e",
+        "checked_with_check_rels": true,
+        "conservation_checked": true,
+        "cpu_seconds": 1.253
+      },
+      "B1": {
+        "unique_relations": 5494,
+        "total_relations": 5494,
+        "relations_hash": "e56879f8b1ab44749c9236aa5f30686b5359abbd05ef23aea2b0912a2cfd7955",
+        "ab_pairs_hash": "33c39da676d594ae9d3f94c041e1633fab35aca099a67de52275b7bdfd50d72e",
+        "checked_with_check_rels": true,
+        "conservation_checked": true,
+        "cpu_seconds": 1.2752
+      },
+      "B2": {
+        "unique_relations": 5494,
+        "total_relations": 5494,
+        "relations_hash": "e56879f8b1ab44749c9236aa5f30686b5359abbd05ef23aea2b0912a2cfd7955",
+        "ab_pairs_hash": "33c39da676d594ae9d3f94c041e1633fab35aca099a67de52275b7bdfd50d72e",
+        "checked_with_check_rels": true,
+        "conservation_checked": true,
+        "cpu_seconds": 1.2827
+      },
+      "A2": {
+        "unique_relations": 5494,
+        "total_relations": 5494,
+        "relations_hash": "e56879f8b1ab44749c9236aa5f30686b5359abbd05ef23aea2b0912a2cfd7955",
+        "ab_pairs_hash": "33c39da676d594ae9d3f94c041e1633fab35aca099a67de52275b7bdfd50d72e",
+        "checked_with_check_rels": true,
+        "conservation_checked": true,
+        "cpu_seconds": 1.2425
+      }
+    },
+    "deterministic_rerun_verified": true,
+    "invariance_verified": true
+  }
+}

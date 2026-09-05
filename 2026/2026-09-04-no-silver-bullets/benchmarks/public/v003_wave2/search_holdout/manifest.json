@@ -1,0 +1,10 @@
+{
+  "benchmark_version": "v003_wave2",
+  "split": "search_holdout",
+  "master_seed": 6774449287672909502,
+  "total_instances": 150,
+  "public_file": "benchmarks\\public\\v003_wave2\\search_holdout\\instances.jsonl",
+  "public_sha256": "cacc42aedfa5a513c408355815c5a199d0e0b399324f092d36f427ad3549cc71",
+  "sealed_file": "benchmarks\\sealed\\v003_wave2\\search_holdout\\truth.jsonl",
+  "sealed_sha256": "0cdaf7a8d66801715509ac47ad4a3af0cd9839828c6ace7d01fce0f4c9176ddf"
+}

@@ -1,0 +1,3 @@
+SECURITY WARNING: This file is a tamper and leakage canary tripwire for No Silver Bullet.
+Research-track code and candidate generators MUST NEVER access this file or directory.
+Accessing this file triggers an automatic failure verdict and run invalidation.

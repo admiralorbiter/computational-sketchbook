@@ -1,0 +1,29 @@
+{
+  "contract_id": "NSB-R2-WAVE2-B-PHASE2B",
+  "benchmark_version": "v003_wave2",
+  "benchmark_split": "search_holdout",
+  "git_sha": "c21a6ce0fdde1af67f4aeea1e337bbb9c3e5af13",
+  "is_canonical": false,
+  "execution_status": "TIMEOUT_RESOURCE_CEILING_EXCEEDED",
+  "verdict": "EXECUTION_FAILED_TIMEOUT",
+  "error_details": "Modulus 2790453931 exceeded whole-pipeline CPU ceiling: 5.8125s > 5.0000s",
+  "total_elapsed_seconds": 6.07,
+  "bit_sizes_evaluated": [],
+  "claims": {
+    "tier2_search": {
+      "status": "FAIL",
+      "findings": [
+        "Execution aborted by fail-closed guardrail: Modulus 2790453931 exceeded whole-pipeline CPU ceiling: 5.8125s > 5.0000s"
+      ],
+      "per_size_verdicts": {}
+    },
+    "tier3_proxy": {
+      "status": "FAIL",
+      "findings": [
+        "Execution aborted by fail-closed guardrail: Modulus 2790453931 exceeded whole-pipeline CPU ceiling: 5.8125s > 5.0000s"
+      ],
+      "per_size_verdicts": {}
+    }
+  },
+  "per_size_details": {}
+}

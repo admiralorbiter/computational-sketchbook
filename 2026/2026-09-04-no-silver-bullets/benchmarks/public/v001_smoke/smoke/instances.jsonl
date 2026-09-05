@@ -1,0 +1,11 @@
+{"instance_id":"R-032-00001","family":"R","bits":32,"N":"3201165293","metadata":{}}
+{"instance_id":"R-032-00002","family":"R","bits":32,"N":"2268166753","metadata":{}}
+{"instance_id":"R-040-00001","family":"R","bits":40,"N":"959928884401","metadata":{}}
+{"instance_id":"R-040-00002","family":"R","bits":40,"N":"941380798867","metadata":{}}
+{"instance_id":"R-048-00001","family":"R","bits":48,"N":"164561948417177","metadata":{}}
+{"instance_id":"R-048-00002","family":"R","bits":48,"N":"194968944280841","metadata":{}}
+{"instance_id":"F-048-00001","family":"F","bits":48,"N":"71641158092099","metadata":{}}
+{"instance_id":"P1-048-00001","family":"P1","bits":48,"N":"2269255616371","metadata":{}}
+{"instance_id":"C-048-00001","family":"C","bits":48,"N":"187191210254821","metadata":{"oracle":{"target":"p","factor_bit_length":24,"oracle_type":"msb","known_bits":12,"fraction":0.5,"msb_value":3056,"shift":12}}}
+{"instance_id":"E-016-00001","family":"E","bits":16,"N":"33233","metadata":{}}
+{"instance_id":"E-024-00001","family":"E","bits":24,"N":"10967797","metadata":{}}

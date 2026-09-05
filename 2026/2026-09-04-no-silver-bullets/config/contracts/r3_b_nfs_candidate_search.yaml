@@ -1,0 +1,91 @@
+﻿# Preregistered Experimental Contract: NSB-R3-B-NFS-CANDIDATE-SEARCH
+# Track: Track B (Algebraic Evolution & Realistic NFS Polynomial Selection)
+# Phase: Candidate Search & Interface Freeze (R3-G4)
+contract_id: "NSB-R3-B-NFS-CANDIDATE-SEARCH"
+version: "1.0.0"
+track: "track_b"
+baseline_reference_contract: "NSB-R3-B-NFS-BASELINE-FOUNDATION"
+baseline_reference_version: "1.3.0"
+baseline_framework: "cado-nfs"
+pinned_baseline_commit: "73ca6b6847118b05b15eeec27c86f45cef82a19e"
+execution_environment: "native_linux_only"
+
+governance_status:
+  baseline_foundation_certified: true
+  public_candidate_development: "GO"
+  candidate_interface_frozen: true
+  holdout_generation: "STRICT_HOLD"
+  candidate_holdout_evaluation: "STRICT_HOLD"
+
+candidate_interface:
+  protocol: "NfsCandidateSelector"
+  entry_point: "select(N: int, profile: CadoParameterProfile, budget: SearchBudget, seed: int) -> CandidateOutput"
+  intervention_levels:
+    - "full_selector"
+    - "stage1_generator"
+    - "post_ropt_ranker"
+  structural_constraints:
+    algebraic_degree_must_equal_profile: true
+    rational_degree_must_equal_one: true
+    require_primitive_coefficients: true
+    require_common_root_modulus_match: true
+    require_resultant_divisible_by_n: true
+    disallow_modulus_mismatch: true
+
+search_budget_enforcement:
+  budget_rule: "1.00x paired baseline selection CPU for identical modulus and pinned profile"
+  accounting_mechanism: "cgroup_v2_cpu_stat"
+  cgroup_root: "/sys/fs/cgroup/nsb"
+  overshoot_policy: "fail_closed_reject_if_final_cpu_exceeds_budget"
+  concurrency_limit: 1
+  concurrency_enforcement: "taskset -c 0"
+  memory_limit_mb: 4096
+  memory_enforcement: "cgroup_v2_memory_max"
+  network_access: "prohibited"
+  network_enforcement: "linux_netns_unshare"
+  gpu_access: "prohibited"
+  gpu_enforcement: "strip_cuda_and_rocm_env"
+  safety_timeout_seconds: 600.0
+
+identical_accounting_boundary:
+  outer_sandbox_runner: "MonitoredSandboxRunner"
+  charge_starts_at_entry_point: true
+  charge_stops_at_return: true
+  baseline_outer_cpu_recorded_separately: true
+
+intervention_cost_rules:
+  full_selector:
+    charged_components: ["candidate_search_cpu"]
+  stage1_generator:
+    charged_components: ["candidate_generator_cpu", "harness_cado_ropt_cpu"]
+  post_ropt_ranker:
+    charged_components: ["harness_cado_pool_gen_cpu", "candidate_ranker_cpu"]
+
+promotion_criteria:
+  tier_1_quality:
+    primary_estimand: "paired_relation_count_ratio"
+    sample_geometric_mean_ratio_min: 1.10
+    bootstrap_ci_confidence: 0.95
+    bootstrap_ci_method: "percentile"
+    bootstrap_resamples: 10000
+    bootstrap_seed: 42
+    ci_lower_bound_must_exceed: 1.00
+    require_positive_median_per_size_cohort: true
+  tier_2_system:
+    metric: "total_core_seconds_per_valid_relation"
+    sample_cost_reduction_min: 0.05
+    bootstrap_ci_confidence: 0.95
+    ci_upper_bound_must_be_below: 1.00
+  failure_policy:
+    failed_run_yield: 0
+    failed_run_cost_multiplier: 100.0
+
+future_holdout_specification:
+  status: "STRICT_HOLD_SPEC_ONLY"
+  sizes: [95, 100]
+  instances_per_size: 10
+  total_instances: 20
+  profiles:
+    95: "c95_pinned"
+    100: "c100_pinned"
+  seed_derivation_rule: "NSB-R3-HOLDOUT- + sha256(candidate_freeze_commit_sha)[:16].upper()"

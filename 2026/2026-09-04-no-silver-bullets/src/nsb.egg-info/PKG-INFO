@@ -1,0 +1,175 @@
+Metadata-Version: 2.4
+Name: nsb
+Version: 0.1.0
+Summary: No Silver Bullet - Controlled experimental program for integer factorization research
+Author: No Silver Bullet Research Team
+License: MIT
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+Requires-Dist: gmpy2>=2.2.0
+Requires-Dist: python-sat>=1.9.dev15
+Requires-Dist: z3-solver>=5.1.0
+Requires-Dist: numpy>=1.26.0
+Requires-Dist: scipy>=1.12.0
+Requires-Dist: pydantic>=2.7.0
+Requires-Dist: pyyaml>=6.0.1
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0.0; extra == "dev"
+Requires-Dist: pytest-cov>=5.0.0; extra == "dev"
+
+# No Silver Bullet
+
+**A controlled experimental program for alternative classical integer-factorization research**
+
+* **Working title**: No Silver Bullet
+* **Primary research target**: Balanced RSA-like semiprimes generated for experiment, plus historical/public challenge numbers for validation.
+* **Core rule**: The project may search aggressively, but it may not move the goalposts.
+
+---
+
+## Why this repository exists
+
+The project asks a narrow but ambitious question:
+
+> *Can any modern combination of mathematical representation, automated algorithm search, tensor/lattice methods, partial-information recovery, or alternative constraint encodings produce a materially different practical scaling curve for factoring balanced semiprimes?*
+
+The project does not begin by claiming that a new factoring method exists. It is designed to make unconventional ideas **cheap to test**, **easy to kill**, and **difficult to fool ourselves about**.
+
+---
+
+## Four Research Tracks Share One Benchmark Harness
+
+* **Track A — Tensor/Lattice Relation Discovery**  
+  Revisit Schnorr-style lattice factoring using modern low-energy search, tensor-network-inspired sampling, and automated mutation of the lattice/sampler design. See [docs/05_TRACK_A_TENSOR_LATTICE.md](docs/05_TRACK_A_TENSOR_LATTICE.md).
+* **Track B — Evolved Algebraic Representations**  
+  Search for better algebraic representations and polynomial-selection strategies, using NFS-style smoothness yield as an objective and an exact downstream factorization test as the final arbiter. See [docs/06_TRACK_B_ALGEBRAIC_EVOLUTION.md](docs/06_TRACK_B_ALGEBRAIC_EVOLUTION.md).
+* **Track C — Partial-Information Bridge**  
+  Ask whether a method can derive useful partial constraints on a hidden factor from $N$ alone, then hand those constraints to lattice/Coppersmith-style recovery. See [docs/07_TRACK_C_PARTIAL_INFORMATION.md](docs/07_TRACK_C_PARTIAL_INFORMATION.md).
+* **Track D — Constraint-Graph Inversion**  
+  Re-express multiplication/factorization as SAT/CSP/tensor/graph problems and search for encodings with lower effective dependency complexity than ordinary binary multiplication. See [docs/08_TRACK_D_CONSTRAINT_GRAPH.md](docs/08_TRACK_D_CONSTRAINT_GRAPH.md).
+
+A fifth component, **Control Portfolio**, is not a research track. It contains known methods such as Fermat, Pollard $\rho$, $p-1$, ECM, and quadratic-sieve/NFS baselines, alongside deliberately weak synthetic families. It proves that the benchmark and verifier can distinguish “method works” from “method merely ran.”
+
+---
+
+## Operating Philosophy
+
+This repository borrows a **Mother Base**-style separation of responsibilities:
+
+* **Human**: Sets the moonshot, resource limits, and scientific boundaries.
+* **Research Director**: Proposes experiments, mutates parameters, allocates bounded compute, kills weak branches, and nominates promising ones.
+* **Runner**: Executes immutable experiment specifications.
+* **Verifier**: Performs deterministic checks and computes canonical metrics.
+* **Auditor**: Checks leakage, benchmark integrity, provenance, and whether promotion criteria were actually met.
+* **Repository**: The scientific source of truth.
+
+> **The AI may propose. The verifier decides whether the measurable claim is true.**
+
+---
+
+## Execution Gates
+
+Every idea must pass three gates:
+
+* **Gate 0 — Canary** (Seconds to a few minutes)  
+  *Purpose*: Prove plumbing, invariants, exact verification, and positive/negative controls.
+* **Gate 1 — Pilot** (Minutes to a few hours)  
+  *Purpose*: Compare against baselines across multiple bit sizes and random seeds. No “hero run” can substitute for a scaling trend.
+* **Gate 2 — Search** (Potentially long-running)  
+  *Purpose*: Spend compute only on branches that passed predeclared promotion criteria.
+
+---
+
+## Scientific Success is Not “Factored a Number”
+
+A useful result may be:
+- A lower empirical scaling exponent over a validated range;
+- A large and reproducible constant-factor speedup in a known bottleneck;
+- A representation that yields materially more smooth relations per CPU-second;
+- A partial-information generator that crosses a lattice-recovery threshold;
+- An encoding whose solver complexity grows materially slower than the baseline;
+- A falsification showing that a seductive modernized dead end still dies for a precise reason.
+
+> *A factorization is a result. A changed scaling law is the prize.*
+
+---
+
+## Start Here
+
+Read, in order:
+
+1. [ACTIVE_CONTRACT.md](ACTIVE_CONTRACT.md)
+2. [docs/00_PROGRAM_CHARTER.md](docs/00_PROGRAM_CHARTER.md)
+3. [docs/01_RESEARCH_SYNTHESIS.md](docs/01_RESEARCH_SYNTHESIS.md)
+4. [docs/02_SYSTEM_ARCHITECTURE.md](docs/02_SYSTEM_ARCHITECTURE.md)
+5. [docs/03_BENCHMARK_CORPUS.md](docs/03_BENCHMARK_CORPUS.md)
+6. [docs/04_EXPERIMENT_PROTOCOL.md](docs/04_EXPERIMENT_PROTOCOL.md)
+7. Track Documents:
+   - [docs/05_TRACK_A_TENSOR_LATTICE.md](docs/05_TRACK_A_TENSOR_LATTICE.md)
+   - [docs/06_TRACK_B_ALGEBRAIC_EVOLUTION.md](docs/06_TRACK_B_ALGEBRAIC_EVOLUTION.md)
+   - [docs/07_TRACK_C_PARTIAL_INFORMATION.md](docs/07_TRACK_C_PARTIAL_INFORMATION.md)
+   - [docs/08_TRACK_D_CONSTRAINT_GRAPH.md](docs/08_TRACK_D_CONSTRAINT_GRAPH.md)
+8. [docs/09_RESEARCH_DIRECTOR.md](docs/09_RESEARCH_DIRECTOR.md)
+9. [docs/10_SMOKE_TEST_AND_CANARY.md](docs/10_SMOKE_TEST_AND_CANARY.md)
+10. [docs/11_LONG_RUN_AND_STOPPING.md](docs/11_LONG_RUN_AND_STOPPING.md)
+11. [docs/12_EVIDENCE_AND_PROVENANCE.md](docs/12_EVIDENCE_AND_PROVENANCE.md)
+12. [docs/13_IMPLEMENTATION_PLAN.md](docs/13_IMPLEMENTATION_PLAN.md)
+13. [docs/14_REVIEW_PACKET.md](docs/14_REVIEW_PACKET.md)
+14. [docs/15_SAFETY_AND_SCOPE.md](docs/15_SAFETY_AND_SCOPE.md)
+
+---
+
+## Intended Repository Tree
+
+```text
+no-silver-bullet/
+├── README.md
+├── ACTIVE_CONTRACT.md
+├── DECISIONS.md
+├── STATUS.md
+├── config/
+│   ├── defaults.yaml
+│   └── smoke.yaml
+├── docs/
+│   ├── 00_PROGRAM_CHARTER.md
+│   ├── 01_RESEARCH_SYNTHESIS.md
+│   ├── 02_SYSTEM_ARCHITECTURE.md
+│   ├── 03_BENCHMARK_CORPUS.md
+│   ├── 04_EXPERIMENT_PROTOCOL.md
+│   ├── 05_TRACK_A_TENSOR_LATTICE.md
+│   ├── 06_TRACK_B_ALGEBRAIC_EVOLUTION.md
+│   ├── 07_TRACK_C_PARTIAL_INFORMATION.md
+│   ├── 08_TRACK_D_CONSTRAINT_GRAPH.md
+│   ├── 09_RESEARCH_DIRECTOR.md
+│   ├── 10_SMOKE_TEST_AND_CANARY.md
+│   ├── 11_LONG_RUN_AND_STOPPING.md
+│   ├── 12_EVIDENCE_AND_PROVENANCE.md
+│   ├── 13_IMPLEMENTATION_PLAN.md
+│   ├── 14_REVIEW_PACKET.md
+│   └── 15_SAFETY_AND_SCOPE.md
+├── research/
+│   └── READING_LIST.md
+├── schemas/
+│   ├── experiment.schema.json
+│   └── result.schema.json
+├── src/
+│   └── nsb/
+│       ├── core/
+│       ├── benchmarks/
+│       ├── baselines/
+│       ├── tracks/
+│       ├── director/
+│       ├── verifier/
+│       └── auditor/
+├── tests/
+│   ├── canary/
+│   ├── unit/
+│   └── integration/
+├── experiments/
+│   ├── manifests/
+│   ├── results/
+│   └── artifacts/
+├── state/
+│   └── experiments.sqlite
+└── reports/
+```

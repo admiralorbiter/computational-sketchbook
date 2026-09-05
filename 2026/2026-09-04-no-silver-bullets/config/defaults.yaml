@@ -1,0 +1,31 @@
+# Default laboratory configuration for No Silver Bullet
+contract_id: "NSB-R0-FOUNDATION"
+benchmark_version: "v001"
+
+storage:
+  database_path: "state/experiments.sqlite"
+  manifests_dir: "experiments/manifests"
+  results_dir: "experiments/results"
+  artifacts_dir: "experiments/artifacts"
+  reports_dir: "reports"
+  public_benchmarks_dir: "benchmarks/public"
+  sealed_benchmarks_dir: "benchmarks/sealed"
+
+resource_governor:
+  default_max_wall_seconds: 60.0
+  default_max_cpu_seconds: 60.0
+  default_max_rss_mb: 2048
+  kill_grace_period_seconds: 2.0
+
+director:
+  mode: "proposal_only"
+  max_active_experiments: 8
+  max_children_per_parent: 3
+  portfolio_allocation:
+    exploit: 0.70
+    explore_far: 0.20
+    replicate: 0.10
+
+auditor:
+  enforce_clean_git: true
+  enable_poison_tripwires: true

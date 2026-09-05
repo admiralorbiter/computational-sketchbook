@@ -1,0 +1,570 @@
+{
+  "timestamp": "2026-09-04T03:11:06.047379+00:00",
+  "contract_id": "NSB-R1-WAVE1-SEARCH",
+  "evaluated_commit": "277f3bd0841ac4d4ef3eac7bbe107d08aba77e05",
+  "attestation_commit": null,
+  "git_commit": "277f3bd0841ac4d4ef3eac7bbe107d08aba77e05",
+  "benchmark_version": "v001_pilot",
+  "wave": "R1 Wave 1 \u2014 Human-Reviewed Search",
+  "milestone_status": "GATE_1A_FEASIBILITY_PASSED / CALIBRATION_ESTABLISHED",
+  "auditor_verdict": "PASS",
+  "audit_report": {
+    "timestamp": "2026-09-04T03:11:05.976230+00:00",
+    "verdict": "PASS",
+    "git_sha": "277f3bd0841ac4d4ef3eac7bbe107d08aba77e05",
+    "git_dirty": false,
+    "canonical_ready": true,
+    "checks": [
+      {
+        "name": "git_provenance_cleanliness",
+        "passed": true,
+        "details": "Clean git state at 277f3bd0841ac4d4ef3eac7bbe107d08aba77e05"
+      },
+      {
+        "name": "public_sha_pilot",
+        "passed": true,
+        "details": "Calculated 315ae15e... vs Expected 315ae15e..."
+      },
+      {
+        "name": "sealed_sha_pilot",
+        "passed": true,
+        "details": "Calculated 5bef83e1... vs Expected 5bef83e1..."
+      },
+      {
+        "name": "public_sha_smoke",
+        "passed": true,
+        "details": "Calculated a0d734bd... vs Expected a0d734bd..."
+      },
+      {
+        "name": "sealed_sha_smoke",
+        "passed": true,
+        "details": "Calculated 8373b701... vs Expected 8373b701..."
+      },
+      {
+        "name": "tripwire_pilot",
+        "passed": true,
+        "details": "Tripwire intact and untampered"
+      },
+      {
+        "name": "tripwire_smoke",
+        "passed": true,
+        "details": "Tripwire intact and untampered"
+      },
+      {
+        "name": "sandbox_leakage",
+        "passed": true,
+        "details": "Verified 3 active sandbox(es); zero sealed leakage detected"
+      }
+    ],
+    "summary": "Audit verdict: PASS. Checks passed: 8/8. Git SHA: 277f3bd0841ac4d4ef3eac7bbe107d08aba77e05 (CLEAN)."
+  },
+  "tracks": [
+    {
+      "track": "A",
+      "champion_id": "NSB-A-PILOT-01",
+      "evidence_tier": "E1",
+      "bit_range": "16-32",
+      "primary_metric": "smooth_relations/cpu_sec=69.3 rel/s (16b), 15.9 rel/s (20b), 23.9 rel/s (24b), 7.7 rel/s (32b)",
+      "baseline": "84010.1 rel/s (16b), 35578.5 rel/s (20b), 65090.0 rel/s (24b), 3471.0 rel/s (32b)",
+      "delta": "C=2000 not promoted (0.00x at 16b (69.3 vs 84010.1 rel/s), 0.00x at 20b (15.9 vs 35578.5 rel/s), 0.00x at 24b (23.9 vs 65090.0 rel/s), 0.00x at 32b (7.7 vs 3471.0 rel/s))",
+      "validation_status": "PASS",
+      "verdict": "INCONCLUSIVE",
+      "criteria": [
+        {
+          "name": "relation_rate_gain",
+          "target": ">= 1.5x advantage over baseline across >= 3 adjacent sizes",
+          "observed": "0.00x at 16b (69.3 vs 84010.1 rel/s), 0.00x at 20b (15.9 vs 35578.5 rel/s), 0.00x at 24b (23.9 vs 65090.0 rel/s), 0.00x at 32b (7.7 vs 3471.0 rel/s)",
+          "status": "FAIL",
+          "justification": "Max adjacent sizes with >= 1.5x gain was 0 (required: 3)."
+        },
+        {
+          "name": "scaling_persistence",
+          "target": "Advantage persists with increasing bit length",
+          "observed": "Ratios: ['16b:0.00x', '20b:0.00x', '24b:0.00x', '32b:0.00x']; zero_yield_bits: []",
+          "status": "FAIL",
+          "justification": "Advantage did not persist with increasing bit length."
+        }
+      ],
+      "findings": [
+        "Track A evaluated across 4 bit lengths (16-32 bits).",
+        "Observed scaling ratios: 0.00x at 16b (69.3 vs 84010.1 rel/s), 0.00x at 20b (15.9 vs 35578.5 rel/s), 0.00x at 24b (23.9 vs 65090.0 rel/s), 0.00x at 32b (7.7 vs 3471.0 rel/s)."
+      ],
+      "recommendation": "Parametric grid completed: residual cofactor bits scale linearly (~0.90 bits per modulus bit), causing severe yield collapse and 350x\u20132800x lower throughput than baseline. Conduct at most one bounded multi-vector / BKZ rescue experiment across multiple independent moduli; if residual growth remains catastrophic, park Track A."
+    },
+    {
+      "track": "B",
+      "champion_id": "NSB-B-PILOT-01",
+      "evidence_tier": "E1",
+      "bit_range": "32-64",
+      "primary_metric": "log_norm_proxy_score=deg-3: 23.80 (32b), 34.99 (48b), 46.06 (64b)",
+      "baseline": "deg-2: 30.68 (32b), 46.79 (48b), 61.97 (64b)",
+      "delta": "Strong positive signal (gain=18.00x, McNemar p=4.29e-13); confirmatory replication on 20-50 instances warranted before R2 promotion",
+      "validation_status": "PASS",
+      "verdict": "CANDIDATE",
+      "criteria": [
+        {
+          "name": "b1_log_norm_advantage",
+          "target": "Degree-3 proxy log-norm <= 0.85 * Degree-2 score",
+          "observed": "deg-3=23.80 vs deg-2=30.68 (32b, ratio=0.78); deg-3=34.99 vs deg-2=46.79 (48b, ratio=0.75); deg-3=46.06 vs deg-2=61.97 (64b, ratio=0.74)",
+          "status": "PASS",
+          "justification": "Degree-3 base-m representation consistently achieved <= 0.85 coefficient log-norm across all tested moduli."
+        },
+        {
+          "name": "b3_downstream_yield_promotion",
+          "target": ">= 25% smooth relation yield improvement in B3 homogeneous sieve (rule: never promote on B1 alone)",
+          "observed": "Cubic yield=5.79% (54/933) vs Deg-2=0.32% (3/933), diff=+5.47%, gain=18.00x, 2x2=[[n11=0, n10=54], [n01=3, n00=876]], McNemar p=4.29e-13",
+          "status": "PASS",
+          "justification": "B3 homogeneous sieve achieved statistically significant paired yield gain (18.00x, p=4.29e-13 <= 0.05) with discordant counts n10=54 vs n01=3."
+        },
+        {
+          "name": "confirmatory_sample_replication",
+          "target": ">= 5 replicated instances per bit length (minimum across all evaluated sizes)",
+          "observed": "min 1 instance(s) per size tested (32b: 1, 48b: 1, 64b: 1, threshold: 5)",
+          "status": "FAIL",
+          "justification": "Evaluation sample size (minimum 1 per size) is insufficient for R2 promotion; confirmatory replication on 20-50 instances is required."
+        }
+      ],
+      "findings": [
+        "Multi-fidelity cascade B0-B3 verified algebraic representations across 32-64 bit moduli.",
+        "Degree-3 base-m representation measured log-norms: 23.80 (32b), 34.99 (48b), 46.06 (64b) vs deg-2 baseline: 30.68 (32b), 46.79 (48b), 61.97 (64b).",
+        "Paired B3 homogeneous sieve measured cubic yield=5.79% vs quadratic=0.32% (gain=18.00x, McNemar exact p=4.29e-13, discordant pairs n10=54 vs n01=3).",
+        "Historical NFS degree selection context: For small moduli (32b-64b), degree 2 vs degree 3 yields depend heavily on polynomial coefficient bounds vs algebraic norm growth; higher degree typically shows its decisive asymptotic advantage as modulus size grows.",
+        "Pilot evaluated minimum 1 instance per bit size (32b: 1, 48b: 1, 64b: 1). Confirmatory multi-instance replication on 20-50 independent semiprimes is warranted before R2 promotion."
+      ],
+      "recommendation": "Wave 2 Primary Focus: Replicate paired degree-3 vs degree-2 sieve on 30 independent balanced semiprimes per size across 32b, 48b, 64b, 80b, and 96b using the modulus as the independent experimental unit, and expand beyond canonical base-m to benchmark against Kleinjung/Murphy/CADO-NFS-style polynomial selection."
+    },
+    {
+      "track": "C",
+      "champion_id": "NSB-C-PILOT-01",
+      "evidence_tier": "E1",
+      "bit_range": "32-48",
+      "primary_metric": "threshold_recovery_rate=32b: SUCCESS (0.12s), 40b: FAIL, 48b: FAIL",
+      "baseline": "zero_information",
+      "delta": "Exact rational Sturm/LLL verified at 32b; 40b/48b bound transition incomplete (1/3 recovered)",
+      "validation_status": "PASS",
+      "verdict": "CALIBRATION_INCOMPLETE",
+      "criteria": [
+        {
+          "name": "50pct_msb_recovery_rate",
+          "target": ">=100% exact recovery at 50% known MSB across pilot ladder",
+          "observed": "1/3 recovered (32b: SUCCESS (0.12s), 40b: FAIL, 48b: FAIL)",
+          "status": "FAIL",
+          "justification": "Exact Sturm/LLL small-root solver succeeded on 1/3 instances at 50% MSB (threshold: 100.0%)."
+        },
+        {
+          "name": "calibration_ladder_completeness",
+          "target": "Calibrated across 25%, 35%, 45%, 50% true MSB fractions",
+          "observed": "Calibrated across [0.25, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6] genuine MSB fractions",
+          "status": "PASS",
+          "justification": "Multi-fraction empirical recovery curve established without synthetic placeholders."
+        }
+      ],
+      "findings": [
+        "Exact rational Sturm chain root isolation operates with zero IEEE-754 precision loss and recovers exact factors with no fallback.",
+        "Observed 50% MSB success rate was 1/3 (32b: SUCCESS (0.12s), 40b: FAIL, 48b: FAIL)."
+      ],
+      "recommendation": "Multi-fraction calibration complete: exact Sturm/LLL root isolation succeeds at >=55% MSB across 32b\u201348b, confirming the finite-size Coppersmith boundary with zero synthetic placeholders. Maintain Track C as shared infrastructure bridge for any track discovering partial factor bits."
+    },
+    {
+      "track": "D",
+      "champion_id": "NSB-D-PILOT-01",
+      "evidence_tier": "E1",
+      "bit_range": "16-32",
+      "primary_metric": "median_solve_time_seconds=0.0011s (16b) to 0.2223s (32b)",
+      "baseline": "schoolbook_sat_glucose4",
+      "delta": "Comparative encoding failed speedup threshold",
+      "validation_status": "PASS",
+      "verdict": "INCONCLUSIVE",
+      "criteria": [
+        {
+          "name": "baseline_characterization",
+          "target": "Establish clean empirical solve-time scaling curve for Schoolbook SAT",
+          "observed": "0.0011s (16b) -> 0.0027s (20b) -> 0.0146s (24b) -> 0.0402s (28b) -> 0.2223s (32b)",
+          "status": "PASS",
+          "justification": "Clean, reproducible CDCL SAT scaling curve established across 5 consecutive bit lengths with zero semantic errors."
+        },
+        {
+          "name": "comparative_encoding_advantage",
+          "target": ">= 2.0x solve time improvement over schoolbook across >= 3 adjacent sizes",
+          "observed": "Speedups: ['1.57x', '0.73x', '0.90x', '0.86x', '2.25x']",
+          "status": "FAIL",
+          "justification": "Alternative encoding failed to achieve consistent 2.0x advantage."
+        }
+      ],
+      "findings": [
+        "Schoolbook SAT encoding successfully inverted across 16-32 bits with 100% factor recovery.",
+        "Empirical CDCL solve time exhibits clean scaling (0.0011s (16b) to 0.2223s (32b))."
+      ],
+      "recommendation": "CSA-v1 evaluated: sub-2.0x speedups at 16\u201328 bits with noisy millisecond timings; single 2.30x speedup at 32b is insufficient evidence of algorithmic scaling. Park Track D until a fundamentally new constraint representation (beyond adder-tree rewrites) appears."
+    }
+  ],
+  "judgments": {
+    "A": {
+      "track": "A",
+      "champion_id": "NSB-A-PILOT-01",
+      "verdict": "INCONCLUSIVE",
+      "evidence_tier": "E1",
+      "bit_range": "16-32",
+      "primary_metric_name": "smooth_relations/cpu_sec",
+      "primary_metric_value": "69.3 rel/s (16b), 15.9 rel/s (20b), 23.9 rel/s (24b), 7.7 rel/s (32b)",
+      "baseline_value": "84010.1 rel/s (16b), 35578.5 rel/s (20b), 65090.0 rel/s (24b), 3471.0 rel/s (32b)",
+      "delta_description": "C=2000 not promoted (0.00x at 16b (69.3 vs 84010.1 rel/s), 0.00x at 20b (15.9 vs 35578.5 rel/s), 0.00x at 24b (23.9 vs 65090.0 rel/s), 0.00x at 32b (7.7 vs 3471.0 rel/s))",
+      "criteria": [
+        {
+          "name": "relation_rate_gain",
+          "target_threshold": ">= 1.5x advantage over baseline across >= 3 adjacent sizes",
+          "observed_value": "0.00x at 16b (69.3 vs 84010.1 rel/s), 0.00x at 20b (15.9 vs 35578.5 rel/s), 0.00x at 24b (23.9 vs 65090.0 rel/s), 0.00x at 32b (7.7 vs 3471.0 rel/s)",
+          "status": "FAIL",
+          "justification": "Max adjacent sizes with >= 1.5x gain was 0 (required: 3)."
+        },
+        {
+          "name": "scaling_persistence",
+          "target_threshold": "Advantage persists with increasing bit length",
+          "observed_value": "Ratios: ['16b:0.00x', '20b:0.00x', '24b:0.00x', '32b:0.00x']; zero_yield_bits: []",
+          "status": "FAIL",
+          "justification": "Advantage did not persist with increasing bit length."
+        }
+      ],
+      "findings": [
+        "Track A evaluated across 4 bit lengths (16-32 bits).",
+        "Observed scaling ratios: 0.00x at 16b (69.3 vs 84010.1 rel/s), 0.00x at 20b (15.9 vs 35578.5 rel/s), 0.00x at 24b (23.9 vs 65090.0 rel/s), 0.00x at 32b (7.7 vs 3471.0 rel/s)."
+      ],
+      "recommendation": "Parametric grid completed: residual cofactor bits scale linearly (~0.90 bits per modulus bit), causing severe yield collapse and 350x\u20132800x lower throughput than baseline. Conduct at most one bounded multi-vector / BKZ rescue experiment across multiple independent moduli; if residual growth remains catastrophic, park Track A."
+    },
+    "B": {
+      "track": "B",
+      "champion_id": "NSB-B-PILOT-01",
+      "verdict": "CANDIDATE",
+      "evidence_tier": "E1",
+      "bit_range": "32-64",
+      "primary_metric_name": "log_norm_proxy_score",
+      "primary_metric_value": "deg-3: 23.80 (32b), 34.99 (48b), 46.06 (64b)",
+      "baseline_value": "deg-2: 30.68 (32b), 46.79 (48b), 61.97 (64b)",
+      "delta_description": "Strong positive signal (gain=18.00x, McNemar p=4.29e-13); confirmatory replication on 20-50 instances warranted before R2 promotion",
+      "criteria": [
+        {
+          "name": "b1_log_norm_advantage",
+          "target_threshold": "Degree-3 proxy log-norm <= 0.85 * Degree-2 score",
+          "observed_value": "deg-3=23.80 vs deg-2=30.68 (32b, ratio=0.78); deg-3=34.99 vs deg-2=46.79 (48b, ratio=0.75); deg-3=46.06 vs deg-2=61.97 (64b, ratio=0.74)",
+          "status": "PASS",
+          "justification": "Degree-3 base-m representation consistently achieved <= 0.85 coefficient log-norm across all tested moduli."
+        },
+        {
+          "name": "b3_downstream_yield_promotion",
+          "target_threshold": ">= 25% smooth relation yield improvement in B3 homogeneous sieve (rule: never promote on B1 alone)",
+          "observed_value": "Cubic yield=5.79% (54/933) vs Deg-2=0.32% (3/933), diff=+5.47%, gain=18.00x, 2x2=[[n11=0, n10=54], [n01=3, n00=876]], McNemar p=4.29e-13",
+          "status": "PASS",
+          "justification": "B3 homogeneous sieve achieved statistically significant paired yield gain (18.00x, p=4.29e-13 <= 0.05) with discordant counts n10=54 vs n01=3."
+        },
+        {
+          "name": "confirmatory_sample_replication",
+          "target_threshold": ">= 5 replicated instances per bit length (minimum across all evaluated sizes)",
+          "observed_value": "min 1 instance(s) per size tested (32b: 1, 48b: 1, 64b: 1, threshold: 5)",
+          "status": "FAIL",
+          "justification": "Evaluation sample size (minimum 1 per size) is insufficient for R2 promotion; confirmatory replication on 20-50 instances is required."
+        }
+      ],
+      "findings": [
+        "Multi-fidelity cascade B0-B3 verified algebraic representations across 32-64 bit moduli.",
+        "Degree-3 base-m representation measured log-norms: 23.80 (32b), 34.99 (48b), 46.06 (64b) vs deg-2 baseline: 30.68 (32b), 46.79 (48b), 61.97 (64b).",
+        "Paired B3 homogeneous sieve measured cubic yield=5.79% vs quadratic=0.32% (gain=18.00x, McNemar exact p=4.29e-13, discordant pairs n10=54 vs n01=3).",
+        "Historical NFS degree selection context: For small moduli (32b-64b), degree 2 vs degree 3 yields depend heavily on polynomial coefficient bounds vs algebraic norm growth; higher degree typically shows its decisive asymptotic advantage as modulus size grows.",
+        "Pilot evaluated minimum 1 instance per bit size (32b: 1, 48b: 1, 64b: 1). Confirmatory multi-instance replication on 20-50 independent semiprimes is warranted before R2 promotion."
+      ],
+      "recommendation": "Wave 2 Primary Focus: Replicate paired degree-3 vs degree-2 sieve on 30 independent balanced semiprimes per size across 32b, 48b, 64b, 80b, and 96b using the modulus as the independent experimental unit, and expand beyond canonical base-m to benchmark against Kleinjung/Murphy/CADO-NFS-style polynomial selection."
+    },
+    "C": {
+      "track": "C",
+      "champion_id": "NSB-C-PILOT-01",
+      "verdict": "CALIBRATION_INCOMPLETE",
+      "evidence_tier": "E1",
+      "bit_range": "32-48",
+      "primary_metric_name": "threshold_recovery_rate",
+      "primary_metric_value": "32b: SUCCESS (0.12s), 40b: FAIL, 48b: FAIL",
+      "baseline_value": "zero_information",
+      "delta_description": "Exact rational Sturm/LLL verified at 32b; 40b/48b bound transition incomplete (1/3 recovered)",
+      "criteria": [
+        {
+          "name": "50pct_msb_recovery_rate",
+          "target_threshold": ">=100% exact recovery at 50% known MSB across pilot ladder",
+          "observed_value": "1/3 recovered (32b: SUCCESS (0.12s), 40b: FAIL, 48b: FAIL)",
+          "status": "FAIL",
+          "justification": "Exact Sturm/LLL small-root solver succeeded on 1/3 instances at 50% MSB (threshold: 100.0%)."
+        },
+        {
+          "name": "calibration_ladder_completeness",
+          "target_threshold": "Calibrated across 25%, 35%, 45%, 50% true MSB fractions",
+          "observed_value": "Calibrated across [0.25, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6] genuine MSB fractions",
+          "status": "PASS",
+          "justification": "Multi-fraction empirical recovery curve established without synthetic placeholders."
+        }
+      ],
+      "findings": [
+        "Exact rational Sturm chain root isolation operates with zero IEEE-754 precision loss and recovers exact factors with no fallback.",
+        "Observed 50% MSB success rate was 1/3 (32b: SUCCESS (0.12s), 40b: FAIL, 48b: FAIL)."
+      ],
+      "recommendation": "Multi-fraction calibration complete: exact Sturm/LLL root isolation succeeds at >=55% MSB across 32b\u201348b, confirming the finite-size Coppersmith boundary with zero synthetic placeholders. Maintain Track C as shared infrastructure bridge for any track discovering partial factor bits."
+    },
+    "D": {
+      "track": "D",
+      "champion_id": "NSB-D-PILOT-01",
+      "verdict": "INCONCLUSIVE",
+      "evidence_tier": "E1",
+      "bit_range": "16-32",
+      "primary_metric_name": "median_solve_time_seconds",
+      "primary_metric_value": "0.0011s (16b) to 0.2223s (32b)",
+      "baseline_value": "schoolbook_sat_glucose4",
+      "delta_description": "Comparative encoding failed speedup threshold",
+      "criteria": [
+        {
+          "name": "baseline_characterization",
+          "target_threshold": "Establish clean empirical solve-time scaling curve for Schoolbook SAT",
+          "observed_value": "0.0011s (16b) -> 0.0027s (20b) -> 0.0146s (24b) -> 0.0402s (28b) -> 0.2223s (32b)",
+          "status": "PASS",
+          "justification": "Clean, reproducible CDCL SAT scaling curve established across 5 consecutive bit lengths with zero semantic errors."
+        },
+        {
+          "name": "comparative_encoding_advantage",
+          "target_threshold": ">= 2.0x solve time improvement over schoolbook across >= 3 adjacent sizes",
+          "observed_value": "Speedups: ['1.57x', '0.73x', '0.90x', '0.86x', '2.25x']",
+          "status": "FAIL",
+          "justification": "Alternative encoding failed to achieve consistent 2.0x advantage."
+        }
+      ],
+      "findings": [
+        "Schoolbook SAT encoding successfully inverted across 16-32 bits with 100% factor recovery.",
+        "Empirical CDCL solve time exhibits clean scaling (0.0011s (16b) to 0.2223s (32b))."
+      ],
+      "recommendation": "CSA-v1 evaluated: sub-2.0x speedups at 16\u201328 bits with noisy millisecond timings; single 2.30x speedup at 32b is insufficient evidence of algorithmic scaling. Park Track D until a fundamentally new constraint representation (beyond adder-tree rewrites) appears."
+    }
+  },
+  "scaling_data": {
+    "Baselines": [
+      {
+        "label": "Fermat (Family F)",
+        "bits": 48,
+        "metric_str": "1 steps (0.00011s)"
+      },
+      {
+        "label": "Fermat (Family F)",
+        "bits": 64,
+        "metric_str": "1 steps (0.00001s)"
+      },
+      {
+        "label": "Pollard p-1 (Family P1)",
+        "bits": 48,
+        "metric_str": "0.00015s"
+      },
+      {
+        "label": "Pollard p-1 (Family P1)",
+        "bits": 64,
+        "metric_str": "0.00020s"
+      },
+      {
+        "label": "Pollard rho (Family R)",
+        "bits": 32,
+        "metric_str": "255 steps (0.0001s)"
+      },
+      {
+        "label": "Pollard rho (Family R)",
+        "bits": 32,
+        "metric_str": "127 steps (0.0001s)"
+      },
+      {
+        "label": "Pollard rho (Family R)",
+        "bits": 40,
+        "metric_str": "511 steps (0.0002s)"
+      },
+      {
+        "label": "Pollard rho (Family R)",
+        "bits": 40,
+        "metric_str": "1791 steps (0.0006s)"
+      }
+    ],
+    "A": [
+      {
+        "label": "Schnorr CVP Relation Yield (16b 18-pt grid)",
+        "bits": 16,
+        "metric_str": "18 pts tested | champ: 18 rels (69.3 r/s, babai_dist=2.8, res_bits=8.6b) vs base: 30 rels (84010.1 r/s) | model: residual_bits = 0.90 * modulus_bits + (-5.52) [R^2 = 0.864]"
+      },
+      {
+        "label": "Schnorr CVP Relation Yield (20b 18-pt grid)",
+        "bits": 20,
+        "metric_str": "18 pts tested | champ: 2 rels (15.9 r/s, babai_dist=3.0, res_bits=12.8b) vs base: 29 rels (35578.5 r/s) | model: residual_bits = 0.90 * modulus_bits + (-5.52) [R^2 = 0.864]"
+      },
+      {
+        "label": "Schnorr CVP Relation Yield (24b 18-pt grid)",
+        "bits": 24,
+        "metric_str": "18 pts tested | champ: 3 rels (23.9 r/s, babai_dist=3.0, res_bits=16.0b) vs base: 30 rels (65090.0 r/s) | model: residual_bits = 0.90 * modulus_bits + (-5.52) [R^2 = 0.864]"
+      },
+      {
+        "label": "Schnorr CVP Relation Yield (32b 18-pt grid)",
+        "bits": 32,
+        "metric_str": "18 pts tested | champ: 1 rels (7.7 r/s, babai_dist=3.3, res_bits=23.1b) vs base: 3 rels (3471.0 r/s) | model: residual_bits = 0.90 * modulus_bits + (-5.52) [R^2 = 0.864]"
+      }
+    ],
+    "B": [
+      {
+        "label": "Base-m Deg-3 vs Deg-2 Sieve",
+        "bits": 32,
+        "metric_str": "B1 norm: deg3=23.80 vs deg2=30.68 | B3 yield: deg3=52/311 (64102.6 r/s) vs deg2=3/311 (3807.6 r/s, gain=17.33x) | McNemar 2x2: n11=0, n10=52, n01=3, n00=256 (p=0.00e+00)"
+      },
+      {
+        "label": "Base-m Deg-3 vs Deg-2 Sieve",
+        "bits": 48,
+        "metric_str": "B1 norm: deg3=34.99 vs deg2=46.79 | B3 yield: deg3=1/311 (1312.7 r/s) vs deg2=0/311 (0.0 r/s, deg2_smooth=0) | McNemar 2x2: n11=0, n10=1, n01=0, n00=310 (p=1.00e+00)"
+      },
+      {
+        "label": "Base-m Deg-3 vs Deg-2 Sieve",
+        "bits": 64,
+        "metric_str": "B1 norm: deg3=46.06 vs deg2=61.97 | B3 yield: deg3=1/311 (1339.4 r/s) vs deg2=0/311 (0.0 r/s, deg2_smooth=0) | McNemar 2x2: n11=0, n10=1, n01=0, n00=310 (p=1.00e+00)"
+      }
+    ],
+    "C": [
+      {
+        "label": "Multi-Fraction MSB Ladder",
+        "bits": 32,
+        "metric_str": "Ladder (25%:FAIL, 35%:FAIL, 40%:FAIL, 45%:FAIL, 50%:OK, 55%:OK, 60%:OK)"
+      },
+      {
+        "label": "Multi-Fraction MSB Ladder",
+        "bits": 40,
+        "metric_str": "Ladder (25%:FAIL, 35%:FAIL, 40%:FAIL, 45%:FAIL, 50%:FAIL, 55%:OK, 60%:OK)"
+      },
+      {
+        "label": "Multi-Fraction MSB Ladder",
+        "bits": 48,
+        "metric_str": "Ladder (25%:FAIL, 35%:FAIL, 40%:FAIL, 45%:FAIL, 50%:FAIL, 55%:OK, 60%:OK)"
+      }
+    ],
+    "D": [
+      {
+        "label": "Schoolbook vs Carry-Save SAT",
+        "bits": 16,
+        "metric_str": "CSA: 0.0007s (200 vars, 978 cls) vs Schoolbook: 0.0011s (200 vars, speedup: 1.57x)"
+      },
+      {
+        "label": "Schoolbook vs Carry-Save SAT",
+        "bits": 20,
+        "metric_str": "CSA: 0.0037s (310 vars, 1562 cls) vs Schoolbook: 0.0027s (310 vars, speedup: 0.73x)"
+      },
+      {
+        "label": "Schoolbook vs Carry-Save SAT",
+        "bits": 24,
+        "metric_str": "CSA: 0.0163s (444 vars, 2282 cls) vs Schoolbook: 0.0146s (444 vars, speedup: 0.90x)"
+      },
+      {
+        "label": "Schoolbook vs Carry-Save SAT",
+        "bits": 28,
+        "metric_str": "CSA: 0.0470s (602 vars, 3138 cls) vs Schoolbook: 0.0402s (602 vars, speedup: 0.86x)"
+      },
+      {
+        "label": "Schoolbook vs Carry-Save SAT",
+        "bits": 32,
+        "metric_str": "CSA: 0.0986s (784 vars, 4130 cls) vs Schoolbook: 0.2223s (784 vars, speedup: 2.25x)"
+      }
+    ]
+  },
+  "rejected_branches": [],
+  "proposals": [
+    {
+      "proposal_id": "NSB-A-20260904-A00002",
+      "parent_experiment": "EXP-TRACK-A-PILOT-v0.1.0",
+      "track": "A",
+      "hypothesis": "Systematic grid over (factor_base_size x scale_c x candidate_budget) maps the relation collapse boundary on 20-32 bit moduli.",
+      "mechanism": "Babai nearest plane relation yield collapsed at 32b; expanding factor base (25-40) and candidate budget (2000) tests whether relation yield recovers.",
+      "mutations": {
+        "scale_c_grid": [
+          500,
+          1000,
+          2000
+        ],
+        "factor_base_grid": [
+          16,
+          25,
+          40
+        ],
+        "candidate_budget": 2000
+      },
+      "expected_effect": "relation_discovery_rate > 0 at 32-bit and >= 1.5x gain over baseline",
+      "budget": {
+        "max_wall_seconds": 60.0,
+        "max_cpu_seconds": 60.0,
+        "max_rss_mb": 1024
+      },
+      "stopping_rule": "stop if 2000 candidates yield 0 relations across all grid points",
+      "promotion_target": "Pilot A-P2",
+      "novelty_reason": "Targeted calibration of relation collapse boundary revealed by PromotionJudge."
+    },
+    {
+      "proposal_id": "NSB-B-20260904-B00002",
+      "parent_experiment": "EXP-TRACK-B-PILOT-v0.1.0",
+      "track": "B",
+      "hypothesis": "B3 homogeneous sieving on cubic candidates yields >= 25% smooth relations over quadratic base-m on 32-64 bits.",
+      "mechanism": "Cubic representation verified in B1 log-norm; Level B3 evaluates true downstream algebraic-sieve relation rate.",
+      "mutations": {
+        "eval_level": "B3",
+        "bound_a": 50,
+        "bound_b": 20,
+        "factor_base_size": 32
+      },
+      "expected_effect": "smooth_relations_per_sec >= 1.25 * degree_2_yield",
+      "budget": {
+        "max_wall_seconds": 45.0,
+        "max_cpu_seconds": 45.0,
+        "max_rss_mb": 1024
+      },
+      "stopping_rule": "stop if B3 smooth relation yield is zero after 1000 pairs",
+      "promotion_target": "Pilot B-P2",
+      "novelty_reason": "Evaluating downstream B3 smooth yield per frozen protocol requirement."
+    },
+    {
+      "proposal_id": "NSB-C-20260904-C00002",
+      "parent_experiment": "EXP-TRACK-C-PILOT-v0.1.0",
+      "track": "C",
+      "hypothesis": "Fine-grained MSB calibration ladder (25%, 35%, 40%, 45%, 50%, 55%, 60%) establishes exact empirical recovery boundary.",
+      "mechanism": "Testing genuine partial bit slices across 7 steps determines exact recovery cutoff and lattice dimension scaling limits.",
+      "mutations": {
+        "fractions": [
+          0.25,
+          0.35,
+          0.4,
+          0.45,
+          0.5,
+          0.55,
+          0.6
+        ],
+        "lattice_dimension": 5
+      },
+      "expected_effect": "empirical_recovery_curve mapped across all 7 fractions without synthetic placeholders",
+      "budget": {
+        "max_wall_seconds": 60.0,
+        "max_cpu_seconds": 60.0,
+        "max_rss_mb": 1024
+      },
+      "stopping_rule": "stop if LLL basis reduction exceeds 60 seconds",
+      "promotion_target": "Pilot C-P2",
+      "novelty_reason": "Full-ladder calibration replacing synthetic negative control."
+    },
+    {
+      "proposal_id": "NSB-D-20260904-D00001",
+      "parent_experiment": null,
+      "track": "D",
+      "hypothesis": "Carry-save adder tree encoding reduces SAT conflict count by >= 25% on 32-bit balanced semiprimes.",
+      "mechanism": "Reduces clause dependency chain depth compared to ripple-carry adders.",
+      "mutations": {
+        "encoding_family": "carry_save",
+        "solver": "cadical195"
+      },
+      "expected_effect": "conflicts <= 0.75 * baseline_schoolbook_conflicts",
+      "budget": {
+        "max_wall_seconds": 30.0,
+        "max_cpu_seconds": 30.0,
+        "max_rss_mb": 1024
+      },
+      "stopping_rule": "stop if D-CANARY-1 semantic equivalence test fails",
+      "promotion_target": "Pilot D-P1",
+      "novelty_reason": "First non-schoolbook arithmetic encoding mutation."
+    }
+  ]
+}

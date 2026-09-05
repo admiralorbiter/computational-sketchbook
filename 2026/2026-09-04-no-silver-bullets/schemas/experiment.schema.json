@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NSBExperimentManifest",
+  "description": "Immutable specification for a single scientific experiment in No Silver Bullet",
+  "type": "object",
+  "required": [
+    "experiment_id",
+    "track",
+    "hypothesis",
+    "contract_id",
+    "git_commit",
+    "config_hash",
+    "benchmark",
+    "budget",
+    "stopping_rule",
+    "promotion_rule"
+  ],
+  "properties": {
+    "experiment_id": {
+      "type": "string",
+      "pattern": "^NSB-[A-D|BASE]-[0-9]{8}-[A-F0-9]{6}$"
+    },
+    "parent_experiment_id": {
+      "type": ["string", "null"]
+    },
+    "track": {
+      "type": "string",
+      "enum": ["A", "B", "C", "D", "BASE"]
+    },
+    "hypothesis": {
+      "type": "string",
+      "minLength": 10
+    },
+    "mechanism": {
+      "type": "string"
+    },
+    "contract_id": {
+      "type": "string"
+    },
+    "git_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{7,40}$"
+    },
+    "config_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "benchmark": {
+      "type": "object",
+      "required": ["version", "split", "families", "bit_sizes"],
+      "properties": {
+        "version": { "type": "string" },
+        "split": { "type": "string", "enum": ["dev", "val", "holdout"] },
+        "families": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["R", "F", "P1", "C", "E"] }
+        },
+        "bit_sizes": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 8 }
+        },
+        "dataset_hash": { "type": "string" }
+      }
+    },
+    "algorithm_params": {
+      "type": "object"
+    },
+    "budget": {
+      "type": "object",
+      "required": ["max_wall_seconds", "max_cpu_seconds", "max_rss_mb"],
+      "properties": {
+        "max_wall_seconds": { "type": "number", "minimum": 0.1 },
+        "max_cpu_seconds": { "type": "number", "minimum": 0.1 },
+        "max_rss_mb": { "type": "integer", "minimum": 64 },
+        "max_candidates": { "type": "integer" }
+      }
+    },
+    "random_seeds": {
+      "type": "array",
+      "items": { "type": "integer" }
+    },
+    "stopping_rule": {
+      "type": "string"
+    },
+    "promotion_rule": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

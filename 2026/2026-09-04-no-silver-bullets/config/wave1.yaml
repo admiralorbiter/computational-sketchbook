@@ -1,0 +1,17 @@
+# R1 Wave 1 Focused Research Configuration
+contract_id: "NSB-R1-WAVE1-SEARCH"
+mode: "wave1"
+benchmark_version: "v001_pilot"
+criteria_contract_path: "config/contracts/r1_wave1_criteria.yaml"
+
+resource_limits:
+  max_wall_seconds: 60.0
+  max_cpu_seconds: 60.0
+  max_rss_mb: 2048
+
+tracks_enabled:
+  - "baselines"
+  - "track_a"
+  - "track_b"
+  - "track_c"
+  - "track_d"

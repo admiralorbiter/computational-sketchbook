@@ -1,0 +1,80 @@
+{
+  "G0": {
+    "gate": "R3-G0",
+    "passed": false,
+    "message": "Canonical R3 execution requires Python runner executing inside native Linux / WSL2. Windows host execution is non-canonical.",
+    "fingerprint": {
+      "platform": "win32",
+      "is_linux": false,
+      "is_windows": true,
+      "python_version": "3.12.0",
+      "cpu_architecture": "AMD64",
+      "cpu_count": 16,
+      "os_release": "11",
+      "cado_root": "cado-nfs",
+      "cado_root_exists": false,
+      "pinned_git_commit": "73ca6b6847118b05b15eeec27c86f45cef82a19e",
+      "detected_git_commit": null,
+      "is_git_clean": false,
+      "toolchain": {
+        "gcc": "unavailable",
+        "cmake": "unavailable",
+        "git": "git version 2.50.0.windows.1"
+      },
+      "binaries_present": [],
+      "missing_binaries": [
+        "polyselect",
+        "polyselect_ropt",
+        "score",
+        "makefb",
+        "las",
+        "check_rels"
+      ],
+      "binary_hashes": {}
+    }
+  },
+  "G1": {
+    "gate": "R3-G1",
+    "passed": false,
+    "error": "Cannot run G1: G0 failed: Canonical R3 execution requires Python runner executing inside native Linux / WSL2. Windows host execution is non-canonical.",
+    "environment_gate": {
+      "gate": "R3-G0",
+      "passed": false,
+      "message": "Canonical R3 execution requires Python runner executing inside native Linux / WSL2. Windows host execution is non-canonical.",
+      "fingerprint": {
+        "platform": "win32",
+        "is_linux": false,
+        "is_windows": true,
+        "python_version": "3.12.0",
+        "cpu_architecture": "AMD64",
+        "cpu_count": 16,
+        "os_release": "11",
+        "cado_root": "cado-nfs",
+        "cado_root_exists": false,
+        "pinned_git_commit": "73ca6b6847118b05b15eeec27c86f45cef82a19e",
+        "detected_git_commit": null,
+        "is_git_clean": false,
+        "toolchain": {
+          "gcc": "unavailable",
+          "cmake": "unavailable",
+          "git": "git version 2.50.0.windows.1"
+        },
+        "binaries_present": [],
+        "missing_binaries": [
+          "polyselect",
+          "polyselect_ropt",
+          "score",
+          "makefb",
+          "las",
+          "check_rels"
+        ],
+        "binary_hashes": {}
+      }
+    }
+  },
+  "G2": {
+    "gate": "R3-G2",
+    "passed": false,
+    "error": "Cannot run G2: G0 failed: Canonical R3 execution requires Python runner executing inside native Linux / WSL2. Windows host execution is non-canonical."
+  }
+}

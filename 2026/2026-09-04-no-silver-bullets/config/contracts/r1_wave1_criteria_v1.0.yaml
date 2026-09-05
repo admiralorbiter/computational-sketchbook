@@ -1,0 +1,27 @@
+# Frozen promotion criteria for R1 Wave 1 Focused Research
+version: "1.0"
+contract_id: "NSB-R1-WAVE1-SEARCH"
+
+track_a:
+  min_advantage_ratio: 1.5
+  min_adjacent_bit_sizes: 3
+  max_zero_yield_tolerance: 0
+  evidence_tier: "E1"
+
+track_b:
+  b1_norm_ratio_threshold: 0.85
+  b3_yield_gain_threshold: 1.25
+  require_b3_for_promotion: true
+  evidence_tier: "E1"
+
+track_c:
+  required_fraction: 0.50
+  required_recovery_rate: 1.0
+  forbidden_synthetic_placeholders: true
+  evidence_tier: "E1"
+
+track_d:
+  min_baseline_sizes: 3
+  require_paired_encoding: true
+  min_paired_speedup: 2.0
+  evidence_tier: "E1"

@@ -1,0 +1,10 @@
+{
+  "benchmark_version": "v001_pilot",
+  "split": "pilot",
+  "master_seed": 1337,
+  "total_instances": 22,
+  "public_file": "benchmarks\\public\\v001_pilot\\pilot\\instances.jsonl",
+  "public_sha256": "1f447eea267f9fa818a01dfc4a65f5e5eebbcbe7c2d3cd5a61936582d4ad7673",
+  "sealed_file": "benchmarks\\sealed\\v001_pilot\\pilot\\truth.jsonl",
+  "sealed_sha256": "5bef83e128324cec166df7a850dcd8eea003226627212569cf2af2fa33cf090c"
+}

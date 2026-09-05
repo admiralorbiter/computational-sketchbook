@@ -1,0 +1,122 @@
+# Preregistered Experimental Contract: NSB-R3-B-NFS-BASELINE-FOUNDATION
+# Track: Track B (Algebraic Evolution & Realistic NFS Polynomial Selection)
+# Phase: Baseline Foundation & Public Calibration (R3-G0, R3-G1, R3-G2, R3-G3)
+contract_id: "NSB-R3-B-NFS-BASELINE-FOUNDATION"
+version: "1.3.0"
+track: "track_b"
+baseline_framework: "cado-nfs"
+pinned_baseline_commit: "73ca6b6847118b05b15eeec27c86f45cef82a19e"
+lockfile_path: "config/external/cado_nfs.lock.yaml"
+execution_environment: "native_linux_only"
+
+gates:
+  r3_g0_dependency_foundation:
+    enabled: true
+    description: "CADO-NFS lockfile verification, bootstrap tooling, comprehensive environment fingerprinting, and Linux/WSL fail-closed checks."
+    no_corpus_required: true
+    require_exact_full_sha: true
+    require_clean_git_tree: true
+    require_clean_nsb_git_tree: true
+    enforce_toolchain_version_locks: true
+    capture_cmake_effective_compiler_flags: true
+    capture_python_packages_freeze_hash: true
+    require_check_rels_binary: true
+    require_comprehensive_provenance: true
+    require_fresh_empty_build_dir_for_certification: true
+    deterministic_build_dir: "build/nsb-r3"
+
+  r3_g1_adapter_canaries:
+    enabled: true
+    description: "Discrete binary canary execution on public 60-digit balanced semiprime: polyselect, ropt, score, makefb, las, and check_rels."
+    smoke_digit_size: 60
+    approx_bit_size: 196
+    require_reproducible_polynomial: true
+    require_positive_relations: true
+    require_nonempty_relation_hash: true
+    require_makefb_success: true
+    require_parser_conservation: true
+    require_check_rels_validation: true
+    select_global_best_ropt: true
+    profile_name: "canary_plumbing_c60"
+
+  r3_g2_deterministic_rerun_canary:
+    enabled: true
+    description: "Repeatability / deterministic rerun canary executing identical polynomial through fixed CADO instrument in counterbalanced order. Asserts identical normalized relation record hashes, ab-pair hashes, cross-gate hash matching with G1, and check_rels validation."
+    counterbalanced_order: "a1_b1_b2_a2"
+    require_exact_relation_parity: true
+    require_exact_relation_record_hash: true
+    require_exact_ab_pair_hash: true
+    require_parser_conservation: true
+    require_all_runs_check_rels_validated: true
+    require_cross_gate_hash_match: true
+    profile_name: "canary_plumbing_c60"
+
+  r3_g3_public_baseline_calibration:
+    enabled: true
+    description: "Empirical public baseline calibration across 40 frozen balanced semiprimes (10 per size: 60, 70, 80, 90 digits) under pinned CADO profiles (c60_pinned, c70_pinned, c80_pinned, c90_pinned). Establishes historical distribution anchor (raw values + linear p10/p50/p90 percentiles) before candidate evaluation."
+    corpus_version: "v005_r3_calibration"
+    split: "public_calibration"
+    corpus_manifest: "benchmarks/public/v005_r3_calibration/public_calibration/manifest.json"
+    public_file_sha256: "9d32b59bccb88b6b56ec90c6600d8c80a3189504457b118240510a1f1b8b177c"
+    sealed_file_sha256: "da5cae954ba38fa05db904726e0485acfcbd973488abd1954c1fac3502b8070b"
+    master_seed: "NSB-R3-CALIBRATION-CORPUS-20260904-V001"
+    digit_sizes: [60, 70, 80, 90]
+    instances_per_size: 10
+    total_instances: 40
+    thread_count: 1
+    stage_timeout_seconds: 600.0
+    percentile_algorithm: "numpy.percentile(method='linear')"
+    all_or_nothing_cohort: true
+    fail_closed_on_any_instance_failure: true
+    require_parser_conservation: true
+    require_check_rels_validation: true
+    operational_status: "CERTIFIED_PASS"
+
+modulus_scale:
+  toy_bit_regime_retired: true
+  smoke_digits: 60          # ~200 bits: plumbing/canaries only
+  calibration_digits:       # public runtime + noise + parameter validation ONLY
+    - 60
+    - 70
+    - 80
+    - 90
+  candidate_evaluation:     # strictly requires fresh out-of-sample holdout corpus
+    calibration_holdout_contamination_banned: true
+    requires_fresh_preregistered_holdout: true
+    min_holdout_digits: 95  # must include at least one larger size not in calibration
+
+process_accounting:
+  accounting_mode: "summed_discrete_binaries"
+  monitored_binaries:
+    - "polyselect"
+    - "polyselect_ropt"
+    - "score"
+    - "makefb"
+    - "las"
+    - "check_rels"
+  forbid_monolithic_undercounting: true
+
+metric_hierarchy:
+  level_1_diagnostic:
+    - "cado_murphy_e"
+    - "cado_lognorm"
+    - "cado_exp_e"
+    - "cado_skew"
+    - "cado_rroots"
+  level_2_primary_outcome:
+    - "unique_valid_relations_per_core_second"
+    - "relations_per_special_q_range"
+    - "fraction_productive_special_q"
+  level_3_system_efficiency:
+    - "total_core_seconds_to_relation_target"
+    - "selection_cpu_plus_sieving_cpu"
+
+fairness_rules:
+  identical_sieve_settings: true
+  same_factor_base_bounds: true
+  same_large_prime_bounds: true
+  same_sieve_area: true
+  same_special_q_interval: true
+  same_thread_count: true
+  counterbalanced_execution_order: true
+  quality_and_system_views_both_required: true

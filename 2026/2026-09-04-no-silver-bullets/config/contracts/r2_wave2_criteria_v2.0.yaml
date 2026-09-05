@@ -1,0 +1,87 @@
+# Preregistered Experimental Criteria: NSB-R2-WAVE2-B-CONFIRMATORY
+# Version: 2.0 (Frozen Preregistration)
+# Contract: NSB-R2-WAVE2-B-CONFIRMATORY
+# Focus: Track B Confirmatory Replication & Multi-Tier Claim Verification
+version: "2.0"
+contract_id: "NSB-R2-WAVE2-B-CONFIRMATORY"
+criteria_tier: "frozen_preregistration"
+primary_track: "track_b"
+
+corpus:
+  version: "v002_wave2"
+  split: "confirmatory"
+  family: "R"  # Balanced random semiprimes
+  bit_sizes: [32, 48, 64, 80, 96]
+  instances_per_size: 30
+  total_instances: 150
+  master_seed: 20260904
+  min_replicated_instances_per_size: 30
+  require_independent_moduli: true
+
+# Hierarchy of Claims: Evaluated independently in strict sequence
+claim_hierarchy:
+  # Level 1: Replication Claim
+  # Canonical base-m degree-3 beats canonical base-m degree-2 across independent moduli
+  replication_claim:
+    enabled: true
+    baseline_type: "canonical_base_m_d2"
+    candidate_type: "canonical_base_m_d3"
+    primary_metric: "modulus_paired_yield_diff"
+    min_mean_paired_yield_diff: 0.0
+    min_candidate_win_rate: 0.70          # At least 21 of 30 moduli must show positive effect
+    max_wilcoxon_pvalue: 0.01             # Modulus-level non-parametric paired test
+    max_paired_t_pvalue: 0.01             # Modulus-level parametric paired test
+    min_evaluable_bit_sizes: 1            # Sizes with non-zero yield
+    sieve_mcnemar_role: "intra_modulus_diagnostic"  # Diagnostic only, not cross-modulus gate
+
+  # Level 2: Representation-Search Claim
+  # Evolved / optimized polynomial pairs beat unoptimized canonical base-m of same degree
+  search_claim:
+    enabled: true
+    baseline_type: "canonical_base_m_d3"
+    candidate_type: "search_optimized_d3"
+    primary_metric: "modulus_paired_yield_diff"
+    min_search_yield_gain: 1.15           # >= 15% paired yield gain over canonical base-m
+    max_wilcoxon_pvalue: 0.01
+    require_log_norm_advantage: true
+    max_log_norm_ratio: 0.95
+
+  # Level 3: SOTA Benchmark Claim
+  # Candidates beat a properly configured Kleinjung/Murphy/CADO-NFS baseline
+  sota_claim:
+    enabled: true
+    baseline_type: "kleinjung_murphy_nfs"
+    candidate_type: "search_optimized_d3"
+    require_kleinjung_murphy_baseline: true
+    metrics:
+      - "murphy_e_score"
+      - "relation_throughput_per_core_sec"
+      - "empirical_yield_rate"
+    min_murphy_e_ratio: 1.00              # Must equal or exceed Kleinjung baseline Murphy E
+    min_throughput_ratio: 1.00            # Must equal or exceed throughput per core-second
+    max_wilcoxon_pvalue: 0.01
+
+  # Level 4: Asymptotic Scaling Claim
+  # Empirical yield advantage persists or improves across bit lengths (32b -> 96b)
+  scaling_claim:
+    enabled: true
+    primary_metric: "paired_yield_ratio_vs_bits"
+    min_regression_slope: 0.0             # Slope of yield ratio vs bit length must not decay
+    min_non_zero_sizes: 2                 # Requires at least 2 non-zero yield bit sizes to evaluate
+
+# Search Space & Sieve Parameters
+search_space:
+  degrees_allowed: [2, 3, 4, 5, 6]
+  sieve_bound_a: 100
+  sieve_bound_b: 20
+  factor_base_primes_bound: 250
+  murphy_alpha_primes_bound: 2000
+
+# Compute Limits & Stopping Rules
+resource_limits:
+  per_modulus_timeout_seconds: 5.0
+  per_cohort_timeout_seconds: 300.0
+  max_total_wall_seconds: 1800.0
+  max_rss_mb: 2048
+  stopping_rules:
+    zero_yield_streak_cutoff: 10          # If 10 consecutive moduli at size K yield 0 for all reps, skip remainder of size K

@@ -1,0 +1,10 @@
+{
+  "benchmark_version": "v001_smoke",
+  "split": "smoke",
+  "master_seed": 42,
+  "total_instances": 11,
+  "public_file": "benchmarks\\public\\v001_smoke\\smoke\\instances.jsonl",
+  "public_sha256": "a0d734bdba5b6186a979cd712f287f1f6b5b50055f34664fcb5acda1d42f22c4",
+  "sealed_file": "benchmarks\\sealed\\v001_smoke\\smoke\\truth.jsonl",
+  "sealed_sha256": "8373b7011dfcb310bf1a24a9d88c3fbfeceac6578aeed7ead6c96b2d128ea01b"
+}

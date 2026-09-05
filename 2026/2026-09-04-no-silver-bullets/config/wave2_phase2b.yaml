@@ -1,0 +1,16 @@
+# R2 Wave 2 Phase 2B Representation Search & Polyselect Proxy Configuration
+contract_id: "NSB-R2-WAVE2-B-PHASE2B"
+mode: "wave2_phase2b_search_proxy"
+benchmark_version: "v004_wave2"
+benchmark_split: "search_holdout"
+criteria_contract_path: "config/contracts/r2_wave2_phase2b_criteria.yaml"
+
+resource_limits:
+  max_wall_seconds: 2100.0
+  max_cpu_seconds: 2100.0
+  per_cohort_wall_seconds: 420.0
+  per_modulus_cpu_seconds: 20.0
+  max_rss_mb: 2048
+
+tracks_enabled:
+  - "track_b"

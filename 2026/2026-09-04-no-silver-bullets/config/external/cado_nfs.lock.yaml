@@ -1,0 +1,44 @@
+# CADO-NFS Baseline Dependency Lockfile
+# Pinned Development Revision from Authoritative Inria Tree / Official Mirror
+package: "cado-nfs"
+canonical_upstream_git: "https://gitlab.inria.fr/cado-nfs/cado-nfs.git"
+github_mirror_git: "https://github.com/cado-nfs/cado-nfs.git"
+pinned_git_commit: "73ca6b6847118b05b15eeec27c86f45cef82a19e"
+pinned_git_date: "2026-09-02"
+license: "LGPL-2.1-or-later"
+
+toolchain_requirements:
+  os: "Linux (Ubuntu 22.04+ / Debian / Fedora under native Linux or WSL2)"
+  cpp_standard: "C++20"
+  min_gcc_version: "10.0"
+  min_cmake_version: "3.18"
+  min_python_version: "3.8"
+  required_libraries:
+    - "libgmp-dev (>= 6.1)"
+    - "libmpfr-dev (>= 4.0)"
+
+deterministic_build_dir: "build/nsb-r3"
+cmake_build_command: "cmake -B build/nsb-r3 -DCMAKE_BUILD_TYPE=Release . && cmake --build build/nsb-r3 -j"
+
+canonical_binaries:
+  polyselect:
+    relative_path: "build/nsb-r3/polyselect/polyselect"
+    description: "Kleinjung size/norm search for degree-d polynomials"
+  polyselect_ropt:
+    relative_path: "build/nsb-r3/polyselect/polyselect_ropt"
+    description: "Root property optimization and rotation"
+  score:
+    relative_path: "build/nsb-r3/polyselect/score"
+    description: "Neutral polynomial evaluation and Murphy-E estimation (--full)"
+  makefb:
+    relative_path: "build/nsb-r3/sieve/makefb"
+    description: "Factor base generation for algebraic and rational sides"
+  las:
+    relative_path: "build/nsb-r3/sieve/las"
+    description: "Lattice siever for relation collection over special-q intervals"
+  check_rels:
+    relative_path: "build/nsb-r3/misc/check_rels"
+    description: "Relation correctness and primality verifier"
+  cado_orchestrator:
+    relative_path: "cado-nfs.py"
+    description: "Reference orchestration script for smoke testing and parameter cross-checks"

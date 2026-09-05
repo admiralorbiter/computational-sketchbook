@@ -1,0 +1,232 @@
+{
+  "timestamp": "2026-09-04T14:57:28.452412+00:00",
+  "contract_id": "NSB-R2-WAVE2-B-PHASE2B",
+  "criteria_version": "1.3",
+  "evaluated_commit": "8152a9f1ef34c9ce6245f51759a03366081514c1",
+  "attestation_commit": "c6dd6dd2089c8025b6e7ecf0faef5d107330e92c",
+  "benchmark_version": "v004_wave2",
+  "benchmark_split": "search_holdout",
+  "master_seed": 3138178080747748033,
+  "verdict": "SEARCH_ADVANTAGE_FAILED",
+  "total_elapsed_seconds": 897.29,
+  "claims": {
+    "tier2_search": {
+      "status": "FAIL",
+      "per_size_verdicts": {
+        "32": "PASS",
+        "48": "FAIL",
+        "64": "FAIL",
+        "80": "FAIL",
+        "96": "FAIL"
+      },
+      "findings": [
+        "32b: PASS. Mean diff +0.014152, gain=1.53x, win rate 76.7%, floor=100.0% (30/30), log-norm ratio=0.9363 <= 0.95, Wilcoxon p=1.42e-04, paired-t p=5.41e-05.",
+        "48b: FAIL. log-norm ratio failed (0.9553 > 0.95); stats failed (diff=0.001561, win=46.7%, wilcoxon_p=8.88e-03, paired_t_p=6.26e-03).",
+        "64b: FAIL. relation floor failed (43.3% < 50.0%); log-norm ratio failed (0.9796 > 0.95); stats failed (diff=0.000120, win=26.7%, wilcoxon_p=5.54e-02, paired_t_p=6.52e-02).",
+        "80b: FAIL. relation floor failed (3.3% < 50.0%); log-norm ratio failed (0.9851 > 0.95); stats failed (diff=0.000013, win=3.3%, wilcoxon_p=5.00e-01, paired_t_p=1.63e-01).",
+        "96b: FAIL. Relation floor failed (0.0% < 50.0%: zero-yield floor reached on primary target size)."
+      ]
+    },
+    "tier3_proxy": {
+      "status": "FAIL",
+      "per_size_verdicts": {
+        "32": "FAIL",
+        "48": "FAIL",
+        "64": "FAIL",
+        "80": "FAIL",
+        "96": "FAIL"
+      },
+      "findings": [
+        "32b: FAIL. Murphy-E raw gate failed (cand=1.310259e-01 < req=1.0x proxy=1.362431e-01); throughput raw gate failed (cand=16326.40 < req=1.0x proxy=16595.33); empirical yield test failed (diff=-0.000160 <= 0.0 or Wilcoxon p=3.80e-01 > 0.01).",
+        "48b: FAIL. Murphy-E raw gate failed (cand=5.546872e-02 < req=1.0x proxy=6.019692e-02).",
+        "64b: FAIL. Murphy-E raw gate failed (cand=8.741595e-02 < req=1.0x proxy=9.207823e-02); throughput raw gate failed (cand=109.87 < req=1.0x proxy=116.67); empirical yield test failed (diff=-0.000013 <= 0.0 or Wilcoxon p=5.82e-01 > 0.01).",
+        "80b: FAIL. Murphy-E raw gate failed (cand=2.270984e-02 < req=1.0x proxy=2.378170e-02); throughput raw gate failed (cand=4.27 < req=1.0x proxy=4.53); empirical yield test failed (diff=0.000000 <= 0.0 or Wilcoxon p=1.00e+00 > 0.01).",
+        "96b: FAIL. Murphy-E raw gate failed (cand=2.074711e-03 < req=1.0x proxy=2.155718e-03); throughput raw gate failed (cand=0.00 < req=1.0x proxy=0.00); empirical yield test failed (diff=0.000000 <= 0.0 or Wilcoxon p=1.00e+00 > 0.01)."
+      ]
+    }
+  },
+  "cohort_summary": {
+    "32": {
+      "n_moduli": 30,
+      "mean_cand_yield": 0.041043,
+      "mean_base_yield": 0.026891,
+      "mean_paired_diff": 0.014152,
+      "candidate_wins": 23,
+      "win_rate": 0.7667,
+      "wilcoxon_pvalue": 0.0001416318118572235,
+      "paired_t_pvalue": 5.405630873261895e-05,
+      "yield_gain": 1.5263,
+      "relation_floor_ratio": 1.0,
+      "mean_log_norm_ratio": 0.9363,
+      "mean_cand_murphy_e": 0.131026,
+      "mean_proxy_murphy_e": 0.136243,
+      "murphy_e_ratio": 0.9617,
+      "throughput_ratio": 0.9838,
+      "proxy_yield_diff": -0.00016,
+      "proxy_wilcoxon_pvalue": 0.3802254867289482,
+      "tier2_verdict": "PASS",
+      "tier3_verdict": "FAIL"
+    },
+    "48": {
+      "n_moduli": 30,
+      "mean_cand_yield": 0.004975,
+      "mean_base_yield": 0.003415,
+      "mean_paired_diff": 0.001561,
+      "candidate_wins": 14,
+      "win_rate": 0.4667,
+      "wilcoxon_pvalue": 0.00887920594716845,
+      "paired_t_pvalue": 0.006259155388233177,
+      "yield_gain": 1.4571,
+      "relation_floor_ratio": 1.0,
+      "mean_log_norm_ratio": 0.9553,
+      "mean_cand_murphy_e": 0.055469,
+      "mean_proxy_murphy_e": 0.060197,
+      "murphy_e_ratio": 0.9215,
+      "throughput_ratio": 2.2242,
+      "proxy_yield_diff": 0.002708,
+      "proxy_wilcoxon_pvalue": 7.344648933464575e-05,
+      "tier2_verdict": "FAIL",
+      "tier3_verdict": "FAIL"
+    },
+    "64": {
+      "n_moduli": 30,
+      "mean_cand_yield": 0.000293,
+      "mean_base_yield": 0.000173,
+      "mean_paired_diff": 0.00012,
+      "candidate_wins": 8,
+      "win_rate": 0.2667,
+      "wilcoxon_pvalue": 0.055419921875,
+      "paired_t_pvalue": 0.06516271272693115,
+      "yield_gain": 1.6923,
+      "relation_floor_ratio": 0.4333,
+      "mean_log_norm_ratio": 0.9796,
+      "mean_cand_murphy_e": 0.087416,
+      "mean_proxy_murphy_e": 0.092078,
+      "murphy_e_ratio": 0.9494,
+      "throughput_ratio": 0.9417,
+      "proxy_yield_diff": -1.3e-05,
+      "proxy_wilcoxon_pvalue": 0.58203125,
+      "tier2_verdict": "FAIL",
+      "tier3_verdict": "FAIL"
+    },
+    "80": {
+      "n_moduli": 30,
+      "mean_cand_yield": 1.3e-05,
+      "mean_base_yield": 0.0,
+      "mean_paired_diff": 1.3e-05,
+      "candidate_wins": 1,
+      "win_rate": 0.0333,
+      "wilcoxon_pvalue": 0.5,
+      "paired_t_pvalue": 0.16279099400809685,
+      "yield_gain": null,
+      "relation_floor_ratio": 0.0333,
+      "mean_log_norm_ratio": 0.9851,
+      "mean_cand_murphy_e": 0.02271,
+      "mean_proxy_murphy_e": 0.023782,
+      "murphy_e_ratio": 0.9549,
+      "throughput_ratio": 0.9412,
+      "proxy_yield_diff": 0.0,
+      "proxy_wilcoxon_pvalue": 1.0,
+      "tier2_verdict": "FAIL",
+      "tier3_verdict": "FAIL"
+    },
+    "96": {
+      "n_moduli": 30,
+      "mean_cand_yield": 0.0,
+      "mean_base_yield": 0.0,
+      "mean_paired_diff": 0.0,
+      "candidate_wins": 0,
+      "win_rate": 0.0,
+      "wilcoxon_pvalue": 1.0,
+      "paired_t_pvalue": 1.0,
+      "yield_gain": null,
+      "relation_floor_ratio": 0.0,
+      "mean_log_norm_ratio": 0.9838,
+      "mean_cand_murphy_e": 0.002075,
+      "mean_proxy_murphy_e": 0.002156,
+      "murphy_e_ratio": 0.9624,
+      "throughput_ratio": null,
+      "proxy_yield_diff": 0.0,
+      "proxy_wilcoxon_pvalue": 1.0,
+      "tier2_verdict": "FAIL",
+      "tier3_verdict": "FAIL"
+    }
+  },
+  "auditor_checks": [
+    {
+      "name": "public_sha_pilot",
+      "passed": true,
+      "details": "Calculated 315ae15e... vs Expected 315ae15e..."
+    },
+    {
+      "name": "sealed_sha_pilot",
+      "passed": true,
+      "details": "Calculated 5bef83e1... vs Expected 5bef83e1..."
+    },
+    {
+      "name": "public_sha_smoke",
+      "passed": true,
+      "details": "Calculated a0d734bd... vs Expected a0d734bd..."
+    },
+    {
+      "name": "sealed_sha_smoke",
+      "passed": true,
+      "details": "Calculated 8373b701... vs Expected 8373b701..."
+    },
+    {
+      "name": "public_sha_confirmatory",
+      "passed": true,
+      "details": "Calculated 4c934876... vs Expected 4c934876..."
+    },
+    {
+      "name": "sealed_sha_confirmatory",
+      "passed": true,
+      "details": "Calculated db0981a7... vs Expected db0981a7..."
+    },
+    {
+      "name": "public_sha_search_holdout",
+      "passed": true,
+      "details": "Calculated cacc42ae... vs Expected cacc42ae..."
+    },
+    {
+      "name": "sealed_sha_search_holdout",
+      "passed": true,
+      "details": "Calculated 0cdaf7a8... vs Expected 0cdaf7a8..."
+    },
+    {
+      "name": "public_sha_search_holdout",
+      "passed": true,
+      "details": "Calculated 5c5b117c... vs Expected 5c5b117c..."
+    },
+    {
+      "name": "sealed_sha_search_holdout",
+      "passed": true,
+      "details": "Calculated 0f7b0ad5... vs Expected 0f7b0ad5..."
+    },
+    {
+      "name": "tripwire_pilot",
+      "passed": true,
+      "details": "Tripwire intact and untampered"
+    },
+    {
+      "name": "tripwire_smoke",
+      "passed": true,
+      "details": "Tripwire intact and untampered"
+    },
+    {
+      "name": "tripwire_confirmatory",
+      "passed": true,
+      "details": "Tripwire intact and untampered"
+    },
+    {
+      "name": "tripwire_search_holdout",
+      "passed": true,
+      "details": "Tripwire intact and untampered"
+    },
+    {
+      "name": "tripwire_search_holdout",
+      "passed": true,
+      "details": "Tripwire intact and untampered"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "benchmark_version": "v004_wave2",
+  "split": "search_holdout",
+  "master_seed": 3138178080747748033,
+  "total_instances": 150,
+  "line_endings": "LF",
+  "hash_bytes": "canonical_git_lf",
+  "public_file": "benchmarks/public/v004_wave2/search_holdout/instances.jsonl",
+  "public_sha256": "5c5b117cef99a50636a42b8d62b1c24275bba5846783d01cfa9ee82730db628e",
+  "sealed_file": "benchmarks/sealed/v004_wave2/search_holdout/truth.jsonl",
+  "sealed_sha256": "0f7b0ad59dccef13667df0ebc24e9954e0ec1da6cd330fc5473edeff560e6310"
+}

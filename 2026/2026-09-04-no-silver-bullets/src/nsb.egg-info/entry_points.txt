@@ -1,0 +1,2 @@
+[console_scripts]
+nsb = nsb.cli:main

@@ -1,0 +1,173 @@
+{
+  "timestamp": "2026-09-04T01:19:35.369060+00:00",
+  "contract_id": "NSB-R0-FOUNDATION",
+  "evaluated_commit": "4bf0f569d80cca4fbc9134813f7d59cc714118e0",
+  "attestation_commit": null,
+  "git_commit": "4bf0f569d80cca4fbc9134813f7d59cc714118e0",
+  "benchmark_version": "v001_smoke",
+  "wave": "Wave 0 \u2014 Smoke Canaries",
+  "auditor_verdict": "PASS",
+  "audit_report": {
+    "timestamp": "2026-09-04T01:19:35.295208+00:00",
+    "verdict": "PASS",
+    "git_sha": "4bf0f569d80cca4fbc9134813f7d59cc714118e0",
+    "git_dirty": false,
+    "canonical_ready": true,
+    "checks": [
+      {
+        "name": "git_provenance_cleanliness",
+        "passed": true,
+        "details": "Clean git state at 4bf0f569d80cca4fbc9134813f7d59cc714118e0"
+      },
+      {
+        "name": "public_sha_smoke",
+        "passed": true,
+        "details": "Calculated a0d734bd... vs Expected a0d734bd..."
+      },
+      {
+        "name": "sealed_sha_smoke",
+        "passed": true,
+        "details": "Calculated 8373b701... vs Expected 8373b701..."
+      },
+      {
+        "name": "tripwire_smoke",
+        "passed": true,
+        "details": "Tripwire intact and untampered"
+      },
+      {
+        "name": "sandbox_leakage",
+        "passed": true,
+        "details": "Verified 1 active sandbox(es); zero sealed leakage detected"
+      }
+    ],
+    "summary": "Audit verdict: PASS. Checks passed: 5/5. Git SHA: 4bf0f569d80cca4fbc9134813f7d59cc714118e0 (CLEAN)."
+  },
+  "tracks": [
+    {
+      "track": "A",
+      "champion_id": "NSB-A-CANARY-01",
+      "evidence_tier": "E1",
+      "bit_range": "20-32",
+      "primary_metric": "19 relations found",
+      "baseline": "0 relations",
+      "delta": "+100%",
+      "validation_status": "PASS",
+      "verdict": "CANDIDATE"
+    },
+    {
+      "track": "B",
+      "champion_id": "NSB-B-CANARY-01",
+      "evidence_tier": "E1",
+      "bit_range": "32-48",
+      "primary_metric": "log_norm=31.06",
+      "baseline": "unsearched",
+      "delta": "valid_base_m",
+      "validation_status": "PASS",
+      "verdict": "CANDIDATE"
+    },
+    {
+      "track": "C",
+      "champion_id": "NSB-C-CANARY-01",
+      "evidence_tier": "E1",
+      "bit_range": "48",
+      "primary_metric": "exact_recovery=0.0373s",
+      "baseline": "zero_info",
+      "delta": "recovered_factors",
+      "validation_status": "PASS",
+      "verdict": "CANDIDATE"
+    },
+    {
+      "track": "D",
+      "champion_id": "NSB-D-CANARY-01",
+      "evidence_tier": "E1",
+      "bit_range": "16-24",
+      "primary_metric": "solve_time=0.0120s",
+      "baseline": "brute_force",
+      "delta": "exact_factor_recovery",
+      "validation_status": "PASS",
+      "verdict": "CANDIDATE"
+    }
+  ],
+  "proposals": [
+    {
+      "proposal_id": "NSB-A-20260904-A00001",
+      "parent_experiment": null,
+      "track": "A",
+      "hypothesis": "Scaling parameter C=5000 in Schnorr lattice increases smooth relation yield by >= 1.5x at 48-64 bits.",
+      "mechanism": "Higher logarithmic scaling improves balance between prime-base weights and modulus vector.",
+      "mutations": {
+        "scale_c": 5000,
+        "factor_base_size": 25
+      },
+      "expected_effect": "unique_valid_relations / cpu_second >= 1.5 * baseline",
+      "budget": {
+        "max_wall_seconds": 30.0,
+        "max_cpu_seconds": 30.0,
+        "max_rss_mb": 1024
+      },
+      "stopping_rule": "stop if 500 candidates yield 0 relations",
+      "promotion_target": "Pilot A-P1",
+      "novelty_reason": "First exploration of scaling parameter mutation."
+    },
+    {
+      "proposal_id": "NSB-B-20260904-B00001",
+      "parent_experiment": null,
+      "track": "B",
+      "hypothesis": "Degree-3 base-m representation achieves lower log-norm proxy score than degree-2 at 64 bits.",
+      "mechanism": "Higher degree distributes N across smaller individual coefficients.",
+      "mutations": {
+        "degree": 3,
+        "sample_bound": 500
+      },
+      "expected_effect": "proxy_log_norm_score <= 0.85 * degree_2_score",
+      "budget": {
+        "max_wall_seconds": 30.0,
+        "max_cpu_seconds": 30.0,
+        "max_rss_mb": 1024
+      },
+      "stopping_rule": "stop if Level B0 validity filter fails",
+      "promotion_target": "Pilot B-P1",
+      "novelty_reason": "Testing representation shift from quadratic to cubic base-m."
+    },
+    {
+      "proposal_id": "NSB-C-20260904-C00001",
+      "parent_experiment": null,
+      "track": "C",
+      "hypothesis": "Bivariate lattice root search lowers required known MSB fraction from 50% to 45% on 48-bit semiprimes.",
+      "mechanism": "Adding dual-monomial polynomial relations extends Howgrave-Graham root bound.",
+      "mutations": {
+        "lattice_dimension": 4,
+        "degree_m": 3
+      },
+      "expected_effect": "downstream_exact_recovery_rate >= 0.8 at fraction=0.45",
+      "budget": {
+        "max_wall_seconds": 60.0,
+        "max_cpu_seconds": 60.0,
+        "max_rss_mb": 1024
+      },
+      "stopping_rule": "stop if LLL basis reduction exceeds 60 seconds",
+      "promotion_target": "Pilot C-P1",
+      "novelty_reason": "Exploration of sub-50% MSB small-root recovery."
+    },
+    {
+      "proposal_id": "NSB-D-20260904-D00001",
+      "parent_experiment": null,
+      "track": "D",
+      "hypothesis": "Carry-save adder tree encoding reduces SAT conflict count by >= 25% on 32-bit balanced semiprimes.",
+      "mechanism": "Reduces clause dependency chain depth compared to ripple-carry adders.",
+      "mutations": {
+        "encoding_family": "carry_save",
+        "solver": "cadical195"
+      },
+      "expected_effect": "conflicts <= 0.75 * baseline_schoolbook_conflicts",
+      "budget": {
+        "max_wall_seconds": 30.0,
+        "max_cpu_seconds": 30.0,
+        "max_rss_mb": 1024
+      },
+      "stopping_rule": "stop if D-CANARY-1 semantic equivalence test fails",
+      "promotion_target": "Pilot D-P1",
+      "novelty_reason": "First non-schoolbook arithmetic encoding mutation."
+    }
+  ]
+}

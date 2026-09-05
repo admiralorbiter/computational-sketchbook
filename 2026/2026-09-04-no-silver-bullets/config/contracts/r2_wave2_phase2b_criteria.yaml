@@ -1,0 +1,124 @@
+# Preregistered Experimental Criteria: NSB-R2-WAVE2-B-PHASE2B
+# Version: 1.3 (Resource-Only Amendment: Calibrated Ceilings from v002 Profiling, Fresh v004 Holdout Scope)
+# Contract: NSB-R2-WAVE2-B-PHASE2B
+# Primary Track: Track B (Algebraic Evolution)
+# Execution Phase: phase_2b_search_and_polyselect_proxy
+version: "1.3"
+contract_id: "NSB-R2-WAVE2-B-PHASE2B"
+criteria_tier: "frozen_preregistration_phase_2b"
+primary_track: "track_b"
+execution_phase: "phase_2b_search_and_polyselect_proxy"
+
+corpus:
+  version: "v004_wave2"
+  split: "search_holdout"
+  family: "R"  # Balanced random semiprimes
+  bit_sizes: [32, 48, 64, 80, 96]
+  target_bit_sizes: [64, 80, 96]        # Primary scientific targets: testing escape from sparse-sieve floor
+  supporting_bit_sizes: [32, 48]        # Controls/benchmarks: passing 32b/48b cannot confer global certification
+  instances_per_size: 30
+  total_instances: 150
+  seed_derivation: "first_63_bits_sha256"
+  seed_formula: "int(hashlib.sha256(f'{freeze_sha}:NSB-R2-WAVE2-B-PHASE2B:v004'.encode()).hexdigest()[:16], 16) & 0x7FFFFFFFFFFFFFFF"
+  min_replicated_instances_per_size: 30
+  require_independent_moduli: true
+  require_pairwise_coprimality: true
+  require_all_cohorts_for_canonical: true
+
+# Frozen Assay Specification:
+assay:
+  bound_a: 100
+  bound_b: 20
+  factor_base_bound: 250
+  degree: 3
+  search_candidate_budget: 50
+  search_grid:
+    canonical_evals: 1
+    translation_radius: 5   # 10 translation candidates (m +/- 1..5)
+    rotation_u_bound: 2     # 24 linear rotation candidates (u in [-2, 2], v in [-2, 2], (u,v)!=(0,0))
+    rotation_v_bound: 2
+    total_grid_candidates: 35
+  b0_validity_filter:
+    require_identical_valid_subset: true
+  murphy_alpha_bound: 2000
+  b1_sample_bound: 50
+
+# Core Scientific Hypothesis:
+# Frozen systematic candidate search (degree-3 translation/rotation grid, budget=50)
+# significantly increases relation yield and lifts absolute relation density above the
+# measurement floor at >=64 bits compared to canonical base-m degree-3 baseline.
+
+claim_hierarchy:
+  # Tier 2: Representation-Search Claim
+  # FrozenSearchOptimizer d=3 vs Canonical base-m d=3 across independent moduli
+  search_claim:
+    enabled: true
+    baseline_type: "canonical_base_m_d3"
+    candidate_type: "frozen_search_optimized_d3"
+    target_bit_sizes: [64, 80, 96]
+    supporting_bit_sizes: [32, 48]
+    require_all_target_cohorts_pass: true # Global certification requires ALL target sizes to PASS
+    primary_metric: "modulus_paired_yield_diff"
+    test_direction: "greater"             # One-sided directional test (search improves yield)
+    min_search_yield_gain: 1.15           # At least +15% yield gain over canonical base-m (if baseline > 0)
+    max_wilcoxon_pvalue: 0.01
+    max_paired_t_pvalue: 0.01
+    min_candidate_win_rate: 0.70          # At least 70% of moduli must show positive effect
+    require_log_norm_advantage: true
+    max_log_norm_ratio: 0.95              # Cohort mean paired B1 log-norm ratio (cand/base) <= 0.95
+    # Absolute Floor Criterion:
+    # Requires candidate to produce >= 1 non-zero relation on >= 50% of cohort moduli (>= 15/30)
+    # Target sizes (64, 80, 96) that remain 0-vs-0 are classified as FAIL (not exempt)
+    require_absolute_relation_floor: true
+    min_moduli_with_relations_ratio: 0.50 # At least 50% of moduli in cohort must produce >= 1 relation
+    target_zero_policy: "fail_relation_floor"
+    unrounded_gate_comparisons: true      # Compare raw floats: cand_yield >= 1.15 * base_yield
+    target_verdict: "SEARCH_ADVANTAGE_CERTIFIED"
+
+  # Tier 3: In-House Polyselect Proxy Claim
+  # Frozen search candidate compared against symmetrical in-house polyselect baseline
+  in_house_polyselect_proxy:
+    enabled: true
+    baseline_type: "in_house_optimized_polyselect_d3"
+    candidate_type: "frozen_search_optimized_d3"
+    target_bit_sizes: [64, 80, 96]
+    supporting_bit_sizes: [32, 48]
+    require_all_target_cohorts_pass: true # Global certification requires ALL target sizes to PASS
+    # Symmetrical baseline searches the exact same 35 representations (canonical + 10 translations + 24 linear rotations)
+    # evaluating the identical B0-valid subset, selecting the representation maximizing Murphy-E.
+    proxy_baseline_method: "select_in_house_murphy_e_baseline"
+    proxy_search_space: "identical_35_candidate_grid"
+    primary_inferential_test: "modulus_paired_empirical_yield_wilcoxon"
+    test_direction: "greater"             # One-sided directional test
+    max_wilcoxon_pvalue: 0.01
+    strict_positive_yield_diff: true      # Requires raw mean proxy_yield_diff > 0.0 (strict positive)
+    min_murphy_e_ratio: 1.00              # Raw mean candidate Murphy-E >= raw mean proxy Murphy-E
+    min_throughput_ratio: 1.00            # Raw cumulative candidate throughput >= raw cumulative proxy throughput
+    unrounded_gate_comparisons: true      # Prevents rounding 0.99996 to 1.0000
+    forbid_sota_claim: true               # Explicitly prohibited from claiming CADO-NFS SOTA
+    target_verdict: "IN_HOUSE_POLYSELECT_PROXY_BEATEN"
+
+zero_denominator_semantics:
+  yield_ratio_when_base_zero: null        # Stored as None/null; 999.0 sentinels forbidden
+  throughput_ratio_when_base_zero: null   # Stored as None/null; 999.0 sentinels forbidden
+
+timing_methodology:
+  type: "cumulative_multi_batch"
+  min_cpu_seconds_per_modulus: 0.25       # Eliminates Windows 15.6ms timer tick quantization
+  max_batch_repeats: 2000
+  fail_closed_on_underflow: true          # Raises TimingInvalidError if cumulative CPU < 0.25s after max repeats
+  counterbalanced_order: "ab_ba_alternation" # 15 candidate-first, 15 proxy-first per 30-modulus cohort
+
+resource_limits:
+  # Calibrated mechanically on all 150 moduli of v002_wave2/confirmatory:
+  # max_modulus_cpu observed = 8.94s ==> ceil_to_5_seconds(2 * 8.94s) = 20.0s
+  # max_cohort_wall observed = 197.05s ==> ceil_to_60_seconds(2 * 197.05s) = 420.0s (7 min)
+  # total_calibration_wall observed = 917.25s ==> ceil_to_300_seconds(2 * 917.25s) = 2100.0s (35 min)
+  # max_rss_mb = 2048 MB (observed peak = 32.9 MB)
+  per_modulus_timeout_cpu_seconds: 20.0   # Covers whole-modulus pipeline (search + proxy + sieves + benchmarks)
+  per_cohort_timeout_seconds: 420.0
+  max_total_wall_seconds: 2100.0
+  max_rss_mb: 2048
+  stopping_rules:
+    forbid_zero_yield_imputation: true
+    forbid_partial_run_canonical: true

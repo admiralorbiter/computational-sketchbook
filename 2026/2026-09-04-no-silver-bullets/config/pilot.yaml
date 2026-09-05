@@ -1,0 +1,35 @@
+﻿# Pilot configuration for Gate 1 (NSB-R0-GATE1-PILOTS)
+contract_id: "NSB-R0-GATE1-PILOTS"
+mode: "pilot"
+benchmark_version: "v001_pilot"
+
+benchmark_generation:
+  seed: 1337
+  instances:
+    - family: "R"
+      bit_sizes: [32, 40, 48, 56, 64]
+      count_per_size: 2
+    - family: "F"
+      bit_sizes: [48, 64]
+      count_per_size: 1
+    - family: "P1"
+      bit_sizes: [48, 64]
+      count_per_size: 1
+    - family: "C"
+      bit_sizes: [32, 40, 48]
+      count_per_size: 1
+    - family: "E"
+      bit_sizes: [16, 20, 24, 28, 32]
+      count_per_size: 1
+
+resource_limits:
+  max_wall_seconds: 30.0
+  max_cpu_seconds: 30.0
+  max_rss_mb: 2048
+
+tracks_enabled:
+  - "baselines"
+  - "track_a"
+  - "track_b"
+  - "track_c"
+  - "track_d"

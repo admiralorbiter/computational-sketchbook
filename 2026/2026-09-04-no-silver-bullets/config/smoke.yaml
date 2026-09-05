@@ -1,0 +1,35 @@
+# Smoke test configuration for Phase S0-S5
+contract_id: "NSB-R0-FOUNDATION"
+mode: "smoke"
+benchmark_version: "v001_smoke"
+
+benchmark_generation:
+  seed: 42
+  instances:
+    - family: "R"
+      bit_sizes: [32, 40, 48]
+      count_per_size: 2
+    - family: "F"
+      bit_sizes: [48]
+      count_per_size: 1
+    - family: "P1"
+      bit_sizes: [48]
+      count_per_size: 1
+    - family: "C"
+      bit_sizes: [48]
+      count_per_size: 1
+    - family: "E"
+      bit_sizes: [16, 24]
+      count_per_size: 1
+
+resource_limits:
+  max_wall_seconds: 10.0
+  max_cpu_seconds: 10.0
+  max_rss_mb: 1024
+
+tracks_enabled:
+  - "baselines"
+  - "track_a"
+  - "track_b"
+  - "track_c"
+  - "track_d"

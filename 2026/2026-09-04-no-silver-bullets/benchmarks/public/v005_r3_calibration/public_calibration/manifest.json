@@ -1,0 +1,17 @@
+{
+  "benchmark_version": "v005_r3_calibration",
+  "split": "public_calibration",
+  "master_seed": "NSB-R3-CALIBRATION-CORPUS-20260904-V001",
+  "total_instances": 40,
+  "target_digit_sizes": [
+    60,
+    70,
+    80,
+    90
+  ],
+  "instances_per_size": 10,
+  "public_file": "benchmarks/public/v005_r3_calibration/public_calibration/instances.jsonl",
+  "public_sha256": "9d32b59bccb88b6b56ec90c6600d8c80a3189504457b118240510a1f1b8b177c",
+  "sealed_file": "benchmarks/sealed/v005_r3_calibration/public_calibration/truth.jsonl",
+  "sealed_sha256": "da5cae954ba38fa05db904726e0485acfcbd973488abd1954c1fac3502b8070b"
+}

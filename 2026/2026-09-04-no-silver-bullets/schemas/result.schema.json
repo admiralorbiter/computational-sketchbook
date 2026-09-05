@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NSBResultManifest",
+  "description": "Schema for execution results and canonical verified metrics",
+  "type": "object",
+  "required": [
+    "run_id",
+    "experiment_id",
+    "instance_id",
+    "exit_code",
+    "wall_seconds",
+    "cpu_seconds",
+    "peak_rss_mb",
+    "timeout",
+    "metrics",
+    "verification"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string"
+    },
+    "experiment_id": {
+      "type": "string"
+    },
+    "instance_id": {
+      "type": "string"
+    },
+    "bit_length": {
+      "type": "integer"
+    },
+    "seed": {
+      "type": "integer"
+    },
+    "exit_code": {
+      "type": "integer"
+    },
+    "wall_seconds": {
+      "type": "number",
+      "minimum": 0.0
+    },
+    "cpu_seconds": {
+      "type": "number",
+      "minimum": 0.0
+    },
+    "peak_rss_mb": {
+      "type": "number",
+      "minimum": 0.0
+    },
+    "timeout": {
+      "type": "boolean"
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["value", "unit", "version"],
+        "properties": {
+          "value": { "type": ["number", "integer", "string", "boolean", "null"] },
+          "unit": { "type": "string" },
+          "version": { "type": "string" }
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "required": ["verified", "status"],
+      "properties": {
+        "verified": { "type": "boolean" },
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILED", "TIMEOUT", "INVALID_FORMAT", "CORRUPTED"]
+        },
+        "factors": {
+          "type": ["array", "null"],
+          "items": { "type": "string" }
+        },
+        "error_message": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "properties": {
+        "stdout_path": { "type": "string" },
+        "stderr_path": { "type": "string" },
+        "candidate_path": { "type": "string" }
+      }
+    }
+  },
+  "additionalProperties": false
+}
