@@ -2,6 +2,7 @@
 
 | Date | Slug | Domain / Tech | Original Repo | Summary |
 | :--- | :--- | :--- | :--- | :--- |
+| **2024-07-13** | `2024-07-13-cant-stop-pairing-heuristics` | Game Theory / Heuristics / Python | `Downloads/Cant Stop Research` | Interactive CLI decision companions implementing the $m_1$ (relative progress) and $m_2$ (stuck penalty) pairing algorithms from Canakci et al. Precursor to `2025-08-10-cant-stop-coach`. |
 | **2025-03-02** | `2025-03-02-museum-of-pictures` | Graphics / Three.js | `museum-of-pictures` | 1-hour procedural infinite 3D art museum generating rooms and hallways based on player proximity across classical, futuristic, and abstract themes. |
 | **2025-03-08** | `2025-03-08-universe-example` | Agentic AI / D3.js | `universe-example` | Single-commit Manus AI generation of a 6-module interactive cosmic distance ladder curriculum with embedded calculators and D3 charts. |
 | **2025-04-06** | `2025-04-06-mo-data-analysis` | Data Science / ML | `mo_data_analysis` | 4-hour 8-step Missouri ZCTA EDA & ML pipeline. Serves as a textbook specimen of target leakage ($R^2 \approx 0.988$ via $y \in X$) and the necessity of epistemic stopping rules. |
@@ -45,3 +46,4 @@
 | **2026-09-04** | `2026-09-04-kc-concentric-gastronomy` | Geospatial / Gastronomy / Canvas / Chart.js | `computational-sketchbook` | Spatial dining decision explorer centered at 1609 E 75th Terrace categorizing 42 South KC restaurants across 3 concentric distance zones, featuring a custom Canvas radar, craving randomizer, Chart.js analytics, and local storage hit list. |
 | **2026-09-04** | `2026-09-04-no-silver-bullets` | Cryptanalysis / NFS / CADO / Linux Cgroups | `no-silver-bullets` | Investigation of candidate reranking in Number Field Sieve polynomial selection under paired CPU budgets ($1.00\times$). Preserves CADO automation harness, cgroup v2 accounting supervisor, 40-instance calibration corpus, and methodological case study on verification vs. experimental intent. Parked as unresolved with no demonstrated advantage within budget. |
 
+| **2026-09-05** | `2026-09-05-clip-reviewer` | Video Editing / Dictation / Web Speech | `computational-sketchbook` | Zero-dependency local video review and voice dictation studio supporting HTTP 206 range-seeking, Web Speech API speech-to-text, single-key triage tags, and synchronized Markdown log generation for 201-clip documentary archive. |

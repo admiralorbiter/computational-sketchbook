@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clip Reviewer & Dictation Studio — The Last Year</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 0.3; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .pulsing {
+      animation: pulse-ring 1.5s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-zinc-100 font-sans antialiased h-screen flex flex-col overflow-hidden">
+
+  <!-- Header -->
+  <header class="bg-zinc-900 border-b border-zinc-800 px-6 py-3 flex items-center justify-between shrink-0">
+    <div class="flex items-center space-x-4">
+      <h1 class="text-lg font-semibold tracking-tight text-white flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+        Famous Final Cut <span class="text-xs text-zinc-400 font-mono font-normal">/ 2026-09-05-clip-reviewer</span>
+      </h1>
+      <span id="progressText" class="text-xs px-2.5 py-1 bg-zinc-800 border border-zinc-700 rounded-md text-zinc-300 font-mono">Loading clips...</span>
+    </div>
+    <div class="flex items-center space-x-3">
+      <input type="text" id="searchInput" placeholder="Search 201 clips..." class="bg-zinc-800 border border-zinc-700 text-xs text-zinc-200 px-3 py-1.5 rounded focus:outline-none focus:border-indigo-500 w-64">
+      <select id="filterSelect" class="bg-zinc-800 border border-zinc-700 text-xs text-zinc-200 px-3 py-1.5 rounded focus:outline-none">
+        <option value="all">All Clips (201)</option>
+        <option value="unreviewed">Unreviewed Only</option>
+        <option value="reviewed">Reviewed Only</option>
+        <option value="anchor">Tag: Anchor</option>
+        <option value="broll">Tag: B-Roll</option>
+        <option value="audio">Tag: Audio Only</option>
+        <option value="discard">Tag: Discard</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- Main Work Area -->
+  <div class="flex-1 flex overflow-hidden">
+    
+    <!-- Left: Video Player & Scrubbing Deck -->
+    <div class="w-3/5 flex flex-col border-r border-zinc-800 bg-black relative">
+      <div class="flex-1 flex items-center justify-center relative p-4 bg-zinc-950">
+        <video id="videoPlayer" class="max-h-full max-w-full rounded shadow-2xl bg-black" controls preload="auto"></video>
+      </div>
+
+      <!-- Player Controls / Keyboard HUD -->
+      <div class="bg-zinc-900 border-t border-zinc-800 p-3 px-6 flex items-center justify-between text-xs text-zinc-400 shrink-0">
+        <div class="flex items-center space-x-3">
+          <button id="btnPrev" class="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-zinc-200 flex items-center gap-1 font-medium transition">
+            ◀ Prev
+          </button>
+          <button id="btnNext" class="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 rounded text-zinc-200 flex items-center gap-1 font-medium transition">
+            Next ▶
+          </button>
+          <div class="h-4 w-px bg-zinc-700 mx-1"></div>
+          <span class="text-zinc-300 font-mono" id="timecodeDisplay">00:00.0 / 00:00.0</span>
+          <div class="h-4 w-px bg-zinc-700 mx-1"></div>
+          <label class="text-zinc-400">Speed:</label>
+          <select id="speedSelect" class="bg-zinc-800 text-zinc-200 border border-zinc-700 rounded px-2 py-1 text-xs">
+            <option value="0.75">0.75x</option>
+            <option value="1.0" selected>1.0x</option>
+            <option value="1.25">1.25x</option>
+            <option value="1.5">1.5x</option>
+            <option value="2.0">2.0x</option>
+          </select>
+        </div>
+
+        <div class="flex items-center space-x-2 text-[11px] text-zinc-400 font-mono">
+          <span class="bg-zinc-800 px-1.5 py-0.5 rounded border border-zinc-700 text-zinc-300">Space</span> Play/Pause
+          <span class="bg-zinc-800 px-1.5 py-0.5 rounded border border-zinc-700 text-zinc-300">← / →</span> ±3s
+          <span class="bg-zinc-800 px-1.5 py-0.5 rounded border border-zinc-700 text-zinc-300">T</span> Stamp
+          <span class="bg-zinc-800 px-1.5 py-0.5 rounded border border-zinc-700 text-zinc-300">R</span> Dictate
+          <span class="bg-zinc-800 px-1.5 py-0.5 rounded border border-zinc-700 text-zinc-300">Ctrl+Enter</span> Save
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Dictation & Editorial Desk -->
+    <div class="w-2/5 flex flex-col bg-zinc-900 overflow-y-auto">
+      
+      <!-- Clip Metadata Card -->
+      <div class="p-5 border-b border-zinc-800 bg-zinc-900/60">
+        <div class="flex items-center justify-between mb-2">
+          <span id="badgeFolder" class="text-[11px] font-mono px-2 py-0.5 bg-zinc-800 text-zinc-300 rounded border border-zinc-700">Folder</span>
+          <span id="badgeStatus" class="text-[11px] font-mono px-2 py-0.5 bg-zinc-800 text-amber-400 rounded border border-zinc-700">UNREVIEWED</span>
+        </div>
+        <h2 id="clipTitle" class="text-sm font-semibold text-zinc-100 leading-snug break-words">Loading current clip...</h2>
+      </div>
+
+      <!-- Triage Tags (Number shortcuts 1-4) -->
+      <div class="p-5 border-b border-zinc-800">
+        <label class="block text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-3">Triage Tag (Press 1 - 4)</label>
+        <div class="grid grid-cols-2 gap-2">
+          <button data-tag="anchor" class="tag-btn py-2 px-3 rounded border text-xs font-medium flex items-center justify-between border-zinc-700 bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 transition">
+            <span>[1] Anchor / A-Roll</span>
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+          </button>
+          <button data-tag="broll" class="tag-btn py-2 px-3 rounded border text-xs font-medium flex items-center justify-between border-zinc-700 bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 transition">
+            <span>[2] B-Roll / Visual</span>
+            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+          </button>
+          <button data-tag="audio" class="tag-btn py-2 px-3 rounded border text-xs font-medium flex items-center justify-between border-zinc-700 bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 transition">
+            <span>[3] Audio Only</span>
+            <span class="w-2.5 h-2.5 rounded-full bg-purple-400"></span>
+          </button>
+          <button data-tag="discard" class="tag-btn py-2 px-3 rounded border text-xs font-medium flex items-center justify-between border-zinc-700 bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 transition">
+            <span>[4] Discard / Skip</span>
+            <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Dictation & Editorial Notes -->
+      <div class="p-5 flex-1 flex flex-col">
+        <div class="flex items-center justify-between mb-3">
+          <label class="text-xs font-semibold uppercase tracking-wider text-zinc-400">Dictate / Spoken Notes</label>
+          <button id="btnTimestamp" class="text-xs text-indigo-400 hover:text-indigo-300 bg-indigo-950/60 border border-indigo-800/60 px-2 py-1 rounded flex items-center gap-1 transition">
+            <span>+ Timestamp [T]</span>
+          </button>
+        </div>
+
+        <!-- Dictation Mic Button -->
+        <div class="mb-3">
+          <button id="btnMic" class="w-full py-3 px-4 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 flex items-center justify-center gap-3 text-zinc-200 transition">
+            <span id="micIcon" class="w-3.5 h-3.5 rounded-full bg-zinc-400"></span>
+            <span id="micLabel" class="text-xs font-medium">Click or Press [R] to Start Voice Dictation</span>
+          </button>
+          <p id="micStatus" class="text-[11px] text-zinc-400 mt-1 text-center font-mono">Microphone ready</p>
+        </div>
+
+        <!-- Note Textarea -->
+        <textarea id="notesArea" placeholder="Dictate your thoughts here or type... Press 'T' while playing to stamp current timestamp." class="flex-1 w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-sm text-zinc-200 font-sans leading-relaxed resize-none focus:outline-none focus:border-indigo-500 mb-4 min-h-[160px]"></textarea>
+
+        <!-- Save Button -->
+        <div class="flex items-center space-x-3">
+          <button id="btnSave" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold tracking-wide uppercase transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-950">
+            <span>Save Note & Next Clip (Ctrl+Enter)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Clip Drawer Toggle -->
+      <div class="p-3 border-t border-zinc-800 bg-zinc-950/80">
+        <button id="btnToggleList" class="w-full text-xs text-zinc-400 hover:text-zinc-200 flex items-center justify-between py-1 px-2">
+          <span>Clip Playlist (<span id="countFiltered">201</span>)</span>
+          <span id="iconDrawer">▲</span>
+        </button>
+        <div id="clipDrawer" class="mt-2 max-h-48 overflow-y-auto space-y-1 hidden">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    let clips = [];
+    let filteredClips = [];
+    let currentIndex = 0;
+    let selectedTag = '';
+    let recognition = null;
+    let isDictating = false;
+
+    const video = document.getElementById('videoPlayer');
+    const clipTitle = document.getElementById('clipTitle');
+    const badgeFolder = document.getElementById('badgeFolder');
+    const badgeStatus = document.getElementById('badgeStatus');
+    const notesArea = document.getElementById('notesArea');
+    const progressText = document.getElementById('progressText');
+    const timecodeDisplay = document.getElementById('timecodeDisplay');
+    const speedSelect = document.getElementById('speedSelect');
+    const searchInput = document.getElementById('searchInput');
+    const filterSelect = document.getElementById('filterSelect');
+    const btnMic = document.getElementById('btnMic');
+    const micIcon = document.getElementById('micIcon');
+    const micLabel = document.getElementById('micLabel');
+    const micStatus = document.getElementById('micStatus');
+    const btnSave = document.getElementById('btnSave');
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+    const btnTimestamp = document.getElementById('btnTimestamp');
+    const btnToggleList = document.getElementById('btnToggleList');
+    const clipDrawer = document.getElementById('clipDrawer');
+    const iconDrawer = document.getElementById('iconDrawer');
+    const countFiltered = document.getElementById('countFiltered');
+
+    // Initialize Web Speech Recognition
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+
+      recognition.onstart = () => {
+        isDictating = true;
+        micIcon.className = 'w-3.5 h-3.5 rounded-full bg-rose-500 pulsing';
+        micLabel.innerText = 'Listening... Speak your notes now (Press R to stop)';
+        btnMic.className = 'w-full py-3 px-4 rounded-lg bg-rose-950/40 border border-rose-600/80 flex items-center justify-center gap-3 text-rose-200 transition';
+        micStatus.innerText = 'Voice dictation active';
+      };
+
+      recognition.onresult = (event) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            const finalChunk = event.results[i][0].transcript.trim();
+            if (notesArea.value && !notesArea.value.endsWith(' ')) {
+              notesArea.value += ' ';
+            }
+            notesArea.value += finalChunk;
+          }
+        }
+      };
+
+      recognition.onerror = (event) => {
+        micStatus.innerText = 'Dictation error: ' + event.error;
+        stopDictation();
+      };
+
+      recognition.onend = () => {
+        if (isDictating) {
+          // Restart if still marked active (Chrome auto-stops occasionally)
+          try { recognition.start(); } catch(e) { stopDictation(); }
+        } else {
+          stopDictation();
+        }
+      };
+    } else {
+      micStatus.innerText = 'Web Speech API not supported in this browser. You can type notes directly.';
+      btnMic.disabled = true;
+      btnMic.classList.add('opacity-50', 'cursor-not-allowed');
+    }
+
+    function toggleDictation() {
+      if (!recognition) return;
+      if (isDictating) {
+        isDictating = false;
+        recognition.stop();
+        stopDictation();
+      } else {
+        recognition.start();
+      }
+    }
+
+    function stopDictation() {
+      isDictating = false;
+      micIcon.className = 'w-3.5 h-3.5 rounded-full bg-zinc-400';
+      micLabel.innerText = 'Click or Press [R] to Start Voice Dictation';
+      btnMic.className = 'w-full py-3 px-4 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 flex items-center justify-center gap-3 text-zinc-200 transition';
+      micStatus.innerText = 'Microphone ready';
+    }
+
+    // Load clips from server API
+    async function loadClips() {
+      try {
+        const res = await fetch('/api/clips');
+        clips = await res.json();
+        applyFilterAndSearch();
+        if (filteredClips.length > 0) {
+          loadClip(0);
+        }
+        updateProgress();
+      } catch (err) {
+        progressText.innerText = 'Failed to load clips';
+      }
+    }
+
+    function updateProgress() {
+      const reviewedCount = clips.filter(c => c.status === 'reviewed').length;
+      const total = clips.length;
+      const pct = total > 0 ? Math.round((reviewedCount / total) * 100) : 0;
+      progressText.innerText = `${reviewedCount} / ${total} reviewed (${pct}%)`;
+    }
+
+    function applyFilterAndSearch() {
+      const query = searchInput.value.toLowerCase().trim();
+      const filter = filterSelect.value;
+
+      filteredClips = clips.filter(c => {
+        const matchesQuery = !query || c.filename.toLowerCase().includes(query) || (c.notes && c.notes.toLowerCase().includes(query));
+        if (!matchesQuery) return false;
+
+        if (filter === 'all') return true;
+        if (filter === 'reviewed') return c.status === 'reviewed';
+        if (filter === 'unreviewed') return c.status !== 'reviewed';
+        if (filter === 'anchor') return c.tag === 'anchor';
+        if (filter === 'broll') return c.tag === 'broll';
+        if (filter === 'audio') return c.tag === 'audio';
+        if (filter === 'discard') return c.tag === 'discard';
+        return true;
+      });
+
+      countFiltered.innerText = filteredClips.length;
+      renderDrawerList();
+    }
+
+    function renderDrawerList() {
+      clipDrawer.innerHTML = '';
+      filteredClips.forEach((c, idx) => {
+        const item = document.createElement('div');
+        const isCurrent = idx === currentIndex;
+        item.className = `p-2 rounded text-xs cursor-pointer flex items-center justify-between ${isCurrent ? 'bg-indigo-950/80 border border-indigo-700/80 text-white' : 'hover:bg-zinc-800/80 text-zinc-400'}`;
+        item.innerHTML = `
+          <span class="truncate pr-2">${c.filename}</span>
+          <span class="text-[10px] font-mono shrink-0 ${c.status === 'reviewed' ? 'text-emerald-400' : 'text-zinc-500'}">${c.status === 'reviewed' ? '✓' : '—'}</span>
+        `;
+        item.onclick = () => loadClip(idx);
+        clipDrawer.appendChild(item);
+      });
+    }
+
+    function loadClip(index) {
+      if (index < 0 || index >= filteredClips.length) return;
+      currentIndex = index;
+      const clip = filteredClips[index];
+
+      video.src = clip.url;
+      video.playbackRate = parseFloat(speedSelect.value);
+      video.play().catch(() => {});
+
+      clipTitle.innerText = clip.filename;
+      badgeFolder.innerText = clip.folder;
+      
+      if (clip.status === 'reviewed') {
+        badgeStatus.innerText = 'REVIEWED';
+        badgeStatus.className = 'text-[11px] font-mono px-2 py-0.5 bg-emerald-950 text-emerald-300 rounded border border-emerald-800';
+      } else {
+        badgeStatus.innerText = 'UNREVIEWED';
+        badgeStatus.className = 'text-[11px] font-mono px-2 py-0.5 bg-zinc-800 text-amber-400 rounded border border-zinc-700';
+      }
+
+      notesArea.value = clip.notes || '';
+      selectTag(clip.tag || '');
+      renderDrawerList();
+    }
+
+    function selectTag(tag) {
+      selectedTag = tag;
+      document.querySelectorAll('.tag-btn').forEach(btn => {
+        if (btn.dataset.tag === tag) {
+          btn.classList.add('border-indigo-500', 'bg-indigo-950/50', 'text-white');
+        } else {
+          btn.classList.remove('border-indigo-500', 'bg-indigo-950/50', 'text-white');
+        }
+      });
+    }
+
+    document.querySelectorAll('.tag-btn').forEach(btn => {
+      btn.onclick = () => selectTag(btn.dataset.tag);
+    });
+
+    function insertTimestamp() {
+      const cur = video.currentTime;
+      const mins = Math.floor(cur / 60);
+      const secs = Math.floor(cur % 60);
+      const stamp = `[${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}] `;
+      
+      const start = notesArea.selectionStart;
+      const end = notesArea.selectionEnd;
+      const text = notesArea.value;
+      notesArea.value = text.substring(0, start) + stamp + text.substring(end);
+      notesArea.focus();
+      notesArea.selectionStart = notesArea.selectionEnd = start + stamp.length;
+    }
+
+    async function saveCurrentNote(advance = true) {
+      if (currentIndex < 0 || currentIndex >= filteredClips.length) return;
+      const clip = filteredClips[currentIndex];
+      
+      const payload = {
+        filename: clip.filename,
+        folder: clip.folder,
+        date: clip.date,
+        tag: selectedTag,
+        notes: notesArea.value.trim(),
+        status: 'reviewed',
+        updated_at: new Date().toISOString()
+      };
+
+      try {
+        const res = await fetch('/api/notes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+          clip.tag = payload.tag;
+          clip.notes = payload.notes;
+          clip.status = 'reviewed';
+          badgeStatus.innerText = 'REVIEWED';
+          badgeStatus.className = 'text-[11px] font-mono px-2 py-0.5 bg-emerald-950 text-emerald-300 rounded border border-emerald-800';
+          updateProgress();
+          
+          if (advance && currentIndex < filteredClips.length - 1) {
+            loadClip(currentIndex + 1);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to save note:', err);
+      }
+    }
+
+    // Video timecode display
+    video.ontimeupdate = () => {
+      const cur = video.currentTime;
+      const dur = video.duration || 0;
+      const formatTime = (t) => {
+        const m = Math.floor(t / 60);
+        const s = (t % 60).toFixed(1);
+        return `${String(m).padStart(2, '0')}:${s.padStart(4, '0')}`;
+      };
+      timecodeDisplay.innerText = `${formatTime(cur)} / ${formatTime(dur)}`;
+    };
+
+    speedSelect.onchange = () => {
+      video.playbackRate = parseFloat(speedSelect.value);
+    };
+
+    btnPrev.onclick = () => {
+      if (currentIndex > 0) loadClip(currentIndex - 1);
+    };
+
+    btnNext.onclick = () => {
+      if (currentIndex < filteredClips.length - 1) loadClip(currentIndex + 1);
+    };
+
+    btnSave.onclick = () => saveCurrentNote(true);
+    btnTimestamp.onclick = insertTimestamp;
+    btnMic.onclick = toggleDictation;
+
+    searchInput.oninput = () => {
+      applyFilterAndSearch();
+      if (filteredClips.length > 0) loadClip(0);
+    };
+
+    filterSelect.onchange = () => {
+      applyFilterAndSearch();
+      if (filteredClips.length > 0) loadClip(0);
+    };
+
+    btnToggleList.onclick = () => {
+      const isHidden = clipDrawer.classList.toggle('hidden');
+      iconDrawer.innerText = isHidden ? '▲' : '▼';
+    };
+
+    // Global Keyboard Shortcuts
+    window.addEventListener('keydown', (e) => {
+      const isTyping = document.activeElement === notesArea || document.activeElement === searchInput;
+
+      // Ctrl+Enter or Cmd+Enter to save
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        saveCurrentNote(true);
+        return;
+      }
+
+      // If typing in notes or search, don't trigger playback hotkeys
+      if (isTyping) {
+        if (e.key === 'Escape') {
+          notesArea.blur();
+          searchInput.blur();
+        }
+        return;
+      }
+
+      // Playback Hotkeys
+      if (e.code === 'Space') {
+        e.preventDefault();
+        if (video.paused) video.play(); else video.pause();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        if (e.shiftKey) video.currentTime -= (1 / 30); // 1 frame
+        else video.currentTime = Math.max(0, video.currentTime - 3);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        if (e.shiftKey) video.currentTime += (1 / 30); // 1 frame
+        else video.currentTime = Math.min(video.duration, video.currentTime + 3);
+      } else if (e.key === 't' || e.key === 'T') {
+        e.preventDefault();
+        insertTimestamp();
+      } else if (e.key === 'r' || e.key === 'R') {
+        e.preventDefault();
+        toggleDictation();
+      } else if (e.key === '1') {
+        selectTag('anchor');
+      } else if (e.key === '2') {
+        selectTag('broll');
+      } else if (e.key === '3') {
+        selectTag('audio');
+      } else if (e.key === '4') {
+        selectTag('discard');
+      } else if (e.key === '[') {
+        const speeds = [0.75, 1.0, 1.25, 1.5, 2.0];
+        const curIdx = speeds.indexOf(video.playbackRate);
+        if (curIdx > 0) {
+          video.playbackRate = speeds[curIdx - 1];
+          speedSelect.value = video.playbackRate;
+        }
+      } else if (e.key === ']') {
+        const speeds = [0.75, 1.0, 1.25, 1.5, 2.0];
+        const curIdx = speeds.indexOf(video.playbackRate);
+        if (curIdx < speeds.length - 1) {
+          video.playbackRate = speeds[curIdx + 1];
+          speedSelect.value = video.playbackRate;
+        }
+      }
+    });
+
+    // Start on page load
+    loadClips();
+  </script>
+</body>
+</html>
