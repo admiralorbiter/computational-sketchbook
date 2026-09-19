@@ -1,0 +1,254 @@
+/* ==========================================================================
+   MySpace Components: Panels, Profile Card, Buttons, Friends, CTA
+   ========================================================================== */
+
+/* Panels */
+.myspace-panel {
+  border: 2px solid var(--ms-blue-primary);
+  margin-bottom: 20px;
+  background-color: var(--ms-card-bg);
+  border-radius: var(--ms-radius-sm);
+}
+
+.myspace-panel-header {
+  background-color: var(--ms-blue-primary);
+  color: var(--ms-text-white);
+  font-weight: bold;
+  font-size: var(--ms-font-size-lg);
+  padding: 4px 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.myspace-panel-header-orange {
+  background-color: var(--ms-orange-primary);
+  color: var(--ms-text-on-orange);
+  font-weight: 800;
+  font-size: var(--ms-font-size-lg);
+  padding: 4px 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.myspace-panel-body {
+  padding: 10px;
+  color: var(--ms-text-dark);
+}
+
+.myspace-panel-body p {
+  color: var(--ms-text-body);
+  font-size: var(--ms-font-size-base);
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+
+.myspace-panel-body h3 {
+  color: var(--ms-orange-text);
+  font-size: var(--ms-font-size-title);
+  font-weight: bold;
+  margin: 12px 0 6px;
+}
+
+.myspace-panel-body h3:first-child {
+  margin-top: 0;
+}
+
+.myspace-panel-body address {
+  font-style: normal;
+}
+
+.myspace-panel-body address a {
+  color: var(--ms-blue-dark);
+  font-weight: bold;
+}
+
+/* Profile Info (Left Column) */
+.myspace-profile-info {
+  display: flex;
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .myspace-profile-info {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.myspace-pic-box {
+  text-align: center;
+  width: 140px;
+  flex-shrink: 0;
+}
+
+.myspace-pic {
+  width: 140px;
+  height: 140px;
+  border: 1px solid var(--ms-gray-border);
+  background: #ececec;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: var(--ms-shadow-card);
+}
+
+.myspace-pic picture {
+  display: block;
+  width: 100%;
+}
+
+.myspace-pic img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+.myspace-status-text {
+  margin-top: 8px;
+  font-style: italic;
+  color: var(--ms-orange-text);
+  font-weight: bold;
+  font-size: var(--ms-font-size-base);
+}
+
+.myspace-details-box {
+  flex-grow: 1;
+}
+
+.myspace-details-row {
+  margin-bottom: 6px;
+  font-size: var(--ms-font-size-base);
+  border-bottom: 1px solid var(--ms-gray-divider);
+  padding-bottom: 4px;
+}
+
+.myspace-details-label {
+  font-weight: bold;
+  color: var(--ms-orange-text);
+}
+
+/* Definition List for Key-Value Data */
+.myspace-dl {
+  margin: 0;
+  padding: 0;
+}
+
+.myspace-dl dt {
+  font-weight: bold;
+  color: var(--ms-orange-text);
+  font-size: var(--ms-font-size-base);
+  margin-top: 6px;
+}
+
+.myspace-dl dd {
+  margin: 2px 0 6px 0;
+  font-size: var(--ms-font-size-base);
+  color: var(--ms-text-body);
+  border-bottom: 1px solid var(--ms-gray-divider);
+  padding-bottom: 4px;
+}
+
+/* Contact Buttons Grid */
+.myspace-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+  text-align: center;
+}
+
+.myspace-contact-btn {
+  background-color: var(--ms-blue-light);
+  border: 1px solid var(--ms-blue-primary);
+  color: var(--ms-blue-dark);
+  padding: 6px 4px;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: var(--ms-font-size-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.myspace-contact-btn:hover {
+  background-color: var(--ms-blue-primary);
+  color: var(--ms-text-white);
+}
+
+/* Top Friends Section */
+.top-friends-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  text-align: center;
+}
+
+.friend-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+}
+
+.friend-cell:hover .friend-pic {
+  border-color: var(--ms-orange-primary);
+}
+
+.friend-cell:hover .friend-name {
+  text-decoration: underline;
+}
+
+.friend-name {
+  color: var(--ms-blue-dark);
+  font-weight: bold;
+  font-size: var(--ms-font-size-sm);
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.friend-pic {
+  width: 55px;
+  height: 55px;
+  border: 1px solid var(--ms-gray-border);
+  background: var(--ms-gray-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.2s;
+}
+
+/* Call to Action Highlight Box */
+.myspace-cta-box {
+  background-color: var(--ms-orange-bg);
+  border: 1px dashed var(--ms-orange-primary);
+  padding: 12px;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.myspace-cta-box a {
+  display: inline-block;
+  background-color: var(--ms-orange-primary);
+  color: var(--ms-text-on-orange);
+  font-weight: 800;
+  padding: 6px 14px;
+  text-decoration: none;
+  border-radius: 3px;
+  margin-top: 6px;
+  transition: background-color 0.2s;
+}
+
+.myspace-cta-box a:hover {
+  background-color: var(--ms-orange-hover);
+}

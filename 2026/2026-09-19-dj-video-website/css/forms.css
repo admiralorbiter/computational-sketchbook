@@ -1,0 +1,62 @@
+/* ==========================================================================
+   MySpace Form Styles (Booking & Inquiries)
+   ========================================================================== */
+.myspace-form fieldset {
+  border: 1px solid var(--ms-blue-primary);
+  margin-bottom: 12px;
+  padding: 10px;
+  background-color: var(--ms-blue-subtle);
+}
+
+.myspace-form legend {
+  font-weight: bold;
+  color: var(--ms-blue-dark);
+  padding: 0 4px;
+}
+
+.myspace-form div {
+  margin-bottom: 8px;
+}
+
+.myspace-form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 2px;
+  color: var(--ms-text-dark);
+}
+
+.myspace-form input[type="text"],
+.myspace-form input[type="email"],
+.myspace-form input[type="tel"],
+.myspace-form input[type="date"],
+.myspace-form input[type="number"],
+.myspace-form select,
+.myspace-form textarea {
+  width: 100%;
+  max-width: 400px;
+  padding: 5px 8px;
+  border: 1px solid var(--ms-blue-primary);
+  font-size: var(--ms-font-size-base);
+  font-family: inherit;
+  border-radius: var(--ms-radius-sm);
+}
+
+.myspace-form textarea {
+  max-width: 100%;
+}
+
+.myspace-form button[type="submit"] {
+  background-color: var(--ms-orange-primary);
+  color: var(--ms-text-white);
+  border: 1px solid var(--ms-orange-border);
+  padding: 6px 14px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: var(--ms-font-size-base);
+  border-radius: var(--ms-radius-sm);
+  transition: background-color 0.2s;
+}
+
+.myspace-form button[type="submit"]:hover {
+  background-color: var(--ms-orange-hover);
+}

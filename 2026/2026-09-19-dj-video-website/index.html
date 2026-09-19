@@ -3,108 +3,232 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DJon | Kansas City DJ</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="description" content="djon - Kansas City DJ specializing in weddings, private parties, and events with high-energy millennial throwbacks, 2000s bangers, hip-hop, and pop-punk.">
+  <title>djon's space | Kansas City DJ</title>
+  <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="djon's space | Kansas City DJ">
+  <meta property="og:description" content="Kansas City DJ specializing in weddings, private parties, and events with high-energy millennial throwbacks, 2000s bangers, hip-hop, and pop-punk.">
+  <meta property="og:image" content="images/djon-cats.jpg">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="djon's space | Kansas City DJ">
+  <meta name="twitter:description" content="Kansas City DJ specializing in weddings, private parties, and events with high-energy millennial throwbacks, 2000s bangers, hip-hop, and pop-punk.">
+  <meta name="twitter:image" content="images/djon-cats.jpg">
+
+  <link rel="preload" as="image" href="images/djon-cats.webp" type="image/webp" fetchpriority="high">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
 </head>
-<body>
-  <a href="#main-content">Skip to main content</a>
+<body class="myspace-theme-container">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <header>
-    <h1>DJon</h1>
-    <p>When you need a little spice in your life.</p>
-    <nav aria-label="Primary Navigation">
-      <ul>
-        <li><a href="index.html" aria-current="page">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
+  <div class="myspace-container">
+    <!-- Header Banner -->
+    <header class="myspace-header-banner">
+      <h1>djon's space</h1>
+      <p>Pardon me, do you have any djon?</p>
+      <nav aria-label="Primary Navigation" class="myspace-nav">
+        <ul>
+          <li><a href="index.html" aria-current="page">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
 
-  <main id="main-content">
-    <!-- Introduction Section -->
-    <section>
-      <h2>Meet DJon</h2>
-      <figure>
-        <img src="images/2025-10-15-00h25m36.jpg" alt="DJon and his cats">
-        <figcaption>DJon and his cats</figcaption>
-      </figure>
-      <p>Welcome to DJon. Inspired by the high-octane hype of Lil Jon, the seamless mashup energy of Girl Talk, and even the occasional classical symphony layer over a modern beat, I bring a unique sound to every event. Having worked every side of events from the bar to the booth, my goal is simple: figure out what your crowd loves and keep the dance floor packed all night.</p>
-      <div>
-        <a href="contact.html">Book an Event &rarr;</a>
-        <a href="about.html">Learn More About My Style &rarr;</a>
-      </div>
-    </section>
+    <!-- Main Content: 2-Column MySpace Grid -->
+    <main id="main-content" class="myspace-grid">
 
-    <!-- Events & Offerings Section -->
-    <section>
-      <h2>Events &amp; Offerings</h2>
-      <p>Custom-curated soundtracks tailored to your crowd&mdash;heavy on 2000s bangers, pop-punk, hip-hop, and party classics with zero generic EDM.</p>
-      <ul>
-        <li>
-          <article>
+      <!-- LEFT COLUMN -->
+      <aside class="myspace-col-left" aria-label="DJon Profile and Details">
+
+        <!-- Profile Panel -->
+        <section class="myspace-panel">
+          <h2 class="myspace-panel-header">djon</h2>
+          <div class="myspace-panel-body">
+            <div class="myspace-profile-info">
+              <div class="myspace-pic-box">
+                <figure class="myspace-pic" style="margin: 0; display: block; height: auto;">
+                  <picture>
+                    <source srcset="images/djon-cats.webp" type="image/webp">
+                    <img src="images/djon-cats.jpg" 
+                         alt="DJon and his cats" 
+                         width="140" 
+                         height="105" 
+                         fetchpriority="high" 
+                         decoding="async">
+                  </picture>
+                  <figcaption class="myspace-status-text">&ldquo;currently digging for hot tracks...&rdquo;</figcaption>
+                </figure>
+              </div>
+
+              <div class="myspace-details-box">
+                <div class="myspace-details-row"><span class="myspace-details-label">DJ Name:</span> djon</div>
+                <div class="myspace-details-row"><span class="myspace-details-label">Vibe:</span> Hip Hop / Pop / Pop-Punk / Throwbacks</div>
+                <div class="myspace-details-row"><span class="myspace-details-label">Location:</span> Kansas City, KS</div>
+                <div class="myspace-details-row"><span class="myspace-details-label">Sound:</span> Millennial Bangers</div>
+                <div class="myspace-details-row"><span class="myspace-details-label">BPM Range:</span> 70 &ndash; 130 BPM</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Contacting djon Panel -->
+        <section class="myspace-panel">
+          <h2 class="myspace-panel-header">Contacting djon</h2>
+          <div class="myspace-panel-body">
+            <div class="myspace-contact-grid">
+              <a href="contact.html" class="myspace-contact-btn"><span aria-hidden="true">&#9993;</span> Send Message</a>
+              <a href="contact.html" class="myspace-contact-btn"><span aria-hidden="true">&#10133;</span> Book Event</a>
+              <a href="about.html" class="myspace-contact-btn"><span aria-hidden="true">&#11088;</span> View Style</a>
+              <a href="contact.html" class="myspace-contact-btn"><span aria-hidden="true">&#128229;</span> Get Quote</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Interests Panel -->
+        <section class="myspace-panel">
+          <h2 class="myspace-panel-header">djon's Interests</h2>
+          <div class="myspace-panel-body">
+            <div class="myspace-details-row">
+              <span class="myspace-details-label">Music Styles:</span> 90s/00s Hip Hop, Pop-Punk Anthems, Millennial Bangers, Classical Layers (No EDM).
+            </div>
+            <div class="myspace-details-row">
+              <span class="myspace-details-label">Favorite Influences:</span> Lil Jon, Girl Talk, Beethoven Symphony.
+            </div>
+            <div class="myspace-details-row">
+              <span class="myspace-details-label">Favorite DJ Gear:</span> FLX-4, Serato, In-House PA Sound System.
+            </div>
+            <div class="myspace-details-row">
+              <span class="myspace-details-label">Mixing Philosophy:</span> Keep the energy high, match the BPMs seamlessly, and drop throwbacks that make people scream-sing.
+            </div>
+          </div>
+        </section>
+
+        <!-- Top Friends Panel -->
+        <section class="myspace-panel">
+          <h2 class="myspace-panel-header">djon's Space Friends (Top 8)</h2>
+          <div class="myspace-panel-body">
+            <p style="margin-bottom: 8px; font-weight: bold;">djon has <span style="color: var(--ms-orange-text);">8</span> friends.</p>
+            <ul class="top-friends-grid">
+              <li class="friend-cell">
+                <div class="friend-pic"><span aria-hidden="true">&#128100;</span></div>
+                <span class="friend-name">Tom</span>
+              </li>
+              <li class="friend-cell">
+                <div class="friend-pic"><span aria-hidden="true">&#127908;</span></div>
+                <span class="friend-name">Lil Jon</span>
+              </li>
+              <li class="friend-cell">
+                <div class="friend-pic"><span aria-hidden="true">&#127911;</span></div>
+                <span class="friend-name">Girl Talk</span>
+              </li>
+              <li class="friend-cell">
+                <div class="friend-pic"><span aria-hidden="true">&#127931;</span></div>
+                <span class="friend-name">Symphony</span>
+              </li>
+              <li class="friend-cell">
+                <div class="friend-pic"><span aria-hidden="true">&#127881;</span></div>
+                <span class="friend-name">Weddings</span>
+              </li>
+              <li class="friend-cell">
+                <div class="friend-pic"><span aria-hidden="true">&#127928;</span></div>
+                <span class="friend-name">Pop-Punk</span>
+              </li>
+              <li class="friend-cell">
+                <div class="friend-pic"><span aria-hidden="true">&#127926;</span></div>
+                <span class="friend-name">Hip Hop</span>
+              </li>
+              <li class="friend-cell">
+                <div class="friend-pic"><span aria-hidden="true">&#128049;</span></div>
+                <span class="friend-name">The Cats</span>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+      </aside>
+
+      <!-- RIGHT COLUMN -->
+      <section class="myspace-col-right" aria-label="DJon Blurbs and Services">
+
+        <!-- Blurbs Panel -->
+        <article class="myspace-panel">
+          <h2 class="myspace-panel-header-orange">djon's Blurbs</h2>
+          <div class="myspace-panel-body">
+            <h3>About me:</h3>
+            <p>
+              Hey! I'm <strong>djon</strong> (pronounced like Dijon, or DJ-on, or just Jon with a silent D). Inspired by the high-octane hype of Lil Jon, the seamless mashup energy of Girl Talk, and even the occasional classical symphony layer over a modern beat, I bring a unique sound to every event.
+            </p>
+            <p>
+              Having worked every side of events from setting up and bartending to the DJ booth, my goal is simple: figure out what your crowd loves and keep the dance floor packed all night.
+            </p>
+
+            <h3>Event Booking &amp; DJ Services:</h3>
+            <p>
+              I love spinning for weddings, private parties, milestone birthdays, anniversaries, corporate parties, and pop-up events. If you need a DJ who actually reads the room, curates the music to fit your guests, and keeps people dancing instead of playing cookie-cutter EDM playlists, let's talk!
+            </p>
+
+            <div class="myspace-cta-box">
+              <p><strong>Ready to add some spice to your event?</strong></p>
+              <p>Based in Kansas City, KS &bull; Open to travel for the right event.</p>
+              <a href="contact.html">Inquire for Booking &amp; Availability &rarr;</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Offerings & Events Detail Panel -->
+        <article class="myspace-panel">
+          <h2 class="myspace-panel-header">Events &amp; Offerings</h2>
+          <div class="myspace-panel-body">
             <h3>Weddings &amp; Receptions</h3>
-            <p>From ceremony and dinner ambiance to high-energy reception dance sets. With hands-on experience setting up and bartending weddings, I understand event flow and how to keep guests celebrating.</p>
-          </article>
-        </li>
-        <li>
-          <article>
+            <p>
+              From ceremony and dinner ambiance to high-energy reception dance sets. With hands-on experience setting up and bartending weddings, I understand event pacing, flow, and how to keep guests celebrating.
+            </p>
+
             <h3>Private Parties &amp; Milestones</h3>
-            <p>Birthdays, anniversaries, and family celebrations built around the songs and eras that mean the most to you and your guests.</p>
-          </article>
-        </li>
-        <li>
-          <article>
+            <p>
+              Birthdays, anniversaries, and family celebrations built around the songs and eras that mean the most to you and your crowd.
+            </p>
+
             <h3>Corporate Parties, Pop-Ups &amp; Special Events</h3>
-            <p>Engaging musical curation for company parties, brand activations, pop-ups, and community gatherings.</p>
-          </article>
-        </li>
-      </ul>
-    </section>
+            <p>
+              Engaging musical curation for company parties, brand activations, pop-ups, and community gatherings.
+            </p>
 
-    <!-- Sound & Equipment Section -->
-    <section>
-      <h2>Sound &amp; Equipment</h2>
-      <p>I come equipped with a sound system, mixing board, and microphone suitable for small to mid-sized events. For larger venues, I can coordinate directly with the venue's house sound system or arrange rental equipment.</p>
-    </section>
+            <h3>Sound &amp; Equipment Setup</h3>
+            <p>
+              I come equipped with a sound system, mixing board, and microphone suitable for small to mid-sized events. For larger venues, I coordinate directly with house sound systems or arrange professional equipment rentals.
+            </p>
+          </div>
+        </article>
 
-    <!-- Location & Travel Section -->
-    <section>
-      <h2>Location &amp; Service Area</h2>
-      <p>Based in Kansas City, Kansas. Proudly serving the greater Kansas City metropolitan area, and always open to travel for the right event.</p>
-    </section>
+      </section>
 
-    <!-- Booking Call to Action Banner -->
-    <aside>
-      <h2>Ready to add some spice to your event?</h2>
-      <p>Let's talk about your musical vision, event date, and guest vibe.</p>
-      <a href="contact.html">Check Availability &amp; Get in Touch &rarr;</a>
-    </aside>
-  </main>
+    </main>
 
-  <footer>
-    <nav aria-label="Footer Navigation">
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
-    </nav>
+    <!-- Footer -->
+    <footer class="myspace-footer">
+      <nav aria-label="Footer Navigation">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
 
-    <address>
-      <p>Location: Kansas City, Kansas (Available for travel)</p>
-      <p>Email: <a href="mailto:placeholder@example.com">placeholder@example.com</a></p>
-      <p>Phone: <a href="tel:+10000000000">(555) 000-0000</a></p>
-    </address>
+      <address>
+        <p>Location: Kansas City, Kansas (Available for travel)</p>
+        <p>Email: <a href="mailto:placeholder@example.com">placeholder@example.com</a> &bull; Phone: <a href="tel:+10000000000">(555) 000-0000</a></p>
+      </address>
 
-    <!-- Social links (to be linked later) -->
-    <ul>
-      <li><a href="#">Instagram</a></li>
-      <li><a href="#">SoundCloud</a></li>
-      <li><a href="#">YouTube</a></li>
-    </ul>
-
-    <p><small>&copy; DJon</small></p>
-  </footer>
+      <p><small>&copy; DJon &bull; When you need a little spice in your life.</small></p>
+    </footer>
+  </div>
 </body>
 </html>
