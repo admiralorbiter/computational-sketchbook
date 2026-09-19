@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact &amp; Booking | DJon</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a href="#main-content">Skip to main content</a>
+
+  <header>
+    <p><a href="index.html">DJon</a></p>
+    <p>When you need a little spice in your life.</p>
+    <nav aria-label="Primary Navigation">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html" aria-current="page">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <header>
+      <h1>Book DJon &bull; Event Inquiries</h1>
+      <p>Fill out the details below to check availability for your date and get a custom quote.</p>
+    </header>
+
+    <!-- Booking Form Section -->
+    <section>
+      <h2>Booking Request Form</h2>
+
+      <form action="#" method="post">
+        <!-- Client Information -->
+        <fieldset>
+          <legend>Your Contact Information</legend>
+
+          <div>
+            <label for="client-name">Your Name (required):</label>
+            <input type="text" id="client-name" name="name" required placeholder="Full Name" autocomplete="name">
+          </div>
+
+          <div>
+            <label for="client-email">Email Address (required):</label>
+            <input type="email" id="client-email" name="email" required placeholder="name@example.com" autocomplete="email">
+          </div>
+
+          <div>
+            <label for="client-phone">Phone Number:</label>
+            <input type="tel" id="client-phone" name="phone" placeholder="(555) 000-0000" autocomplete="tel">
+          </div>
+        </fieldset>
+
+        <!-- Event Specifications -->
+        <fieldset>
+          <legend>Event Details</legend>
+
+          <div>
+            <label for="event-date">Date of Event (required):</label>
+            <input type="date" id="event-date" name="event-date" required>
+          </div>
+
+          <div>
+            <label for="event-type">Type of Event (required):</label>
+            <select id="event-type" name="event-type" required>
+              <option value="">-- Please Select an Event Type --</option>
+              <option value="wedding">Wedding Ceremony &amp; Reception</option>
+              <option value="birthday">Birthday Party / Milestone</option>
+              <option value="anniversary">Anniversary Celebration</option>
+              <option value="corporate">Corporate Party / Gala</option>
+              <option value="popup">Pop-Up / Brand Event</option>
+              <option value="other">Other Special Event</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="venue-location">Venue Name &amp; City / Location (required):</label>
+            <input type="text" id="venue-location" name="venue" required placeholder="e.g., Kansas City, KS or Venue Name">
+          </div>
+
+          <div>
+            <label for="guest-count">Estimated Guest Count:</label>
+            <input type="number" id="guest-count" name="guests" min="1" placeholder="e.g., 100">
+          </div>
+
+          <div>
+            <label for="sound-needs">Sound &amp; Audio Equipment Needs:</label>
+            <select id="sound-needs" name="sound-needs">
+              <option value="djon-system">I need DJon to provide the sound system &amp; mics</option>
+              <option value="venue-system">Venue provides house sound system</option>
+              <option value="not-sure">Not sure yet / To be discussed</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <!-- Musical Preferences & Notes -->
+        <fieldset>
+          <legend>Music &amp; Additional Information</legend>
+
+          <div>
+            <label for="message-notes">Tell me about your crowd, musical tastes, or event schedule:</label>
+            <textarea id="message-notes" name="notes" rows="6" placeholder="Favorite artists, must-play throwbacks, timeline notes, or questions..."></textarea>
+          </div>
+        </fieldset>
+
+        <!-- Submit Button -->
+        <div>
+          <button type="submit">Submit Booking Inquiry</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Direct Contact & Service Area Aside -->
+    <aside>
+      <h2>Direct Inquiries &amp; Service Area</h2>
+      <address>
+        <p><strong>Location:</strong> Kansas City, Kansas (Open to travel for the right event)</p>
+        <p><strong>Email:</strong> <a href="mailto:placeholder@example.com">placeholder@example.com</a></p>
+        <p><strong>Phone:</strong> <a href="tel:+10000000000">(555) 000-0000</a></p>
+      </address>
+    </aside>
+  </main>
+
+  <footer>
+    <nav aria-label="Footer Navigation">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+
+    <address>
+      <p>Location: Kansas City, Kansas (Available for travel)</p>
+      <p>Email: <a href="mailto:placeholder@example.com">placeholder@example.com</a></p>
+      <p>Phone: <a href="tel:+10000000000">(555) 000-0000</a></p>
+    </address>
+
+    <!-- Social links (to be linked later) -->
+    <ul>
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">SoundCloud</a></li>
+      <li><a href="#">YouTube</a></li>
+    </ul>
+
+    <p><small>&copy; DJon</small></p>
+  </footer>
+</body>
+</html>

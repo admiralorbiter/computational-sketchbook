@@ -1,0 +1,29 @@
+/* Base styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin-inline: auto;
+}
+
+/* Ensure images and videos scale responsively */
+img, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+figure {
+  margin: 1rem 0;
+}
+
+figcaption {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
