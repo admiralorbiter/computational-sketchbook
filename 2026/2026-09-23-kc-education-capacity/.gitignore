@@ -1,0 +1,13 @@
+# Exclude large raw NCES archives
+data/raw/nces/*.zip
+data/raw/nces/*.csv
+data/raw/nces/*.TXT
+data/raw/nces/*.xlsx
+data/raw/nces/*.sas7bdat
+
+# Keep placeholders and manifests
+!data/raw/nces/.gitkeep
+!data/manifest.csv
+
+# Keep processed outputs
+!data/processed/*.csv
