@@ -65,6 +65,8 @@ kc_education_capacity/
 
 ---
 
-## Current Status: Phase 1 (Task 001)
+## Current Status: Phase 2 (Task 002) Complete
 
-Establishing the baseline geographic school universe for the Kansas City bi-state region using official National Center for Education Statistics (NCES) Common Core of Data (CCD) and Education Demographic and Geographic Estimates (EDGE) datasets.
+- **Task 001 (Geographic Universe):** Complete. 691 schools across 9 MARC counties established, geocoded, and classified using NCES CCD/EDGE SY 2024–2025.
+- **Task 002 (Baseline Staffing & Capacity):** Complete. School- and LEA-level baseline capacity panels constructed (`kc_school_capacity_2024_2025.csv`, `kc_lea_capacity_2024_2025.csv`), with independent Urban Institute API replication, explicit analytical stratification, and anomalies audited in `outputs/tables/task002_qa_report.md`.
+- **Next Phase:** User review of Task 002 capacity baselines prior to Phase 3 longitudinal trend assembly or section-level course data requests.

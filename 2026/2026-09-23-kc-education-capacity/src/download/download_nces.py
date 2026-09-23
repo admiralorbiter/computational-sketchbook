@@ -39,6 +39,46 @@ DOWNLOAD_TARGETS = [
         "school_year": "2024-2025",
         "description": "NCES EDGE Public School Geocodes and Locale Assignments SY 2024-2025",
         "notes": "Contains building physical location, coordinates (LAT, LON), county name (NMCNTY), county FIPS (CNTY), and NCES locale code (LOCALE)"
+    },
+    {
+        "source": "NCES CCD",
+        "source_url": "https://nces.ed.gov/ccd/Data/zip/ccd_sch_052_2425_l_1a_073025.zip",
+        "filename": "ccd_sch_052_2425_l_1a_073025.zip",
+        "school_year": "2024-2025",
+        "description": "NCES CCD Public Elementary/Secondary School Universe Survey Membership Data SY 2024-2025 (v.1a)",
+        "notes": "Contains school-level student membership by grade (PK, KG, 01-12), race/ethnicity, and sex"
+    },
+    {
+        "source": "NCES CCD",
+        "source_url": "https://nces.ed.gov/ccd/Data/zip/ccd_sch_059_2425_l_1a_073025.zip",
+        "filename": "ccd_sch_059_2425_l_1a_073025.zip",
+        "school_year": "2024-2025",
+        "description": "NCES CCD Public Elementary/Secondary School Universe Survey Staff Data SY 2024-2025 (v.1a)",
+        "notes": "Contains school-level classroom teacher FTE (TEACHERS)"
+    },
+    {
+        "source": "NCES CCD",
+        "source_url": "https://nces.ed.gov/ccd/Data/zip/ccd_sch_033_2425_l_2a_073025.zip",
+        "filename": "ccd_sch_033_2425_l_2a_073025.zip",
+        "school_year": "2024-2025",
+        "description": "NCES CCD School-Level Free & Reduced-Price Lunch Data SY 2024-2025 (v.2a)",
+        "notes": "Contains counts of students eligible for free lunch, reduced-price lunch, and direct certification"
+    },
+    {
+        "source": "NCES CCD",
+        "source_url": "https://nces.ed.gov/ccd/Data/zip/ccd_lea_052_2425_l_1a_073025.zip",
+        "filename": "ccd_lea_052_2425_l_1a_073025.zip",
+        "school_year": "2024-2025",
+        "description": "NCES CCD Local Education Agency Universe Survey Membership Data SY 2024-2025 (v.1a)",
+        "notes": "Contains LEA-level student membership by grade (PK, KG, 01-12), race/ethnicity, and sex"
+    },
+    {
+        "source": "NCES CCD",
+        "source_url": "https://nces.ed.gov/ccd/Data/zip/ccd_lea_059_2425_l_1a_073025.zip",
+        "filename": "ccd_lea_059_2425_l_1a_073025.zip",
+        "school_year": "2024-2025",
+        "description": "NCES CCD Local Education Agency Universe Survey Staff Data SY 2024-2025 (v.1a)",
+        "notes": "Contains LEA-level staff FTE disaggregated by category (PK, KG, elementary, secondary, ungraded teachers, paraprofessionals, counselors, psychologists, administrators, etc.)"
     }
 ]
 

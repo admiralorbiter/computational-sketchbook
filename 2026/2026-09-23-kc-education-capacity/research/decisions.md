@@ -39,3 +39,48 @@
 * **Decision:** Distinguish two separate operational flags in the processed universe:
   1. `is_operating`: Evaluates to `True` for all schools actively providing instruction in the survey year (status 1 = Open, status 3 = New, status 4 = Added, status 5 = Changed Agency/Boundary, status 8 = Reopened). Evaluates to `False` for status 2 (Closed), status 6 (Inactive), and status 7 (Future).
   2. `is_continuing_school`: Evaluates to `True` strictly for continuing operational facilities (status 1 = Open).
+
+### Decision 007: Anchor Year (SY 2024–2025) and Strict Year Matching
+* **Status:** Adopted
+* **Date:** 2026-09-23
+* **Context:** Federal data releases occur on staggered timelines. In NCES CCD, SY 2024–2025 school membership, LEA membership, school staff (classroom teachers), LEA professional staff, and lunch data are published (v.1a/v.2a), whereas some secondary EDFacts files (IDEA, EL, chronic absenteeism) lag or are pending federal release.
+* **Decision:** Establish SY 2024–2025 as the firm anchor year for the baseline capacity panel. Never mix school years within the canonical baseline datasets (`kc_school_capacity_2024_2025.csv` and `kc_lea_capacity_2024_2025.csv`). Variables pending federal release for 2024–2025 remain explicit `NaN`. Any lagged contextual variables (e.g., 2023–2024 chronic absenteeism) are strictly isolated in a separate context file (`data/processed/kc_lagged_context.csv`).
+
+### Decision 008: School-Level Capacity Metric Construction
+* **Status:** Adopted
+* **Date:** 2026-09-23
+* **Context:** In NCES CCD School Staff (FS059), teachers are reported only as total `TEACHERS` (classroom teacher FTE). Pre-K classroom teachers cannot be separated from K–12 teachers at the school building level. Dividing K–12 enrollment by total classroom teacher FTE would artificially deflate the ratio in schools that offer Pre-K.
+* **Decision:** At the school level, the primary structural capacity ratio is strictly defined as matched total membership divided by total classroom teacher FTE:
+  $$\text{students\_per\_classroom\_teacher\_fte\_allgrades} = \frac{\text{enrollment\_total}}{\text{classroom\_teacher\_fte}}$$
+  Never divide K–12 enrollment by total classroom teacher FTE at the school level. Furthermore, strictly preserve the guardrail that this metric represents a structural capacity ratio, not an observed class size.
+
+### Decision 009: LEA-Level Capacity Ratios and Staffing Disaggregation
+* **Status:** Adopted
+* **Date:** 2026-09-23
+* **Context:** Unlike the school file, the NCES CCD LEA Staff dataset (FS059) reports teachers broken down by level (Pre-K, Kindergarten, Elementary, Secondary, Ungraded) and disaggregates specialized staff (paraprofessionals, counselors, psychologists, coordinators, administrators).
+* **Decision:** Construct clean K–12 measures at the LEA level:
+  1. $\text{teachers\_k12\_fte} = \text{Kindergarten} + \text{Elementary} + \text{Secondary} + \text{Ungraded Teachers}$ (excluding Pre-K teachers).
+  2. $\text{enrollment\_k12} = \text{enrollment\_total} - \text{enrollment\_pk}$.
+  3. $\text{students\_per\_teacher\_fte\_k12} = \frac{\text{enrollment\_k12}}{\text{teachers\_k12\_fte}}$.
+  4. $\text{students\_per\_teacher\_para\_fte\_k12} = \frac{\text{enrollment\_k12}}{\text{teachers\_k12\_fte} + \text{paraprofessionals\_fte}}$ (explicitly avoiding the overly broad label "instructional adults").
+  5. Staffing intensity rates per 1,000 K–12 students for all professional categories.
+  6. Never add specialized counts (such as SPED or Title III teachers) to total teacher FTE, as they are non-mutually exclusive subcategories.
+
+### Decision 010: Analytical Strata Taxonomy
+* **Status:** Adopted
+* **Date:** 2026-09-23
+* **Context:** Specialized schools (virtual, alternative, special education, standalone Pre-K, CTE) operate under structurally distinct staffing models and caseload constraints compared to traditional neighborhood schools. Mixing them into overall capacity distributions skews baseline statistics.
+* **Decision:** Assign every school mutually exclusive analytical strata:
+  1. `Non-Operating` (~is_operating)
+  2. `Exclusively Virtual` (is_virtual)
+  3. `Special Education` (is_special_ed)
+  4. `Alternative` (is_alternative)
+  5. `Career and Technical` (is_vocational)
+  6. `Standalone Early Childhood` (is_standalone_pk)
+  7. `Core Operating Regular` (operating regular neighborhood schools)
+
+### Decision 011: Independent Validation via Urban Institute API
+* **Status:** Adopted
+* **Date:** 2026-09-23
+* **Context:** Verifying ingestion pipelines against independent third-party aggregations ensures that raw NCES CCD data parsing, grade rollups, and staff categories match national benchmarks.
+* **Decision:** Replicate a 10-district sample representing diverse metropolitan archetypes (Urban Core MO/KS, Large Suburb MO/KS, High-Wealth Suburb, Exurban/Town MO/KS, Outer Rural MO/KS) against the Urban Institute Education Data Portal API. Validate total enrollment, total teacher FTE, Pre-K teacher FTE, and paraprofessional FTE to confirm exact arithmetic consistency.

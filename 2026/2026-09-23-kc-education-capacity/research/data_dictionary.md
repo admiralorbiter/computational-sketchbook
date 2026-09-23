@@ -41,3 +41,78 @@
 | `is_operating` | Boolean | Derived | `True` for schools actively operating in the survey year (status 1=Open, 3=New, 4=Added, 5=Changed Agency, 8=Reopened). `False` for status 2=Closed, 6=Inactive, 7=Future. |
 | `is_continuing_school` | Boolean | Derived | `True` strictly for continuing open schools (`operational_status == '1'`). |
 | `school_year` | String | NCES CCD | School year of the record (e.g., `2024-2025`). |
+
+## School-Level Baseline Capacity Metrics (`kc_school_capacity_2024_2025.csv`)
+
+| Variable | Type | Source | Description / Valid Values |
+| :--- | :--- | :--- | :--- |
+| `enrollment_total` | Integer | NCES CCD FS052 | Total student membership count (Education Unit Total). |
+| `enrollment_pk` | Integer | NCES CCD FS052 | Pre-Kindergarten student enrollment count. |
+| `enrollment_k12` | Integer | Derived | Total K–12 enrollment (`enrollment_total - enrollment_pk`). |
+| `enrollment_kg` | Integer | NCES CCD FS052 | Kindergarten student enrollment count. |
+| `has_pre_k` | Boolean | Derived | `True` if `enrollment_pk > 0`. |
+| `is_standalone_pk` | Boolean | Derived | `True` if school serves exclusively Pre-K (`lowest_grade == 'PK'` and `highest_grade == 'PK'`). |
+| `classroom_teacher_fte` | Float | NCES CCD FS059 | Full-time equivalent classroom teachers reported for the school building (`TEACHERS`). |
+| `students_per_classroom_teacher_fte_allgrades` | Float | Derived | Structural capacity ratio: $\frac{\text{enrollment\_total}}{\text{classroom\_teacher\_fte}}$. **Strict Guardrail:** Represents structural staffing ratio, NOT observed class size. Set to `NaN` if `classroom_teacher_fte == 0`. |
+| `free_lunch_eligible` | Float | NCES CCD FS033 | Number of students eligible for free lunch under NSLP. |
+| `reduced_lunch_eligible` | Float | NCES CCD FS033 | Number of students eligible for reduced-price lunch under NSLP. |
+| `frl_eligible` | Float | NCES CCD FS033 | Total Free and Reduced-Price Lunch eligible students. |
+| `frl_rate` | Float | Derived | Free/reduced lunch rate: $\frac{\text{frl\_eligible}}{\text{enrollment\_total}}$. |
+| `direct_certification` | Float | NCES CCD FS033 | Number of students directly certified for free lunch through SNAP/TANF. |
+| `analytical_stratum` | String | Derived | Mutually exclusive analytical category: `Core Operating Regular`, `Standalone Early Childhood`, `Exclusively Virtual`, `Special Education`, `Alternative`, `Career and Technical`, `Non-Operating`. |
+
+## LEA-Level Baseline Capacity Metrics (`kc_lea_capacity_2024_2025.csv`)
+
+| Variable | Type | Source | Description / Valid Values |
+| :--- | :--- | :--- | :--- |
+| `nces_lea_id` | String(7) | NCES CCD | Unique 7-digit NCES Local Education Agency identifier (`LEAID`). |
+| `district_name` | String | NCES CCD | Name of the local education agency / district. |
+| `state` | String(2) | NCES CCD | State postal abbreviation (`MO` or `KS`). |
+| `county_primary` | String | Derived | Primary modal county of operating schools in the district. |
+| `operating_schools_count` | Integer | Derived | Number of operating schools in the district located within the 9 MARC counties. |
+| `regular_schools_count` | Integer | Derived | Number of operating regular schools in the district located within the 9 MARC counties. |
+| `enrollment_total` | Integer | NCES CCD FS052 | District total student membership (Education Unit Total). |
+| `enrollment_pk` | Integer | NCES CCD FS052 | District Pre-Kindergarten student enrollment. |
+| `enrollment_k12` | Integer | Derived | District K–12 student enrollment (`enrollment_total - enrollment_pk`). |
+| `enrollment_kg` | Integer | NCES CCD FS052 | District Kindergarten enrollment. |
+| `enrollment_elem` | Integer | NCES CCD FS052 | District Elementary enrollment (Grades 1–5 sum). |
+| `enrollment_middle` | Integer | NCES CCD FS052 | District Middle School enrollment (Grades 6–8 sum). |
+| `enrollment_high` | Integer | NCES CCD FS052 | District High School enrollment (Grades 9–12 sum). |
+| `enrollment_ungraded` | Integer | NCES CCD FS052 | District Ungraded student count. |
+| `teachers_prek_fte` | Float | NCES CCD FS059 | Pre-kindergarten teachers FTE. |
+| `teachers_kindergarten_fte` | Float | NCES CCD FS059 | Kindergarten teachers FTE. |
+| `teachers_elementary_fte` | Float | NCES CCD FS059 | Elementary teachers FTE. |
+| `teachers_secondary_fte` | Float | NCES CCD FS059 | Secondary teachers FTE. |
+| `teachers_ungraded_fte` | Float | NCES CCD FS059 | Ungraded teachers FTE. |
+| `teachers_total_reported_fte`| Float | NCES CCD FS059 | Total reported classroom teachers FTE in CCD LEA staff file. |
+| `teachers_k12_fte` | Float | Derived | K–12 teachers FTE: Kindergarten + Elementary + Secondary + Ungraded teachers (excludes Pre-K). |
+| `teachers_sum_diff_reported` | Float | Derived | Internal consistency check: $\text{teachers\_total\_reported} - (\text{teachers\_k12} + \text{teachers\_prek})$. Equals $0.00$ across all 79 LEAs. |
+| `paraprofessionals_fte` | Float | NCES CCD FS059 | Paraprofessionals / instructional aides FTE. |
+| `instructional_coordinators_fte`| Float | NCES CCD FS059 | Instructional coordinators and supervisors FTE. |
+| `counselors_fte` | Float | NCES CCD FS059 | Total guidance counselors FTE (elementary, secondary, and unassigned). |
+| `psychologists_fte` | Float | NCES CCD FS059 | School psychologists FTE. |
+| `student_support_staff_fte` | Float | NCES CCD FS059 | Student support services staff FTE (without psychology). |
+| `librarians_fte` | Float | NCES CCD FS059 | Librarians / media specialists FTE. |
+| `school_administrators_fte` | Float | NCES CCD FS059 | School building administrators (principals, assistant principals) FTE. |
+| `school_admin_support_fte` | Float | NCES CCD FS059 | School administrative support staff FTE. |
+| `lea_administrators_fte` | Float | NCES CCD FS059 | District / central office administrators (superintendents, directors) FTE. |
+| `lea_admin_support_fte` | Float | NCES CCD FS059 | District administrative support staff FTE. |
+| `other_support_staff_fte` | Float | NCES CCD FS059 | All other district support staff FTE. |
+| `total_staff_fte` | Float | NCES CCD FS059 | Total district staff FTE (Education Unit Total). |
+| `idea_students` | Float | EDFacts FS002 | Special education students with IEPs under IDEA. *Pending federal 2024–25 release (`NaN`).* |
+| `sped_teacher_fte` | Float | EDFacts FS070 | Special education teachers FTE. *Pending federal 2024–25 release (`NaN`).* |
+| `sped_paraprofessional_fte` | Float | EDFacts FS112 | Special education paraprofessionals FTE. *Pending federal 2024–25 release (`NaN`).* |
+| `english_learner_students` | Float | EDFacts FS141 | English Learner (EL) student count. *Pending federal 2024–25 release (`NaN`).* |
+| `title3_teacher_count` | Float | EDFacts FS067 | Title III English Learner teachers. *Pending federal 2024–25 release (`NaN`).* |
+| `idea_students_per_sped_teacher_fte` | Float | Derived | Caseload ratio of IDEA students to SPED teachers. *Pending federal 2024–25 release (`NaN`).* |
+| `students_per_teacher_fte_k12` | Float | Derived | Matched K–12 structural capacity ratio: $\frac{\text{enrollment\_k12}}{\text{teachers\_k12\_fte}}$. |
+| `students_per_teacher_para_fte_k12` | Float | Derived | Adult instructional capacity ratio: $\frac{\text{enrollment\_k12}}{\text{teachers\_k12\_fte} + \text{paraprofessionals\_fte}}$. |
+| `teachers_k12_per_1000` | Float | Derived | K–12 classroom teachers per 1,000 K–12 students. |
+| `paraprofessionals_per_1000` | Float | Derived | Paraprofessionals per 1,000 K–12 students. |
+| `counselors_per_1000` | Float | Derived | Counselors per 1,000 K–12 students. |
+| `psychologists_per_1000` | Float | Derived | Psychologists per 1,000 K–12 students. |
+| `student_support_per_1000` | Float | Derived | Student support staff per 1,000 K–12 students. |
+| `coordinators_per_1000` | Float | Derived | Instructional coordinators per 1,000 K–12 students. |
+| `school_administrators_per_1000`| Float | Derived | School administrators per 1,000 K–12 students. |
+| `school_year` | String | NCES CCD | School year of the record (`2024-2025`). |
+
