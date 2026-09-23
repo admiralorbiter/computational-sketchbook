@@ -65,8 +65,9 @@ kc_education_capacity/
 
 ---
 
-## Current Status: Phase 2 (Task 002) Complete
+## Current Status: Phase 2 (Task 002 & 002B) Complete
 
 - **Task 001 (Geographic Universe):** Complete. 691 schools across 9 MARC counties established, geocoded, and classified using NCES CCD/EDGE SY 2024–2025.
-- **Task 002 (Baseline Staffing & Capacity):** Complete. School- and LEA-level baseline capacity panels constructed (`kc_school_capacity_2024_2025.csv`, `kc_lea_capacity_2024_2025.csv`), with independent Urban Institute API replication, explicit analytical stratification, and anomalies audited in `outputs/tables/task002_qa_report.md`.
-- **Next Phase:** User review of Task 002 capacity baselines prior to Phase 3 longitudinal trend assembly or section-level course data requests.
+- **Task 002 & 002B (Baseline Staffing & Capacity):** Complete. School- and LEA-level baseline capacity panels constructed (`kc_school_capacity_2024_2025.csv`, `kc_lea_capacity_2024_2025.csv`), with programmatic LEA geographic coverage metadata, `Operating Regular (NCES)` terminology, FRL missingness analysis, independent Urban Institute ingestion replication, and audited anomalies in `outputs/tables/task002_qa_report.md`.
+- **Next Phase (Task 003):** 11-school-year annual panel spanning the 10-year interval from 2014–15 through 2024–25, reconstructed independently in every year as repeated cross-sections to avoid survivorship bias.
+

@@ -59,7 +59,8 @@
 | `frl_eligible` | Float | NCES CCD FS033 | Total Free and Reduced-Price Lunch eligible students. |
 | `frl_rate` | Float | Derived | Free/reduced lunch rate: $\frac{\text{frl\_eligible}}{\text{enrollment\_total}}$. |
 | `direct_certification` | Float | NCES CCD FS033 | Number of students directly certified for free lunch through SNAP/TANF. |
-| `analytical_stratum` | String | Derived | Mutually exclusive analytical category: `Core Operating Regular`, `Standalone Early Childhood`, `Exclusively Virtual`, `Special Education`, `Alternative`, `Career and Technical`, `Non-Operating`. |
+| `frl_observed` | Boolean | Derived | `True` if free/reduced lunch eligibility count is reported in CCD FS033; `False` if unobserved/missing. |
+| `analytical_stratum` | String | Derived | Mutually exclusive analytical category: `Operating Regular (NCES)`, `Standalone Early Childhood`, `Exclusively Virtual`, `Special Education`, `Alternative`, `Career and Technical`, `Non-Operating`. **Note:** `Operating Regular (NCES)` indicates NCES `school_type == 1`, but is not synonymous with traditional neighborhood schools as it includes several specialized, custody, and day-treatment programs. |
 
 ## LEA-Level Baseline Capacity Metrics (`kc_lea_capacity_2024_2025.csv`)
 
@@ -114,5 +115,10 @@
 | `student_support_per_1000` | Float | Derived | Student support staff per 1,000 K–12 students. |
 | `coordinators_per_1000` | Float | Derived | Instructional coordinators per 1,000 K–12 students. |
 | `school_administrators_per_1000`| Float | Derived | School administrators per 1,000 K–12 students. |
+| `lea_total_operating_schools_national` | Integer | NCES CCD FS029 | Total operating schools operated by the LEA nationally. |
+| `lea_operating_schools_in_region` | Integer | Derived | Operating schools operated by the LEA located physically within the 9 MARC counties. |
+| `lea_operating_schools_outside_region` | Integer | Derived | Operating schools operated by the LEA located outside the 9 MARC counties (`national - in_region`). |
+| `lea_geographic_coverage_share` | Float | Derived | Regional school coverage share: $\frac{\text{lea\_operating\_schools\_in\_region}}{\text{lea\_total\_operating\_schools\_national}}$. |
+| `lea_fully_within_region` | Boolean | Derived | `True` if `lea_operating_schools_outside_region == 0`. `False` if LEA operates schools outside the 9-county region (e.g. MO DYS, MSSD). Staffing/enrollment for `False` LEAs reflect statewide totals. |
 | `school_year` | String | NCES CCD | School year of the record (`2024-2025`). |
 

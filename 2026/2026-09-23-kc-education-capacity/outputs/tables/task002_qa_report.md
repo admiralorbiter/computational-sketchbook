@@ -8,7 +8,7 @@
 
 | Level | Expected Population | Matched Staffing | Matched Membership | Matched Lunch | Completeness |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **School Level** | 691 (686 operating) | 686 (100% operating) | 686 (100% operating) | 650 (94.7% operating) | **100% of Operating Schools** |
+| **School Level** | 691 (686 operating) | 686 (100% operating) | 686 (100% operating) | 649 (94.6% operating) | **100% of Operating Schools** |
 | **LEA Level** | 79 operating LEAs | 79 (100%) | 79 (100%) | N/A | **100% of Operating LEAs** |
 
 ## 2. Ingestion & File Provenance Ledger
@@ -27,16 +27,19 @@
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Alternative** | 14 | 2.0% | 37 | 187.92 | Primary target or isolated subpopulation |
 | **Career and Technical** | 7 | 1.0% | 147 | 90.56 | Primary target or isolated subpopulation |
-| **Core Operating Regular** | 624 | 90.3% | 323,264 | 23,178.23 | Primary target or isolated subpopulation |
 | **Exclusively Virtual** | 13 | 1.9% | 2,641 | 62.88 | Primary target or isolated subpopulation |
 | **Non-Operating** | 5 | 0.7% | 0 | 0.00 | Primary target or isolated subpopulation |
+| **Operating Regular (NCES)** | 624 | 90.3% | 323,264 | 23,178.23 | Primary target or isolated subpopulation |
 | **Special Education** | 10 | 1.4% | 252 | 51.55 | Primary target or isolated subpopulation |
 | **Standalone Early Childhood** | 18 | 2.6% | 2,718 | 276.13 | Primary target or isolated subpopulation |
 
+> [!NOTE]
+> **Important Clarification on NCES Classification:** The `Operating Regular (NCES)` stratum comprises all operating schools coded as `1 - Regular School` in the federal CCD. This classification is **not** synonymous with an ordinary or traditional neighborhood school. Several specialized, alternative, or day-treatment programs are officially coded by NCES as regular schools, including `STAR School` (Division of Youth Services), `DAY TREATMENT` (Independence), `CONTRACT` (KCPS), `CRITTENTON TREATMENT CENTER` (Hickman Mills), `SUCCESS ACADEMY` (KCPS), `NORTHWOOD SCH.` (Raytown), `RUSSELL JONES ED CENTER` (Park Hill), and `MILLER PARK CENTER` (Lee's Summit). These facilities report non-standard staffing structures (including zero classroom teacher FTE) and are preserved with their official NCES classification rather than manually reclassified.
 
-## 4. School-Level Capacity Distributions (Core Operating Regular Schools)
 
-Analyzing $N=624$ regular operating neighborhood schools:
+## 4. School-Level Capacity Distributions: Operating Regular (NCES) Schools
+
+Analyzing $N=624$ schools in the `Operating Regular (NCES)` stratum:
 
 | Metric | 10th Pct | 25th Pct | Median | Mean | 75th Pct | 90th Pct |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -46,15 +49,19 @@ Analyzing $N=624$ regular operating neighborhood schools:
 | **Free/Reduced Lunch Rate** | 0.1 | 0.2 | 0.4 | 0.5 | 0.7 | 1.0 |
 
 > [!NOTE]
-> **Guardrail Reminder:** `students_per_classroom_teacher_fte_allgrades` is a structural staffing ratio, NOT an observable class size. It divides total building membership by certified classroom FTE.
+> **Guardrail Reminder:** `students_per_classroom_teacher_fte_allgrades` is a structural staffing ratio ($rac{	ext{Total Building Membership}}{	ext{Classroom Teacher FTE}}$), NOT an observable class size. It measures the aggregate availability of instructional faculty per enrolled student.
 
 
 ### Pre-K Influence on School Ratios
 
 | Cohort | School Count | Median Ratio | Mean Ratio | Explanation |
 | :--- | :--- | :--- | :--- | :--- |
-| Schools With Pre-K | 181 | 13.59 | 13.60 | Pre-K low ratios lower building average |
+| Schools With Pre-K | 181 | 13.59 | 13.60 | Co-located Pre-K programs |
 | Schools Without Pre-K | 443 | 13.52 | 13.36 | Pure K–12 elementary/secondary buildings |
+
+> [!NOTE]
+> **Pre-K Staffing Interpretation:** After cleanly isolating standalone early-childhood centers ($N=18$), the presence of co-located Pre-K in operating regular schools is associated with only a very small difference in the observed building staffing ratio (median 13.59 vs. 13.52; mean 13.60 vs. 13.36). This slight difference indicates that co-located Pre-K does not materially distort building-level capacity ratios in the aggregate, but this observational comparison must not be interpreted as a causal effect.
+
 
 ## 5. LEA-Level Capacity & Staffing Composition
 
@@ -77,9 +84,33 @@ At the district level, K–12 enrollment and K–12 classroom teacher FTE can be
 | RICHMOND R-XVI | MO | 1,468 | 112.2 | 27.0 | **13.1** | **10.6** | 76.4 | 18.4 |
 
 
-## 6. Urban Institute Replication & Validation
+### LEA Geographic Coverage & Boundary Analysis
 
-Independent verification against the Urban Institute Education Data Portal API across 10 sample districts:
+The school universe is defined by physical school location within the 9 MARC counties, but federal LEA-level CCD counts encompass the entire administrative agency across the nation.
+
+
+- **Fully Within Region ($N=77$ LEAs):** 77 of 79 operating LEAs have 100% of their operating schools located inside the 9-county study region (`lea_fully_within_region == True`, `lea_geographic_coverage_share == 1.0`).
+
+- **Cross-Boundary / Statewide LEAs ($N=2$ LEAs):** Exactly two operating LEAs operate schools outside the region:
+
+
+| LEA ID | District Name | State | National Op. Schools | In-Region Op. Schools | Outside Region | Regional Coverage Share |
+
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `2900009` | **DIVISION OF YOUTH SERVICE** | MO | 30 | 5 | 25 | **16.7%** |
+| `2900022` | **MO SCHLS FOR THE SEV DISABLED** | MO | 35 | 5 | 30 | **14.3%** |
+
+> [!WARNING]
+> **Geographic Boundary Warning:** LEA staffing and enrollment totals for agencies where `lea_fully_within_region == False` describe the entire statewide agency and therefore **must not be interpreted as purely Kansas City regional resources**.
+
+
+## 6. Independent Ingestion Replication (Urban Institute Education Data Portal)
+
+To verify the arithmetic fidelity and data parsing of our ingestion pipeline, we replicated 10 sample districts across diverse metropolitan archetypes against the Urban Institute Education Data Portal API (CCD Directory 2024 endpoint).
+
+
+> [!NOTE]
+> **Scope of Replication:** Both the Urban Institute Education Data Portal and our pipeline derive from the identical underlying federal NCES CCD collections. This comparison confirms that our data ingestion, grade rollups, and category parsing are mathematically exact; it does not constitute an independent validation of the accuracy of local district submissions to NCES.
 
 
 | District | State | Variable | Official CCD | Urban API | Difference | % Diff | Status / Explanation |
@@ -125,32 +156,54 @@ Independent verification against the Urban Institute Education Data Portal API a
 | Richmond R-XVI | MO | Pre-K Teachers FTE | 6.50 | 6.00 | 0.50 | 0.0% | **Exact Match** |
 | Richmond R-XVI | MO | Paraprofessionals FTE | 27.00 | 27.00 | 0.00 | 0.0% | **Exact Match** |
 
-> [!NOTE]
-> **Validation Result:** 100% agreement across all enrollment, grade-specific teacher categories, and paraprofessional FTE counts between the direct NCES CCD downloads and the Urban Institute Education Data Portal. This confirms the mathematical fidelity of our ingestion pipeline.
+
+## 7. Free and Reduced-Price Lunch (FRL) Availability & Missingness Analysis
+
+In SY 2024–2025 CCD Free and Reduced-Price Lunch reporting (FS033 v.2a), FRL counts are observed for 649 of 686 operating schools (94.6%), while 37 operating schools have missing FRL data (`frl_observed == False`).
 
 
-## 7. Audit of Anomalies & Structural Caveats
+As shown below, missingness is highly non-random and heavily concentrated in specialized, alternative, and virtual programs:
+
+
+| Category | Subpopulation | Total Operating Schools | FRL Observed | FRL Missing | % Observed |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **State** | KS | 277 | 267 | 10 | 96.4% |
+|  | MO | 409 | 382 | 27 | 93.4% |
+| **Charter Status** | Charter | 45 | 44 | 1 | 97.8% |
+|  | Non-Charter | 641 | 605 | 36 | 94.4% |
+| **NCES School Type** | Alternative School | 14 | 2 | 12 | 14.3% |
+|  | Career and Technical School | 7 | 1 | 6 | 14.3% |
+|  | Regular School | 655 | 638 | 17 | 97.4% |
+|  | Special Education School | 10 | 8 | 2 | 80.0% |
+| **Analytical Stratum** | Alternative | 14 | 2 | 12 | 14.3% |
+|  | Career and Technical | 7 | 1 | 6 | 14.3% |
+|  | Exclusively Virtual | 13 | 3 | 10 | 23.1% |
+|  | Operating Regular (NCES) | 624 | 617 | 7 | 98.9% |
+|  | Special Education | 10 | 8 | 2 | 80.0% |
+|  | Standalone Early Childhood | 18 | 18 | 0 | 100.0% |
+| **Locale Group** | City | 266 | 254 | 12 | 95.5% |
+|  | Rural | 107 | 101 | 6 | 94.4% |
+|  | Suburb | 243 | 231 | 12 | 95.1% |
+|  | Town | 70 | 63 | 7 | 90.0% |
+
+> [!WARNING]
+> **Methodological Warning on Socioeconomic Controls:** Missingness in FRL is structurally driven by program delivery models—students in shared-time vocational centers, virtual schools, and juvenile justice or therapeutic treatment centers either receive meals through sending home districts or are outside standard NSLP cafeteria counts. Furthermore, the 7 unobserved schools in `Operating Regular (NCES)` are all day treatment, alternative, custody, or therapeutic centers (`STAR School`, `CRITTENTON`, `DAY TREATMENT`, `SUCCESS ACADEMY`, `MILLER PARK CENTER`, `NORTHWOOD`, `RUSSELL JONES`). Therefore, `frl_rate` **must not yet be treated as a universal socioeconomic control** in cross-school models without explicit accounting for program missingness and reporting mechanisms.
+
+
+## 8. Audit of Anomalies & Structural Caveats
 
 Detailed anomaly records are saved in [`outputs/tables/task002_anomalies.csv`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-23-kc-education-capacity/outputs/tables/task002_anomalies.csv). Summary of findings:
 
 
-1. **Zero Classroom Teacher FTE (12 Operating Schools):** All 12 schools are specialized facilities (state agency schools like DYS and MSSD, alternative centers, standalone early childhood, or virtual academies) where staff are either contracted, itinerant, or held at the district level.
+1. **Zero Classroom Teacher FTE (12 Operating Schools):** All 12 schools are specialized facilities where instructional staff are contracted, itinerant, or accounted for at the district level. Notably, 4 of these facilities (`STAR School`, `DAY TREATMENT`, `CONTRACT`, `MILLER PARK CENTER`) are coded by NCES as Regular Schools, emphasizing why `Operating Regular (NCES)` must not be conflated with ordinary neighborhood schools.
 
-2. **Teacher Sum Consistency:** In all 79 LEAs, $\text{Pre-K} + \text{Kindergarten} + \text{Elementary} + \text{Secondary} + \text{Ungraded} = \text{Total Teachers}$ with **zero discrepancy** ($0.00$).
+2. **Cross-Boundary / Statewide LEAs (2 LEAs):** Division of Youth Services (MO DYS) and Missouri Schools for the Severely Disabled (MSSD) operate 30 and 35 operating schools statewide respectively, with only 5 schools each physically located in the KC MARC region. Machine-readable flags (`lea_fully_within_region == False`) prevent these from distorting regional LEA comparisons.
 
-3. **School Sum vs. LEA Enrollment Divergence:**
+3. **Teacher Sum Consistency:** In all 79 LEAs, $\text{Pre-K} + \text{Kindergarten} + \text{Elementary} + \text{Secondary} + \text{Ungraded} = \text{Total Teachers}$ with **exact zero discrepancy** ($0.00$).
 
-   - Statewide agencies (`DYS 2900009` and `MSSD 2900022`) show expected large divergences because our school universe includes only their KC facilities, while the LEA file reflects statewide totals.
+4. **School Sum vs. LEA Enrollment Divergence:** In addition to statewide agencies, several traditional districts (De Soto, Bonner Springs, Lee's Summit, Hickman Mills) show divergences corresponding directly to centralized district Pre-K enrollments or alternative placements not assigned to building directories.
 
-   - Districts such as De Soto (`2005490`), Bonner Springs (`2004050`), and Lee's Summit (`2918300`) show small divergences that match their centralized district Pre-K enrollment numbers.
+5. **Variables Unavailable for SY 2024–2025 (Pending Federal Release):** IDEA / Special Education Student Counts (FS002), SPED Teacher FTE (FS070), and English Learner Counts (FS141) are pending federal public release for SY 2024–2025. Per protocol, these remain explicit `NaN` in the baseline rather than contaminated with lagged prior-year data.
 
-4. **Variables Unavailable for SY 2024–2025 (Pending Federal Release):**
-
-   - IDEA / Special Education Student Counts (FS002)
-
-   - English Learner Counts (FS141)
-
-   - Chronic Absenteeism Rates
-
-   *Status:* Following protocol, these fields are maintained as explicit `NaN` in the canonical 2024–2025 baseline rather than contaminated with lagged 2023–2024 data.
+6. **Longitudinal Scope Clarification:** The upcoming longitudinal panel will assemble an 11-school-year annual panel spanning the 10-year interval from 2014–15 through 2024–25 as repeated cross-sections, avoiding survivorship bias.
 

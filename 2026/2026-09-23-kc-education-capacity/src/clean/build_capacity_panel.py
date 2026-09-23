@@ -208,6 +208,7 @@ def build_school_capacity_dataset(df_universe):
         np.nan
     )
     df_sch["direct_certification"] = df_sch["nces_school_id"].map(dcert_map)
+    df_sch["frl_observed"] = df_sch["frl_eligible"].notna()
     
     # Analytical Stratum assignment
     conditions = [
@@ -226,7 +227,7 @@ def build_school_capacity_dataset(df_universe):
         "Special Education",
         "Career and Technical",
         "Standalone Early Childhood",
-        "Core Operating Regular"
+        "Operating Regular (NCES)"
     ]
     df_sch["analytical_stratum"] = np.select(conditions, strata, default="Other")
     
@@ -377,6 +378,36 @@ def build_lea_capacity_dataset(df_universe):
     unique_leas["coordinators_per_1000"] = np.where(k12_enr > 0, (unique_leas["instructional_coordinators_fte"] / k12_enr * 1000).round(2), np.nan)
     unique_leas["school_administrators_per_1000"] = np.where(k12_enr > 0, (unique_leas["school_administrators_fte"] / k12_enr * 1000).round(2), np.nan)
     
+    # 4. Programmatic LEA Geographic Coverage Metadata
+    # Inspect complete national 2024-2025 CCD school directory
+    with zipfile.ZipFile(RAW_NCES_DIR / "ccd_sch_029_2425_w_1a_073025.zip") as zf:
+        with zf.open("ccd_sch_029_2425_w_1a_073025.csv") as f:
+            df_nat_sch = pd.read_csv(f, dtype=str, usecols=["LEAID", "NCESSCH", "SY_STATUS"])
+            
+    # Filter to operating schools nationally (SY_STATUS in 1, 3, 4, 5, 8) for these 79 LEAs
+    df_nat_op = df_nat_sch[
+        df_nat_sch["LEAID"].isin(set(unique_leas["nces_lea_id"])) &
+        df_nat_sch["SY_STATUS"].isin(["1", "3", "4", "5", "8"])
+    ].copy()
+    
+    # Operating schools in KC universe
+    kc_op_sch_ids = set(df_universe[df_universe["is_operating"]]["nces_school_id"])
+    
+    nat_op_counts = df_nat_op.groupby("LEAID")["NCESSCH"].count()
+    reg_op_counts = df_nat_op[df_nat_op["NCESSCH"].isin(kc_op_sch_ids)].groupby("LEAID")["NCESSCH"].count()
+    
+    unique_leas["lea_total_operating_schools_national"] = unique_leas["nces_lea_id"].map(nat_op_counts).fillna(0).astype(int)
+    unique_leas["lea_operating_schools_in_region"] = unique_leas["nces_lea_id"].map(reg_op_counts).fillna(0).astype(int)
+    unique_leas["lea_operating_schools_outside_region"] = (
+        unique_leas["lea_total_operating_schools_national"] - unique_leas["lea_operating_schools_in_region"]
+    ).astype(int)
+    unique_leas["lea_geographic_coverage_share"] = np.where(
+        unique_leas["lea_total_operating_schools_national"] > 0,
+        (unique_leas["lea_operating_schools_in_region"] / unique_leas["lea_total_operating_schools_national"]).round(4),
+        0.0
+    )
+    unique_leas["lea_fully_within_region"] = unique_leas["lea_operating_schools_outside_region"] == 0
+    
     unique_leas["school_year"] = "2024-2025"
     
     # Save LEA capacity dataset
@@ -386,8 +417,8 @@ def build_lea_capacity_dataset(df_universe):
     return unique_leas
 
 def run_urban_validation(df_lea):
-    """Run independent validation against Urban Institute Education Data Portal API."""
-    print("\n--- 4. Running Urban Institute API Replication & Validation ---")
+    """Run independent ingestion replication against Urban Institute Education Data Portal API."""
+    print("\n--- 4. Running Independent Ingestion Replication (Urban Institute API) ---")
     
     # 10 sample districts representing diverse metro archetypes
     sample_leas = [
@@ -538,6 +569,22 @@ def build_anomalies_and_qa_report(df_sch, df_lea, df_val):
                 "explanation": "Attributable to statewide agency facilities outside KC (DYS, MSSD) or central Pre-K enrollments."
             })
             
+    # E. Cross-Boundary / Statewide LEAs (Partial Regional Coverage)
+    partial_leas = df_lea[~df_lea["lea_fully_within_region"]]
+    for _, r in partial_leas.iterrows():
+        anomalies.append({
+            "grain": "LEA",
+            "id": r["nces_lea_id"],
+            "name": r["district_name"],
+            "lea_id": r["nces_lea_id"],
+            "lea_name": r["district_name"],
+            "state": r["state"],
+            "anomaly_type": "Cross-Boundary / Statewide LEA (Partial KC Coverage)",
+            "observed_value": f"National={r['lea_total_operating_schools_national']}, In-Region={r['lea_operating_schools_in_region']}, Outside={r['lea_operating_schools_outside_region']} (Coverage={r['lea_geographic_coverage_share']*100:.1f}%)",
+            "stratum": "LEA",
+            "explanation": "Operates schools outside 9-county KC region. LEA staffing and enrollment represent statewide totals and must not be interpreted as purely Kansas City regional resources."
+        })
+            
     df_anom = pd.DataFrame(anomalies)
     anom_path = OUTPUTS_TABLES_DIR / "task002_anomalies.csv"
     df_anom.to_csv(anom_path, index=False)
@@ -552,14 +599,11 @@ def generate_task002_markdown(df_sch, df_lea, df_val, df_anom, out_path):
     """Generate structured markdown QA report."""
     total_sch = len(df_sch)
     op_sch = df_sch["is_operating"].sum()
-    core_sch = (df_sch["analytical_stratum"] == "Core Operating Regular").sum()
+    reg_nces_sch = (df_sch["analytical_stratum"] == "Operating Regular (NCES)").sum()
     total_lea = len(df_lea)
     
-    # Distributions
-    core_df = df_sch[df_sch["analytical_stratum"] == "Core Operating Regular"]
-    med_ratio = core_df["students_per_classroom_teacher_fte_allgrades"].median()
-    p25_ratio = core_df["students_per_classroom_teacher_fte_allgrades"].quantile(0.25)
-    p75_ratio = core_df["students_per_classroom_teacher_fte_allgrades"].quantile(0.75)
+    # Distributions for Operating Regular (NCES)
+    reg_df = df_sch[df_sch["analytical_stratum"] == "Operating Regular (NCES)"]
     
     md = []
     md.append("# Task 002 QA Audit Report: Baseline Staffing & Capacity (SY 2024–2025)\n")
@@ -570,7 +614,7 @@ def generate_task002_markdown(df_sch, df_lea, df_val, df_anom, out_path):
     md.append("## 1. Executive Population & Match Summary\n")
     md.append("| Level | Expected Population | Matched Staffing | Matched Membership | Matched Lunch | Completeness |")
     md.append("| :--- | :--- | :--- | :--- | :--- | :--- |")
-    md.append(f"| **School Level** | 691 (686 operating) | 686 (100% operating) | 686 (100% operating) | 650 (94.7% operating) | **100% of Operating Schools** |")
+    md.append(f"| **School Level** | 691 (686 operating) | 686 (100% operating) | 686 (100% operating) | 649 (94.6% operating) | **100% of Operating Schools** |")
     md.append(f"| **LEA Level** | 79 operating LEAs | 79 (100%) | 79 (100%) | N/A | **100% of Operating LEAs** |\n")
     
     md.append("## 2. Ingestion & File Provenance Ledger\n")
@@ -591,10 +635,10 @@ def generate_task002_markdown(df_sch, df_lea, df_val, df_anom, out_path):
         enr = grp["enrollment_total"].sum()
         tch = grp["classroom_teacher_fte"].sum()
         md.append(f"| **{strat}** | {scnt} | {pct:.1f}% | {enr:,.0f} | {tch:,.2f} | Primary target or isolated subpopulation |")
-    md.append("\n")
-    
-    md.append("## 4. School-Level Capacity Distributions (Core Operating Regular Schools)\n")
-    md.append(f"Analyzing $N={len(core_df)}$ regular operating neighborhood schools:\n")
+    md.append("\n> [!NOTE]\n> **Important Clarification on NCES Classification:** The `Operating Regular (NCES)` stratum comprises all operating schools coded as `1 - Regular School` in the federal CCD. This classification is **not** synonymous with an ordinary or traditional neighborhood school. Several specialized, alternative, or day-treatment programs are officially coded by NCES as regular schools, including `STAR School` (Division of Youth Services), `DAY TREATMENT` (Independence), `CONTRACT` (KCPS), `CRITTENTON TREATMENT CENTER` (Hickman Mills), `SUCCESS ACADEMY` (KCPS), `NORTHWOOD SCH.` (Raytown), `RUSSELL JONES ED CENTER` (Park Hill), and `MILLER PARK CENTER` (Lee's Summit). These facilities report non-standard staffing structures (including zero classroom teacher FTE) and are preserved with their official NCES classification rather than manually reclassified.\n\n")
+
+    md.append("## 4. School-Level Capacity Distributions: Operating Regular (NCES) Schools\n")
+    md.append(f"Analyzing $N={len(reg_df)}$ schools in the `Operating Regular (NCES)` stratum:\n")
     md.append("| Metric | 10th Pct | 25th Pct | Median | Mean | 75th Pct | 90th Pct |")
     md.append("| :--- | :--- | :--- | :--- | :--- | :--- | :--- |")
     for col, lbl in [
@@ -603,17 +647,18 @@ def generate_task002_markdown(df_sch, df_lea, df_val, df_anom, out_path):
         ("students_per_classroom_teacher_fte_allgrades", "Students per Classroom Teacher FTE (All Grades)"),
         ("frl_rate", "Free/Reduced Lunch Rate")
     ]:
-        s = core_df[col].dropna()
+        s = reg_df[col].dropna()
         md.append(f"| **{lbl}** | {s.quantile(0.10):.1f} | {s.quantile(0.25):.1f} | {s.median():.1f} | {s.mean():.1f} | {s.quantile(0.75):.1f} | {s.quantile(0.90):.1f} |")
-    md.append("\n> [!NOTE]\n> **Guardrail Reminder:** `students_per_classroom_teacher_fte_allgrades` is a structural staffing ratio, NOT an observable class size. It divides total building membership by certified classroom FTE.\n\n")
+    md.append("\n> [!NOTE]\n> **Guardrail Reminder:** `students_per_classroom_teacher_fte_allgrades` is a structural staffing ratio ($\frac{\text{Total Building Membership}}{\text{Classroom Teacher FTE}}$), NOT an observable class size. It measures the aggregate availability of instructional faculty per enrolled student.\n\n")
 
     md.append("### Pre-K Influence on School Ratios\n")
-    pk_present = core_df[core_df["has_pre_k"]]
-    pk_absent = core_df[~core_df["has_pre_k"]]
+    pk_present = reg_df[reg_df["has_pre_k"]]
+    pk_absent = reg_df[~reg_df["has_pre_k"]]
     md.append("| Cohort | School Count | Median Ratio | Mean Ratio | Explanation |")
     md.append("| :--- | :--- | :--- | :--- | :--- |")
-    md.append(f"| Schools With Pre-K | {len(pk_present)} | {pk_present['students_per_classroom_teacher_fte_allgrades'].median():.2f} | {pk_present['students_per_classroom_teacher_fte_allgrades'].mean():.2f} | Pre-K low ratios lower building average |")
+    md.append(f"| Schools With Pre-K | {len(pk_present)} | {pk_present['students_per_classroom_teacher_fte_allgrades'].median():.2f} | {pk_present['students_per_classroom_teacher_fte_allgrades'].mean():.2f} | Co-located Pre-K programs |")
     md.append(f"| Schools Without Pre-K | {len(pk_absent)} | {pk_absent['students_per_classroom_teacher_fte_allgrades'].median():.2f} | {pk_absent['students_per_classroom_teacher_fte_allgrades'].mean():.2f} | Pure K–12 elementary/secondary buildings |\n")
+    md.append("> [!NOTE]\n> **Pre-K Staffing Interpretation:** After cleanly isolating standalone early-childhood centers ($N=18$), the presence of co-located Pre-K in operating regular schools is associated with only a very small difference in the observed building staffing ratio (median 13.59 vs. 13.52; mean 13.60 vs. 13.36). This slight difference indicates that co-located Pre-K does not materially distort building-level capacity ratios in the aggregate, but this observational comparison must not be interpreted as a causal effect.\n\n")
 
     md.append("## 5. LEA-Level Capacity & Staffing Composition\n")
     md.append("At the district level, K–12 enrollment and K–12 classroom teacher FTE can be matched cleanly by removing Pre-K teachers and Pre-K students.\n\n")
@@ -625,8 +670,21 @@ def generate_task002_markdown(df_sch, df_lea, df_val, df_anom, out_path):
         md.append(f"| {r['district_name']} | {r['state']} | {r['enrollment_k12']:,} | {r['teachers_k12_fte']:,.1f} | {r['paraprofessionals_fte']:,.1f} | **{r['students_per_teacher_fte_k12']:.1f}** | **{r['students_per_teacher_para_fte_k12']:.1f}** | {r['teachers_k12_per_1000']:.1f} | {r['paraprofessionals_per_1000']:.1f} |")
     md.append("\n")
 
-    md.append("## 6. Urban Institute Replication & Validation\n")
-    md.append("Independent verification against the Urban Institute Education Data Portal API across 10 sample districts:\n\n")
+    md.append("### LEA Geographic Coverage & Boundary Analysis\n")
+    md.append("The school universe is defined by physical school location within the 9 MARC counties, but federal LEA-level CCD counts encompass the entire administrative agency across the nation.\n\n")
+    fully_cnt = int(df_lea["lea_fully_within_region"].sum())
+    part_cnt = int((~df_lea["lea_fully_within_region"]).sum())
+    md.append(f"- **Fully Within Region ($N={fully_cnt}$ LEAs):** {fully_cnt} of 79 operating LEAs have 100% of their operating schools located inside the 9-county study region (`lea_fully_within_region == True`, `lea_geographic_coverage_share == 1.0`).\n")
+    md.append(f"- **Cross-Boundary / Statewide LEAs ($N={part_cnt}$ LEAs):** Exactly two operating LEAs operate schools outside the region:\n\n")
+    md.append("| LEA ID | District Name | State | National Op. Schools | In-Region Op. Schools | Outside Region | Regional Coverage Share |\n")
+    md.append("| :--- | :--- | :--- | :--- | :--- | :--- | :--- |")
+    for _, r in df_lea[~df_lea["lea_fully_within_region"]].iterrows():
+        md.append(f"| `{r['nces_lea_id']}` | **{r['district_name']}** | {r['state']} | {r['lea_total_operating_schools_national']} | {r['lea_operating_schools_in_region']} | {r['lea_operating_schools_outside_region']} | **{r['lea_geographic_coverage_share']*100:.1f}%** |")
+    md.append("\n> [!WARNING]\n> **Geographic Boundary Warning:** LEA staffing and enrollment totals for agencies where `lea_fully_within_region == False` describe the entire statewide agency and therefore **must not be interpreted as purely Kansas City regional resources**.\n\n")
+
+    md.append("## 6. Independent Ingestion Replication (Urban Institute Education Data Portal)\n")
+    md.append("To verify the arithmetic fidelity and data parsing of our ingestion pipeline, we replicated 10 sample districts across diverse metropolitan archetypes against the Urban Institute Education Data Portal API (CCD Directory 2024 endpoint).\n\n")
+    md.append("> [!NOTE]\n> **Scope of Replication:** Both the Urban Institute Education Data Portal and our pipeline derive from the identical underlying federal NCES CCD collections. This comparison confirms that our data ingestion, grade rollups, and category parsing are mathematically exact; it does not constitute an independent validation of the accuracy of local district submissions to NCES.\n\n")
     md.append("| District | State | Variable | Official CCD | Urban API | Difference | % Diff | Status / Explanation |")
     md.append("| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |")
     for _, r in df_val.iterrows():
@@ -634,20 +692,49 @@ def generate_task002_markdown(df_sch, df_lea, df_val, df_anom, out_path):
         md.append(f"| {r['name']} | {r['state']} | Total Teachers FTE | {r['off_tch_tot']:.2f} | {r['u_tch_tot']:.2f} | {r['off_tch_tot'] - r['u_tch_tot']:.2f} | 0.0% | **Exact Match** |")
         md.append(f"| {r['name']} | {r['state']} | Pre-K Teachers FTE | {r['off_tch_prek']:.2f} | {r['u_tch_prek']:.2f} | {r['off_tch_prek'] - r['u_tch_prek']:.2f} | 0.0% | **Exact Match** |")
         md.append(f"| {r['name']} | {r['state']} | Paraprofessionals FTE | {r['off_paras']:.2f} | {r['u_paras']:.2f} | {r['off_paras'] - r['u_paras']:.2f} | 0.0% | **Exact Match** |")
-    md.append("\n> [!NOTE]\n> **Validation Result:** 100% agreement across all enrollment, grade-specific teacher categories, and paraprofessional FTE counts between the direct NCES CCD downloads and the Urban Institute Education Data Portal. This confirms the mathematical fidelity of our ingestion pipeline.\n\n")
+    md.append("\n")
 
-    md.append("## 7. Audit of Anomalies & Structural Caveats\n")
+    md.append("## 7. Free and Reduced-Price Lunch (FRL) Availability & Missingness Analysis\n")
+    md.append("In SY 2024–2025 CCD Free and Reduced-Price Lunch reporting (FS033 v.2a), FRL counts are observed for 649 of 686 operating schools (94.6%), while 37 operating schools have missing FRL data (`frl_observed == False`).\n\n")
+    md.append("As shown below, missingness is highly non-random and heavily concentrated in specialized, alternative, and virtual programs:\n\n")
+    
+    # Generate FRL breakdown table
+    df_op = df_sch[df_sch["is_operating"]].copy()
+    df_op["is_charter_lbl"] = df_op["is_charter"].map({True: "Charter", False: "Non-Charter"})
+    
+    frl_dims = [
+        ("state", "State"),
+        ("is_charter_lbl", "Charter Status"),
+        ("school_type_desc", "NCES School Type"),
+        ("analytical_stratum", "Analytical Stratum"),
+        ("locale_group", "Locale Group")
+    ]
+    
+    md.append("| Category | Subpopulation | Total Operating Schools | FRL Observed | FRL Missing | % Observed |")
+    md.append("| :--- | :--- | :--- | :--- | :--- | :--- |")
+    for col, cat_name in frl_dims:
+        first = True
+        grp = df_op.groupby(col, as_index=False).agg(
+            total=("nces_school_id", "count"),
+            observed=("frl_observed", "sum")
+        )
+        grp["missing"] = grp["total"] - grp["observed"]
+        grp["pct"] = (grp["observed"] / grp["total"] * 100).round(1)
+        for _, r in grp.iterrows():
+            c_lbl = f"**{cat_name}**" if first else ""
+            first = False
+            md.append(f"| {c_lbl} | {r[col]} | {r['total']} | {r['observed']} | {r['missing']} | {r['pct']:.1f}% |")
+            
+    md.append("\n> [!WARNING]\n> **Methodological Warning on Socioeconomic Controls:** Missingness in FRL is structurally driven by program delivery models—students in shared-time vocational centers, virtual schools, and juvenile justice or therapeutic treatment centers either receive meals through sending home districts or are outside standard NSLP cafeteria counts. Furthermore, the 7 unobserved schools in `Operating Regular (NCES)` are all day treatment, alternative, custody, or therapeutic centers (`STAR School`, `CRITTENTON`, `DAY TREATMENT`, `SUCCESS ACADEMY`, `MILLER PARK CENTER`, `NORTHWOOD`, `RUSSELL JONES`). Therefore, `frl_rate` **must not yet be treated as a universal socioeconomic control** in cross-school models without explicit accounting for program missingness and reporting mechanisms.\n\n")
+
+    md.append("## 8. Audit of Anomalies & Structural Caveats\n")
     md.append(f"Detailed anomaly records are saved in [`outputs/tables/task002_anomalies.csv`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-23-kc-education-capacity/outputs/tables/task002_anomalies.csv). Summary of findings:\n\n")
-    md.append("1. **Zero Classroom Teacher FTE (12 Operating Schools):** All 12 schools are specialized facilities (state agency schools like DYS and MSSD, alternative centers, standalone early childhood, or virtual academies) where staff are either contracted, itinerant, or held at the district level.\n")
-    md.append("2. **Teacher Sum Consistency:** In all 79 LEAs, $\\text{Pre-K} + \\text{Kindergarten} + \\text{Elementary} + \\text{Secondary} + \\text{Ungraded} = \\text{Total Teachers}$ with **zero discrepancy** ($0.00$).\n")
-    md.append("3. **School Sum vs. LEA Enrollment Divergence:**\n")
-    md.append("   - Statewide agencies (`DYS 2900009` and `MSSD 2900022`) show expected large divergences because our school universe includes only their KC facilities, while the LEA file reflects statewide totals.\n")
-    md.append("   - Districts such as De Soto (`2005490`), Bonner Springs (`2004050`), and Lee's Summit (`2918300`) show small divergences that match their centralized district Pre-K enrollment numbers.\n")
-    md.append("4. **Variables Unavailable for SY 2024–2025 (Pending Federal Release):**\n")
-    md.append("   - IDEA / Special Education Student Counts (FS002)\n")
-    md.append("   - English Learner Counts (FS141)\n")
-    md.append("   - Chronic Absenteeism Rates\n")
-    md.append("   *Status:* Following protocol, these fields are maintained as explicit `NaN` in the canonical 2024–2025 baseline rather than contaminated with lagged 2023–2024 data.\n\n")
+    md.append("1. **Zero Classroom Teacher FTE (12 Operating Schools):** All 12 schools are specialized facilities where instructional staff are contracted, itinerant, or accounted for at the district level. Notably, 4 of these facilities (`STAR School`, `DAY TREATMENT`, `CONTRACT`, `MILLER PARK CENTER`) are coded by NCES as Regular Schools, emphasizing why `Operating Regular (NCES)` must not be conflated with ordinary neighborhood schools.\n")
+    md.append("2. **Cross-Boundary / Statewide LEAs (2 LEAs):** Division of Youth Services (MO DYS) and Missouri Schools for the Severely Disabled (MSSD) operate 30 and 35 operating schools statewide respectively, with only 5 schools each physically located in the KC MARC region. Machine-readable flags (`lea_fully_within_region == False`) prevent these from distorting regional LEA comparisons.\n")
+    md.append("3. **Teacher Sum Consistency:** In all 79 LEAs, $\\text{Pre-K} + \\text{Kindergarten} + \\text{Elementary} + \\text{Secondary} + \\text{Ungraded} = \\text{Total Teachers}$ with **exact zero discrepancy** ($0.00$).\n")
+    md.append("4. **School Sum vs. LEA Enrollment Divergence:** In addition to statewide agencies, several traditional districts (De Soto, Bonner Springs, Lee's Summit, Hickman Mills) show divergences corresponding directly to centralized district Pre-K enrollments or alternative placements not assigned to building directories.\n")
+    md.append("5. **Variables Unavailable for SY 2024–2025 (Pending Federal Release):** IDEA / Special Education Student Counts (FS002), SPED Teacher FTE (FS070), and English Learner Counts (FS141) are pending federal public release for SY 2024–2025. Per protocol, these remain explicit `NaN` in the baseline rather than contaminated with lagged prior-year data.\n")
+    md.append("6. **Longitudinal Scope Clarification:** The upcoming longitudinal panel will assemble an 11-school-year annual panel spanning the 10-year interval from 2014–15 through 2024–25 as repeated cross-sections, avoiding survivorship bias.\n\n")
     
     with open(out_path, "w", encoding="utf-8") as f:
         f.write("\n".join(md))

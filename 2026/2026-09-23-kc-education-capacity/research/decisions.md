@@ -66,10 +66,10 @@
   5. Staffing intensity rates per 1,000 K–12 students for all professional categories.
   6. Never add specialized counts (such as SPED or Title III teachers) to total teacher FTE, as they are non-mutually exclusive subcategories.
 
-### Decision 010: Analytical Strata Taxonomy
-* **Status:** Adopted
+### Decision 010: Analytical Strata Taxonomy & Regular School Definition
+* **Status:** Adopted (Refined in Task 002B)
 * **Date:** 2026-09-23
-* **Context:** Specialized schools (virtual, alternative, special education, standalone Pre-K, CTE) operate under structurally distinct staffing models and caseload constraints compared to traditional neighborhood schools. Mixing them into overall capacity distributions skews baseline statistics.
+* **Context:** Specialized schools (virtual, alternative, special education, standalone Pre-K, CTE) operate under structurally distinct staffing models and caseload constraints compared to traditional neighborhood schools. However, NCES `school_type == 1` ("Regular School") is not synonymous with an ordinary neighborhood school—facilities such as DAY TREATMENT, CONTRACT, STAR School, and MILLER PARK CENTER are officially classified as regular schools by NCES despite reporting non-standard staffing structures.
 * **Decision:** Assign every school mutually exclusive analytical strata:
   1. `Non-Operating` (~is_operating)
   2. `Exclusively Virtual` (is_virtual)
@@ -77,10 +77,29 @@
   4. `Alternative` (is_alternative)
   5. `Career and Technical` (is_vocational)
   6. `Standalone Early Childhood` (is_standalone_pk)
-  7. `Core Operating Regular` (operating regular neighborhood schools)
+  7. `Operating Regular (NCES)` (operating regular schools per NCES classification)
+  Strictly preserve official NCES classifications without ad-hoc name-based reclassification, and refrain from creating subjective "neighborhood school" subsets without independently defensible criteria.
 
-### Decision 011: Independent Validation via Urban Institute API
+### Decision 011: Independent Ingestion Replication via Urban Institute API
+* **Status:** Adopted (Refined in Task 002B)
+* **Date:** 2026-09-23
+* **Context:** Verifying ingestion pipelines against third-party aggregations ensures that raw NCES CCD parsing, grade rollups, and staff categories match national benchmarks. However, because both pipelines derive from federal CCD submissions, this constitutes ingestion replication rather than independent confirmation of underlying CCD accuracy.
+* **Decision:** Replicate a 10-district sample representing diverse metropolitan archetypes against the Urban Institute Education Data Portal API. Validate total enrollment, total teacher FTE, Pre-K teacher FTE, and paraprofessional FTE to confirm arithmetic and parsing consistency.
+
+### Decision 012: LEA Geographic Coverage and Cross-Boundary Agency Accounting
 * **Status:** Adopted
 * **Date:** 2026-09-23
-* **Context:** Verifying ingestion pipelines against independent third-party aggregations ensures that raw NCES CCD data parsing, grade rollups, and staff categories match national benchmarks.
-* **Decision:** Replicate a 10-district sample representing diverse metropolitan archetypes (Urban Core MO/KS, Large Suburb MO/KS, High-Wealth Suburb, Exurban/Town MO/KS, Outer Rural MO/KS) against the Urban Institute Education Data Portal API. Validate total enrollment, total teacher FTE, Pre-K teacher FTE, and paraprofessional FTE to confirm exact arithmetic consistency.
+* **Context:** The school universe is bounded by physical location within the 9 MARC counties, but federal LEA-level CCD counts encompass entire administrative agencies. Statewide agencies (e.g. MO Division of Youth Services and MO Schools for the Severely Disabled) operate facilities across Missouri, creating large divergences between regional school sums and LEA totals.
+* **Decision:** Programmatically determine geographic coverage for all 79 LEAs by checking the complete national CCD directory. Add machine-readable metadata fields (`lea_total_operating_schools_national`, `lea_operating_schools_in_region`, `lea_operating_schools_outside_region`, `lea_geographic_coverage_share`, `lea_fully_within_region`). Flag partial-coverage LEAs in the anomaly ledger and explicitly document that LEA measures for `lea_fully_within_region == False` represent statewide operations rather than Kansas City regional capacity.
+
+### Decision 013: Free and Reduced-Price Lunch Missingness and Socioeconomic Controls
+* **Status:** Adopted
+* **Date:** 2026-09-23
+* **Context:** Free and reduced-price lunch eligibility (FS033) is unobserved for 37 operating schools. Missingness is heavily non-random, concentrating in shared-time vocational centers, virtual schools, and day-treatment or juvenile justice programs.
+* **Decision:** Add `frl_observed` boolean flag to the school capacity baseline. Do not impute missing FRL values. Require that `frl_rate` not be treated as a universal socioeconomic control in downstream models without explicit accounting for program delivery missingness.
+
+### Decision 014: Longitudinal Panel Structure and Survivorship Bias Avoidance
+* **Status:** Adopted
+* **Date:** 2026-09-23
+* **Context:** Constructing a historical panel by filtering historical data to current 2024–2025 schools introduces severe survivorship bias by omitting schools that closed, reorganized, or merged during the decade.
+* **Decision:** Phase 3 will construct an 11-school-year annual panel spanning the 10-year interval from 2014–15 through 2024–25 by independently reconstructing the KC 9-county geographic universe in each school year as repeated cross-sections. A balanced panel of continuously observed facilities will be generated as a secondary sensitivity check.
