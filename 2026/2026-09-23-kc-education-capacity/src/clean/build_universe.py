@@ -208,7 +208,12 @@ def main():
     merged["is_special_ed"] = merged["school_type"] == "2"
     merged["is_vocational"] = merged["school_type"] == "3"
     merged["is_alternative"] = merged["school_type"] == "4"
-    merged["is_open"] = merged["operational_status"] == "1"
+    
+    # Operational status logic:
+    # 1=Open, 3=New, 4=Added, 5=Changed Boundary/Agency, 8=Reopened -> Operating
+    # 2=Closed, 6=Inactive, 7=Future -> Non-Operating
+    merged["is_operating"] = merged["operational_status"].isin(["1", "3", "4", "5", "8"])
+    merged["is_continuing_school"] = merged["operational_status"] == "1"
     
     merged["school_year"] = "2024-2025"
     
@@ -224,7 +229,7 @@ def main():
         "locale_code", "locale_desc", "locale_group",
         "cbsa_code", "cbsa_name", "csa_code", "csa_name",
         "is_charter", "is_virtual", "is_regular", "is_special_ed", "is_vocational",
-        "is_alternative", "is_open", "school_year"
+        "is_alternative", "is_operating", "is_continuing_school", "school_year"
     ]
     
     df_out = merged[final_cols].sort_values(["state", "county_name", "district_name", "school_name"]).reset_index(drop=True)
@@ -273,13 +278,15 @@ def generate_qa_report(df: pd.DataFrame, national_counts: dict) -> str:
     alt_count = df["is_alternative"].sum()
     sped_count = df["is_special_ed"].sum()
     voc_count = df["is_vocational"].sum()
-    open_count = df["is_open"].sum()
+    operating_count = df["is_operating"].sum()
+    continuing_count = df["is_continuing_school"].sum()
     closed_count = (df["operational_status"] == "2").sum()
     future_count = (df["operational_status"] == "7").sum()
     new_count = (df["operational_status"] == "3").sum()
+    non_operating_count = total_schools - operating_count
     
-    # Non-open schools
-    non_open_df = df[~df["is_open"]][["nces_school_id", "school_name", "district_name", "county_name", "operational_status_desc", "virtual_status_desc"]]
+    # Non-operating and status-change schools
+    status_change_df = df[df["operational_status"] != "1"][["nces_school_id", "school_name", "district_name", "county_name", "operational_status_desc", "is_operating", "is_continuing_school", "virtual_status_desc"]]
     
     # Virtual schools
     virtual_df = df[df["is_virtual"]][["nces_school_id", "school_name", "district_name", "county_name", "virtual_status_desc", "locale_group"]]
@@ -296,9 +303,11 @@ def generate_qa_report(df: pd.DataFrame, national_counts: dict) -> str:
     md.append(f"| :--- | :--- | :--- |")
     md.append(f"| **Total Public Schools in KC Universe** | **{total_schools}** | Physically located in 9 target counties |")
     md.append(f"| **Total Unique LEAs / Districts** | **{unique_leas}** | 21 in Kansas, 58 in Missouri (incl. charter LEAs) |")
-    md.append(f"| **Currently Operating / Open Schools** | **{open_count}** | Operational status = Open |")
+    md.append(f"| **Actively Operating Schools (`is_operating`)** | **{operating_count}** | 685 continuing open + 1 newly opened school |")
+    md.append(f"| **Continuing Open Schools (`is_continuing_school`)** | **{continuing_count}** | Operational status = 1 (Open) |")
+    md.append(f"| **Non-Operating Schools** | **{non_operating_count}** | 2 Closed (status 2), 3 Future (status 7) |")
     md.append(f"| **Charter Schools** | **{charter_count}** | All located in Jackson County (KCPS area) |")
-    md.append(f"| **Virtual Schools** | **{virtual_count}** | Exclusively or primarily virtual facilities |")
+    md.append(f"| **Virtual Schools** | **{virtual_count}** | Exclusively virtual instruction facilities |")
     md.append(f"| **Alternative Schools** | **{alt_count}** | NCES Type 4 |")
     md.append(f"| **Special Education Schools** | **{sped_count}** | NCES Type 2 |")
     md.append(f"| **Career & Technical Schools** | **{voc_count}** | NCES Type 3 |")
@@ -364,13 +373,15 @@ def generate_qa_report(df: pd.DataFrame, national_counts: dict) -> str:
     
     md.append("## 6. Audit of Questionable Records, Anomalies, and Edge Cases\n")
     
-    md.append("### A. Non-Open Operational Status Records (6 Schools)\n")
-    md.append("The directory includes 6 schools not in standard 'Open' status. These must be preserved in the master frame with flags:\n")
-    md.append("| NCES ID | School Name | District | County | Status | Notes |")
-    md.append("| :--- | :--- | :--- | :--- | :--- | :--- |")
-    for _, r in non_open_df.iterrows():
-        md.append(f"| `{r['nces_school_id']}` | {r['school_name']} | {r['district_name']} | {r['county_name']} | **{r['operational_status_desc']}** | {r['virtual_status_desc']} |")
-    md.append("\n> [!NOTE]\n> The 5 schools with missing `virtual_status_desc` in CCD Characteristics correspond exactly to the 2 Closed schools (`Kansas City Girls Prep High`, `Hickman Mills 8th Grade Center`) and 3 Future schools (`Hickman Mills South Middle`, `Ervin Early Learning Center`, `Great Beginnings PreK at PV`). Missouri DESE did not submit characteristics for inactive facilities.\n\n")
+    md.append("### A. Operational Status and Cohort Classification (6 Status-Change Schools)\n")
+    md.append("NCES operational status flags distinguish continuing schools from newly opened, closed, or future planned facilities:\n")
+    md.append("| NCES ID | School Name | District | County | Status | `is_operating` | `is_continuing_school` | Notes |")
+    md.append("| :--- | :--- | :--- | :--- | :--- | :---: | :---: | :--- |")
+    for _, r in status_change_df.iterrows():
+        op_flag = "Yes" if r["is_operating"] else "No"
+        cont_flag = "Yes" if r["is_continuing_school"] else "No"
+        md.append(f"| `{r['nces_school_id']}` | {r['school_name']} | {r['district_name']} | {r['county_name']} | **{r['operational_status_desc']}** | {op_flag} | {cont_flag} | {r['virtual_status_desc']} |")
+    md.append("\n> [!NOTE]\n> **Operational Status Logic:** `Lansing Virtual Academy` is classified as Status 3 ('New'), having opened since the prior reporting period. It is actively operating in 2024–2025 (`is_operating = True`) but is not a continuing school (`is_continuing_school = False`). The 5 non-operating facilities (`is_operating = False`) comprise 2 Closed schools (`Kansas City Girls Prep High`, `Hickman Mills 8th Grade Center`) and 3 Future planned facilities (`Hickman Mills South Middle`, `Ervin Early Learning Center`, `Great Beginnings PreK at PV`), for which Missouri DESE did not submit characteristics.\n\n")
     
     md.append("### B. Virtual Schools (13 Identified)\n")
     md.append("The universe contains 13 schools with virtual instruction designations. Virtual facilities report teacher FTE and student enrollments that skew physical classroom load calculations and should be analyzed as a distinct stratum:\n")
