@@ -86,13 +86,12 @@ kc_education_capacity/
     - Grade band divergence: Primary/Elementary schools expanded capacity significantly (within-school $\beta = -0.2152$), whereas High schools saw minimal change ($\beta = -0.0531$).
     - Missouri and Kansas exhibited near-identical starting levels (14.82 vs 14.88) and parallel decade slopes ($-0.1581$ vs $-0.1623$).
   - **Strict Methodological Guardrail:** Staffing ratios measure macro capacity and are never described as class sizes. Hypotheses H1a, H1b, H2, and H3 remain strictly unadjudicated.
-- **Next Phase (Phase 3C — Staffing Metric & Allocation Audit):**
-  - Independent state replication: Reconcile NCES teacher FTE against KSDE (SO66/LPR) and MO DESE (Core Data / MOSIS) for anchor years (2014–15, 2019–20, 2024–25).
-  - Staffing decomposition: Quantify shifts in SPED teachers, SPED paras, IDEA enrollment, EL enrollment, Title III teachers, and non-teaching support staff (coordinators, counselors, psychologists).
-  - External benchmarking: Triangulate with Civil Rights Data Collection (CRDC) and National Teacher and Principal Survey (NTPS) class-size estimates.
-- **Subsequent Phase 4 (Section-Level Micro Analysis):**
-  - **Phase 4A (Section & Roster Distributions):** Directly measure course section sizes, student exposure to large classes ($\ge 25, \ge 30, \ge 33$), teacher roster loads, and allocation diagnostics ("ghost class" / schedule distributions).
-  - **Phase 4B (Classroom Complexity Overlay):** Integrate section-level IEP, ELL, chronic absenteeism, and student mobility metrics.
+- **Phase 3C (Staffing Metric & Allocation Audit):**
+  - **Step 1A (State Staffing Reconciliation Pilot):** Complete (`outputs/tables/task003c_state_replication_pilot_report.md`). Audited 8 benchmark districts across anchor years (2014–15, 2019–20, 2024–25); 17/24 comparisons within 2%, 23/24 within 5% (median difference 1.47%). Confirmed state administrative systems reproduce the macro teacher expansion and identified Kansas's structural separation of Classroom Teachers vs. Other Teachers (SPED/Reading).
+  - **Step 1B-KS (Kansas Role Decomposition):** Complete across all 19 Unified School Districts (`outputs/tables/task003c_kansas_role_decomposition_report.md`). Quantified the Allocation Wedge at **2.66 to 2.81 students per teacher** between classroom ratios (16.86 -> 16.26) and total instructional ratios (14.05 -> 13.60). Proved that in major Johnson County suburbs, both classroom teachers (+8.7%) and specialized teachers (+21.3%) expanded faster than enrollment (+3.2%), shifting the frontier to teacher prep loads and elective dispersion.
+  - **Workstream 2 (Parallel Specialized Personnel & Non-Teaching Staff):** Complete across all 77 fully regional LEAs (`outputs/tables/task003c_workstream2_regional_staff_need_report.md`). Tracked parallel series showing paraprofessionals (+11.85%), instructional coordinators (+49.74%), counselors (+18.92%), and administrators (+16.62%) expanded faster than enrollment (-0.73%).
+- **Phase 4 Preparation (Section-Level Micro Analysis):**
+  - **Phase 4A Data Request Specifications Drafted:** Complete (`research/phase4a_data_request_specifications.md`). Formulated deidentified course section data requests for MO DESE (Screen 20 Course Assignment) and KSDE (KCCMS/EDCS Course Assignment) to observe student-weighted class size distributions, core vs. elective allocations, and daily teacher roster loads.
 
 
 

@@ -17,14 +17,14 @@ The Step 1A pilot investigated whether the decade-long structural expansion in t
 The pilot evaluated **8 major school districts** (4 in Kansas, 4 in Missouri) across the three key anchor years: **2014–15 (baseline)**, **2019–20 (pre-pandemic peak)**, and **2024–25 (current endline)**.
 
 ### Core Headline Findings:
-1. **Corroboration of Macro Staffing Trajectory:** State administrative records in both Kansas (KSDE Superintendent's Organization Report SO66 / Budget Form 150) and Missouri (DESE Core Data / MOSIS Screen 18) **independently corroborate the direction and approximate magnitude of the decade-long staffing expansion**. The +1,922 teacher FTE increase is not an artifact of federal data transformations or reporting distortions.
+1. **Upstream/Downstream Administrative Alignment:** State administrative records in both Kansas (KSDE Superintendent's Organization Report SO66 / Budget Form 150) and Missouri (DESE Core Data / MOSIS Screen 18) **demonstrate close administrative alignment on the direction and approximate magnitude of the decade-long staffing expansion**. The +1,922 teacher FTE increase is not an artifact of federal data transformations or reporting distortions.
 2. **High Definitional Parity:** Out of 24 district-year comparisons:
    - **17 comparisons (70.8%)** are a `close_match` ($\le \pm 2\%$).
    - **6 comparisons (25.0%)** are a `moderate_difference` ($> 2\%$ and $\le 5\%$).
-   - **Only 1 comparison (4.2%)** is a `material_difference` ($> 5\%$, Shawnee Mission 2024–25 at $-8.3\%$, driven by non-classroom specialist grouping).
+   - **Only 1 comparison (4.2%)** is a `material_difference` ($> 5\%$, Shawnee Mission 2024–25 at $-8.3\%$, reflecting unresolved definitional variance).
    - **0 comparisons** were structurally `not_comparable`.
 3. **The Upstream/Downstream Reality:** CCD data originate from state education agency submissions. The close alignment confirms that federal CCD processing introduces negligible drift from state-level certified instructional payroll rolls.
-4. **The Critical Definitional Insight (The Allocation Wedge Root):** Kansas state reporting systems explicitly separate *Classroom Teachers* from *Other Teachers (Special Education and Reading Specialists)*. When Kansas policy organizations publish "Classroom Teachers," they strip out Special Education teachers and reading specialists. When NCES CCD reports "Teachers," it includes them. This proves that **special education and specialized instructional assignments represent a primary component of the structural wedge** between reported teacher FTE and classroom section sizes.
+4. **The Critical Definitional Insight (The Allocation Wedge Root):** Kansas state reporting systems explicitly separate *Classroom Teachers* from *Other Teachers (Special Education and Reading Specialists)*. When Kansas policy organizations publish "Classroom Teachers," they strip out Special Education teachers and reading specialists. When NCES CCD reports "Teachers," it includes them. This demonstrates that **specialized instructional teachers are an identifiable component of the denominator that can make structural pupil/teacher ratios substantially lower than conventional classroom staffing measures**. Whether specialized roles are the *primary* driver of the decade-long $+1,922$ FTE growth requires quantifying how much of that growth actually occurred within conventional classroom lines versus specialized instructional lines.
 
 ---
 
@@ -98,11 +98,11 @@ The table below presents the 24 pilot comparisons across the 8 benchmark distric
 
 ---
 
-## 3. Independent Trend Reconciliation (2014–15 to 2024–25)
+## 3. Upstream/Downstream Administrative Trend Reconciliation (2014–15 to 2024–25)
 
-The central question of this pilot is: **Does the state administrative system independently reproduce the existence and approximate magnitude of the decade-long staffing expansion?**
+The central question of this pilot is: **Does the state administrative reporting system reproduce the existence and approximate magnitude of the decade-long staffing expansion?**
 
-The table below compares the 10-year endpoint growth independently calculated within each administrative system:
+The table below compares the 10-year endpoint growth calculated within each administrative reporting channel:
 
 ### Table 2: 10-Year Trend Reconciliation Comparison
 *Comparing NCES CCD vs. State Administrative Records*
@@ -140,7 +140,7 @@ Detailed in `outputs/tables/task003c_state_replication_anomalies.csv`:
 
 1. **Shawnee Mission USD 512 (2024–25 Discrepancy):**
    - KSDE Open Gov records 1,659.60 Classroom Teachers and 294.70 Other Teachers (sum = 1,954.30 FTE). NCES K–12 Teacher FTE is 1,792.01 FTE.
-   - *Forensic Finding:* Shawnee Mission reallocated several dozen building-level specialist and interventionist positions between 2020 and 2024. In the federal submission, positions with student attendance rosters remained in classroom teachers, while non-rostered instructional specialists were reported under instructional coordinators/coaches. Both sources agree that instructional capacity expanded while enrollment fell.
+   - *Forensic Finding:* This represents unresolved definitional variance between the state and federal reporting streams. While both sources agree that instructional capacity expanded while enrollment contracted, we do not yet know precisely which educator assignments explain the 8.3% difference in 2024–25 (e.g., whether specific building-level interventionists or reading specialists were categorized under classroom teachers vs. support staff in federal EDFacts). Mutually exclusive educator-level assignment records will be required to resolve this boundary precisely.
 2. **Special Education Cooperative Accounting (Kansas City USD 500):**
    - USD 500 serves as the fiscal agent for the Wyandotte Comprehensive Special Education Cooperative.
    - In state accounting, cooperative personnel can appear on the central district ledger (e.g. 350.0 "Other Teachers" in 2014–15), whereas federal CCD building staff files assign teachers directly to the operating attendance centers across member districts. When looking strictly at direct classroom teachers (1,382.00 State vs. 1,391.60 NCES), the discrepancy is less than 1% (9.6 FTE).
@@ -179,7 +179,7 @@ Detailed in `outputs/tables/task003c_state_replication_anomalies.csv`:
 - Across all 8 pilot districts, 17 of 24 comparisons are within $\pm 2\%$, and 23 of 24 are within $\pm 5\%$. The median absolute difference is **1.47%**.
 
 ### Q5: Do state-source trends corroborate the NCES staffing expansion?
-- **Yes, emphatically.** In 7 of the 8 pilot districts, state records corroborate positive teacher FTE growth over the decade. In the fastest-growing suburban districts (Blue Valley, Olathe, North Kansas City), both sources independently demonstrate that teacher staffing grew by 8% to 18% while student enrollment was flat or falling.
+- **Yes, emphatically.** In 7 of the 8 pilot districts, state administrative records reflect positive teacher FTE growth over the decade. In the fastest-growing suburban districts (Blue Valley, Olathe, North Kansas City), both state and federal reporting streams demonstrate that teacher staffing grew by 8% to 18% while student enrollment was flat or falling.
 
 ### Q6: Any definitional obstacles that require changing the Phase 3C design?
 - No structural redesign is required, but two operational protocols must be enforced when scaling:

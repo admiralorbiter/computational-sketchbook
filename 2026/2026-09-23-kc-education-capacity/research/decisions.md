@@ -173,6 +173,23 @@ Catalog these metrics in `outputs/tables/task003a1_reporting_coverage.csv` and r
   3. **Deferral of Additive Residuals:** Strictly forbid calculating an additive general-education residual ($\text{Teachers}_{\text{Total}} - \text{Teachers}_{\text{SPED}} - \text{Teachers}_{\text{EL}}$) from broad federal collections because Title III FS067 reports unduplicated teacher headcounts (not FTE) that include content teachers, mixing units and risking double-counting. Retain specialized categories as parallel series until mutually exclusive FTE categories are demonstrated from state assignment microdata.
   4. **Phase 4 Split:** Subdivide Phase 4 into **Phase 4A** (Actual Section & Roster Distributions, Student-Weighted Exposure, Teacher Roster Load, and Allocation Diagnostics) and **Phase 4B** (Classroom Complexity Overlay: IEP, ELL, chronic absenteeism, and student mobility at the section level).
 
+### Decision 026: Phase 3C Sequencing, Kansas Instructional Role Decomposition, and Parallel Phase 4A Section Requests
+* **Date:** September 24, 2026
+* **Context:** The Step 1A pilot verified close upstream/downstream administrative alignment across 8 benchmark districts (~51% of regional enrollment) across 3 anchor years (2014–15, 2019–20, 2024–25), confirming that federal CCD teacher growth is not a statistical artifact or data fabrication. However, Kansas state reporting reveals an essential structural distinction: KSDE separates *Classroom Teachers* from *Other Teachers (Special Education & Reading Specialists)*, whereas CCD bundles both into total teachers. Reconciling another 50 Missouri LEAs on aggregate numbers offers diminishing returns since MO DESE Screen 18 is the upstream source for federal EDFacts FS059 anyway.
+* **Decision:**
+  1. **Acknowledge Pilot Empirical Baseline:** Conclude that the macro teacher staffing expansion is real within the state/federal administrative ecosystem. The distortion is primarily one of definition and allocation. Specialized instructional staff are an identifiable component of the denominator; determining whether they are a primary driver requires quantifying how much of the +1,922 FTE expansion occurred in classroom vs. specialized assignments.
+  2. **Step 1B-KS Scaling:** Scale Kansas reconciliation and role decomposition across all 21 fully regional Kansas LEAs for 2014–15, 2019–20, and 2024–25:
+     $$T_{instructional} = T_{classroom} + T_{other}$$
+     $$SpecialistShare = \frac{T_{other}}{T_{classroom} + T_{other}}$$
+     $$\Delta T_{instructional} = \Delta T_{classroom} + \Delta T_{other}$$
+     Quantify the exact contribution of conventional classroom teachers vs. specialized instructional teachers to total teacher growth.
+  3. **Workstream 2 Parallel Metro-Wide Execution:** Compile parallel longitudinal series across all 77 regional LEAs for:
+     - IDEA student counts and SPED teacher/para FTE (from EDFacts / IDEA Section 618).
+     - Title III EL student counts and instructional staffing.
+     - Compute staffing-to-need ratios ($\frac{\text{IDEA Students}}{\text{SPED Teacher FTE}}$, $\frac{\text{SPED Teacher FTE}}{\text{Total Teacher FTE}}$, and decade change in IDEA share vs. SPED staffing share) without manufacturing additive residuals.
+  4. **Missouri Pivot:** Deprioritize redundant 56-district aggregate reconciliation; prioritize obtaining detailed Screen 18 duty-code extracts (001–099 splits).
+  5. **Immediate Phase 4A Data Request Drafting:** Draft formal research data request specifications for deidentified section-level course assignment extracts from MO DESE (Screen 20 Course Assignment) and KSDE (KEDS/LPR Assignment) in parallel with Phase 3C analysis to avoid project lag.
+
 
 
 
