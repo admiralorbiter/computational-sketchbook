@@ -104,11 +104,11 @@
 * **Context:** Constructing a historical panel by filtering historical data to current 2024–2025 schools introduces severe survivorship bias by omitting schools that closed, reorganized, or merged during the decade.
 * **Decision:** Phase 3 will construct an 11-school-year annual panel spanning the 10-year interval from 2014–15 through 2024–25 by independently reconstructing the KC 9-county geographic universe in each school year as repeated cross-sections. A balanced panel of continuously observed facilities will be generated as a secondary sensitivity check.
 
-### Decision 015: Longitudinal Repeated Cross-Sections Primacy and Zero Survivorship Bias
+### Decision 015: Longitudinal Repeated Cross-Sections Primacy and Avoidance of Current-Cohort Survivorship Bias
 * **Status:** Adopted
 * **Date:** 2026-09-23
 * **Context:** In educational capacity analysis over a 10-year period, conditioning on survival into 2024–25 introduces substantial bias by ignoring school closures, consolidations, charter turnovers, and suburban boundary shifts.
-* **Decision:** Establish `kc_school_capacity_long_2014_15_2024_25.csv` as the primary analytical foundation, built from independent annual cross-sections based on physical school building geocodes within the 9 MARC counties for each year $t \in [2014\text{–}15, \dots, 2024\text{–}25]$. Every school operating in each year is included regardless of subsequent survival or historical existence.
+* **Decision:** Establish `kc_school_capacity_long_2014_15_2024_25.csv` as the primary analytical foundation, built from independent annual cross-sections based on physical school building geocodes within the 9 MARC counties for each year $t \in [2014\text{–}15, \dots, 2024\text{–}25]$. Every school operating in each year is included regardless of subsequent survival or historical existence, avoiding conditioning the historical sample on survival into 2024–25. Annual school counts range from 652 (2015–16) to 691 (2024–25).
 
 ### Decision 016: Secondary Balanced Panel Definition and Dual Locale Architecture
 * **Status:** Adopted
@@ -127,4 +127,34 @@
 * **Date:** 2026-09-23
 * **Context:** Geocoded datasets can silently omit schools present in state administrative directories if physical coordinates are pending or unassigned, leading to invisible attrition.
 * **Decision:** Audit every school record in Missouri (29) and Kansas (20) across both the CCD Directory and EDGE Geocode files for all 11 years prior to geographic bounding. Log any school present in Directory but omitted from EDGE (or present in EDGE but omitted from Directory) explicitly in `outputs/tables/task003a_anomalies.csv` to ensure 100% transparency of coverage.
+
+### Decision 019: Systematic NCES Historical Negative Exception-Code Remediation (-1, -2, -9)
+* **Status:** Adopted
+* **Date:** 2026-09-24
+* **Context:** Historical wide-format NCES CCD files (specifically 2014–15 and 2015–16) utilize negative numeric exception codes to represent administrative data states: `-1` (Missing / Not Reported), `-2` (Not Applicable), and `-9` (Suppressed / Data Withheld to protect confidentiality). Ingesting these values as raw floats without exception parsing corrupts arithmetic operations, leading to negative staff FTEs, distorted ratios, or spurious zeros when filled.
+* **Decision:** Systematically convert all negative exception codes in historical raw files to `NaN` or explicit Not Applicable representations prior to arithmetic or derivation. Never allow negative codes to participate in additions, subtractions, aggregations, or denominator construction. Preserve true reported 0 values as distinct from administrative missingness (`NaN`). All negative exception instances are logged in `outputs/tables/task003a_anomalies.csv`. Automated assertions strictly enforce that 0 negative values exist in cleaned analytical columns.
+
+### Decision 020: Dual K–12 Derived Teacher Formula and Pre-K Non-Applicability Handling
+* **Status:** Adopted
+* **Date:** 2026-09-24
+* **Context:** In historical LEA staff files, summing individual grade-level teacher components (Kindergarten, Elementary, Secondary, Ungraded) is fragile because specific components (e.g. Ungraded Teachers) frequently carry `-2.0` (Not Applicable) or `-1.0` (Missing) codes even when an agency's total teachers and Pre-K teachers are fully reported.
+* **Decision:** Adopt `teachers_k12_fte = teachers_total_reported_fte - teachers_prek_fte` as the primary derived measure where both values are valid non-negative numbers. Where Pre-K is Not Applicable (`-2.0`, meaning no Pre-K program operates in the LEA), Pre-K teachers are treated as 0, setting `teachers_k12_fte = teachers_total_reported_fte`. If total teachers or Pre-K teachers are missing or suppressed, `teachers_k12_fte` is set to `NaN`. Simultaneously retain `teachers_k12_fte_components` where all components are valid as an automated QA audit check.
+
+### Decision 021: Standardized Reporting Coverage Quality Tiers
+* **Status:** Adopted
+* **Date:** 2026-09-24
+* **Context:** Aggregate pupil/teacher ratios can appear distorted if calculated across universes where large agencies have suppressed or missing data, creating severe artificial discontinuities. Downstream longitudinal analyses must know whether an annual aggregate is representative of the metropolitan area or state.
+* **Decision:** For every annual school and LEA series, compute reporting coverage across both entity counts and represented student enrollment. Classify reporting coverage into four objective tiers:
+  1. `complete`: 100.0% of regional enrollment represented by valid entities.
+  2. `high_coverage`: 95.0% to < 100.0% of regional enrollment represented.
+  3. `partial_coverage`: 80.0% to < 95.0% of regional enrollment represented.
+  4. `insufficient_coverage`: < 80.0% of regional enrollment represented.
+Catalog these metrics in `outputs/tables/task003a1_reporting_coverage.csv` and report them in QA documentation. Require that any series in the `insufficient_coverage` tier be flagged and excluded from unadjusted trend regressions.
+
+### Decision 022: Resolution of 2015–16 Kansas LEA Staff Suppression (Olathe & Gardner Edgerton)
+* **Status:** Adopted
+* **Date:** 2026-09-24
+* **Context:** In the 2015–16 CCD LEA staff file, two major Kansas districts—Olathe (2010140, 28,567 K–12 students) and Gardner Edgerton (2006420, 5,611 K–12 students)—had their entire staff data withheld/suppressed (`-9.0`). Uncorrected aggregation produced an artificial jump in Kansas regional student/teacher ratio from 14.96 to 20.02.
+* **Decision:** In accordance with Decision 019, set `teachers_k12_fte` and all staff variables for Olathe and Gardner Edgerton in 2015–16 to `NaN`. Do not impute values. Document that Kansas regional LEA staff coverage in 2015–16 is 75.9% of enrollment, placing Kansas 2015–16 in the `insufficient_coverage (< 80%)` tier. On the 20 reporting Kansas LEAs, the calculated student/teacher ratio is 15.03, proving that the apparent 20.02 spike was entirely an artifact of unhandled NCES suppression codes. Establish that 2015–16 Kansas LEA staffing must not be used as a complete regional aggregate.
+
 

@@ -65,11 +65,19 @@ kc_education_capacity/
 
 ---
 
-## Current Status: Phase 3A (Task 003A) Complete
+## Current Status: Phase 3A (Task 003A & 003A.1) Complete
 
 - **Task 001 (Geographic Universe):** Complete. 691 schools across 9 MARC counties established, geocoded, and classified using NCES CCD/EDGE SY 2024–2025.
 - **Task 002 & 002B (Baseline Staffing & Capacity):** Complete. School- and LEA-level baseline capacity panels constructed (`kc_school_capacity_2024_2025.csv`, `kc_lea_capacity_2024_2025.csv`), with programmatic LEA geographic coverage metadata, `Operating Regular (NCES)` terminology, FRL missingness analysis, independent Urban Institute ingestion replication, and audited anomalies in `outputs/tables/task002_qa_report.md`.
-- **Task 003A (11-Year Longitudinal Data Construction & Audit):** Complete. Downloaded and cataloged all 99 raw NCES archives across 11 school years (2014–15 through 2024–25). Constructed primary repeated cross-section school panel (`kc_school_capacity_long_2014_15_2024_25.csv`, 7,384 records across 730 unique schools), primary repeated cross-section LEA panel (`kc_lea_capacity_long_2014_15_2024_25.csv`, 881 records), secondary balanced panel (`kc_school_balanced_panel_2014_15_2024_25.csv`, 6,820 records across 620 schools), anomaly ledger (`task003a_anomalies.csv`, 100 entries), and audit report (`outputs/tables/task003a_qa_report.md`). Zero discrepancies on 2024–25 baseline parity check.
-- **Next Phase (Task 003B):** Longitudinal Capacity Trend Analysis & Formal Hypothesis Testing (H1a, H1b, H2, H3, H4) across the 10-year period.
+- **Task 003A & 003A.1 (11-Year Longitudinal Data Construction, Exception Remediation & Audit):** Complete.
+  - Ingested and cataloged all 99 raw NCES archives spanning 11 school years (2014–15 through 2024–25).
+  - Remediated all historical negative NCES exception codes (`-1` Missing, `-2` Not Applicable, `-9` Suppressed) to `NaN` or explicit Not Applicable representations prior to arithmetic.
+  - Implemented dual K–12 teacher FTE derivations (`Total - PreK` audited against component summation), setting missing/suppressed measures to `NaN`.
+  - Resolved 2015–16 Kansas discontinuity: identified NCES staff suppression in Olathe and Gardner Edgerton; confirmed reporting ratio of 15.03 on valid LEAs, while classifying Kansas 2015–16 as `insufficient_coverage (< 80%)`.
+  - Automated integrity assertions verified **0 negative values** across all numeric analytical variables in all 11 years.
+  - Automated baseline parity check confirmed **exact 100% parity (0 discrepancies)** with frozen Task 002B baseline for 2024–25.
+  - Constructed primary repeated cross-section school panel (`kc_school_capacity_long_2014_15_2024_25.csv`, 7,384 records across 730 unique schools, ranging from 652 to 691 schools annually), primary repeated cross-section LEA panel (`kc_lea_capacity_long_2014_15_2024_25.csv`, 881 records), secondary balanced panel (`kc_school_balanced_panel_2014_15_2024_25.csv`, 6,820 records across 620 schools), anomaly ledger (`task003a_anomalies.csv`, 409 entries), and reporting coverage table (`task003a1_reporting_coverage.csv`, 66 rows). Full audit documented in `outputs/tables/task003a_qa_report.md`.
+- **Next Phase (Task 003B):** Longitudinal Structural Capacity Analysis across the 10-year period (evaluating structural pupil/teacher and adult capacity trends across urban core, suburban, and rural strata, distinguishing structural staffing capacity from observable classroom section size).
+
 
 

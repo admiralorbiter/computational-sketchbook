@@ -144,5 +144,32 @@ These attributes appear in the primary repeated cross-sections panel (`kc_school
 | `locale_changed_any` | Boolean | Derived | `True` if school's 2-digit NCES locale code changed across observed years. |
 | `locale_code_fixed_2024_2025` | String | NCES EDGE (24–25) | Fixed 2024–25 NCES locale code attached to balanced panel schools for sensitivity controls against census boundary shifts. |
 | `locale_group_fixed_2024_2025`| String | Derived (24–25) | Fixed 2024–25 broad locale group (`City`, `Suburb`, `Town`, `Rural`) attached to balanced panel schools. |
+| `teacher_fte_valid` | Boolean | Derived | `True` iff `classroom_teacher_fte` is non-missing and $\ge 0$. `False` if teacher FTE was suppressed, missing, or negative in raw files. |
+| `teachers_k12_fte_components` | Float | Derived | Secondary K–12 teacher FTE derived via grade-level component sum: $\text{KG} + \text{Elem} + \text{Sec} + \text{Ungraded}$. Retained for automated QA audit against the primary $\text{Total} - \text{PreK}$ formula. |
+| `teacher_k12_valid` | Boolean | Derived | `True` iff `teachers_k12_fte` is non-missing and $\ge 0$. `False` if total teachers or Pre-K teachers were suppressed (`-9.0`) or missing (`-1.0`). |
+
+---
+
+### 3.4 Historical CCD Exception-Code Handling & Reporting Quality Tiers
+
+#### NCES Administrative Exception Codes
+In historical wide-format CCD files (SY 2014–15 and 2015–16), NCES utilized negative numeric exception codes to denote administrative data states:
+- `-1` / `-1.0`: **Missing / Not Reported** (data were expected from the agency but omitted).
+- `-2` / `-2.0`: **Not Applicable** (the educational unit does not offer this grade, program, or staff category).
+- `-9` / `-9.0`: **Suppressed / Data Withheld** (data withheld by NCES to protect confidentiality or due to state reporting withholding).
+
+#### Cleaning and Remediation Protocol:
+1. **Zero Arithmetic on Negative Codes:** Negative values are systematically identified and converted to `NaN` or explicit NA representations prior to arithmetic. Negative codes never participate in sums, subtractions, aggregations, or ratio denominators.
+2. **Distinction of Zeros:** A true reported count of 0 is preserved as `0.0`. Administrative non-reporting or suppression is represented strictly as `NaN`.
+3. **Pre-K Non-Applicability:** Where an LEA or school does not offer Pre-K (`-2.0` Not Applicable), Pre-K enrollment and teacher FTE are treated as 0 for K–12 derivations, preserving total reported teachers as K–12 teachers. Where Pre-K is suppressed (`-9.0`) or missing (`-1.0`), derived K–12 measures are set to `NaN`.
+4. **Integrity Assertions:** Automated assertions in `src/clean/build_longitudinal_panel.py` enforce that 0 negative values exist across all 38 numeric school and LEA analytical variables in all 11 school years.
+
+#### Reporting Coverage Quality Tiers
+To prevent distorted longitudinal aggregations (such as the 2015–16 Kansas suppression artifact), every annual aggregate is audited for reporting coverage across both entity counts and represented student enrollment:
+- **`complete`:** 100.0% of regional enrollment represented by valid entities.
+- **`high_coverage`:** 95.0% to < 100.0% of regional enrollment represented.
+- **`partial_coverage`:** 80.0% to < 95.0% of regional enrollment represented.
+- **`insufficient_coverage`:** < 80.0% of regional enrollment represented. Series in this tier must NOT be used for unadjusted trend regressions.
+
 
 
