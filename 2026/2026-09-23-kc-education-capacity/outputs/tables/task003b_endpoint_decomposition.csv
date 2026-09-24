@@ -31,18 +31,18 @@ Locale_Rural,Full_Decade_2014_to_2024,2014-2015,2024-2025,42333,40676,-1657,-3.9
 Locale_Rural,Pre_Pandemic_2014_to_2019,2014-2015,2019-2020,42333,48257,5924,13.99,2789.6,3217.67,428.07,15.35,15.18,15.0,-0.18,-1.17,,,,,,,,,Staffing Outpaced Enrollment Growth
 Locale_Rural,Pandemic_Shock_2019_to_2020,2019-2020,2020-2021,48257,47984,-273,-0.57,3217.67,3198.84,-18.83,-0.59,15.0,15.0,0.0,0.02,,,,,,,,,Mixed
 Locale_Rural,Post_Pandemic_2020_to_2024,2020-2021,2024-2025,47984,40676,-7308,-15.23,3198.84,2935.3,-263.54,-8.24,15.0,13.86,-1.14,-7.62,,,,,,,,,Mixed
-Grade_Primary,Full_Decade_2014_to_2024,2014-2015,2024-2025,163376,152654,-10722,-6.56,10612.62,11297.94,685.32,6.46,15.39,13.51,-1.88,-12.23,,,,,,,,,Joint Staffing Expansion & Enrollment Contraction
-Grade_Primary,Pre_Pandemic_2014_to_2019,2014-2015,2019-2020,163376,160934,-2442,-1.49,10612.62,11132.42,519.8,4.9,15.39,14.46,-0.94,-6.09,,,,,,,,,Staffing Expansion
+Grade_Primary,Full_Decade_2014_to_2024,2014-2015,2024-2025,162160,152654,-9506,-5.86,10534.84,11297.94,763.1,7.24,15.39,13.51,-1.88,-12.22,,,,,,,,,Joint Staffing Expansion & Enrollment Contraction
+Grade_Primary,Pre_Pandemic_2014_to_2019,2014-2015,2019-2020,162160,160934,-1226,-0.76,10534.84,11132.42,597.58,5.67,15.39,14.46,-0.94,-6.08,,,,,,,,,Staffing Expansion
 Grade_Primary,Pandemic_Shock_2019_to_2020,2019-2020,2020-2021,160934,151380,-9554,-5.94,11132.42,11101.57,-30.85,-0.28,14.46,13.64,-0.82,-5.68,,,,,,,,,Enrollment Contraction
 Grade_Primary,Post_Pandemic_2020_to_2024,2020-2021,2024-2025,151380,152654,1274,0.84,11101.57,11297.94,196.37,1.77,13.64,13.51,-0.12,-0.91,,,,,,,,,Staffing Expansion
-Grade_Middle,Full_Decade_2014_to_2024,2014-2015,2024-2025,67760,68746,986,1.46,4581.4,5150.54,569.14,12.42,14.79,13.35,-1.44,-9.76,,,,,,,,,Staffing Expansion
-Grade_Middle,Pre_Pandemic_2014_to_2019,2014-2015,2019-2020,67760,72217,4457,6.58,4581.4,4889.34,307.94,6.72,14.79,14.77,-0.02,-0.13,,,,,,,,,Staffing Outpaced Enrollment Growth
-Grade_Middle,Pandemic_Shock_2019_to_2020,2019-2020,2020-2021,72217,71736,-481,-0.67,4889.34,4947.0,57.66,1.18,14.77,14.5,-0.27,-1.82,,,,,,,,,Joint Staffing Expansion & Enrollment Contraction
-Grade_Middle,Post_Pandemic_2020_to_2024,2020-2021,2024-2025,71736,68746,-2990,-4.17,4947.0,5150.54,203.54,4.11,14.5,13.35,-1.15,-7.96,,,,,,,,,Joint Staffing Expansion & Enrollment Contraction
-Grade_High,Full_Decade_2014_to_2024,2014-2015,2024-2025,94874,101571,6697,7.06,5920.44,6642.06,721.62,12.19,16.02,15.29,-0.73,-4.57,,,,,,,,,Staffing Outpaced Enrollment Growth
-Grade_High,Pre_Pandemic_2014_to_2019,2014-2015,2019-2020,94874,99007,4133,4.36,5920.44,6240.13,319.69,5.4,16.02,15.87,-0.16,-0.99,,,,,,,,,Staffing Outpaced Enrollment Growth
-Grade_High,Pandemic_Shock_2019_to_2020,2019-2020,2020-2021,99007,100519,1512,1.53,6240.13,6172.53,-67.6,-1.08,15.87,16.28,0.42,2.64,,,,,,,,,Mixed
-Grade_High,Post_Pandemic_2020_to_2024,2020-2021,2024-2025,100519,101571,1052,1.05,6172.53,6642.06,469.53,7.61,16.28,15.29,-0.99,-6.1,,,,,,,,,Staffing Expansion
+Grade_Middle,Full_Decade_2014_to_2024,2014-2015,2024-2025,68387,68236,-151,-0.22,4626.48,5112.09,485.61,10.5,14.78,13.35,-1.43,-9.7,,,,,,,,,Staffing Expansion
+Grade_Middle,Pre_Pandemic_2014_to_2019,2014-2015,2019-2020,68387,71677,3290,4.81,4626.48,4855.13,228.65,4.94,14.78,14.76,-0.02,-0.13,,,,,,,,,Staffing Outpaced Enrollment Growth
+Grade_Middle,Pandemic_Shock_2019_to_2020,2019-2020,2020-2021,71677,71178,-499,-0.7,4855.13,4913.49,58.36,1.2,14.76,14.49,-0.28,-1.88,,,,,,,,,Joint Staffing Expansion & Enrollment Contraction
+Grade_Middle,Post_Pandemic_2020_to_2024,2020-2021,2024-2025,71178,68236,-2942,-4.13,4913.49,5112.09,198.6,4.04,14.49,13.35,-1.14,-7.86,,,,,,,,,Joint Staffing Expansion & Enrollment Contraction
+Grade_High,Full_Decade_2014_to_2024,2014-2015,2024-2025,91275,102092,10817,11.85,5626.56,6682.01,1055.45,18.76,16.22,15.28,-0.94,-5.82,,,,,,,,,Staffing Outpaced Enrollment Growth
+Grade_High,Pre_Pandemic_2014_to_2019,2014-2015,2019-2020,91275,99547,8272,9.06,5626.56,6275.84,649.28,11.54,16.22,15.86,-0.36,-2.22,,,,,,,,,Staffing Outpaced Enrollment Growth
+Grade_High,Pandemic_Shock_2019_to_2020,2019-2020,2020-2021,99547,101083,1536,1.54,6275.84,6207.54,-68.3,-1.09,15.86,16.28,0.42,2.66,,,,,,,,,Mixed
+Grade_High,Post_Pandemic_2020_to_2024,2020-2021,2024-2025,101083,102092,1009,1.0,6207.54,6682.01,474.47,7.64,16.28,15.28,-1.01,-6.17,,,,,,,,,Staffing Expansion
 Distance_Core_Under_5mi,Full_Decade_2014_to_2024,2014-2015,2024-2025,32419,35595,3176,9.8,2166.82,2606.04,439.22,20.27,14.96,13.66,-1.3,-8.71,,,,,,,,,Staffing Expansion
 Distance_Core_Under_5mi,Pre_Pandemic_2014_to_2019,2014-2015,2019-2020,32419,34338,1919,5.92,2166.82,2431.54,264.72,12.22,14.96,14.12,-0.84,-5.61,,,,,,,,,Staffing Expansion
 Distance_Core_Under_5mi,Pandemic_Shock_2019_to_2020,2019-2020,2020-2021,34338,33184,-1154,-3.36,2431.54,2479.67,48.13,1.98,14.12,13.38,-0.74,-5.24,,,,,,,,,Joint Staffing Expansion & Enrollment Contraction
@@ -63,3 +63,19 @@ Balanced_Panel_Regular,Full_Decade_2014_to_2024,2014-2015,2024-2025,317094,30443
 Balanced_Panel_Regular,Pre_Pandemic_2014_to_2019,2014-2015,2019-2020,317094,318806,1712,0.54,20498.34,21353.0,854.66,4.17,15.47,14.93,-0.54,-3.48,,,,,,,,,Staffing Expansion
 Balanced_Panel_Regular,Pandemic_Shock_2019_to_2020,2019-2020,2020-2021,318806,307440,-11366,-3.57,21353.0,21091.61,-261.39,-1.22,14.93,14.58,-0.35,-2.37,,,,,,,,,Enrollment Contraction
 Balanced_Panel_Regular,Post_Pandemic_2020_to_2024,2020-2021,2024-2025,307440,304436,-3004,-0.98,21091.61,21764.86,673.25,3.19,14.58,13.99,-0.59,-4.04,,,,,,,,,Staffing Expansion
+Balanced_Panel_City_Fixed,Full_Decade_2014_to_2024,2014-2015,2024-2025,116761,116566,-195,-0.17,7650.87,8419.68,768.81,10.05,15.26,13.84,-1.42,-9.28,,,,,,,,,Staffing Expansion
+Balanced_Panel_City_Fixed,Pre_Pandemic_2014_to_2019,2014-2015,2019-2020,116761,120211,3450,2.95,7650.87,8243.74,592.87,7.75,15.26,14.58,-0.68,-4.45,,,,,,,,,Staffing Expansion
+Balanced_Panel_City_Fixed,Pandemic_Shock_2019_to_2020,2019-2020,2020-2021,120211,115097,-5114,-4.25,8243.74,8032.35,-211.39,-2.56,14.58,14.33,-0.25,-1.73,,,,,,,,,Mixed
+Balanced_Panel_City_Fixed,Post_Pandemic_2020_to_2024,2020-2021,2024-2025,115097,116566,1469,1.28,8032.35,8419.68,387.33,4.82,14.33,13.84,-0.48,-3.38,,,,,,,,,Staffing Expansion
+Balanced_Panel_Suburb_Fixed,Full_Decade_2014_to_2024,2014-2015,2024-2025,132576,124354,-8222,-6.2,8360.63,8776.49,415.86,4.97,15.86,14.17,-1.69,-10.65,,,,,,,,,Joint Staffing Expansion & Enrollment Contraction
+Balanced_Panel_Suburb_Fixed,Pre_Pandemic_2014_to_2019,2014-2015,2019-2020,132576,131287,-1289,-0.97,8360.63,8625.05,264.42,3.16,15.86,15.22,-0.64,-4.01,,,,,,,,,Staffing Expansion
+Balanced_Panel_Suburb_Fixed,Pandemic_Shock_2019_to_2020,2019-2020,2020-2021,131287,126990,-4297,-3.27,8625.05,8518.85,-106.2,-1.23,15.22,14.91,-0.31,-2.07,,,,,,,,,Enrollment Contraction
+Balanced_Panel_Suburb_Fixed,Post_Pandemic_2020_to_2024,2020-2021,2024-2025,126990,124354,-2636,-2.08,8518.85,8776.49,257.64,3.02,14.91,14.17,-0.74,-4.95,,,,,,,,,Joint Staffing Expansion & Enrollment Contraction
+Balanced_Panel_Town_Fixed,Full_Decade_2014_to_2024,2014-2015,2024-2025,31068,26752,-4316,-13.89,2008.71,1912.39,-96.32,-4.8,15.47,13.99,-1.48,-9.56,,,,,,,,,Enrollment Contraction
+Balanced_Panel_Town_Fixed,Pre_Pandemic_2014_to_2019,2014-2015,2019-2020,31068,29173,-1895,-6.1,2008.71,1935.69,-73.02,-3.64,15.47,15.07,-0.4,-2.56,,,,,,,,,Mixed
+Balanced_Panel_Town_Fixed,Pandemic_Shock_2019_to_2020,2019-2020,2020-2021,29173,28423,-750,-2.57,1935.69,1980.19,44.5,2.3,15.07,14.35,-0.72,-4.76,,,,,,,,,Joint Staffing Expansion & Enrollment Contraction
+Balanced_Panel_Town_Fixed,Post_Pandemic_2020_to_2024,2020-2021,2024-2025,28423,26752,-1671,-5.88,1980.19,1912.39,-67.8,-3.42,14.35,13.99,-0.36,-2.54,,,,,,,,,Mixed
+Balanced_Panel_Rural_Fixed,Full_Decade_2014_to_2024,2014-2015,2024-2025,36689,36764,75,0.2,2478.13,2656.3,178.17,7.19,14.81,13.84,-0.96,-6.52,,,,,,,,,Staffing Expansion
+Balanced_Panel_Rural_Fixed,Pre_Pandemic_2014_to_2019,2014-2015,2019-2020,36689,38135,1446,3.94,2478.13,2548.52,70.39,2.84,14.81,14.96,0.16,1.07,,,,,,,,,Staffing Outpaced Enrollment Growth
+Balanced_Panel_Rural_Fixed,Pandemic_Shock_2019_to_2020,2019-2020,2020-2021,38135,36930,-1205,-3.16,2548.52,2560.22,11.7,0.46,14.96,14.42,-0.54,-3.6,,,,,,,,,Enrollment Contraction
+Balanced_Panel_Rural_Fixed,Post_Pandemic_2020_to_2024,2020-2021,2024-2025,36930,36764,-166,-0.45,2560.22,2656.3,96.08,3.75,14.42,13.84,-0.58,-4.05,,,,,,,,,Staffing Expansion
