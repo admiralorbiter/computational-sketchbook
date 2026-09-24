@@ -65,7 +65,7 @@ kc_education_capacity/
 
 ---
 
-## Current Status: Phase 3B Complete; Transitioning to Phase 3C
+## Current Status: Phase 3C Complete; Launching Phase 4A (Section Microdata & Allocation Analysis)
 
 - **Task 001 (Geographic Universe):** Complete. 691 schools across 9 MARC counties established, geocoded, and classified using NCES CCD/EDGE SY 2024–2025.
 - **Task 002 & 002B (Baseline Staffing & Capacity):** Complete. School- and LEA-level baseline capacity panels constructed (`kc_school_capacity_2024_2025.csv`, `kc_lea_capacity_2024_2025.csv`), with programmatic LEA geographic coverage metadata, `Operating Regular (NCES)` terminology, FRL missingness analysis, independent Urban Institute ingestion replication, and audited anomalies in `outputs/tables/task002_qa_report.md`.
@@ -86,12 +86,13 @@ kc_education_capacity/
     - Grade band divergence: Primary/Elementary schools expanded capacity significantly (within-school $\beta = -0.2152$), whereas High schools saw minimal change ($\beta = -0.0531$).
     - Missouri and Kansas exhibited near-identical starting levels (14.82 vs 14.88) and parallel decade slopes ($-0.1581$ vs $-0.1623$).
   - **Strict Methodological Guardrail:** Staffing ratios measure macro capacity and are never described as class sizes. Hypotheses H1a, H1b, H2, and H3 remain strictly unadjudicated.
-- **Phase 3C (Staffing Metric & Allocation Audit):**
+- **Phase 3C (Staffing Metric & Allocation Audit):** Complete.
   - **Step 1A (State Staffing Reconciliation Pilot):** Complete (`outputs/tables/task003c_state_replication_pilot_report.md`). Audited 8 benchmark districts across anchor years (2014–15, 2019–20, 2024–25); 17/24 comparisons within 2%, 23/24 within 5% (median difference 1.47%). Confirmed state administrative systems reproduce the macro teacher expansion and identified Kansas's structural separation of Classroom Teachers vs. Other Teachers (SPED/Reading).
-  - **Step 1B-KS (Kansas Role Decomposition):** Complete across all 19 Unified School Districts (`outputs/tables/task003c_kansas_role_decomposition_report.md`). Quantified the Allocation Wedge at **2.66 to 2.81 students per teacher** between classroom ratios (16.86 -> 16.26) and total instructional ratios (14.05 -> 13.60). Proved that in major Johnson County suburbs, both classroom teachers (+8.7%) and specialized teachers (+21.3%) expanded faster than enrollment (+3.2%), shifting the frontier to teacher prep loads and elective dispersion.
-  - **Workstream 2 (Parallel Specialized Personnel & Non-Teaching Staff):** Complete across all 77 fully regional LEAs (`outputs/tables/task003c_workstream2_regional_staff_need_report.md`). Tracked parallel series showing paraprofessionals (+11.85%), instructional coordinators (+49.74%), counselors (+18.92%), and administrators (+16.62%) expanded faster than enrollment (-0.73%).
-- **Phase 4 Preparation (Section-Level Micro Analysis):**
-  - **Phase 4A Data Request Specifications Drafted:** Complete (`research/phase4a_data_request_specifications.md`). Formulated deidentified course section data requests for MO DESE (Screen 20 Course Assignment) and KSDE (KCCMS/EDCS Course Assignment) to observe student-weighted class size distributions, core vs. elective allocations, and daily teacher roster loads.
+  - **Step 1B-KS (Kansas Role Decomposition across 19 Metropolitan USDs):** Complete (`outputs/tables/task003c_kansas_role_decomposition_report.md`). Quantified the **Specialist Denominator Wedge** at **2.66 to 2.81 students per teacher** between classroom ratios (16.86 -> 16.26) and total instructional ratios (14.05 -> 13.60). Proved that in major Johnson County suburbs, both classroom teachers (+8.7%) and specialized teachers (+21.3%) expanded faster than enrollment (+3.2%). At the 19-USD aggregate, 88.9% of net instructional additions were classroom teachers, demonstrating that specialist dilution alone does not explain why core classes remain large. The formal **Allocation Wedge** ($\text{Median Core Section Size} - \text{Reported PTR}$) is reserved for Phase 4A.
+  - **Workstream 2 (Parallel Specialized Personnel & Non-Teaching Staff):** Complete across all 77 fully regional LEAs (`outputs/tables/task003c_workstream2_regional_staff_need_report.md`). Tracked parallel series showing paraprofessionals (+11.85%), instructional coordinators (+49.74%), counselors (+18.92%), and administrators (+16.62%) expanded faster than enrollment (-0.73%), separating non-teaching organizational support from the teacher denominator.
+- **Phase 4A Launch (Course Section Microdata Requests):**
+  - **Data Request Specifications & Two-Tier Architecture:** Formulated in `research/phase4a_data_request_specifications.md`. Includes Tier 1 (roster-level surrogate IDs) and Tier 2 (agency-aggregated fallback), distinguishing teacher student-seat load from unique student roster load.
+  - **Agency Submission Packages:** Formally prepared in `requests/missouri/mo_dese_course_section_request_cover_letter.md` and `requests/kansas/ksde_course_section_request_cover_letter.md` for transmission to MO DESE (MOSIS Screen 20 + Screen 18) and KSDE (KEDX + EDCS).
 
 
 
