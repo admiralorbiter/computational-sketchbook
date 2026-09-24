@@ -262,7 +262,10 @@ Catalog these metrics in `outputs/tables/task003a1_reporting_coverage.csv` and r
      - Consequently, for elementary classrooms, public state administrative records provide planning guidelines and building PTRs, but do not provide section-by-section roster microdata. Physical yearbook photographic sampling (Track C) remains the only feasible independent physical verification method if elementary section headcounts must be observed directly.
 
 ### Decision 031: The Teacher Roster Load Paradigm and Jenkins Historical Integration (Tasks 005A, 005B, 005C)
-* **Status:** Adopted
+* **Status:** Adopted (SUPERSEDED IN PART BY DECISION 032)
+
+> [!WARNING] SUPERSEDED IN PART BY DECISION 032
+> The provisions of Decision 031 concerning direct NTPS teacher-level roster percentile distributions, the progressive collapsing protocol, and the attribution of reliability flags to NCES Standard 4-2 were formally retracted and superseded by Decision 032 (Task 005B.2). In accordance with scientific reproducibility standards, only verbatim published NCES reference table estimates are retained as Class 1 survey metrics, schedule contact loads are strictly classified as Class 3 derived benchmarks, 2015–16 state-level rows are deleted, and cross-era synthesis is framed as discrete benchmarks rather than a longitudinal trend.
 * **Date:** 2026-09-24
 * **Context:** Following the completion of Tasks 004A.1, 004B.1, and 004C.1, the project reoriented the core inquiry away from "class size" as a single missing variable and toward **Teacher Roster Load**—how school systems translate certified teacher FTE into daily student assignments. Review of historical federal desegregation litigation in Kansas City (*Jenkins v. Missouri*) revealed that forty years ago, the federal court developed the exact capacity measurement architecture we are building today. Tasks 005A, 005B, and 005C reconstruct this historical record, triangulate against federal survey data (NTPS/SASS), and synthesize a 40-year empirical resolution to the education capacity paradox.
 * **Decision:** Adopt the following conceptual framework, evidentiary standards, and empirical findings:
@@ -307,13 +310,13 @@ Catalog these metrics in `outputs/tables/task003a1_reporting_coverage.csv` and r
      - Eliminate pseudo-longitudinal claims (e.g. '40-Year Shift: -15%').
      - Classify historical complexity metrics (1985/1997 Section 504 and chronic absenteeism) strictly as: *'Not comparable / no equivalent measure located'*.
   3. **Establish the Public Data Transparency Boundary:**
-     - Explicitly document that public data can rigorously establish structural staffing (+8.9% FTE), specialist allocation (+2.7 ratio point wedge), school-course averages (24.5 students), bell-schedule regimes (5-of-7 vs. 6-of-7), Section 504 accommodations (+93.5% volume), and chronic absenteeism (24.7%).
-     - Acknowledge that public data generally cannot reveal the actual distribution of individual KC classroom rosters or the empirical percentage of teachers carrying >140 students, which requires restricted-use microdata or custom DataLab extraction.
+     - Explicitly document that public data can rigorously establish structural staffing (+8.86% teacher FTE despite flat enrollment of -0.73% across the 56-district metro panel), specialist allocation (+2.7 ratio point wedge), regional school-course means (high teens) alongside mid-20s averages at selected large comprehensive suburban campuses, bell-schedule regimes (5-of-7 vs. 6-of-7), Section 504 accommodations (+93.5% volume), and chronic absenteeism (24.69% plateau).
+     - Acknowledge that public data generally cannot reveal the actual distribution of individual KC classroom rosters or the empirical percentage of teachers carrying >140 students; public state releases do not expose this metric, which requires restricted-use microdata or custom DataLab extraction.
   4. **Adopt the Four-Layer Explanatory Architecture:**
-     - Layer 1: Institutional Staffing (Pupil/Teacher Ratio).
-     - Layer 2: Instructional Allocation (Classroom vs. specialized personnel, SPED, reading specialists, and curricular breadth).
-     - Layer 3: Teacher Assignment Load (Sections taught x students per section; governed by bell-schedule regimes and contractual planning).
-     - Layer 4: Effective Workload (Active roster headcount compounded by student complexity: Section 504, IEPs, chronic absence re-teaching, grading, parent communication, coverage, minus protected planning).
+     - Layer 1: Institutional Staffing (Pupil/Teacher Ratio; +8.86% teacher FTE, -0.73% enrollment across 56-district metro panel).
+     - Layer 2: Instructional Allocation (Classroom vs. specialized personnel, SPED, reading specialists; 88.9% of net instructional-teacher additions across the 19 Kansas USD panel were general classroom teachers).
+     - Layer 3: Teacher Assignment Load (Sections taught x students per section; governed by bell-schedule regimes and contractual planning, with Shawnee Mission demonstrating the FTE-to-planning absorption mechanism).
+     - Layer 4: Effective Workload (Available public evidence does not indicate a dramatic increase in secondary roster headcount; modern schedule-based loads fall in a similar or lower range compared to Jenkins, but student complexity has surged with 16.4% carrying legal accommodations and 24.7% chronically absent).
   5. **Freeze Public Data Collection:**
      - Cease further public data collection (Track B Sunshine/KORA parked; no internal PREP-KC district access; no elementary yearbook archaeology; no additional board PDF crawls).
      - Transition to final synthesis paper and project documentation based on the four-layer explanatory model.

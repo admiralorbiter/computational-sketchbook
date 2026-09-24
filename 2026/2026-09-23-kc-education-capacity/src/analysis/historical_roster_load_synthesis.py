@@ -362,7 +362,7 @@ Through state administrative reconciliations, CRDC course-level audits, schedule
      - **Section 504 Accommodations:** Expanded **+93.5% in student volume** regionally between 2018 and 2024 (reaching 5–10% of high school students in large suburban districts), requiring formal legal modifications, individual testing accommodations, and parent compliance reporting.
      - **Total Mandated Accommodations (IEP + 504):** Reached **16.41%** of total regional enrollment in 2024.
      - **Chronic Absenteeism:** Spiked to 35.1% during the pandemic shock and has settled into a persistent post-pandemic plateau at **24.69% (+11.8 percentage points above the 2018 baseline)**.
-   - **Qualitative Resolution:** *The number of students on a secondary teacher's roster may not have exploded. The number of individualized instructional problems, legal compliance accommodations, and asynchronous re-teaching burdens a teacher must solve for those students did.*
+   - **Qualitative Resolution:** *Available public evidence does not indicate a dramatic increase in secondary roster headcount; modern schedule-based loads fall in a similar or lower range compared to the Jenkins era. Rather, the number of individualized instructional problems, legal compliance accommodations, and asynchronous re-teaching burdens a teacher must solve for those students has escalated substantially.*
 
 ---
 
@@ -375,20 +375,20 @@ Rather than positing a single monolithic cause, the evidence converges on a **Fo
    ========================================================================================
    LAYER 1: Institutional Staffing (Pupil/Teacher Ratio)
    --> Ratio of total enrolled students to total teacher FTE (CCD / State Personnel Reports).
-   --> Explains macro hiring: Regional teacher FTE expanded +8.9% while enrollment grew +1.4%.
+   --> Explains macro hiring: Regional teacher FTE expanded +8.86% while enrollment was essentially flat (-0.73%, from 321,228 to 318,883 across the 56-district metro panel).
    ----------------------------------------------------------------------------------------
    LAYER 2: Instructional Allocation (Classroom vs. Specialized Personnel)
    --> Allocation of teacher FTE between regular general education classrooms and specialist
        roles (Special Education, Title I/ELL reading specialists, interventionists, coaches).
    --> Explains the specialist denominator wedge: ~2.7 ratio points lower than classroom reality.
-       89% of net Kansas additions were general classroom teachers, proving staffing growth was real.
+       88.9% of net instructional-teacher additions across the 19 Kansas USD panel were in KSDE's Classroom Teachers category, proving staffing growth was real.
    ----------------------------------------------------------------------------------------
    LAYER 3: Teacher Assignment Load (Sections Taught x Students per Section)
    --> The Jenkins "more revealing figure": Total student-class enrollments / teachers.
    --> Governed by bell-schedule regimes: phi_regime = P_student / P_teacher.
    --> Explains staffing absorption: Shifting from 6-of-7 (phi = 1.17) to 5-of-7 (phi = 1.40)
        structurally requires +20.0% teacher FTE just to hold section sizes constant!
-       Staffing additions bought protected teacher planning periods rather than shrinking sections.
+       In demonstrated cases like Shawnee Mission USD 512, staffing additions specifically funded the contractual transition to 5-of-7, buying protected planning time rather than reducing section size.
    ----------------------------------------------------------------------------------------
    LAYER 4: Effective Workload (Instructional Friction & Complexity Drag)
    --> Effective Workload = sum_j [ n_j * (1 + w_acc * AccShare + w_abs * AbsDrag) ] + Compliance - Prep
@@ -406,10 +406,10 @@ The table below synthesizes empirical capacity benchmarks across four distinct h
 
 | Metric / Dimension | Era 1: 1985 Jenkins Remedial Order (Class 1) | Era 2: 1997 Desegregation Review (Class 2) | Era 3: 2017–18 Pre-Pandemic Baseline (Class 1/3) | Era 4: 2023–24 Modern Reality (Class 1/3) | Operational Synthesis Across Eras |
 | :--- | :---: | :---: | :---: | :---: | :--- |
-| **Headline Building PTR** | 22.1:1 (Elem) / 24.8:1 (HS) | 8.6–18.4:1 | 14.5–16.2:1 | 13.5–15.6:1 | **Substantial Long-Term Decline** |
+| **Headline Building PTR** | 22.1:1 (Elem) / 24.8:1 (HS) | 8.6–18.4:1 | 14.5–16.2:1 | 13.5–15.6:1 | **Modern benchmarks generally lower** |
 | **Specialist Denominator Wedge** | +4.41 students (Ch. I) | +4.0 to +8.0 students | +2.7 ratio points | +2.7 ratio points | **Structural Institutional Feature** |
-| **Secondary Section Size** | 27.2 (Jr) / 28.7 (Sr) | 22–25 (Middle) | 24.0 (Suburban Core) | 24.5 (Suburban Core) | **Modest Decline / Flat (24–28 range)** |
-| **Secondary Daily Student Load** | 148.8–154.1 std/day | 135–140 std/day | 144.0 std/day (6-of-7) | 122.5 (5-of-7) / 147 (6-of-7) | **Flat to Moderately Declining** |
+| **Secondary Section Size** | 27.2 (Jr) / 28.7 (Sr) | 22–25 (Middle) | 24.0 (Suburban Core) | 24.5 (Suburban Core) | **Similar 20s range** |
+| **Secondary Daily Student Load** | 148.8–154.1 std/day | 135–140 std/day | 144.0 std/day (6-of-7) | 122.5 (5-of-7) / 147 (6-of-7) | **Same broad order of magnitude; modern modeled loads overlap or fall below historical KCMSD** |
 | **Section 504 Accommodations** | *Not comparable / no equiv.* | *Not comparable / no equiv.* | 2.87% | 4.79% (5–10% in HS) | **Surged +93.5% in Student Volume** |
 | **Total Mandated Accommodations** | *Not comparable / no equiv.* | *Not comparable / no equiv.* | 13.50% | 16.41% | **Accelerated Modern Expansion (+2.91 pp)** |
 | **Chronic Absenteeism Rate** | *Not comparable / no equiv.* | *Not comparable / no equiv.* | 12.90% | 24.69% | **Persistent Plateau (+11.8 pp above baseline)** |
@@ -437,9 +437,9 @@ Why did adding teacher FTE fail to collapse section sizes into the teens?
 
 ### C. The Public Data Transparency Boundary
 A critical conclusion of this research is establishing where public administrative data end and where restricted microdata begin:
-- **What Public Data Prove:** Public administrative records rigorously prove that structural staffing increased (+8.9%), specialist allocations create a +2.7 ratio point wedge, secondary course sections average 24.5 students, bell schedules govern section loads, Section 504 accommodations surged +93.5%, and chronic absenteeism plateaued at 24.7%.
+- **What Public Data Prove:** Public administrative records rigorously prove that structural staffing increased (+8.9%), specialist allocations create a +2.7 ratio point wedge, regional school-course means (high teens) coexist with mid-20s averages at selected large comprehensive suburban campuses, bell schedules govern section loads, Section 504 accommodations surged +93.5%, and chronic absenteeism plateaued at 24.7%.
 - **What Public Data Cannot Reveal:** Public data generally cannot reveal the actual distribution of individual KC classroom rosters or the empirical percentage of teachers carrying $>140$ students. While the NTPS questionnaire collects section-by-section counts, calculating $E[\\sum_j n_j]$ requires restricted-use microdata or custom DataLab extraction.
-- **The Transparency Gap:** This transparency gap itself is a key finding for educational governance. Policymakers debate building-level pupil/teacher ratios, but the actual administrative data systems published by states do not monitor the primary metric that governs secondary teacher workload: active roster load.
+- **The Transparency Gap:** This transparency gap itself is a key finding for educational governance. Policymakers debate building-level pupil/teacher ratios, but public state releases do not expose the primary metric that governs secondary teacher workload: active roster load.
 
 ---
 
@@ -448,7 +448,7 @@ A critical conclusion of this research is establishing where public administrati
 The four-layer workload framework resolves the Kansas City education capacity paradox:
 1. Adult instructional capacity is the root construct, but building-level class size is an incomplete measure of it.
 2. Teacher roster load and student complexity are closer to the lived operational constraint.
-3. Adding teachers expanded specialized support and bought contractual planning time, but left remaining classroom instructional time facing unprecedented compound complexity.
+3. Adding teachers expanded specialized support and bought contractual planning time in demonstrated cases like SMSD, while classroom instructional hours faced unprecedented compound complexity.
 """
     
     with open("outputs/tables/task005c_historical_roster_load_synthesis_report.md", "w", encoding="utf-8") as f:

@@ -472,7 +472,7 @@ The following table presents all verified quantities published directly by NCES 
 > - **Missouri:** 23.1 (2012) $\\longrightarrow$ 22.5 (2018) $\\longrightarrow$ 19.2 (2021)
 > - **Kansas:** 20.5 (2012) $\\longrightarrow$ 19.8 (2018) $\\longrightarrow$ 17.4 (2021)
 > 
-> *Statewide survey estimates may mask metro/suburban differences.* In particular, rural and non-metropolitan districts encompass many small secondary sections that pull down statewide averages relative to large suburban comprehensive high schools.
+> *Statewide survey estimates may mask metro/suburban differences.*
 
 ---
 
@@ -527,9 +527,9 @@ LEVEL 4: Teacher Roster Load     --> Sum of sections for named/individual teache
 ```
 
 ### The Analytical Implication:
-1. Public data can rigorously establish structural staffing (+8.9% FTE), specialist allocations (+2.7 ratio point wedge), school-course averages (24.5 students), bell-schedule regimes (5-of-7 vs. 6-of-7), accommodations (+93.5% Section 504), and chronic absenteeism (24.69%).
+1. Public data can rigorously establish structural staffing (+8.9% teacher FTE despite flat enrollment of -0.73%), specialist allocations (+2.7 ratio point wedge), regional school-course means (high teens) alongside mid-20s averages at selected large comprehensive suburban campuses, bell-schedule regimes (5-of-7 vs. 6-of-7), accommodations (+93.5% Section 504), and chronic absenteeism (24.69%).
 2. Public data **cannot** reveal the empirical distribution of individual teacher active roster loads or the precise percentage of teachers carrying $>140$ students.
-3. Therefore, claiming that modern teachers empirically carry fewer students than Jenkins-era teachers would require restricted-use microdata or custom DataLab extraction. What the public evidence *does* demonstrate is that **headcount loads are structurally bounded in a similar or lower range (87–147 students) compared to the Jenkins era (149–154 students)**, while student complexity has surged dramatically.
+3. Therefore, claiming that modern teachers empirically carry fewer students than Jenkins-era teachers would require restricted-use microdata or custom DataLab extraction. What the public evidence *does* demonstrate is that **available public evidence does not indicate a dramatic increase in secondary roster headcount; modern schedule-based loads fall in a similar or lower range (87–147 students) compared to the Jenkins era (149–154 students)**, while student complexity has surged dramatically.
 
 ---
 
