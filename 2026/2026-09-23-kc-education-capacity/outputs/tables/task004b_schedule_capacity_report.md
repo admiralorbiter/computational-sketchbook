@@ -28,37 +28,37 @@ Where $P_{\text{student}}$ is the number of periods students attend daily/per cy
 
 ---
 
-## 2. Shawnee Mission USD 512 Quasi-Case Study: The Staffing vs Class Size Divergence
+## 2. Shawnee Mission USD 512 Mechanism Case Study: The Staffing vs Class Size Divergence
 
-Shawnee Mission Public Schools provides an explicit, real-world demonstration of how a school district can expand its teacher rolls substantially without reducing student headcounts in core classrooms.
+Shawnee Mission Public Schools provides an explicit, real-world demonstration of how a school district can expand its secondary teacher rolls substantially without reducing student headcounts in core classrooms.
 
 ### The Policy Mechanism:
 - **Pre-2020 Baseline:** Secondary teachers instructed 6 of 7 periods daily ($P_{\text{teacher}} = 6, P_{\text{student}} = 7, \phi = 7/6 \approx 1.167$).
-- **January 2020 Agreement:** Following protracted collective bargaining, the Board approved a plan to phase in a **5-of-7 teaching load** ($P_{\text{teacher}} = 5, \phi = 7/5 = 1.400$), providing teachers an extra collaborative/PLC period.
+- **January 2020 Commitment & Phased Implementation:** Following protracted collective bargaining, the Board approved an agreement committing to phase in a **5-of-7 teaching load** ($P_{\text{teacher}} = 5, \phi = 7/5 = 1.400$), beginning in 2021–22. By 2022, an MOU formalized 5-of-7 as the contractual standard (with extra pay for taking a 6th section), and a 2021 bond issue freed operational funds to add up to 78.5 secondary FTE specifically dedicated to collaboration and planning time.
 - **The Scheduling Arithmetic:**
-  $$\frac{\phi_{\text{post}}}{\phi_{\text{pre}}} = \frac{1.400}{1.167} = 1.200 \implies +20.0\% \text{ Teacher FTE Required to Hold Class Size Constant!}$$
+  $$\frac{\phi_{\text{post}}}{\phi_{\text{pre}}} = \frac{1.400}{1.167} = 1.200 \implies +20.0\% \text{ Teacher FTE Structurally Required to Hold Class Size Constant!}$$
 
 ### Empirical Longitudinal Trajectory (From `outputs/tables/task004b_schedule_case_study_smsd.csv`):
 
 | School Year | Policy Era | Campuses | Enrollment | High School Teacher FTE | High School PTR | CRDC Core Math Class Size |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| 2014-2015 | Pre-2020 (6 of 7 Load; phi ≈ 1.167) | 4 | 6,394 | 391.0 | **16.4:1** | — |
-| 2015-2016 | Pre-2020 (6 of 7 Load; phi ≈ 1.167) | 4 | 6,633 | 380.1 | **17.4:1** | **15.8** |
-| 2016-2017 | Pre-2020 (6 of 7 Load; phi ≈ 1.167) | 4 | 6,525 | 375.8 | **17.4:1** | — |
-| 2017-2018 | Pre-2020 (6 of 7 Load; phi ≈ 1.167) | 5 | 8,291 | 485.8 | **17.1:1** | **24.0** |
-| 2018-2019 | Pre-2020 (6 of 7 Load; phi ≈ 1.167) | 5 | 8,222 | 471.4 | **17.4:1** | — |
-| 2019-2020 | Pre-2020 (6 of 7 Load; phi ≈ 1.167) | 5 | 8,177 | 471.2 | **17.4:1** | — |
-| 2020-2021 | Post-2020 (5 of 7 Phased; phi = 1.400) | 5 | 8,147 | 486.4 | **16.8:1** | **23.9** |
-| 2021-2022 | Post-2020 (5 of 7 Phased; phi = 1.400) | 5 | 8,005 | 498.9 | **16.1:1** | **23.0** |
-| 2022-2023 | Post-2020 (5 of 7 Phased; phi = 1.400) | 5 | 8,117 | 520.2 | **15.6:1** | — |
-| 2023-2024 | Post-2020 (5 of 7 Phased; phi = 1.400) | 5 | 8,007 | 494.0 | **16.2:1** | **25.0** |
-| 2024-2025 | Post-2020 (5 of 7 Phased; phi = 1.400) | 5 | 8,011 | 515.0 | **15.6:1** | — |
+| 2014-2015 | Pre-2020 Baseline (6 of 7 Load; phi ≈ 1.167) | 4 | 6,394 | 391.0 | **16.4:1** | — |
+| 2015-2016 | Pre-2020 Baseline (6 of 7 Load; phi ≈ 1.167) | 4 | 6,633 | 380.1 | **17.4:1** | **15.8** |
+| 2016-2017 | Pre-2020 Baseline (6 of 7 Load; phi ≈ 1.167) | 4 | 6,525 | 375.8 | **17.4:1** | — |
+| 2017-2018 | Pre-2020 Baseline (6 of 7 Load; phi ≈ 1.167) | 5 | 8,291 | 485.8 | **17.1:1** | **24.0** |
+| 2018-2019 | Pre-2020 Baseline (6 of 7 Load; phi ≈ 1.167) | 5 | 8,222 | 471.4 | **17.4:1** | — |
+| 2019-2020 | Pre-2020 Baseline (6 of 7 Load; phi ≈ 1.167) | 5 | 8,177 | 471.2 | **17.4:1** | — |
+| 2020-2021 | 2020–21 Transition / Pre-Implementation | 5 | 8,147 | 486.4 | **16.8:1** | **23.9** |
+| 2021-2022 | Post-2021 Implementation (5 of 7 Phased; phi = 1.400) | 5 | 8,005 | 498.9 | **16.1:1** | **23.0** |
+| 2022-2023 | Post-2021 Implementation (5 of 7 Phased; phi = 1.400) | 5 | 8,117 | 520.2 | **15.6:1** | — |
+| 2023-2024 | Post-2021 Implementation (5 of 7 Phased; phi = 1.400) | 5 | 8,007 | 494.0 | **16.2:1** | **25.0** |
+| 2024-2025 | Post-2021 Implementation (5 of 7 Phased; phi = 1.400) | 5 | 8,011 | 515.0 | **15.6:1** | — |
 
 
 ### Analytical Takeaway:
 Between 2018–19 and 2022–23, Shawnee Mission high school enrollment was virtually flat (8,222 -> 8,117 students), while high school classroom teacher staffing expanded from **471.4 FTE to 520.2 FTE (+48.8 FTE, +10.4% expansion)**. Reported high school pupil/teacher ratios declined from **17.4:1 to 15.6:1**.
 
-Yet CRDC core math class sizes did **not** decrease; they remained steady at **23.0 to 25.0 students**! The added teacher FTE was entirely absorbed by restructuring secondary schedules to provide protected planning and PLC periods, reducing the number of sections each individual teacher instructed rather than shrinking the number of students sitting in each section.
+Yet CRDC core math class sizes did **not** decrease; they remained steady at **23.0 to 25.0 students**! The staffing expansion coincided with and was explicitly intended in substantial part to fund reduced teaching loads and additional planning/collaboration time, reducing the number of sections each individual teacher instructed rather than shrinking the number of students sitting in each section.
 
 ---
 

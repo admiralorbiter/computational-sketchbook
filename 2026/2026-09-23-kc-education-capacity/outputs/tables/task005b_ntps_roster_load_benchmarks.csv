@@ -1,0 +1,97 @@
+geography,subject,schedule_regime,sections_taught_cycle,daily_contact_sections,estimated_section_mean,section_sd,active_roster_load,daily_contact_students,prob_active_roster_gt_125,prob_active_roster_gt_140,prob_active_roster_gt_150,subject_notes
+US National Benchmark,Mathematics,5-of-7 Contractual (Modern SMSD / KCPS),5,5,23.1,5.4,115.5,115.5,21.6,2.1,0.2,Core graduation requirement; balanced tracks
+US National Benchmark,Mathematics,6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,23.1,5.4,138.6,138.6,84.8,45.8,19.4,Core graduation requirement; balanced tracks
+US National Benchmark,Mathematics,Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,23.1,5.4,138.6,69.3,84.8,45.8,19.4,Core graduation requirement; balanced tracks
+US National Benchmark,Science (Bio/Chem/Phys),5-of-7 Contractual (Modern SMSD / KCPS),5,5,23.5,5.4,117.5,117.5,26.7,3.1,0.4,Lab safety caps typically 24-28
+US National Benchmark,Science (Bio/Chem/Phys),6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,23.5,5.4,141.0,141.0,88.7,53.0,24.8,Lab safety caps typically 24-28
+US National Benchmark,Science (Bio/Chem/Phys),Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,23.5,5.4,141.0,70.5,88.7,53.0,24.8,Lab safety caps typically 24-28
+US National Benchmark,Social Studies,5-of-7 Contractual (Modern SMSD / KCPS),5,5,24.8,5.4,124.0,124.0,46.7,9.3,1.6,Typically largest academic core sections
+US National Benchmark,Social Studies,6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,24.8,5.4,148.8,148.8,96.4,74.7,46.4,Typically largest academic core sections
+US National Benchmark,Social Studies,Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,24.8,5.4,148.8,74.4,96.4,74.7,46.4,Typically largest academic core sections
+US National Benchmark,English / Language Arts,5-of-7 Contractual (Modern SMSD / KCPS),5,5,22.5,5.4,112.5,112.5,15.0,1.1,0.1,Writing-intensive grading burden
+US National Benchmark,English / Language Arts,6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,22.5,5.4,135.0,135.0,77.5,35.3,12.8,Writing-intensive grading burden
+US National Benchmark,English / Language Arts,Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,22.5,5.4,135.0,67.5,77.5,35.3,12.8,Writing-intensive grading burden
+US National Benchmark,Foreign Languages,5-of-7 Contractual (Modern SMSD / KCPS),5,5,21.0,5.4,105.0,105.0,4.9,0.2,0.0,Standard elective academic tracks
+US National Benchmark,Foreign Languages,6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,21.0,5.4,126.0,126.0,53.0,14.5,3.5,Standard elective academic tracks
+US National Benchmark,Foreign Languages,Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,21.0,5.4,126.0,63.0,53.0,14.5,3.5,Standard elective academic tracks
+US National Benchmark,Fine Arts / Music,5-of-7 Contractual (Modern SMSD / KCPS),5,5,26.5,5.4,132.5,132.5,73.3,26.7,7.4,Includes large performance ensembles
+US National Benchmark,Fine Arts / Music,6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,26.5,5.4,159.0,159.0,99.5,92.5,75.2,Includes large performance ensembles
+US National Benchmark,Fine Arts / Music,Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,26.5,5.4,159.0,79.5,99.5,92.5,75.2,Includes large performance ensembles
+US National Benchmark,Career & Tech Ed (CTE),5-of-7 Contractual (Modern SMSD / KCPS),5,5,17.4,5.4,87.0,87.0,0.1,0.0,0.0,"Shop, culinary, lab safety caps"
+US National Benchmark,Career & Tech Ed (CTE),6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,17.4,5.4,104.4,104.4,6.0,0.4,0.0,"Shop, culinary, lab safety caps"
+US National Benchmark,Career & Tech Ed (CTE),Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,17.4,5.4,104.4,52.2,6.0,0.4,0.0,"Shop, culinary, lab safety caps"
+US National Benchmark,Special Education (Resource),5-of-7 Contractual (Modern SMSD / KCPS),5,5,9.5,5.4,47.5,47.5,0.0,0.0,0.0,Pull-out departmentalized sections
+US National Benchmark,Special Education (Resource),6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,9.5,5.4,57.0,57.0,0.0,0.0,0.0,Pull-out departmentalized sections
+US National Benchmark,Special Education (Resource),Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,9.5,5.4,57.0,28.5,0.0,0.0,0.0,Pull-out departmentalized sections
+Missouri State Average,Mathematics,5-of-7 Contractual (Modern SMSD / KCPS),5,5,21.1,5.1,105.5,105.5,4.4,0.1,0.0,Core graduation requirement; balanced tracks
+Missouri State Average,Mathematics,6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,21.1,5.1,126.6,126.6,55.1,14.2,3.1,Core graduation requirement; balanced tracks
+Missouri State Average,Mathematics,Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,21.1,5.1,126.6,63.3,55.1,14.2,3.1,Core graduation requirement; balanced tracks
+Missouri State Average,Science (Bio/Chem/Phys),5-of-7 Contractual (Modern SMSD / KCPS),5,5,21.5,5.1,107.5,107.5,6.2,0.2,0.0,Lab safety caps typically 24-28
+Missouri State Average,Science (Bio/Chem/Phys),6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,21.5,5.1,129.0,129.0,62.6,18.9,4.6,Lab safety caps typically 24-28
+Missouri State Average,Science (Bio/Chem/Phys),Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,21.5,5.1,129.0,64.5,62.6,18.9,4.6,Lab safety caps typically 24-28
+Missouri State Average,Social Studies,5-of-7 Contractual (Modern SMSD / KCPS),5,5,22.7,5.1,113.5,113.5,15.7,1.0,0.1,Typically largest academic core sections
+Missouri State Average,Social Studies,6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,22.7,5.1,136.2,136.2,81.5,38.0,13.5,Typically largest academic core sections
+Missouri State Average,Social Studies,Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,22.7,5.1,136.2,68.1,81.5,38.0,13.5,Typically largest academic core sections
+Missouri State Average,English / Language Arts,5-of-7 Contractual (Modern SMSD / KCPS),5,5,20.5,5.1,102.5,102.5,2.4,0.1,0.0,Writing-intensive grading burden
+Missouri State Average,English / Language Arts,6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,20.5,5.1,123.0,123.0,43.6,8.7,1.5,Writing-intensive grading burden
+Missouri State Average,English / Language Arts,Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,20.5,5.1,123.0,61.5,43.6,8.7,1.5,Writing-intensive grading burden
+Missouri State Average,Foreign Languages,5-of-7 Contractual (Modern SMSD / KCPS),5,5,19.2,5.1,96.0,96.0,0.5,0.0,0.0,Standard elective academic tracks
+Missouri State Average,Foreign Languages,6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,19.2,5.1,115.2,115.2,21.6,2.4,0.3,Standard elective academic tracks
+Missouri State Average,Foreign Languages,Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,19.2,5.1,115.2,57.6,21.6,2.4,0.3,Standard elective academic tracks
+Missouri State Average,Fine Arts / Music,5-of-7 Contractual (Modern SMSD / KCPS),5,5,24.2,5.1,121.0,121.0,36.3,4.8,0.5,Includes large performance ensembles
+Missouri State Average,Fine Arts / Music,6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,24.2,5.1,145.2,145.2,94.7,66.1,35.0,Includes large performance ensembles
+Missouri State Average,Fine Arts / Music,Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,24.2,5.1,145.2,72.6,94.7,66.1,35.0,Includes large performance ensembles
+Missouri State Average,Career & Tech Ed (CTE),5-of-7 Contractual (Modern SMSD / KCPS),5,5,15.9,5.1,79.5,79.5,0.0,0.0,0.0,"Shop, culinary, lab safety caps"
+Missouri State Average,Career & Tech Ed (CTE),6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,15.9,5.1,95.4,95.4,0.9,0.0,0.0,"Shop, culinary, lab safety caps"
+Missouri State Average,Career & Tech Ed (CTE),Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,15.9,5.1,95.4,47.7,0.9,0.0,0.0,"Shop, culinary, lab safety caps"
+Missouri State Average,Special Education (Resource),5-of-7 Contractual (Modern SMSD / KCPS),5,5,8.6,5.1,43.0,43.0,0.0,0.0,0.0,Pull-out departmentalized sections
+Missouri State Average,Special Education (Resource),6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,8.6,5.1,51.6,51.6,0.0,0.0,0.0,Pull-out departmentalized sections
+Missouri State Average,Special Education (Resource),Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,8.6,5.1,51.6,25.8,0.0,0.0,0.0,Pull-out departmentalized sections
+Kansas State Average,Mathematics,5-of-7 Contractual (Modern SMSD / KCPS),5,5,19.1,4.8,95.5,95.5,0.3,0.0,0.0,Core graduation requirement; balanced tracks
+Kansas State Average,Mathematics,6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,19.1,4.8,114.6,114.6,18.8,1.5,0.1,Core graduation requirement; balanced tracks
+Kansas State Average,Mathematics,Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,19.1,4.8,114.6,57.3,18.8,1.5,0.1,Core graduation requirement; balanced tracks
+Kansas State Average,Science (Bio/Chem/Phys),5-of-7 Contractual (Modern SMSD / KCPS),5,5,19.5,4.8,97.5,97.5,0.5,0.0,0.0,Lab safety caps typically 24-28
+Kansas State Average,Science (Bio/Chem/Phys),6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,19.5,4.8,117.0,117.0,24.8,2.5,0.3,Lab safety caps typically 24-28
+Kansas State Average,Science (Bio/Chem/Phys),Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,19.5,4.8,117.0,58.5,24.8,2.5,0.3,Lab safety caps typically 24-28
+Kansas State Average,Social Studies,5-of-7 Contractual (Modern SMSD / KCPS),5,5,20.5,4.8,102.5,102.5,1.8,0.0,0.0,Typically largest academic core sections
+Kansas State Average,Social Studies,6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,20.5,4.8,123.0,123.0,43.2,7.4,1.1,Typically largest academic core sections
+Kansas State Average,Social Studies,Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,20.5,4.8,123.0,61.5,43.2,7.4,1.1,Typically largest academic core sections
+Kansas State Average,English / Language Arts,5-of-7 Contractual (Modern SMSD / KCPS),5,5,18.6,4.8,93.0,93.0,0.1,0.0,0.0,Writing-intensive grading burden
+Kansas State Average,English / Language Arts,6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,18.6,4.8,111.6,111.6,12.7,0.8,0.1,Writing-intensive grading burden
+Kansas State Average,English / Language Arts,Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,18.6,4.8,111.6,55.8,12.7,0.8,0.1,Writing-intensive grading burden
+Kansas State Average,Foreign Languages,5-of-7 Contractual (Modern SMSD / KCPS),5,5,17.4,4.8,87.0,87.0,0.0,0.0,0.0,Standard elective academic tracks
+Kansas State Average,Foreign Languages,6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,17.4,4.8,104.4,104.4,4.0,0.1,0.0,Standard elective academic tracks
+Kansas State Average,Foreign Languages,Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,17.4,4.8,104.4,52.2,4.0,0.1,0.0,Standard elective academic tracks
+Kansas State Average,Fine Arts / Music,5-of-7 Contractual (Modern SMSD / KCPS),5,5,21.9,4.8,109.5,109.5,7.4,0.2,0.0,Includes large performance ensembles
+Kansas State Average,Fine Arts / Music,6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,21.9,4.8,131.4,131.4,70.7,23.2,5.7,Includes large performance ensembles
+Kansas State Average,Fine Arts / Music,Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,21.9,4.8,131.4,65.7,70.7,23.2,5.7,Includes large performance ensembles
+Kansas State Average,Career & Tech Ed (CTE),5-of-7 Contractual (Modern SMSD / KCPS),5,5,14.4,4.8,72.0,72.0,0.0,0.0,0.0,"Shop, culinary, lab safety caps"
+Kansas State Average,Career & Tech Ed (CTE),6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,14.4,4.8,86.4,86.4,0.1,0.0,0.0,"Shop, culinary, lab safety caps"
+Kansas State Average,Career & Tech Ed (CTE),Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,14.4,4.8,86.4,43.2,0.1,0.0,0.0,"Shop, culinary, lab safety caps"
+Kansas State Average,Special Education (Resource),5-of-7 Contractual (Modern SMSD / KCPS),5,5,7.8,4.8,39.0,39.0,0.0,0.0,0.0,Pull-out departmentalized sections
+Kansas State Average,Special Education (Resource),6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,7.8,4.8,46.8,46.8,0.0,0.0,0.0,Pull-out departmentalized sections
+Kansas State Average,Special Education (Resource),Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,7.8,4.8,46.8,23.4,0.0,0.0,0.0,Pull-out departmentalized sections
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Mathematics,5-of-7 Contractual (Modern SMSD / KCPS),5,5,24.5,5.2,122.5,122.5,41.5,6.6,0.9,Core graduation requirement; balanced tracks
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Mathematics,6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,24.5,5.2,147.0,147.0,95.8,70.9,40.7,Core graduation requirement; balanced tracks
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Mathematics,Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,24.5,5.2,147.0,73.5,95.8,70.9,40.7,Core graduation requirement; balanced tracks
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Science (Bio/Chem/Phys),5-of-7 Contractual (Modern SMSD / KCPS),5,5,25.0,5.2,125.0,125.0,50.0,9.9,1.6,Lab safety caps typically 24-28
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Science (Bio/Chem/Phys),6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,25.0,5.2,150.0,150.0,97.5,78.4,50.0,Lab safety caps typically 24-28
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Science (Bio/Chem/Phys),Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,25.0,5.2,150.0,75.0,97.5,78.4,50.0,Lab safety caps typically 24-28
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Social Studies,5-of-7 Contractual (Modern SMSD / KCPS),5,5,26.3,5.2,131.5,131.5,71.2,23.2,5.6,Typically largest academic core sections
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Social Studies,6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,26.3,5.2,157.8,157.8,99.5,91.9,73.0,Typically largest academic core sections
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Social Studies,Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,26.3,5.2,157.8,78.9,99.5,91.9,73.0,Typically largest academic core sections
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),English / Language Arts,5-of-7 Contractual (Modern SMSD / KCPS),5,5,23.9,5.2,119.5,119.5,31.8,3.9,0.4,Writing-intensive grading burden
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),English / Language Arts,6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,23.9,5.2,143.4,143.4,92.6,60.5,30.2,Writing-intensive grading burden
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),English / Language Arts,Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,23.9,5.2,143.4,71.7,92.6,60.5,30.2,Writing-intensive grading burden
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Foreign Languages,5-of-7 Contractual (Modern SMSD / KCPS),5,5,22.3,5.2,111.5,111.5,12.3,0.7,0.0,Standard elective academic tracks
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Foreign Languages,6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,22.3,5.2,133.8,133.8,75.5,31.3,10.2,Standard elective academic tracks
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Foreign Languages,Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,22.3,5.2,133.8,66.9,75.5,31.3,10.2,Standard elective academic tracks
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Fine Arts / Music,5-of-7 Contractual (Modern SMSD / KCPS),5,5,28.1,5.2,140.5,140.5,90.9,51.7,20.7,Includes large performance ensembles
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Fine Arts / Music,6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,28.1,5.2,168.6,168.6,100.0,98.8,92.8,Includes large performance ensembles
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Fine Arts / Music,Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,28.1,5.2,168.6,84.3,100.0,98.8,92.8,Includes large performance ensembles
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Career & Tech Ed (CTE),5-of-7 Contractual (Modern SMSD / KCPS),5,5,18.5,5.2,92.5,92.5,0.3,0.0,0.0,"Shop, culinary, lab safety caps"
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Career & Tech Ed (CTE),6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,18.5,5.2,111.0,111.0,13.6,1.1,0.1,"Shop, culinary, lab safety caps"
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Career & Tech Ed (CTE),Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,18.5,5.2,111.0,55.5,13.6,1.1,0.1,"Shop, culinary, lab safety caps"
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Special Education (Resource),5-of-7 Contractual (Modern SMSD / KCPS),5,5,10.0,5.2,50.0,50.0,0.0,0.0,0.0,Pull-out departmentalized sections
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Special Education (Resource),6-of-7 Traditional (Pre-2020 SMSD / Basehor / Richmond),6,6,10.0,5.2,60.0,60.0,0.0,0.0,0.0,Pull-out departmentalized sections
+KC Suburban Comprehensive HS (SMSD/Olathe/NKC),Special Education (Resource),Alternating 8-Block (NKC / Lee's Summit / Olathe),6,3,10.0,5.2,60.0,30.0,0.0,0.0,0.0,Pull-out departmentalized sections

@@ -261,6 +261,28 @@ Catalog these metrics in `outputs/tables/task003a1_reporting_coverage.csv` and r
      - Review of K.S.A. § 72-3123 open-enrollment capacity filings (SMSD Board Policy JBCD, Blue Valley, Olathe) confirms that districts publish capacity planning targets (typically 18–22:1 in K–2, 22–26:1 in 3–5), but not empirical section roster distributions.
      - Consequently, for elementary classrooms, public state administrative records provide planning guidelines and building PTRs, but do not provide section-by-section roster microdata. Physical yearbook photographic sampling (Track C) remains the only feasible independent physical verification method if elementary section headcounts must be observed directly.
 
+### Decision 031: The Teacher Roster Load Paradigm and Jenkins Historical Integration (Tasks 005A, 005B, 005C)
+* **Status:** Adopted
+* **Date:** 2026-09-24
+* **Context:** Following the completion of Tasks 004A.1, 004B.1, and 004C.1, the project reoriented the core inquiry away from "class size" as a single missing variable and toward **Teacher Roster Load**—how school systems translate certified teacher FTE into daily student assignments. Review of historical federal desegregation litigation in Kansas City (*Jenkins v. Missouri*) revealed that forty years ago, the federal court developed the exact capacity measurement architecture we are building today. Tasks 005A, 005B, and 005C reconstruct this historical record, triangulate against federal survey data (NTPS/SASS), and synthesize a 40-year empirical resolution to the education capacity paradox.
+* **Decision:** Adopt the following conceptual framework, evidentiary standards, and empirical findings:
+  1. **The Teacher Roster Load Metric:** Define the primary operational metric of secondary teacher instructional capacity as total student-seat assignments across the instructional cycle:
+     $$\text{Teacher Active Roster Load} = \sum_{j=1}^K n_j \approx \frac{\text{student-class enrollments}}{\text{full-time teachers}}$$
+     Distinguish **Active Roster Load** (unique students the teacher grades, accommodates, and advises across the cycle) from **Daily Contact Load** (students sitting in class on a given day). In 5-of-7 and 6-of-7 regimes, active roster equals daily contact; in alternating 8-block regimes, active roster (147 students) is double daily contact (73.5 students).
+  2. **Integration of the Jenkins v. Missouri Judicial Blueprint:**
+     - **1985 Remedial Order (639 F. Supp. 19):** Classified as `formal_remedial_finding` based on audited master schedule exhibits (K-56, K-58, K-59). The court demonstrated that headline PTR (22:1) obscured ordinary loads (26.6:1) after separating Chapter I specialists (+4.4-student wedge); counted secondary student-class enrollments (37,457 Jr High, 52,362 Sr High) and sections (1,376 Jr High, 1,824 Sr High); established that daily student load (149–154 students/day) was the operative constraint; and established a binding remedial ceiling of $\le 125$ students per secondary teacher per day.
+     - **Appellate Affirmance of Maximums (890 F.2d 65 (8th Cir. 1989)):** The Eighth Circuit explicitly upheld Judge Clark's use of **maximum class sizes rather than averages** to determine teacher staffing requirements, affirming the legal and pedagogical primacy of the tail (Hypothesis H3).
+     - **1997 Unitary Status Decision (959 F. Supp. 1151; aff'd 122 F.3d 588):** Classified as `court_observation_not_finding`. The court observed that low building staffing ratios (8.6–18.4:1) were depressed by non-classroom specialists, while ordinary classrooms remained 22–28 students and middle school teachers routinely taught 6 classes with 135–140 students/day.
+     - **The Planning-Time Capacity Mechanism:** In 1985, Judge Clark ordered 54 specialists + 31 teachers + 31 aides explicitly to buy 180 minutes of weekly elementary planning time rather than shrinking homeroom size.
+  3. **NTPS Triangulation & Tail Modeling (Task 005B):**
+     - NCES NTPS 2020–21 data confirms secondary departmentalized class sizes average **21.0 (US)**, **19.2 (MO, rank #33)**, and **17.4 (KS, rank #40)**. The low state averages reflect the large rural tail of small secondary schools (8–14 students/section), while metropolitan comprehensive high schools operate at **23.5–26.5 students**.
+     - Longitudinal stability (24.2 in 2011–12; 26.0 in 2015–16; 23.3 in 2017–18; 21.0 in 2020–21) confirms that secondary class sizes have not secularly ballooned.
+     - Distributional tail modeling proves that shifting from 6-of-7 to 5-of-7 (with class size 24.5) reduces expected active roster from 147.0 to 122.5 students/day (achieving the 1985 Jenkins $\le 125$ goal), cuts severe overload ($R > 140$) by >90% (from 70.9% to 6.6%), and virtually eliminates catastrophic overload ($R > 150$, from 40.7% to 0.9%).
+  4. **The 40-Year Capacity Divergence Synthesis (Task 005C):**
+     - Secondary teacher headcount load has remained flat to moderately declining across four decades (149–154 in 1985 $\to$ 135–140 in 1997 $\to$ 122.5–147.0 today).
+     - Operational student complexity has exploded: Section 504 accommodation plans surged +93.5% (reaching 5–10% of high school students), total accommodations reached 16.41%, and chronic absenteeism settled at 24.69% (+11.8 pp above pre-pandemic baseline).
+     - **Paradox Resolution:** Regional teacher expansion (+8.9%) and falling pupil/teacher ratios did not shrink classroom sections because the staffing capacity was structurally absorbed by schedule enhancements (phasing into 5-of-7 or block planning periods). Meanwhile, teacher workload distress is driven by compound complexity per student seat rather than raw student headcount growth.
+
 
 
 

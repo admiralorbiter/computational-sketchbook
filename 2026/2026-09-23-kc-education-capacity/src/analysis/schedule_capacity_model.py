@@ -272,7 +272,12 @@ def run_schedule_model():
         w_ptr = tot_enr / tot_fte if tot_fte > 0 else np.nan
         
         # Policy era
-        era = "Pre-2020 (6 of 7 Load; phi ≈ 1.167)" if int(sy[:4]) < 2020 else "Post-2020 (5 of 7 Phased; phi = 1.400)"
+        if int(sy[:4]) < 2020:
+            era = "Pre-2020 Baseline (6 of 7 Load; phi ≈ 1.167)"
+        elif sy == "2020-2021":
+            era = "2020–21 Transition / Pre-Implementation"
+        else:
+            era = "Post-2021 Implementation (5 of 7 Phased; phi = 1.400)"
         
         smsd_staff_rows.append({
             "school_year": sy,
@@ -420,13 +425,13 @@ def run_schedule_model():
         f.write("   - We explicitly **retract the assertion that schedule arithmetic explains 80–95% of the wedge as a universal regional rule**.\n")
         f.write("   - On campuses with documented 5-of-7 teaching loads, schedule mechanics account for a large portion of the gap between building PTR and observed core sections; however, regionally, the relative contributions of teacher role definitions (specialist vs classroom), instructional scheduling, and curriculum tracking remain partially unseparated pending section microdata.\n\n")
         f.write("---\n\n")
-        f.write("## 2. Shawnee Mission USD 512 Quasi-Case Study: The Staffing vs Class Size Divergence\n\n")
-        f.write("Shawnee Mission Public Schools provides an explicit, real-world demonstration of how a school district can expand its teacher rolls substantially without reducing student headcounts in core classrooms.\n\n")
+        f.write("## 2. Shawnee Mission USD 512 Mechanism Case Study: The Staffing vs Class Size Divergence\n\n")
+        f.write("Shawnee Mission Public Schools provides an explicit, real-world demonstration of how a school district can expand its secondary teacher rolls substantially without reducing student headcounts in core classrooms.\n\n")
         f.write("### The Policy Mechanism:\n")
         f.write("- **Pre-2020 Baseline:** Secondary teachers instructed 6 of 7 periods daily ($P_{\\text{teacher}} = 6, P_{\\text{student}} = 7, \\phi = 7/6 \\approx 1.167$).\n")
-        f.write("- **January 2020 Agreement:** Following protracted collective bargaining, the Board approved a plan to phase in a **5-of-7 teaching load** ($P_{\\text{teacher}} = 5, \\phi = 7/5 = 1.400$), providing teachers an extra collaborative/PLC period.\n")
+        f.write("- **January 2020 Commitment & Phased Implementation:** Following protracted collective bargaining, the Board approved an agreement committing to phase in a **5-of-7 teaching load** ($P_{\\text{teacher}} = 5, \\phi = 7/5 = 1.400$), beginning in 2021–22. By 2022, an MOU formalized 5-of-7 as the contractual standard (with extra pay for taking a 6th section), and a 2021 bond issue freed operational funds to add up to 78.5 secondary FTE specifically dedicated to collaboration and planning time.\n")
         f.write("- **The Scheduling Arithmetic:**\n")
-        f.write("  $$\\frac{\\phi_{\\text{post}}}{\\phi_{\\text{pre}}} = \\frac{1.400}{1.167} = 1.200 \\implies +20.0\\% \\text{ Teacher FTE Required to Hold Class Size Constant!}$$\n\n")
+        f.write("  $$\\frac{\\phi_{\\text{post}}}{\\phi_{\\text{pre}}} = \\frac{1.400}{1.167} = 1.200 \\implies +20.0\\% \\text{ Teacher FTE Structurally Required to Hold Class Size Constant!}$$\n\n")
         f.write("### Empirical Longitudinal Trajectory (From `outputs/tables/task004b_schedule_case_study_smsd.csv`):\n\n")
         f.write("| School Year | Policy Era | Campuses | Enrollment | High School Teacher FTE | High School PTR | CRDC Core Math Class Size |\n")
         f.write("| :--- | :--- | :---: | :---: | :---: | :---: | :---: |\n")
@@ -436,7 +441,7 @@ def run_schedule_model():
             
         f.write("\n\n### Analytical Takeaway:\n")
         f.write("Between 2018–19 and 2022–23, Shawnee Mission high school enrollment was virtually flat (8,222 -> 8,117 students), while high school classroom teacher staffing expanded from **471.4 FTE to 520.2 FTE (+48.8 FTE, +10.4% expansion)**. Reported high school pupil/teacher ratios declined from **17.4:1 to 15.6:1**.\n\n")
-        f.write("Yet CRDC core math class sizes did **not** decrease; they remained steady at **23.0 to 25.0 students**! The added teacher FTE was entirely absorbed by restructuring secondary schedules to provide protected planning and PLC periods, reducing the number of sections each individual teacher instructed rather than shrinking the number of students sitting in each section.\n\n")
+        f.write("Yet CRDC core math class sizes did **not** decrease; they remained steady at **23.0 to 25.0 students**! The staffing expansion coincided with and was explicitly intended in substantial part to fund reduced teaching loads and additional planning/collaboration time, reducing the number of sections each individual teacher instructed rather than shrinking the number of students sitting in each section.\n\n")
         f.write("---\n\n")
         f.write("## 3. Grounded 10-District Schedule Regimes Panel\n\n")
         f.write("From `data/raw/schedules/kc_district_schedule_regimes.csv`:\n\n")
