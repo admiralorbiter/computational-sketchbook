@@ -31,12 +31,12 @@ Rather than cataloguing grievances or designing an analysis to validate prior re
 ### H1c — The Allocation Wedge Hypothesis
 * **Hypothesis:** A substantial structural wedge exists between reported pupil/teacher ratios and typical general-education classroom section sizes because federal and state teacher FTE counts include instructional personnel who carry small caseloads, provide specialized services, or do not bear standard core classroom rosters.
 * **Mechanism & NCES Operational Reality:** NCES explicitly documents that pupil/teacher ratios include teachers for students with disabilities and other specialized teachers, whereas those teachers are generally excluded from class-size calculations. Even under strict federal definitions (instructing students and taking attendance), teacher FTE includes general-ed teachers, SPED caseload teachers, resource teachers, interventionists, co-teachers, pull-out/push-in specialists, alternative program teachers, and low-enrollment specialized electives. Consequently:
-  $$\text{Allocation Wedge} = \text{Observable Median Core Section Size} - \text{Reported Pupil/Teacher Ratio}$$
-* **Observable Predictions:**
-  1. The Allocation Wedge is positive, large, and persistent across districts (benchmarked at $+4$ to $+8$ students based on NTPS departmentalized secondary estimates: $19.8\text{ KS} / 22.5\text{ MO}$ in 2017–18 and $17.4\text{ KS} / 19.2\text{ MO}$ in 2020–21 vs. $13\text{--}15$ structural ratios).
-  2. Decade-long growth in teacher FTE disproportionately tracks specialized assignments (SPED, intervention, ELL, specialized electives) rather than an expansion of standard general-education sections.
-  3. Secondary teacher roster load (total unique students instructed per FTE) remains high (e.g. 130–150 students) despite falling macro staffing ratios.
-* **Falsification / Stopping Condition:** If the wedge between median core section sizes and staffing ratios is negligible (e.g., $< 1.5$ students), or if added teacher FTE translated directly into proportional increases in core sections and smaller typical classes, H1c is rejected.
+  $$\text{Allocation Wedge} = \text{Observable District/School Median Core Section Size} - \text{Reported Pupil/Teacher Ratio}$$
+* **Observable Predictions & External Benchmarks:**
+  1. **External Benchmark:** State-level NTPS estimates suggest that wedges of several students are plausible and provide an external benchmark (e.g., departmentalized high school estimates: $19.8\text{ KS} / 22.5\text{ MO}$ in 2017–18 and $17.4\text{ KS} / 19.2\text{ MO}$ in 2020–21 vs. $13\text{--}15$ structural ratios). Phase 4 will directly estimate the KC-specific distribution.
+  2. **Role Distribution:** Decade-long growth in teacher FTE disproportionately tracks specialized assignments (SPED, intervention, ELL, specialized electives) rather than an expansion of standard general-education sections.
+  3. **Roster Loads:** Secondary teacher roster load (total unique students instructed per FTE) remains high (e.g. 130–150 students) despite falling macro staffing ratios.
+* **Falsification / Stopping Condition:** If the observable district-level wedge between median core section sizes and staffing ratios is negligible, or if added teacher FTE translated directly into proportional increases in core sections and smaller typical classes, H1c is rejected. (Specific numerical cutoff thresholds deferred until section data distributions are observed).
 
 ---
 

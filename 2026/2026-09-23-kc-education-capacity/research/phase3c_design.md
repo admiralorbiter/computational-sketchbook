@@ -66,58 +66,66 @@ Phase 3C bridges the gap between macro structural capacity (Phase 3) and micro c
 +---------------------------------------------------------------------------------------------------+
 |                                     PHASE 3C RESEARCH WORKSTREAMS                                 |
 +------------------------------------+----------------------------------+---------------------------+
-| Workstream 1: State Replication    | Workstream 2: Role Decomposition | Workstream 3: External QA |
+| Workstream 1: State Reconciliation | Workstream 2: Role Decomposition | Workstream 3: External QA |
 +------------------------------------+----------------------------------+---------------------------+
-| * KSDE SO66 / LPR Reports          | * SPED Teacher & Para FTE        | * CRDC 6-Wave Panel       |
-| * MO DESE Core Data / MOSIS        | * IDEA & EL Student Populations  | * NTPS Benchmark Registry |
-| * Anchor Years: 2014, 2019, 2024   | * Coordinators, Counselors, Psych| * Non-Teacher Growth Rates|
-| * District-by-District Audit       | * Estimated General-Ed Residual  | * Allocation Wedge Models |
+| * Upstream/Downstream Audit        | * Part A: Inside Teacher FTE     | * CRDC 6-Wave Panel       |
+| * Pilot: 3-4 Districts/State       |   (SPED, Resource, Intervention) | * NTPS Benchmark Registry |
+| * KSDE SO66 / LPR Reports          | * Part B: Non-Teacher Support    | * Non-Teacher Growth Rates|
+| * MO DESE Core Data / MOSIS        |   (Coordinators, Counselors, etc)| * Mutual Exclusivity Audit|
+| * Anchor Years: 2014, 2019, 2024   | * Residual Deferred              | * Allocation Wedge Models |
 +------------------------------------+----------------------------------+---------------------------+
 ```
 
-### Workstream 1: Independent State-Source Replication
-* **Objective:** Compare NCES CCD reported teacher FTE against state administrative records district by district for fully regional LEAs across three anchor years:
-  - **SY 2014–15:** Baseline anchor.
-  - **SY 2019–20:** Pre-pandemic peak anchor.
-  - **SY 2024–25:** Current post-pandemic endline anchor.
+### Workstream 1: State-Source Staffing Reconciliation (Pilot First)
+* **Epistemic Framing:** This is an upstream/downstream administrative source reconciliation exercise rather than an independent replication, as federal CCD data originate from state education agency submissions. The objective is to verify whether state-facing personnel records and the federal CCD transformation agree on the magnitude and direction of teacher staffing.
+* **Step 1A: Pilot-First Protocol:**
+  - Before any statewide bulk ingestion, execute a targeted pilot across 3–4 key districts per state across the three anchor years (**SY 2014–15**, **SY 2019–20**, **SY 2024–25**):
+    - **Kansas:** Olathe (USD 233), Kansas City (USD 500), Blue Valley (USD 229), Shawnee Mission (USD 512).
+    - **Missouri:** Kansas City 33 (KCPS), North Kansas City 74, Lee's Summit R-VII, Independence 30.
 * **Kansas Source Pipeline:**
   - KSDE Data Central $\rightarrow$ School Finance *Superintendent's Organization Report (SO66)*: Unaudited FTE of Licensed Personnel by position.
-  - KSDE Licensed Personnel Reports (LPR): District-level licensed teacher FTE, special education teacher FTE, and pupil/teacher ratios.
-  - Test Case: Reconcile major Kansas districts (e.g. Olathe USD 233, Shawnee Mission USD 512, Blue Valley USD 229, Kansas City USD 500) between NCES and KSDE.
+  - KSDE Licensed Personnel Reports (LPR): District-level licensed teacher FTE, special education teacher FTE, and PK–12 teacher FTE.
+  - *Strict Rule:* Explicitly distinguish between Licensed Personnel FTE, Special Education Teacher FTE, and PK–12 Teacher FTE. PK–12 Teachers is the primary comparable field; total Licensed Personnel is broader and must not be substituted.
 * **Missouri Source Pipeline:**
-  - MO DESE Missouri Comprehensive Data System (MCDS) $\rightarrow$ District & Building Staffing files.
+  - MO DESE Missouri Comprehensive Data System (MCDS) $\rightarrow$ Building and District Staffing files.
   - MO DESE Core Data / MOSIS Educator Workforce and Vacancy Reports.
-  - Test Case: Reconcile major Missouri districts (e.g. Kansas City Public Schools, North Kansas City, Lee's Summit, Independence).
-* **Audit Thresholds:**
-  - **Parity ($\Delta \le \pm 2\%$):** State payroll/licensure confirms NCES counts.
-  - **Discrepancy ($\Delta > \pm 5\%$):** Trigger forensic review of position definitions (e.g., Pre-K inclusion, shared-service cooperatives, regional vocational center attribution).
+* **Reconciliation Classifications (Audit Flags):**
+  - `close_match`: Absolute difference $\le \pm 2\%$.
+  - `moderate_difference`: Difference $> 2\%$ and $\le 5\%$.
+  - `material_difference`: Difference $> 5\%$ (triggers forensic review of PK, SPED attribution, cooperatives, timing snapshots, and audited/unaudited status).
+  - `not_comparable`: Definitional mismatch.
 
 ### Workstream 2: Staffing Role & Student Need Decomposition
-* **Objective:** Determine the operational destination of the $+1,921.91$ regional teacher FTE increase and evaluate concurrent growth in specialized support roles.
-* **Target Staffing Measures:**
-  1. **Special Education Teachers (FTE):** Federal EDFacts FS070 / FS099 and state SPED personnel files.
-  2. **Special Education Paraprofessionals (FTE):** EDFacts FS112 and state personnel files.
-  3. **English Learner / Bilingual Teachers (FTE):** Title III / ESL teacher reports.
-  4. **Instructional Coordinators & Supervisors (FTE):** CCD LEA Staff (already observed rising $+49.7\%$, $+266.89$ FTE).
-  5. **Student Support Professionals (FTE):**
-     - Guidance Counselors (already observed rising $+18.9\%$, $+144.62$ FTE).
-     - School Psychologists (reported separately from 2020 onward; $+231.05$ FTE).
-     - Social Workers and Student Support Staff ($+15.4\%$, $+355.45$ FTE).
-* **Target Student Need Measures:**
-  1. **IDEA / Special Education Student Enrollment:** EDFacts FS002 (Children with Disabilities).
-  2. **English Learner (EL) Student Enrollment:** EDFacts FS141 (LEP / EL headcount).
-  3. **High-Need Intensity Ratios:** Students with IEPs per SPED Teacher FTE; EL students per ESL Teacher FTE.
-* **The General-Education Residual Calculation:**
-  $$\text{Teachers}_{\text{GenEd\_Residual}} = \text{Teachers}_{\text{Total\_K12}} - \text{Teachers}_{\text{SpecialEd}} - \text{Teachers}_{\text{Bilingual/ESL}}$$
-  - If $\text{Teachers}_{\text{GenEd\_Residual}}$ grew at a substantially lower rate than total FTE, the Allocation Wedge hypothesis is strongly corroborated prior to Phase 4.
+* **Epistemic Clarification:** Instructional coordinators, counselors, psychologists, and support staff do **not** explain the $+1,922$ classroom-teacher FTE because they are distinct CCD categories. Workstream 2 is strictly organized into two separate analytical components:
+* **Part A: Decomposing Teacher FTE Itself (Inside the Denominator):**
+  - Examine categories that legitimately sit inside teacher FTE:
+    1. Special Education Teacher FTE (EDFacts FS070 / FS099 and state SPED personnel files).
+    2. Special-education resource and caseload teachers.
+    3. Targeted intervention instructors (reading/math specialists).
+    4. Co-teachers and push-in/pull-out instructional specialists.
+    5. Alternative program and low-enrollment specialized section teachers.
+* **Part B: Separately Analyzing Non-Teacher Support Growth (Outside the Denominator):**
+  - Track how auxiliary student support expanded alongside classroom teachers:
+    1. Instructional Coordinators & Supervisors (already observed rising $+49.7\%$, $+266.89$ FTE).
+    2. Guidance Counselors (already observed rising $+18.9\%$, $+144.62$ FTE).
+    3. School Psychologists (reported separately from 2020 onward; $+231.05$ FTE).
+    4. Social Workers and Student Support Staff ($+15.4\%$, $+355.45$ FTE).
+    5. Special Education Paraprofessionals ($+11.85\%$, $+565.91$ FTE).
+* **Part C: Student Need Trajectories (Parallel Series):**
+  - IDEA / Special Education Student Enrollment (EDFacts FS002).
+  - English Learner (EL) Student Headcount (EDFacts FS141).
+  - Title III Language Instruction Program Teacher Headcounts (EDFacts FS067).
+* **Methodological Guardrail on Residuals:**
+  - **Do NOT calculate** an additive residual ($\text{Teachers}_{\text{Total}} - \text{Teachers}_{\text{SPED}} - \text{Teachers}_{\text{EL}}$) at this stage. Title III FS067 reports unduplicated teacher headcounts (not FTE) that can include general content teachers; subtracting it from total FTE mixes units and double-counts individuals.
+  - The general-education residual is **strictly deferred** until mutually exclusive FTE categories are demonstrated from state assignment microdata. All specialized categories are retained as parallel series.
 
-### Workstream 3: Federal Triangulation & External Benchmarks
+### Workstream 3: External Triangulation & Survey Benchmarks
 * **Civil Rights Data Collection (CRDC):**
   - Mandatory OCR biennial collection covering all public schools.
   - Ingest public-use data files for 6 survey waves: **2013–14, 2015–16, 2017–18, 2020–21, 2021–22, 2023–24**.
   - Extract school-level certified teacher FTE, uncertified teacher counts, student enrollment by disability (IDEA/504) and EL status, school counselor FTE, and security staff.
 * **NTPS Survey Integration:**
-  - Compile published state-level departmentalized and self-contained average class sizes for Missouri and Kansas from the 2015–16, 2017–18, and 2020–21 NTPS waves as external reference points.
+  - State-level NTPS estimates provide an external benchmark for plausible wedges (secondary departmentalized class sizes around $19.8\text{ KS} / 22.5\text{ MO}$ in 2017–18 and $17.4\text{ KS} / 19.2\text{ MO}$ in 2020–21). Phase 4 will directly estimate the KC-specific distribution.
 
 ---
 
@@ -147,17 +155,18 @@ By completing Phase 3C first, Phase 4 can be sharply split into two high-yield s
 
 ---
 
-## 5. Deliverables and Execution Plan for Phase 3C
+## 5. Deliverables and Execution Plan for Step 1A Pilot
 
-1. **State Ingestion Scripts:**
-   - `src/download/download_ksde_personnel.py`: Download KSDE SO66 / LPR personnel tables.
-   - `src/download/download_dese_workforce.py`: Download MO DESE staffing and educator workforce files.
-2. **Replication & Reconciliation Audit:**
-   - `outputs/tables/task003c_state_replication_audit.csv`: District-by-district comparison table (NCES vs. KSDE/DESE for 2014, 2019, 2024).
-   - Anomaly ledger for any discrepancies $> \pm 3\%$.
-3. **Staffing Role Decomposition Table & Figures:**
-   - `outputs/tables/task003c_staffing_role_decomposition.csv`: SPED, EL, coordinator, counselor, and general-ed residual trajectories across 11 years.
-   - `outputs/figures/staffing_category_growth_rates.png`: Comparative growth rates of teachers vs. specialized roles.
-   - `outputs/figures/allocation_wedge_schematic.png`: Visualizing the gap between structural PTR and estimated general-ed classroom load.
-4. **Phase 3C Synthesis Report:**
-   - `outputs/tables/task003c_synthesis_report.md`: Formal findings on staffing integrity, role allocations, and the empirical magnitude of the allocation wedge.
+1. **Source Definition Matrix:**
+   - `research/phase3c_state_source_definition_matrix.csv`: Detailed audit of report name, variable name, headcount vs FTE, reporting dates, PK inclusion, SPED inclusion, itinerant/shared staff, charters, cooperatives/interlocals, audited status, reporting unit, and comparability to CCD.
+2. **Pilot Reconciliation Table:**
+   - `outputs/tables/task003c_state_replication_pilot.csv`: District-year-source comparisons for the 8 pilot districts across 2014–15, 2019–20, and 2024–25 with percentage differences and audit classification flags (`close_match`, `moderate_difference`, `material_difference`, `not_comparable`).
+3. **Pilot Anomaly Ledger:**
+   - `outputs/tables/task003c_state_replication_anomalies.csv`: Detailed explanations for every comparison with difference $> 5\%$.
+4. **Step 1A Pilot Report:**
+   - `outputs/tables/task003c_state_replication_pilot_report.md`: Synthesis of source compatibility, pilot discrepancies, trend comparisons, and recommendation on scaling to the full 77 LEAs.
+
+### Stop Condition
+- **Strict Stop:** Stop immediately upon completion of the Step 1A Pilot.
+- Do not proceed to statewide bulk ingestion across all 77 LEAs.
+- Do not begin staffing-role decomposition until the pilot reconciliation has been reviewed and approved.
