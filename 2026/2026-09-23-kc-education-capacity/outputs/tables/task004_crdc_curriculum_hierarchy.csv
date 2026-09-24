@@ -1,13 +1,13 @@
-crdc_wave,course_level,total_classes,total_enrolled,unweighted_mean_size,median_size,student_weighted_mean_size,school_ptr_mean,allocation_wedge_mean,allocation_wedge_weighted
-2013-14,Foundation Core,4996,79625,19.41,20.08,15.94,15.42,3.99,0.52
-2013-14,Advanced / Specialized,2136,28006,16.31,16.28,13.11,15.42,0.89,-2.31
-2015-16,Foundation Core,4875,99917,20.38,21.0,20.5,15.24,5.14,5.25
-2015-16,Advanced / Specialized,1423,28494,18.61,20.0,20.02,15.24,3.37,4.78
-2017-18,Foundation Core,5700,105479,18.72,19.03,18.51,15.45,3.26,3.05
-2017-18,Advanced / Specialized,1721,30872,16.71,17.36,17.94,15.45,1.26,2.49
-2020-21,Foundation Core,7303,107107,16.93,16.12,14.67,15.43,1.5,-0.77
-2020-21,Advanced / Specialized,1945,27732,14.59,12.88,14.26,15.43,-0.84,-1.17
-2021-22,Foundation Core,6243,108118,17.56,17.79,17.32,15.07,2.49,2.25
-2021-22,Advanced / Specialized,1461,22838,14.54,14.1,15.63,15.07,-0.53,0.56
-2023-24,Foundation Core,6298,112328,18.53,18.67,17.84,14.81,3.72,3.02
-2023-24,Advanced / Specialized,1473,24993,15.52,16.29,16.97,14.81,0.71,2.15
+crdc_wave,course_level,total_classes,total_enrolled,schools_count,class_weighted_mean_size,unweighted_mean_size,median_size,matched_class_weighted_ptr,class_weighted_allocation_wedge,school_unweighted_mean_ptr,school_unweighted_mean_wedge,school_unweighted_median_wedge
+2013-14,Foundation Core,4877,77461,94,15.88,19.43,20.17,16.4,-0.52,15.44,3.99,4.19
+2013-14,Advanced / Specialized,2083,27232,88,13.07,16.2,16.09,16.59,-3.52,15.61,0.36,0.39
+2015-16,Foundation Core,3817,78573,92,20.59,20.68,21.04,16.4,4.19,15.15,5.46,5.05
+2015-16,Advanced / Specialized,1385,27616,85,19.94,18.52,19.91,16.43,3.51,15.5,2.5,3.77
+2017-18,Foundation Core,5794,107606,106,18.57,18.74,19.03,16.26,2.31,15.06,3.61,3.69
+2017-18,Advanced / Specialized,1721,30872,89,17.94,16.71,17.36,16.29,1.65,15.49,0.92,2.07
+2020-21,Foundation Core,7414,108301,108,14.61,16.88,16.08,16.89,-2.29,15.0,1.68,0.71
+2020-21,Advanced / Specialized,1945,27732,93,14.26,14.59,12.88,17.24,-2.98,15.97,-2.01,-3.59
+2021-22,Foundation Core,6297,109334,109,17.36,17.6,17.83,16.17,1.19,14.87,2.55,2.33
+2021-22,Advanced / Specialized,1461,22838,94,15.63,14.54,14.1,16.58,-0.94,15.4,-1.14,-1.87
+2023-24,Foundation Core,6299,112355,109,17.84,18.55,18.72,16.2,1.64,14.53,3.88,4.0
+2023-24,Advanced / Specialized,1474,25022,95,16.98,15.58,16.36,16.02,0.96,15.07,0.25,0.42

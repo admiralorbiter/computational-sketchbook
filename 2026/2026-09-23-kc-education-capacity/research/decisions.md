@@ -206,6 +206,29 @@ Catalog these metrics in `outputs/tables/task003a1_reporting_coverage.csv` and r
   5. **Curriculum Hierarchy / Course Dilution Hypothesis:** Differentiate Foundation Core courses (Algebra I/II, Geometry, Biology) from Advanced/Specialized courses (Calculus, Physics, Advanced Math). Confirm that schools allocate certified instructional FTE to small specialized and advanced sections (e.g. Calculus at 5–15 students), which pulls down the aggregate building PTR while leaving foundational core classrooms crowded (24–28+ students).
   6. **External Federal Benchmarking:** Triangulate CRDC findings against the National Teacher and Principal Survey (NTPS) secondary departmentalized class-size surveys (~17.4 KS, ~19.2 MO). The concordance confirms that headline pupil/teacher ratios reflect institutional staffing definitions rather than actual classroom student loads, rejecting claims of administrative data falsification while demonstrating metric distortion.
 
+### Decision 028: CRDC Estimand Correction, Matched Allocation-Wedge Aggregation, and Robustness Protocol (Task 004A.1)
+* **Status:** Adopted
+* **Date:** 2026-09-24
+* **Context:** Methodological review of the CRDC Courses & Classes collection identified critical estimand, aggregation, and measurement constraints: (1) CRDC data represent school-course aggregated offerings ($\frac{\text{Enrollment}}{\text{Classes}}$), not individual classroom section microdata; (2) pooling PTR across all course records introduced structural weighting bias; (3) the 2013–14 wave was temporally misaligned against 2014–15 CCD PTR; and (4) diagnostic outlier trimming ($< 3$ and $> 55$) required scientific sensitivity testing across unfiltered specifications.
+* **Decision:** Adopt the following audited protocols:
+  1. **Unit of Analysis & Terminology Discipline:** Rename the long file to `kc_crdc_school_course_aggregates_long_2013_14_2023_24.csv`. Strictly refer to the derived quotient ($\frac{\text{num\_enrolled}}{\text{num\_classes}}$) as **school-course average class size** or **reported students per reported class**. Forbid the terms "actual section size", "section-level distribution", or "median section size" in CRDC analysis.
+  2. **Class-Weighted vs. Student-Weighted Distinction:** Rename the aggregation $\frac{\sum \text{Enrollment}}{\sum \text{Classes}}$ to **class-weighted average class size**, explicitly documenting that it weights school offerings by the number of sections. Do not claim true student-weighted exposure ($\frac{\sum n_j^2}{\sum n_j}$), which remains an unobservable microdata estimand reserved for Phase 4A.
+  3. **Strict School-to-School Matched PTR Comparators:** Compute the allocation wedge row by row at the school-course level:
+     $$W_{s,c,t} = \frac{\text{Enrollment}_{s,c,t}}{\text{Classes}_{s,c,t}} - \text{School PTR}_{s,t}$$
+     For aggregate metrics, report both:
+     - **School-Unweighted Wedge:** Mean ($\overline{W}$) and Median of $W_{s,c,t}$ across distinct contributing schools.
+     - **Matched Class-Weighted Allocation Wedge:**
+       $$W_{CW} = \frac{\sum \text{Enrollment}_{s,c,t}}{\sum \text{Classes}_{s,c,t}} - \frac{\sum (\text{School PTR}_{s,t} \cdot \text{Classes}_{s,c,t})}{\sum \text{Classes}_{s,c,t}}$$
+     Never compare course averages against an unweighted PTR derived from a different or multi-counted school population.
+  4. **Contemporaneous 2013–14 CCD Integration:** Ingest the 2013–14 NCES CCD school directory and staffing panel via Urban Institute API (`kc_ccd_school_capacity_2013_14.csv`), ensuring 100% same-year contemporaneous PTR matching across all six survey waves.
+  5. **Four-Specification Sensitivity Framework:** Mandate testing across four explicit specifications: Spec 1 (All Valid Nonnegative), Spec 2 (Operating Regular High Schools), Spec 3 (Spec 2 Excl Virtual/Specialized), and Spec 4 (Spec 3 + Diagnostic Outlier Filter). Empirical testing demonstrates the Allocation Wedge is invariant to filtering: Core Math median wedge is $+2.85$ to $+3.00$ pooled and $+3.8$ to $+5.1$ in SY 2023–24 across all specifications.
+  6. **Calibrated Substantive Claims:** 
+     - Describe the curriculum pattern as "evidence consistent with a curriculum-allocation mechanism", not proof that small Calculus sections causally produce low school PTR.
+     - Distinguish regional course averages (~high teens) from large suburban comprehensive high school averages (regularly 24–28+ students).
+     - Characterize NTPS departmentalized benchmarks as broadly consistent sanity boundaries.
+  7. **Public-Use Disclosure Caveats:** Flag small-cell observations subject to $\pm 1$ student perturbation (Oak Park Calculus, Blue Valley North Algebra I) as diagnostic leads requiring independent verification via district master schedules or public records responses.
+
+
 
 
 

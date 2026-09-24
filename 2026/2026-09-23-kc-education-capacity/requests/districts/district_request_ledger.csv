@@ -1,4 +1,4 @@
-district_id,district_name,state,statutory_law,records_custodian_contact,submission_status,target_years,submission_date,statutory_deadline,notes
+district_id,district_name,state,statutory_law,records_custodian_contact,submission_status,target_years,submission_date,three_day_response_deadline,notes
 USD512,Shawnee Mission Public Schools,KS,KORA (K.S.A. 45-215),openrecords@smsd.org,Drafted Ready to Submit,2014-15;2019-20;2024-25,,,Large Johnson Co Suburb; High baseline CRDC wedge (+10.5 to +11.5)
 USD233,Olathe Public Schools,KS,KORA (K.S.A. 45-215),kora@olatheschools.org,Drafted Ready to Submit,2014-15;2019-20;2024-25,,,Largest Johnson Co Suburb; High growth
 USD229,Blue Valley Schools,KS,KORA (K.S.A. 45-215),kora@bluevalleyk12.org,Drafted Ready to Submit,2014-15;2019-20;2024-25,,,High-wealth Johnson Co Suburb; High AP/honors enrollment

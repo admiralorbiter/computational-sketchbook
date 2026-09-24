@@ -7,7 +7,7 @@
 
 While statewide longitudinal microdata requests have been formally drafted for the state departments of education (MO DESE Screen 20 and KSDE KEDX/LPR), state-level research governance processes often require extensive review cycles.
 
-**Track B** initiates direct, parallel public records requests to **8 target local education agencies (LEAs)** across the Kansas City metropolitan area. 
+**Track B** initiates direct, parallel public records requests to **9 target local education agencies (LEAs)** across the Kansas City metropolitan area. 
 
 ### Why District-Level Requests Succeed:
 1. **Existing SIS Exports:** Every school district operates a Student Information System (SIS)—predominantly **PowerSchool**, **Infinite Campus**, or **Tyler SIS / Synergy**. These platforms possess standard, pre-built administrative export routines for:
@@ -15,16 +15,17 @@ While statewide longitudinal microdata requests have been formally drafted for t
    - *Course Section Enrollment Summaries*
    - *Class Size Audit Reports*
 2. **Zero Student PII / Zero FERPA Redaction Costs:** By requesting section-level aggregate headcounts (e.g., School, Course Code, Section ID, Period, Educator Identifier, Active Student Headcount) without individual student identifiers, records contain **zero Family Educational Rights and Privacy Act (FERPA) protected data**. Districts do not need to perform time-consuming redactions.
-3. **Statutory Turnaround Requirements:**
-   - **Kansas (KORA, K.S.A. 45-215 et seq.):** Agency must respond within **3 business days**.
-   - **Missouri (Sunshine Law, RSMo Chapter 610):** Agency must respond within **3 business days**.
+3. **Three-Day Response Requirements:**
+   - **Kansas (KORA, K.S.A. 45-218(d)):** The public agency must act upon the request within **three (3) business days**. If records are not immediately available, the custodian must furnish a written explanation of the delay and state the earliest date, time, and place they will be available.
+   - **Missouri (Sunshine Law, RSMo § 610.023.3):** The custodian must respond within **three (3) business days**. If access cannot be granted immediately, the custodian must provide a detailed explanation of the delay and state the earliest date and time the record will be available for inspection or production.
+   - *Important Compliance Clarification:* Neither statute requires immediate production of complex datasets within 72 hours; both require an initial response, acknowledgment, fee estimate, or delay justification within that window. An agency that timely acknowledges a request and states production will take two weeks is in full compliance with the law.
 4. **Immediate Triangulation:** Direct SIS section exports provide immediate ground-truth verification for the CRDC Course Capacity Panel (Task 004A) and establish section distributions for courses not captured in federal collections (e.g., Middle School Math/ELA, Elementary Homerooms, and High School English/Social Studies).
 
 ---
 
 ## 2. Target District Stratification
 
-The 8 target districts are purposively selected to represent all major metropolitan quadrants, urbanization tiers (NCES Locales), and state jurisdictions:
+The 9 target districts are purposively selected to represent all major metropolitan quadrants, urbanization tiers (NCES Locales), and state jurisdictions:
 
 | District Name | State | County | NCES Locale | 2024–25 Enrollment | SIS Platform (Typical) | Strategic Role |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -84,7 +85,7 @@ To prevent district pushback claiming that the request requires "creating a new 
 3. **Ledgering:** Log all submissions in `requests/districts/district_request_ledger.csv` tracking:
    - District
    - Date Submitted
-   - Statutory Deadline (3 business days)
+   - Statutory Three-Day Response Deadline
    - Status (Pending, Acknowledged, Fee Estimate Received, Delivered, Denied)
    - Notes / Follow-ups
 4. **Data Intake Pipeline:** Ingest delivered CSV/Excel files into `data/raw/districts/{district_id}_{year}/` and harmonize using `src/clean/build_district_section_panel.py`.
