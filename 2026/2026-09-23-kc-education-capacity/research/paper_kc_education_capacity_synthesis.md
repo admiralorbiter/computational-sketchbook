@@ -4,7 +4,7 @@
 **Author:** Computational Sketchbook Project  
 **Date:** September 2026  
 **Geographic Universe:** 9-County Mid-America Regional Council (MARC) Kansas City Metropolitan Area (56 School Districts, 691 Public Campuses)  
-**Methodological Decisions:** Decisions 001–033 Adopted  
+**Methodological Decisions:** Decisions 001–034 Adopted  
 
 ---
 
@@ -164,7 +164,7 @@ By reducing secondary teaching loads from 6 sections to 5 sections, the district
 
 ---
 
-### Course-Level Load Asymmetry & The Public Course-Load Boundary (Task 006.1)
+### Course-Load Scenarios, Gateway Bottlenecks, and the Department Reconstruction Audit (Tasks 006.1 & 006.2)
 
 While suburban case studies illustrate how schedule reform absorbed staffing additions, a critical empirical question remained: **Does administrative building PTR systematically understate the classroom load represented by core academic gateway courses, and can this be investigated strictly from public records without private Student Information System (SIS) microdata?**
 
@@ -178,14 +178,16 @@ Methodologically, this requires adhering to a strict **Five-Step Reconstruction 
 [1. OBSERVED]            School-course enrollment and class counts (CRDC: E_c, S_c)
                          --> Objective public empirical fact from federal collection.
 ----------------------------------------------------------------------------------------
-[2. DERIVED]             Course-average class load (s_bar_c = E_c / S_c)
-                         --> Exact mathematical average per reported course section.
+[2. DERIVED]             CRDC course-load proxy (s_bar_c = E_c / S_c)
+                         --> Reported students per reported class; quotient of reported quantities
+                             subject to OCR timing mismatches (fall class count vs. spring enrollment).
 ----------------------------------------------------------------------------------------
 [3. MODELED SCENARIOS]   Schedule scenario loads (R_5 = 5 * s_bar_c; R_6 = 6 * s_bar_c)
-                         --> Modeled seat burden for a teacher assigned D sections of course c.
+                         --> Derived seat burden scenarios for a teacher assigned D sections.
 ----------------------------------------------------------------------------------------
-[4. DEPARTMENT LOAD]     Enrollment per teacher (E_math / T_math)
-                         --> Average covered student-course enrollments per subject teacher.
+[4. DEPT LOAD AUDIT]     Department Reconstruction Attempted (E_math / T_math)
+                         --> Audited in Task 006.2: public personnel directories do not reliably
+                             observe contemporaneous subject-specific teacher headcounts (T_math).
 ----------------------------------------------------------------------------------------
 [5. STILL UNOBSERVED]    Individual teacher roster distribution (P(R > 140), section variance)
                          --> Requires student-level SIS microdata or section schedule tables.
@@ -222,6 +224,17 @@ As illustrated in **Figure 15**, reporting these campuses individually highlight
 3. **Staffing Denominator & Policy Guardrails:** The Common Core of Data (CCD) pupil/teacher ratio divides enrollment by full-time equivalent classroom teachers. Guidance counselors are categorized separately and do not depress the teacher denominator; the specialist denominator gap is driven by instructional personnel coded as teachers (e.g. special education resource teachers or Title I interventionists). Furthermore, while Missouri requires 3 math and 3 science credits with EOC exams in Algebra I and Biology, and Kansas requires 3 units incorporating algebraic and geometric concepts, state law does not mandate a universal 9th/10th grade sequence. Gateway courses absorb large volumes because they are foundational requirements, not because of a rigid statutory lockstep.
 
 ![Figure 15: Public Course-Load Modeling for Selected Urban Kansas City High Schools](../figures/fig15_urban_core_teacher_load_wedge.png)
+
+#### The Department Reconstruction Feasibility Audit (Task 006.2)
+To test whether public records could advance from modeled scenarios (Step 3) to an observed department-level average student-course load (Step 4: $E_{\text{math}} / T_{\text{math}}$), Task 006.2 audited publicly available faculty listings, district directories, and state releases across the six pilot campuses:
+
+* **The Wyandotte Staffing Disconnect:** Wyandotte High School is one of the rare urban campuses with a public website explicitly disaggregating faculty by department, currently listing **8 Math Teachers**. In 2023–24, CRDC reported **121 math classes and 2,351 student enrollments**. Dividing CRDC quantities by the 8 listed teachers yields **15.1 classes and 293.9 enrollments per teacher**—an impossible concurrent assignment under a 6-block schedule (8 teachers can instruct at most 48 concurrent sections). This disconnect reveals three confounding mechanisms:
+  1. *Semester / Block Snapshot Aggregation:* Under OCR reporting rules, block-schedule schools may report the cumulative sum of fall and spring semester classes (~60 concurrent sections per semester requiring ~10 full-time teachers).
+  2. *Departmental Spillover:* Teachers who instruct math sections are often categorized under Special Education (co-teachers), ESOL/Bilingual education, or instructional coaching rather than "Math Teachers".
+  3. *Temporal & Vacancy Lag:* Current web directories reflect 2024–2026 staffing and omit vacancies, long-term substitutes, or adjuncts that existed during the 2023–24 CRDC collection wave.
+* **Missouri Urban District Unavailability:** In Missouri, KCPS and Center staff directories operate behind automated bot challenges and list teachers under undifferentiated "Teacher" titles; Grandview and Ruskin list certified staff without subject department indexing. Across all five Missouri urban campuses, $T_{\text{math}}$ is completely unobserved in public data.
+
+**The Analytical Boundary:** This audit provides direct empirical proof that **public data capability firmly terminates at Step 3 (Modeled Course-Load Scenarios)**. Calculating true department-level student-course loads ($E_{\text{dept}} / T_{\text{dept}}$), individual teacher rosters, or section-level variance requires restricted-use state educator databases (e.g. KSDE licensed personnel files with assignment codes; Missouri DESE Core Data Educator files) or district master schedule tables.
 
 ---
 
@@ -332,6 +345,7 @@ Forty years after Judge Russell G. Clark looked past pupil/teacher ratios to cou
 - **Cross-Era Synthesis:** `outputs/tables/task005c_historical_roster_load_synthesis_report.md` & `outputs/figures/fig14_historical_roster_load_synthesis.png`
 - **Schedule Decomposition:** `outputs/tables/task004b_schedule_capacity_report.md` & `outputs/figures/fig11_schedule_capacity_decomposition.png`
 - **Student Complexity Panel:** `outputs/tables/task004c_complexity_analysis_report.md` & `outputs/figures/fig12_student_complexity_trends.png`
-- **Urban Roster Reconstruction Pilot:** `outputs/tables/task006_urban_roster_reconstruction_report.md`, `task006_urban_roster_reconstruction.csv` & `outputs/figures/fig15_urban_core_teacher_load_wedge.png`
+- **Urban Course-Load Scenarios & Bottlenecks:** `outputs/tables/task006_urban_roster_reconstruction_report.md`, `task006_urban_roster_reconstruction.csv` & `outputs/figures/fig15_urban_core_teacher_load_wedge.png`
+- **Department Reconstruction Feasibility Audit:** `outputs/tables/task006_2_department_reconstruction_audit_report.md` & `outputs/tables/task006_2_department_reconstruction_audit.csv`
 - **CRDC Course Capacity Audit:** `outputs/tables/task004a1_crdc_estimand_audit.md` & `outputs/tables/task004a1_crdc_sensitivity_analysis.csv`
-- **Governance & Decisions:** `research/decisions.md` (Decisions 001–033) & `research/hypotheses.md` (H1–H4)
+- **Governance & Decisions:** `research/decisions.md` (Decisions 001–034) & `research/hypotheses.md` (H1–H4)

@@ -321,20 +321,20 @@ Catalog these metrics in `outputs/tables/task003a1_reporting_coverage.csv` and r
      - Cease further public data collection (Track B Sunshine/KORA parked; no internal PREP-KC district access; no elementary yearbook archaeology; no additional board PDF crawls).
      - Transition to final synthesis paper and project documentation based on the four-layer explanatory model.
 
-### Decision 033: Task 006.1 Public Course-Load Bounds, Gateway Bottlenecks, and the Five-Step Reconstruction Ladder
+### Decision 033: Public Course-Load Scenarios, Gateway Bottlenecks, and the Five-Step Reconstruction Ladder (Task 006.1)
 * **Status:** Adopted
 * **Date:** 2026-09-24
-* **Context:** Methodological review of Task 006 established that while public CRDC course aggregates and bell-schedule parameters reveal substantial course-level loading wedges above building pupil/teacher ratios, multiplying course averages by an arbitrary number of sections ($D \times \bar{s}$) constructs a modeled scenario load, not an observed individual teacher roster. Furthermore, secondary campuses operate under distinct bell-schedule architectures (e.g., KCKPS 8-period alternating block vs. 7-period days), and course loading varies intensely across specific gateway subjects within the same department.
+* **Context:** Methodological review of Task 006 established that while public CRDC course aggregates and bell-schedule parameters reveal substantial course-level loading wedges above building pupil/teacher ratios, multiplying course averages by an arbitrary number of sections ($D \times \bar{s}$) constructs a modeled scenario load, not an observed individual teacher roster. Furthermore, secondary campuses operate under distinct bell-schedule architectures (e.g., KCKPS 8-period alternating block vs. 7-period days), OCR reporting rules introduce timing mismatches between fall class counts and spring course enrollments, and course loading varies intensely across specific gateway subjects within the same department.
 * **Decision:**
   1. **Adopt the Five-Step Reconstruction Ladder:**
-     $$\boxed{\text{1. Observed}} \quad (E_c, S_c) \longrightarrow \boxed{\text{2. Derived}} \quad \bar{s}_c = E_c/S_c \longrightarrow \boxed{\text{3. Modeled Scenarios}} \quad R_D = D \cdot \bar{s}_c \longrightarrow \boxed{\text{4. Department Load}} \quad \frac{E_{\text{math}}}{T_{\text{math}}} \longrightarrow \boxed{\text{5. Unobserved}} \quad \text{Individual Rosters}$$
-     - Level 1 (Observed): School-course enrollment and section counts from federal CRDC.
-     - Level 2 (Derived): Average class size per reported section.
+     $$\boxed{\text{1. Observed}} \quad (E_c, S_c) \longrightarrow \boxed{\text{2. Derived}} \quad \bar{s}_c = \frac{E_c}{S_c} \longrightarrow \boxed{\text{3. Modeled Scenarios}} \quad R_D = D \cdot \bar{s}_c \longrightarrow \boxed{\text{4. Dept Load (Audit)}} \quad \frac{E_{\text{math}}}{T_{\text{math}}} \longrightarrow \boxed{\text{5. Unobserved}} \quad \text{Individual Rosters}$$
+     - Level 1 (Observed): School-course enrollment ($E_c$) and class counts ($S_c$) from federal CRDC.
+     - Level 2 (Derived Proxy): CRDC school-course load proxy ($\bar{s}_c = E_c / S_c$), recognized as reported students per reported class, subject to OCR timing mismatches (fall class count around Oct 1 vs. spring enrollment snapshot).
      - Level 3 (Modeled Scenarios): Derived scenario loads under explicit teaching duty assignments (e.g., $R_5 = 5\bar{s}$ and $R_6 = 6\bar{s}$).
-     - Level 4 (Department Load): Ratio of covered course enrollments to public subject teacher counts (analogous to the Jenkins 1985 metric: student-class enrollments per teacher).
-     - Level 5 (Unobserved): Individual teacher roster distributions, section-level variance, and tail probabilities ($P(R > 140)$), which remain unobserved without student-level SIS microdata or master schedule section tables.
-  2. **Calibrate the Zero-Private-Data Boundary:**
-     - Public data is sufficient to prove that building pupil/teacher ratio (PTR) materially understates the classroom load represented by core foundation and gateway courses.
+     - Level 4 (Department Load Attempted): Ratio of covered course enrollments to public subject teacher counts ($E_{\text{math}} / T_{\text{math}}$), audited in Task 006.2.
+     - Level 5 (Unobserved): Individual teacher roster distributions, section-level variance, and tail probabilities ($P(R > 140)$), which strictly require student-level SIS microdata or master schedule section tables.
+  2. **Calibrate the Public Data Boundary:**
+     - Public data is sufficient to prove that building pupil/teacher ratio (PTR) **can materially understate the load represented by particular courses**.
      - Private data is unnecessary to demonstrate this structural mismatch. However, public aggregates alone do not reveal individual teacher rosters.
   3. **Report Pilot Campuses Individually (No Universal Load Assertion):**
      - **Lincoln College Prep (KCPS):** Building PTR is 17.25:1; core math sections average 29.5 students (Geometry 31.0, Algebra II 30.6). A modeled 5-section core assignment corresponds to 147.4 student seats (+61.1 residual over naive PTR), exceeding the Jenkins 125 ceiling.
@@ -342,10 +342,35 @@ Catalog these metrics in `outputs/tables/task003a1_reporting_coverage.csv` and r
      - **Ruskin High School (Hickman Mills C-1):** Building PTR is 12.94:1; core math sections average 21.0 students, yielding a modeled 5-section load of 104.8 (+40.1 residual) and 6-section load of 125.7. Advanced Math averages 4.25 students.
      - **Center Senior High (Center 58):** Building PTR is 12.10:1; core math sections average 16.7 students (Algebra I 19.0), yielding a modeled 5-section load of 83.4 (+22.9 residual).
      - **East High School (KCPS):** Building PTR is 13.85:1; core math sections average 17.1 students, yielding a modeled 5-section load of 85.5 (+16.3 residual).
-     - **Wyandotte High School (Kansas City USD 500) — The Gateway Bottleneck:** Overall core math averages 20.19 against a 20.10 PTR (virtually zero aggregate wedge). However, Algebra I specifically contains 46 classes enrolling 1,313 students (average 28.54/class). Under Wyandotte's public 8-period Red/White alternating block, a teacher instructing 6 blocks of Algebra I manages a modeled active grading roster of 171.2 students (+50.6 over naive PTR).
+     - **Wyandotte High School (Kansas City USD 500) — The Gateway Bottleneck:** Overall core math averages 20.19 against a 20.10 PTR (virtually zero aggregate wedge). However, Algebra I specifically contains 46 classes enrolling 1,313 students (average 28.54/class). Under Wyandotte's public 8-period Red/White alternating block ($D = 6$), a teacher assigned 6 sections of Algebra I manages a modeled active grading roster of 171.2 students (+50.6 over naive PTR).
   4. **Adopt Defensible Residual Decomposition Terminology:**
      $$\Delta_{\text{total}} = R_{\text{modeled}} - R_{\text{naive}} = \underbrace{D \cdot (\bar{s}_{\text{dept}} - PTR_{\text{bldg}})}_{\text{Course-vs-PTR Residual}} + \underbrace{D \cdot (\bar{s}_{\text{core}} - \bar{s}_{\text{dept}})}_{\text{Core-vs-Advanced Mix Difference}}$$
      - Avoid attributing $\Delta_{\text{sched}}$ solely to causal scheduling/specialists or $\Delta_{\text{track}}$ solely to tracking.
      - Clarify that guidance counselors are categorized separately in CCD staffing and do not depress the teacher denominator.
      - Clarify that state graduation requirements mandate math and science credit totals with specific EOC assessments, but do not dictate universal grade-level course sequencing.
+
+### Decision 034: Department Reconstruction Feasibility Audit & The Personnel Artifact Boundary (Task 006.2)
+* **Status:** Adopted
+* **Date:** 2026-09-24
+* **Context:** Following Task 006.1, the research team tested whether public records could advance from modeled scenario loads (Step 3) to an observed department-level average student-course load (Step 4: $E_{\text{math}} / T_{\text{math}}$), analogous to the 1985 Jenkins remedial audit metric (student-classes per teacher). The audit evaluated publicly available faculty listings, district directories, and state releases across the six urban pilot high schools.
+* **Decision:**
+  1. **Acknowledge the Breakdown of Public Department-Level Reconstruction:**
+     - The empirical audit demonstrates that department-level teacher load reconstruction is **not reliably feasible from public records today**.
+     - Across the six pilot campuses, public personnel directories either:
+       a) Do not categorize faculty by subject department (Missouri urban districts list teachers under undifferentiated 'Teacher' classifications);
+       b) Shield staff rosters behind automated bot verification (KCPS and Center platforms return HTTP 200 Client Challenges to automated inquiries); or
+       c) Exhibit severe temporal, taxonomic, and snapshot disconnects when department rosters are exposed.
+  2. **Codify the Wyandotte Staffing Disconnect as an Empirical Boundary Case:**
+     - Wyandotte's public directory lists 8 Math Teachers. In 2023–24, CRDC reported 121 math classes and 2,351 enrollments, implying $121 / 8 = 15.1$ classes/teacher and $2,351 / 8 = 293.9$ enrollments/teacher.
+     - This disconnect reflects three confounding mechanisms:
+       - *Timing & Snapshot Aggregation:* CRDC block-schedule reporting can reflect cumulative fall and spring semester classes (~60 concurrent sections per semester requiring ~10 full-time teachers).
+       - *Departmental Classification:* Special education co-teachers, bilingual/ESOL math teachers, and instructional coaches are listed under separate departmental headings.
+       - *Temporal & Vacancy Lag:* Current web directories reflect 2024–2026 staffing and omit vacancies, long-term substitutes, or adjuncts present during the 2023–24 collection.
+     - Computing $E_{\text{math}} / T_{\text{math}}$ from these public listings produces a spurious artifact rather than a true workload metric.
+  3. **Establish the Final Public-to-Restricted Boundary:**
+     - Public data capability firmly terminates at **Step 3 (Modeled Course-Load Scenarios)**.
+     - Reconstructing true department-level teacher loads ($E_{\text{dept}} / T_{\text{dept}}$), individual teacher rosters, or section-level variance requires restricted-use state personnel databases (e.g. KSDE licensed personnel files with assignment codes; Missouri DESE Core Data Educator files) or district master schedule tables.
+  4. **Publish Task 006.2 Deliverables:**
+     - Audit data: `outputs/tables/task006_2_department_reconstruction_audit.csv`.
+     - Analytical report: `outputs/tables/task006_2_department_reconstruction_audit_report.md`.
 

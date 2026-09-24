@@ -1,4 +1,4 @@
-# Task 006.1: Public Course-Load Bounds & Department-Level Reconstruction
+# Task 006.1: Public Course-Load Scenarios & Gateway Bottlenecks
 
 ## 1. Epistemic Framing & The Five-Step Reconstruction Ladder
 
@@ -26,7 +26,7 @@ This pilot investigates the extent to which public data can recover secondary in
 
 ## 2. Core Empirical Findings: Selected Urban High School Pilot (SY 2023–24)
 
-Public CRDC data demonstrates that building-level pupil/teacher ratio (PTR) materially understates the classroom load represented by many core academic courses. However, the phenomenon is **not universal across all schools or all courses**, and depends heavily on gateway course concentration and course-mix differences:
+Public CRDC data demonstrates that building-level pupil/teacher ratio (PTR) **can materially understate the load represented by particular courses**. However, the phenomenon is **not universal across all schools or all courses**, and depends heavily on gateway course concentration and course-mix differences:
 
 ### Table 1: Course-Level Averages and Modeled Scenario Loads
 

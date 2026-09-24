@@ -1,6 +1,6 @@
 """
 src/analysis/urban_core_roster_reconstruction.py
-Task 006.1: Public Course-Load Bounds & Department-Level Reconstruction for Selected Urban High Schools
+Task 006.1: Public Course-Load Scenarios & Gateway Bottlenecks for Selected Urban High Schools
 
 Investigates the extent to which public CRDC course aggregates can model secondary course loads without
 student microdata, while maintaining strict epistemic boundaries between observed course means, derived
@@ -25,7 +25,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 def run_urban_reconstruction():
-    print("=== Running Task 006.1: Public Course-Load Bounds & Department-Level Reconstruction ===")
+    print("=== Running Task 006.1: Public Course-Load Scenarios & Gateway Bottlenecks ===")
     
     # 1. Load CRDC Course Aggregates
     df = pd.read_csv("data/processed/kc_crdc_school_course_aggregates_long_2013_14_2023_24.csv")
@@ -268,7 +268,7 @@ def run_urban_reconstruction():
     # 4. Generate Formal Markdown Report
     report_path = "outputs/tables/task006_urban_roster_reconstruction_report.md"
     with open(report_path, "w", encoding="utf-8") as f:
-        f.write("# Task 006.1: Public Course-Load Bounds & Department-Level Reconstruction\n\n")
+        f.write("# Task 006.1: Public Course-Load Scenarios & Gateway Bottlenecks\n\n")
         f.write("## 1. Epistemic Framing & The Five-Step Reconstruction Ladder\n\n")
         f.write("This pilot investigates the extent to which public data can recover secondary instructional workload without student microdata, while respecting the strict epistemic boundary between observed course aggregates and unobserved individual teacher rosters:\n\n")
         f.write("```\n")
@@ -292,7 +292,7 @@ def run_urban_reconstruction():
         f.write("```\n\n")
         
         f.write("## 2. Core Empirical Findings: Selected Urban High School Pilot (SY 2023–24)\n\n")
-        f.write("Public CRDC data demonstrates that building-level pupil/teacher ratio (PTR) materially understates the classroom load represented by many core academic courses. However, the phenomenon is **not universal across all schools or all courses**, and depends heavily on gateway course concentration and course-mix differences:\n\n")
+        f.write("Public CRDC data demonstrates that building-level pupil/teacher ratio (PTR) **can materially understate the load represented by particular courses**. However, the phenomenon is **not universal across all schools or all courses**, and depends heavily on gateway course concentration and course-mix differences:\n\n")
         
         f.write("### Table 1: Course-Level Averages and Modeled Scenario Loads\n\n")
         f.write("| School Campus | District | Building PTR | Alg I Mean | Geom Mean | Alg 2 Mean | Core Math Mean | Adv Math Mean | Modeled R5 (5 × Core) | Modeled R6 (6 × Core) | Naive R5 (5 × PTR) | R5 Residual (Δtotal) |\n")
