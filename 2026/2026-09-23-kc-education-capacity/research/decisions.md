@@ -377,5 +377,10 @@ Catalog these metrics in `outputs/tables/task003a1_reporting_coverage.csv` and r
      - Conclude data collection permanently (no Task 007).
      - Audit data: `outputs/tables/task006_2_department_reconstruction_audit.csv`.
      - Analytical report: `outputs/tables/task006_2_department_reconstruction_audit_report.md`.
+  5. **Codify the Three-Study Research Frontier:**
+     - Formalize the architectural separation between:
+       - **Study 1 (Current Monograph):** The Public Measurement of Adult Instructional Capacity in Metropolitan Kansas City (100% public, reproducible, macro-to-course architecture).
+       - **Study 2 (Follow-Up Inquiry):** Effective Classroom Complexity & Intersecting Need (internal de-identified demographic microdata evaluating $P(\text{IEP} \cap \text{ELL})$, $P(\text{IEP} \cap \text{FRL})$).
+       - **Study 3 (The Modern Jenkins Replication):** Teacher Roster Load Validation (direct empirical calculation of $R_t = \sum_s n_s$ and tail shares if an anonymous SIS course-section table is acquired).
 
 

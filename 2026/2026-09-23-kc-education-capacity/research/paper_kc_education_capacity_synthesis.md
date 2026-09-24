@@ -322,6 +322,26 @@ Herein lies the institutional irony: **Forty years ago, a federal court was able
 
 Policymakers and school boards debate building-level pupil/teacher ratios that obscure classroom reality, while the actual administrative data systems published by states fail to report teacher active roster load.
 
+### The Epistemological Finding: Testing the Public Measurement Shortcuts
+A major conclusion of this multi-phase investigation is that **the data boundary itself has become a substantive empirical finding**. Rather than merely failing to locate an elusive statistic, the project systematically audited and ruled out every candidate shortcut in public administrative data:
+1. *Can building pupil/teacher ratio (PTR) tell us?* **No.** PTR measures institutional employment relative to enrollment, conflating self-contained elementary classes with secondary departmental schedules, and counting non-classroom specialists in the teacher denominator.
+2. *Can state certified staffing tallies tell us?* **No.** State payroll registers (DESE Screen 18, KSDE LPR) prove that certified staffing expansions were real (+8.86%), but aggregate state counts do not reveal classroom allocations.
+3. *Can federal CRDC course aggregates tell us?* **No.** CRDC course catalogs establish course-demand pressure and gateway bottlenecks, but yield annual quotients ($\bar{s}_c = E_c / S_c$) subject to timing mismatches, not simultaneous individual section rosters.
+4. *Can bell schedule models get us there?* **No.** Schedule multipliers ($\phi = P_{\text{student}} / P_{\text{teacher}}$) establish rigorous structural scenario envelopes ($R_5 = 5\bar{s}, R_6 = 6\bar{s}$), but remain modeled scenarios rather than observed teacher rosters.
+5. *Can public personnel directories supply the department denominator?* **No.** As proven in Task 006.2, public school web listings either omit subject classifications, shield directories behind bot verification, or produce severe temporal and block-snapshot disconnects.
+6. *Can certified student enrollment files reconstruct sections?* **No.** Official state October Student Core files record demographic census denominators, but lack the essential assignment relation:
+   $$\text{student} \longrightarrow \text{course section} \longrightarrow \text{teacher}$$
+
+### The Research Frontier: A Three-Study Architecture
+By establishing precisely where public records terminate, this project establishes a clean boundary separating public measurement from internal microdata research:
+
+1. **Study 1 (This Monograph): The Public Measurement of Adult Instructional Capacity:**
+   - Evaluates macro-to-course capacity strictly from audited public administrative records across 56 school districts and 691 campuses over four decades. Fully public, open-source, and reproducible.
+2. **Study 2 (Follow-Up Inquiry): Effective Classroom Complexity & Intersecting Need:**
+   - An internal, de-identified demographic study evaluating joint support probabilities ($P(\text{IEP} \cap \text{ELL})$, $P(\text{IEP} \cap \text{FRL})$) to determine whether modern instructional complexity stems from expanding discrete cohorts or increasingly stacked support requirements concentrated within the same students.
+3. **Study 3 (The Modern Jenkins Replication): Teacher Roster Load Validation:**
+   - If research partnerships or state releases ever expose an anonymous course-section table ($\text{teacher\_id}, \text{course}, \text{section}, \text{roster\_count}$) from district SIS master schedules (PowerSchool, Infinite Campus) or state assignment collections (MOSIS Screen 20/21; KEDX Course-Section Association), calculating empirical teacher active roster loads ($R_t = \sum_{s \in t} n_s$), section variances, and tail overload shares ($P(R > 125, 140, 150)$) to directly benchmark against Judge Clark's 1985 remedial orders.
+
 ---
 
 ## 8. Conclusion: Reframing Adult Instructional Capacity
