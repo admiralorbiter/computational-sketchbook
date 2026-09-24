@@ -79,8 +79,8 @@ In accordance with user methodological guardrails:
 1. **Rejection of Pure Fabricated Numbers:**
    Both states show substantial parallel increases in both certified teachers and classified paraprofessionals. The expansion of adults inside schools is real across both sides of the state line.
 2. **Individualized Needs (H2 Linkage):**
-   The rapid expansion of paraprofessionals (+11.85% regional, +15.74% in Missouri) is strong indirect evidence of growing individualized education programs (IEPs), 1-on-1 behavioral support, and intensive special education mandates.
+   Paraprofessional growth (+11.85% regional, +15.74% in Missouri) is consistent with increased individualized and instructional-support capacity, but the current CCD category is broader than special-education aides and does not identify the underlying service population. Verifying whether expanding IEP, behavioral-support, or ELL obligations drove this growth requires linking IDEA child-count microdata.
 3. **The Non-Teaching Support Surge:**
-   Instructional coordinators expanded by nearly 50% regionally (+71% in Kansas). These personnel work on curriculum alignment, teacher coaching, assessment coordination, and compliance rather than rostered classroom teaching.
+   Instructional coordinators expanded by nearly 50% regionally (+71% in Kansas). These positions (curriculum coaches, assessment coordinators, compliance specialists) are interesting organizationally, but they reside entirely outside the teacher denominator. They demonstrate that school systems became more organizationally staffed, but they do not explain why the teacher pupil/teacher ratio fell.
 4. **Transition to Phase 4A:**
    The human-capital investment in schools expanded significantly across teachers, aides, specialists, and coordinators. The next imperative is to examine Section-Level Microdata (Screen 20 in Missouri, KEDS in Kansas) to see how these personnel translate into actual student class rosters.

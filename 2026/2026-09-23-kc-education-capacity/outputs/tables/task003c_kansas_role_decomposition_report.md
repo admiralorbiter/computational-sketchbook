@@ -11,14 +11,15 @@
 
 The Step 1A pilot revealed that Kansas State Department of Education (KSDE) administrative systems distinguish between **Classroom Teachers** and **Other Teachers (Special Education & Reading Specialists)**, whereas federal Common Core of Data (CCD) bundles both into total instructional teachers. 
 
-To determine whether the decade-long teacher staffing expansion was driven primarily by specialized instructional roles (H1c — The Allocation Wedge Hypothesis) or by conventional classroom teachers, this report analyzes complete administrative personnel panels across **all 19 Unified School Districts (USDs)** in the 4 Kansas metropolitan counties (Johnson, Wyandotte, Leavenworth, and Miami) across the three canonical anchor years: **2014–15, 2019–20, and 2024–25**.
+To determine whether the decade-long teacher staffing expansion was driven primarily by specialized instructional roles (H1c — The Allocation Wedge Hypothesis) or by conventional classroom teachers, this report analyzes complete administrative personnel panels across **all 19 metropolitan Unified School Districts (USDs)** in the 4 Kansas metropolitan counties (Johnson, Wyandotte, Leavenworth, and Miami) across the three canonical anchor years: **2014–15, 2019–20, and 2024–25**. (Note: State special schools—School for the Blind and School for the Deaf—are state-administered institutions outside the standard USD school finance and staffing formula and are excluded from this USD decomposition).
 
 ### Key Findings:
 
-1. **The Allocation Wedge is Quantified at ~2.7 to 2.8 Students per Teacher:**
-   - In 2014–15, the regional student-to-teacher ratio across all 19 Kansas USDs was **16.86** students per *Classroom Teacher*, but **14.05** students per *Total Instructional Teacher* ($\text{Wedge} = \mathbf{2.81}$).
-   - In 2024–25, the ratio was **16.26** students per *Classroom Teacher*, but **13.60** students per *Total Instructional Teacher* ($\text{Wedge} = \mathbf{2.66}$).
+1. **The Specialist Denominator Wedge is Quantified at ~2.7 to 2.8 Students per Teacher:**
+   - In 2014–15, the regional student-to-teacher ratio across the 19 Kansas USDs was **16.86** students per *Classroom Teacher*, but **14.05** students per *Total Instructional Teacher* ($\text{Specialist Denominator Wedge} = \mathbf{2.81}$).
+   - In 2024–25, the ratio was **16.26** students per *Classroom Teacher*, but **13.60** students per *Total Instructional Teacher* ($\text{Specialist Denominator Wedge} = \mathbf{2.66}$).
    - Reporting aggregate teacher FTE (as federal CCD does) makes regional staffing look systematically more generous by **2.7 to 2.8 students per teacher** compared to direct classroom-teaching lines.
+   - *Important Terminology Distinction:* This measure is the **Specialist Denominator Wedge** (or Teacher-Definition Wedge). The true **Allocation Wedge** defined under Hypothesis H1c is $\text{Median Core Section Size} - \text{Reported Pupil/Teacher Ratio}$, which will be directly measured in Phase 4A.
 
 2. **Both Classroom and Specialized Roles Rose Substantially:**
    - Across all 19 districts combined:
@@ -75,7 +76,7 @@ Table 1 summarizes all 19 Unified School Districts in Johnson, Wyandotte, Leaven
 ### Table 1: Kansas Metropolitan USD Personnel Totals (19 Districts)
 *Source: KSDE OpenGov / Licensed Personnel Databank*
 
-| School Year | Students | Classroom Teachers | Other Teachers (SPED/Reading) | Total Instructional Tch | Managers | Specialist Share (%) | Students / Classroom Tch | Students / Instructional Tch | Allocation Wedge |
+| School Year | Students | Classroom Teachers | Other Teachers (SPED/Reading) | Total Instructional Tch | Managers | Specialist Share (%) | Students / Classroom Tch | Students / Instructional Tch | Specialist Denominator Wedge |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **2014–15** | 136,986.0 | 8,123.70 | 1,623.90 | 9,747.60 | 998.20 | **16.66%** | **16.86** | **14.05** | **+2.81** |
 | **2019–20** | 145,812.0 | 8,884.80 | 1,715.40 | 10,600.20 | 1,064.30 | **16.18%** | **16.41** | **13.76** | **+2.66** |
@@ -94,7 +95,7 @@ The table below presents the full decomposition for each of the 19 Kansas school
 ### Table 2: 10-Year Teacher Role Decomposition by Kansas District
 *Source: `outputs/tables/task003c_kansas_role_decomposition.csv`*
 
-| USD | District Name | County | $\Delta\text{Students}$ | $\Delta T_{class}$ | $\Delta T_{other}$ | $\Delta T_{inst}$ | $\% \Delta T_{class}$ | $\% \Delta T_{other}$ | Specialist Share 2025 | Specialist Share of Growth | Wedge 2015 | Wedge 2025 |
+| USD | District Name | County | $\Delta\text{Students}$ | $\Delta T_{class}$ | $\Delta T_{other}$ | $\Delta T_{inst}$ | $\% \Delta T_{class}$ | $\% \Delta T_{other}$ | Specialist Share 2025 | Specialist Share of Growth | Specialist Wedge 2015 | Specialist Wedge 2025 |
 | :---: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **202** | Turner-Kansas City | Wyandotte | -219.6 | +15.0 | -9.0 | +6.0 | +7.2% | -19.6% | 14.2% | -150.0% | 3.47 | 2.38 |
 | **203** | Piper-Kansas City | Wyandotte | +837.0 | +47.5 | +27.0 | +74.5 | +44.2% | +300.0% | 18.9% | **36.2%** | 1.32 | 3.29 |
@@ -136,9 +137,9 @@ USD 500 experienced significant contraction in reported central personnel (-144.
 
 ## 5. Synthesis: Implications for the Research Hypotheses
 
-| Hypothesis | Finding from Step 1B-KS | Interpretation |
+| Hypothesis | Finding from Step 1B-KS | Interpretation & Status |
 | :--- | :--- | :--- |
-| **H1c (Allocation Wedge: Specialized Roles)** | **Partially Validated (~2.7–2.8 ratio wedge)** | Specialized teachers create a persistent 2.7–2.8 student wedge between classroom ratios and aggregate ratios. In high-growth districts like Blue Valley, specialized roles accounted for 51% of net additions. |
-| **H1c (Classroom Teacher Sufficiency)** | **Classroom Teachers Rose Substantially (+6.2% to +8.7%)** | Because classroom teachers themselves expanded faster than enrollment, specialized role dilution does NOT fully explain why core classes remain large. Physical classroom capacity increased. |
-| **H2 (Complexity / Individualized Needs)** | **Substantial Expansion in Specialists & Paras** | The 21% surge in suburban specialized teachers and 12% rise in paras indicates expanding individualized instructional obligations (IEP/504/ELL). |
-| **Phase 4A Frontier (Scheduling & Load)** | **Strongest Next Question** | If classroom teachers grew by 8.7% while enrollment grew 3.2%, why didn't core secondary class sizes shrink proportionally? Directly motivates section-level scheduling and elective distribution analysis. |
+| **H1c (The Allocation Wedge Hypothesis)** | **Specialist Wedge Quantified (~2.7–2.8); Allocation Wedge Unresolved** | Kansas state data confirms that specialized instructional teachers create a ~2.7–2.8 ratio wedge (the *Specialist Denominator Wedge*). However, because classroom teachers themselves also grew (+6.2% across USDs, +8.7% in Johnson County), denominator dilution alone does not explain why core classes remain large. The true Allocation Wedge ($\text{Median Core Section Size} - \text{Reported PTR}$) remains **unresolved** pending Phase 4A course section microdata. |
+| **Classroom Teacher Sufficiency** | **Classroom Teachers Rose Substantially (+6.2% to +8.7%)** | Physical regular classroom capacity expanded faster than enrollment. Why added classroom FTE did not translate into smaller core sections is the central mystery for Phase 4. |
+| **H2 (Complexity / Individualized Needs)** | **Substantial Expansion in Specialists & Paras** | The 21% surge in suburban specialized teachers and 12% rise in paras is consistent with expanding individualized instructional obligations (IEP/504/ELL), though CCD and LPR aggregates do not observe the section-level student mix. |
+| **Phase 4A Frontier (Scheduling & Load)** | **Highest-Value Research Step** | Squeezing district FTE further offers diminishing returns. The empirical frontier requires observing course section schedules, educator prep load, and student distribution. |
