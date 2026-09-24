@@ -103,3 +103,28 @@
 * **Date:** 2026-09-23
 * **Context:** Constructing a historical panel by filtering historical data to current 2024–2025 schools introduces severe survivorship bias by omitting schools that closed, reorganized, or merged during the decade.
 * **Decision:** Phase 3 will construct an 11-school-year annual panel spanning the 10-year interval from 2014–15 through 2024–25 by independently reconstructing the KC 9-county geographic universe in each school year as repeated cross-sections. A balanced panel of continuously observed facilities will be generated as a secondary sensitivity check.
+
+### Decision 015: Longitudinal Repeated Cross-Sections Primacy and Zero Survivorship Bias
+* **Status:** Adopted
+* **Date:** 2026-09-23
+* **Context:** In educational capacity analysis over a 10-year period, conditioning on survival into 2024–25 introduces substantial bias by ignoring school closures, consolidations, charter turnovers, and suburban boundary shifts.
+* **Decision:** Establish `kc_school_capacity_long_2014_15_2024_25.csv` as the primary analytical foundation, built from independent annual cross-sections based on physical school building geocodes within the 9 MARC counties for each year $t \in [2014\text{–}15, \dots, 2024\text{–}25]$. Every school operating in each year is included regardless of subsequent survival or historical existence.
+
+### Decision 016: Secondary Balanced Panel Definition and Dual Locale Architecture
+* **Status:** Adopted
+* **Date:** 2026-09-23
+* **Context:** While repeated cross-sections accurately measure aggregate capacity, distinguishing genuine within-school staffing trends from campus openings and closures requires a balanced panel. Furthermore, NCES locale codes are updated periodically (e.g. following Decennial Census boundary revisions), conflating demographic reclassification with actual urbanization shifts.
+* **Decision:** Construct a secondary balanced panel (`kc_school_balanced_panel_2014_15_2024_25.csv`) comprising the 620 schools that were observed and continuously operating in the 9-county region across all 11 school years (`balanced_panel_eligible == True`). Preserve dynamic historical locale codes (`locale_code_year`, `locale_group_year`) alongside fixed 2024–25 locale assignments (`locale_code_fixed_2024_2025`, `locale_group_fixed_2024_2025`) for sensitivity controls. Attach school-level longitudinal transition summary flags (`grade_span_changed_any`, `lea_changed_any`, `school_type_changed_any`, `locale_changed_any`).
+
+### Decision 017: Longitudinal FRL Measurement Guardrail
+* **Status:** Adopted
+* **Date:** 2026-09-23
+* **Context:** In 2016–17, federal EDFacts reporting transitioned from wide lunch files to long formats, coincident with widespread adoption and expansion of the Community Eligibility Provision (CEP) and direct certification. Raw counts of free and reduced-price lunch eligibility (FRL) exhibit structural breaks across the decade.
+* **Decision:** Ingest FRL data faithfully (`frl_eligible`, `frl_rate`, `frl_observed`) without continuous poverty imputation. Enforce a strict methodological guardrail: FRL must NOT be used as a continuous longitudinal poverty proxy across the decade, and downstream trend models must not infer student poverty trajectories from federal lunch eligibility rates without controlling for policy breaks.
+
+### Decision 018: Explicit Directory <-> EDGE Geocode Match Audit Protocol
+* **Status:** Adopted
+* **Date:** 2026-09-23
+* **Context:** Geocoded datasets can silently omit schools present in state administrative directories if physical coordinates are pending or unassigned, leading to invisible attrition.
+* **Decision:** Audit every school record in Missouri (29) and Kansas (20) across both the CCD Directory and EDGE Geocode files for all 11 years prior to geographic bounding. Log any school present in Directory but omitted from EDGE (or present in EDGE but omitted from Directory) explicitly in `outputs/tables/task003a_anomalies.csv` to ensure 100% transparency of coverage.
+

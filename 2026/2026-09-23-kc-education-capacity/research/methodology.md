@@ -42,9 +42,17 @@
    * **Independent Ingestion Replication:** Replicate data ingestion against the Urban Institute Education Data Portal API across 10 sample districts representing core urban, suburban, exurban, and rural archetypes. Replicates parsing, aggregation, and arithmetic against identical federal CCD collections without claiming independent confirmation of underlying CCD accuracy.
    * **Socioeconomic Missingness Warning:** Free and reduced-price lunch eligibility (FS033) is missing for 37 operating schools in a non-random pattern concentrated in shared-time CTE, virtual, and day-treatment programs. `frl_rate` must not be treated as a universal socioeconomic control without accounting for reporting missingness.
    * **Methodological Guardrails:** Capacity ratios measure structural staffing resources per pupil; they are **never** treated as observable class sizes.
-3. **Phase 3: Longitudinal Capacity Panel (11 School Years, 10-Year Interval)**
-   * Assemble an 11-school-year annual panel spanning the 10-year interval from 2014–15 through 2024–25.
-   * Construct the panel by independently reconstructing the KC 9-county geographic universe in every school year as repeated cross-sections, avoiding survivorship bias.
-   * Construct a secondary balanced panel of continuously operating schools for sensitivity analysis.
+3. **Phase 3: Longitudinal Capacity Panel (Task 003A & 003B)**
+   * **Task 003A: Construction & Audit Foundation (11 School Years, 10-Year Interval):**
+     * Assemble 11 annual school years spanning the decade from 2014–15 through 2024–25.
+     * **Primary Panel (Repeated Cross-Sections):** Independently reconstruct the 9-county KC geographic universe in each school year based on active physical building coordinates and county FIPS codes (`kc_school_capacity_long_2014_15_2024_25.csv`, 7,384 school-years, 730 unique schools; `kc_lea_capacity_long_2014_15_2024_25.csv`, 881 LEA-years). Prevents current-cohort survivorship bias by capturing all campus openings, closures, consolidations, and relocations.
+     * **Secondary Balanced Panel:** Isolate the 620 schools observed and operating continuously across all 11 school years (`kc_school_balanced_panel_2014_15_2024_25.csv`, 6,820 rows). Serves strictly as a sensitivity control to differentiate within-campus staffing adjustments from geographic/portfolio turnover.
+     * **Directory <-> EDGE Audit Protocol:** Audit every state Directory school against federal EDGE geocodes prior to geographic filtering to surface missing coordinates transparently (`outputs/tables/task003a_anomalies.csv`).
+     * **Dual Locale Architecture:** Preserve dynamic historical NCES locale classifications active in each school year (`locale_code_year`, `locale_group_year`) alongside fixed 2024–25 classifications (`locale_code_fixed_2024_2025`, `locale_group_fixed_2024_2025`) to test sensitivity against Decennial Census boundary revisions.
+     * **FRL Measurement Guardrail:** Ingest federal lunch counts faithfully without poverty imputation; strictly enforce that FRL cannot serve as a continuous longitudinal poverty proxy due to the 2016–17 federal reporting shift and CEP expansion.
+     * **Zero Hypothesis Testing Certification:** Task 003A is strictly restricted to data construction and auditing. No regressions, statistical significance testing, or directional claims of improvement or deterioration are permitted prior to formal review.
+   * **Task 003B: Longitudinal Hypothesis & Trend Analysis:**
+     * Evaluate decade-long trends in student-to-teacher capacity across urban, suburban, and rural strata using both repeated cross-sections and balanced panel specifications.
 4. **Phase 4: Section-Level Class Size Analysis**
    * Merge state-level course assignment collections (DESE MOSIS Course & Student Assignment records; KSDE open-enrollment capacity and section files) to reconstruct actual classroom section distributions and evaluate the gap between structural capacity ratios and true class sizes.
+

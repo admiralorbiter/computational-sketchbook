@@ -65,9 +65,11 @@ kc_education_capacity/
 
 ---
 
-## Current Status: Phase 2 (Task 002 & 002B) Complete
+## Current Status: Phase 3A (Task 003A) Complete
 
 - **Task 001 (Geographic Universe):** Complete. 691 schools across 9 MARC counties established, geocoded, and classified using NCES CCD/EDGE SY 2024–2025.
 - **Task 002 & 002B (Baseline Staffing & Capacity):** Complete. School- and LEA-level baseline capacity panels constructed (`kc_school_capacity_2024_2025.csv`, `kc_lea_capacity_2024_2025.csv`), with programmatic LEA geographic coverage metadata, `Operating Regular (NCES)` terminology, FRL missingness analysis, independent Urban Institute ingestion replication, and audited anomalies in `outputs/tables/task002_qa_report.md`.
-- **Next Phase (Task 003):** 11-school-year annual panel spanning the 10-year interval from 2014–15 through 2024–25, reconstructed independently in every year as repeated cross-sections to avoid survivorship bias.
+- **Task 003A (11-Year Longitudinal Data Construction & Audit):** Complete. Downloaded and cataloged all 99 raw NCES archives across 11 school years (2014–15 through 2024–25). Constructed primary repeated cross-section school panel (`kc_school_capacity_long_2014_15_2024_25.csv`, 7,384 records across 730 unique schools), primary repeated cross-section LEA panel (`kc_lea_capacity_long_2014_15_2024_25.csv`, 881 records), secondary balanced panel (`kc_school_balanced_panel_2014_15_2024_25.csv`, 6,820 records across 620 schools), anomaly ledger (`task003a_anomalies.csv`, 100 entries), and audit report (`outputs/tables/task003a_qa_report.md`). Zero discrepancies on 2024–25 baseline parity check.
+- **Next Phase (Task 003B):** Longitudinal Capacity Trend Analysis & Formal Hypothesis Testing (H1a, H1b, H2, H3, H4) across the 10-year period.
+
 

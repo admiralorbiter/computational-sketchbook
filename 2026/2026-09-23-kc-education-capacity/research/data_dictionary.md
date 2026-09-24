@@ -122,3 +122,27 @@
 | `lea_fully_within_region` | Boolean | Derived | `True` if `lea_operating_schools_outside_region == 0`. `False` if LEA operates schools outside the 9-county region (e.g. MO DYS, MSSD). Staffing/enrollment for `False` LEAs reflect statewide totals. |
 | `school_year` | String | NCES CCD | School year of the record (`2024-2025`). |
 
+---
+
+### 3. Longitudinal Panel & Transition Variables
+
+These attributes appear in the primary repeated cross-sections panel (`kc_school_capacity_long_2014_15_2024_25.csv`) and the secondary balanced panel (`kc_school_balanced_panel_2014_15_2024_25.csv`):
+
+| Field Name | Type | Source | Description |
+| :--- | :--- | :--- | :--- |
+| `locale_code_year` | String | NCES EDGE | 2-digit NCES locale code (11–43) active in the observed school year. Preserves historical classification without retroactive backfilling. |
+| `locale_desc_year` | String | Derived | Standard text description of active annual locale code (e.g. `City: Large`, `Suburb: Midsize`). |
+| `locale_group_year` | String | Derived | 4-category broad locale grouping in observed year (`City`, `Suburb`, `Town`, `Rural`). |
+| `years_observed_count` | Integer | Derived | Total number of annual cross-sections (out of 11) in which the NCES school ID is observed in the regional universe. |
+| `years_operating_count` | Integer | Derived | Total number of annual cross-sections (out of 11) in which the school was observed with an active operating status (`is_operating == True`). |
+| `first_observed_school_year` | String | Derived | First school year in which the school ID appeared in the regional frame (e.g. `2014-2015`). |
+| `last_observed_school_year` | String | Derived | Most recent school year in which the school ID appeared in the regional frame (e.g. `2024-2025`). |
+| `balanced_panel_eligible` | Boolean | Derived | `True` iff school is observed in all 11 school years and is operating in all 11 school years (`years_observed_count == 11 and years_operating_count == 11`). 620 schools meet this criterion. |
+| `grade_span_changed_any` | Boolean | Derived | `True` if school reported different grade span configurations (`lowest_grade` to `highest_grade`) across observed years. |
+| `lea_changed_any` | Boolean | Derived | `True` if school was reassigned to a different `nces_lea_id` across observed years. |
+| `school_type_changed_any` | Boolean | Derived | `True` if school's NCES school type classification changed over the decade. |
+| `locale_changed_any` | Boolean | Derived | `True` if school's 2-digit NCES locale code changed across observed years. |
+| `locale_code_fixed_2024_2025` | String | NCES EDGE (24–25) | Fixed 2024–25 NCES locale code attached to balanced panel schools for sensitivity controls against census boundary shifts. |
+| `locale_group_fixed_2024_2025`| String | Derived (24–25) | Fixed 2024–25 broad locale group (`City`, `Suburb`, `Town`, `Rural`) attached to balanced panel schools. |
+
+

@@ -1,0 +1,101 @@
+school_year,entity_type,entity_id,entity_name,anomaly_type,metric,value,notes
+2014-2015,School,290060903262,The Biome,UNMATCHED_DIRECTORY_IN_EDGE,Missing EDGE Geocode,"State=MO, LEA=The Biome",School present in official state Directory but omitted from federal EDGE geocode file.
+2014-2015,School,290061003263,Vernare Learning School,UNMATCHED_DIRECTORY_IN_EDGE,Missing EDGE Geocode,"State=MO, LEA=Vernare",School present in official state Directory but omitted from federal EDGE geocode file.
+2014-2015,School,292370001411,,UNMATCHED_EDGE_IN_DIRECTORY,Missing Directory Record,"County=ST. LOUIS COUNTY, FIPS=29189",School present in EDGE geocode file but omitted from state Directory.
+2014-2015,School,290058803123,,UNMATCHED_EDGE_IN_DIRECTORY,Missing Directory Record,"County=JACKSON COUNTY, FIPS=29095",School present in EDGE geocode file but omitted from state Directory.
+2014-2015,School,291854002791,,UNMATCHED_EDGE_IN_DIRECTORY,Missing Directory Record,"County=CLAY COUNTY, FIPS=29047",School present in EDGE geocode file but omitted from state Directory.
+2014-2015,School,291854001008,,UNMATCHED_EDGE_IN_DIRECTORY,Missing Directory Record,"County=CLAY COUNTY, FIPS=29047",School present in EDGE geocode file but omitted from state Directory.
+2014-2015,School,290058803206,,UNMATCHED_EDGE_IN_DIRECTORY,Missing Directory Record,"County=JACKSON COUNTY, FIPS=29095",School present in EDGE geocode file but omitted from state Directory.
+2014-2015,LEA,2008250,Prairie View,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=4, InRegion=0, Outside=4",LEA operates schools outside the 9 MARC counties (coverage share = 0.0%).
+2014-2015,LEA,2900009,DIVISION OF YOUTH SERVICE,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=42, InRegion=5, Outside=37",LEA operates schools outside the 9 MARC counties (coverage share = 11.9%).
+2014-2015,LEA,2900022,MO SCHLS FOR THE SEV DISABLED,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=35, InRegion=5, Outside=30",LEA operates schools outside the 9 MARC counties (coverage share = 14.3%).
+2014-2015,LEA,2931110,WASHINGTON,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=12, InRegion=2, Outside=10",LEA operates schools outside the 9 MARC counties (coverage share = 16.7%).
+2015-2016,School,590010300102,Kickapoo Nation School,UNMATCHED_EDGE_IN_DIRECTORY,Missing Directory Record,"County=Brown County, FIPS=20013",School present in EDGE geocode file but omitted from state Directory.
+2015-2016,LEA,2900009,DIVISION OF YOUTH SERVICE,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=42, InRegion=5, Outside=37",LEA operates schools outside the 9 MARC counties (coverage share = 11.9%).
+2015-2016,LEA,2900022,MO SCHLS FOR THE SEV DISABLED,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=35, InRegion=5, Outside=30",LEA operates schools outside the 9 MARC counties (coverage share = 14.3%).
+2016-2017,School,590010300102,Kickapoo Nation School,UNMATCHED_EDGE_IN_DIRECTORY,Missing Directory Record,"County=Brown County, FIPS=20013",School present in EDGE geocode file but omitted from state Directory.
+2016-2017,LEA,2900009,DIVISION OF YOUTH SERVICE,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=41, InRegion=5, Outside=36",LEA operates schools outside the 9 MARC counties (coverage share = 12.2%).
+2016-2017,LEA,2900022,MO SCHLS FOR THE SEV DISABLED,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=35, InRegion=5, Outside=30",LEA operates schools outside the 9 MARC counties (coverage share = 14.3%).
+2017-2018,School,590010300102,Kickapoo Nation School,UNMATCHED_EDGE_IN_DIRECTORY,Missing Directory Record,"County=Brown County, FIPS=20013",School present in EDGE geocode file but omitted from state Directory.
+2017-2018,LEA,2900009,DIVISION OF YOUTH SERVICE,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=41, InRegion=5, Outside=36",LEA operates schools outside the 9 MARC counties (coverage share = 12.2%).
+2017-2018,LEA,2900022,MO SCHLS FOR THE SEV DISABLED,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=35, InRegion=5, Outside=30",LEA operates schools outside the 9 MARC counties (coverage share = 14.3%).
+2018-2019,School,590010300102,Kickapoo Nation School,UNMATCHED_EDGE_IN_DIRECTORY,Missing Directory Record,"County=Brown County, FIPS=20013",School present in EDGE geocode file but omitted from state Directory.
+2018-2019,LEA,2900009,DIVISION OF YOUTH SERVICE,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=41, InRegion=5, Outside=36",LEA operates schools outside the 9 MARC counties (coverage share = 12.2%).
+2018-2019,LEA,2900022,MO SCHLS FOR THE SEV DISABLED,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=35, InRegion=5, Outside=30",LEA operates schools outside the 9 MARC counties (coverage share = 14.3%).
+2019-2020,School,590010300102,Kickapoo Nation School,UNMATCHED_EDGE_IN_DIRECTORY,Missing Directory Record,"County=Brown County, FIPS=20013",School present in EDGE geocode file but omitted from state Directory.
+2019-2020,LEA,2900009,DIVISION OF YOUTH SERVICE,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=41, InRegion=5, Outside=36",LEA operates schools outside the 9 MARC counties (coverage share = 12.2%).
+2019-2020,LEA,2900022,MO SCHLS FOR THE SEV DISABLED,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=35, InRegion=5, Outside=30",LEA operates schools outside the 9 MARC counties (coverage share = 14.3%).
+2020-2021,School,590010300102,Kickapoo Nation School,UNMATCHED_EDGE_IN_DIRECTORY,Missing Directory Record,"County=Brown County, FIPS=20013",School present in EDGE geocode file but omitted from state Directory.
+2020-2021,LEA,2900009,DIVISION OF YOUTH SERVICE,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=41, InRegion=5, Outside=36",LEA operates schools outside the 9 MARC counties (coverage share = 12.2%).
+2020-2021,LEA,2900022,MO SCHLS FOR THE SEV DISABLED,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=35, InRegion=5, Outside=30",LEA operates schools outside the 9 MARC counties (coverage share = 14.3%).
+2021-2022,School,590010300102,Kickapoo Nation School,UNMATCHED_EDGE_IN_DIRECTORY,Missing Directory Record,"County=Brown County, FIPS=20013",School present in EDGE geocode file but omitted from state Directory.
+2021-2022,LEA,2900009,DIVISION OF YOUTH SERVICE,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=41, InRegion=5, Outside=36",LEA operates schools outside the 9 MARC counties (coverage share = 12.2%).
+2021-2022,LEA,2900022,MO SCHLS FOR THE SEV DISABLED,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=35, InRegion=5, Outside=30",LEA operates schools outside the 9 MARC counties (coverage share = 14.3%).
+2022-2023,School,590010300102,Kickapoo Nation School,UNMATCHED_EDGE_IN_DIRECTORY,Missing Directory Record,"County=Brown County, FIPS=20013",School present in EDGE geocode file but omitted from state Directory.
+2022-2023,LEA,2900009,DIVISION OF YOUTH SERVICE,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=41, InRegion=5, Outside=36",LEA operates schools outside the 9 MARC counties (coverage share = 12.2%).
+2022-2023,LEA,2900022,MO SCHLS FOR THE SEV DISABLED,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=35, InRegion=5, Outside=30",LEA operates schools outside the 9 MARC counties (coverage share = 14.3%).
+2023-2024,School,590010300102,Kickapoo Nation School,UNMATCHED_EDGE_IN_DIRECTORY,Missing Directory Record,"County=Brown County, FIPS=20013",School present in EDGE geocode file but omitted from state Directory.
+2023-2024,LEA,2900009,DIVISION OF YOUTH SERVICE,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=41, InRegion=5, Outside=36",LEA operates schools outside the 9 MARC counties (coverage share = 12.2%).
+2023-2024,LEA,2900022,MO SCHLS FOR THE SEV DISABLED,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=35, InRegion=5, Outside=30",LEA operates schools outside the 9 MARC counties (coverage share = 14.3%).
+2024-2025,School,590010300102,Kickapoo Nation School,UNMATCHED_EDGE_IN_DIRECTORY,Missing Directory Record,"County=Brown County, FIPS=20013",School present in EDGE geocode file but omitted from state Directory.
+2024-2025,LEA,2900009,DIVISION OF YOUTH SERVICE,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=30, InRegion=5, Outside=25",LEA operates schools outside the 9 MARC counties (coverage share = 16.7%).
+2024-2025,LEA,2900022,MO SCHLS FOR THE SEV DISABLED,CROSS_BOUNDARY_LEA,Operating Schools Outside Region,"Total=35, InRegion=5, Outside=30",LEA operates schools outside the 9 MARC counties (coverage share = 14.3%).
+2014-15 to 2024-25,School,200378001187,Linwood Elementary School,COORDINATE_DISPLACEMENT,Max Coordinate Movement,3.87 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,200633000048,MacArthur Elem,COORDINATE_DISPLACEMENT,Max Coordinate Movement,0.65 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,200633000049,Patton Jr High,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.02 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,200795002094,Alfred Fairfax Academy,COORDINATE_DISPLACEMENT,Max Coordinate Movement,7.73 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,200834001230,Lansing High 9-12,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.81 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,200834001664,Lansing Middle 6-8,COORDINATE_DISPLACEMENT,Max Coordinate Movement,0.96 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,200897001742,Peoria Street Learning Center,COORDINATE_DISPLACEMENT,Max Coordinate Movement,2.55 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,201068000026,Piper High,COORDINATE_DISPLACEMENT,Max Coordinate Movement,3.26 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,201068002041,Piper Creek Elementary,COORDINATE_DISPLACEMENT,Max Coordinate Movement,3.34 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,201164001523,Briarwood Elem,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.00 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,201164001525,Brookwood Elem,COORDINATE_DISPLACEMENT,Max Coordinate Movement,0.63 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,201164001529,Crestview Elem,COORDINATE_DISPLACEMENT,Max Coordinate Movement,0.65 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,201164001535,John Diemer Elem,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.55 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,201164001555,Rushton Elem,COORDINATE_DISPLACEMENT,Max Coordinate Movement,2.24 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,201185001918,Insight School of Kansas,COORDINATE_DISPLACEMENT,Max Coordinate Movement,5.63 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,201185002068,Kansas Virtual Academy (KSVA),COORDINATE_DISPLACEMENT,Max Coordinate Movement,5.63 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,201221001864,Tonganoxie Elem,COORDINATE_DISPLACEMENT,Max Coordinate Movement,0.97 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,201236000022,Turner Elem,COORDINATE_DISPLACEMENT,Max Coordinate Movement,0.52 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,290000901270,NORTHWEST REG. YOUTH CTR.,COORDINATE_DISPLACEMENT,Max Coordinate Movement,0.75 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,290001302751,KC INTERNATIONAL-WALLACE,COORDINATE_DISPLACEMENT,Max Coordinate Movement,4.09 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,290001403196,HOGAN PREPARATORY ACAD MIDDLE,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.04 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,290001403222,HOGAN PREPARATORY ACADEMY ELEM,COORDINATE_DISPLACEMENT,Max Coordinate Movement,6.14 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,290002203045,LAKEVIEW WOODS SCHOOL,COORDINATE_DISPLACEMENT,Max Coordinate Movement,0.65 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,290002503379,ALLEN VILLAGE PRESCHOOL,COORDINATE_DISPLACEMENT,Max Coordinate Movement,2.33 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,290002902741,GUADALUPE CENTERS HIGH SCHOOL,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.78 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,290002903166,GUADALUPE CENTERS MIDDLE,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.01 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,290002903216,GUADALUPE CENTERS ELEMENTARY,COORDINATE_DISPLACEMENT,Max Coordinate Movement,4.27 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,290003103395,KIPP KC LEGACY HIGH SCHOOL,COORDINATE_DISPLACEMENT,Max Coordinate Movement,2.74 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,290060403209,ACADEMY FOR INTEGRATED ARTS,COORDINATE_DISPLACEMENT,Max Coordinate Movement,2.83 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,290061203286,ELEMENTARY SCHOOL,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.17 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,291165000414,EXCELSIOR SPRINGS CAREER CTR.,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.40 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,291165000417,LEWIS ELEMENTARY,COORDINATE_DISPLACEMENT,Max Coordinate Movement,0.99 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,291165000421,CORNERSTONE ELEMENTARY,COORDINATE_DISPLACEMENT,Max Coordinate Movement,0.74 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,291165003352,EXCELSIOR SPRINGS EAR CHLD CTR,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.43 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,291229002592,MCCUNE SCHOOL FOR BOYS,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.46 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,291308002866,PRAIRIE BRANCH ELEM.,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.82 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,291376002594,EVERETT WADE JUVENILE CTR.,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.13 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,291434000651,COMPASS ELEMENTARY,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.30 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,291434002979,FREDA MARKLEY EARLY CHILDHOOD,COORDINATE_DISPLACEMENT,Max Coordinate Movement,2.80 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,291434003162,HICKMAN MILLS 8TH GRADE CENTER,COORDINATE_DISPLACEMENT,Max Coordinate Movement,3.86 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,291434003246,ERVIN ELEMENTARY SCHOOL,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.57 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,291434003370,BURKE ACADEMY,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.46 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,291548003210,ABRAHAM MALLINSON ELEMENTARY,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.05 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,291640000882,WENDELL PHILLIPS ELEMENTARY,COORDINATE_DISPLACEMENT,Max Coordinate Movement,0.58 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,291640002375,ROGERS ELEMENTARY,COORDINATE_DISPLACEMENT,Max Coordinate Movement,0.81 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,291830000983,LEE'S SUMMIT SR. HIGH,COORDINATE_DISPLACEMENT,Max Coordinate Movement,0.74 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,291830002614,HILLTOP SCHOOL,COORDINATE_DISPLACEMENT,Max Coordinate Movement,0.68 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,291830002776,WOODLAND ELEM.,COORDINATE_DISPLACEMENT,Max Coordinate Movement,4.57 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,291830003010,SUMMIT POINTE ELEM.,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.08 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,291854001665,LIBERTY ACADEMY,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.49 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,292280002662,EARLY EDUCATION CENTER,COORDINATE_DISPLACEMENT,Max Coordinate Movement,3.63 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,292283002817,PLATTE VALLEY COOP.,COORDINATE_DISPLACEMENT,Max Coordinate Movement,7.29 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,292301000141,OAK GROVE PRIMARY,COORDINATE_DISPLACEMENT,Max Coordinate Movement,0.75 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,292355003313,LEAD INNOVATION STUDIO,COORDINATE_DISPLACEMENT,Max Coordinate Movement,4.70 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,292355003368,HOPEWELL ELEMENTARY,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.43 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,292523001455,PLATTE CITY MIDDLE,COORDINATE_DISPLACEMENT,Max Coordinate Movement,0.76 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,292523002024,DONALD D. SIEGRIST ELEM.,COORDINATE_DISPLACEMENT,Max Coordinate Movement,0.78 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,292607000945,NEW TRAILS EARLY LEARNING CTR.,COORDINATE_DISPLACEMENT,Max Coordinate Movement,1.25 miles,School building geocode displaced by > 0.5 miles across the decade.
+2014-15 to 2024-25,School,292607001973,RAYTOWN EDUCATION CTR.,COORDINATE_DISPLACEMENT,Max Coordinate Movement,2.29 miles,School building geocode displaced by > 0.5 miles across the decade.

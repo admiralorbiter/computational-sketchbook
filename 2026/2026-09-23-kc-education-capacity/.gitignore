@@ -1,13 +1,14 @@
 # Exclude large raw NCES archives
-data/raw/nces/*.zip
-data/raw/nces/*.csv
-data/raw/nces/*.TXT
-data/raw/nces/*.xlsx
-data/raw/nces/*.sas7bdat
-
-# Keep placeholders and manifests
+data/raw/nces/**
+!data/raw/nces/
 !data/raw/nces/.gitkeep
-!data/manifest.csv
 
-# Keep processed outputs
+# Exclude scratch and python caches
+scratch/
+__pycache__/
+*.pyc
+
+# Manifests and processed outputs
+!data/manifest.csv
 !data/processed/*.csv
+
