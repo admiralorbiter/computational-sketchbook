@@ -48,13 +48,13 @@ Rather than cataloguing grievances or designing an analysis to validate prior re
 ---
 
 ### H3 — Distribution Hypothesis (Averages Concealing the Overcrowded Tail)
-* **Status:** **STRONGLY SUPPORTED BY JUDICIAL PRECEDENT & TAIL MODELING; UNRESOLVED WITHOUT SECTION MICRODATA (Tasks 004A.1, 005A, 005B)**
+* **Status:** **SUPPORTED BY HISTORICAL JUDICIAL PRECEDENT; UNRESOLVED WITHOUT SECTION MICRODATA (Tasks 004A.1, 005A, 005B.1)**
 * **Hypothesis:** District and school-wide average class sizes appear moderate because low-enrollment specialized sections (small-group intervention, self-contained SPED, specialized electives, AP/IB courses) skew the mean downward, while ordinary core foundation courses (e.g., 9th-grade Algebra I, Geometry, Biology) absorb large, overcrowded rosters.
 * **Mechanism:** Uneven staffing allocation concentrates unserved seat volume into mandatory core academic sections, creating an asymmetric right-tail of severely overloaded classrooms.
 * **Empirical & Judicial Adjudication:** 
-  1. **Appellate Judicial Affirmance (*Jenkins v. Missouri*, 890 F.2d 65 (8th Cir. 1989)):** The Eighth Circuit explicitly affirmed the U.S. District Court's legal authority to determine teacher staffing requirements based on **maximum class sizes rather than averages**, establishing that evaluating school capacity solely through averages conceals the unconstitutional or pedagogically destructive tail of overcrowded rooms.
-  2. **CRDC Course Hierarchy:** Supported by CRDC data (e.g. Calculus averaging 17.0 vs. Geometry and Algebra II averaging 24–28+ on large suburban campuses).
-  3. **NTPS Tail Modeling (Task 005B):** Simulating the secondary teacher roster distribution reveals why teacher collective bargaining prioritized schedule relief (moving from 6-of-7 to 5-of-7): with an average section size of 24.5, a 6-of-7 load puts **95.8% of core teachers over the 125-student ceiling, 70.9% over 140 students, and 40.7% over 150 students/day**. Shifting to 5-of-7 reduces severe overload ($R > 140$) to **6.6%** and virtually eliminates catastrophic overload ($R > 150$, to **0.9%**). Even without shrinking average section size, duty relief compresses the tail of extreme overload. Full adjudication of campus-level section variance remains reserved for section microdata.
+  1. **Appellate Judicial Precedent (*Jenkins v. Missouri*, 890 F.2d 65 (8th Cir. 1989)):** The appellate court affirmed the remedial use of maximum class sizes, providing historical precedent for treating the upper tail—not merely averages—as policy-relevant. This provides judicial precedent for taking the overloaded tail seriously, though empirical validation of our modern distribution hypothesis depends on classroom section distributions.
+  2. **CRDC Course Hierarchy:** Supported by CRDC curriculum hierarchy (e.g. Calculus averaging 17.0 vs. Geometry and Algebra II averaging 24–28+ on large suburban campuses).
+  3. **Illustrative Tail Modeling (Task 005B):** Under an illustrative IID normal section simulation ($X_j \sim N(24.5, 5.2^2)$), shifting from 6-of-7 to 5-of-7 cuts modeled $P(R > 140)$ from 70.9% to 6.6% and virtually eliminates $P(R > 150)$ (from 40.7% to 0.9%), illustrating how schedule relief compresses the upper tail even when section averages are unchanged. Direct teacher-level section distributions remain the key missing public measure to empirically confirm this tail.
 
 ---
 

@@ -77,10 +77,7 @@ To remedy this, the court did not order smaller homerooms; it ordered the additi
 
 In 1989, the State of Missouri appealed Judge Clark's remedial orders, arguing that teacher staffing requirements should be determined by **average class size** rather than **maximum class sizes**.
 
-The U.S. Court of Appeals for the Eighth Circuit explicitly rejected the State's position (*Jenkins v. Missouri*, 890 F.2d 65, 67 (8th Cir. 1989)):
-> *The State argues that the district court should have calculated the number of teachers needed based upon average class size rather than maximum class size. We conclude that the district court has consistently utilized maximum class size measurements and this was well within its remedial discretion.*
-
-This legal ruling directly validates **Hypothesis H3 (The Tail Distribution Hypothesis)**: school systems cannot evaluate capacity by looking only at averages that conceal an overcrowded tail of classrooms violating statutory or pedagogical standards.
+The appellate court affirmed the remedial use of maximum class sizes, providing historical precedent for treating the upper tail—not merely averages—as policy-relevant. This provides judicial precedent for taking the overloaded tail seriously, though empirical validation of our modern distribution hypothesis (Hypothesis H3) depends on classroom section distributions (*Jenkins v. Missouri*, 890 F.2d 65, 67 (8th Cir. 1989)).
 
 ---
 
