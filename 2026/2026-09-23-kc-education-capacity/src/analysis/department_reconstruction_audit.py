@@ -85,7 +85,7 @@ def run_department_audit():
             "source_type": "School Website Departmental Listing (whs.kckschools.org)",
             "source_quality": "Medium (Disaggregated by Subject, but Non-Contemporaneous)",
             "source_notes": "Website explicitly segments faculty by department, listing 8 teachers under 'Math Teachers' (Brous, Cecil, L. Holst, M. Holst, Hornberger, O'Dell, et al.).",
-            "mismatch_flags": "Severe Class-to-Teacher Disconnect: 121 CRDC classes / 8 teachers = 15.1 classes/teacher (293.9 enrollments/teacher). Indicates temporal lag, cumulative fall/spring snapshot aggregation, and/or missing itinerant, SPED, and long-term substitute instructors."
+            "mismatch_flags": "Severe Class-to-Teacher Disconnect: 121 CRDC classes / 8 teachers = 15.1 classes/teacher (293.9 enrollments/teacher). The mismatch is consistent with one or more of the following: cumulative block/semester reporting, incomplete or differently classified math staff, and temporal differences between the CRDC year and current website."
         },
         {
             "short_name": "Lincoln Prep",
@@ -194,10 +194,10 @@ def run_department_audit():
         f.write("- **The Public Listing:** Wyandotte's public staff directory is one of the few urban portals that explicitly disaggregates faculty by academic department, listing **8 Math Teachers** (Brous, Cecil, L. Holst, M. Holst, Hornberger, O'Dell, et al.).\n")
         f.write("- **The CRDC Reality:** In 2023–24, CRDC reported **121 math classes enrolling 2,351 students** across Algebra I, Geometry, Algebra II, and Advanced Math.\n")
         f.write("- **The Discrepancy:** Dividing CRDC quantities by the 8 listed teachers yields **15.1 classes per teacher and 293.9 student-course enrollments per teacher**. Under Wyandotte's 8-period Red/White alternating block, a full-time teacher typically instructs 6 blocks. Eight teachers could staff at most $8 \\times 6 = 48$ concurrent sections—fewer than half of the 121 classes reported!\n")
-        f.write("- **The Mechanism Audit:**\n")
-        f.write("  1. *Semester / Block Snapshot Aggregation:* Under OCR reporting rules, block-schedule schools may report the cumulative sum of fall and spring semester classes. If 121 represents a full-year cumulative count of semester courses, concurrent offerings were approximately ~60 sections per semester, requiring $\\approx 10$ full-time teachers.\n")
-        f.write("  2. *Departmental Spillover:* Teachers who instruct math sections may be categorized under Special Education (co-teachers), ESOL/Bilingual education, or instructional coaching rather than 'Math Teachers'.\n")
-        f.write("  3. *Temporal & Vacancy Lag:* Public school websites reflect current staffing (2024–2026) and routinely omit vacancies, long-term substitutes, or adjuncts that existed during the 2023–24 CRDC collection wave.\n")
+        f.write("- **The Mechanism Audit:** The mismatch is consistent with one or more of the following:\n")
+        f.write("  1. *Cumulative Block / Semester Reporting:* Under OCR reporting rules, block-schedule schools may report the cumulative sum of fall and spring semester classes. If 121 represents a full-year cumulative count of semester courses, concurrent offerings were approximately ~60 sections per semester, requiring $\\approx 10$ full-time teachers.\n")
+        f.write("  2. *Incomplete or Differently Classified Math Staff:* Teachers who instruct math sections may be categorized under Special Education (co-teachers), ESOL/Bilingual education, or instructional coaching rather than 'Math Teachers'.\n")
+        f.write("  3. *Temporal Differences & Vacancy Lag:* Public school websites reflect current staffing (2024–2026) and routinely omit vacancies, long-term substitutes, or adjuncts that existed during the 2023–24 CRDC collection wave.\n")
         f.write("- **Audit Ruling:** Without internal master schedule tables, an analyst cannot determine whether $T_{\\text{math}} = 8$, $10$, $12$, or $20$. Computing $2,351 / 8 = 293.9$ produces a spurious artifact rather than a true teacher workload metric.\n\n")
         
         f.write("### 2. Missouri Urban Campuses (Lincoln Prep, East High, Grandview, Ruskin, Center)\n")
@@ -207,17 +207,21 @@ def run_department_audit():
         f.write("- **Center Senior High (Center 58):** Web platform is bot-shielded; public directories do not classify teachers by department.\n")
         f.write("- **Audit Ruling:** Across all five Missouri urban campuses, $T_{\\text{math}}$ is **completely unobserved** in public personnel records. Any calculation of $E_{\\text{math}} / T_{\\text{math}}$ would require imputing $T_{\\text{math}} = S_{\\text{math}} / D$, which simply reduces to $D \\cdot \\bar{s}_{\\text{dept}}$ (Step 3 modeled load) rather than an independent empirical observation.\n\n")
         
-        f.write("## 4. The Final Synthesis Boundary\n\n")
-        f.write("This audit firmly establishes the public data boundary for the final synthesis paper:\n\n")
+        f.write("## 4. The Practical Boundary in the Public Artifacts Audited\n\n")
+        f.write("This audit establishes the practical boundary in the public artifacts audited:\n\n")
         f.write("1. **What Public Data Can Defensively Recover:**\n")
         f.write("   - School staffing ratios ($PTR_{\\text{bldg}}$) and macro personnel trends (CCD / State files).\n")
         f.write("   - Course enrollment pressure ($E_c$) and class counts ($S_c$) (CRDC).\n")
         f.write("   - Reported students per reported class (CRDC load proxy: $\\bar{s}_c = E_c / S_c$).\n")
         f.write("   - Derived schedule scenarios ($R_5 = 5\\bar{s}_c, R_6 = 6\\bar{s}_c$).\n")
         f.write("   - Gateway course bottlenecks (e.g. Wyandotte Algebra I averaging 28.5 across 46 classes).\n\n")
-        f.write("2. **Where Public Reconstruction Breaks Down:**\n")
-        f.write("   - **Department-Level Reconstruction ($E_{\\text{dept}} / T_{\\text{dept}}$):** Fails because public school directories are non-contemporaneous, unstandardized, subject-undifferentiated, and prone to semester-snapshot disconnects.\n")
-        f.write("   - **Individual Teacher Rosters & Tail Distributions:** Strictly unobservable without private Student Information System (SIS) microdata or internal master schedules.\n")
+        f.write("2. **Where Public Reconstruction Breaks Down in Audited Artifacts:**\n")
+        f.write("   - **Department-Level Reconstruction ($E_{\\text{dept}} / T_{\\text{dept}}$):** Fails because public school web directories are non-contemporaneous, unstandardized, subject-undifferentiated, and prone to semester-snapshot disconnects.\n")
+        f.write("   - **Individual Teacher Rosters & Tail Distributions:** Strictly unobservable without private Student Information System (SIS) microdata or internal master schedules.\n\n")
+        f.write("3. **State Administrative Context & Internal Collections:**\n")
+        f.write("   - Both Kansas and Missouri state educational agencies collect richer assignment-level data internally. KSDE's Educator Data Collection System (EDCS) / Licensed Personnel Report (LPR) records educator assignments and requires districts to enter the number of classes for assignments; KSDE notes that those data are released publicly only in aggregate forms. (KSDE's dynamic public Educator Directory Reports system stands as an unverified possible exception that may expose assignment queries, though its coverage, grain, and systematic usability remain unverified without a dedicated data pull).\n")
+        f.write("   - Missouri DESE's MOSIS / Core Data system likewise collects educator files (Screen 18), course-assignment files (Screen 20), and student-assignment files that link educators and courses.\n")
+        f.write("   - In the public artifacts audited (federal CCD, CRDC, state summary tables, and school websites), empirical reconstruction terminates at Step 3 (Modeled Course-Load Scenarios).\n")
         
     print(f"Generated {report_path}")
     print("=== Task 006.2 Complete ===")

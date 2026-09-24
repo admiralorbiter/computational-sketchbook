@@ -316,7 +316,7 @@ Catalog these metrics in `outputs/tables/task003a1_reporting_coverage.csv` and r
      - Layer 1: Institutional Staffing (Pupil/Teacher Ratio; +8.86% teacher FTE, -0.73% enrollment across 56-district metro panel).
      - Layer 2: Instructional Allocation (Classroom vs. specialized personnel, SPED, reading specialists; 88.9% of net instructional-teacher additions across the 19 Kansas USD panel were general classroom teachers).
      - Layer 3: Teacher Assignment Load (Sections taught x students per section; governed by bell-schedule regimes and contractual planning, with Shawnee Mission demonstrating the FTE-to-planning absorption mechanism).
-     - Layer 4: Effective Workload (Available public evidence does not indicate a dramatic increase in secondary roster headcount; modern schedule-based loads fall in a similar or lower range compared to Jenkins, but student complexity has surged with 16.4% carrying legal accommodations and 24.7% chronically absent).
+      - Layer 4: Effective Workload (Available public evidence does not indicate a dramatic increase in secondary roster headcount; modern schedule-based loads fall in a similar or lower range compared to Jenkins, but student complexity has surged with 16.4% carrying legal accommodations and 24.69% chronically absent in 2022–23).
   5. **Freeze Public Data Collection:**
      - Cease further public data collection (Track B Sunshine/KORA parked; no internal PREP-KC district access; no elementary yearbook archaeology; no additional board PDF crawls).
      - Transition to final synthesis paper and project documentation based on the four-layer explanatory model.
@@ -349,12 +349,12 @@ Catalog these metrics in `outputs/tables/task003a1_reporting_coverage.csv` and r
      - Clarify that guidance counselors are categorized separately in CCD staffing and do not depress the teacher denominator.
      - Clarify that state graduation requirements mandate math and science credit totals with specific EOC assessments, but do not dictate universal grade-level course sequencing.
 
-### Decision 034: Department Reconstruction Feasibility Audit & The Personnel Artifact Boundary (Task 006.2)
+### Decision 034: Department Reconstruction Feasibility Audit & The Practical Boundary in Audited Artifacts (Task 006.2)
 * **Status:** Adopted
 * **Date:** 2026-09-24
 * **Context:** Following Task 006.1, the research team tested whether public records could advance from modeled scenario loads (Step 3) to an observed department-level average student-course load (Step 4: $E_{\text{math}} / T_{\text{math}}$), analogous to the 1985 Jenkins remedial audit metric (student-classes per teacher). The audit evaluated publicly available faculty listings, district directories, and state releases across the six urban pilot high schools.
 * **Decision:**
-  1. **Acknowledge the Breakdown of Public Department-Level Reconstruction:**
+  1. **Acknowledge the Breakdown of Public Department-Level Reconstruction in Audited Artifacts:**
      - The empirical audit demonstrates that department-level teacher load reconstruction is **not reliably feasible from public records today**.
      - Across the six pilot campuses, public personnel directories either:
        a) Do not categorize faculty by subject department (Missouri urban districts list teachers under undifferentiated 'Teacher' classifications);
@@ -362,15 +362,20 @@ Catalog these metrics in `outputs/tables/task003a1_reporting_coverage.csv` and r
        c) Exhibit severe temporal, taxonomic, and snapshot disconnects when department rosters are exposed.
   2. **Codify the Wyandotte Staffing Disconnect as an Empirical Boundary Case:**
      - Wyandotte's public directory lists 8 Math Teachers. In 2023–24, CRDC reported 121 math classes and 2,351 enrollments, implying $121 / 8 = 15.1$ classes/teacher and $2,351 / 8 = 293.9$ enrollments/teacher.
-     - This disconnect reflects three confounding mechanisms:
+     - The mismatch is consistent with one or more of the following: cumulative block/semester reporting, incomplete or differently classified math staff, and temporal differences between the CRDC year and current website:
        - *Timing & Snapshot Aggregation:* CRDC block-schedule reporting can reflect cumulative fall and spring semester classes (~60 concurrent sections per semester requiring ~10 full-time teachers).
        - *Departmental Classification:* Special education co-teachers, bilingual/ESOL math teachers, and instructional coaches are listed under separate departmental headings.
        - *Temporal & Vacancy Lag:* Current web directories reflect 2024–2026 staffing and omit vacancies, long-term substitutes, or adjuncts present during the 2023–24 collection.
      - Computing $E_{\text{math}} / T_{\text{math}}$ from these public listings produces a spurious artifact rather than a true workload metric.
-  3. **Establish the Final Public-to-Restricted Boundary:**
-     - Public data capability firmly terminates at **Step 3 (Modeled Course-Load Scenarios)**.
-     - Reconstructing true department-level teacher loads ($E_{\text{dept}} / T_{\text{dept}}$), individual teacher rosters, or section-level variance requires restricted-use state personnel databases (e.g. KSDE licensed personnel files with assignment codes; Missouri DESE Core Data Educator files) or district master schedule tables.
-  4. **Publish Task 006.2 Deliverables:**
+  3. **Establish the Practical Boundary in the Public Artifacts Audited:**
+     - In the public artifacts audited (federal CCD, CRDC, state summary releases, and school websites), empirical capability terminates at **Step 3 (Modeled Course-Load Scenarios)**.
+     - State educational agencies in both Kansas and Missouri collect richer assignment-level data internally:
+       - Kansas KSDE's Educator Data Collection System (EDCS) / Licensed Personnel Report (LPR) records educator assignments and requires districts to enter class counts; KSDE states that those data are released publicly only in aggregate forms. (KSDE's dynamic public Educator Directory Reports system stands as an unverified possible exception that may expose assignment queries, though its coverage, grain, and systematic usability remain unverified without a dedicated data pull).
+       - Missouri DESE's MOSIS / Core Data system collects educator files (Screen 18), course-assignment files (Screen 20), and student-assignment files that link educators and courses.
+     - Reconstructing true department-level teacher loads ($E_{\text{dept}} / T_{\text{dept}}$), individual teacher rosters, or section-level variance requires restricted-use state personnel databases or internal district master schedules.
+  4. **Data Freeze & Deliverables:**
+     - Conclude data collection permanently (no Task 007).
      - Audit data: `outputs/tables/task006_2_department_reconstruction_audit.csv`.
      - Analytical report: `outputs/tables/task006_2_department_reconstruction_audit_report.md`.
+
 

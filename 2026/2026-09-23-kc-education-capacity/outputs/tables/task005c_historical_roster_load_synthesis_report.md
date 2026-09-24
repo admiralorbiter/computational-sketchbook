@@ -65,8 +65,8 @@ Rather than positing a single monolithic cause, the evidence converges on a **Fo
    LAYER 4: Effective Workload (Instructional Friction & Complexity Drag)
    --> Effective Workload = sum_j [ n_j * (1 + w_acc * AccShare + w_abs * AbsDrag) ] + Compliance - Prep
    --> The lived constraint: Roster headcounts are flat to lower (122–147), but 16.4% of students
-       require legal accommodations and 24.7% are chronically absent, requiring perpetual
-       asynchronous re-teaching, individualized documentation, and parent coordination.
+       require legal accommodations and 24.69% are chronically absent (latest 2022–23 release),
+       requiring perpetual asynchronous re-teaching, individualized documentation, and parent coordination.
    ========================================================================================
 ```
 
@@ -84,7 +84,9 @@ The table below synthesizes empirical capacity benchmarks across four distinct h
 | **Secondary Daily Student Load** | 148.8–154.1 std/day | 135–140 std/day | 144.0 std/day (6-of-7) | 122.5 (5-of-7) / 147 (6-of-7) | **Same broad order of magnitude; modern modeled loads overlap or fall below historical KCMSD** |
 | **Section 504 Accommodations** | *Not comparable / no equiv.* | *Not comparable / no equiv.* | 2.87% | 4.79% (5–10% in HS) | **Surged +93.5% in Student Volume** |
 | **Total Mandated Accommodations** | *Not comparable / no equiv.* | *Not comparable / no equiv.* | 13.50% | 16.41% | **Accelerated Modern Expansion (+2.91 pp)** |
-| **Chronic Absenteeism Rate** | *Not comparable / no equiv.* | *Not comparable / no equiv.* | 12.90% | 24.69% | **Persistent Plateau (+11.8 pp above baseline)** |
+| **Chronic Absenteeism Rate** | *Not comparable / no equiv.* | *Not comparable / no equiv.* | 12.90% | 24.69%* | **Persistent Plateau (+11.8 pp above baseline)** |
+
+*\*Note: For Chronic Absenteeism, the latest available EDFacts FS195 analytical release covers SY 2022–23; SY 2023–24 public analytical files have not been released.*
 
 ---
 
@@ -109,7 +111,7 @@ Why did adding teacher FTE fail to collapse section sizes into the teens?
 
 ### C. The Public Data Transparency Boundary
 A critical conclusion of this research is establishing where public administrative data end and where restricted microdata begin:
-- **What Public Data Prove:** Public administrative records rigorously prove that structural staffing increased (+8.9%), specialist allocations create a +2.7 ratio point wedge, regional school-course means (high teens) coexist with mid-20s averages at selected large comprehensive suburban campuses, bell schedules govern section loads, Section 504 accommodations surged +93.5%, and chronic absenteeism plateaued at 24.7%.
+- **What Public Data Prove:** Public administrative records rigorously prove that structural staffing increased (+8.9%), specialist allocations create a +2.7 ratio point wedge, regional school-course means (high teens) coexist with mid-20s averages at selected large comprehensive suburban campuses, bell schedules govern section loads, Section 504 accommodations surged +93.5%, and chronic absenteeism plateaued at 24.69% (2022–23 latest release).
 - **What Public Data Cannot Reveal:** Public data generally cannot reveal the actual distribution of individual KC classroom rosters or the empirical percentage of teachers carrying $>140$ students. While the NTPS questionnaire collects section-by-section counts, calculating $E[\sum_j n_j]$ requires restricted-use microdata or custom DataLab extraction.
 - **The Transparency Gap:** This transparency gap itself is a key finding for educational governance. Policymakers debate building-level pupil/teacher ratios, but public state releases do not expose the primary metric that governs secondary teacher workload: active roster load.
 
