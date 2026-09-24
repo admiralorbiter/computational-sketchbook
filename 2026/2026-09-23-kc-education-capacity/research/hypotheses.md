@@ -47,15 +47,17 @@ Rather than cataloguing grievances or designing an analysis to validate prior re
 
 ---
 
-### H3 — Distribution Hypothesis (Averages Concealing the Overcrowded Tail & Core Asymmetry)
-* **Status:** **STRONGLY SUPPORTED AT THE COURSE LEVEL; EMPIRICALLY CONFIRMED IN INNER-CITY PILOT (Tasks 004A.1, 005A, 006)**
-* **Hypothesis:** District and school-wide average class sizes appear moderate because low-enrollment specialized sections (small-group intervention, self-contained SPED, specialized electives, AP/IB courses) skew the mean downward, while ordinary core foundation courses (e.g., 9th-grade Algebra I, Geometry, Biology) absorb large, overcrowded rosters.
+### H3 — Distribution Hypothesis (Averages Concealing Course Bottlenecks & Gateway Asymmetry)
+* **Status:** **SUPPORTED AT COURSE LEVEL; ADJUDICATED THROUGH SELECTED URBAN PILOT (Tasks 004A.1, 005A, 006.1)**
+* **Hypothesis:** District and school-wide average class sizes appear moderate because low-enrollment specialized sections (small-group intervention, specialized electives, advanced courses) skew the mean downward, while foundational gateway courses (e.g., Algebra I, Geometry, Biology) absorb large, congested enrollments.
 * **Mechanism & Decomposition:**
-  \Delta_{\text{total}} = R_{\text{core}} - R_{\text{naive}} = \underbrace{D \cdot (\bar{s}_{\text{dept}} - PTR_{\text{bldg}})}_{\Delta_{\text{sched}} \text{ (Schedule \& Specialist Staffing)}} + \underbrace{D \cdot (\bar{s}_{\text{core}} - \bar{s}_{\text{dept}})}_{\Delta_{\text{track}} \text{ (Curricular Tracking Asymmetry)}}
+  $$\Delta_{\text{total}} = R_{\text{modeled}} - R_{\text{naive}} = \underbrace{D \cdot (\bar{s}_{\text{dept}} - PTR_{\text{bldg}})}_{\text{Course-vs-PTR Residual}} + \underbrace{D \cdot (\bar{s}_{\text{core}} - \bar{s}_{\text{dept}})}_{\text{Core-vs-Advanced Mix Difference}}$$
 * **Empirical & Judicial Adjudication:** 
-  1. **Appellate Judicial Precedent (*Jenkins v. Missouri*, 890 F.2d 65 (8th Cir. 1989)):** The Eighth Circuit affirmed the remedial use of maximum class sizes, providing foundational historical precedent for treating the upper tail—not merely building averages—as policy-relevant.
-  2. **CRDC Curriculum Hierarchy:** Core foundational courses (Geometry, Algebra II, Biology) consistently operate at 24–31 students, while upper-level electives (Calculus, Advanced Math, Physics) average 3 to 15 students.
-  3. **Task 006 Inner-City Roster Reconstruction Pilot (SY 2023–24):** Reconstructed teacher rosters across inner-city high schools confirm that core mathematics teachers bear active daily rosters that are **+23% to +71% (+16 to +61 students/day) larger** than administrative building PTRs imply (Lincoln Prep: 147 vs 86; Grandview High: 120 vs 85; Ruskin High: 105 vs 65; Center High: 83 vs 60; East High: 86 vs 69; Wyandotte High: 143 in Algebra I vs 101). Tracking asymmetry ($\Delta_{\text{track}}$) accounts for up to 52% of this wedge (Figure 15).
+  1. **Appellate Judicial Precedent (*Jenkins v. Missouri*, 890 F.2d 65 (8th Cir. 1989)):** The Eighth Circuit affirmed the remedial use of maximum class sizes rather than district averages, providing foundational judicial precedent for treating the upper tail as policy-relevant.
+  2. **CRDC Curriculum Hierarchy:** Core foundation courses consistently operate at higher section averages (e.g., Lincoln Prep Geometry at 31.0 and Algebra II at 30.6; Grandview Algebra I at 25.8 and Geometry at 25.9), while upper-level advanced courses average 3 to 15 students.
+  3. **Task 006.1 Selected Urban Pilot (SY 2023–24):** Derived schedule scenarios ($R_5 = 5\bar{s}$ and $R_6 = 6\bar{s}$) demonstrate that building PTR materially understates the classroom load represented by many core courses (Lincoln Prep modeled 5-section load: 147.4 vs. 86.3 PTR baseline; Grandview High: 120.1 vs. 85.0; Ruskin High: 104.8 vs. 64.7; Center High: 83.4 vs. 60.5; East High: 85.5 vs. 69.3).
+  4. **The Gateway Bottleneck Finding (Wyandotte High):** Wyandotte demonstrates that core wedges are not automatic: aggregate core math averages 20.19 against a 20.10 PTR (zero aggregate wedge). However, Algebra I specifically contains **46 classes enrolling 1,313 students (average 28.54/class)**. Under Wyandotte's 8-period Red/White alternating block ($D = 6$), a teacher assigned 6 sections of Algebra I manages a modeled active grading roster of **171.2 students** (+50.6 over naive PTR). The allocation wedge therefore exists between particular high-demand gateway courses within the same department.
+  5. **Epistemic Boundary:** Public CRDC aggregates demonstrate course-level load mismatches, but individual teacher roster distributions and section-level variance remain unobserved without section microdata.
 
 ---
 

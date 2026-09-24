@@ -164,36 +164,64 @@ By reducing secondary teaching loads from 6 sections to 5 sections, the district
 
 ---
 
-### The Core Teacher Load Asymmetry & Inner-City Roster Reconstruction (Task 006)
+### Course-Level Load Asymmetry & The Public Course-Load Boundary (Task 006.1)
 
-While suburban case studies illustrate how schedule reform absorbed staffing additions, a critical empirical question remained: **Does administrative PTR systematically misrepresent the workload of core academic teachers (mathematics and science), and can this be proved 100% from public records without private Student Information System (SIS) microdata?**
+While suburban case studies illustrate how schedule reform absorbed staffing additions, a critical empirical question remained: **Does administrative building PTR systematically understate the classroom load represented by core academic gateway courses, and can this be investigated strictly from public records without private Student Information System (SIS) microdata?**
 
-Task 006 tested this hypothesis across the urban core of Kansas City (Kansas City 33, Grandview C-4, Hickman Mills C-1, Center 58, and Kansas City USD 500). By combining CRDC course section counts ($S_c$) and enrollments ($E_c$) with documented teaching duty periods ($D = 5$), we constructed a closed, mathematical **Roster Wedge Decomposition Identity**:
+Task 006.1 evaluated this boundary across six selected urban-core high schools (Lincoln College Prep and East High in KCPS; Grandview Senior High; Ruskin High in Hickman Mills; Center Senior High; and Wyandotte High in KCKPS). 
 
-$$\Delta_{\text{total}} = R_{\text{core}} - R_{\text{naive}} = \underbrace{D \cdot (\bar{s}_{\text{dept}} - PTR_{\text{bldg}})}_{\Delta_{\text{sched}} \text{ (Schedule \& Specialist Staffing)}} + \underbrace{D \cdot (\bar{s}_{\text{core}} - \bar{s}_{\text{dept}})}_{\Delta_{\text{track}} \text{ (Curricular Tracking Asymmetry)}}$$
+Methodologically, this requires adhering to a strict **Five-Step Reconstruction Ladder**:
+
+```
+                          THE FIVE-STEP RECONSTRUCTION LADDER
+========================================================================================
+[1. OBSERVED]            School-course enrollment and class counts (CRDC: E_c, S_c)
+                         --> Objective public empirical fact from federal collection.
+----------------------------------------------------------------------------------------
+[2. DERIVED]             Course-average class load (s_bar_c = E_c / S_c)
+                         --> Exact mathematical average per reported course section.
+----------------------------------------------------------------------------------------
+[3. MODELED SCENARIOS]   Schedule scenario loads (R_5 = 5 * s_bar_c; R_6 = 6 * s_bar_c)
+                         --> Modeled seat burden for a teacher assigned D sections of course c.
+----------------------------------------------------------------------------------------
+[4. DEPARTMENT LOAD]     Enrollment per teacher (E_math / T_math)
+                         --> Average covered student-course enrollments per subject teacher.
+----------------------------------------------------------------------------------------
+[5. STILL UNOBSERVED]    Individual teacher roster distribution (P(R > 140), section variance)
+                         --> Requires student-level SIS microdata or section schedule tables.
+========================================================================================
+```
+
+The right conclusion is narrower and methodologically rigorous: **We do not need private data to show that building PTR materially understates the load represented by many core courses. But public CRDC aggregates alone still do not reveal the actual roster of an individual teacher.**
+
+When an average section size $\bar{s}_c$ is multiplied by an assumed teaching load ($D = 5$ or $D = 6$), the result is a **derived scenario load**, not an observed teacher roster. We do not know whether any specific teacher teaches five pure core sections, whether their sections average $\bar{s}_c$, or how students are distributed across classes.
+
+Under this calibrated framework, the difference between a modeled scenario load and the naive administrative baseline is decomposed into two arithmetic components:
+
+$$\Delta_{\text{total}} = R_{\text{modeled}} - R_{\text{naive}} = \underbrace{D \cdot (\bar{s}_{\text{dept}} - PTR_{\text{bldg}})}_{\text{Course-vs-PTR Residual}} + \underbrace{D \cdot (\bar{s}_{\text{core}} - \bar{s}_{\text{dept}})}_{\text{Core-vs-Advanced Mix Difference}}$$
 
 Where:
-* $R_{\text{naive}} = D \cdot PTR_{\text{bldg}}$ is the daily roster load naively implied by the building staffing ratio;
-* $\Delta_{\text{sched}}$ captures the expansion from teacher planning periods (multiplier $\mu = P/D \approx 1.33–1.40$) and non-classroom certified specialists who broaden the building denominator without teaching general sections;
-* $\Delta_{\text{track}}$ captures curricular funneling: graduation requirements pack 100% of freshmen and sophomores into required foundation courses (Algebra I, Geometry, Biology), while upper-level electives (Calculus, Advanced Math, Physics) operate with small enrollments (3 to 15 students) that pull down building averages.
+* $R_{\text{naive}} = D \cdot PTR_{\text{bldg}}$ is the baseline load implied by building staffing;
+* The **Course-vs-PTR Residual** reflects the mathematical gap between departmental course averages and the building teacher ratio (driven in part by teacher planning periods under $\mu = P/D$ and specialist teachers coded in the teacher denominator who instruct small specialized caseloads rather than full general sections);
+* The **Core-vs-Advanced Mix Difference** reflects arithmetic variation within the department: gateway and broadly enrolled foundation courses (e.g., Algebra I, Geometry) concentrate heavy student enrollment, while upper-level electives (e.g., Calculus, Advanced Math) operate with small enrollments (3 to 15 students) that pull down building averages.
 
-#### Table 2: Urban Core Teacher Roster Reconstruction (SY 2023–24)
-| School Campus | District | Building PTR | Naive Roster (5 × PTR) | Core Math Size | Adv Math Size | Actual Core Roster | Total Wedge (Δtotal) | Pct Wedge | Tracking Wedge (Δtrack) |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Lincoln College Prep** | KANSAS CITY 33 | 17.25:1 | 86.3 | 29.5 | 14.8 | **147.4** | **+61.1** | **+70.9%** | +31.8 (52%) |
-| **Grandview Senior High** | GRANDVIEW C-4 | 16.99:1 | 85.0 | 24.0 | 6.8 | **120.1** | **+35.2** | **+41.4%** | +10.8 (31%) |
-| **Ruskin High School** | HICKMAN MILLS C-1 | 12.94:1 | 64.7 | 21.0 | 4.2 | **104.8** | **+40.1** | **+61.9%** | +6.8 (17%) |
-| **Center Senior High** | CENTER 58 | 12.10:1 | 60.5 | 16.7 | N/A | **83.4** | **+22.9** | **+37.9%** | +0.0 (0%) |
-| **East High School** | KANSAS CITY 33 | 13.85:1 | 69.3 | 17.1 | 10.0 | **85.5** | **+16.3** | **+23.5%** | +1.5 (9%) |
-| **Wyandotte High School** | Kansas City USD 500 | 20.10:1 | 100.5 | 20.2 | 11.8 | **101.0** | **+0.5** | **+0.5%** | +3.8 (100%) |
+#### Table 2: Course-Level Averages & Modeled Scenario Loads for Selected Urban High Schools (SY 2023–24)
+| School Campus | District | Schedule Architecture | Building PTR | Alg I Mean | Geom Mean | Core Math Mean | Adv Math Mean | Modeled R5 (5 × Core) | Modeled R6 (6 × Core) | Naive R5 (5 × PTR) | R5 Residual (Δtotal) |
+| :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Lincoln College Prep** | KANSAS CITY 33 | 7-period / hybrid | 17.25:1 | 26.3 | 31.0 | 29.5 | 14.8 | **147.4** | 176.9 | 86.3 | **+61.1** |
+| **Grandview Senior High** | GRANDVIEW C-4 | 7-period day | 16.99:1 | 25.8 | 25.9 | 24.0 | 6.8 | **120.1** | 144.2 | 85.0 | **+35.2** |
+| **Ruskin High School** | HICKMAN MILLS C-1 | 7-period day | 12.94:1 | 20.2 | 21.8 | 21.0 | 4.2 | **104.8** | 125.7 | 64.7 | **+40.1** |
+| **Center Senior High** | CENTER 58 | 7-period day | 12.10:1 | 19.0 | 17.0 | 16.7 | N/A | **83.4** | 100.1 | 60.5 | **+22.9** |
+| **East High School** | KANSAS CITY 33 | 7-period / hybrid | 13.85:1 | 19.0 | 12.3 | 17.1 | 10.0 | **85.5** | 102.7 | 69.3 | **+16.3** |
+| **Wyandotte High School** | Kansas City USD 500 | 8-period Red/White block | 20.10:1 | 28.5 | 14.3 | 20.2 | 11.8 | **101.0** | **121.1** | 100.5 | **+0.5** |
 
-As illustrated in **Figure 15**, the public evidence decisively validates the lived perception of core classroom teachers:
-1. **Severe Core Congestion:** At Lincoln Prep, Geometry averages 31.0 and Algebra II averages 30.6 students per section; a 5-period core math teacher carries **147.4 students per day**, creating a **+61.1 student (+70.9%) load wedge** over administrative expectations and exceeding the 1985 Jenkins ceiling.
-2. **The 13:1 Ratio Illusion:** At Ruskin High (Hickman Mills), building PTR of 12.94:1 implies intimate classes, yet core math sections average 21.0 students (roster load of 104.8, a **+61.9% wedge**) and core Chemistry sections average 46.6 students.
-3. **The Freshman Algebra I Congestion:** At Wyandotte High, Algebra I alone contains **46 sections enrolling 1,313 students (average 28.5 students/class)**, creating an active daily load of **142.7 students** (+42.2 students / +42.0% above naive PTR).
-4. **Resolution of the Zero-Private-Data Boundary:** These findings demonstrate that **private student or program-specific records are unnecessary to establish the reality of teacher overload**. Public CRDC censuses provide 100% population coverage and demonstrate that core academic teachers bear structural roster loads 23% to 71% higher than administrative ratios report.
+As illustrated in **Figure 15**, reporting these campuses individually highlights both structural loading patterns and critical counterexamples:
 
-![Figure 15: Public Roster Reconstruction for Inner-City Kansas City High Schools](../figures/fig15_urban_core_teacher_load_wedge.png)
+1. **Course-Level Mismatch at Selected Campuses:** At Lincoln Prep, reported Geometry sections average 31.0 and Algebra II sections average 30.6 students. A hypothetical teacher assigned 5 sections at the core mean would carry approximately **147.4 students**—a **+61.1 student residual** over the 86.3 naive PTR expectation, surpassing the 1985 Jenkins ceiling (125 students). Similarly, at Grandview High (core mean 24.0 vs. PTR 17.0) and Ruskin High (core mean 21.0 vs. PTR 12.9), core course averages substantially exceed building staffing ratios.
+2. **The Wyandotte Counterexample & Gateway Bottleneck:** Wyandotte High demonstrates that core wedges are **not automatic**. Its aggregate core-math section mean is **20.19**, virtually identical to its building PTR of **20.10** (an aggregate residual of essentially zero, +0.09). However, disaggregating specific courses reveals an acute **gateway bottleneck in Algebra I**: **46 classes enrolling 1,313 students (average 28.54 students/class)**. Under Wyandotte's public 8-period Red/White alternating-block schedule (where full-time teachers typically instruct 6 blocks across the two-day cycle), an Algebra I instructor teaching 6 sections manages a modeled active grading roster of **171.2 students** (+50.6 students above naive 6-period PTR). This demonstrates that allocation wedges exist not merely between "core teachers" and electives, but between specific high-demand gateway courses within the same department.
+3. **Staffing Denominator & Policy Guardrails:** The Common Core of Data (CCD) pupil/teacher ratio divides enrollment by full-time equivalent classroom teachers. Guidance counselors are categorized separately and do not depress the teacher denominator; the specialist denominator gap is driven by instructional personnel coded as teachers (e.g. special education resource teachers or Title I interventionists). Furthermore, while Missouri requires 3 math and 3 science credits with EOC exams in Algebra I and Biology, and Kansas requires 3 units incorporating algebraic and geometric concepts, state law does not mandate a universal 9th/10th grade sequence. Gateway courses absorb large volumes because they are foundational requirements, not because of a rigid statutory lockstep.
+
+![Figure 15: Public Course-Load Modeling for Selected Urban Kansas City High Schools](../figures/fig15_urban_core_teacher_load_wedge.png)
 
 ---
 
