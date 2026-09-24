@@ -65,7 +65,7 @@ kc_education_capacity/
 
 ---
 
-## Current Status: Phase 3C Complete; Launching Phase 4A (Section Microdata & Allocation Analysis)
+## Current Status: Phase 3C Complete; Task 004A (CRDC Course Capacity Panel) Complete; Launching Phase 4 Microdata Tracks
 
 - **Task 001 (Geographic Universe):** Complete. 691 schools across 9 MARC counties established, geocoded, and classified using NCES CCD/EDGE SY 2024–2025.
 - **Task 002 & 002B (Baseline Staffing & Capacity):** Complete. School- and LEA-level baseline capacity panels constructed (`kc_school_capacity_2024_2025.csv`, `kc_lea_capacity_2024_2025.csv`), with programmatic LEA geographic coverage metadata, `Operating Regular (NCES)` terminology, FRL missingness analysis, independent Urban Institute ingestion replication, and audited anomalies in `outputs/tables/task002_qa_report.md`.
@@ -88,11 +88,20 @@ kc_education_capacity/
   - **Strict Methodological Guardrail:** Staffing ratios measure macro capacity and are never described as class sizes. Hypotheses H1a, H1b, H2, and H3 remain strictly unadjudicated.
 - **Phase 3C (Staffing Metric & Allocation Audit):** Complete.
   - **Step 1A (State Staffing Reconciliation Pilot):** Complete (`outputs/tables/task003c_state_replication_pilot_report.md`). Audited 8 benchmark districts across anchor years (2014–15, 2019–20, 2024–25); 17/24 comparisons within 2%, 23/24 within 5% (median difference 1.47%). Confirmed state administrative systems reproduce the macro teacher expansion and identified Kansas's structural separation of Classroom Teachers vs. Other Teachers (SPED/Reading).
-  - **Step 1B-KS (Kansas Role Decomposition across 19 Metropolitan USDs):** Complete (`outputs/tables/task003c_kansas_role_decomposition_report.md`). Quantified the **Specialist Denominator Wedge** at **2.66 to 2.81 students per teacher** between classroom ratios (16.86 -> 16.26) and total instructional ratios (14.05 -> 13.60). Proved that in major Johnson County suburbs, both classroom teachers (+8.7%) and specialized teachers (+21.3%) expanded faster than enrollment (+3.2%). At the 19-USD aggregate, 88.9% of net instructional additions were classroom teachers, demonstrating that specialist dilution alone does not explain why core classes remain large. The formal **Allocation Wedge** ($\text{Median Core Section Size} - \text{Reported PTR}$) is reserved for Phase 4A.
+  - **Step 1B-KS (Kansas Role Decomposition across 19 Metropolitan USDs):** Complete (`outputs/tables/task003c_kansas_role_decomposition_report.md`). Quantified the **Specialist Denominator Wedge** at **2.66 to 2.81 students per teacher** between classroom ratios (16.86 -> 16.26) and total instructional ratios (14.05 -> 13.60). Proved that in major Johnson County suburbs, both classroom teachers (+8.7%) and specialized teachers (+21.3%) expanded faster than enrollment (+3.2%). At the 19-USD aggregate, 88.9% of net instructional additions were classroom teachers, demonstrating that specialist dilution alone does not explain why core classes remain large.
   - **Workstream 2 (Parallel Specialized Personnel & Non-Teaching Staff):** Complete across all 77 fully regional LEAs (`outputs/tables/task003c_workstream2_regional_staff_need_report.md`). Tracked parallel series showing paraprofessionals (+11.85%), instructional coordinators (+49.74%), counselors (+18.92%), and administrators (+16.62%) expanded faster than enrollment (-0.73%), separating non-teaching organizational support from the teacher denominator.
+- **Task 004A (Civil Rights Data Collection Course Capacity Panel & The Allocation Wedge):** Complete (`outputs/tables/task004_crdc_analysis_report.md`).
+  - **Empirical Pipeline:** Executed `src/download/download_historical_crdc.py`, `src/clean/build_crdc_course_panel.py`, and `src/analysis/crdc_capacity_analysis.py` across all 6 public CRDC waves (2013–14, 2015–16, 2017–18, 2020–21, 2021–22, 2023–24). Produced harmonized school panel (3,914 school-years) and long sections panel (31,312 records).
+  - **Core Findings & Hypothesis Adjudication:**
+    - Directly quantified the **Allocation Wedge** ($\text{Course Mean Class Size} - \text{School PTR}$): regional high school Algebra I (+3.50), Geometry (+4.42), Algebra II (+3.93), and Chemistry (+4.33) substantially exceed building-wide pupil/teacher ratios.
+    - Large suburban comprehensive high schools experience a massive wedge of **+7.0 to +11.5 students**: e.g., Shawnee Mission North (Algebra I 25.7 vs 14.2 PTR; Wedge +11.5), Olathe Northwest (Geometry 27.1 vs 16.6 PTR; Wedge +10.5), Olathe North (Algebra II 26.5 vs 14.9 PTR; Wedge +11.6), and Lincoln College Prep (Algebra II 30.6 vs 17.2 PTR; Wedge +13.4).
+    - Validated the **Curriculum Hierarchy / Course Dilution Hypothesis**: schools allocate certified teachers to low-enrollment advanced seminars (Calculus mean 16.14, with sections as low as 4.7) and specialized programs, compressing aggregate school PTR while foundation core classrooms remain crowded (24–28+ students).
+    - Successfully triangulated against external federal NTPS secondary departmentalized survey averages (~17.4 KS / ~19.2 MO).
 - **Phase 4A Launch (Course Section Microdata Requests):**
   - **Data Request Specifications & Two-Tier Architecture:** Formulated in `research/phase4a_data_request_specifications.md`. Includes Tier 1 (roster-level surrogate IDs) and Tier 2 (agency-aggregated fallback), distinguishing teacher student-seat load from unique student roster load.
   - **Agency Submission Packages:** Formally prepared in `requests/missouri/mo_dese_course_section_request_cover_letter.md` and `requests/kansas/ksde_course_section_request_cover_letter.md` for transmission to MO DESE (MOSIS Screen 20 + Screen 18) and KSDE (KEDX + EDCS).
+  - **District Level Requests (Track B):** Drafting targeted public records requests for 6–8 key districts.
+  - **Photographic Sampling Protocol (Track C):** Designing elementary school yearbook class size sampling framework.
 
 
 

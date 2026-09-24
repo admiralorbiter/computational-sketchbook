@@ -1,7 +1,10 @@
-# Exclude large raw NCES archives
+# Exclude large raw NCES and CRDC archives
 data/raw/nces/**
 !data/raw/nces/
 !data/raw/nces/.gitkeep
+data/raw/crdc/**
+!data/raw/crdc/
+!data/raw/crdc/.gitkeep
 
 # Exclude scratch and python caches
 scratch/

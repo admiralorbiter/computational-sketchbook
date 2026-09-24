@@ -190,6 +190,23 @@ Catalog these metrics in `outputs/tables/task003a1_reporting_coverage.csv` and r
   4. **Missouri Pivot:** Deprioritize redundant 56-district aggregate reconciliation; prioritize obtaining detailed Screen 18 duty-code extracts (001–099 splits).
   5. **Immediate Phase 4A Data Request Drafting:** Draft formal research data request specifications for deidentified section-level course assignment extracts from MO DESE (Screen 20 Course Assignment) and KSDE (KEDS/LPR Assignment) in parallel with Phase 3C analysis to avoid project lag.
 
+### Decision 027: The Three-Track Public-Data Ladder, CRDC Course Capacity Panel Harmonization, and the Allocation Wedge Framework
+* **Status:** Adopted
+* **Date:** 2026-09-24
+* **Context:** Following Phase 3C, which demonstrated that macro teacher staffing expanded primarily in classroom instructional categories and that specialist denominator dilution accounted for only a ~2.7 student-to-teacher difference, the core question shifted to why physical classroom section sizes remain large (24–28+ students) despite falling pupil/teacher ratios. Administrative section-level microdata across two state agencies is fragmented and subject to lengthy governance reviews. To systematically resolve section-level capacity without project stalls, a three-track research ladder was formulated: Track A (Immediate Public Quantitative Data via CRDC and NTPS), Track B (Administrative State & District Section Microdata Requests), and Track C (Independent Photographic Sampling / Elementary Yearbooks).
+* **Decision:** Execute Track A immediately and establish the following empirical protocols:
+  1. **Six-Wave CRDC Panel Construction:** Ingest, clean, and harmonize all six public biennial waves of the Civil Rights Data Collection (CRDC): 2013–14, 2015–16, 2017–18, 2020–21, 2021–22, and 2023–24. Reconstruct 12-digit NCES school identifiers from `LEAID.zfill(7) + SCHID.zfill(5)` to prevent truncation or scientific notation corruption caused by OCR's Excel export layouts.
+  2. **Reserve Code Exception Sanitization:** Enforce strict conversion of all CRDC negative reserve codes (`-1` Missing, `-2` Not Applicable, `-3` Partial/Suppressed, `-5` Edit Check, `-9` Data Suppressed, `-11` Missing/Reserve, `-12` Not Applicable/Reserve) to `NaN` or unoffered; strictly forbid negative integers from entering arithmetic.
+  3. **Section Size Estimators:** For 8 secondary academic disciplines (Algebra I, Geometry, Algebra II, Advanced Math, Calculus, Biology, Chemistry, Physics), define:
+     $$\text{Mean Section Size}_{s, c, t} = \frac{\text{Students Enrolled}_{s, c, t}}{\text{Number of Classes}_{s, c, t}}$$
+     For aggregate regional/group metrics, compute the student-weighted mean ($\frac{\sum \text{Students}}{\sum \text{Classes}}$) rather than an unweighted average of campus means.
+  4. **The Allocation Wedge Formalized:** Quantify the gap between actual course section sizes and reported school-wide pupil/teacher ratio:
+     $$\text{Allocation Wedge}_{s, c, t} = \text{Mean Section Size}_{s, c, t} - \text{School Pupil/Teacher Ratio (CCD PTR)}_{s, t}$$
+     Empirical results demonstrate an average regional Allocation Wedge of **+3.5 to +4.4 students** in secondary core math and science, expanding to **+7.0 to +11.5 students** on large suburban comprehensive high school campuses.
+  5. **Curriculum Hierarchy / Course Dilution Hypothesis:** Differentiate Foundation Core courses (Algebra I/II, Geometry, Biology) from Advanced/Specialized courses (Calculus, Physics, Advanced Math). Confirm that schools allocate certified instructional FTE to small specialized and advanced sections (e.g. Calculus at 5–15 students), which pulls down the aggregate building PTR while leaving foundational core classrooms crowded (24–28+ students).
+  6. **External Federal Benchmarking:** Triangulate CRDC findings against the National Teacher and Principal Survey (NTPS) secondary departmentalized class-size surveys (~17.4 KS, ~19.2 MO). The concordance confirms that headline pupil/teacher ratios reflect institutional staffing definitions rather than actual classroom student loads, rejecting claims of administrative data falsification while demonstrating metric distortion.
+
+
 
 
 

@@ -1,0 +1,13 @@
+crdc_wave,course_level,total_classes,total_enrolled,unweighted_mean_size,median_size,student_weighted_mean_size,school_ptr_mean,allocation_wedge_mean,allocation_wedge_weighted
+2013-14,Foundation Core,4996,79625,19.41,20.08,15.94,15.42,3.99,0.52
+2013-14,Advanced / Specialized,2136,28006,16.31,16.28,13.11,15.42,0.89,-2.31
+2015-16,Foundation Core,4875,99917,20.38,21.0,20.5,15.24,5.14,5.25
+2015-16,Advanced / Specialized,1423,28494,18.61,20.0,20.02,15.24,3.37,4.78
+2017-18,Foundation Core,5700,105479,18.72,19.03,18.51,15.45,3.26,3.05
+2017-18,Advanced / Specialized,1721,30872,16.71,17.36,17.94,15.45,1.26,2.49
+2020-21,Foundation Core,7303,107107,16.93,16.12,14.67,15.43,1.5,-0.77
+2020-21,Advanced / Specialized,1945,27732,14.59,12.88,14.26,15.43,-0.84,-1.17
+2021-22,Foundation Core,6243,108118,17.56,17.79,17.32,15.07,2.49,2.25
+2021-22,Advanced / Specialized,1461,22838,14.54,14.1,15.63,15.07,-0.53,0.56
+2023-24,Foundation Core,6298,112328,18.53,18.67,17.84,14.81,3.72,3.02
+2023-24,Advanced / Specialized,1473,24993,15.52,16.29,16.97,14.81,0.71,2.15

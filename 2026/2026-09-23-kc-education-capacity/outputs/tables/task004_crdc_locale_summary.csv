@@ -1,0 +1,49 @@
+crdc_wave,locale_group,course_level,schools_count,total_classes,total_enrolled,unweighted_mean_size,median_size,student_weighted_size,school_ptr_mean,allocation_wedge
+2013-14,City,Foundation Core,36,2118,24820,19.38,19.68,11.72,15.11,4.27
+2013-14,City,Advanced / Specialized,30,1076,8863,13.77,13.5,8.24,15.11,-1.33
+2013-14,Rural,Foundation Core,22,602,10908,18.14,17.67,18.12,13.88,4.26
+2013-14,Rural,Advanced / Specialized,21,210,3048,14.33,15.0,14.51,13.88,0.46
+2013-14,Suburb,Foundation Core,30,1813,34538,19.0,20.9,19.05,16.46,2.55
+2013-14,Suburb,Advanced / Specialized,25,691,12888,18.82,20.85,18.65,16.46,2.37
+2013-14,Town,Foundation Core,14,463,9359,22.42,21.73,20.21,16.46,5.95
+2013-14,Town,Advanced / Specialized,13,159,3207,19.55,19.8,20.17,16.46,3.08
+2015-16,City,Foundation Core,38,1481,32194,21.64,22.33,21.74,14.94,6.7
+2015-16,City,Advanced / Specialized,30,476,10837,21.6,23.0,22.77,14.94,6.66
+2015-16,Rural,Foundation Core,21,643,12735,17.67,18.5,19.81,13.67,4.01
+2015-16,Rural,Advanced / Specialized,20,158,2545,13.9,13.6,16.11,13.67,0.23
+2015-16,Suburb,Foundation Core,30,2178,42948,19.49,21.03,19.72,16.4,3.09
+2015-16,Suburb,Advanced / Specialized,25,642,12417,18.69,21.12,19.34,16.4,2.29
+2015-16,Town,Foundation Core,14,573,12040,22.99,21.67,21.01,16.34,6.65
+2015-16,Town,Advanced / Specialized,13,147,2695,18.72,19.12,18.33,16.34,2.38
+2017-18,City,Foundation Core,38,1876,38593,20.26,21.53,20.57,14.9,5.37
+2017-18,City,Advanced / Specialized,32,685,12565,18.7,20.0,18.34,14.9,3.81
+2017-18,Rural,Foundation Core,22,818,13769,15.86,15.0,16.83,14.21,1.65
+2017-18,Rural,Advanced / Specialized,20,240,3170,11.82,11.0,13.21,14.21,-2.39
+2017-18,Suburb,Foundation Core,31,2466,41567,17.28,18.41,16.86,16.34,0.95
+2017-18,Suburb,Advanced / Specialized,26,682,12872,17.38,18.93,18.87,16.34,1.05
+2017-18,Town,Foundation Core,14,540,11550,22.46,21.58,21.39,16.97,5.49
+2017-18,Town,Advanced / Specialized,11,114,2265,18.12,19.0,19.87,16.97,1.15
+2020-21,City,Foundation Core,42,2443,40496,19.23,19.32,16.58,14.72,4.51
+2020-21,City,Advanced / Specialized,35,537,9296,17.8,15.37,17.31,14.72,3.08
+2020-21,Rural,Foundation Core,22,852,13779,16.32,14.5,16.17,14.25,2.06
+2020-21,Rural,Advanced / Specialized,20,258,3614,12.35,11.8,14.01,14.25,-1.91
+2020-21,Suburb,Foundation Core,30,3246,41834,14.23,12.36,12.89,16.36,-2.13
+2020-21,Suburb,Advanced / Specialized,26,930,12044,13.13,11.94,12.95,16.36,-3.23
+2020-21,Town,Foundation Core,13,762,10998,16.93,16.38,14.43,17.23,-0.3
+2020-21,Town,Advanced / Specialized,12,220,2778,12.55,12.25,12.63,17.23,-4.68
+2021-22,City,Foundation Core,44,2216,39948,18.35,18.46,18.03,14.58,3.77
+2021-22,City,Advanced / Specialized,37,568,8573,14.85,13.84,15.09,14.58,0.27
+2021-22,Rural,Foundation Core,22,886,13689,15.19,14.35,15.45,14.14,1.05
+2021-22,Rural,Advanced / Specialized,19,217,3065,12.41,12.59,14.12,14.14,-1.73
+2021-22,Suburb,Foundation Core,29,2462,44344,18.4,18.58,18.01,15.71,2.7
+2021-22,Suburb,Advanced / Specialized,26,557,9348,15.43,15.64,16.78,15.71,-0.27
+2021-22,Town,Foundation Core,13,679,10137,17.06,16.71,14.93,16.66,0.4
+2021-22,Town,Advanced / Specialized,12,119,1852,14.53,14.12,15.56,16.66,-2.13
+2023-24,City,Foundation Core,42,2248,42627,19.01,18.96,18.96,14.08,4.93
+2023-24,City,Advanced / Specialized,36,547,9530,16.24,16.14,17.42,14.08,2.15
+2023-24,Rural,Foundation Core,24,863,15642,17.07,15.5,18.13,13.55,3.52
+2023-24,Rural,Advanced / Specialized,21,190,2679,11.67,11.38,14.1,13.55,-1.88
+2023-24,Suburb,Foundation Core,29,2540,44013,19.1,20.62,17.33,15.89,3.2
+2023-24,Suburb,Advanced / Specialized,25,592,10953,17.93,19.8,18.5,15.89,2.03
+2023-24,Town,Foundation Core,13,647,10046,18.36,17.8,15.53,16.84,1.52
+2023-24,Town,Advanced / Specialized,12,144,1831,14.38,15.25,12.72,16.84,-2.46
