@@ -151,10 +151,17 @@
   4. `insufficient_coverage`: < 80.0% of regional enrollment represented.
 Catalog these metrics in `outputs/tables/task003a1_reporting_coverage.csv` and report them in QA documentation. Require that any series in the `insufficient_coverage` tier be flagged and excluded from unadjusted trend regressions.
 
-### Decision 022: Resolution of 2015–16 Kansas LEA Staff Suppression (Olathe & Gardner Edgerton)
+### Decision 023: Structural Capacity Estimand Protocol (Student-Weighted Aggregates vs. Typical-School Distributions)
 * **Status:** Adopted
 * **Date:** 2026-09-24
-* **Context:** In the 2015–16 CCD LEA staff file, two major Kansas districts—Olathe (2010140, 28,567 K–12 students) and Gardner Edgerton (2006420, 5,611 K–12 students)—had their entire staff data withheld/suppressed (`-9.0`). Uncorrected aggregation produced an artificial jump in Kansas regional student/teacher ratio from 14.96 to 20.02.
-* **Decision:** In accordance with Decision 019, set `teachers_k12_fte` and all staff variables for Olathe and Gardner Edgerton in 2015–16 to `NaN`. Do not impute values. Document that Kansas regional LEA staff coverage in 2015–16 is 75.9% of enrollment, placing Kansas 2015–16 in the `insufficient_coverage (< 80%)` tier. On the 20 reporting Kansas LEAs, the calculated student/teacher ratio is 15.03, proving that the apparent 20.02 spike was entirely an artifact of unhandled NCES suppression codes. Establish that 2015–16 Kansas LEA staffing must not be used as a complete regional aggregate.
+* **Context:** A fundamental distinction exists between measuring what the overall student population experienced structurally versus what the typical school campus looked like. Averaging entity-level ratios creates severe distortion by weighting a 50-student rural school identically to a 2,500-student comprehensive high school.
+* **Decision:** For all regional, state, locale, and grade-band aggregates in Task 003B, adopt the **student-weighted staffing ratio** ($\frac{\sum \text{Enrollment}}{\sum \text{Teacher FTE}}$) as the primary system-level estimand. Never average individual entity ratios to compute a group ratio. Concurrently report the **typical-school distribution** (median, IQR [p25–p75], p10, and p90) as a separate and explicitly labeled metric describing campus-level variation. Apply the same protocol to the combined teacher-plus-paraprofessional ratio ($\frac{\sum \text{Enrollment}}{\sum \text{Teachers} + \sum \text{Paras}}$).
+
+### Decision 024: Non-Causal Accounting Decompositions and Strict Phase 4 Guardrails
+* **Status:** Adopted
+* **Date:** 2026-09-24
+* **Context:** Understanding decade-long capacity changes requires determining whether declining ratios stem from shrinking student enrollments or expanding teacher headcounts. Furthermore, macro staffing ratios must not be conflated with classroom section sizes.
+* **Decision:** Decompose all 10-year endpoint and subperiod staffing ratio shifts into separate non-causal accounting components: enrollment change ($\Delta E$, $\% \Delta E$), teacher FTE change ($\Delta T$, $\% \Delta T$), and ratio change ($\Delta R$, $\% \Delta R$). Establish that over the 2014–15 to 2024–25 period, regional K–12 enrollment was essentially flat ($-0.73\%$), while teacher FTE expanded $+8.88\%$, proving that ratio reductions reflect active staff expansion rather than student depopulation. Strictly forbid describing staffing ratios as class sizes and forbid claiming adjudication of Hypotheses H1a, H1b, H2, or H3, preserving these questions for Phase 4 section-level roster research.
+
 
 

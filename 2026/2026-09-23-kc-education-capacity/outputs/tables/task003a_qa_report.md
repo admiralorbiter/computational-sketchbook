@@ -106,7 +106,7 @@ In the 2015–16 NCES CCD LEA staff file (`CCD_LEA_059_1516_W_1a_011717_csv.zip`
 1. In the initial uncorrected pipeline, these `-9.0` codes were summed as negative numbers, producing `teachers_k12_fte = -28.0` and creating a fictitious regional PTR jump to 20.02.
 2. In the remediated pipeline, these suppressed codes are converted to `NaN`.
 3. Valid reporting coverage for Kansas in 2015–16 is **75.9% of regional K–12 enrollment** (107,766 out of 141,944 students), placing Kansas 2015–16 in the **`insufficient_coverage (< 80%)`** tier.
-4. On the 20 reporting Kansas LEAs, the calculated K–12 student/teacher ratio is **15.03**, demonstrating smooth structural stability with 2014–15 (14.96) and 2016–17 (14.77).
+4. On the 20 reporting Kansas LEAs, the calculated K–12 student/teacher ratio is **15.03**, demonstrating smooth structural stability with 2014–15 (14.88) and 2016–17 (14.77).
 5. **Methodological Directive:** Kansas LEA staffing data for 2015–16 must NOT be presented as a complete regional aggregate in downstream longitudinal analysis.
 
 ---
