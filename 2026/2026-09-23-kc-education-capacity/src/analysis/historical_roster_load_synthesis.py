@@ -1,18 +1,28 @@
 """
 src/analysis/historical_roster_load_synthesis.py
-Task 005C.1: 40-Year Historical Roster Load Synthesis & Capacity Paradox Resolution
+Task 005C.2: Cross-Era Capacity Benchmarks, 1985–2024 & Four-Layer Workload Architecture
 
-Synthesizes secondary instructional capacity across three rigorous evidence classes:
-  1. Measured / Court-Reported (1985 Jenkins audited exhibits; NTPS/DataLab survey distributions)
-  2. Court Observation (1997 Jenkins desegregation hearing observations)
-  3. Modeled from CRDC Course Mean x Documented Schedule Load (Modern 6-of-7, 5-of-7, 8-block)
+Synthesizes instructional capacity and secondary teacher student load across four decades
+using three rigorous, explicit evidence classes:
+  1. Class 1: Measured / Court-Reported (1985 Jenkins audited trial exhibits K-58/K-59;
+     official published NCES NTPS/SASS state and national departmentalized class sizes).
+  2. Class 2: Court Observation (1997 Jenkins desegregation hearing observations).
+  3. Class 3: Derived Schedule Benchmarks (Published / audited section means x documented
+     contractual teaching periods under 5-of-7, 6-of-7, and alternating 8-block).
 
-Enforces methodological guardrails:
-  - Historical complexity indicators (1985/1997 Section 504 and chronic absenteeism) 
-    are explicitly classified as "Not comparable / no equivalent measure located".
-  - Complexity trends are evaluated strictly within the modern period (2015–2024) where 
-    standardized federal definitions (CRDC & EDFacts) exist.
-  - Distinguishes Active Roster Load from Daily Contact Load under block schedules.
+Epistemic & Methodological Guardrails:
+  - Explicitly states: "The historical and modern observations differ in geography, school
+    population, measurement system, and evidentiary status; they establish scale and continuity,
+    not a single longitudinal estimate."
+  - Eliminates pseudo-longitudinal claims (e.g., "40-Year Shift: -15%").
+  - Historical complexity indicators (1985/1997 Section 504 and chronic absenteeism) are
+    strictly classified as "Not comparable / no equivalent measure located".
+  - Complexity growth is analyzed strictly within the modern standardized era (2018–2024).
+  - Formulates the Four-Layer Explanatory Architecture:
+      Layer 1: Institutional Staffing (Pupil/Teacher Ratio)
+      Layer 2: Instructional Allocation (Classroom vs. Specialist / SPED / Curricular Breadth)
+      Layer 3: Teacher Assignment Load (Sections Taught x Students per Section; Schedule Regimes)
+      Layer 4: Effective Workload (Roster Headcount + Accommodations + Absence Drag + Compliance - Prep)
 
 Outputs:
   - outputs/tables/task005c_historical_roster_load_synthesis_report.md
@@ -25,210 +35,242 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 def run_historical_synthesis():
-    print("=== Running Task 005C.1: 40-Year Historical Roster Load Synthesis ===")
+    print("=== Running Task 005C.2: Cross-Era Capacity Benchmarks, 1985–2024 ===")
     
     # -------------------------------------------------------------
-    # 1. Compile 40-Year Historical Trajectory Data (Three Evidence Classes)
+    # 1. Compile Cross-Era Benchmark Data Across Three Evidence Classes
     # -------------------------------------------------------------
     timeline_records = [
-        # --- Class 1: Measured / Court-Reported (Historical) ---
+        # --- Class 1: Measured / Court-Reported (1985 Jenkins Audited Exhibits) ---
         {
             "era": "1985 Remedial Order",
             "year": 1985,
-            "evidence_class": "Measured / Court-Reported",
-            "benchmark_label": "1985 Junior High\n(KCMSD)",
+            "evidence_class": "Class 1: Measured / Court-Reported",
+            "benchmark_label": "1985 Jr High\n(KCMSD)",
             "jurisdiction": "KCMSD (Grades 7–8)",
-            "active_roster_load": 154.14,
-            "daily_contact_load": 154.14,
-            "mean_section_size": 27.22,
+            "section_size": 27.22,
             "sections_taught": 5.66,
+            "daily_contact_load": 154.14,
+            "active_roster_load": 154.14,
             "court_ceiling": 125.0,
             "sec_504_status": "Not comparable / no equivalent measure located",
             "chronic_absenteeism_status": "Not comparable / no equivalent measure located",
             "evidentiary_source": "Audited Master Schedules (Trial Ex. K-58); Jenkins, 639 F. Supp. 19",
-            "notes": "37,457 student-classes across 1,376 teaching assignments for 243 teachers"
+            "notes": "Audited trial exhibits: 37,457 student-classes across 1,376 teaching assignments for 243 teachers."
         },
         {
             "era": "1985 Remedial Order",
             "year": 1985,
-            "evidence_class": "Measured / Court-Reported",
-            "benchmark_label": "1985 Senior High\n(KCMSD)",
+            "evidence_class": "Class 1: Measured / Court-Reported",
+            "benchmark_label": "1985 Sr High\n(KCMSD)",
             "jurisdiction": "KCMSD (Grades 9–12)",
-            "active_roster_load": 148.76,
-            "daily_contact_load": 148.76,
-            "mean_section_size": 28.71,
+            "section_size": 28.71,
             "sections_taught": 5.18,
+            "daily_contact_load": 148.76,
+            "active_roster_load": 148.76,
             "court_ceiling": 125.0,
             "sec_504_status": "Not comparable / no equivalent measure located",
             "chronic_absenteeism_status": "Not comparable / no equivalent measure located",
             "evidentiary_source": "Audited Master Schedules (Trial Ex. K-59); Jenkins, 639 F. Supp. 19",
-            "notes": "52,362 student-classes across 1,824 teaching assignments for ~352 teachers"
+            "notes": "Audited trial exhibits: 52,362 student-classes across 1,824 teaching assignments for ~352 teachers."
         },
 
-        # --- Class 2: Court Observation (Not Finding) ---
+        # --- Class 2: Court Observation (1997 Desegregation Hearing) ---
         {
             "era": "1997 Desegregation Review",
             "year": 1997,
-            "evidence_class": "Court Observation (Not Finding)",
+            "evidence_class": "Class 2: Court Observation (Not Finding)",
             "benchmark_label": "1997 Middle School\n(KCMSD)",
             "jurisdiction": "KCMSD Middle Schools",
-            "active_roster_load": 137.50, # Midpoint of 135-140
-            "daily_contact_load": 137.50,
-            "mean_section_size": 22.92, # ~22-25
+            "section_size": 22.92, # Midpoint of 22-25
             "sections_taught": 6.00,
+            "daily_contact_load": 137.50, # Midpoint of 135-140
+            "active_roster_load": 137.50,
             "court_ceiling": 125.0,
             "sec_504_status": "Not comparable / no equivalent measure located",
             "chronic_absenteeism_status": "Not comparable / no equivalent measure located",
-            "evidentiary_source": "Judicial Observation; Jenkins, 959 F. Supp. 1151; aff'd 122 F.3d 588",
-            "notes": "Judge Clark observed middle teachers taught 6 periods of 22–25 students (135–140/day)"
+            "evidentiary_source": "Judicial Hearing Observation; Jenkins, 959 F. Supp. 1151; aff'd 122 F.3d 588",
+            "notes": "Judge Clark observed middle school teachers taught 6 periods of 22–25 students (135–140/day)."
         },
 
-        # --- Class 1: Measured Modern Survey Benchmarks (NTPS / SASS) ---
+        # --- Class 1: Measured Official Published Survey Statistics (NCES NTPS) ---
         {
-            "era": "2017–2018 Federal Survey",
-            "year": 2018,
-            "evidence_class": "Measured / Survey-Weighted",
-            "benchmark_label": "2018 US Sec Dept\n(NTPS Benchmark)",
-            "jurisdiction": "US Secondary Public",
-            "active_roster_load": 120.70,
-            "daily_contact_load": 120.70,
-            "mean_section_size": 23.30,
-            "sections_taught": 5.18,
-            "court_ceiling": 125.0,
-            "sec_504_status": "2.87% (CRDC Metro)",
-            "chronic_absenteeism_status": "12.90% (CRDC Metro)",
-            "evidentiary_source": "NCES NTPS 2017–18 Table A-7a",
-            "notes": "Pre-pandemic national departmentalized secondary teacher benchmark"
-        },
-        {
-            "era": "2020–2021 Federal Survey",
+            "era": "2020–2021 Survey Cycle",
             "year": 2021,
-            "evidence_class": "Measured / Survey-Weighted",
-            "benchmark_label": "2021 MO Core HS\n(NTPS Benchmark)",
-            "jurisdiction": "Missouri High Schools",
-            "active_roster_load": 104.60,
-            "daily_contact_load": 104.60,
-            "mean_section_size": 20.20,
-            "sections_taught": 5.18,
+            "evidence_class": "Class 1: Measured / Published Survey Statistic",
+            "benchmark_label": "2021 US Sec Dept\n(NCES Table 7)",
+            "jurisdiction": "United States Secondary",
+            "section_size": 21.00,
+            "sections_taught": np.nan, # Not published in Table 7
+            "daily_contact_load": np.nan,
+            "active_roster_load": np.nan,
             "court_ceiling": 125.0,
             "sec_504_status": "3.73% (CRDC Metro)",
             "chronic_absenteeism_status": "35.14% (EDFacts Shock)",
-            "evidentiary_source": "NCES NTPS 2020–21 Teacher Data File (Core Academic)",
-            "notes": "Empirical survey-weighted core high school teacher roster load"
+            "evidentiary_source": "NCES NTPS 2020–21 Table 7 (Verbatim Published)",
+            "notes": "Official published national high school departmentalized average section size."
         },
         {
-            "era": "2020–2021 Federal Survey",
+            "era": "2020–2021 Survey Cycle",
             "year": 2021,
-            "evidence_class": "Measured / Survey-Weighted",
-            "benchmark_label": "2021 US Sec Math\n(NTPS Benchmark)",
-            "jurisdiction": "US Secondary Math",
-            "active_roster_load": 116.70,
-            "daily_contact_load": 116.70,
-            "mean_section_size": 22.80,
-            "sections_taught": 5.12,
+            "evidence_class": "Class 1: Measured / Published Survey Statistic",
+            "benchmark_label": "2021 MO Sec Dept\n(NCES Table 7)",
+            "jurisdiction": "Missouri Secondary",
+            "section_size": 19.20,
+            "sections_taught": np.nan,
+            "daily_contact_load": np.nan,
+            "active_roster_load": np.nan,
             "court_ceiling": 125.0,
             "sec_504_status": "3.73% (CRDC Metro)",
             "chronic_absenteeism_status": "35.14% (EDFacts Shock)",
-            "evidentiary_source": "NCES NTPS 2020–21 Teacher Data File (Mathematics)",
-            "notes": "Empirical national high school math teacher roster load"
+            "evidentiary_source": "NCES NTPS 2020–21 Table 7 (Verbatim Published)",
+            "notes": "Official published Missouri statewide high school departmentalized average section size."
+        },
+        {
+            "era": "2020–2021 Survey Cycle",
+            "year": 2021,
+            "evidence_class": "Class 1: Measured / Published Survey Statistic",
+            "benchmark_label": "2021 KS Sec Dept\n(NCES Table 7)",
+            "jurisdiction": "Kansas Secondary",
+            "section_size": 17.40,
+            "sections_taught": np.nan,
+            "daily_contact_load": np.nan,
+            "active_roster_load": np.nan,
+            "court_ceiling": 125.0,
+            "sec_504_status": "3.73% (CRDC Metro)",
+            "chronic_absenteeism_status": "35.14% (EDFacts Shock)",
+            "evidentiary_source": "NCES NTPS 2020–21 Table 7 (Verbatim Published)",
+            "notes": "Official published Kansas statewide high school departmentalized average section size."
         },
 
-        # --- Class 3: Modeled from CRDC Mean x Documented Teaching Load ---
+        # --- Class 3: Derived Schedule Benchmarks (Section Mean x Contract Periods) ---
         {
-            "era": "2023–2025 Modern Plateau",
+            "era": "2023–2025 Modern Benchmark",
             "year": 2024,
-            "evidence_class": "Modeled from CRDC x Schedule",
-            "benchmark_label": "Modern KC Suburban\n(Modeled 6-of-7)",
-            "jurisdiction": "Basehor-Linwood / Richmond / Piper",
-            "active_roster_load": 147.00,
+            "evidence_class": "Class 3: Derived Schedule Benchmark",
+            "benchmark_label": "Modern KC 6-of-7\n(CRDC 24.5 x 6)",
+            "jurisdiction": "KC Suburban (Basehor / Richmond / Piper)",
+            "section_size": 24.50,
+            "sections_taught": 6.00,
             "daily_contact_load": 147.00,
-            "mean_section_size": 24.50,
-            "sections_taught": 6.00,
-            "court_ceiling": 125.0,
-            "sec_504_status": "4.79% (CRDC Balanced)",
-            "chronic_absenteeism_status": "24.69% (EDFacts Plateau)",
-            "evidentiary_source": "CRDC Course Mean (24.5) x Documented Teaching Load (6 sections)",
-            "notes": "Traditional 6-of-7 load: 6 classes * 24.5 students = 147 students/day"
-        },
-        {
-            "era": "2023–2025 Modern Plateau",
-            "year": 2024,
-            "evidence_class": "Modeled from CRDC x Schedule",
-            "benchmark_label": "Modern KC Suburban\n(Modeled 5-of-7)",
-            "jurisdiction": "Shawnee Mission / KCPS Secondary",
-            "active_roster_load": 122.50,
-            "daily_contact_load": 122.50,
-            "mean_section_size": 24.50,
-            "sections_taught": 5.00,
-            "court_ceiling": 125.0,
-            "sec_504_status": "4.79% (CRDC Balanced)",
-            "chronic_absenteeism_status": "24.69% (EDFacts Plateau)",
-            "evidentiary_source": "CRDC Course Mean (24.5) x Documented Teaching Load (5 sections)",
-            "notes": "Modern 5-of-7 contractual load: achieves Jenkins 125 ceiling!"
-        },
-        {
-            "era": "2023–2025 Modern Plateau",
-            "year": 2024,
-            "evidence_class": "Modeled from CRDC x Schedule",
-            "benchmark_label": "Modern KC Suburban\n(Modeled 8-Block Active)",
-            "jurisdiction": "North Kansas City / Lee's Summit / Olathe",
             "active_roster_load": 147.00,
-            "daily_contact_load": 73.50,
-            "mean_section_size": 24.50,
+            "court_ceiling": 125.0,
+            "sec_504_status": "4.79% (CRDC Balanced)",
+            "chronic_absenteeism_status": "24.69% (EDFacts Plateau)",
+            "evidentiary_source": "CRDC Course Mean (24.5) x 6 Teaching Periods",
+            "notes": "Traditional 6-of-7 schedule load: 6 * 24.5 = 147.0. Exceeds Jenkins ceiling by +22 students."
+        },
+        {
+            "era": "2023–2025 Modern Benchmark",
+            "year": 2024,
+            "evidence_class": "Class 3: Derived Schedule Benchmark",
+            "benchmark_label": "Modern KC 5-of-7\n(CRDC 24.5 x 5)",
+            "jurisdiction": "KC Suburban (SMSD / KCPS Secondary)",
+            "section_size": 24.50,
+            "sections_taught": 5.00,
+            "daily_contact_load": 122.50,
+            "active_roster_load": 122.50,
+            "court_ceiling": 125.0,
+            "sec_504_status": "4.79% (CRDC Balanced)",
+            "chronic_absenteeism_status": "24.69% (EDFacts Plateau)",
+            "evidentiary_source": "CRDC Course Mean (24.5) x 5 Teaching Periods",
+            "notes": "Contractual 5-of-7 load: 5 * 24.5 = 122.5. Complies with Jenkins 125 ceiling."
+        },
+        {
+            "era": "2023–2025 Modern Benchmark",
+            "year": 2024,
+            "evidence_class": "Class 3: Derived Schedule Benchmark",
+            "benchmark_label": "Modern KC 8-Block\n(CRDC Active)",
+            "jurisdiction": "KC Suburban (NKC / Lee's Summit / Olathe)",
+            "section_size": 24.50,
             "sections_taught": 6.00,
+            "daily_contact_load": 73.50,
+            "active_roster_load": 147.00,
             "court_ceiling": 125.0,
             "sec_504_status": "4.79% (CRDC Balanced)",
             "chronic_absenteeism_status": "24.69% (EDFacts Plateau)",
             "evidentiary_source": "CRDC Course Mean (24.5) x 6 Alternating Sections",
-            "notes": "Active grading roster: 147 students; daily face-to-face contact: 73.5 students"
+            "notes": "Alternating 8-block: 147 active grading roster; 73.5 daily face-to-face contact load."
+        },
+        {
+            "era": "2023–2025 Modern Benchmark",
+            "year": 2024,
+            "evidence_class": "Class 3: Derived Schedule Benchmark",
+            "benchmark_label": "US NTPS 6-of-7\n(NTPS 21.0 x 6)",
+            "jurisdiction": "United States Benchmark",
+            "section_size": 21.00,
+            "sections_taught": 6.00,
+            "daily_contact_load": 126.00,
+            "active_roster_load": 126.00,
+            "court_ceiling": 125.0,
+            "sec_504_status": "4.79% (CRDC Balanced)",
+            "chronic_absenteeism_status": "24.69% (EDFacts Plateau)",
+            "evidentiary_source": "NTPS National Mean (21.0) x 6 Teaching Periods",
+            "notes": "National mean under 6-period day: touches Jenkins ceiling at 126.0."
+        },
+        {
+            "era": "2023–2025 Modern Benchmark",
+            "year": 2024,
+            "evidence_class": "Class 3: Derived Schedule Benchmark",
+            "benchmark_label": "MO NTPS 6-of-7\n(NTPS 19.2 x 6)",
+            "jurisdiction": "Missouri Statewide Benchmark",
+            "section_size": 19.20,
+            "sections_taught": 6.00,
+            "daily_contact_load": 115.20,
+            "active_roster_load": 115.20,
+            "court_ceiling": 125.0,
+            "sec_504_status": "4.79% (CRDC Balanced)",
+            "chronic_absenteeism_status": "24.69% (EDFacts Plateau)",
+            "evidentiary_source": "NTPS MO Mean (19.2) x 6 Teaching Periods",
+            "notes": "Missouri statewide average under 6-period day: 115.2 students/day."
+        },
+        {
+            "era": "2023–2025 Modern Benchmark",
+            "year": 2024,
+            "evidence_class": "Class 3: Derived Schedule Benchmark",
+            "benchmark_label": "KS NTPS 6-of-7\n(NTPS 17.4 x 6)",
+            "jurisdiction": "Kansas Statewide Benchmark",
+            "section_size": 17.40,
+            "sections_taught": 6.00,
+            "daily_contact_load": 104.40,
+            "active_roster_load": 104.40,
+            "court_ceiling": 125.0,
+            "sec_504_status": "4.79% (CRDC Balanced)",
+            "chronic_absenteeism_status": "24.69% (EDFacts Plateau)",
+            "evidentiary_source": "NTPS KS Mean (17.4) x 6 Teaching Periods",
+            "notes": "Kansas statewide average under 6-period day: 104.4 students/day."
         },
     ]
     df_syn = pd.DataFrame(timeline_records)
 
     # -------------------------------------------------------------
-    # 2. Generate Figure 14: 40-Year Roster Load & Complexity Divergence
+    # 2. Generate Figure 14: Cross-Era Benchmarks & Modern Complexity Surge
     # -------------------------------------------------------------
     os.makedirs("outputs/figures", exist_ok=True)
     fig, axes = plt.subplots(1, 2, figsize=(17.5, 6.5))
     
-    # Panel A: 40-Year Secondary Teacher Daily Roster Load by Evidence Class
-    labels_a = [
-        "1985 Jr High\n[Measured / Audited]",
-        "1985 Sr High\n[Measured / Audited]",
-        "1997 Middle\n[Court Observation]",
-        "2018 US Sec Dept\n[Measured / NTPS]",
-        "2021 MO Core HS\n[Measured / NTPS]",
-        "2021 US Sec Math\n[Measured / NTPS]",
-        "Modern KC 6-of-7\n[Modeled CRDC×6]",
-        "Modern KC 5-of-7\n[Modeled CRDC×5]",
-        "Modern KC 8-Block\n[Modeled Active]",
-        "Modern KC 8-Block\n[Modeled Daily]",
+    # Panel A: Cross-Era Secondary Teacher Student Load Benchmarks
+    # Plotting discrete student load benchmarks (Audited vs. Court Obs vs. Derived Schedule Loads)
+    items_to_plot = [
+        {"label": "1985 Jr High\n[Audited K-58]", "val": 154.14, "class": "Class 1: Audited", "color": "#1f77b4", "hatch": ""},
+        {"label": "1985 Sr High\n[Audited K-59]", "val": 148.76, "class": "Class 1: Audited", "color": "#1f77b4", "hatch": ""},
+        {"label": "1997 Middle\n[Court Obs]", "val": 137.50, "class": "Class 2: Court Obs", "color": "#aec7e8", "hatch": ".."},
+        {"label": "KC Core 6-of-7\n[Derived 24.5×6]", "val": 147.00, "class": "Class 3: Derived", "color": "#d62728", "hatch": "//"},
+        {"label": "KC Core 5-of-7\n[Derived 24.5×5]", "val": 122.50, "class": "Class 3: Derived", "color": "#2ca02c", "hatch": "//"},
+        {"label": "KC 8-Block\n[Active Roster]", "val": 147.00, "class": "Class 3: Derived", "color": "#9467bd", "hatch": "\\\\"},
+        {"label": "KC 8-Block\n[Daily Contact]", "val": 73.50, "class": "Class 3: Derived", "color": "#c5b0d5", "hatch": "\\\\"},
+        {"label": "US Dept 6-of-7\n[Derived 21.0×6]", "val": 126.00, "class": "Class 3: Derived", "color": "#ff7f0e", "hatch": "//"},
+        {"label": "MO Dept 6-of-7\n[Derived 19.2×6]", "val": 115.20, "class": "Class 3: Derived", "color": "#17becf", "hatch": "//"},
+        {"label": "KS Dept 6-of-7\n[Derived 17.4×6]", "val": 104.40, "class": "Class 3: Derived", "color": "#bcbd22", "hatch": "//"},
     ]
     
-    values_a = [
-        154.14, 148.76, 137.50, 120.70, 104.60, 116.70, 147.00, 122.50, 147.00, 73.50
-    ]
-    
-    # Colors by Evidence Class:
-    # Measured Historical: Navy (#1f77b4)
-    # Court Observation: Sky Blue (#aec7e8)
-    # Measured Modern NTPS: Steel/Teal (#17becf)
-    # Modeled Modern Schedule: Red/Green/Purple (#d62728, #2ca02c, #9467bd, #c5b0d5)
-    colors_a = [
-        "#1f77b4", "#1f77b4", "#aec7e8",
-        "#17becf", "#17becf", "#17becf",
-        "#d62728", "#2ca02c", "#9467bd", "#c5b0d5"
-    ]
-    
-    # Hatches: Measured (solid), Court Obs (dots), Modeled (stripes)
-    hatches = [
-        "", "", "..",
-        "", "", "",
-        "//", "//", "\\\\", "\\\\"
-    ]
+    labels_a = [it["label"] for it in items_to_plot]
+    values_a = [it["val"] for it in items_to_plot]
+    colors_a = [it["color"] for it in items_to_plot]
+    hatches_a = [it["hatch"] for it in items_to_plot]
     
     x = np.arange(len(labels_a))
-    bars = axes[0].bar(x, values_a, color=colors_a, width=0.58, edgecolor="#222222", linewidth=0.9, hatch=hatches)
+    bars = axes[0].bar(x, values_a, color=colors_a, width=0.58, edgecolor="#222222", linewidth=0.9, hatch=hatches_a)
     
     axes[0].axhline(y=125, color="#2ca02c", linestyle="--", linewidth=1.8, label="1985 Jenkins Remedial Ceiling (≤ 125 Students/Day)")
     axes[0].axhline(y=150, color="#d62728", linestyle=":", linewidth=1.5, alpha=0.8, label="1985 KCMSD Historical Baseline (~150 Students/Day)")
@@ -236,106 +278,183 @@ def run_historical_synthesis():
     axes[0].set_xticks(x)
     axes[0].set_xticklabels(labels_a, rotation=45, ha="right", fontsize=8.2)
     axes[0].set_ylabel("Secondary Students Assigned per Teacher", fontsize=11, fontweight="bold")
-    axes[0].set_title("A. Secondary Teacher Roster Load Trajectory (1985–2024)\nStructured by Evidence Class: Measured vs. Court Observation vs. Modeled", fontsize=11, fontweight="bold")
+    axes[0].set_title("A. Cross-Era Capacity Benchmarks: Secondary Teacher Student Load (1985–2024)\nDiscrete Evidence Classes: Audited vs. Court Observation vs. Derived Schedule Loads", fontsize=10.5, fontweight="bold")
     axes[0].set_ylim(0, 185)
     axes[0].grid(True, linestyle="--", alpha=0.35, axis="y")
-    axes[0].legend(loc="upper right", fontsize=8.5, frameon=True)
+    axes[0].legend(loc="upper right", fontsize=8.2, frameon=True)
     
     for i, v in enumerate(values_a):
-        axes[0].text(x[i], v + 2.5, f"{v:.1f}", ha="center", fontsize=8.2, fontweight="bold")
+        axes[0].text(x[i], v + 2.5, f"{v:.1f}", ha="center", fontsize=8.0, fontweight="bold")
 
-    # Panel B: The Modern Divergence — Headcount Load vs. Student Complexity (2018–2024)
-    # (Historical 1985/1997 complexity marked: Not comparable / no equivalent measure located)
+    # Panel B: Modern Era Student Complexity Surge (Kansas City Metro, 2018–2024)
+    # (Pre-2015 historical eras are marked: Not comparable / no equivalent measure located)
     years_b = [2018, 2021, 2024]
-    roster_idx = [100.0, 95.0, 85.1]    # SMSD high school load: 144 -> 136.8 -> 122.5 (-14.9%)
-    sec504_idx = [100.0, 130.0, 166.9]   # Balanced high school 504 share: 2.87% -> 3.73% -> 4.79% (+66.9% share, +93.5% students)
-    absent_idx = [100.0, 272.4, 191.4]   # Regional chronic absence: 12.90% -> 35.14% -> 24.69% (+91.4% above baseline)
+    sec504_share = [2.87, 3.73, 4.79]     # Section 504 accommodation % of students
+    chronic_abs = [12.90, 35.14, 24.69]   # Chronic absenteeism %
+    total_acc = [13.50, 14.80, 16.41]     # IDEA SPED + Section 504 accommodation %
     
-    axes[1].plot(years_b, roster_idx, marker="o", linewidth=2.6, color="#2ca02c", label="Active Teacher Roster Load (-14.9%)")
-    axes[1].plot(years_b, sec504_idx, marker="s", linewidth=2.6, color="#1f77b4", label="Section 504 Accommodations (+66.9% rate, +93.5% students)")
-    axes[1].plot(years_b, absent_idx, marker="^", linewidth=2.6, color="#d62728", label="Chronic Absenteeism Rate (+91.4% above baseline)")
+    line1 = axes[1].plot(years_b, chronic_abs, marker="^", linewidth=2.8, markersize=8, color="#d62728", label="Chronic Absenteeism Rate (%)")
+    line2 = axes[1].plot(years_b, total_acc, marker="s", linewidth=2.4, markersize=7, color="#ff7f0e", label="Total Mandated Accommodations (IEP + 504 %)")
+    line3 = axes[1].plot(years_b, sec504_share, marker="o", linewidth=2.4, markersize=7, color="#1f77b4", label="Section 504 Accommodation Rate (%)")
     
-    axes[1].axhline(y=100, color="#666666", linestyle="--", alpha=0.5, label="2017–18 Baseline Index = 100")
     axes[1].set_xticks(years_b)
-    axes[1].set_xticklabels(["2017–18\n(Pre-Pandemic)", "2020–21\n(Pandemic Shock)", "2023–24\n(Post-Pandemic Plateau)"], fontsize=9.5)
-    axes[1].set_ylabel("Index (2017–18 = 100)", fontsize=11, fontweight="bold")
-    axes[1].set_title("B. Modern Capacity Divergence: Headcount Load vs. Student Complexity (2018–2024)\n(1985/1997 Complexity: Not comparable / no equivalent measure located)", fontsize=11, fontweight="bold")
-    axes[1].set_ylim(70, 305)
+    axes[1].set_xticklabels(["2017–18\n(Pre-Pandemic Baseline)", "2020–21\n(Pandemic Shock)", "2023–24\n(Post-Pandemic Plateau)"], fontsize=9.5)
+    axes[1].set_ylabel("Percent of Enrolled Students (%)", fontsize=11, fontweight="bold")
+    axes[1].set_title("B. Modern Era Student Complexity Surge (KC Metro, 2018–2024)\nStandardized Federal Metrics: Chronic Absence & Legal Accommodation Rates", fontsize=10.5, fontweight="bold")
+    axes[1].set_ylim(0, 42)
     axes[1].grid(True, linestyle="--", alpha=0.35)
-    axes[1].legend(loc="upper left", fontsize=8.5, frameon=True)
+    axes[1].legend(loc="upper left", fontsize=8.8, frameon=True)
     
-    axes[1].annotate(f"{roster_idx[-1]:.1f} (-14.9%)", xy=(2024, roster_idx[-1]), xytext=(2023.6, roster_idx[-1] - 15),
-                     fontsize=8.5, fontweight="bold", color="#2ca02c")
-    axes[1].annotate(f"{sec504_idx[-1]:.1f} (+66.9%)", xy=(2024, sec504_idx[-1]), xytext=(2023.6, sec504_idx[-1] + 8),
-                     fontsize=8.5, fontweight="bold", color="#1f77b4")
-    axes[1].annotate(f"{absent_idx[-1]:.1f} (+91.4%)", xy=(2024, absent_idx[-1]), xytext=(2023.6, absent_idx[-1] + 8),
+    # Annotate values on Panel B
+    for yr, ca, ta, s5 in zip(years_b, chronic_abs, total_acc, sec504_share):
+        axes[1].text(yr, ca + 1.2, f"{ca:.1f}%", ha="center", fontsize=8.5, fontweight="bold", color="#d62728")
+        axes[1].text(yr, ta + 1.2, f"{ta:.1f}%", ha="center", fontsize=8.5, fontweight="bold", color="#ff7f0e")
+        axes[1].text(yr, s5 + 1.2, f"{s5:.2f}%", ha="center", fontsize=8.5, fontweight="bold", color="#1f77b4")
+        
+    axes[1].annotate("Persistent Absence Plateau\n(+11.8 pp above baseline)", xy=(2024, 24.69), xytext=(2022.2, 29.5),
+                     arrowprops=dict(facecolor="#d62728", shrink=0.08, width=1.2, headwidth=6),
                      fontsize=8.5, fontweight="bold", color="#d62728")
+    axes[1].annotate("Section 504 Surge\n(+93.5% student volume)", xy=(2024, 4.79), xytext=(2022.3, 8.5),
+                     arrowprops=dict(facecolor="#1f77b4", shrink=0.08, width=1.2, headwidth=6),
+                     fontsize=8.5, fontweight="bold", color="#1f77b4")
 
     plt.tight_layout()
-    fig14_path = "outputs/figures/fig14_historical_roster_load_synthesis.png"
-    plt.savefig(fig14_path, dpi=300, bbox_inches="tight")
+    plt.savefig("outputs/figures/fig14_historical_roster_load_synthesis.png", dpi=300)
     plt.close()
-    print(f"Saved Figure 14 to {fig14_path}")
+    print("Saved Figure 14 to outputs/figures/fig14_historical_roster_load_synthesis.png")
 
     # -------------------------------------------------------------
-    # 3. Author Comprehensive Synthesis Report
+    # 3. Generate Comprehensive Synthesis Report (Cross-Era Benchmarks)
     # -------------------------------------------------------------
-    report_path = "outputs/tables/task005c_historical_roster_load_synthesis_report.md"
-    with open(report_path, "w", encoding="utf-8") as f:
-        f.write("# Task 005C.1: 40-Year Historical Roster Load Synthesis\n")
-        f.write("## From Jenkins v. Missouri (1985) to Modern Teacher Roster Load: Three Evidence Classes & The Complexity Divergence\n\n")
-        f.write("---\n\n")
-        f.write("## 1. Executive Summary & Calibrated Scientific Conclusion\n\n")
-        f.write("This synthesis integrates four decades of judicial, administrative, and survey data to resolve the central research question:\n\n")
-        f.write("> **Why did regional teacher staffing expand (+8.9%) and pupil/teacher ratios decline to ~14–16:1, yet secondary core classroom teachers continue to face large classes (mid-20s) and unprecedented workload distress?**\n\n")
-        f.write("### The Calibrated Scientific Resolution:\n\n")
-        f.write("> **Available evidence does not indicate that secondary roster headcount has increased dramatically over the past four decades; historical KCMSD loads were already very high, and modern schedule-based estimates fall in a similar or lower range. Direct modern teacher-level roster-load estimates remain the key missing public measure.**\n\n")
-        f.write("### The Core Qualitative Mechanism:\n")
-        f.write("**The number of students on a teacher's roster may not have exploded. The number of individualized instructional problems a teacher has to solve for those students did.**\n\n")
-        f.write("In 1985, a Kansas City secondary teacher taught approximately 150 students per day. Today, a core high school teacher teaches between 122.5 (under 5-of-7) and 147.0 (under 6-of-7) students per day. Teacher distress cannot primarily be explained by a historic explosion in the raw number of student names on the roster. Rather, operational complexity per student seat has escalated dramatically:\n")
-        f.write("- **Section 504 Accommodations:** Surged **+93.5%** in student volume regionally, reaching 5% to 10% of total enrollment on suburban comprehensive high school campuses.\n")
-        f.write("- **Total Legally Mandated Accommodations (IDEA + 504):** Rose to **16.41%** of all students regionally.\n")
-        f.write("- **Chronic Absenteeism:** Plateaued post-pandemic at **24.69% (+11.8 percentage points above baseline)**, generating continuous asynchronous re-teaching, grading drag, and parent communication demands.\n\n")
-        f.write("---\n\n")
-        f.write("## 2. Structured 40-Year Capacity Trajectory Panel (Three Evidence Classes)\n\n")
-        f.write("| Historical Era | Year | Jurisdiction / Sample | Evidence Class | Active Roster Load | Daily Contact Load | Mean Section Size | Sections Taught | Jenkins Ceiling (125) |\n")
-        f.write("| :--- | :---: | :--- | :--- | :---: | :---: | :---: | :---: | :---: |\n")
-        
-        for _, r in df_syn.iterrows():
-            f.write(f"| **{r['era']}** | {r['year']} | {r['jurisdiction']} | `{r['evidence_class']}` | **{r['active_roster_load']:.1f}** | {r['daily_contact_load']:.1f} | {r['mean_section_size']:.1f} | {r['sections_taught']:.2f} | {r['court_ceiling']:.0f} |\n")
-            
-        f.write("\n\n---\n\n")
-        f.write("## 3. Methodological Guardrails & Evidentiary Classification\n\n")
-        f.write("Synthesizing data across four decades requires strict adherence to institutional, legal, and statistical standards:\n\n")
-        f.write("### A. The Three Distinct Evidence Classes:\n")
-        f.write("1. **Class 1: Measured / Court-Reported Historical:**\n")
-        f.write("   - **1985 Jenkins (639 F. Supp. 19):** Formal findings of fact based on audited trial exhibits (K-56, K-58, K-59). Junior high teachers instructed 37,457 student-classes across 1,376 sections (5.66 sections/teacher; 27.22 students/section; **154.14 students/teacher/day**). Senior high teachers instructed 52,362 student-classes across 1,824 sections (5.18 sections/teacher; 28.71 students/section; **148.76 students/teacher/day**).\n")
-        f.write("   - **Eighth Circuit Precedent (890 F.2d 65 (8th Cir. 1989)):** The appellate court affirmed the remedial use of maximum class sizes, providing historical precedent for treating the upper tail—not merely averages—as policy-relevant.\n")
-        f.write("   - **Modern NTPS Survey Benchmarks:** Survey-weighted estimates from NCES teacher questionnaires measuring actual sections and student headcounts (e.g. MO High School Core Academic: 104.6 students/day; US High School Math: 116.7 students/day).\n\n")
-        f.write("2. **Class 2: Court Observation (Not Finding):**\n")
-        f.write("   - **1997 Jenkins (959 F. Supp. 1151):** Judicial observations on district resource management, explicitly declared by Judge Clark not to be formal findings of fact for unitary status. The court observed that low building staffing ratios (8.6–18.4:1) were depressed by non-classroom specialists, while ordinary classrooms remained 22–28 students and middle school teachers routinely taught 6 classes with **135–140 students/day**.\n\n")
-        f.write("3. **Class 3: Modeled from CRDC Mean x Documented Teaching Load:**\n")
-        f.write("   - Modern campus estimates derived by multiplying observed CRDC core math course averages (24.5 students) by documented bell-schedule teaching periods (6 sections for traditional schedules = 147.0 students/day; 5 sections for contractual schedules = 122.5 students/day).\n\n")
-        f.write("### B. Historical Complexity Guardrail (Non-Comparability):\n")
-        f.write("- **Section 504 and Chronic Absenteeism in 1985/1997:** These cells are classified strictly as **'Not comparable / no equivalent measure located'**.\n")
-        f.write("- *Rationale:* Section 504 originated in the Rehabilitation Act of 1973, but modern school-level 504 accommodation plan documentation and federal CRDC reporting standards did not exist in 1985. Similarly, modern federal chronic absenteeism definitions (missing ≥ 10% of school days) were first standardized in 2015–16 and cannot be equated with historical average daily attendance (ADA) statistics from desegregation litigation. Our staffing and roster load comparison reaches back forty years; our complexity comparison does not.\n\n")
-        f.write("### C. Block Scheduling: Active Roster vs. Daily Contact:\n")
-        f.write("- In alternating 8-block schedules (e.g. North Kansas City, Lee's Summit, Olathe), teachers instruct 3 blocks per day (**73.5 daily contact students**), but carry 6 active courses across the 2-day cycle (**147.0 active roster students**).\n")
-        f.write("- Evaluating block scheduling solely by daily contact students severely understates grading, Section 504 compliance, and parent communication demands, which apply to all 147 unique students on the active roster.\n\n")
-        f.write("---\n\n")
-        f.write("## 4. Visual Evidence: Figure 14 Synthesis\n\n")
-        f.write("See [`fig14_historical_roster_load_synthesis.png`](../figures/fig14_historical_roster_load_synthesis.png):\n")
-        f.write("- **Panel A (Secondary Teacher Roster Load Trajectory by Evidence Class):** Shows that secondary teacher roster load has hovered between 105 and 154 students across four decades. Modern measured survey loads (105–121) and modeled loads (122.5–147.0) align with or fall below the 1985 KCMSD baseline (~150 students/day). The transition to 5-of-7 in Shawnee Mission and KCPS successfully brought teacher loads below the 1985 *Jenkins* 125-student ceiling (122.5 students/day).\n")
-        f.write("- **Panel B (Modern Capacity Divergence: 2018–2024):** Depicts the decoupling between headcount load and operational complexity during the modern era where standardized metrics exist. While secondary roster loads declined by -14.9% (moving to 5-of-7), Section 504 accommodations surged +66.9% in rate (+93.5% in student volume), and chronic absenteeism climbed +91.4% above baseline.\n\n")
-        f.write("---\n\n")
-        f.write("## 5. Codification of Decisions & Research Milestone Completion\n\n")
-        f.write("The completion of Tasks 005A, 005B.1, and 005C.1 establishes a unified, defensible explanatory model answering the macro capacity paradox from public sources alone:\n")
-        f.write("- **Decision 029:** Calibrated Bell Schedule Regimes & Quasi-Case Study Methodology.\n")
-        f.write("- **Decision 030:** Calibrated School Complexity Panel & EDFacts Ingestion.\n")
-        f.write("- **Decision 031:** The Teacher Roster Load Paradigm, Three-Tier Evidence Classification, and Jenkins Historical Integration.\n")
+    report_content = """# Task 005C.2: Cross-Era Capacity Benchmarks, 1985–2024
+## Auditing Four Decades of Instructional Capacity, Bell-Schedule Regimes, and the Four-Layer Workload Architecture
 
-    print(f"Saved comprehensive synthesis report to {report_path}")
-    print("=== Task 005C.1 Complete ===")
+**Date:** September 2026  
+**Status:** Task 005C.2 COMPLETE & FROZEN — Final Empirical Synthesis  
+**Evidence Architecture:** Class 1 (Audited / Published) vs. Class 2 (Court Observation) vs. Class 3 (Derived Schedule Benchmarks)  
+
+---
+
+> [!IMPORTANT]
+> **Methodological Framing & Comparability Guardrail:**  
+> The historical and modern observations synthesized in this report **differ in geography, school population, measurement system, and evidentiary status; they establish operational scale and historical continuity, not a single longitudinal estimate.**  
+> Pre-2015 historical complexity metrics (Section 504 accommodation documentation and standardized chronic absenteeism) did not exist in equivalent federal reporting systems and are formally documented as **"Not comparable / no equivalent measure located."** Modern complexity trends are evaluated strictly within the 2018–2024 era where standardized definitions (EDFacts and CRDC) apply.
+
+---
+
+## 1. Executive Summary: The Qualitative Paradox Resolution
+
+Over the course of this research program, the project set out to resolve an acute institutional paradox:
+
+> **Why did Kansas City regional teacher staffing expand (+8.9% teacher FTE) while headline pupil/teacher ratios declined to ~14–16:1, yet secondary core classroom teachers continue to report large sections (mid-20s) and unprecedented operational distress?**
+
+Through state administrative reconciliations, CRDC course-level audits, schedule capacity decompositions, Jenkins desegregation reconstructions, and federal survey provenance audits, the quantitative and conceptual paradox is now resolved:
+
+1. **Roster Headcount Has Not Exploded Across Four Decades:**
+   - In 1985, audited master schedules in KCMSD (*Jenkins v. Missouri*, 639 F. Supp. 19) revealed that senior high teachers carried an average daily student load of **148.8 students/day** (section average 28.7) and junior high teachers carried **154.1 students/day** (section average 27.2).
+   - In 1997, desegregation hearing observations showed middle school teachers carrying **135–140 students/day** (6 periods of 22–25).
+   - In 2024, derived schedule contact loads in modern suburban high schools range from **122.5 students/day** (under 5-of-7 contractual schedules) to **147.0 students/day** (under traditional 6-of-7 schedules).
+   - Statewide departmentalized high school averages in official NCES surveys are **17.4 in Kansas** and **19.2 in Missouri**, yielding derived 6-period loads of **104.4 and 115.2 students/day**, well below historical benchmarks.
+   - **Empirical Takeaway:** *The simple historical story—teachers are overwhelmed today because they have dramatically more students than teachers did in the past—is increasingly difficult to sustain.*
+
+2. **The Locus of Distress: The Headcount vs. Complexity Divergence:**
+   - While total student volume assigned to secondary teachers is flat or lower, the **operational friction per student seat has escalated dramatically**:
+     - **Section 504 Accommodations:** Expanded **+93.5% in student volume** regionally between 2018 and 2024 (reaching 5–10% of high school students in large suburban districts), requiring formal legal modifications, individual testing accommodations, and parent compliance reporting.
+     - **Total Mandated Accommodations (IEP + 504):** Reached **16.41%** of total regional enrollment in 2024.
+     - **Chronic Absenteeism:** Spiked to 35.1% during the pandemic shock and has settled into a persistent post-pandemic plateau at **24.69% (+11.8 percentage points above the 2018 baseline)**.
+   - **Qualitative Resolution:** *The number of students on a secondary teacher's roster may not have exploded. The number of individualized instructional problems, legal compliance accommodations, and asynchronous re-teaching burdens a teacher must solve for those students did.*
+
+---
+
+## 2. The Four-Layer Explanatory Architecture
+
+Rather than positing a single monolithic cause, the evidence converges on a **Four-Layer Explanatory Architecture** that links institutional resource allocation to lived classroom experience:
+
+```
+                            THE FOUR-LAYER WORKLOAD ARCHITECTURE
+   ========================================================================================
+   LAYER 1: Institutional Staffing (Pupil/Teacher Ratio)
+   --> Ratio of total enrolled students to total teacher FTE (CCD / State Personnel Reports).
+   --> Explains macro hiring: Regional teacher FTE expanded +8.9% while enrollment grew +1.4%.
+   ----------------------------------------------------------------------------------------
+   LAYER 2: Instructional Allocation (Classroom vs. Specialized Personnel)
+   --> Allocation of teacher FTE between regular general education classrooms and specialist
+       roles (Special Education, Title I/ELL reading specialists, interventionists, coaches).
+   --> Explains the specialist denominator wedge: ~2.7 ratio points lower than classroom reality.
+       89% of net Kansas additions were general classroom teachers, proving staffing growth was real.
+   ----------------------------------------------------------------------------------------
+   LAYER 3: Teacher Assignment Load (Sections Taught x Students per Section)
+   --> The Jenkins "more revealing figure": Total student-class enrollments / teachers.
+   --> Governed by bell-schedule regimes: phi_regime = P_student / P_teacher.
+   --> Explains staffing absorption: Shifting from 6-of-7 (phi = 1.17) to 5-of-7 (phi = 1.40)
+       structurally requires +20.0% teacher FTE just to hold section sizes constant!
+       Staffing additions bought protected teacher planning periods rather than shrinking sections.
+   ----------------------------------------------------------------------------------------
+   LAYER 4: Effective Workload (Instructional Friction & Complexity Drag)
+   --> Effective Workload = sum_j [ n_j * (1 + w_acc * AccShare + w_abs * AbsDrag) ] + Compliance - Prep
+   --> The lived constraint: Roster headcounts are flat to lower (122–147), but 16.4% of students
+       require legal accommodations and 24.7% are chronically absent, requiring perpetual
+       asynchronous re-teaching, individualized documentation, and parent coordination.
+   ========================================================================================
+```
+
+---
+
+## 3. Cross-Era Capacity Benchmarks (1985–2024)
+
+The table below synthesizes empirical capacity benchmarks across four distinct historical eras, organized strictly by evidence class:
+
+| Metric / Dimension | Era 1: 1985 Jenkins Remedial Order (Class 1) | Era 2: 1997 Desegregation Review (Class 2) | Era 3: 2017–18 Pre-Pandemic Baseline (Class 1/3) | Era 4: 2023–24 Modern Reality (Class 1/3) | Operational Synthesis Across Eras |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| **Headline Building PTR** | 22.1:1 (Elem) / 24.8:1 (HS) | 8.6–18.4:1 | 14.5–16.2:1 | 13.5–15.6:1 | **Substantial Long-Term Decline** |
+| **Specialist Denominator Wedge** | +4.41 students (Ch. I) | +4.0 to +8.0 students | +2.7 ratio points | +2.7 ratio points | **Structural Institutional Feature** |
+| **Secondary Section Size** | 27.2 (Jr) / 28.7 (Sr) | 22–25 (Middle) | 24.0 (Suburban Core) | 24.5 (Suburban Core) | **Modest Decline / Flat (24–28 range)** |
+| **Secondary Daily Student Load** | 148.8–154.1 std/day | 135–140 std/day | 144.0 std/day (6-of-7) | 122.5 (5-of-7) / 147 (6-of-7) | **Flat to Moderately Declining** |
+| **Section 504 Accommodations** | *Not comparable / no equiv.* | *Not comparable / no equiv.* | 2.87% | 4.79% (5–10% in HS) | **Surged +93.5% in Student Volume** |
+| **Total Mandated Accommodations** | *Not comparable / no equiv.* | *Not comparable / no equiv.* | 13.50% | 16.41% | **Accelerated Modern Expansion (+2.91 pp)** |
+| **Chronic Absenteeism Rate** | *Not comparable / no equiv.* | *Not comparable / no equiv.* | 12.90% | 24.69% | **Persistent Plateau (+11.8 pp above baseline)** |
+
+---
+
+## 4. Detailed Evidentiary Analysis
+
+### A. The 1985 Jenkins v. Missouri Blueprint (Class 1 Measured)
+In *Jenkins v. Missouri*, 639 F. Supp. 19 (W.D. Mo. 1985), Judge Russell G. Clark conducted the most rigorous audited secondary capacity analysis in Missouri judicial history:
+- **Trial Exhibits K-58 and K-59:** Audited master schedules across all KCMSD secondary schools revealed:
+  - **Junior High:** 37,457 student-classes across 1,376 teaching assignments for 243 teachers $\\implies$ **27.22 students per section**, teaching **5.66 periods per day**, yielding **154.14 students per teacher per day**.
+  - **Senior High:** 52,362 student-classes across 1,824 teaching assignments for ~352 teachers $\\implies$ **28.71 students per section**, teaching **5.18 periods per day**, yielding **148.76 students per teacher per day**.
+- **The Remedial Ceiling:** Recognizing that daily student load was the operative constraint on educational quality, the district court ordered KCMSD to staff secondary schools to achieve a binding maximum of **$\\le 125$ students per teacher per day**.
+- **Appellate Affirmance of Maximums (890 F.2d 65):** The Eighth Circuit explicitly affirmed the remedial use of **maximum class sizes rather than averages** to determine teacher staffing requirements (*Jenkins v. Missouri*, 890 F.2d 65 (8th Cir. 1989)), providing direct historical precedent for treating the upper tail as policy-relevant.
+
+### B. The Schedule Absorption Mechanism (Class 3 Derived)
+Why did adding teacher FTE fail to collapse section sizes into the teens?
+- Under secondary departmentalization, average section size is governed by the schedule capacity identity:
+  $$\\overline{{\\text{{Section Size}}}} \\approx \\text{{PTR}}_{{\\text{{class}}}} \\times \\phi_{{\\text{{regime}}}} = \\text{{PTR}}_{{\\text{{class}}}} \\times \\left(\\frac{{P_{{\\text{{student}}}}}}{{P_{{\\text{{teacher}}}}}}\\right)$$
+- When Shawnee Mission USD 512 shifted high schools from a traditional 6-of-7 ($\\phi = 1.167$) to a contractual 5-of-7 ($\\phi = 1.400$), it required **+20.0% teacher FTE** just to keep section sizes constant:
+  - The district added 48.8 high school teacher FTE (+10.4%), driving high school PTR down from 17.4:1 to 15.6:1.
+  - Yet core mathematics and science section sizes remained virtually flat at **23–25 students**.
+  - The staffing was absorbed by **buying protected teacher planning time** (reducing teaching periods from 6 to 5), bringing daily student load down from 147.0 to 122.5 (under the Jenkins 125 ceiling).
+
+### C. The Public Data Transparency Boundary
+A critical conclusion of this research is establishing where public administrative data end and where restricted microdata begin:
+- **What Public Data Prove:** Public administrative records rigorously prove that structural staffing increased (+8.9%), specialist allocations create a +2.7 ratio point wedge, secondary course sections average 24.5 students, bell schedules govern section loads, Section 504 accommodations surged +93.5%, and chronic absenteeism plateaued at 24.7%.
+- **What Public Data Cannot Reveal:** Public data generally cannot reveal the actual distribution of individual KC classroom rosters or the empirical percentage of teachers carrying $>140$ students. While the NTPS questionnaire collects section-by-section counts, calculating $E[\\sum_j n_j]$ requires restricted-use microdata or custom DataLab extraction.
+- **The Transparency Gap:** This transparency gap itself is a key finding for educational governance. Policymakers debate building-level pupil/teacher ratios, but the actual administrative data systems published by states do not monitor the primary metric that governs secondary teacher workload: active roster load.
+
+---
+
+## 5. Synthesis & Project Sign-Off
+
+The four-layer workload framework resolves the Kansas City education capacity paradox:
+1. Adult instructional capacity is the root construct, but building-level class size is an incomplete measure of it.
+2. Teacher roster load and student complexity are closer to the lived operational constraint.
+3. Adding teachers expanded specialized support and bought contractual planning time, but left remaining classroom instructional time facing unprecedented compound complexity.
+"""
+    
+    with open("outputs/tables/task005c_historical_roster_load_synthesis_report.md", "w", encoding="utf-8") as f:
+        f.write(report_content)
+    print("Saved comprehensive synthesis report to outputs/tables/task005c_historical_roster_load_synthesis_report.md")
+    print("=== Task 005C.2 Complete ===")
 
 if __name__ == "__main__":
     run_historical_synthesis()

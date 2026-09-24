@@ -287,9 +287,34 @@ Catalog these metrics in `outputs/tables/task003a1_reporting_coverage.csv` and r
      - **Calibrated Scientific Conclusion:** *Available evidence does not indicate that secondary roster headcount has increased dramatically over the past four decades; historical KCMSD loads were already very high, and modern schedule-based estimates fall in a similar or lower range. Direct modern teacher-level roster-load estimates remain the key missing public measure.*
      - **Qualitative Story:** The number of students on a teacher's roster may not have exploded. The number of individualized instructional problems a teacher has to solve for those students did. Added staffing bought planning time, while remaining classroom hours face unprecedented compound student complexity.
 
-
-
-
-
-
+### Decision 032: NTPS Provenance Audit, Retraction of Unverified Survey Distributions, Cross-Era Benchmark Nomenclature, and the Four-Layer Architecture (Tasks 005B.2 & 005C.2)
+* **Status:** Adopted
+* **Date:** 2026-09-24
+* **Context:** Methodological and reproducibility review of Task 005B.1 and Task 005C.1 identified two critical scientific integrity requirements:
+  1. The repository previously reported teacher-level roster load percentiles (P75, P90, median) and tail probabilities (>125, >140, >150) that were reconstructed or modeled from section means and parametric assumptions rather than directly calculated from an audited NCES DataLab session with replicate weights, unweighted n, and variance matrices. Furthermore, 2015–16 state estimates were presented as representative despite NCES explicitly establishing that the 2015–16 NTPS design was not state-representative.
+  2. Synthesizing disparate populations (1985 KCMSD desegregation exhibits, 1997 KCMSD hearing observations, modern statewide survey estimates, KC suburban CRDC course aggregates, and modeled schedule regimes) as a single '40-year longitudinal trend' implied continuous demographic and geographic comparability that the data do not support.
+* **Decision:**
+  1. **Execute Task 005B.2 (NTPS Provenance Audit & Retractions):**
+     - Formally retract and delete all unsupported teacher-level percentile distributions and tail probabilities.
+     - Retain exclusively verbatim published NCES quantities from official reference tables (2020–21 NTPS Table 7: US 21.0, KS 17.4, MO 19.2; 2017–18 NTPS Table A-7a: US 23.3, KS 19.8, MO 22.5; 2011–12 SASS Table 69: US 24.2, KS 20.5, MO 23.1).
+     - Formally remove 2015–16 Kansas and Missouri state rows, preserving 2015–16 exclusively for national comparisons (First Look Table 8: US 26.0). The modern state survey series is strictly: 2017–18 -> 2020–21.
+     - Re-attribute '!' and '‡' reporting flags to official published NTPS Table 7 publication conventions (CV 30–50% for '!'; CV >= 50% or too few cases for '‡'), correcting earlier attribution to NCES Standard 4-2 (which governs confidentiality).
+     - Classify all student contact loads under schedules as **Class 3: Derived Schedule Benchmarks** (Published Section Mean x Teaching Periods), not measured survey distributions.
+  2. **Refactor Task 005C.2 to 'Cross-Era Capacity Benchmarks, 1985–2024':**
+     - Rename product and documentation: **Cross-Era Capacity Benchmarks, 1985–2024**.
+     - Formally adopt the mandatory comparability guardrail:
+       *'The historical and modern observations differ in geography, school population, measurement system, and evidentiary status; they establish scale and continuity, not a single longitudinal estimate.'*
+     - Eliminate pseudo-longitudinal claims (e.g. '40-Year Shift: -15%').
+     - Classify historical complexity metrics (1985/1997 Section 504 and chronic absenteeism) strictly as: *'Not comparable / no equivalent measure located'*.
+  3. **Establish the Public Data Transparency Boundary:**
+     - Explicitly document that public data can rigorously establish structural staffing (+8.9% FTE), specialist allocation (+2.7 ratio point wedge), school-course averages (24.5 students), bell-schedule regimes (5-of-7 vs. 6-of-7), Section 504 accommodations (+93.5% volume), and chronic absenteeism (24.7%).
+     - Acknowledge that public data generally cannot reveal the actual distribution of individual KC classroom rosters or the empirical percentage of teachers carrying >140 students, which requires restricted-use microdata or custom DataLab extraction.
+  4. **Adopt the Four-Layer Explanatory Architecture:**
+     - Layer 1: Institutional Staffing (Pupil/Teacher Ratio).
+     - Layer 2: Instructional Allocation (Classroom vs. specialized personnel, SPED, reading specialists, and curricular breadth).
+     - Layer 3: Teacher Assignment Load (Sections taught x students per section; governed by bell-schedule regimes and contractual planning).
+     - Layer 4: Effective Workload (Active roster headcount compounded by student complexity: Section 504, IEPs, chronic absence re-teaching, grading, parent communication, coverage, minus protected planning).
+  5. **Freeze Public Data Collection:**
+     - Cease further public data collection (Track B Sunshine/KORA parked; no internal PREP-KC district access; no elementary yearbook archaeology; no additional board PDF crawls).
+     - Transition to final synthesis paper and project documentation based on the four-layer explanatory model.
 

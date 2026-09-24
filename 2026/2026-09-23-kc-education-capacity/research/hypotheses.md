@@ -1,5 +1,5 @@
 # Research Hypotheses: Kansas City Education Capacity Study
-## Status & Empirical Adjudication (Phases 1–3C & Tasks 004A.1–004C.1)
+## Status & Empirical Adjudication (Phases 1–3C & Tasks 004A.1–004C.1, 005A–005C.2)
 
 ## Core Framing
 **Central Research Question:**
