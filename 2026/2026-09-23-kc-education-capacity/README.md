@@ -65,7 +65,22 @@ kc_education_capacity/
 
 ---
 
-## Current Status: Phase 3C Complete; Task 004A (CRDC Course Capacity Panel) Complete; Launching Phase 4 Microdata Tracks
+## Current Status: Complete Research Synthesis Available; Tasks 001–005C.2 Concluded
+
+The complete empirical research paper synthesizing this 4-decade investigation is available at:
+👉 **[
+esearch/paper_kc_education_capacity_synthesis.md](research/paper_kc_education_capacity_synthesis.md)**: *The Capacity Paradox: Why Hiring More Teachers Didn’t Shrink the Classroom (A Four-Decade Investigation into Institutional Staffing, Bell Schedules, and Effective Teacher Workload Across Metropolitan Kansas City)*.
+
+### Key Milestones & Completed Tasks:
+- **Phase 1 & 2 (Universe & Baseline Capacity):** Geocoded 691 campuses across 9 MARC counties; audited 2024–25 baseline staffing.
+- **Phase 3 (11-Year Longitudinal Panel):** Proved regional teacher FTE expanded **+8.86%** while enrollment was flat (**-0.73%**), reducing pupil/teacher ratio from 14.85:1 to 13.54:1.
+- **Phase 3C (State Staffing Reconciliations):** Quantified the **+2.7 ratio point Specialist Denominator Wedge**; proved 88.9% of net Kansas additions were general classroom teachers.
+- **Task 004A.1 (CRDC Course-Level Capacity):** Audited 6 biennial waves; documented positive Allocation Wedge (+3.5 to +5.1 in core courses) and suburban comprehensive high school sections of 24–28+.
+- **Task 004B.1 (Schedule Regimes & SMSD Case Study):** Formulated Schedule Capacity Identity (phi = 1.17 to 1.40); demonstrated in Shawnee Mission how adding +10.4% teacher FTE bought protected planning periods rather than reducing section size.
+- **Task 004C.1 (Student Complexity Panel):** Documented the modern complexity explosion: Section 504 accommodations surged **+93.5%**, total accommodations reached **16.41%**, and chronic absenteeism plateaued at **24.69%**.
+- **Task 005A (Jenkins Historical Reconstruction):** Reconstructed Judge Russell G. Clark's 1985 capacity framework (audited exhibits K-58/K-59: 149–154 std/day load; 125 remedial ceiling; Eighth Circuit affirmance of maximums).
+- **Task 005B.2 (NTPS Provenance Audit):** Retracted unverified survey distributions; preserved official NCES published state/national benchmarks; classified schedule loads as derived benchmarks.
+- **Task 005C.2 (Cross-Era Capacity Benchmarks):** Synthesized 40-year benchmarks across three evidence classes; codified the **Four-Layer Explanatory Architecture** and documented the public transparency boundary.
 
 - **Task 001 (Geographic Universe):** Complete. 691 schools across 9 MARC counties established, geocoded, and classified using NCES CCD/EDGE SY 2024–2025.
 - **Task 002 & 002B (Baseline Staffing & Capacity):** Complete. School- and LEA-level baseline capacity panels constructed (`kc_school_capacity_2024_2025.csv`, `kc_lea_capacity_2024_2025.csv`), with programmatic LEA geographic coverage metadata, `Operating Regular (NCES)` terminology, FRL missingness analysis, independent Urban Institute ingestion replication, and audited anomalies in `outputs/tables/task002_qa_report.md`.
