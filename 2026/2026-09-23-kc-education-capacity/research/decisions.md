@@ -228,6 +228,31 @@ Catalog these metrics in `outputs/tables/task003a1_reporting_coverage.csv` and r
      - Characterize NTPS departmentalized benchmarks as broadly consistent sanity boundaries.
   7. **Public-Use Disclosure Caveats:** Flag small-cell observations subject to $\pm 1$ student perturbation (Oak Park Calculus, Blue Valley North Algebra I) as diagnostic leads requiring independent verification via district master schedules or public records responses.
 
+### Decision 029: The Schedule-Adjusted Capacity Model, Multi-Stage Decomposition, and Compound Workload Framework (Tasks 004B & 004C)
+* **Status:** Adopted
+* **Date:** 2026-09-24
+* **Context:** Following the completion of Task 004A.1, the research strategy was fundamentally refined: (1) public records requests (Track B) were de-prioritized to determine how far an ordinary citizen/researcher can proceed using purely public data before seeking non-public or internal records; (2) the positive gap between headline PTR (~14–16:1) and observed core class sizes (24–28+) required a rigorous mathematical and organizational explanation rather than attributing it to reporting distortion; and (3) teacher perceptions of severe workload overload required reconciliation with administrative data showing an 8.9% expansion in certified teacher staffing.
+* **Decision:** Adopt the following explanatory models and empirical architectures:
+  1. **De-Prioritization of Track B:** Cancel plans for external KORA and Sunshine Law requests. Exhaust all public artifacts (schedules, negotiated agreements, state accountability regulations, board documents, CRDC complexity tables, EDFacts, and NTPS) first.
+  2. **The Schedule-Adjusted Capacity Model (Task 004B):** Formalize the mathematical bridge between classroom staffing ratios and section sizes:
+     $$\boxed{ \overline{\text{Size}}_{\text{sched}} = \text{PTR}_{class} \times \left(\frac{P_{\text{student}}}{P_{\text{teacher}}}\right) = \text{PTR}_{class} \times \phi }$$
+     Recognize that statutory and contractual planning-time guarantees (Missouri MSIP 6 rule requiring $\ge 250$ minutes self-directed planning/week; Kansas negotiated agreements restricting secondary educators to 5 teaching periods daily) establish an unavoidable schedule multiplier of $\phi = \frac{7}{5} = 1.400$ (+40% expansion over classroom ratio).
+  3. **Three-Stage Capacity Decomposition:** Decompose the gap between reported building PTR and observed core classroom size into three distinct, additive components:
+     $$\text{Observed Core Size} = \text{Reported PTR} + \Delta_1 + \Delta_2 + \Delta_3$$
+     - $\Delta_1$ (Specialist Denominator Effect): $+2.5$ to $+2.8$ students (removing non-classroom special education co-teachers, reading specialists, and EL support).
+     - $\Delta_2$ (Schedule Planning Multiplier): $+6.5$ to $+8.0$ students ($\text{PTR}_{class} \times [\phi - 1]$; the direct arithmetic consequence of 1 planning period + 1 PLC/duty period).
+     - $\Delta_3$ (Course Hierarchy / Tracking Residual): $-1.5$ to $+3.5$ students (the residual allocation gap between small advanced electives/AP courses at 8–15 students and foundation graduation requirements at 25–28+ students).
+     Empirical findings from `outputs/tables/task004b_schedule_decomposition_benchmarks.csv` prove that on large comprehensive campuses (e.g. Shawnee Mission North, Olathe Northwest, Lincoln Prep), **80% to 98% of the raw 10-to-13 student wedge is explained by specialist categorization ($\Delta_1$) and schedule planning mechanics ($\Delta_2$)**.
+  4. **Explaining the Decade Staffing Surge ('5 of 7' Phasing):** The shift from a 6-of-7 teaching load ($\phi \approx 1.167$) to a 5-of-7 teaching load ($\phi = 1.400$), such as Shawnee Mission's Board-approved transition in January 2020, structurally requires an exact **+20.0% increase in teacher FTE** to maintain identical classroom section sizes ($1.400 / 1.167 = 1.20$). Public school districts expanded teacher hiring *not to reduce the number of students sitting in each section*, but to **buy back teacher planning time** and reduce the number of course sections each teacher manages daily.
+  5. **Falsification of H1b and Validation of H2 (The Compound Workload Model, Task 004C):** Falsify the hypothesis that classroom headcounts grew secularly by 5+ students over the decade (refuted by NTPS national trends and flat CRDC aggregates). Validate Hypothesis H2: section sizes remained anchored in the mid-20s by schedule mechanics, but the **operational complexity per student exploded**:
+     $$\boxed{ \text{Teacher Workload} = \sum_{j=1}^{K} \left[ n_j \times (1 + \omega_{\text{acc}} \cdot \text{AccRate}_j + \omega_{\text{abs}} \cdot \text{AbsRate}_j) \right] + \text{Admin} + \text{Coverage} - \text{Planning} }$$
+     Data from `kc_school_complexity_panel_2015_2024.csv` confirms:
+     - Section 504 accommodation plans surged **+93.5%** (6,552 to 12,676 students; reaching 5–10% of suburban high schools).
+     - Total legally mandated accommodations (IDEA + 504) expanded to **16.41%** of all students regionally.
+     - Chronic absenteeism surged from **12.9%** to **35.1%** in EDFacts, creating massive asynchronous re-teaching, grading, and family follow-up friction.
+     - Staff vacancies (35% in NCES School Pulse Panel) routinely force teachers to surrender planning periods for substitute coverage.
+  6. **Historical Continuity:** Reconnect modern findings to the 1997 *Jenkins v. Missouri* KCMSD desegregation ruling, which explicitly documented the exact divergence between low reported student-teacher ratios and large physical class sizes (22–28) thirty years ago.
+
 
 
 

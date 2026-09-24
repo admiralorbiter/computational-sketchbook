@@ -1,0 +1,5 @@
+crdc_wave,num_schools,total_enrollment,idea_students,idea_pct,section_504_students,section_504_pct,lep_el_students,lep_el_pct,total_accommodations_students,total_accommodations_pct,chronic_absent_students,chronic_absent_rate_pct,mean_frl_rate_pct,mean_school_ptr
+2015-16,609,323393,34233,10.59,6552,2.03,27968,8.65,40785,12.61,,,46.22,14.6
+2017-18,617,327296,37519,11.46,8693,2.66,29927,9.14,46212,14.12,37943.0,12.9,46.91,14.32
+2020-21,646,321323,39101,12.17,9489,2.95,27345,8.51,48590,15.12,97365.0,35.14,45.1,13.5
+2023-24,643,320561,39932,12.46,12676,3.95,30033,9.37,52608,16.41,,,47.96,13.31
