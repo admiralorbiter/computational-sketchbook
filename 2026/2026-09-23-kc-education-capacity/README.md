@@ -100,8 +100,8 @@ kc_education_capacity/
 - **Phase 4A Launch (Course Section Microdata Requests):**
   - **Data Request Specifications & Two-Tier Architecture:** Formulated in `research/phase4a_data_request_specifications.md`. Includes Tier 1 (roster-level surrogate IDs) and Tier 2 (agency-aggregated fallback), distinguishing teacher student-seat load from unique student roster load.
   - **Agency Submission Packages:** Formally prepared in `requests/missouri/mo_dese_course_section_request_cover_letter.md` and `requests/kansas/ksde_course_section_request_cover_letter.md` for transmission to MO DESE (MOSIS Screen 20 + Screen 18) and KSDE (KEDX + EDCS).
-  - **District Level Requests (Track B):** Drafting targeted public records requests for 6–8 key districts.
-  - **Photographic Sampling Protocol (Track C):** Designing elementary school yearbook class size sampling framework.
+  - **District Level Requests (Track B):** Packaged in `requests/districts/` (`DISTRICT_RECORDS_REQUEST_FRAMEWORK.md`, `kansas_kora_district_requests.md`, `missouri_sunshine_district_requests.md`, and `district_request_ledger.csv`) covering 9 target LEAs (Shawnee Mission, Olathe, Blue Valley, KCKPS, Basehor-Linwood, KCPS, North Kansas City, Lee's Summit, Richmond) requesting existing SIS master schedule section exports without student PII.
+  - **Photographic Sampling Protocol (Track C):** Fully designed in `research/elementary_yearbook_sampling_protocol.md` establishing a 12-school stratified matrix across 3 anchor years for independent photometric homeroom class size enumeration, supported by `data/raw/yearbooks/yearbook_homeroom_ledger.csv`.
 
 
 
