@@ -1,54 +1,60 @@
-# The Four-Pillar Capacity & Class Size Measurement Framework (Decision 036)
+# The Four-Pillar Capacity & Class Size Measurement Framework (Decision 036 Remediated)
 
-## 1. Executive Synthesis: Why the Four Pieces Fit Together
+## 1. Executive Synthesis: Separating the Four Questions Cleanly
 
 A central finding of this investigation is that pupil/teacher ratio (PTR) is not an invalid number; it is simply the wrong statistic for describing classroom load. When school boards or state agencies announce that a district operates at '12:1 or 13:1 students per teacher,' they are measuring **macro adult staffing inventory**, not the number of students sitting in front of an instructor.
 
 To resolve this tension without discarding valid public data, the project establishes a **Four-Pillar Architecture** that explicitly maintains two parallel empirical series:
 
-1. **Pillar 1: Structural Staffing Capacity (NCES CCD & State Administrative Data)**
+1. **Pillar 1: Structural Staffing Capacity (NCES CCD & State Administrative Registers)**
+   - *Question Answered:* **How much teacher FTE does the educational system employ relative to enrollment?**
    - *Metric:* Students per teacher FTE / Teachers per 1,000 students.
-   - *Grain:* Annual universal census across all 56 KC metropolitan districts (2014–15 to 2024–25).
-   - *What it proves:* Macro instructional capacity expanded significantly. Regional teacher FTE grew by **+8.86%** while enrollment fell by **-0.73%**, driving PTR from **14.85:1 down to 13.54:1**.
+   - *Grain:* Annual universal census across all 77 fully regional public LEAs in the KC metropolitan area (2014–15 to 2024–25).
+   - *Core Finding:* Macro instructional capacity expanded significantly. Regional teacher FTE grew by **+8.86%** while enrollment fell by **-0.73%**, driving PTR from **14.85:1 down to 13.54:1**.
 
-2. **Pillar 2: Actual Teacher-Reported Class Size (NCES SASS / NTPS Teacher Surveys)**
-   - *Metric:* Direct teacher survey logs where departmentalized secondary instructors list every single class section, period, subject, and student headcount.
-   - *Grain:* State (MO/KS) and National representative survey waves (2011–12 SASS, 2017–18 NTPS, 2020–21 NTPS).
-   - *What it proves:* Actual departmentalized class sizes are **5 to 9 students higher than headline PTR**. In 2020–21, Missouri's average departmentalized class was **19.2** (vs PTR 13.7:1), and Kansas's was **17.4** (vs PTR 14.1:1).
+2. **Pillar 2: Actual Teacher-Reported Class Size (NCES SASS / NTPS Teacher Questionnaires)**
+   - *Question Answered:* **What size classes do representative teachers report actually teaching?**
+   - *Metric:* Departmentalized secondary teachers log every separate class section (up to 10), recording subject, grade level, and exact student headcount.
+   - *Methodology:* Nationally and state-representative two-stage probability sample (~9,900 public schools and ~68,300 teachers in 2020–21; 55% overall weighted response rate). NCES applies survey weights for selection probability and nonresponse.
+   - *Core Finding:* Actual departmentalized high school class sizes were **stable through the pre-pandemic decade** (Missouri: 21.8 in 2011–12 to 22.5 in 2017–18; Kansas: 19.7 to 19.8), demonstrating that macro staffing additions did not mechanically shrink high school sections.
 
 3. **Pillar 3: Historic Ground-Truth & Daily Student Load (Jenkins v. Missouri Litigation Records)**
-   - *Metric:* Courtroom master-schedule audits, student-classes, and daily student contact loads ($R_t = \sum_s n_s$).
+   - *Question Answered:* **What did Kansas City's audited master schedules and total daily assignments look like under judicial scrutiny?**
+   - *Metric:* Courtroom master-schedule audits, student-classes, teaching assignments, and daily student contact loads ($R_t = \sum_s n_s$).
    - *Grain:* KCMSD 1985 trial exhibits (K-58, K-59; *Jenkins v. Missouri*, 639 F. Supp. 19; affirmed 890 F.2d 65).
-   - *What it proves:* Forty years ago, federal courts independently rejected PTR because junior high teachers carried **154 students/day** across 5.66 periods (27.2/class) and high school teachers carried **149 students/day** across 5.18 periods (28.7/class). Judge Clark established a binding remedial ceiling of **$\le 125$ students per day**.
+   - *Core Finding:* Forty years ago, federal courts independently rejected PTR because junior high teachers carried **154 students/day** across 5.66 periods (27.2/class) and high school teachers carried **149 students/day** across 5.18 periods (28.7/class). Judge Clark established a binding remedial ceiling of **$\le 125$ students per day**.
 
 4. **Pillar 4: Modern Course-Level Empirical Proxies (OCR Civil Rights Data Collection)**
+   - *Question Answered:* **Where within modern KC schools do particular courses depart from the averages?**
    - *Metric:* School-by-course average section load proxy ($\bar{s}_c = E_c / S_c$).
-   - *Grain:* Biennial census across KC high schools (2013–14 to 2023–24).
-   - *What it proves:* Exposes why state averages smooth over classroom reality. While Missouri's high school average is 19.2, core gateway courses across comprehensive high schools (Algebra I, Geometry, Biology) consistently average **25 to 29+ students per section**, while advanced electives, AP, and calculus average **12 to 16 students**.
+   - *Grain:* Biennial federal census waves across KC high schools (2013–14 to 2023–24).
+   - *Core Finding:* Across all operating regular high schools in the metro area, course averages are modest (~16.5–18.7: Algebra I 17.2, Geometry 18.7, Biology 16.5). However, **state and metro averages hide localized gateway bottlenecks**: specific urban and large suburban comprehensive campuses consistently report core sections of **25 to 31 students** (Wyandotte Algebra I at 28.5 across 46 sections, Lincoln Prep Geometry/Math at 29.5, Grandview Algebra/Geometry at 26–28, Shawnee Mission East/North at 26–28).
 
 ## 2. The Empirical Parallel Series (2011–12 to 2020–21)
 
-| Survey Wave | Jurisdiction | Actual Class Size (SASS/NTPS) | Structural PTR (CCD) | Structural Wedge (Class − PTR) |
-| :--- | :--- | :---: | :---: | :---: |
-| **2011–12 (SASS)** | United States | **24.2** | 16.0:1 | **+8.2 students** |
-| | Missouri | **23.1** | 14.1:1 | **+9.0 students** |
-| | Kansas | **20.5** | 13.9:1 | **+6.6 students** |
-| **2017–18 (NTPS)** | United States | **23.3** | 15.9:1 | **+7.4 students** |
-| | Missouri | **22.5** | 14.1:1 | **+8.4 students** |
-| | Kansas | **19.8** | 14.2:1 | **+5.6 students** |
-| **2020–21 (NTPS)** | United States | **21.0** | 15.4:1 | **+5.6 students** |
-| | Missouri | **19.2** | 13.7:1 | **+5.5 students** |
-| | Kansas | **17.4** | 14.1:1 | **+3.3 students** |
+| Survey Wave | Jurisdiction | Actual HS Class Size (SASS/NTPS) | State All-Grade PTR (CCD) | Class-Size / Macro-PTR Gap | Period Context |
+| :--- | :--- | :---: | :---: | :---: | :--- |
+| **2011–12 (SASS)** | United States | **24.2** | 16.0:1 | **+8.2 students** | Clean Pre-Pandemic Baseline |
+| | Missouri | **21.8** | 13.8:1 | **+8.0 students** | (SASS Table 7, CCD Table 2) |
+| | Kansas | **19.7** | 13.0:1 | **+6.7 students** | (SASS Table 7, CCD Table 2) |
+| **2017–18 (NTPS)** | United States | **23.3** | 15.9:1 | **+7.4 students** | Pre-Pandemic Staffing Expansion |
+| | Missouri | **22.5** | 14.1:1 | **+8.4 students** | (NTPS Table A-7a) |
+| | Kansas | **19.8** | 14.2:1 | **+5.6 students** | (NTPS Table A-7a) |
+| **2020–21 (NTPS)\*** | United States | **21.0** | 15.4:1 | **+5.6 students** | Pandemic Year (NCES Category Revisions) |
+| | Missouri | **19.2** | 13.7:1 | **+5.5 students** | (Table ntps2021_sflt07_t1s) |
+| | Kansas | **17.4** | 14.1:1 | **+3.3 students** | (Table ntps2021_sflt07_t1s) |
 
-## 3. The Core Analytical Contrast
+\*Note: NCES explicitly warns that school-level categories changed in 2020–21 relative to earlier administrations, and pandemic remote/hybrid schedules perturbed student enrollments per period. The 2011–12 to 2017–18 comparison represents the clean, unperturbed pre-pandemic baseline.
 
-> **The Central Contrast:** Teacher staffing density has improved substantially. Actual class sizes have fallen much less.
+## 3. The Core Analytical Insights
 
-- **Staffing Density Trend:** Between 2011–12 and 2023–24, KC metro school districts added thousands of certified teachers, driving PTR down by 1.5 students/teacher and expanding teacher density by +9.8% to +21.7% in urban systems.
-- **Class Size Trend:** Over the same decade, actual teacher-reported departmentalized section sizes fell by only ~3.2 students nationally (24.2 $\to$ 21.0) and ~3.9 students in Missouri (23.1 $\to$ 19.2).
-- **Why? The Schedule & Role Multiplier:** A secondary teacher cannot teach all day. In a 7-period day where teachers receive contractual planning periods (e.g. 5 of 7 teaching periods), the schedule multiplier is $\phi = 7/5 = 1.400$. Furthermore, ~16% of certified staff are specialized educators (SPED, ELL, reading). As proven in Shawnee Mission, staffing additions were largely absorbed by buying protected planning time rather than shrinking class sizes.
+1. **Pre-Pandemic Stability Despite Hiring:** Between 2011–12 and 2017–18, high-school departmentalized class sizes in Missouri actually rose slightly (**21.8 $\to$ 22.5**) and in Kansas were completely flat (**19.7 $\to$ 19.8**), even as statewide and metro teacher hiring expanded. Staffing density improved, but class sizes held steady.
+
+2. **Cross-Metric Distinction (Class Size vs. Macro PTR):** High-school departmentalized class sizes consistently exceed all-grade state PTRs by **5 to 8 students**. This gap reflects structural organizational filters: secondary bell-schedule planning multipliers ($\phi = P_{\text{std}} / P_{\text{tch}}$, e.g. 5-of-7 planning periods requiring +20% FTE just to maintain class sizes) and specialized non-classroom roles (SPED, ELL, reading interventionists).
+
+3. **Localized Bottlenecks vs. Regional Means:** While regional average high school course proxies sit around 16.5–18.7, high-volume gateway subjects in non-selective urban and comprehensive suburban campuses regularly experience acute localized crowding (26–31 students per class), creating intense localized workload pressure that building-wide and state-wide averages conceal.
 
 ## 4. Visual Artifact
 
-### Figure 18: The Structural Wedge (Class Size vs. PTR Over Time)
+### Figure 18: The Class-Size / Macro-PTR Gap Over Time
 ![Figure 18: Structural Staffing vs. Actual Class Size](../figures/fig18_structural_staffing_vs_actual_class_size.png)

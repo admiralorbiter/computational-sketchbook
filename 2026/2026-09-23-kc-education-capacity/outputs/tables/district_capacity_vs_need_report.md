@@ -31,11 +31,11 @@ This analysis integrates annual Common Core of Data (CCD) certified staffing pan
      - **Lee's Summit:** Added **+2.3 teachers per 1,000 (+3.6%)**, driving PTR down from 15.24:1 to 14.71:1 (-0.53), absorbing an accommodations surge from 12.44% to 17.31% (+4.87 pp).
 
 5. **Which districts saw falling students-per-FTE but rising SPED/504 burden?**
-   - **Almost the entire region!** Across the balanced metro panel, **48 out of 56 districts (85.7%)** saw students-per-teacher FTE fall (improved headline staffing) while their student accommodation share increased.
+   - **Almost the entire region!** Across the 56 eligible longitudinal districts with enrollment ≥ 400 present across both endpoints (representing 85.7% of the eligible sample and >95% of regional student enrollment), **48 out of 56 districts** saw students-per-teacher FTE fall (improved headline staffing) while their student accommodation share increased.
    - Center 58: PTR fell from 12.09 to 11.95, while accommodations surged from 14.4% to 16.2%.
    - Hickman Mills: PTR fell from 13.34 to 12.78, while accommodations rose from 12.6% to 17.4%.
    - North Kansas City: PTR fell from 15.73 to 14.21, while accommodations rose from 14.2% to 19.9%.
-   - **The Regional Total:** Regional PTR contracted from **14.99:1 to 13.47:1** (-1.52 students/teacher), while total accommodations expanded from **12.61% to 16.42% (+3.80 percentage points)**.
+   - **The Regional Total:** Regional PTR (computed across reporting LEAs) contracted from **14.75:1 to 13.47:1** (-1.28 students/teacher), while total accommodations expanded from **12.61% to 16.42% (+3.80 percentage points)**.
 
 ## 2. Benchmark District Trajectory Matrix (2015–16 to 2023–24)
 
@@ -49,10 +49,12 @@ This analysis integrates annual Common Core of Data (CCD) certified staffing pan
 | INDEPENDENCE 30 | 14,244 | 13,633 | 15.86:1 | 14.83:1 | **-1.03** | 63.1 | 67.4 | 12.0% | 12.8% | **+0.81 pp** | 9.8% |
 | Shawnee Mission | 27,275 | 25,687 | 15.75:1 | 13.76:1 | **-1.99** | 63.5 | 72.7 | 8.6% | 15.9% | **+7.30 pp** | 7.9% |
 | Blue Valley | 22,105 | 21,878 | 15.13:1 | 13.09:1 | **-2.04** | 66.1 | 76.4 | 10.1% | 15.1% | **+5.09 pp** | 3.0% |
-| Olathe | 28,567 | 27,766 | 14.56:1 | 13.00:1 | **-1.56** | 68.7 | 77.0 | 18.2% | 17.7% | **-0.49 pp** | 9.8% |
+| Olathe | 28,567 | 27,766 | Suppressed* | 13.00:1 | *N/A* | Suppressed* | 77.0 | 18.2% | 17.7% | **-0.49 pp** | 9.8% |
 | LEE'S SUMMIT | 17,750 | 17,513 | 15.24:1 | 14.71:1 | **-0.53** | 65.6 | 68.0 | 12.4% | 17.3% | **+4.87 pp** | 2.4% |
 | NORTH KANSAS CITY 74 | 19,395 | 20,666 | 15.73:1 | 14.21:1 | **-1.52** | 63.6 | 70.4 | 14.2% | 19.9% | **+5.70 pp** | 10.8% |
-| **METRO REGIONAL TOTAL** | 324,422 | 320,725 | 14.99:1 | 13.47:1 | **-1.52** | 66.7 | 74.2 | 12.6% | 16.4% | **+3.80 pp** | 9.3% |
+| **METRO REGIONAL TOTAL** | 324,422 | 320,725 | 14.75:1 | 13.47:1 | **-1.28** | 67.8 | 74.2 | 12.6% | 16.4% | **+3.80 pp** | 9.3% |
+
+*Note: In 2015–16 CCD, staff counts for Olathe USD 233 were administratively suppressed by NCES (code -9.0; preserved as missing per Decision 030). Unsuppressed adjacent years were 14.66:1 in 2014–15 and 14.43:1 in 2016–17.*
 
 
 ## 3. Visual Artifacts

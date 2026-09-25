@@ -418,38 +418,47 @@ Catalog these metrics in `outputs/tables/task003a1_reporting_coverage.csv` and r
 
 
 
-### Decision 036: The Four-Pillar Measurement Framework (Structural Staffing vs. Teacher-Reported Class Size)
-* **Status:** Adopted
+#### Decision 036: The Four-Pillar Measurement Framework (Structural Staffing vs. Teacher-Reported Class Size)
+* **Status:** Adopted (Remediated)
 * **Date:** 2026-09-25
 * **Context:** A central methodological challenge in education policy is distinguishing between system-level adult staffing ratios and the actual headcount of students sitting in front of a teacher. Prior tasks established that building-level pupil/teacher ratio (PTR) does not measure class size, while noting that SASS/NTPS teacher surveys are not available at the individual KC district level. However, SASS/NTPS provides direct, teacher-reported section counts and roster sizes at national and state levels, establishing an indispensable external empirical benchmark.
 * **Decision:**
   1. **Adopt the Four-Pillar Measurement Framework:**
-     - **Pillar 1: Structural Staffing Capacity (NCES CCD & State Administrative Data):**
+     - **Pillar 1: Structural Staffing Capacity (NCES CCD & State Administrative Registers):**
+       - *Question Answered:* How much teacher FTE does the educational system employ relative to enrollment?
        - *Metric:* Students per teacher FTE / Teachers per 1,000 students.
-       - *Scope:* Annual census across all 56 KC metropolitan districts (2014–15 to 2024–25).
+       - *Scope:* Annual universal census across all 77 fully regional public LEAs in the KC metropolitan area (2014–15 to 2024–25).
        - *Function:* Measures macro system-level staffing inventory relative to total enrollment.
      - **Pillar 2: Actual Teacher-Reported Class Size (NCES SASS / NTPS Teacher Questionnaires):**
-       - *Metric:* Direct survey estimates where departmentalized secondary teachers log every separate class period, subject, grade level, and exact student headcount.
-       - *Scope:* State (MO/KS) and National benchmarks across survey waves (2011–12 SASS, 2017–18 NTPS, 2020–21 NTPS).
-       - *Function:* Establishes empirical ground-truth of how many students are actually sitting in a typical classroom.
+       - *Question Answered:* What size classes do representative teachers report actually teaching?
+       - *Metric:* Departmentalized secondary teachers log section-by-section student headcounts for every class period taught (up to 10 sections), recording subject and grade level.
+       - *Methodology:* Nationally and state-representative two-stage probability sample (~9,900 public schools and ~68,300 teachers in 2020–21; 55% overall weighted response rate). NCES applies survey weights for selection probability and nonresponse.
+       - *Scope:* State (MO/KS) and National benchmarks across survey waves (2011–12 SASS Table 7, 2017–18 NTPS Table A-7a, 2020–21 NTPS Table 7).
+       - *Function:* Establishes empirical survey estimates of how many students are actually sitting in a typical classroom.
      - **Pillar 3: Historic Ground-Truth & Daily Student Load (Jenkins v. Missouri Litigation Records):**
-       - *Metric:* Master schedule audits, student-classes, teaching assignments, and daily student contact loads ( = \sum_s n_s$).
-       - *Scope:* KCMSD 1985 trial records (Exhibits K-58, K-59; *Jenkins v. Missouri*, 639 F. Supp. 19; 890 F.2d 65).
+       - *Question Answered:* What did Kansas City's audited master schedules and total daily assignments look like under judicial scrutiny?
+       - *Metric:* Master schedule audits, student-classes, teaching assignments, and daily student contact loads ($R_t = \sum_s n_s$).
+       - *Scope:* KCMSD 1985 trial records (Exhibits K-58, K-59; *Jenkins v. Missouri*, 639 F. Supp. 19; affirmed 890 F.2d 65).
        - *Function:* Documents that courtroom audits independently rejected PTR in favor of section counts, proving that teachers carried 149–154 students/day across 5 sections (~30/class) and establishing the binding $\le 125$ daily load ceiling.
      - **Pillar 4: Modern Course-Level Empirical Proxies (OCR Civil Rights Data Collection):**
-       - *Metric:* School-by-course average section proxy ($ar{s}_c = E_c / S_c$).
+       - *Question Answered:* Where within modern KC schools do particular courses depart from the averages?
+       - *Metric:* School-by-course average section proxy ($\bar{s}_c = E_c / S_c$).
        - *Scope:* Biennial federal census waves (2013–14 to 2023–24) across KC high schools.
-       - *Function:* Exposes curricular tracking and subject bottlenecks (e.g. foundational Algebra I at 25–29 vs advanced electives at 12–15), proving that building-level averages hide severe high-enrollment course pressure.
+       - *Function:* Exposes curricular tracking and localized gateway bottlenecks. While regional regular high school course proxies average ~16.5–18.7, specific urban and large suburban comprehensive campuses consistently report core sections of 25 to 31 students (Wyandotte Algebra I at 28.5 across 46 sections, Lincoln Prep Geometry/Math at 29.5, Grandview Algebra/Geometry at 26–28, Shawnee Mission East/North at 26–28), proving that state and metro averages hide intense localized gateway pressure.
   2. **Explicitly Maintain Two Parallel Empirical Series:**
-     - **Series A: Annual Structural Staffing Density (KC Metropolitan Districts):**
+     - **Series A: Annual Structural Staffing Density (KC Metropolitan Districts & States):**
        - Regional PTR contracted from 14.85:1 down to 13.54:1 (teachers per 1,000 rose from 67.3 to 73.9, a +9.8% expansion).
-     - **Series B: Actual Teacher-Reported Class Size (SASS/NTPS Benchmarks):**
-       - 2011–12 SASS: US 24.2, MO 23.1, KS 20.5
-       - 2017–18 NTPS: US 23.3, MO 22.5, KS 19.8
-       - 2020–21 NTPS: US 21.0, MO 19.2, KS 17.4
-  3. **The Core Analytical Finding:**
-     - *Teacher staffing density has improved substantially; actual class sizes have fallen much less.*
-     - In 2020–21, Missouri's structural PTR was ~13.7:1, but its teacher-reported departmentalized high school class size was **19.2** (a +5.5 student structural wedge).
-     - In Kansas, structural PTR was ~14.1:1, but departmentalized high school class size was **17.4** (a +3.3 student structural wedge).
+       - Official CCD State PTRs:
+         - 2011–12: US 16.0, MO 13.8, KS 13.0
+         - 2017–18: US 15.9, MO 14.1, KS 14.2
+         - 2020–21: US 15.4, MO 13.7, KS 14.1
+     - **Series B: Actual Teacher-Reported Class Size (SASS/NTPS High School Departmentalized Benchmarks):**
+       - 2011–12 SASS: US 24.2, MO 21.8, KS 19.7 (Table 7)
+       - 2017–18 NTPS: US 23.3, MO 22.5, KS 19.8 (Table A-7a)
+       - 2020–21 NTPS: US 21.0, MO 19.2, KS 17.4 (Table ntps2021_sflt07_t1s)
+  3. **The Core Analytical Findings:**
+     - *Pre-Pandemic Class-Size Stability:* Between 2011–12 and 2017–18 (clean pre-pandemic baseline), high-school departmentalized class sizes in Missouri actually rose slightly (21.8 to 22.5) and in Kansas were completely flat (19.7 to 19.8), even as macro teacher hiring took place.
+     - *Cross-Metric Gap:* High-school departmentalized class sizes consistently exceed all-grade state PTRs by 5 to 8 students. This gap is explicitly designated as a cross-metric comparison (Class-Size / Macro-PTR Gap), reflecting secondary schedule planning multipliers ($\phi = P_{\text{std}} / P_{\text{tch}}$, e.g. 5-of-7 schedules requiring +20% FTE just to maintain class sizes) and specialized non-classroom roles.
+     - *Pandemic Wave Context:* 2020–21 NTPS is not treated as a clean endpoint in a seamless trend due to NCES school-level category changes and remote/hybrid scheduling perturbations.
   4. **The Aggregation Guardrail:**
-     - Acknowledge that while SASS/NTPS is far more descriptive of classroom reality than PTR, state averages still smooth over the internal distribution (a state average of 19 naturally combines Algebra I at 29 with Calculus at 11). Pillar 4 (CRDC) and Pillar 3 (Jenkins) provide the critical granular distribution that explains where the tail pressure concentrates.
+     - Acknowledge that while SASS/NTPS is far more descriptive of classroom reality than PTR, state averages still smooth over the internal distribution (a state average of 19 naturally combines Algebra I at 29 with Calculus at 11). Pillar 4 (CRDC) and Pillar 3 (Jenkins) provide the critical granular distribution that explains where localized bottleneck pressure concentrates.

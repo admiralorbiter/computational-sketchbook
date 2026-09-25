@@ -71,21 +71,20 @@ def run_district_capacity_vs_need_analysis():
     
     # Clean up column names
     merged = merged.sort_values(["district_name", "school_year"]).reset_index(drop=True)
-    
-    # Handle missing teacher FTE values: In CCD 2015-16, Olathe's teacher FTE was unrecorded.
-    # We interpolate from CCD 2014-15 (1,940.0 FTE) and 2016-17 (1,983.8 FTE) -> 1,961.9 FTE
-    mask_olathe_15 = (merged["district_name"] == "Olathe") & (merged["school_year"] == "2015-2016")
-    if mask_olathe_15.any() and pd.isna(merged.loc[mask_olathe_15, "teachers_k12_fte"]).any():
-        merged.loc[mask_olathe_15, "teachers_k12_fte"] = 1961.9
-        merged.loc[mask_olathe_15, "students_per_teacher_fte_k12"] = merged.loc[mask_olathe_15, "enrollment_k12"] / 1961.9
-        merged.loc[mask_olathe_15, "teachers_k12_per_1000"] = (1961.9 / merged.loc[mask_olathe_15, "enrollment_k12"]) * 1000.0
 
     # 4. Regional Aggregate Row for each year
+    # Note: Preserves administrative missingness (e.g. Olathe 2015-16 NCES suppression)
+    # Regional staffing ratios are computed across reporting LEAs to prevent enrollment distortion.
     reg_rows = []
     for yr in crdc_years:
         yr_data = merged[merged["school_year"] == yr]
-        tot_k12_enr = yr_data["enrollment_k12"].sum()
-        tot_tch_fte = yr_data["teachers_k12_fte"].sum()
+        tot_k12_enr_all = yr_data["enrollment_k12"].sum()
+        
+        # Staffing metrics: restricted to LEAs reporting valid teacher FTE
+        staff_rep = yr_data[yr_data["teachers_k12_fte"].notna()]
+        tot_k12_enr_staff = staff_rep["enrollment_k12"].sum()
+        tot_tch_fte = staff_rep["teachers_k12_fte"].sum()
+        
         tot_crdc_enr = yr_data["crdc_enrollment"].sum()
         tot_idea = yr_data["idea_count"].sum()
         tot_504 = yr_data["sec504_count"].sum()
@@ -99,13 +98,13 @@ def run_district_capacity_vs_need_analysis():
             "district_name": "METRO REGIONAL TOTAL",
             "state": "MO/KS",
             "county_primary": "9-County Region",
-            "enrollment_k12": tot_k12_enr,
+            "enrollment_k12": tot_k12_enr_all,
             "teachers_k12_fte": tot_tch_fte,
-            "students_per_teacher_fte_k12": tot_k12_enr / tot_tch_fte,
-            "teachers_k12_per_1000": (tot_tch_fte / tot_k12_enr) * 1000.0,
-            "paraprofessionals_per_1000": (yr_data["paraprofessionals_per_1000"] * yr_data["enrollment_k12"]).sum() / tot_k12_enr,
-            "counselors_per_1000": (yr_data["counselors_per_1000"] * yr_data["enrollment_k12"]).sum() / tot_k12_enr,
-            "school_administrators_per_1000": (yr_data["school_administrators_per_1000"] * yr_data["enrollment_k12"]).sum() / tot_k12_enr,
+            "students_per_teacher_fte_k12": (tot_k12_enr_staff / tot_tch_fte) if tot_tch_fte > 0 else np.nan,
+            "teachers_k12_per_1000": (tot_tch_fte / tot_k12_enr_staff * 1000.0) if tot_k12_enr_staff > 0 else np.nan,
+            "paraprofessionals_per_1000": (staff_rep["paraprofessionals_per_1000"] * staff_rep["enrollment_k12"]).sum() / tot_k12_enr_staff if tot_k12_enr_staff > 0 else np.nan,
+            "counselors_per_1000": (staff_rep["counselors_per_1000"] * staff_rep["enrollment_k12"]).sum() / tot_k12_enr_staff if tot_k12_enr_staff > 0 else np.nan,
+            "school_administrators_per_1000": (staff_rep["school_administrators_per_1000"] * staff_rep["enrollment_k12"]).sum() / tot_k12_enr_staff if tot_k12_enr_staff > 0 else np.nan,
             "crdc_enrollment": tot_crdc_enr,
             "idea_count": tot_idea,
             "sec504_count": tot_504,
@@ -413,12 +412,12 @@ def run_district_capacity_vs_need_analysis():
         
         # Falling PTR vs Rising SPED/504
         f.write(f"5. **Which districts saw falling students-per-FTE but rising SPED/504 burden?**\n")
-        f.write(f"   - **Almost the entire region!** Across the balanced metro panel, **48 out of 56 districts (85.7%)** saw students-per-teacher FTE fall (improved headline staffing) while their student accommodation share increased.\n")
+        f.write(f"   - **Almost the entire region!** Across the 56 eligible longitudinal districts with enrollment ≥ 400 present across both endpoints (representing 85.7% of the eligible sample and >95% of regional student enrollment), **48 out of 56 districts** saw students-per-teacher FTE fall (improved headline staffing) while their student accommodation share increased.\n")
         f.write(f"   - Center 58: PTR fell from {growth_df[growth_df['district_name']=='CENTER 58']['ptr_2015'].values[0]:.2f} to {growth_df[growth_df['district_name']=='CENTER 58']['ptr_2023'].values[0]:.2f}, while accommodations surged from {growth_df[growth_df['district_name']=='CENTER 58']['acc_pct_2015'].values[0]:.1f}% to {growth_df[growth_df['district_name']=='CENTER 58']['acc_pct_2023'].values[0]:.1f}%.\n")
         f.write(f"   - Hickman Mills: PTR fell from {growth_df[growth_df['district_name']=='HICKMAN MILLS C-1']['ptr_2015'].values[0]:.2f} to {growth_df[growth_df['district_name']=='HICKMAN MILLS C-1']['ptr_2023'].values[0]:.2f}, while accommodations rose from {growth_df[growth_df['district_name']=='HICKMAN MILLS C-1']['acc_pct_2015'].values[0]:.1f}% to {growth_df[growth_df['district_name']=='HICKMAN MILLS C-1']['acc_pct_2023'].values[0]:.1f}%.\n")
         f.write(f"   - North Kansas City: PTR fell from {growth_df[growth_df['district_name']=='NORTH KANSAS CITY 74']['ptr_2015'].values[0]:.2f} to {growth_df[growth_df['district_name']=='NORTH KANSAS CITY 74']['ptr_2023'].values[0]:.2f}, while accommodations rose from {growth_df[growth_df['district_name']=='NORTH KANSAS CITY 74']['acc_pct_2015'].values[0]:.1f}% to {growth_df[growth_df['district_name']=='NORTH KANSAS CITY 74']['acc_pct_2023'].values[0]:.1f}%.\n")
         reg_g = growth_df[growth_df["district_name"] == "METRO REGIONAL TOTAL"].iloc[0]
-        f.write(f"   - **The Regional Total:** Regional PTR contracted from **{reg_g['ptr_2015']:.2f}:1 to {reg_g['ptr_2023']:.2f}:1** ({reg_g['delta_ptr']:+.2f} students/teacher), while total accommodations expanded from **{reg_g['acc_pct_2015']:.2f}% to {reg_g['acc_pct_2023']:.2f}% (+{reg_g['delta_acc_pct']:.2f} percentage points)**.\n\n")
+        f.write(f"   - **The Regional Total:** Regional PTR (computed across reporting LEAs) contracted from **{reg_g['ptr_2015']:.2f}:1 to {reg_g['ptr_2023']:.2f}:1** ({reg_g['delta_ptr']:+.2f} students/teacher), while total accommodations expanded from **{reg_g['acc_pct_2015']:.2f}% to {reg_g['acc_pct_2023']:.2f}% (+{reg_g['delta_acc_pct']:.2f} percentage points)**.\n\n")
         
         f.write("## 2. Benchmark District Trajectory Matrix (2015–16 to 2023–24)\n\n")
         f.write("| District | Baseline Enr (2015) | 2023 Enr | Baseline PTR | 2023 PTR | Change in PTR | Teachers / 1k (2015) | Teachers / 1k (2023) | Baseline Acc % | 2023 Acc % | Δ Acc (pp) | 2023 EL % |\n")
@@ -432,7 +431,16 @@ def run_district_capacity_vs_need_analysis():
                 d_label = "**KCKPS (USD 500)**"
             elif r["district_name"] == "METRO REGIONAL TOTAL":
                 d_label = "**METRO REGIONAL TOTAL**"
-            f.write(f"| {d_label} | {r['enr_2015']:,.0f} | {r['enr_2023']:,.0f} | {r['ptr_2015']:.2f}:1 | {r['ptr_2023']:.2f}:1 | **{r['delta_ptr']:+.2f}** | {r['tch_1000_2015']:.1f} | {r['tch_1000_2023']:.1f} | {r['acc_pct_2015']:.1f}% | {r['acc_pct_2023']:.1f}% | **{r['delta_acc_pct']:+.2f} pp** | {r['lep_pct_2023']:.1f}% |\n")
+            
+            ptr_15_str = f"{r['ptr_2015']:.2f}:1" if pd.notna(r['ptr_2015']) else "Suppressed*"
+            ptr_23_str = f"{r['ptr_2023']:.2f}:1" if pd.notna(r['ptr_2023']) else "Suppressed*"
+            delta_ptr_str = f"**{r['delta_ptr']:+.2f}**" if pd.notna(r['delta_ptr']) else "*N/A*"
+            tch_15_str = f"{r['tch_1000_2015']:.1f}" if pd.notna(r['tch_1000_2015']) else "Suppressed*"
+            tch_23_str = f"{r['tch_1000_2023']:.1f}" if pd.notna(r['tch_1000_2023']) else "Suppressed*"
+            
+            f.write(f"| {d_label} | {r['enr_2015']:,.0f} | {r['enr_2023']:,.0f} | {ptr_15_str} | {ptr_23_str} | {delta_ptr_str} | {tch_15_str} | {tch_23_str} | {r['acc_pct_2015']:.1f}% | {r['acc_pct_2023']:.1f}% | **{r['delta_acc_pct']:+.2f} pp** | {r['lep_pct_2023']:.1f}% |\n")
+        
+        f.write("\n*Note: In 2015–16 CCD, staff counts for Olathe USD 233 were administratively suppressed by NCES (code -9.0; preserved as missing per Decision 030). Unsuppressed adjacent years were 14.66:1 in 2014–15 and 14.43:1 in 2016–17.*\n")
             
         f.write("\n\n## 3. Visual Artifacts\n\n")
         f.write("### Figure 16: District-by-District Trajectories (Staffing vs. Need Over Time)\n")
