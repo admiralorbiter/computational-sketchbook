@@ -383,4 +383,36 @@ Catalog these metrics in `outputs/tables/task003a1_reporting_coverage.csv` and r
        - **Study 2 (Follow-Up Inquiry):** Effective Classroom Complexity & Intersecting Need (internal de-identified demographic microdata evaluating $P(\text{IEP} \cap \text{ELL})$, $P(\text{IEP} \cap \text{FRL})$).
        - **Study 3 (The Modern Jenkins Replication):** Teacher Roster Load Validation (direct empirical calculation of $R_t = \sum_s n_s$ and tail shares if an anonymous SIS course-section table is acquired).
 
+### Decision 035: Institutional History of Jenkins v. Missouri (1977–2003) & The Resource-to-Capacity Conversion Framework
+* **Status:** Adopted
+* **Date:** 2026-09-25
+* **Context:** Following the completion of the empirical public capacity study, the project synthesized the broader 26-year institutional arc of *Jenkins v. Missouri* (1977–2003), the economics of school finance resource conversion, and cross-domain models of organizational friction. This provides the comprehensive historical and conceptual reference base for independent narrative writing, policy translation, and future research.
+* **Decision:**
+  1. **Codify the 26-Year Arc of Jenkins v. Missouri (1977–2003):**
+     - *1977 Metropolitan Origin:* KCMSD sued the State and 18 suburban districts seeking a metropolitan desegregation remedy; suburban districts were dismissed under *Milliken v. Bradley*, forcing an intradistrict remedy onto a regional demographic problem.
+     - *1984 Liability:* State constitutional liability established following a 92-day trial.
+     - *1985 Operational Capacity Blueprint:* Judge Clark audited master schedules (Exhibits K-58, K-59); subtracted Chapter I specialists (+4.41 wedge); counted student-classes and teaching assignments; established the binding $\le 125$ student contact load ceiling; and ordered specialized staff to purchase 180 minutes of elementary planning time.
+     - *1989 Appellate Affirmance:* The Eighth Circuit affirmed the remedial reliance on maximum class sizes rather than district averages (890 F.2d 65), establishing the legal primacy of the tail.
+     - *1986–1995 Magnet Expansion ("Desegregative Attractiveness"):* Massive capital investments ($488M+, 15 new schools, 54 renovations) converted KCMSD into an all-magnet district designed to attract suburban white students.
+     - *Supreme Court Jurisprudence:* 1989 (attorney fees; 491 U.S. 274); 1990 (taxing power authorization; 495 U.S. 33); 1995 (rejection of desegregative attractiveness and rejection of test-score stopping rules; 515 U.S. 70).
+     - *1997 Organizational Diagnosis:* Physical facilities equalized, but severe operational dysfunction emerged: 10 superintendents in 9 years, fragmented instructional coherence, and massive underutilization (<50% functional capacity across high schools; Lincoln Prep at 35%, Paseo at 48%).
+     - *2000–2003 Accreditation Loss & Unitary Exit:* Missouri revoked KCMSD accreditation in 2000 despite historic spending; the district was declared unitary and released in 2003.
+  2. **Adopt the Resource Conversion Funnel Axiom:**
+     $$\text{Gross Revenue} \longrightarrow \text{Legacy/Fixed Commitments} \longrightarrow \text{Enabling Operations} \longrightarrow \text{Instructional Staffing} \longrightarrow \text{Role Allocation} \longrightarrow \text{Schedule Architecture} \longrightarrow \text{Effective Capacity}$$
+     - *Governing Axiom:* "Resources are not capacity. Capacity is what remains after resources pass through the organizational, structural, and legal constraints of the system."
+  3. **Establish the Four-Category Cost Taxonomy:**
+     - Partition expenditures into: (1) Higher Cost of Need (SPED/ELL); (2) Necessary Enabling Infrastructure (transportation, facilities); (3) Sticky Fixed Costs & Underutilization (excess square footage, debt); and (4) Actionable Waste/Fraud (historically minor relative to structural underutilization).
+     - Document the Denominator Illusion: declining enrollment in a large physical footprint mechanically spikes per-pupil spending without increasing classroom resources.
+  4. **Adopt Five Cross-Domain Analytical Lenses:**
+     - *Bottleneck Theory / Operations Research (Goldratt):* System throughput is constrained by bottleneck resources (certified gateway instructors), not total staff inventory.
+     - *Fixed-Cost Indivisibility & Network Economics:* Infrastructure indivisibility creates sticky costs when enrollment contracts.
+     - *Healthcare Spending vs. Clinical Capacity:* Compliance, administrative overhead, and documentation absorb funding before clinical/instructional contact expands.
+     - *State Capacity & Absorptive Capacity (Development Economics):* Financial capital outstripping organizational stability and execution capability.
+     - *Baumol's Cost Disease:* Labor-intensive personal services cannot mechanically multiply productivity without degrading the core service.
+  5. **Separate Selection vs. Treatment in Selective Campuses:**
+     - Clarify that elite exam/magnet schools (Lincoln Prep, Sumner Academy) reflect strong admissions and retention filtering (sorting), which cannot be conflated with classroom treatment effects or open-enrollment comprehensive high school capacity.
+  6. **Deliverable:**
+     - Comprehensive reference guide published at `research/jenkins_history_and_resource_conversion_framework.md`.
+
+
 
