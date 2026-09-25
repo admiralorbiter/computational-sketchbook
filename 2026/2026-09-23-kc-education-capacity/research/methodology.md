@@ -65,7 +65,14 @@
        * School fixed-effects models on the 620-school balanced panel confirm a within-school trajectory of $\beta = -0.1750\text{ students/FTE per year}$ ($p < 0.0001$; 10-year within-school decline of $−1.75$ students/FTE).
        * Grade band divergence: Primary/Elementary schools expanded capacity significantly (within-school $\beta = -0.2154$), whereas High schools saw minimal change ($\beta = -0.0509$).
      * **Strict Methodological Guardrail:** Staffing ratios are never described as class sizes. Hypotheses H1a, H1b, H2, and H3 remain strictly unadjudicated until Phase 4 section roster data are integrated.
-4. **Phase 4: Section-Level Class Size Analysis**
-   * Merge state-level course assignment collections (DESE MOSIS Course & Student Assignment records; KSDE open-enrollment capacity and section files) to reconstruct actual classroom section distributions and evaluate the gap between structural capacity ratios and true class sizes.
+4. **Phase 4: The Four-Pillar Measurement Framework (Class Size vs. Structural Staffing)**
+   * Resolves the tension between administrative macro-staffing and classroom reality by explicitly maintaining two parallel empirical series across four integrated evidence layers (Decision 036):
+     - **Pillar 1: Structural Staffing Capacity (NCES CCD & State Registers):** Annual census across all 56 KC districts tracking Students per Teacher FTE and Teachers per 1,000 students. Measures system-level staffing density.
+     - **Pillar 2: Actual Teacher-Reported Class Size (NCES SASS / NTPS Teacher Questionnaires):** Direct teacher questionnaire logs reporting every separate section, subject, grade, and student headcount. Measures empirical class size in front of secondary teachers at state (MO/KS) and national levels (2011–12 SASS: US 24.2, MO 23.1, KS 20.5; 2020–21 NTPS: US 21.0, MO 19.2, KS 17.4).
+     - **Pillar 3: Historic Ground-Truth & Daily Student Load (Jenkins v. Missouri Litigation Records):** Master schedule audits, student-classes, teaching assignments, and daily student contact loads ($R_t = \sum_s n_s$). Proves that court-monitored remedial audits in KC independently counted sections and capped daily loads at $\le 125$ students/day (149–154 baseline).
+     - **Pillar 4: Modern Course-Level Empirical Proxies (OCR Civil Rights Data Collection):** Course enrollment divided by reported sections ($\bar{s}_c = E_c / S_c$), exposing curricular tracking and gateway course bottlenecks (Algebra I at 25–29 vs advanced electives at 12–15).
+   * **Core Methodological Contrast:** Teacher staffing density improved substantially (+9.8% to +22% across KC districts), but actual class sizes fell much less, leaving a persistent structural wedge of +3.5 to +5.5 students between PTR and actual departmentalized high school sections.
+   * **The Aggregation Guardrail:** Acknowledge that while SASS/NTPS is far more descriptive of classroom reality than PTR, state averages still smooth over the internal distribution (a state average of 19 naturally combines Algebra I at 29 with Calculus at 11). Pillar 4 (CRDC) and Pillar 3 (Jenkins) provide the critical granular distribution that explains where tail pressure concentrates.
+
 
 
