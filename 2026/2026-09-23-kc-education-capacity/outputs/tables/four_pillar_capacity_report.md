@@ -16,19 +16,20 @@ To resolve this tension without discarding valid public data, the project establ
    - *Question Answered:* **What size classes do representative teachers report actually teaching?**
    - *Metric:* Departmentalized secondary teachers log section-by-section student headcounts for every class period taught (up to 10 sections), recording subject and grade level.
    - *Methodology:* Nationally and state-representative two-stage probability sample (~9,900 public schools and ~68,300 teachers in 2020–21; 55% overall weighted response rate). NCES applies survey weights for selection probability and nonresponse.
-   - *Core Finding:* Actual departmentalized high school class sizes were **stable through the pre-pandemic decade** (Missouri: 21.8 in 2011–12 to 22.5 in 2017–18; Kansas: 19.7 to 19.8), demonstrating that macro staffing additions did not mechanically shrink high school sections.
+   - *Function:* Provides weighted survey estimates of average class size reported by representative departmentalized high-school teachers.
+   - *Core Finding:* Neither state showed improving all-grade staffing density during the 2011–12 to 2017–18 window (MO PTR 13.8 to 14.1; KS PTR 13.0 to 14.2), while high-school class size also remained roughly stable (MO 21.8 to 22.5; KS 19.7 to 19.8), reinforcing that these are distinct measures rather than demonstrating a staffing/class-size divergence during this particular period.
 
 3. **Pillar 3: Historic Ground-Truth & Daily Student Load (Jenkins v. Missouri Litigation Records)**
    - *Question Answered:* **What did Kansas City's audited master schedules and total daily assignments look like under judicial scrutiny?**
    - *Metric:* Courtroom master-schedule audits, student-classes, teaching assignments, and daily student contact loads ($R_t = \sum_s n_s$).
    - *Grain:* KCMSD 1985 trial exhibits (K-58, K-59; *Jenkins v. Missouri*, 639 F. Supp. 19; affirmed 890 F.2d 65).
-   - *Core Finding:* Forty years ago, federal courts looked beyond PTR, finding teaching assignments and daily loads 'more revealing' (junior high teachers carried **154 students/day** across 5.66 periods and high school teachers carried **149 students/day** across 5.18 periods). Judge Clark established a binding remedial ceiling of **$\le 125$ students per day**.
+   - *Core Finding:* Forty years ago, federal courts looked beyond PTR, finding teaching assignments and daily loads 'more revealing' (*Jenkins v. Missouri*, 639 F. Supp. at 33; junior high teachers carried **154 students/day** across 5.66 periods and high school teachers carried **149 students/day** across 5.18 periods). Judge Clark established a binding remedial ceiling of **$\le 125$ students per day**.
 
 4. **Pillar 4: Modern Course-Level Empirical Proxies (OCR Civil Rights Data Collection)**
    - *Question Answered:* **Where within modern KC schools do particular courses depart from the averages?**
    - *Metric:* School-by-course average section load proxy ($\bar{s}_c = E_c / S_c$).
    - *Grain:* Biennial federal census waves across KC high schools (2013–14 to 2023–24).
-   - *Core Finding:* Across all operating regular high schools in the metro area, course averages are modest (~16.5–18.7: Algebra I 17.2, Geometry 18.7, Biology 16.5). However, **state and metro averages hide localized gateway bottlenecks**: specific urban and large suburban comprehensive campuses report core sections of **25 to 31 students** (Wyandotte Algebra I at 28.5 across 46 sections, Lincoln Prep Geometry/Math at 29.5, Grandview Algebra/Geometry at 26–28, Shawnee Mission East/North at 26–28).
+   - *Core Finding:* Across all operating regular high schools in the metro area, course averages are modest (~16.5–18.7: Algebra I 17.2, Geometry 18.7, Biology 16.5). However, **state and metro averages hide localized gateway bottlenecks**: specific urban and large suburban comprehensive campuses report localized bottlenecks of **25 to 31 students** (Wyandotte Algebra I at 28.5 across 46 sections, Lincoln Prep Geometry/Math at 29.5, Grandview Algebra/Geometry at 26–28, Shawnee Mission East/North at 26–28), which demonstrates how state and metro averages hide localized gateway pressure.
 
 ## 2. The Empirical Parallel Series (2011–12 to 2020–21)
 
@@ -48,7 +49,7 @@ To resolve this tension without discarding valid public data, the project establ
 
 ## 3. The Core Analytical Insights
 
-1. **Distinct Statistics Rather than Divergence:** Between 2011–12 and 2017–18, teacher-reported high-school class sizes remained essentially unchanged in Missouri (21.8 to 22.5) and Kansas (19.7 to 19.8). Statewide all-grade PTRs also showed little improvement (MO 13.8 to 14.1; KS 13.0 to 14.2), reinforcing that these are distinct measures rather than demonstrating a staffing/class-size divergence during this particular window. The material expansion in teacher staffing density occurred in the KC metro panel over the 2014–15 to 2024–25 decade.
+1. **Distinct Statistics Rather than Divergence:** Neither state showed improving all-grade staffing density during the 2011–12 to 2017–18 window (MO PTR 13.8 to 14.1; KS PTR 13.0 to 14.2), while high-school class size also remained roughly stable (MO 21.8 to 22.5; KS 19.7 to 19.8), reinforcing that these are distinct measures rather than demonstrating a staffing/class-size divergence during this particular period. The material expansion in teacher staffing density occurred in the KC metro panel over the 2014–15 to 2024–25 decade.
 
 2. **Cross-Metric Distinction (Class Size vs. Macro PTR):** High-school departmentalized class sizes consistently exceed all-grade state PTRs by **5 to 8 students**. This gap reflects structural organizational filters: secondary bell-schedule planning multipliers ($\phi = P_{\text{std}} / P_{\text{tch}}$, e.g. 5-of-7 planning periods requiring +20% FTE just to maintain class sizes) and specialized non-classroom roles (SPED, ELL, reading interventionists).
 
