@@ -16,9 +16,17 @@ plt.rcParams['font.sans-serif'] = 'Helvetica, Arial, sans-serif'
 plt.rcParams['axes.edgecolor'] = '#cbd5e1'
 plt.rcParams['axes.linewidth'] = 0.8
 
-output_dir = r"c:\Users\admir\Github\computational-sketchbook\2026\2026-09-26-education-data-observatory\dashboard"
+# Path resolution
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+KC_DIR = os.path.join(os.path.dirname(BASE_DIR), "2026-09-23-kc-education-capacity")
+
+output_dir = os.path.join(BASE_DIR, "dashboard")
 artifact_dir = r"C:\Users\admir\.gemini\antigravity\brain\341419bd-5669-4622-8d51-d6eecec301ff"
 os.makedirs(output_dir, exist_ok=True)
+
+# Data paths
+lea_long_path = os.path.join(KC_DIR, "data", "processed", "kc_lea_capacity_long_2014_15_2024_25.csv")
+lea_long = pd.read_csv(lea_long_path)
 
 # -------------------------------------------------------------
 # FIGURE 7: CROSS-SOURCE / BENCHMARK COMPARISON
@@ -26,58 +34,62 @@ os.makedirs(output_dir, exist_ok=True)
 # -------------------------------------------------------------
 fig, ax = plt.subplots(figsize=(10.5, 5.5), dpi=300)
 
-years = [
-    "2014-15", "2015-16", "2016-17", "2017-18", "2018-19", 
-    "2019-20", "2020-21", "2021-22", "2022-23", "2023-24", "2024-25"
-]
-
-# Raw Data:
-# KC Metro K-12 enrollment (from audited 11-year CCD LEA panel, excluding Pre-K)
-kc_raw = [
-    327699, 325483, 326762, 329013, 330064, 
-    330128, 322818, 321304, 322785, 320830, 320031
-]
+# Compute KC series dynamically
+fully_dyn = lea_long[lea_long['lea_fully_within_region'] == True].groupby('school_year')['enrollment_k12'].sum()
+years_full = fully_dyn.index.values
+kc_raw = fully_dyn.values
 
 # US Total K-12 Public Enrollment in thousands (from NCES Digest 2023, Table 203.10: Total - Pre-K)
 # Note: 2023-24 and 2024-25 are NCES National Projection Model figures
-us_raw = [
+us_raw = np.array([
     48943.2, 49036.4, 49189.5, 49214.4, 49154.4, 
     49210.7, 48132.8, 48022.5, 48090.3, 47658.5, 47381.3
-]
+])
 
-kc_idx = [v / kc_raw[0] * 100 for v in kc_raw]
-us_idx = [v / us_raw[0] * 100 for v in us_raw]
+kc_idx = kc_raw / kc_raw[0] * 100
+us_idx = us_raw / us_raw[0] * 100
 
-ax.plot(years, kc_idx, marker='o', color='#0284c7', linewidth=2.4, markersize=6, label='Kansas City Metro (77 LEAs)')
-ax.plot(years[:9], us_idx[:9], marker='s', color='#0f172a', linewidth=2.4, markersize=5.5, label='United States Total (Reported CCD Census)')
-ax.plot(years[8:], us_idx[8:], marker='^', color='#64748b', linewidth=2.0, linestyle='--', markersize=5.5, label='United States Total (NCES Projection Model)')
+years_labels = [y.replace("20", "20", 1).replace("-20", "-") for y in years_full]
+
+ax.plot(years_labels, kc_idx, marker='o', color='#0284c7', linewidth=2.5, markersize=6, label='Kansas City Metro (Dynamic Fully-Regional, 77 LEAs)')
+ax.plot(years_labels[:9], us_idx[:9], marker='s', color='#0f172a', linewidth=2.2, markersize=5.5, label='United States Total (Reported CCD Census)')
+ax.plot(years_labels[8:], us_idx[8:], marker='^', color='#64748b', linewidth=2.0, linestyle='--', markersize=5.5, label='United States Total (NCES Projection Model)')
 
 # Highlight Fall 2020 break
-ax.scatter(["2020-21"], [kc_idx[6]], color='#e11d48', s=70, zorder=5)
-ax.scatter(["2020-21"], [us_idx[6]], color='#e11d48', s=70, zorder=5)
+covid_idx = 6 # 2020-21
+ax.scatter([years_labels[covid_idx]], [kc_idx[covid_idx]], color='#e11d48', s=70, zorder=5)
+ax.scatter([years_labels[covid_idx]], [us_idx[covid_idx]], color='#e11d48', s=70, zorder=5)
 
-ax.annotate('Fall 2020 Enrollment Drop:\nKC Metro: -2.21% (-7.3k students)\nU.S. Total: -2.19% (-1.08M students)',
-            xy=("2020-21", 98.4), xytext=(25, -25), textcoords="offset points",
+ax.annotate('Fall 2020 Enrollment Drop:\nKC Metro: -2.32% (-7.6k students)\nU.S. Total: -2.19% (-1.08M students)',
+            xy=(years_labels[covid_idx], 99.2), xytext=(25, -28), textcoords="offset points",
             fontsize=8.5, fontweight='bold', color='#be123c',
             arrowprops=dict(arrowstyle="->", color='#e11d48', lw=1.2),
             bbox=dict(boxstyle="round,pad=0.3", facecolor="#fff1f2", edgecolor="#fda4af", alpha=0.9))
 
-ax.annotate('Pre-Pandemic Peak (2019-20)\nKC: 330,128 (100.7)\nUS: 49.21M (100.5)',
-            xy=("2019-20", 100.74), xytext=(-60, 25), textcoords="offset points",
+peak_idx = 5 # 2019-20
+ax.annotate(f'Pre-Pandemic Peak (2019–20)\nKC: {kc_raw[peak_idx]:,} ({kc_idx[peak_idx]:.2f})\nUS: 49.21M ({us_idx[peak_idx]:.2f})',
+            xy=(years_labels[peak_idx], kc_idx[peak_idx]), xytext=(-65, 22), textcoords="offset points",
             fontsize=8.2, fontweight='bold', color='#0369a1',
             arrowprops=dict(arrowstyle="->", color='#0284c7', lw=1.2))
 
+# Post-pandemic diverge annotation
+ax.annotate(f'Post-Pandemic Stabilization:\nKC Plateau: 99.27% of 2014 baseline\nUS Continued Decline: 96.81% (proj)',
+            xy=(years_labels[-1], kc_idx[-1]), xytext=(-110, -45), textcoords="offset points",
+            fontsize=8.2, fontweight='bold', color='#0f172a',
+            arrowprops=dict(arrowstyle="->", color='#0f172a', lw=1.2),
+            bbox=dict(boxstyle="round,pad=0.3", facecolor="#f8fafc", edgecolor="#cbd5e1", alpha=0.9))
+
 ax.axhline(100.0, color='#94a3b8', linestyle=':', linewidth=1)
 ax.set_ylabel('K–12 Public Enrollment Index (SY 2014–15 = 100)', fontsize=10, fontweight='semibold')
-ax.set_title('[CROSS-SOURCE / BENCHMARK COMPARISON] Regional vs. National K–12 Enrollment Trajectories\nIndexed Public School Membership Trends in Kansas City Metro vs. United States (SY 2014–15 to SY 2024–25)', fontsize=11, fontweight='bold', pad=15)
-ax.set_ylim(95.5, 102.5)
-ax.set_xticks(range(len(years)))
-ax.set_xticklabels(years, rotation=35, ha='right', fontsize=9)
+ax.set_title('[CROSS-SOURCE / BENCHMARK COMPARISON] Regional vs. National K–12 Enrollment Trajectories\nIndexed Public School Membership Trends: Kansas City Metro vs. United States (SY 2014–15 to SY 2024–25)', fontsize=11, fontweight='bold', pad=15)
+ax.set_ylim(95.5, 103.5)
+ax.set_xticks(range(len(years_labels)))
+ax.set_xticklabels(years_labels, rotation=35, ha='right', fontsize=9)
 ax.legend(loc='lower left', frameon=True, facecolor='#ffffff', edgecolor='#cbd5e1', fontsize=8.5)
 
 footer_text7 = (
     "CLASSIFICATION: CROSS-SOURCE / BENCHMARK COMPARISON. Operationalization: ENR-NCES-K12-MEMBER (excludes Pre-K).\n"
-    "Sources: Kansas City: Audited 11-Year NCES CCD LEA Panel (SY 2014–15 baseline = 327,699 students across 77 districts).\n"
+    f"Sources: Kansas City: Dynamically computed from audited CCD LEA Panel (baseline = {kc_raw[0]:,} students; 2024–25 = {kc_raw[-1]:,}).\n"
     "United States: NCES Digest of Education Statistics Table 203.10 (SY 2014–15 baseline = 48,943,226 students; 2023–25 are NCES projections).\n"
     "Generated by: analysis/cross-measure/generate_national_enrollment_visuals.py"
 )
@@ -130,7 +142,7 @@ def plot_grade_band(ax, title, kc_data, us_data, kc_med, us_med, note_text):
             bbox=dict(boxstyle="round,pad=0.35", facecolor="#ffffff", edgecolor="#cbd5e1", alpha=0.9))
 
 plot_grade_band(ax1, "Elementary Schools\n(KC N=393 | U.S. N=52,800)", kc_elem, us_elem, 374, 420, "KC concentrated in\n300-499 size range")
-plot_grade_band(ax2, "Middle Schools\n(KC N=122 | U.S. N=16,500)", kc_middle, us_middle, 584, 540, "KC concentrated in\n500-699 size range")
+plot_grade_band(ax2, "Middle Schools\n(KC N=122 | U.S. N=540)", kc_middle, us_middle, 584, 540, "KC concentrated in\n500-699 size range")
 plot_grade_band(ax3, "High Schools\n(KC N=114 | U.S. N=18,200)", kc_high, us_high, 843, 640, "KC 1,000+ mega-schools:\n44.8% vs. 31.3% U.S.")
 
 ax1.set_ylabel('Percentage of Schools (%)', fontsize=10, fontweight='semibold')

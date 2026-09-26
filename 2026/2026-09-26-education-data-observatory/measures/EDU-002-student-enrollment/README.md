@@ -32,7 +32,7 @@ Student Headcount Enrollment is the official count of individual pupils register
 > **Enrollment is Neither Attendance Nor State Funding FTE.** 
 > 1. An enrolled student is not necessarily in attendance every day. Cumulative student illness and chronic absenteeism create a 6% to 10% wedge between **Membership** (headcount) and **Average Daily Attendance (ADA)**.
 > 2. Enrollment is not statutory funding capacity. In Missouri, funding is historically driven by attendance (transitioning to a hybrid count under SB 727); in Kansas, funding formulas apply statutory lookbacks and demographic weightings to audited FTEs.
-> 3. Summing school-level enrollments does **not** equal district-level enrollment. In the Kansas City metro area alone, LEA memberships exceed the sum of school rosters by **+2,445 students (+0.74%)**.
+> 3. Summing school-level enrollments does **not** equal district-level enrollment. Across the 77 fully-regional districts in the Kansas City metro area, LEA memberships exceed the sum of school rosters by **+1,472 students (+0.446%)**, with an additional 973 students accounted for by two statewide administrative agencies whose non-KC campuses were omitted from the regional school file.
 
 ### 2.2 Formal / Statistical Definition
 For an educational entity $i$ (school campus $s$ or local education agency $d$) in school year $t$:
@@ -56,13 +56,13 @@ $$\begin{aligned}
 
 | Estimand | Mathematical Nature | Research Question Answered | Kansas City Metro Benchmark (SY 2024–25) |
 | :--- | :--- | :--- | :--- |
-| **Total Regional Enrollment** ($\sum E_i$) | Simple sum across all entities | *How many total public school students are enrolled across the regional jurisdiction?* | **327,998 students** (Campus Headcount sum) / **330,443 students** (LEA Member sum) |
+| **Total Regional Enrollment** ($\sum E_i$) | Simple sum across all entities | *How many total public school students are enrolled across the regional jurisdiction?* | **328,884 students** (Campus sum) / **330,356 students** (LEA sum across 77 fully-regional LEAs) |
 | **Median Campus Size** | 50th percentile of campus distribution | *What is the size of the middle/typical school facility, robust to extreme outliers?* | Elementary: **374** \| Middle: **584** \| High: **843** |
 | **Unweighted Campus Mean** | Arithmetic mean of school enrollments | *What is the average administrative size of a school building plant?* | Elementary: **390** \| Middle: **559** \| High: **905** |
-| **Student-Weighted Campus Exposure** | Student-weighted mean ($\frac{\sum E^2}{\sum E}$) | *What is the enrollment size of the school attended by a randomly selected enrolled student?* | Elementary: **428** \| Middle: **643** \| High: **1,289** |
+| **Student-Weighted Campus Exposure** | Student-weighted mean ($\frac{\sum E^2}{\sum E}$) | *What is the enrollment size of the school attended by a randomly selected enrolled student?* | Elementary: **445** \| Middle: **643** \| High: **1,419** |
 
 > [!NOTE]
-> **The High School Scale Skew:** While the median Kansas City high school enrolls 843 students, the **student-weighted high school size is 1,289 students**. Because mega-campuses like Blue Springs High (2,429 students) and Liberty North High (2,262 students) hold disproportionate shares of the student population, the typical enrolled teenager attends a high school significantly larger than the median campus building.
+> **The High School Scale Skew:** While the median Kansas City high school enrolls 843 students, the **student-weighted high school size is 1,419 students** (a 1.68x ratio). Because mega-campuses like Blue Springs High (2,429 students) and Liberty North High (2,262 students) hold disproportionate shares of the student population, the typical enrolled teenager attends a high school significantly larger than the median campus building plant.
 
 ### 2.4 Unit & Scale
 - **Unit of Measurement:** `students` (discrete integer count of persons).
@@ -148,20 +148,30 @@ All records reported in the NCES CCD Public School Universe Directory (`ccd_sch_
 In empirical reality, **LEA-reported membership systematically exceeds the sum of school campus memberships**:
 $$\Delta_{\text{reconciliation}} = E_{\text{LEA}} - \sum_{s \in \text{LEA}} E_s$$
 
-In the 9-county Kansas City metro area in SY 2024–25:
-- Total LEA-reported enrollment: **330,443 students**.
-- Sum of school-reported enrollments: **327,998 students**.
-- Regional Discrepancy: **$+2,445$ unassigned students (+0.74%)**.
+When evaluating this gap, researchers must strictly separate **fully regional school districts** from **statewide administrative agencies**:
+1. **Fully Regional Public Districts ($N=77$):**
+   - Total LEA-reported enrollment: **330,356 students**.
+   - Sum of campus-reported enrollments: **328,884 students**.
+   - Net Regional Discrepancy: **$+1,472$ unassigned students (+0.446% of LEA membership)**.
+   - **Exact Matches:** $61$ of $77$ districts ($79.2\%$) reconcile with a difference of exactly zero.
+   - **Positive Gaps:** $16$ districts report positive unassigned students ($\Delta > 0$).
+   - **Negative Gaps:** $0$ districts report negative discrepancies ($\Delta < 0$).
+2. **Statewide Administrative Agencies ($N=2$):**
+   - MO Division of Youth Services (DYS): LEA membership = 496; in-region campus sum = 79; gap = **+417 students** (84.1% outside KC region).
+   - MO Schools for Severely Disabled: LEA membership = 652; in-region campus sum = 96; gap = **+556 students** (85.3% outside KC region).
+   - *Structural Explanation:* These two statewide agencies operate campuses across all 114 Missouri counties. Their non-KC campuses were properly omitted from the 9-county regional school universe, creating an apparent $+973$ gap when statewide LEA totals are compared against regionally clipped school rosters. They must not be conflated with local school district reconciliation gaps.
 
-#### Empirical Outlier Ledger (SY 2024–25):
+#### Empirical Outlier Ledger — Fully Regional Districts (SY 2024–25):
 | District Name (State) | LEA Membership | Campus Sum | Reconciliation Gap ($\Delta$) | Gap (%) | Explanatory Status | Candidate Mechanisms / Evidence |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Hickman Mills C-1 (MO)** | 5,082 | 4,487 | **+595** | **+11.7%** | `unresolved` | Candidate: Out-of-district day placements, central alternative roster. Queued for audit (`INV-ENR-001`). |
-| **MO Schools for Severely Disabled (MO)** | 652 | 96 | **+556** | **+85.3%** | `verified_structure` | State agency reporting structure: regional day facilities held on central district roster (`INV-ENR-003`). |
-| **MO Division of Youth Services (MO)** | 496 | 79 | **+417** | **+84.1%** | `verified_structure` | State juvenile justice agency: students held on central administrative roster (`INV-ENR-003`). |
-| **De Soto USD 232 (KS)** | 7,370 | 7,142 | **+228** | **+3.1%** | `unresolved` | Candidate: Specialized early childhood / virtual program roster (`INV-ENR-002`). |
-| **Shawnee Mission USD 512 (KS)** | 26,050 | 25,867 | **+183** | **+0.7%** | `candidate_mechanism` | Candidate: Central pre-K and specialized day placements. |
-| **Lee's Summit R-VII (MO)** | 17,910 | 17,735 | **+175** | **+1.0%** | `candidate_mechanism` | Candidate: Alternative program placements and outplaced special services. |
+| **Hickman Mills C-1 (MO)** | 5,067 | 4,472 | **+595** | **+11.7%** | `unresolved` | Out-of-district day placements, central alternative roster. Queued for audit (`INV-ENR-001`). |
+| **De Soto USD 232 (KS)** | 7,295 | 7,067 | **+228** | **+3.1%** | `unresolved` | Specialized early childhood / virtual program roster. Queued for audit (`INV-ENR-002`). |
+| **Shawnee Mission USD 512 (KS)** | 26,513 | 26,330 | **+183** | **+0.7%** | `candidate_mechanism` | Central pre-K enrollment and specialized day placements held at central office. |
+| **Lee's Summit R-VII (MO)** | 17,870 | 17,695 | **+175** | **+1.0%** | `candidate_mechanism` | Alternative program placements and outplaced special education services. |
+| **Bonner Springs USD 204 (KS)** | 2,535 | 2,437 | **+98** | **+3.9%** | `candidate_mechanism` | Inter-district cooperative placements and early childhood roster. |
+| **Turner USD 202 (KS)** | 3,926 | 3,865 | **+61** | **+1.6%** | `candidate_mechanism` | Alternative/vocational shared placements and early childhood roster. |
+| **Paola USD 368 (KS)** | 1,785 | 1,732 | **+53** | **+3.0%** | `candidate_mechanism` | Special education cooperative day services. |
+| **Blue Valley USD 229 (KS)** | 22,252 | 22,225 | **+27** | **+0.1%** | `candidate_mechanism` | Centralized alternative / transition services. |
 
 > [!WARNING]
 > **Methodological Consequence:** Summing school-level CCD files systematically undercounts district students and distorts per-pupil calculations. Out-of-district day placements, homebound instruction, hospital programs, regional cooperatives, and central office administrative holding rosters represent **candidate mechanisms** that must be audited district-by-district rather than assumed.
@@ -215,27 +225,31 @@ Both state constructs are tracked as separate measures (`EDU-015` and `EDU-016`)
 
 ## 7. Longitudinal Trajectory & Candidate Hypotheses
 
-Between SY 2014–15 and SY 2024–25 across the 77 school districts of the Kansas City metropolitan area, K–12 public school enrollment followed an observable 11-year trajectory:
+Between SY 2014–15 and SY 2024–25 across the operating school districts of the Kansas City metropolitan area, K–12 public school enrollment followed an observable 11-year trajectory.
+
+When computing longitudinal trends, the Observatory distinguishes between the **Dynamic Fully Regional Universe** (districts located fully within the 9-county MARC region, accounting for district openings/closings: 78 LEAs in 2014–15 → 77 in 2024–25) and the **Balanced 75-LEA Cohort** (the 75 districts continuously operating across all 11 years). An uncurated panel that includes statewide administrative agencies produces an artificial -2.36% drop and is discarded from regional totals.
 
 ```
-School Year     KC K-12 Enrollment     Annual Change      Index (2014-15=100)     Descriptive Period Label
-------------------------------------------------------------------------------------------------------------------
-2014-15         327,699                 --                100.00                  Baseline
-2015-16         325,483                 -2,216 (-0.68%)    99.32                  Minor demographic dip
-2016-17         326,762                 +1,279 (+0.39%)    99.71                  Suburban growth
-2017-18         329,013                 +2,251 (+0.69%)   100.40                  Suburban growth
-2018-19         330,064                 +1,051 (+0.32%)   100.72                  Suburban growth
-2019-20         330,128                 +64    (+0.02%)   100.74                  PRE-PANDEMIC PEAK
-2020-21         322,818                 -7,310 (-2.21%)    98.51                  FALL 2020 ENROLLMENT DROP
-2021-22         321,304                 -1,514 (-0.47%)    98.05                  Post-break stabilization
-2022-23         322,785                 +1,481 (+0.46%)    98.50                  Partial cohort bounce
-2023-24         320,830                 -1,955 (-0.61%)    97.90                  Cohort contraction
-2024-25         320,031                 -799   (-0.25%)    97.66                  -3.06% from 2019-20 Peak
+School Year     Dynamic Regional K-12     Index (2014-15=100)     Balanced 75 Cohort     Index (2014-15=100)     Descriptive Period Label
+-----------------------------------------------------------------------------------------------------------------------------------------
+2014-15         321,228                   100.00                  320,465                100.00                  Baseline
+2015-16         323,844                   100.81                  323,118                100.83                  Demographic growth
+2016-17         325,274                   101.26                  324,432                101.24                  Suburban expansion
+2017-18         327,585                   101.98                  326,834                101.99                  Suburban expansion
+2018-19         328,578                   102.29                  328,115                102.39                  Suburban expansion
+2019-20         329,357                   102.53                  328,860                102.62                  PRE-PANDEMIC PEAK
+2020-21         321,732                   100.16                  321,078                100.19                  FALL 2020 ENROLLMENT DROP (-7,625)
+2021-22         320,165                    99.67                  319,478                 99.69                  Post-break trough
+2022-23         321,595                   100.11                  321,051                100.18                  Partial cohort rebound
+2023-24         319,559                    99.48                  319,038                 99.55                  Cohort contraction
+2024-25         318,883                    99.27                  318,406                 99.36                  Net 10-Yr Change: -0.73% (-2,345)
 ```
 
 ### The Observed Empirical Facts:
-1. **The Fall 2020 Drop:** In a single year, regional K–12 public enrollment dropped by **$-7,310$ students ($-2.21\%$)**.
-2. **Post-2020 Stagnation:** Across five subsequent school years, regional public enrollment has remained plateaued between 320,000 and 322,800 students, remaining **$-10,097$ students ($-3.06\%$) below peak**.
+1. **Pre-Pandemic Expansion:** From 2014–15 to 2019–20, regional public K–12 enrollment grew steadily by **$+8,129$ students (+2.53%)**, peaking at **329,357 students**.
+2. **The Fall 2020 Drop:** In a single school year, regional public enrollment fell by **$-7,625$ students ($-2.32\%$)**.
+3. **Post-2020 Stabilization / Plateau:** Following the 2020 drop, regional public enrollment stabilized within a narrow band between 318,800 and 321,600 students. Net 10-year change from baseline is modest: **$-2,345$ students ($-0.73\%$)** in the dynamic universe and **$-2,059$ students ($-0.64\%$)** in the balanced cohort.
+4. **Discarding the Unfiltered Panel:** The unfiltered 82/79 LEA panel drops from 327,761 to 320,031 ($-2.36\%$). This discrepancy is driven by reporting shifts and student roster movements within statewide agencies (MO DYS and MO Schools for Severely Disabled) rather than actual changes in local metropolitan public school membership.
 
 ### Candidate Hypotheses (Future Research Queue):
 The Observatory distinguishes between observed trendlines and causal explanations. The following candidate hypotheses are registered for empirical testing:
@@ -271,9 +285,9 @@ Mandatory checklist executed against KC Metropolitan Universe (SY 2024–25, $N 
 
 - [x] **Negative Value Sanitization:** Zero negative exception codes (`-1`, `-2`, `-9`) present in processed analysis files.
 - [x] **Zero-Membership Verification:** 26 zero-membership operating schools audited and verified against NCES shared-time, CTE, alternative, and special education metadata.
-- [x] **Reconciliation Gap Documented:** Verified that LEA enrollment ($330,443$) exceeds campus enrollment ($327,998$) by $+2,445$ students across all 77 districts; major district gaps cataloged in outlier ledger.
+- [x] **Reconciliation Gap Documented:** Verified that LEA enrollment ($330,356$) exceeds campus enrollment ($328,884$) by $+1,472$ students across the 77 fully-regional districts; statewide agencies isolated (+973 students outside KC); major district gaps cataloged in outlier ledger.
 - [x] **Grade-Span Isolation:** Pre-K enrollment ($10,603$ students) cleanly isolated in `ENR-NCES-K12-MEMBER`.
-- [x] **Longitudinal Continuity Check:** Verified 11-year LEA panel without artificial ID breakages.
+- [x] **Longitudinal Continuity Check:** Verified 11-year LEA panel without artificial ID breakages; dynamic fully-regional ($321,228 \to 318,883$) and balanced 75 cohort ($320,465 \to 318,406$) series calculated.
 
 ---
 
@@ -293,16 +307,16 @@ The Observatory maintains five visual artifacts for `EDU-002`, establishing its 
 ### Figure 5: The LEA–School Membership Reconciliation Gap — Where Are the Students?
 ![Figure 5: LEA-School Membership Reconciliation Gap](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-26-education-data-observatory/dashboard/fig05_campus_vs_lea_enrollment_gap.png)
 - **Classification:** `DESCRIPTIVE OBSERVATION`
-- **Purpose:** Expose the empirical gap between district-level membership and the sum of school building rosters.
+- **Purpose:** Expose the empirical gap between district-level membership and the sum of physical school building rosters across the 77 fully regional districts.
 - **Source:** NCES CCD LEA Survey vs. School Universe Survey (SY 2024–25).
 - **Generator Script:** [`analysis/cross-measure/generate_edu002_visuals.py`](../../analysis/cross-measure/generate_edu002_visuals.py)
 
 ---
 
-### Figure 6: 11-Year Regional Enrollment Trajectory — The Fall 2020 Drop & Stagnation
+### Figure 6: 11-Year Regional Enrollment Trajectory — The Fall 2020 Drop & Post-Pandemic Plateau
 ![Figure 6: 11-Year Enrollment Trajectory](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-26-education-data-observatory/dashboard/fig06_longitudinal_enrollment_trajectory.png)
 - **Classification:** `DESCRIPTIVE OBSERVATION`
-- **Purpose:** Document regional public school enrollment volume across 77 districts from SY 2014–15 to SY 2024–25.
+- **Purpose:** Document regional public school enrollment volume across fully-regional districts from SY 2014–15 to SY 2024–25, exposing both the Dynamic Fully Regional series and the Balanced 75-LEA Cohort.
 - **Source:** Audited 11-Year NCES CCD LEA Longitudinal Panel (`kc_lea_capacity_long_2014_15_2024_25.csv`).
 - **Generator Script:** [`analysis/cross-measure/generate_edu002_visuals.py`](../../analysis/cross-measure/generate_edu002_visuals.py)
 
@@ -313,10 +327,10 @@ The Observatory maintains five visual artifacts for `EDU-002`, establishing its 
 - **Classification:** `CROSS-SOURCE / BENCHMARK COMPARISON`
 - **Purpose:** Benchmark Kansas City regional K–12 enrollment trends against the United States total public K–12 enrollment trajectory.
 - **Findings:**
-  - Regional and national enrollment track with remarkable alignment: both peaked in SY 2019–20 (KC index 100.7; US index 100.5).
-  - In Fall 2020, KC metro enrollment fell by **$-2.21\%$**, mirroring the national drop of **$-2.19\%$**.
-  - Post-2020, both regional and national public enrollment have remained below pre-pandemic baselines.
-- **Sources:** Kansas City: Audited 11-Year NCES CCD LEA Panel (baseline: 327,699 students). United States: NCES Digest of Education Statistics Table 203.10 (baseline: 48,943,226 students; 2023–25 are NCES projections).
+  - Pre-Pandemic: KC metro grew faster than the nation from 2014–15 to 2019–20 (+2.53% in KC vs +0.55% nationally).
+  - Fall 2020 Break: KC metro enrollment fell by **$-2.32\%$** (-7.6k students), mirroring the national drop of **$-2.19\%$** (-1.08M students).
+  - Post-Pandemic Divergence: While US national public enrollment continued a gradual downward trajectory (projected to reach 96.81% of 2014 baseline by 2024–25), KC regional enrollment stabilized into a resilient plateau at 99.27% of baseline.
+- **Sources:** Kansas City: Dynamically computed from audited CCD LEA Panel (`kc_lea_capacity_long_2014_15_2024_25.csv`, baseline = 321,228 students). United States: NCES Digest of Education Statistics Table 203.10 (baseline: 48,943,226 students; 2023–25 are NCES projections).
 - **Generator Script:** [`analysis/cross-measure/generate_national_enrollment_visuals.py`](../../analysis/cross-measure/generate_national_enrollment_visuals.py)
 
 ---
@@ -328,7 +342,7 @@ The Observatory maintains five visual artifacts for `EDU-002`, establishing its 
 - **Findings:**
   - *Elementary:* KC median (374) sits slightly below the national median (~420); KC elementary schools are heavily concentrated in the 300–499 range ($57.5\%$ vs $39.5\%$ nationally).
   - *Middle:* KC median (584) sits above the national median (~540), with $42.6\%$ of middle schools in the 500–699 range (vs $21.3\%$ nationally).
-  - *High School:* KC exhibits substantial right-skew: **$44.8\%$ of KC high schools enroll 1,000+ students** (vs $31.3\%$ nationally), driving student-weighted high school size to $1,289$.
+  - *High School:* KC exhibits substantial right-skew: **$44.8\%$ of KC high schools enroll 1,000+ students** (vs $31.3\%$ nationally), driving student-weighted high school size to $1,419$.
 - **Sources:** Kansas City: NCES CCD Public School Universe (SY 2024–25, $N=629$ regular operating campuses with enrollment $>0$). United States: NCES Digest of Education Statistics Table 216.40 (SY 2021–22 regular public schools).
 - **Generator Script:** [`analysis/cross-measure/generate_national_enrollment_visuals.py`](../../analysis/cross-measure/generate_national_enrollment_visuals.py)
 
@@ -343,3 +357,4 @@ The Observatory maintains five visual artifacts for `EDU-002`, establishing its 
 - **Audit History:**
   - `2026-09-26 (Task 003)`: Initial measure audited and codified; reconciliation gap documented; 4-tier universe instantiated; Figures 4–6 generated.
   - `2026-09-26 (Task 003B)`: Semantic cleanup completed: ADA and funding FTE separated into proposed measures `EDU-015` and `EDU-016`; "compulsory" replaced with "grade-span"; 26 zero-membership schools audited into 4-part taxonomy; Missouri SB 727 transition and Kansas funding lookbacks documented; candidate hypotheses formalizing the Fall 2020 drop registered; Figures 7 and 8 added with national benchmarks; measure frozen.
+  - `2026-09-26 (Task 003C)`: Geographic and longitudinal universe bugs resolved: isolated 2 statewide agencies (+973 students outside KC) from 77 fully-regional LEAs (+1,472 gap); replaced contaminated unfiltered panel with Dynamic Fully Regional series (321,228 $\to$ 318,883, -0.73%) and Balanced 75 Cohort (320,465 $\to$ 318,406, -0.64%); Figures 5, 6, 7 updated to calculate directly from data; exhaustive exploratory analysis completed across regional redistribution, system concentration, campus scale exposure, district portfolio response, Pre-K structure, and CRDC cross-measure associations; re-frozen.

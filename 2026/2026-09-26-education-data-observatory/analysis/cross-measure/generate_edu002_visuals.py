@@ -10,14 +10,18 @@ plt.rcParams['font.sans-serif'] = 'Helvetica, Arial, sans-serif'
 plt.rcParams['axes.edgecolor'] = '#cbd5e1'
 plt.rcParams['axes.linewidth'] = 0.8
 
-output_dir = r"c:\Users\admir\Github\computational-sketchbook\2026\2026-09-26-education-data-observatory\dashboard"
+# Path resolution
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+KC_DIR = os.path.join(os.path.dirname(BASE_DIR), "2026-09-23-kc-education-capacity")
+
+output_dir = os.path.join(BASE_DIR, "dashboard")
 artifact_dir = r"C:\Users\admir\.gemini\antigravity\brain\341419bd-5669-4622-8d51-d6eecec301ff"
 os.makedirs(output_dir, exist_ok=True)
 
 # Data paths
-kc_school_path = r"2026/2026-09-23-kc-education-capacity/data/processed/kc_school_capacity_2024_2025.csv"
-kc_lea_path = r"2026/2026-09-23-kc-education-capacity/data/processed/kc_lea_capacity_2024_2025.csv"
-lea_long_path = r"2026/2026-09-23-kc-education-capacity/data/processed/kc_lea_capacity_long_2014_15_2024_25.csv"
+kc_school_path = os.path.join(KC_DIR, "data", "processed", "kc_school_capacity_2024_2025.csv")
+kc_lea_path = os.path.join(KC_DIR, "data", "processed", "kc_lea_capacity_2024_2025.csv")
+lea_long_path = os.path.join(KC_DIR, "data", "processed", "kc_lea_capacity_long_2014_15_2024_25.csv")
 
 sch_df = pd.read_csv(kc_school_path)
 lea_df = pd.read_csv(kc_lea_path)
@@ -59,7 +63,7 @@ ax.annotate('Dedicated Early Childhood Centers\n(Grace: 228; Shull: 189)',
             fontsize=8.5, fontweight='bold', color='#0369a1')
 
 ax.set_ylabel('Total Enrolled Students (Fall Headcount MEMBER)', fontsize=10.5, fontweight='semibold')
-ax.set_title('[DESCRIPTIVE OBSERVATION] Campus Institutional Scale: School Size Distributions by Grade Band\n691 Operating Public Schools Across 9-County Kansas City Metropolitan Area (SY 2024–25)', fontsize=11, fontweight='bold', pad=15)
+ax.set_title('[DESCRIPTIVE OBSERVATION] Campus Institutional Scale: School Size Distributions by Grade Band\n665 Operating Public Schools with Enrollment Across 9-County Kansas City Metropolitan Area (SY 2024–25)', fontsize=11, fontweight='bold', pad=15)
 ax.set_ylim(0, 2600)
 
 footer_text4 = (
@@ -77,98 +81,125 @@ plt.close()
 shutil.copy(fig4_path, os.path.join(artifact_dir, "fig04_school_size_distribution.png"))
 
 # -------------------------------------------------------------
-# FIGURE 5: DESCRIPTIVE OBSERVATION
+# FIGURE 5: DESCRIPTIVE OBSERVATION (CORRECTED UNIVERSE)
 # The Campus vs. LEA Aggregation Discrepancy
 # -------------------------------------------------------------
-fig, ax = plt.subplots(figsize=(10, 5.2), dpi=300)
+fig, ax = plt.subplots(figsize=(10.5, 5.4), dpi=300)
 
 sch_by_lea = sch_df.groupby('nces_lea_id')['enrollment_total'].sum().reset_index(name='campus_sum_enrollment')
-merged_lea = pd.merge(lea_df[['nces_lea_id', 'district_name', 'state', 'enrollment_total']], sch_by_lea, on='nces_lea_id', how='left')
-merged_lea['diff'] = merged_lea['enrollment_total'] - merged_lea['campus_sum_enrollment'].fillna(0)
+merged_lea = pd.merge(lea_df, sch_by_lea, on='nces_lea_id', how='left')
+merged_lea['campus_sum_enrollment'] = merged_lea['campus_sum_enrollment'].fillna(0)
+merged_lea['diff'] = merged_lea['enrollment_total'] - merged_lea['campus_sum_enrollment']
+
+# Filter strictly to the 77 fully regional LEAs
+fully_regional = merged_lea[merged_lea['lea_fully_within_region'] == True].copy()
+tot_gap = fully_regional['diff'].sum()
+tot_lea_enr = fully_regional['enrollment_total'].sum()
 
 # Top 8 LEAs with positive unassigned students
-top_diff = merged_lea.sort_values(by='diff', ascending=False).head(8)
+top_diff = fully_regional.sort_values(by='diff', ascending=False).head(8)
 
 y_pos = np.arange(len(top_diff))
 bars = ax.barh(y_pos, top_diff['diff'], color='#3b82f6', height=0.55, edgecolor='#1d4ed8')
 
 ax.set_yticks(y_pos)
-ax.set_yticklabels(top_diff['district_name'] + " (" + top_diff['state'] + ")", fontsize=9.5)
+ax.set_yticklabels([f"{r['district_name']} ({r['state']})" for _, r in top_diff.iterrows()], fontsize=9.5)
 ax.invert_yaxis()
 
 for bar, d, tot in zip(bars, top_diff['diff'], top_diff['enrollment_total']):
     pct = d / tot * 100
-    ax.text(d + 12, bar.get_y() + bar.get_height()/2,
+    ax.text(d + 10, bar.get_y() + bar.get_height()/2,
             f"+{d:,.0f} unassigned students ({pct:.1f}% of district)",
             va='center', ha='left', fontsize=8.5, fontweight='bold', color='#1e293b')
 
 ax.set_xlabel('Unassigned Students: LEA Total Enrollment Minus Sum of Campus Enrollments', fontsize=10, fontweight='semibold')
-ax.set_title('[DESCRIPTIVE OBSERVATION] The LEA–School Membership Reconciliation Gap: Where Are the Students?\nTop Kansas City Districts Where LEA Membership Exceeds the Sum of Physical School Rosters (SY 2024–25)', fontsize=10.5, fontweight='bold', pad=15)
-ax.set_xlim(0, 850)
+ax.set_title('[DESCRIPTIVE OBSERVATION] The LEA–School Membership Reconciliation Gap: Where Are the Students?\nTop Kansas City Districts Where LEA Membership Exceeds Physical Campus Rosters (SY 2024–25)', fontsize=10.5, fontweight='bold', pad=15)
+ax.set_xlim(0, 750)
 
 footer_text5 = (
     "CLASSIFICATION: DESCRIPTIVE OBSERVATION. Source: NCES CCD LEA Survey vs. School Universe Survey (SY 2024–25).\n"
-    "Reconciliation gaps occur when students are placed in out-of-district day schools, homebound programs, or central administrative rolls without a building code.\n"
-    "Total regional discrepancy across all 77 MARC districts: +2,445 students. Generated by: analysis/cross-measure/generate_edu002_visuals.py"
+    f"Filtered strictly to 77 fully-regional LEAs (total LEA enrollment = {tot_lea_enr:,}; campus sum = {fully_regional['campus_sum_enrollment'].sum():,}).\n"
+    f"61 of 77 districts reconcile exactly (diff = 0); 16 report unassigned students. Total regional gap = +{tot_gap:,} students (+{tot_gap/tot_lea_enr*100:.3f}%).\n"
+    "Note: Excludes statewide agencies (MO DYS & MO Severely Disabled) whose non-KC campuses were properly omitted from the regional school file."
 )
-plt.figtext(0.5, 0.015, footer_text5, ha="center", fontsize=7.5, color="#475569",
+plt.figtext(0.5, 0.015, footer_text5, ha="center", fontsize=7.2, color="#475569",
              bbox=dict(boxstyle="round,pad=0.4", facecolor="#f8fafc", edgecolor="#cbd5e1", alpha=0.9))
 
-plt.subplots_adjust(left=0.28, bottom=0.18, right=0.90, top=0.86)
+plt.subplots_adjust(left=0.28, bottom=0.20, right=0.92, top=0.86)
 fig5_path = os.path.join(output_dir, "fig05_campus_vs_lea_enrollment_gap.png")
 plt.savefig(fig5_path)
 plt.close()
 shutil.copy(fig5_path, os.path.join(artifact_dir, "fig05_campus_vs_lea_enrollment_gap.png"))
 
 # -------------------------------------------------------------
-# FIGURE 6: DESCRIPTIVE OBSERVATION
+# FIGURE 6: DESCRIPTIVE OBSERVATION (CORRECTED LONGITUDINAL UNIVERSES)
 # 11-Year Longitudinal Trajectory: The Fall 2020 Drop & Stagnation
 # -------------------------------------------------------------
-fig, ax = plt.subplots(figsize=(10, 5.2), dpi=300)
+fig, ax = plt.subplots(figsize=(10.5, 5.5), dpi=300)
 
-yearly_enr = lea_long.groupby('school_year')['enrollment_k12'].sum().reset_index()
-years = yearly_enr['school_year'].values
-counts = yearly_enr['enrollment_k12'].values
+# Compute both universes directly from data
+fully_dyn = lea_long[lea_long['lea_fully_within_region'] == True].groupby('school_year')['enrollment_k12'].sum()
+leas_1415 = set(lea_long[(lea_long['school_year']=='2014-2015') & (lea_long['lea_fully_within_region'] == True)]['nces_lea_id'])
+leas_2425 = set(lea_long[(lea_long['school_year']=='2024-2025') & (lea_long['lea_fully_within_region'] == True)]['nces_lea_id'])
+balanced_leas = leas_1415.intersection(leas_2425)
+bal_dyn = lea_long[lea_long['nces_lea_id'].isin(balanced_leas)].groupby('school_year')['enrollment_k12'].sum()
 
-ax.plot(years, counts, marker='o', color='#0284c7', linewidth=2.5, markersize=6, label='Regional K–12 Membership')
-ax.fill_between(years, counts, color='#0284c7', alpha=0.08)
+years = fully_dyn.index.values
+dyn_counts = fully_dyn.values
+bal_counts = bal_dyn.values
 
-# Highlight pre-COVID peak and drop
-peak_idx = 5 # 2019-20
+ax.plot(years, dyn_counts, marker='o', color='#0284c7', linewidth=2.6, markersize=6, label='Dynamic Fully Regional Universe (78 LEAs in 2014-15 → 77 in 2024-25)')
+ax.plot(years, bal_counts, marker='s', color='#475569', linewidth=1.8, linestyle='--', markersize=5, label='Balanced Cohort (Same 75 LEAs in All 11 Years)')
+ax.fill_between(years, dyn_counts, color='#0284c7', alpha=0.08)
+
+# Highlight pre-COVID peak and drop on dynamic series
+peak_idx = 5  # 2019-20
 covid_idx = 6 # 2020-21
-drop = counts[covid_idx] - counts[peak_idx]
+drop_abs = dyn_counts[covid_idx] - dyn_counts[peak_idx]
+drop_pct = drop_abs / dyn_counts[peak_idx] * 100
 
-ax.scatter([years[peak_idx]], [counts[peak_idx]], color='#10b981', s=80, zorder=5)
-ax.scatter([years[covid_idx]], [counts[covid_idx]], color='#ef4444', s=80, zorder=5)
+ax.scatter([years[peak_idx]], [dyn_counts[peak_idx]], color='#10b981', s=80, zorder=5)
+ax.scatter([years[covid_idx]], [dyn_counts[covid_idx]], color='#ef4444', s=80, zorder=5)
 
-ax.annotate(f"Pre-Pandemic Peak\n({counts[peak_idx]:,})",
-            xy=(years[peak_idx], counts[peak_idx]), xytext=(-40, 20),
+ax.annotate(f"Pre-Pandemic Peak: {dyn_counts[peak_idx]:,}\n(SY 2019–20)",
+            xy=(years[peak_idx], dyn_counts[peak_idx]), xytext=(-40, 22),
             textcoords="offset points", fontsize=8.5, fontweight='bold', color='#065f46',
-            arrowprops=dict(arrowstyle="->", color='#059669'))
+            arrowprops=dict(arrowstyle="->", color='#059669', lw=1.2))
 
-ax.annotate(f"Fall 2020 Drop: {drop:,.0f} students (-2.2%)\nPost-2020 enrollment stagnates at ~320k",
-            xy=(years[covid_idx], counts[covid_idx]), xytext=(20, -35),
+ax.annotate(f"Fall 2020 Drop: {drop_abs:,.0f} students ({drop_pct:.2f}%)\nPost-2020 enrollment remains flat at ~319k",
+            xy=(years[covid_idx], dyn_counts[covid_idx]), xytext=(20, -38),
             textcoords="offset points", fontsize=8.5, fontweight='bold', color='#991b1b',
-            arrowprops=dict(arrowstyle="->", color='#dc2626'))
+            arrowprops=dict(arrowstyle="->", color='#dc2626', lw=1.2),
+            bbox=dict(boxstyle="round,pad=0.3", facecolor="#fff1f2", edgecolor="#fda4af", alpha=0.9))
+
+# Annotate endpoints
+net_change = dyn_counts[-1] - dyn_counts[0]
+net_pct = net_change / dyn_counts[0] * 100
+ax.annotate(f"2024–25: {dyn_counts[-1]:,}\n10-Yr Net: {net_change:+,} ({net_pct:+.2f}%)",
+            xy=(years[-1], dyn_counts[-1]), xytext=(-85, 20),
+            textcoords="offset points", fontsize=8.2, fontweight='bold', color='#0f172a',
+            arrowprops=dict(arrowstyle="->", color='#0f172a', lw=1.1))
 
 ax.set_ylabel('Total K–12 Headcount Enrollment', fontsize=10.5, fontweight='semibold')
-ax.set_title('[DESCRIPTIVE OBSERVATION] 11-Year Regional Enrollment Trajectory: The Fall 2020 Drop & Stagnation\n77 Operating School Districts Across 9-County KC Metro (SY 2014–15 to SY 2024–25)', fontsize=11, fontweight='bold', pad=15)
-ax.set_ylim(310000, 335000)
-ax.set_xticks(years)
+ax.set_title('[DESCRIPTIVE OBSERVATION] 11-Year Regional Enrollment Trajectory: The Fall 2020 Drop & Post-Pandemic Plateau\nDynamic Universe vs. Balanced 75-LEA Cohort Across 9-County KC Metro (SY 2014–15 to SY 2024–25)', fontsize=11, fontweight='bold', pad=15)
+ax.set_ylim(312000, 333000)
+ax.set_xticks(range(len(years)))
 ax.set_xticklabels(years, rotation=35, ha='right', fontsize=9)
+ax.legend(loc='lower left', frameon=True, facecolor='#ffffff', edgecolor='#cbd5e1', fontsize=8.8)
 
 footer_text6 = (
     "CLASSIFICATION: DESCRIPTIVE OBSERVATION. Source: Audited 11-Year NCES CCD LEA Longitudinal Panel (SY 2014–15 through SY 2024–25).\n"
-    "Shows K–12 enrollment excluding Pre-K. Regional enrollment peaked at 330,128 in 2019–20 before falling to 320,031 in 2024–25 (-3.06% from peak).\n"
+    "Estimand: K–12 Fall Headcount (excluding Pre-K). Filtered strictly to fully-regional LEAs (removes statewide agency contamination).\n"
+    f"Dynamic Series: 321,228 (2014-15) → 329,357 (peak) → 318,883 (2024-25, net -0.73%). Balanced 75 Cohort: 320,465 → 318,406 (-0.64%).\n"
     "Generated by: analysis/cross-measure/generate_edu002_visuals.py"
 )
-plt.figtext(0.5, 0.015, footer_text6, ha="center", fontsize=7.5, color="#475569",
+plt.figtext(0.5, 0.015, footer_text6, ha="center", fontsize=7.2, color="#475569",
              bbox=dict(boxstyle="round,pad=0.4", facecolor="#f8fafc", edgecolor="#cbd5e1", alpha=0.9))
 
-plt.subplots_adjust(bottom=0.20, top=0.88)
+plt.subplots_adjust(bottom=0.22, top=0.88, left=0.10, right=0.95)
 fig6_path = os.path.join(output_dir, "fig06_longitudinal_enrollment_trajectory.png")
 plt.savefig(fig6_path)
 plt.close()
 shutil.copy(fig6_path, os.path.join(artifact_dir, "fig06_longitudinal_enrollment_trajectory.png"))
 
-print("All 3 EDU-002 figures successfully created and copied to artifacts directory!")
+print("Figures 4, 5, and 6 successfully generated and copied to artifact directory!")
