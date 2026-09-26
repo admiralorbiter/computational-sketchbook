@@ -1,0 +1,8 @@
+{
+  "master_meeting_id": "17411",
+  "meeting_date": "2025-03-20",
+  "video_access_status": "no_public_recording_located",
+  "search_audit": "Queried YouTube channel @GrandviewC-4SchoolDistrict, official Grandview TV channel, and grandviewc4.net Board of Education video portals. No public video or livestream archive was located for this regular meeting date.",
+  "public_channel": "https://www.youtube.com/@GrandviewC-4SchoolDistrict",
+  "recommendation": "If district internal recording archives or sunshine audio files are obtained via public records requests, align timestamps to priority agenda items indexed in priority_meeting_items.csv."
+}

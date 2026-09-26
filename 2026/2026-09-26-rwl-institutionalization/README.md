@@ -84,11 +84,17 @@ flowchart LR
     P1 --> P2 --> P3
 ```
 
-### Project Phasing
-- **Task 001**: Grandview C-4 Public Evidence Inventory — **audited with acquisition gates open**. Source taxonomy, Simbli census, initial timeline, and public-system inventory exist; grant lifecycle, exact RWL evaluation artifacts, validated Board Brief corpus, and archived personnel snapshots remain Task 002 prerequisites.
-- **Task 002**: Automated Corpus Ingestion & Preservation (Agendas, Simbli packets, Board Briefs, Google Drive budgets, DESE MCDS data).
+### Project Phasing & Roadmap Status
+
+> [!NOTE]
+> **Current Project Status**: **PARKED** — Evidence acquisition phase complete through focal governance corpus. Reopening criteria defined in [`PROJECT_STATE.md`](PROJECT_STATE.md) and [`DECISIONS.md`](DECISIONS.md).
+
+- **Task 001**: Grandview C-4 Public Evidence Inventory — **Completed & Audited**.
+- **Task 002 (Gate 1)**: Kauffman Grant Lifecycle Resolution — **Complete**. (Resolved complete 2019–2024 funding history: $640,435 across 3 grants; direct commitments exhausted December 31, 2024).
+- **Task 002 (Gate 2)**: Priority Governance Corpus & Epistemic Remediation — **Complete after epistemic remediation**. (Acquired complete API-accessible governance corpus across 5 focal transition meetings; cataloged 272 artifacts and 199 agenda items with strict observational boundaries; observable-only evaluation schema).
+- **Task 002 (Gate 3)**: Longitudinal Operational & Fiscal Series — **Deferred / Next-Session Entry Point**. (Staff/position genealogy, annual course description guides, and DESE ASBR finance alignment).
 - **Task 003**: Chronological Evidence Matrix Construction (Manual and semi-automated coding of primary events).
-- **Task 004**: Multi-Modal Governance Extraction (Transcribe audio/video recordings, extract item-level debate and votes).
+- **Task 004**: Multi-Modal Governance Extraction (Audio/video records where available, item-level debate and votes).
 - **Task 005**: Comparative Institutionalization Metrics & Panel Scaling.
 
 ---

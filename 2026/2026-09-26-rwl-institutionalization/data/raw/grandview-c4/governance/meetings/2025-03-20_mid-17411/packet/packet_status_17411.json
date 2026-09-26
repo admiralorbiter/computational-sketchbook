@@ -1,0 +1,14 @@
+{
+  "master_meeting_id": "17411",
+  "meeting_date": "2025-03-20",
+  "packet_access_status": "linked_but_unavailable",
+  "barrier_type": "dynamic_authenticated_generation",
+  "barrier_details": "Simbli eBOARDsolutions does not provide static public download links for full meeting packets. Packet generation is dynamically orchestrated via client-side REST calls to app2.eboardsolutions.com (/api/PrintMeetingPacket/GenerateMeetingPacketPdf) and protected by session-bound bearer tokens and Imperva Incapsula WAF.",
+  "available_proxies": [
+    "agenda/agenda_17411.html",
+    "agenda/agenda_tree_17411.json",
+    "agenda/agenda_items_17411.json",
+    "minutes/minutes_17411.json",
+    "board_brief/board_brief_2053567.html"
+  ]
+}
