@@ -1,17 +1,22 @@
-source_node,target_node,relationship_type,description,parameter
-EDU-001,EDU-002,derived_from_numerator,Pupil/Teacher Ratio numerator is total student headcount enrollment (K-12),numerator
-EDU-001,EDU-003,derived_from_denominator,Pupil/Teacher Ratio denominator is total certified teacher FTE,denominator
-EDU-001,EDU-004,contrasted_with,Classroom Teacher FTE excludes instructional specialists isolating the Specialist Denominator Wedge,Delta_1_specialist_wedge
-EDU-001,EDU-007,contrasted_with,Structural macro staffing ratio relates to actual class size through the schedule planning multiplier phi,phi_schedule_multiplier
-EDU-006,EDU-007,aggregates_to,Individual course section enrollments aggregate to student-weighted or class-weighted class size,aggregation
-EDU-001,nces-ccd,sourced_from,Reported and derived from NCES CCD Non-Fiscal School and LEA universe files,primary_source
-EDU-002,nces-ccd,sourced_from,Reported directly as student membership headcount (MEMBER) in CCD non-fiscal survey,primary_source
-EDU-003,nces-ccd,sourced_from,Reported directly as total teacher FTE (TEACHERS_FTE) in CCD non-fiscal survey,primary_source
-EDU-004,ksde,sourced_from,Reported as distinct classroom teacher FTE in state personnel systems (KPTEN/MOSIS),state_source
-EDU-005,nces-ccd,sourced_from,Reported as instructional paraprofessionals/aides FTE in CCD LEA survey,primary_source
-EDU-006,crdc,sourced_from,Reported as course section counts and enrollments in biennial CRDC waves,primary_source
-EDU-007,ntps,sourced_from,Direct self-reported average class size from NTPS/SASS teacher questionnaire,survey_benchmark
-EDU-008,edfacts,sourced_from,Federal reporting of students chronically absent (missing >= 10% school days),primary_source
-EDU-009,edfacts,sourced_from,IDEA Part B child count reported through EDFacts and state report cards,primary_source
-EDU-010,crdc,sourced_from,Students with Section 504 plans reported biennially in CRDC,primary_source
-EDU-007,EDU-001,validates,Survey teacher reports and course-level sections provide empirical calibration against macro PTR,validation_contrast
+source_node,target_node,relationship_class,relationship_type,scope,evidence_status,source_study,description,parameter
+EDU-001,EDU-002,definition,numerator,universal,authoritative,nces-ccd,Pupil/Teacher Ratio numerator is student headcount enrollment,numerator
+EDU-001,EDU-003,definition,denominator,universal,authoritative,nces-ccd,Pupil/Teacher Ratio denominator is reported classroom teacher FTE,denominator
+EDU-012,EDU-006,definition,numerator,universal,authoritative,crdc,School-Course Mean Class Size numerator is Course Enrollment,numerator
+EDU-012,EDU-011,definition,denominator,universal,authoritative,crdc,School-Course Mean Class Size denominator is Course Class Count,denominator
+EDU-001,EDU-004,conceptual_contrast,specialist_isolation,state_specific_ks,empirical_reconciliation,kc_education_capacity_task003c,Classroom Teacher FTE excludes specialists isolating the Specialist Denominator Wedge (Delta_1),Delta_1_specialist_wedge
+EDU-001,EDU-012,empirical_model,schedule_and_specialist_bridge,kansas_city_secondary_comprehensive,calibrated_empirical_model,kc_education_capacity_task004b,Kansas City empirical model decomposing macro PTR to observed secondary core class size via Delta_1 phi and Delta_3,phi_multiplier
+EDU-001,EDU-007,conceptual_contrast,macro_density_vs_classroom_exposure,national_and_state,published_survey_benchmark,ntps_2017_18_digest_table_7,Administrative macro staffing density systematically contrasts with survey-reported high school class sizes by +6 to +9 students,structural_wedge
+EDU-007,EDU-014,conceptual_contrast,survey_vs_exposure_estimand,universal,methodological_distinction,observatory_standard,Teacher-reported survey average class size (NTPS) is distinct from student-weighted exposure class size (sum s^2 / sum s),estimand_distinction
+EDU-013,EDU-014,definition,exposure_aggregation,local_master_schedule,mathematical_formulation,observatory_standard,True individual section rosters aggregate into student-weighted class size,student_weighted_exposure
+EDU-001,nces-ccd,source_mapping,primary_source,national,authoritative,nces-ccd,Reported and derived from NCES CCD Non-Fiscal Public School and LEA Universe surveys,
+EDU-002,nces-ccd,source_mapping,primary_source,national,authoritative,nces-ccd,Reported directly as student membership headcount (MEMBER) in CCD non-fiscal survey,
+EDU-003,nces-ccd,source_mapping,primary_source,national,authoritative,nces-ccd,Reported directly as FTE classroom teachers in CCD school non-fiscal survey,
+EDU-004,ksde,source_mapping,state_source,state_kansas,authoritative,ksde-kpten,Reported as distinct classroom teacher FTE in Kansas personnel system (KPTEN/CPFS),
+EDU-005,nces-ccd,source_mapping,primary_source,national,authoritative,nces-ccd,Reported as instructional aides/paraprofessionals FTE in CCD LEA survey,
+EDU-006,crdc,source_mapping,primary_source,national,authoritative,crdc,Reported as course-level student enrollment headcount in biennial CRDC waves,
+EDU-011,crdc,source_mapping,primary_source,national,authoritative,crdc,Reported as number of course classes in biennial CRDC waves,
+EDU-007,ntps,source_mapping,survey_source,national_and_state,authoritative,ntps,Direct self-reported average class size from NTPS/SASS public school teacher questionnaire,
+EDU-008,edfacts,source_mapping,primary_source,national,authoritative,edfacts,Federal reporting of students chronically absent (missing >= 10% school days),
+EDU-009,edfacts,source_mapping,primary_source,national,authoritative,edfacts,IDEA Part B child count reported through EDFacts and state report cards,
+EDU-010,crdc,source_mapping,primary_source,national,authoritative,crdc,Students with Section 504 accommodation plans reported biennially in CRDC,
+EDU-007,EDU-001,validation_relationship,cross_source_triangulation,national_and_state,empirical_contrast,kc_education_capacity_task005c,Survey teacher reports and course-level means provide empirical validation and contrast against macro PTR,cross_source_validation
