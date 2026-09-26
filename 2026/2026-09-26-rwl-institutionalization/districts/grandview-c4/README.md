@@ -9,7 +9,7 @@
 | :--- | :--- | :--- |
 | **Legal Name** | Consolidated School District No. 4 of Jackson County, MO | Missouri DESE Directory |
 | **Common Name** | Grandview C-4 School District (`GC-4`) | District Charter & Website |
-| **State District Code** | `048-068` (Jackson County 048, District 068) | DESE MCDS Portal |
+| **State District Code** | `048-074` (Jackson County 048, District 074) | DESE MCDS Portal |
 | **Location** | Grandview, MO (South Kansas City Metropolitan Suburb) | Geographic Boundary Record |
 | **Student Enrollment** | $\sim 3,500$ Students (K–12) | NCES CCD / DESE MCDS 2024–25 |
 | **Demographic Context** | Majority-minority, high Free/Reduced Lunch ($\sim 75\%+$), Title I Schoolwide | DESE Demographic Profile |
@@ -128,7 +128,7 @@ flowchart TD
   - Enables NLP-based lexical evolution analysis (measuring shift from Kauffman "MVA" terminology to MSIP 6 "Success-Ready Students" terminology).
 
 ### Layer 7: Outcomes & State Accreditation
-- **Missouri Comprehensive Data System (MCDS) - District 048-068**:
+- **Missouri Comprehensive Data System (MCDS) - District 048-074**:
   - Annual Performance Report (APR) scoring under MSIP 6.
   - 4-year and 5-year cohort graduation rates.
   - Postsecondary placement rates and 180-day CTE graduate follow-up surveys.
@@ -158,7 +158,7 @@ flowchart TD
     P1["<b>Phase 1: High-Value Core Documents (P1)</b><br/>• Download Strategic Plan One-Pager PDF & Issuu pages<br/>• Harvest Google Drive Operating Budget & Audit PDFs<br/>• Scrape full Board Briefs archive (Category 5936)"]
     P2["<b>Phase 2: Simbli Governance Harvesting (P1)</b><br/>• Extract meeting index (2018–2026) via Simbli API<br/>• Download agenda packets and official approved minutes<br/>• Catalog attached board presentation slide decks"]
     P3["<b>Phase 3: Organizational Genealogy & Web CDX (P2)</b><br/>• Ingest current staff directory master list<br/>• Query Wayback CDX for historical annual staff snapshots<br/>• Reconstruct RWL/CTE coordinator position timeline"]
-    P4["<b>Phase 4: Operations & Opportunity Architecture (P2)</b><br/>• Archive GHS course catalogs and CTE pathway manuals<br/>• Ingest DESE MCDS 048-068 district report card series<br/>• Download regional Kauffman RWL progress publications"]
+    P4["<b>Phase 4: Operations & Opportunity Architecture (P2)</b><br/>• Archive GHS course catalogs and CTE pathway manuals<br/>• Ingest DESE MCDS 048-074 district report card series<br/>• Download regional Kauffman RWL progress publications"]
     P5["<b>Phase 5: Audio Transcription & Event Coding (P3)</b><br/>• Extract audio from priority board meetings (Dec 2024, Jan 2025, Jun 2026)<br/>• Transcribe and align with item-level agenda packets<br/>• Execute behavioral classification into registry/evidence.csv"]
 
     P1 --> P2 --> P3 --> P4 --> P5
