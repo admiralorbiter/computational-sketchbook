@@ -30,8 +30,8 @@ lea_14_b = lea_b75[lea_b75['school_year'] == '2014-2015'].set_index('nces_lea_id
 lea_24_b = lea_b75[lea_b75['school_year'] == '2024-2025'].set_index('nces_lea_id')
 
 sch_bal = sch_long[sch_long['nces_lea_id'].isin(b75)].copy()
-sch_cnt_14 = sch_bal[(sch_bal['school_year'] == '2014-2015') & (sch_bal['operational_status'] == 1)].groupby('nces_lea_id').size()
-sch_cnt_24 = sch_bal[(sch_bal['school_year'] == '2024-2025') & (sch_bal['operational_status'] == 1)].groupby('nces_lea_id').size()
+sch_cnt_14 = sch_bal[(sch_bal['school_year'] == '2014-2015') & (sch_bal['is_operating'] == True)].groupby('nces_lea_id').size()
+sch_cnt_24 = sch_bal[(sch_bal['school_year'] == '2024-2025') & (sch_bal['is_operating'] == True)].groupby('nces_lea_id').size()
 
 df_bal = pd.DataFrame(index=b75)
 df_bal['enr_14'] = lea_14_b['enrollment_k12']
@@ -48,8 +48,8 @@ decliners_28 = df_bal[(df_bal['enr_chg'] < 0) & (df_bal['sch_cnt_chg'] == 0)].co
 
 identical_ids_leas = []
 for lid in decliners_28.index:
-    ids_14 = set(sch_bal[(sch_bal['school_year'] == '2014-2015') & (sch_bal['nces_lea_id'] == lid) & (sch_bal['operational_status'] == 1)]['nces_school_id'])
-    ids_24 = set(sch_bal[(sch_bal['school_year'] == '2024-2025') & (sch_bal['nces_lea_id'] == lid) & (sch_bal['operational_status'] == 1)]['nces_school_id'])
+    ids_14 = set(sch_bal[(sch_bal['school_year'] == '2014-2015') & (sch_bal['nces_lea_id'] == lid) & (sch_bal['is_operating'] == True)]['nces_school_id'])
+    ids_24 = set(sch_bal[(sch_bal['school_year'] == '2024-2025') & (sch_bal['nces_lea_id'] == lid) & (sch_bal['is_operating'] == True)]['nces_school_id'])
     if ids_14 == ids_24:
         identical_ids_leas.append(lid)
 

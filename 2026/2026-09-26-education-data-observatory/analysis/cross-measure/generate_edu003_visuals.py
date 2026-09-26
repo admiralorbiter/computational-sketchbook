@@ -135,8 +135,8 @@ lea_14_df = lea_bal_df[lea_bal_df['school_year'] == '2014-2015'].set_index('nces
 lea_24_df = lea_bal_df[lea_bal_df['school_year'] == '2024-2025'].set_index('nces_lea_id')
 
 sch_bal_df = sch_long[sch_long['nces_lea_id'].isin(balanced_leas)].copy()
-sch_cnt_14 = sch_bal_df[(sch_bal_df['school_year'] == '2014-2015') & (sch_bal_df['operational_status'] == 1)].groupby('nces_lea_id').size()
-sch_cnt_24 = sch_bal_df[(sch_bal_df['school_year'] == '2024-2025') & (sch_bal_df['operational_status'] == 1)].groupby('nces_lea_id').size()
+sch_cnt_14 = sch_bal_df[(sch_bal_df['school_year'] == '2014-2015') & (sch_bal_df['is_operating'] == True)].groupby('nces_lea_id').size()
+sch_cnt_24 = sch_bal_df[(sch_bal_df['school_year'] == '2024-2025') & (sch_bal_df['is_operating'] == True)].groupby('nces_lea_id').size()
 
 df_bal_calc = pd.DataFrame(index=balanced_leas)
 df_bal_calc['district_name'] = lea_24_df['district_name']

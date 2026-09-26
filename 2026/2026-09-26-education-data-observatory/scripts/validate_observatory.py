@@ -940,6 +940,56 @@ def test_dossier_table_universe_and_subtotal_consistency(repo_dir: Path):
 
 
 # ----------------------------------------------------------------------
+# Named Test 21: canonical_universe_implementation_consistency
+# ----------------------------------------------------------------------
+def test_canonical_universe_implementation_consistency(repo_dir: Path):
+    errors = []
+    warnings = []
+    
+    # 1. Prohibit raw operational_status == 1 in any analysis or ledger script
+    op_status_pattern = re.compile(r"operational_status\s*==\s*['\"]?1['\"]?")
+    py_files_checked = 0
+    
+    scan_dirs = [repo_dir / "analysis", repo_dir / "scripts"]
+    for sdir in scan_dirs:
+        if not sdir.exists():
+            continue
+        for p in sdir.rglob("*.py"):
+            if p.name == "validate_observatory.py":
+                continue
+            py_files_checked += 1
+            text = p.read_text(encoding="utf-8", errors="ignore")
+            matches = op_status_pattern.findall(text)
+            if matches:
+                errors.append(f"Script {p.relative_to(repo_dir)} uses raw 'operational_status == 1' instead of canonical 'is_operating == True' flag")
+
+    # 2. Verify explore_edu001_ptr.py implements KC_REGULAR_PTR_ACTIVE_616 registered criteria
+    ptr_script = repo_dir / "analysis" / "cross-measure" / "explore_edu001_ptr.py"
+    if ptr_script.exists():
+        text_ptr = ptr_script.read_text(encoding="utf-8", errors="ignore")
+        if "KC_REGULAR_PTR_ACTIVE_616" not in text_ptr:
+            warnings.append("analysis/cross-measure/explore_edu001_ptr.py does not explicitly tag KC_REGULAR_PTR_ACTIVE_616 in comments")
+        if "['is_operating'] == True" not in text_ptr and '["is_operating"] == True' not in text_ptr:
+            errors.append("analysis/cross-measure/explore_edu001_ptr.py does not implement 'is_operating == True' for campus PTR filtering")
+        if "school_type" not in text_ptr or "Regular School" not in text_ptr:
+            errors.append("analysis/cross-measure/explore_edu001_ptr.py missing school_type == 'Regular School' filter")
+        if "classroom_teacher_fte" not in text_ptr or "> 0" not in text_ptr:
+            errors.append("analysis/cross-measure/explore_edu001_ptr.py missing classroom_teacher_fte > 0 filter")
+    else:
+        errors.append("Missing analysis/cross-measure/explore_edu001_ptr.py")
+
+    # 3. Verify generate_claims_ledger.py implements is_operating == True for school counting
+    claims_script = repo_dir / "scripts" / "generate_claims_ledger.py"
+    if claims_script.exists():
+        text_cl = claims_script.read_text(encoding="utf-8", errors="ignore")
+        if "['is_operating'] == True" not in text_cl and '["is_operating"] == True' not in text_cl:
+            errors.append("scripts/generate_claims_ledger.py does not implement 'is_operating == True' for school counts")
+
+    detail = f"{py_files_checked} python scripts enforce canonical 'is_operating == True'; KC_REGULAR_PTR_ACTIVE_616 contract verified"
+    return len(errors) == 0, errors, warnings, detail
+
+
+# ----------------------------------------------------------------------
 # Main Runner
 # ----------------------------------------------------------------------
 def validate_observatory():
@@ -971,6 +1021,7 @@ def validate_observatory():
         ("claim_specific_dossier_consistency", test_claim_specific_dossier_consistency),
         ("prohibited_legacy_terms_in_dossiers", test_prohibited_legacy_terms_in_dossiers),
         ("dossier_table_universe_and_subtotal_consistency", test_dossier_table_universe_and_subtotal_consistency),
+        ("canonical_universe_implementation_consistency", test_canonical_universe_implementation_consistency),
     ]
     
     total_tests = len(named_tests)

@@ -97,8 +97,8 @@ print("2. DECLINING DISTRICT STAFFING COHORTS")
 print("=" * 80)
 
 sch_bal = sch_long[sch_long['nces_lea_id'].isin(b75)].copy()
-sch_cnt_14 = sch_bal[(sch_bal['school_year'] == '2014-2015') & (sch_bal['operational_status'] == 1)].groupby('nces_lea_id').size()
-sch_cnt_24 = sch_bal[(sch_bal['school_year'] == '2024-2025') & (sch_bal['operational_status'] == 1)].groupby('nces_lea_id').size()
+sch_cnt_14 = sch_bal[(sch_bal['school_year'] == '2014-2015') & (sch_bal['is_operating'] == True)].groupby('nces_lea_id').size()
+sch_cnt_24 = sch_bal[(sch_bal['school_year'] == '2024-2025') & (sch_bal['is_operating'] == True)].groupby('nces_lea_id').size()
 
 lea_14_b = lea_b75[lea_b75['school_year'] == '2014-2015'].set_index('nces_lea_id')
 lea_24_b = lea_b75[lea_b75['school_year'] == '2024-2025'].set_index('nces_lea_id')
@@ -130,7 +130,7 @@ print(f"  Teachers:   {t14_28:,.2f} -> {t24_28:,.2f} ({t24_28 - t14_28:+,.2f}, {
 sch_decl_28 = sch_bal[sch_bal['nces_lea_id'].isin(decliners_28.index)]
 sch_decl_14 = sch_decl_28[sch_decl_28['school_year'] == '2014-2015']
 sch_decl_24 = sch_decl_28[sch_decl_28['school_year'] == '2024-2025']
-print(f"  School count in 28 LEAs: 2014-15 = {len(sch_decl_14[sch_decl_14['operational_status']==1])}, 2024-25 = {len(sch_decl_24[sch_decl_24['operational_status']==1])}")
+print(f"  School count in 28 LEAs: 2014-15 = {len(sch_decl_14[sch_decl_14['is_operating']==True])}, 2024-25 = {len(sch_decl_24[sch_decl_24['is_operating']==True])}")
 sch_enr_14 = sch_decl_14['enrollment_k12'].sum()
 sch_enr_24 = sch_decl_24['enrollment_k12'].sum()
 sch_tch_14 = sch_decl_14['classroom_teacher_fte'].sum()

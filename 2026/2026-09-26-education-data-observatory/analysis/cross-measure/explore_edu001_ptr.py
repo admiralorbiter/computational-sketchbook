@@ -69,8 +69,8 @@ print("\n" + "=" * 70)
 print("3. KC_DECLINING_UNCHANGED_COUNT_28 (Declining LEAs Staffing Stickiness)")
 print("=" * 70)
 sch_bal = sch_long[sch_long['nces_lea_id'].isin(b75)].copy()
-sch_cnt_14 = sch_bal[(sch_bal['school_year'] == '2014-2015') & (sch_bal['operational_status'] == 1)].groupby('nces_lea_id').size()
-sch_cnt_24 = sch_bal[(sch_bal['school_year'] == '2024-2025') & (sch_bal['operational_status'] == 1)].groupby('nces_lea_id').size()
+sch_cnt_14 = sch_bal[(sch_bal['school_year'] == '2014-2015') & (sch_bal['is_operating'] == True)].groupby('nces_lea_id').size()
+sch_cnt_24 = sch_bal[(sch_bal['school_year'] == '2024-2025') & (sch_bal['is_operating'] == True)].groupby('nces_lea_id').size()
 
 df_bal = pd.DataFrame(index=b75)
 df_bal['enr_14'] = lea_14_b['enrollment_k12']
@@ -118,8 +118,8 @@ print(f"School Universe Sums:  {sch_enr_tot:.0f} students / {sch_tch_tot:.2f} te
 print(f"LEA Universe Sums:     {lea_enr_tot:.0f} students / {lea_tch_tot:.2f} teachers = PTR {lea_ptr_tot:.4f}")
 print(f"Campus vs LEA PTR Gap: {gap_ptr_tot:+.4f} students/teacher ({gap_ptr_tot/lea_ptr_tot*100:+.2f}%)")
 
-# Campus regular school distributions
-sch_reg = sch_77[(sch_77['operational_status'] == 1) & (sch_77['school_type'] == 'Regular School') & (sch_77['enrollment_k12'] > 0) & (sch_77['classroom_teacher_fte'] > 0)].copy()
+# Campus regular school distributions (KC_REGULAR_PTR_ACTIVE_616)
+sch_reg = sch_77[(sch_77['is_operating'] == True) & (sch_77['school_type'] == 'Regular School') & (sch_77['enrollment_k12'] > 0) & (sch_77['classroom_teacher_fte'] > 0)].copy()
 sch_reg['ptr'] = sch_reg['enrollment_k12'] / sch_reg['classroom_teacher_fte']
 print(f"\nRegular School Campus K-12 PTR Distribution (N={len(sch_reg)}):")
 print(f"  Pooled: {sch_reg['enrollment_k12'].sum() / sch_reg['classroom_teacher_fte'].sum():.2f}")
@@ -132,7 +132,7 @@ print(f"  Q75:    {sch_reg['ptr'].quantile(0.75):.2f}")
 print(f"  Max:    {sch_reg['ptr'].max():.2f}")
 
 # By grade band
-for level in ['Primary', 'Middle', 'High']:
+for level in ['Primary', 'Middle', 'High', 'Other']:
     sub = sch_reg[sch_reg['school_level'] == level]
     print(f"  {level:<10} (N={len(sub):3d}): Pooled = {sub['enrollment_k12'].sum()/sub['classroom_teacher_fte'].sum():.2f}, Mean = {sub['ptr'].mean():.2f}, Median = {sub['ptr'].median():.2f}")
 
