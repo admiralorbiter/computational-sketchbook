@@ -20,3 +20,8 @@ EDU-008,edfacts,source_mapping,primary_source,national,authoritative,edfacts,Fed
 EDU-009,edfacts,source_mapping,primary_source,national,authoritative,edfacts,IDEA Part B child count reported through EDFacts and state report cards,
 EDU-010,crdc,source_mapping,primary_source,national,authoritative,crdc,Students with Section 504 accommodation plans reported biennially in CRDC,
 EDU-007,EDU-001,validation_relationship,cross_source_triangulation,national_and_state,empirical_contrast,kc_education_capacity_task005c,Survey teacher reports and course-level means provide empirical validation and contrast against macro PTR,cross_source_validation
+EDU-002,EDU-015,conceptual_contrast,membership_vs_attendance,universal,statutory_accounting_distinction,observatory_standard,"Fall student headcount membership contrasts with Average Daily Attendance (hours attended / scheduled hours); attendance is typically 6% to 10% lower due to absenteeism.",attendance_wedge
+EDU-002,EDU-016,conceptual_contrast,headcount_vs_weighted_funding,statewide_funding,statutory_funding_formula,observatory_standard,"Fall headcount membership is an unweighted count of persons; state funding enrollment applies statutory lookbacks and demographic/programmatic weightings.",funding_weight_wedge
+EDU-015,mo-dese,source_mapping,state_source,state_missouri,authoritative,mo-dese,"Average Daily Attendance reported in Missouri DESE school finance portals.",
+EDU-016,ksde,source_mapping,state_source,state_kansas,authoritative,ksde,"Audited base FTE and weighted student units reported in KSDE School Finance and Comparative Performance systems.",
+
