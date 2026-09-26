@@ -1,2 +1,20 @@
 # Project directory junction
 kc_education_capacity
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS / Editor artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local environment
+.env
+.venv
+env/
+venv/
+

@@ -1,11 +1,19 @@
+# [HISTORICAL / EXPLORATORY SCRIPT — TASK 002]
+# Note: For canonical audited findings, see measures/EDU-002-student-enrollment/README.md.
+
 import os
+from pathlib import Path
 import pandas as pd
 import numpy as np
 
+script_dir = Path(__file__).resolve().parent
+repo_dir = script_dir.parent.parent
+kc_dir = repo_dir.parent / "2026-09-23-kc-education-capacity"
+
 # Load processed Kansas City panels
-kc_school_path = r"2026/2026-09-23-kc-education-capacity/data/processed/kc_school_capacity_2024_2025.csv"
-kc_lea_path = r"2026/2026-09-23-kc-education-capacity/data/processed/kc_lea_capacity_2024_2025.csv"
-kc_long_path = r"2026/2026-09-23-kc-education-capacity/data/processed/kc_school_capacity_long_2014_15_2024_25.csv"
+kc_school_path = kc_dir / "data" / "processed" / "kc_school_capacity_2024_2025.csv"
+kc_lea_path = kc_dir / "data" / "processed" / "kc_lea_capacity_2024_2025.csv"
+kc_long_path = kc_dir / "data" / "processed" / "kc_school_capacity_long_2014_15_2024_25.csv"
 
 sch_df = pd.read_csv(kc_school_path)
 lea_df = pd.read_csv(kc_lea_path)

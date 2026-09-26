@@ -6,13 +6,18 @@ Task 003E Verification Script:
 4. Complexity table exact N audit and locale breakdown.
 """
 
+# [HISTORICAL / AUDIT SCRIPT — TASK 003E]
+# Note: For canonical audited Task 003E findings, see measures/EDU-002-student-enrollment/README.md.
+
 import os
+from pathlib import Path
 import pandas as pd
 import numpy as np
 import math
 
-BASE_DIR = r"c:\Users\admir\Github\computational-sketchbook"
-KC_DIR = os.path.join(BASE_DIR, "2026", "2026-09-23-kc-education-capacity")
+script_dir = Path(__file__).resolve().parent
+repo_dir = script_dir.parent.parent
+KC_DIR = repo_dir.parent / "2026-09-23-kc-education-capacity"
 
 lea_long = pd.read_csv(os.path.join(KC_DIR, "data", "processed", "kc_lea_capacity_long_2014_15_2024_25.csv"))
 sch_long = pd.read_csv(os.path.join(KC_DIR, "data", "processed", "kc_school_capacity_long_2014_15_2024_25.csv"))

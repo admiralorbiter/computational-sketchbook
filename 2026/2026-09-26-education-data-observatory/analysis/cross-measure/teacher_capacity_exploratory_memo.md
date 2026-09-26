@@ -15,10 +15,10 @@ This monograph executes the comprehensive empirical investigation and semantic a
 
 Five key analytical jobs were executed using the integrated 11-year administrative panel and multi-wave CRDC microdata. The core empirical findings are:
 
-1. **Fixed-Plant Staffing Stickiness (`Job 1`):** In the 28 school districts that experienced enrollment declines while keeping their physical operating plant unchanged, classroom teaching staff contracted by only **$-3.63\%$ ($-136.3$ FTE)** despite an **$-8.33\%$ drop in K–12 enrollment ($-4,388$ students)**. School administrative personnel contracted in near-perfect lockstep with students (**$-9.78\%$**), but non-teaching support staff expanded aggressively (**$+9.41\%$, $+675.2$ FTE**). Because teacher staffing was sticky downward across existing buildings, headline pupil/teacher ratios actually *decreased* from $14.02$ to $13.34$.
-2. **Curricular Breadth Staffing Penalty (`Job 2`):** In secondary schools, school scale buys curricular offerings, not smaller classes. In high schools under 800 students, offering Advanced Placement / advanced STEM coursework (Calculus and Physics) requires a minimum faculty threshold of **$\ge 35$ Teacher FTEs** (averaging $34.3$ FTE vs. $23.8$ FTE in schools without Calculus). Over the past decade, Calculus offerings in high schools under 800 collapsed from **$69.4\%$ (2013–14)** to **$28.6\%$ (2023–24)** across the metro region.
+1. **Fixed-Plant Staffing Stickiness (`Job 1`):** In the 28 school districts that experienced enrollment declines while keeping their physical operating plant unchanged, classroom teaching staff contracted by only **$-3.63\%$ ($-136.3$ FTE)** despite an **$-8.33\%$ drop in K–12 enrollment ($-4,388$ students)**. School administrative personnel contracted in near-perfect lockstep with students (**$-9.78\%$**), while total district staff across all roles expanded (**$+9.41\%$, $+675.2$ FTE**), driven by increases in paraprofessionals ($+8.64\%$), instructional coordinators ($+29.08\%$), and student counselors ($+12.76\%$). Because teacher staffing was sticky downward across existing buildings, headline pupil/teacher ratios actually *decreased* from $14.02$ to $13.34$. This stickiness is robust across multiple sensitivity specifications (e.g., $-3.26\%$ teacher change in the 25 districts with 100% identical campus IDs).
+2. **Curricular Breadth Staffing Penalty (`Job 2`):** In secondary schools, school scale buys curricular offerings, not smaller classes. In high schools under 800 students, offering Advanced Placement / advanced STEM coursework (Calculus and Physics) requires substantial instructional scale. However, a strict $\ge 35$ FTE threshold is empirically retracted: in 2023–24, offering schools included faculties as small as $15.63$ FTE (Drexel High), with half of offering schools under 35 FTE. Crucially, a matched-cohort panel of 28 high schools under 800 students present in both 2013–14 and 2023–24 reveals that Calculus offerings collapsed from **$67.9\%$ (19 of 28)** down to **$35.7\%$ (10 of 28)**, with 12 schools dropping Calculus and only 3 adding it.
 3. **Kindergarten Staffing Resilience (`Job 3`):** When regional Kindergarten enrollment experienced an acute shock in Fall 2020 (dropping $-11.43\%$, $-2,871$ pupils), districts did *not* cut kindergarten teaching positions; reported Kindergarten FTE in the Balanced 75 actually *increased* by **$+3.67\%$ ($+115.2$ FTE)**, causing an immediate drop in primary pupil/teacher ratios. Over the 10-year span, total primary instructional labor expanded by **$+23.87\%$**.
-4. **Charter Staffing Elasticity (`Job 4`):** In the Kansas City urban core (KCPS + Jackson County independent charters), charter enrollment expanded by **$+29.02\%$ ($+2,955$ students)** while charter classroom teacher FTE surged by **$+59.50\%$ ($+470.2$ FTE)**. Charters hired at a marginal elasticity of **$1.0$ teacher FTE per $6.28$ additional students**, operating at an average macro PTR of **$10.42$** in 2024–25, significantly below KCPS ($12.92$).
+4. **Charter Staffing Elasticity (`Job 4`):** In the Kansas City urban core (KCPS + Jackson County independent charters), charter enrollment expanded by **$+29.02\%$ ($+2,955$ students)** while charter classroom teacher FTE surged by **$+59.50\%$ ($+470.2$ FTE)**. Charters hired at an endpoint ratio of **$1.0$ teacher FTE per $6.28$ additional students** ($0.1591$ FTE/student), operating at an average macro PTR of **$10.42$** in 2024–25, significantly below KCPS ($12.92$).
 5. **The Secondary Staffing Wedge (`Job 5`):** Across 109 regular operating high schools in CRDC 2023–24, the macro school PTR ($14.74$) mechanically understates actual foundational course class sizes by **$+3.5$ to $+4.5$ students** (Algebra I: $19.28$, wedge $+4.53$; Geometry: $18.94$, wedge $+4.06$; Biology: $18.81$, wedge $+3.96$). This structural wedge has persisted across all six CRDC waves from 2013–14 to 2023–24 due to teacher planning periods and low-enrollment advanced electives.
 
 ---
@@ -61,8 +61,8 @@ The apparent discrepancy between campus sums and LEA reports is entirely explain
 ### 1.2 The 2015–16 Kansas CCD Non-Reporting Anomaly
 > [!WARNING]
 > **Severe Administrative Artifact:** In SY 2015–16, the federal NCES CCD LEA and School Non-Fiscal files failed to collect teacher counts for two major Kansas districts:
-> - **Olathe USD 233 (`LEAID 2010050`):** Missing $\sim 1,940$ teacher FTE (55 of 59 campuses unrecorded).
-> - **Gardner Edgerton USD 231 (`LEAID 2005430`):** Missing $\sim 371$ teacher FTE.
+> - **Olathe USD 233 (`LEAID 2010140`):** Missing $\sim 1,940$ teacher FTE (55 of 59 campuses unrecorded).
+> - **Gardner Edgerton USD 231 (`LEAID 2006420`):** Missing $\sim 371$ teacher FTE.
 > 
 > This created an artificial, single-year regional drop of **$-2,311$ teacher FTE**, causing unadjusted regional macro PTR to spike to an artificial $16.65$. The Observatory's audited longitudinal series applies verified state KSDE interpolations, restoring the true balanced teacher stock to $21,797$ FTE and maintaining a smooth regional trend.
 
@@ -78,24 +78,55 @@ School district staffing models operate under structural step-functions dictated
 
 In Task 003D/003E, the Observatory identified **28 school districts** in the Balanced 75 cohort that experienced negative net K–12 enrollment change between 2014–15 and 2024–25 while keeping their operating school count completely unchanged (with 25 of the 28 retaining 100% identical campus NCESSCH IDs).
 
-### 2.2 Empirical Audit Findings
-Across these 28 districts, the 10-year reallocation of labor shows a profound structural divergence between instructional staff, administrative overhead, and non-teaching support staff:
+### 2.2 Empirical Audit Findings & Sensitivity Specifications
+Across these 28 districts, the 10-year reallocation of labor shows a profound structural divergence between instructional staff, administrative overhead, and non-teaching support staff. 
+
+To verify that this result is not driven by district reconfiguration, the Observatory evaluated three nested sensitivity specifications:
+1. **Specification 1 (All 28 Unchanged-Count Decliners):** All districts in the Balanced 75 experiencing negative net enrollment while maintaining the same total number of operating schools.
+2. **Specification 2 (25 Strictly Identical NCESSCH LEAs):** Restricting to the 25 districts whose active school NCESSCH ID sets remained 100% identical from 2014–15 to 2024–25 (excluding Raymore-Peculiar, Kansas City KS, and Leavenworth, which reconfigured campus grade spans).
+3. **Specification 3 (Physical-Plant Matched Facilities):** Confirming that all 28 districts operated in the exact same physical building footprint across the decade.
 
 ```
-========================================================================================
-AGGREGATE 10-YEAR STAFFING REALLOCATION (N = 28 DECLINING LEAs WITH UNCHANGED PLANT)
-========================================================================================
-  Metric                       SY 2014–15      SY 2024–25      Net Change      % Change
-  --------------------------------------------------------------------------------------
-  K-12 Student Enrollment        52,657          48,269          -4,388         -8.33%
-  Classroom Teacher FTE         3,755.5         3,619.3          -136.3         -3.63%
-  School/LEA Administrators       261.7           236.1           -25.6         -9.78%
-  Total Non-Teaching Support    3,160.4         3,997.4          +837.0        +26.48%
-  Total District Staff FTE      7,177.6         7,852.8          +675.2         +9.41%
-  --------------------------------------------------------------------------------------
-  Aggregate Macro PTR             14.02           13.34           -0.68         -4.85%
-========================================================================================
+====================================================================================================
+SENSITIVITY ANALYSIS: FIXED-PLANT DOWNWARD STAFFING STICKINESS (2014–15 TO 2024–25)
+====================================================================================================
+Metric                       Specification 1 (N=28 LEAs)       Specification 2 (N=25 LEAs)
+----------------------------------------------------------------------------------------------------
+K-12 Student Enrollment      52,657 -> 48,269 (-8.33%, -4,388) 44,792 -> 41,209 (-8.00%, -3,583)
+Classroom Teacher FTE        3,755.5 -> 3,619.3 (-3.63%, -136.3) 3,197.6 -> 3,093.4 (-3.26%, -104.2)
+School/LEA Administrators     261.7 ->   236.1 (-9.78%,  -25.6)   227.1 ->   206.4 (-9.11%,  -20.7)
+Total District Staff FTE     7,177.6 -> 7,852.8 (+9.41%, +675.2) 6,104.9 -> 6,659.5 (+9.08%, +554.6)
+Aggregate Macro PTR           14.02 ->   13.34 (-0.68 PTR)        14.01 ->   13.32 (-0.69 PTR)
+====================================================================================================
 ```
+
+Across both specifications, classroom teacher staffing contracted at less than half the rate of enrollment loss, driving headline pupil/teacher ratios downward.
+
+#### Staff-Category Coverage Matrix & True Composition
+The $+9.41\%$ ($+675.2$ FTE) net growth represents **Total District Staff (All Roles Combined)** ($7,177.6 \to 7,852.8$ FTE). 
+
+> [!WARNING]
+> **Data Limitation (Staffing Category Comparability):** Naive aggregation of non-teaching "support staff" variables across historical CCD waves creates severe artificial volatility. Older federal CCD files (2014–15 and 2015–16) did not populate `psychologists_fte`, `school_admin_support_fte`, or `lea_admin_support_fte`. Furthermore, `student_support_staff_fte` was unpopulated or zeroed out from 2016–17 through 2018–19. 
+
+Examining clean, consistently reported personnel categories reveals the true reallocation of labor across the 28 declining districts:
+
+```
+====================================================================================================
+CLEAN STAFF CATEGORY REALLOCATION (N = 28 DECLINING LEAs WITH UNCHANGED PLANT)
+====================================================================================================
+Staff Category                   SY 2014–15      SY 2024–25      Net Change      % Change
+----------------------------------------------------------------------------------------------------
+Classroom Teachers                3,755.5         3,619.3          -136.3         -3.63%
+Paraprofessionals                   907.9           986.3           +78.4         +8.64%
+Instructional Coordinators          161.3           208.3           +46.9        +29.08%
+Guidance Counselors                 133.1           150.0           +17.0        +12.76%
+School Administrators               216.6           194.7           -21.9        -10.09%
+Librarians / Media Specialists       85.7            39.1           -46.6        -54.39%
+Total District Staff (All Roles)  7,177.6         7,852.8          +675.2         +9.41%
+====================================================================================================
+```
+
+The expansion of non-instructional labor was heavily concentrated in **paraprofessionals and instructional aides ($+8.64\%$)**, curriculum coordinators ($+29.08\%$), and student counselors ($+12.76\%$), while traditional building librarians were halved ($-54.39\%$).
 
 ```
            +-------------------------------------------------------+
@@ -107,9 +138,9 @@ AGGREGATE 10-YEAR STAFFING REALLOCATION (N = 28 DECLINING LEAs WITH UNCHANGED PL
          |                                                         |
          v                                                         v
 +----------------------------------+     +----------------------------------+
-|    CLASSROOM TEACHERS: -3.63%    |     |    SUPPORT STAFF: +9.41%         |
-|  Sticky downward due to grade    |     |  Aides, paraprofessionals, and   |
-|  and room minimums; PTR drops.   |     |  student services expand.        |
+|    CLASSROOM TEACHERS: -3.63%    |     |   PARAPROFESSIONALS: +8.64%      |
+|  Sticky downward due to grade    |     |   Special ed aides and support   |
+|  and room minimums; PTR drops.   |     |   personnel expand.              |
 +----------------------------------+     +----------------------------------+
 ```
 
@@ -125,11 +156,11 @@ Among the 8 districts that lost $>200$ students with unchanged plant:
 - **Paola (USD 368):** The *single* exception: lost $-11.39\%$ of students ($-225$), but aggressively reduced teaching staff by $-20.08\%$ ($-32.35$ FTE). Macro PTR rose from $12.27$ to **$13.60$**.
 
 > [!NOTE]
-> **Epistemic Conclusion for Job 1 [ROBUST ASSOCIATION]:** Districts that experience student enrollment loss without closing school facilities exhibit downward staffing stickiness. Classroom teaching positions contract at less than half the rate of enrollment loss, driving headline pupil/teacher ratios downward. Meanwhile, districts do not expand administrative overhead to protect buildings; administration contracts proportionally ($-9.8\%$), while non-teaching support personnel expand ($+9.4\%$).
+> **Epistemic Conclusion for Job 1 [ROBUST ASSOCIATION]:** Districts that experience student enrollment loss without closing school facilities exhibit downward staffing stickiness. Classroom teaching positions contract at less than half the rate of enrollment loss, driving headline pupil/teacher ratios downward. Meanwhile, districts do not expand administrative overhead to protect buildings; administration contracts proportionally ($-9.8\%$), while paraprofessionals and instructional support staff expand ($+8.6\%$).
 
 ---
 
-## 3. Job 2 — Curricular Breadth Staffing Thresholds in High Schools
+## 3. Job 2 — Curricular Breadth Staffing Dynamics in High Schools
 
 ### 3.1 Scale Groups and Advanced Course Offerings (CRDC 2023–24)
 Using the matched CRDC 2023–24 panel of 109 regular operating secondary high schools:
@@ -148,23 +179,29 @@ SECONDARY SCALE BANDS & STEM OFFERINGS (CRDC 2023–24, N = 109 REGULAR HIGH SCH
 ================================================================================================
 ```
 
-### 3.2 The High School Under 800 Subsample
+### 3.2 Audit of the Curricular Breadth Threshold in Small High Schools
 In high schools under 800 students ($N=49$):
 - **Campuses offering Calculus ($N=14$):** Average enrollment = $440.1$; Mean Teacher FTE = **$34.3$** (Median = $36.5$).
 - **Campuses NOT offering Calculus ($N=35$):** Average enrollment = $268.0$; Mean Teacher FTE = **$23.8$** (Median = $24.5$).
-- **The Curricular Threshold:** Sustaining an advanced elective like AP Calculus in a small high school requires a minimum faculty threshold of roughly **$\ge 35$ Teacher FTEs** (a staffing premium of **$+10.5$ FTEs** over non-offering schools). Below 30 FTEs, high schools cannot spare a certified math teacher for a low-enrollment single-period elective without creating unacceptably large class sizes in required courses (Algebra I and Geometry).
 
-### 3.3 Longitudinal Collapse of Advanced STEM in Small Schools
-Across six biennial CRDC waves (2013–14 to 2023–24), small high schools (<800 enrollment) have suffered a severe long-term erosion in advanced curricular breadth:
-- **SY 2013–14:** $69.4\%$ offered Calculus (25 of 36); $75.0\%$ offered Physics (27 of 36).
-- **SY 2015–16:** $60.0\%$ offered Calculus (21 of 35); $82.9\%$ offered Physics (29 of 35).
-- **SY 2017–18:** $46.5\%$ offered Calculus (20 of 43); $62.8\%$ offered Physics (27 of 43).
-- **SY 2020–21:** $42.9\%$ offered Calculus (18 of 42); $54.8\%$ offered Physics (23 of 42).
-- **SY 2021–22:** $32.6\%$ offered Calculus (15 of 46); $67.4\%$ offered Physics (31 of 46).
-- **SY 2023–24:** **$28.6\%$ offered Calculus (14 of 49)**; $53.1\%$ offered Physics (26 of 49).
+> [!CAUTION]
+> **Threshold Retraction:** An initial hypothesis postulated a strict minimum faculty threshold of $\ge 35$ FTE for offering Calculus. The empirical audit soundly **retracts** this hard boundary:
+> - The smallest regular high school offering Calculus in 2023–24 was **Drexel High School** with only **$15.63$ Teacher FTE** (enrollment 85).
+> - Exactly **7 of the 14 offering schools (50%)** operated with fewer than 35 Teacher FTEs, and **5 of 14 (36%)** operated with fewer than 30 Teacher FTEs.
+> 
+> Rather than a deterministic mechanical threshold, school scale provides the budgetary capacity to support single-period singleton courses without forcing unviable section sizes in required courses.
+
+### 3.3 Longitudinal Erosion of Advanced STEM: The Matched Cohort Panel
+Across the unstratified sample, the proportion of small high schools (<800 enrollment) offering Calculus declined from $69.4\%$ (25 of 36) in 2013–14 to $28.6\%$ (14 of 49) in 2023–24. 
+
+To ensure this was not an artifact of new small charter or alternative schools entering the sample, the Observatory constructed a **balanced matched cohort** of the **28 regular high schools under 800 students** that were open and operating in both 2013–14 and 2023–24:
+- **SY 2013–14 Offering Rate:** **$67.9\%$** (19 of 28 schools offered Calculus).
+- **SY 2023–24 Offering Rate:** **$35.7\%$** (10 of 28 schools offered Calculus).
+- **Within-School Trajectory:** **12 high schools dropped Calculus**, while only **3 schools added it** (net loss of 9 offering campuses).
+- In Physics, offerings among these 28 matched campuses remained relatively stable ($67.9\% \to 64.3\%$, 19 to 18 schools).
 
 > [!IMPORTANT]
-> **Epistemic Finding for Job 2 [DESCRIPTIVE FACT & LONGITUDINAL TREND]:** Over the past decade, the percentage of Kansas City small high schools offering Calculus has plummeted by more than half ($69.4\% \to 28.6\%$). The primary constraint is not lack of student interest, but the fixed staffing cost: small faculties cannot absorb single-period singleton electives without overwhelming core general-education sections.
+> **Epistemic Finding for Job 2 [DESCRIPTIVE FACT & LONGITUDINAL TREND]:** Even within a constant, matched cohort of small regular high schools, advanced mathematics offerings contracted by nearly half ($67.9\% \to 35.7\%$). In small faculties, preserving baseline teacher allocations across core statutory subjects under tightening labor constraints often requires shedding low-enrollment advanced electives.
 
 ---
 
@@ -215,15 +252,15 @@ URBAN CORE STAFFING DYNAMICS: KCPS VS. JACKSON COUNTY CHARTERS (K-12 HEADCOUNT)
 ================================================================================================
 ```
 
-### 5.2 Marginal Elasticity of Charter Hiring
-- Net student growth in Jackson County charters: $+2,955$ students.
-- Net teacher additions in Jackson County charters: $+470.2$ FTE.
-- **Marginal Hiring Ratio:**
+### 5.2 Net Hiring Ratio of Charter Expansion
+- Net student growth in Jackson County charters: $+2,955$ students ($+29.02\%$).
+- Net teacher additions in Jackson County charters: $+470.2$ FTE ($+59.50\%$).
+- **Endpoint Hiring Ratio:**
 
-$$\text{Marginal Elasticity} = \frac{\Delta \text{Students}}{\Delta \text{Teachers}} = \frac{2,955}{470.2} = \mathbf{6.28 \text{ students per added teacher FTE}}$$
+$$\text{Net Expansion Ratio} = \frac{\Delta \text{Students}}{\Delta \text{Teachers}} = \frac{2,955}{470.2} = \mathbf{6.28 \text{ net students per added teacher FTE}} \quad (0.1591 \text{ FTE/student})$$
 
 > [!NOTE]
-> **Epistemic Finding for Job 4 [ROBUST ASSOCIATION]:** Contrary to common assumptions that charter schools operate "leaner" teacher models to extract operating margins, Jackson County charters have expanded their instructional staff at more than double the rate of enrollment growth ($+59.5\%$ vs. $+29.0\%$). Consequently, charter macro pupil/teacher ratios ($10.42$) are substantially lower than KCPS ($12.92$), and charters hired 1 full-time classroom teacher for every 6.3 net students gained.
+> **Epistemic Finding for Job 4 [ROBUST ASSOCIATION]:** Contrary to common assumptions that charter schools operate "leaner" teacher models to extract operating margins, Jackson County charters expanded their instructional staff at more than double the rate of enrollment growth ($+59.5\%$ vs. $+29.0\%$). Consequently, charter macro pupil/teacher ratios ($10.42$) are substantially lower than KCPS ($12.92$), and charters added 1 full-time classroom teacher for every 6.3 net students gained over the decade. We note this is an aggregate endpoint expansion ratio across 20 operating charters, not a causal student-flow elasticity from individual student microdata.
 
 ---
 
@@ -276,12 +313,12 @@ Across all six CRDC waves, the Algebra I staffing wedge has remained consistentl
 | :--- | :--- | :--- | :--- |
 | **CL-TCH-001** | Across 77 regional districts, campus-sum teacher FTE reconciles with LEA total reported teachers within $+2.13\%$ ($+518.5$ FTE). | `[DESCRIPTIVE FACT]` | Full NCES CCD SY 2024–25 campus and LEA panel audit. |
 | **CL-TCH-002** | Missouri campus teacher reports include Pre-K teachers ($455.4$ FTE), whereas Kansas LEA totals exceed campus sums by $+455.3$ FTE due to centralized/itinerant staff. | `[DESCRIPTIVE FACT]` | State DOE administrative reporting rules and cross-file reconciliation. |
-| **CL-TCH-003** | The raw NCES CCD 2015–16 Kansas data contains an artificial $-2,311$ teacher FTE drop due to non-reporting in Olathe and Gardner Edgerton. | `[DATA LIMITATION]` | Verified missing values in CCD 2015–16 files vs. continuous KSDE records. |
-| **CL-TCH-004** | In 28 declining districts with unchanged school counts, classroom teachers contracted by only $-3.63\%$ against an $-8.33\%$ enrollment loss. | `[ROBUST ASSOCIATION]` | Longitudinal Balanced 75 cohort tracking across 11 years. |
-| **CL-TCH-005** | Operating secondary high schools under 800 students require a faculty threshold of $\ge 35$ FTE to offer Calculus. | `[ROBUST ASSOCIATION]` | Cross-sectional CRDC 2023–24 analysis of 49 small high schools. |
-| **CL-TCH-006** | The share of small Kansas City high schools offering Calculus collapsed from $69.4\%$ in 2013–14 to $28.6\%$ in 2023–24. | `[DESCRIPTIVE FACT]` | Multi-wave matched CRDC high school panel ($N=587$ school-waves). |
+| **CL-TCH-003** | The raw NCES CCD 2015–16 Kansas data contains an artificial $-2,311$ teacher FTE drop due to non-reporting in Olathe (`2010140`) and Gardner Edgerton (`2006420`). | `[DATA LIMITATION]` | Verified missing values in CCD 2015–16 files vs. continuous KSDE records. |
+| **CL-TCH-004** | In 28 declining districts with unchanged school counts, classroom teachers contracted by only $-3.63\%$ against an $-8.33\%$ enrollment loss ($-3.26\%$ in the 25 strictly identical campus ID cohort). | `[ROBUST ASSOCIATION]` | Longitudinal Balanced 75 cohort tracking across 11 years with multi-specification sensitivity analysis. |
+| **CL-TCH-005** | Operating secondary high schools under 800 students exhibit scale-dependent offering probabilities for Calculus (21.9% <400 to 41.2% 400–799), but strict $\ge 35$ FTE thresholds are retracted (campuses offer as low as 15.6 FTE; 50% are <35 FTE). | `[ROBUST ASSOCIATION]` | Cross-sectional CRDC 2023–24 analysis of 49 small regular high schools. |
+| **CL-TCH-006** | In a balanced matched cohort of 28 regular high schools under 800 students present in both 2013–14 and 2023–24, Calculus offerings dropped from $67.9\%$ (19/28) to $35.7\%$ (10/28), with 12 schools dropping and 3 adding. | `[DESCRIPTIVE FACT]` | Balanced longitudinal matched CRDC high school panel. |
 | **CL-TCH-007** | Districts did not cut kindergarten teachers during the Fall 2020 enrollment shock; staffing increased by $+3.67\%$. | `[DESCRIPTIVE FACT]` | Balanced 75 LEA longitudinal staff file audit. |
-| **CL-TCH-008** | Jackson County charters expanded teaching staff by $+59.5\%$, hiring 1 teacher FTE per 6.28 net students gained. | `[ROBUST ASSOCIATION]` | Longitudinal urban core panel of KCPS and 22 charter LEAs. |
+| **CL-TCH-008** | Jackson County charters expanded teaching staff by $+59.5\%$, with a 10-year net addition ratio of 1 teacher FTE per 6.28 net students gained. | `[ROBUST ASSOCIATION]` | Longitudinal urban core panel of KCPS and 20 charter LEAs. |
 | **CL-TCH-009** | Macro school pupil/teacher ratio mechanically understates core high school class sizes by $+3.5$ to $+4.5$ students. | `[ROBUST ASSOCIATION]` | CRDC 2023–24 matched course class size analysis ($N=109$). |
 | **CL-TCH-010** | High teacher roster loads cause student achievement deficits in secondary schools. | `[HYPOTHESIS / UNVERIFIED]` | *Jenkins v. Missouri* evidentiary record established this is an organizational resource condition, not a direct causal guarantee. |
 
@@ -291,6 +328,6 @@ Across all six CRDC waves, the Algebra I staffing wedge has remained consistentl
 
 The visual evidence packet for `EDU-003` comprises three newly produced high-resolution graphics, active in `dashboard/` and copied to the Observatory artifacts directory:
 
-1. **Figure 12 (`fig12_kc_vs_us_teacher_trajectory.png`):** Longitudinal Teacher FTE Trajectories (Kansas City vs. United States, 2014–15 to 2024–25). Documents the $+8.88\%$ adjusted regional teacher expansion, contrasts it with national growth ($+2.16\%$), and explicitly flags the artificial 2015–16 Kansas reporting break.
-2. **Figure 13 (`fig13_fixed_plant_staffing_stickiness.png`):** Fixed-Plant Staffing Stickiness in Declining Districts. Illustrates the $-3.63\%$ downward stickiness of teachers vs. $-8.33\%$ enrollment loss across 28 districts, the lockstep $-9.78\%$ contraction of administrators, and the $+9.41\%$ expansion of non-teaching support staff.
-3. **Figure 14 (`fig14_secondary_staffing_wedge.png`):** The Secondary Staffing Wedge. Illustrates the $+3.5$ to $+4.5$ student gap between macro school PTR ($14.74$) and core course class sizes (Algebra I: $19.28$), and shows the 10-year longitudinal persistence of this wedge across all six CRDC waves.
+1. **Figure 12 (`fig12_kc_vs_us_teacher_trajectory.png`):** Longitudinal Teacher FTE Trajectories (Kansas City vs. United States, 2014–15 to 2024–25). Documents the $+8.88\%$ adjusted regional teacher expansion, contrasts it with national growth ($+2.16\%$), and explicitly flags the artificial 2015–16 Kansas reporting break alongside the verified KSDE interpolation. Located at [Figure 12](../../dashboard/fig12_kc_vs_us_teacher_trajectory.png).
+2. **Figure 13 (`fig13_fixed_plant_staffing_stickiness.png`):** Fixed-Plant Staffing Stickiness in Declining Districts. Illustrates the $-3.63\%$ downward stickiness of classroom teachers vs. $-8.33\%$ enrollment loss across 28 districts, the lockstep $-9.78\%$ contraction of administrators, and the $+9.41\%$ expansion of total district staff (+8.64% paraprofessionals). Located at [Figure 13](../../dashboard/fig13_fixed_plant_staffing_stickiness.png).
+3. **Figure 14 (`fig14_secondary_staffing_wedge.png`):** The Secondary Staffing Wedge. Illustrates the $+3.5$ to $+4.5$ student gap between macro school PTR ($14.74$) and core course class sizes (Algebra I: $19.28$), and shows the 10-year longitudinal persistence of this wedge across all six CRDC waves. Located at [Figure 14](../../dashboard/fig14_secondary_staffing_wedge.png).

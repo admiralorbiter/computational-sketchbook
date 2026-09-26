@@ -10,10 +10,10 @@ $$\mathbf{SOURCE} \ne \mathbf{FIELD} \ne \mathbf{OPERATIONALIZATION} \ne \mathbf
 
 Contemporary public education research and policy reporting routinely collapse these five distinct epistemic layers together:
 - A CSV file downloaded from the National Center for Education Statistics is a **Source Artifact**.
-- `TEACHERS_FTE` or `MEMBER` is a **Raw Field**.
+- `TEACHERS` or `MEMBER` is a **Raw Field**.
 - The specific formula, inclusion criteria, and grade adjustments applied to raw fields (e.g., NCES unadjusted school PTR vs. Observatory K–12 adjusted PTR vs. KSDE classroom teacher ratio) constitute an **Operationalization**.
-- The abstract, standardized construct of interest (e.g., `EDU-001 Pupil / Teacher Ratio` or `EDU-002 Student Enrollment`) is the **Measure**.
-- *"Kansas City public schools have expanded instructional capacity over the past decade"* is an interpretive **Claim** that can only be sustained after evaluating multiple converging measures, staffing distributions, bell schedules, and accommodation loads.
+- The abstract, standardized construct of interest (e.g., `EDU-001 Pupil / Teacher Ratio`, `EDU-002 Student Enrollment`, `EDU-003 Reported Classroom Teacher FTE`) is the **Measure**.
+- *"Kansas City public schools expanded instructional capacity over the past decade"* is an interpretive **Claim** that can only be evaluated after examining multiple converging measures, staffing distributions, bell schedules, and accommodation loads.
 
 When these layers are collapsed, empirical investigations devolve into fishing expeditions—running correlation matrices across hundreds of raw columns before establishing what the columns actually capture. 
 
@@ -38,8 +38,8 @@ flowchart TD
 
     subgraph M["4. DERIVED MEASURE"]
         M1["<b>EDU-001: Pupil / Teacher Ratio</b><br/><i>Abstract Staffing Density Construct</i>"]
-        M2["<b>EDU-002: Student Enrollment</b>"]
-        M3["<b>EDU-003: Classroom Teacher FTE</b>"]
+        M2["<b>EDU-002: Student Headcount Enrollment</b>"]
+        M3["<b>EDU-003: Reported Classroom Teacher FTE</b>"]
     end
 
     subgraph C["5. EMPIRICAL CLAIM"]
@@ -107,17 +107,17 @@ All work in this repository adheres to ten foundational principles:
 7. **Exploratory correlations generate hypotheses; they do not confirm them.** Cross-measure exploratory correlations are diagnostic tools for finding interesting phenomena to investigate, never proof of causation.
 8. **Prefer multiple independent measurements of the same latent phenomenon.** Triangulate administrative censuses (e.g., CCD) with teacher sample surveys (e.g., NTPS/SASS) and course microdata (e.g., CRDC).
 9. **Dashboards display evidence; they do not turn descriptive measures into scores.** Avoid composite school quality indexes, arbitrary rankings, or punitive normative metrics. Present clear, contextual evidence.
-10. **It is acceptable for a measure investigation to end with *"this is not useful."*** Discarding a misleading or un-salvageable variable is a scientific victory, not a failure.
+10. **A finding is not frozen until the registry, canonical dossier, README, figures, and analysis memo all agree.** Discarding a misleading or un-salvageable variable, or tightening an empirical claim, is a scientific victory.
 
 ---
 
-## 4. Repository Architecture
+## 4. Repository Architecture & Upstream Dependencies
 
 ```text
 2026-09-26-education-data-observatory/
 ├── README.md                      # Observatory manifesto, architecture, and principles
 ├── registry/                      # Machine-readable registry ledgers
-│   ├── measures.csv               # Master catalog of education measures
+│   ├── measures.csv               # Master catalog of education measures (canonical names/IDs)
 │   ├── operationalizations.csv    # Concrete formula and universe implementations
 │   ├── sources.csv                # Master catalog of external data sources
 │   └── relationships.csv          # Measurement graph edge list (inputs, outputs, models)
@@ -128,21 +128,28 @@ All work in this repository adheres to ten foundational principles:
 │   ├── EDU-001-pupil-teacher-ratio/
 │   │   └── README.md              # Calibration specimen dossier for PTR
 │   ├── EDU-002-student-enrollment/
+│   │   └── README.md              # Audited and frozen dossier for Student Headcount Enrollment
 │   └── EDU-003-total-teacher-fte/
+│       └── README.md              # Audited dossier for Reported Classroom Teacher FTE
 ├── sources/                       # Documentation and audit dossiers for external data sources
-│   ├── nces-ccd/
-│   ├── crdc/
-│   ├── ntps/
-│   ├── mo-dese/
-│   └── ksde/
+│   ├── nces-ccd/README.md         # NCES Common Core of Data source dossier
+│   ├── crdc/README.md             # Civil Rights Data Collection source dossier
+│   ├── ntps/README.md             # National Teacher and Principal Survey source dossier
+│   ├── mo-dese/README.md          # Missouri DESE administrative register dossier
+│   └── ksde/README.md             # Kansas State Dept of Education register dossier
 ├── data/                          # Segregated data storage
+│   ├── upstream_artifacts.csv     # Cryptographic audit ledger linking validated upstream panels
 │   ├── raw/                       # Immutable external downloads (by source and year)
 │   ├── interim/                   # Cleaned, standardized tabular intermediate files
 │   └── processed/                 # Validated measure extractions
 ├── analysis/                      # Cross-measure analyses
-│   └── cross-measure/             # Relational and multivariate explorations consuming measures
+│   ├── cross-measure/             # Relational and multivariate explorations consuming measures
+│   └── archive/                   # Superseded or diagnostic exploration scripts
 └── dashboard/                     # Downstream visualization views over the registry
 ```
+
+### Upstream Data Architecture
+To prevent duplicating gigabytes of raw federal and state files across sibling sketchbook projects, the Observatory formalizes its data dependencies via [`data/upstream_artifacts.csv`](data/upstream_artifacts.csv). Each validated upstream panel ingested from the companion Kansas City Education Capacity Study (`2026-09-23-kc-education-capacity`) is cryptographically registered with its producing script, schema version, SHA-256 hash, and consuming measure IDs.
 
 ---
 
@@ -153,10 +160,14 @@ Rather than a static directory of analysis scripts, the Observatory constructs a
 ```text
 EDU-001: Pupil / Teacher Ratio
   ├── Derived From (Numerator):   EDU-002 (Student Headcount Enrollment)
-  ├── Derived From (Denominator): EDU-003 (Total Teacher FTE)
-  ├── Contrasts With:             EDU-004 (Classroom Teacher FTE) -> isolates Specialist Denominator Wedge (Δ1)
+  ├── Derived From (Denominator): EDU-003 (Reported Classroom Teacher FTE)
+  ├── Contrasts With:             EDU-004 (State Classroom Teacher FTE [Disaggregated]) -> isolates Specialist Wedge (Δ1)
   ├── Multiplied By:              Schedule Planning Multiplier (φ = P_student / P_teacher) -> isolates Planning Wedge (Δ2)
-  └── Triangulated Against:       EDU-006 (Section Enrollment) & EDU-007 (Student-Weighted Class Size)
+  ├── Triangulated Against:       EDU-006 (Course Student Enrollment)
+  ├── Aggregated Across:          EDU-011 (Course Class Count)
+  ├── Benchmarked Against:        EDU-012 (Derived School-Course Mean Class Size)
+  ├── Survey Contrasted With:     EDU-007 (Teacher-Reported Average Class Size)
+  └── Exposure Estimand:          EDU-014 (Student-Weighted Class Size Exposure)
 ```
 
 By decoupling measures from individual projects, future research investigations do not need to re-download or re-audit standard educational metrics. When investigating teacher turnover, instructional salary allocations, or school accountability ratings, existing validated measures (`EDU-001`, `EDU-002`, `EDU-003`, etc.) are consumed directly from the registry.
@@ -172,15 +183,25 @@ Key empirical foundations inherited from that work include:
 - The **Specialist Denominator Wedge** ($\Delta_1 \approx +2.7$ students/teacher) documented through state personnel role reconciliations.
 - The **Schedule Capacity Identity** ($\phi = P_{\text{student}} / P_{\text{teacher}} = 1.400$), demonstrating how collective bargaining planning periods expand required staffing by $+40\%$.
 - The historical judicial precedent (*Jenkins v. Missouri*, 1985) establishing that federal desegregation courts rejected aggregate PTR in favor of daily contact load caps ($\le 125$).
-- The **Student Complexity Panel**, documenting surging Section 504 accommodation burdens and chronic absenteeism friction.
+- The **Student Complexity Panel**, documenting Section 504 accommodation burdens and chronic absenteeism friction.
 
 ---
 
-## 7. Project Roadmap
+## 7. Project Roadmap & Milestone Log
 
 - **Task 001 (Completed):** Scaffold the Education Data Observatory repository architecture, establish the 10 Research Principles, author standard dossier templates (`measure_dossier.md`, `source_dossier.md`), initialize machine-readable registry ledgers (`measures.csv`, `sources.csv`, `relationships.csv`), and author the initial calibration dossier for `EDU-001` (Pupil / Teacher Ratio).
 - **Task 002 & 002B (Completed):** Deep-dive review and epistemic audit of `EDU-001 Pupil/Teacher Ratio`. Created `registry/operationalizations.csv`, audited the 14-measure registry, decoupled generic templates from PTR specifics, established the 4-tier comparison universe, added Figure 1–3 visual evidence packet with explicit provenance, and updated interactive visualizer.
-- **Task 003 (In Progress):** Deep investigation of the foundational components of capacity:
-  - **`EDU-002 Student Headcount Enrollment` (Completed & Audited):** Audited fall membership semantics, registered 5 operationalizations, uncovered the Central Aggregation Discrepancy (+2,445 unassigned students in KC metro), documented the 26 zero-enrollment CTE campuses, established the 4-tier universe, and published Figures 4, 5, and 6.
-  - **`EDU-003 Reported Classroom Teacher FTE` (Next):** Empirical audit of reported classroom teacher FTE in NCES CCD, investigating reporting semantics, non-fiscal staff categories, and itinerant vs. building assignments.
-- **Task 004:** Author source dossiers for `nces-ccd`, `crdc`, `mo-dese`, and `ksde`.
+- **Task 003, 003B, 003C, 003D, 003E (Completed & Frozen):** Comprehensive empirical audit of `EDU-002 Student Headcount Enrollment`:
+  - Resolved the geographic universe boundary: established the **+1,472 regional gap** across the 77 fully-regional LEAs, with +973 additional discrepancy arising from two non-geographic statewide agencies (correction of the obsolete +2,445 claim).
+  - Documented kindergarten pipeline shock: Fall 2020 dropped $-11.43\%$, accounting for $36.9\%$ of the regional drop; 10-year Grades 1–12 enrollment remained net positive (+0.10%), while Kindergarten dropped $-9.14\%$.
+  - Spatial stability: Metro enrollment-weighted centroid shifted only $0.32$ miles ($1,686.5$ feet), disproving suburban centrifugal flight.
+  - Published Figures 4 through 11 in [`dashboard/`](dashboard/). Status: `AUDITED / FROZEN`.
+- **Task 004 & 004A (In Progress / Auditing):** Empirical audit and stabilization of `EDU-003 Reported Classroom Teacher FTE`:
+  - Reconciled Campus Sum ($23,820$ FTE) vs LEA reported totals across 77 regional districts.
+  - Audited the 2015–16 Kansas CCD non-reporting artifact: Olathe (`LEAID 2010140`) and Gardner Edgerton (`LEAID 2006420`) missing $-2,311$ FTE.
+  - Audited fixed-plant staffing stickiness across 28 declining districts with unchanged school counts.
+  - Retracted unsupported $\ge 35$ FTE Calculus threshold; documented association and matched-cohort drop from $67.9\%$ to $35.7\%$.
+  - Quantified the Secondary Staffing Wedge across 6 CRDC waves ($+3.5$ to $+4.5$ students).
+  - Published Figures 12, 13, 14 in [`dashboard/`](dashboard/). Status: `IN PROGRESS / AUDITING`.
+- **Task 005 (Upcoming):** Re-audit `EDU-001 Pupil/Teacher Ratio` synthesizing audited `EDU-002` and `EDU-003` foundations.
+- **Task 006 (Upcoming):** Scaffold `EDU-005 Paraprofessional FTE`.

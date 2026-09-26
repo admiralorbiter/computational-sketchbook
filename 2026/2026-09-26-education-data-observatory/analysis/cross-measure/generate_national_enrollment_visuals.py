@@ -6,6 +6,7 @@ Figure 8: Kansas City School Size in National Context by Grade Band
 
 import os
 import shutil
+from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -21,7 +22,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 KC_DIR = os.path.join(os.path.dirname(BASE_DIR), "2026-09-23-kc-education-capacity")
 
 output_dir = os.path.join(BASE_DIR, "dashboard")
-artifact_dir = r"C:\Users\admir\.gemini\antigravity\brain\341419bd-5669-4622-8d51-d6eecec301ff"
+artifact_env = os.environ.get("ANTIGRAVITY_ARTIFACT_DIR")
+artifact_dir = Path(artifact_env) if artifact_env and Path(artifact_env).exists() else None
 os.makedirs(output_dir, exist_ok=True)
 
 # Data paths
@@ -100,7 +102,8 @@ plt.subplots_adjust(top=0.88, bottom=0.22, left=0.10, right=0.95)
 fig7_path = os.path.join(output_dir, "fig07_kc_vs_us_enrollment_trajectory.png")
 plt.savefig(fig7_path)
 plt.close()
-shutil.copy(fig7_path, os.path.join(artifact_dir, "fig07_kc_vs_us_enrollment_trajectory.png"))
+if artifact_dir:
+    shutil.copy(fig7_path, artifact_dir / "fig07_kc_vs_us_enrollment_trajectory.png")
 
 # -------------------------------------------------------------
 # FIGURE 8: BENCHMARK COMPARISON
@@ -164,6 +167,7 @@ plt.subplots_adjust(top=0.82, bottom=0.18, left=0.06, right=0.97, wspace=0.15)
 fig8_path = os.path.join(output_dir, "fig08_kc_school_size_national_context.png")
 plt.savefig(fig8_path)
 plt.close()
-shutil.copy(fig8_path, os.path.join(artifact_dir, "fig08_kc_school_size_national_context.png"))
+if artifact_dir:
+    shutil.copy(fig8_path, artifact_dir / "fig08_kc_school_size_national_context.png")
 
 print("Figures 7 and 8 successfully generated and copied to dashboard and artifact directories!")

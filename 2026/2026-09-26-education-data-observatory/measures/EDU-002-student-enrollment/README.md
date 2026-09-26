@@ -296,7 +296,7 @@ Mandatory checklist executed against KC Metropolitan Universe (SY 2024–25, $N 
 The Observatory maintains five visual artifacts for `EDU-002`, establishing its institutional distribution, aggregation dynamics, longitudinal history, and national benchmark context:
 
 ### Figure 4: Campus Institutional Scale — School Size Distributions by Grade Band
-![Figure 4: Campus Institutional Scale](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-26-education-data-observatory/dashboard/fig04_school_size_distribution.png)
+![Figure 4: Campus Institutional Scale](../../dashboard/fig04_school_size_distribution.png)
 - **Classification:** `DESCRIPTIVE OBSERVATION`
 - **Purpose:** Document organizational scale variance across grade levels.
 - **Source:** NCES CCD Public School Universe Directory File (SY 2024–25). Excludes 26 zero-membership facilities.
@@ -305,7 +305,7 @@ The Observatory maintains five visual artifacts for `EDU-002`, establishing its 
 ---
 
 ### Figure 5: The LEA–School Membership Reconciliation Gap — Where Are the Students?
-![Figure 5: LEA-School Membership Reconciliation Gap](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-26-education-data-observatory/dashboard/fig05_campus_vs_lea_enrollment_gap.png)
+![Figure 5: LEA-School Membership Reconciliation Gap](../../dashboard/fig05_campus_vs_lea_enrollment_gap.png)
 - **Classification:** `DESCRIPTIVE OBSERVATION`
 - **Purpose:** Expose the empirical gap between district-level membership and the sum of physical school building rosters across the 77 fully regional districts.
 - **Source:** NCES CCD LEA Survey vs. School Universe Survey (SY 2024–25).
@@ -314,7 +314,7 @@ The Observatory maintains five visual artifacts for `EDU-002`, establishing its 
 ---
 
 ### Figure 6: 11-Year Regional Enrollment Trajectory — The Fall 2020 Drop & Post-Pandemic Plateau
-![Figure 6: 11-Year Enrollment Trajectory](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-26-education-data-observatory/dashboard/fig06_longitudinal_enrollment_trajectory.png)
+![Figure 6: 11-Year Enrollment Trajectory](../../dashboard/fig06_longitudinal_enrollment_trajectory.png)
 - **Classification:** `DESCRIPTIVE OBSERVATION`
 - **Purpose:** Document regional public school enrollment volume across fully-regional districts from SY 2014–15 to SY 2024–25, exposing both the Dynamic Fully Regional series and the Balanced 75-LEA Cohort.
 - **Source:** Audited 11-Year NCES CCD LEA Longitudinal Panel (`kc_lea_capacity_long_2014_15_2024_25.csv`).
@@ -323,7 +323,7 @@ The Observatory maintains five visual artifacts for `EDU-002`, establishing its 
 ---
 
 ### Figure 7: Regional vs. National K–12 Enrollment Trajectories (Indexed to 2014–15 = 100)
-![Figure 7: Regional vs National Trajectory](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-26-education-data-observatory/dashboard/fig07_kc_vs_us_enrollment_trajectory.png)
+![Figure 7: Regional vs National Trajectory](../../dashboard/fig07_kc_vs_us_enrollment_trajectory.png)
 - **Classification:** `CROSS-SOURCE / BENCHMARK COMPARISON`
 - **Purpose:** Benchmark Kansas City regional K–12 enrollment trends against the United States total public K–12 enrollment trajectory.
 - **Findings:**
@@ -336,7 +336,7 @@ The Observatory maintains five visual artifacts for `EDU-002`, establishing its 
 ---
 
 ### Figure 8: Kansas City School Size Distributions in National Context
-![Figure 8: School Size in National Context](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-26-education-data-observatory/dashboard/fig08_kc_school_size_national_context.png)
+![Figure 8: School Size in National Context](../../dashboard/fig08_kc_school_size_national_context.png)
 - **Classification:** `BENCHMARK COMPARISON`
 - **Purpose:** Position Kansas City campus sizes across elementary, middle, and high school grade bands within the national distribution.
 - **Findings:**
@@ -349,7 +349,7 @@ The Observatory maintains five visual artifacts for `EDU-002`, establishing its 
 ---
 
 ### Figure 9: The Post-Pandemic Divergence — Fall 2020 Shock & Recovery Typology
-![Figure 9: Recovery Typology](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-26-education-data-observatory/dashboard/fig09_post_2020_recovery_typology.png)
+![Figure 9: Recovery Typology](../../dashboard/fig09_post_2020_recovery_typology.png)
 - **Classification:** `DESCRIPTIVE OBSERVATION`
 - **Purpose:** Decompose the aggregate regional "plateau" into 4 distinct 5-year district trajectory categories across the Balanced 75-LEA Cohort.
 - **Findings:**
@@ -360,23 +360,23 @@ The Observatory maintains five visual artifacts for `EDU-002`, establishing its 
 ---
 
 ### Figure 10: Kindergarten as a Demographic Warning Indicator — The Contracting Pipeline
-![Figure 10: Kindergarten Pipeline](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-26-education-data-observatory/dashboard/fig10_kindergarten_pipeline_indicator.png)
+![Figure 10: Kindergarten Pipeline](../../dashboard/fig10_kindergarten_pipeline_indicator.png)
 - **Classification:** `DEMOGRAPHIC WARNING INDICATOR`
 - **Purpose:** Contrast the trajectory of incoming Kindergarten entry cohorts against continuing Grades 1–12 across the Balanced 75-LEA Cohort.
 - **Findings:**
   - In Fall 2020, Kindergarten collapsed by **$-11.43\%$** (-2,871 students), accounting for **$36.9\%$ of the entire regional enrollment drop**.
-  - Over the full decade, continuing Grades 1–12 are **net positive (+0.10%)**, while Kindergarten is down **$-9.14\%$** (-2,341 students). The entire 10-year regional decline is located in the incoming cohort pipeline.
+  - Over the full decade, continuing Grades 1–12 are **net positive (+0.10%)**, while Kindergarten is down **$-9.14\%$** (-2,341 students). This arithmetic concentration of decline in entry cohorts is an endpoint demographic fact; entry deferral (`H-ENR-001`) remains an unconfirmed hypothesis.
 - **Source:** NCES CCD LEA Survey (`enrollment_kg` vs `enrollment_k12`).
 - **Generator Script:** [`analysis/cross-measure/generate_task003d_visuals.py`](../../analysis/cross-measure/generate_task003d_visuals.py)
 
 ---
 
 ### Figure 11: Institutional Scale vs. Curricular Breadth — The Advanced Course Tradeoff
-![Figure 11: Curricular Breadth Tradeoff](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-26-education-data-observatory/dashboard/fig11_school_scale_vs_curricular_breadth.png)
+![Figure 11: Curricular Breadth Tradeoff](../../dashboard/fig11_school_scale_vs_curricular_breadth.png)
 - **Classification:** `CROSS-MEASURE BENCHMARK`
 - **Purpose:** Document how high school institutional scale affects the probability of offering advanced STEM coursework (Calculus, Physics, Chemistry) across 587 regular high school observations in CRDC.
 - **Findings:**
-  - What scale reliably purchases is curricular breadth: Calculus offering rates jump from **$32.6\%$** in high schools under 400 students to **$95.9\%$** in high schools over 1,600 students; Physics jumps from **$56.2\%$** to **$98.4\%$**.
+  - Larger high schools are consistently more likely to report advanced STEM offerings: Calculus offering rates jump from **$32.6\%$** in high schools under 400 students to **$95.9\%$** in high schools over 1,600 students; Physics jumps from **$56.2\%$** to **$98.4\%$**.
 - **Source:** Civil Rights Data Collection (CRDC Waves 2013–14 through 2023–24, regular operating high schools).
 - **Generator Script:** [`analysis/cross-measure/generate_task003d_visuals.py`](../../analysis/cross-measure/generate_task003d_visuals.py)
 
@@ -392,4 +392,6 @@ The Observatory maintains five visual artifacts for `EDU-002`, establishing its 
   - `2026-09-26 (Task 003)`: Initial measure audited and codified; reconciliation gap documented; 4-tier universe instantiated; Figures 4–6 generated.
   - `2026-09-26 (Task 003B)`: Semantic cleanup completed: ADA and funding FTE separated into proposed measures `EDU-015` and `EDU-016`; "compulsory" replaced with "grade-span"; 26 zero-membership schools audited into 4-part taxonomy; Missouri SB 727 transition and Kansas funding lookbacks documented; candidate hypotheses formalizing the Fall 2020 drop registered; Figures 7 and 8 added with national benchmarks; measure frozen.
   - `2026-09-26 (Task 003C)`: Geographic and longitudinal universe bugs resolved: isolated 2 statewide agencies (+973 students outside KC) from 77 fully-regional LEAs (+1,472 gap); replaced contaminated unfiltered panel with Dynamic Fully Regional series (321,228 $\to$ 318,883, -0.73%) and Balanced 75 Cohort (320,465 $\to$ 318,406, -0.64%); Figures 5, 6, 7 updated to calculate directly from data.
-  - `2026-09-26 (Task 003D)`: Second-pass enrollment analysis completed: 4-tier post-2020 recovery typology established; Kindergarten pipeline collapse identified (-9.1% KG vs +0.10% grades 1–12); geographic centroid immobility proven (-0.077 mi shift); physical plant immobility verified with NCESSCH IDs (77.8% of declining LEAs with same count kept 100% identical campuses); urban charter share audited at 48.5% with net public sector expansion; CRDC curricular breadth tradeoffs documented across 587 regular high schools; complexity associations stratified; Figures 9–11 added; EDU-002 declared genuinely exhausted; authorized transition to EDU-003.
+  - `2026-09-26 (Task 003D)`: Second-pass enrollment analysis completed: 4-tier post-2020 recovery typology established; Kindergarten pipeline collapse identified (-9.1% KG vs +0.10% grades 1–12); spatial stability audited: enrollment-weighted centroid moved 0.32 miles (1,686.5 feet), while average school distance from downtown KC moved -0.077 miles (-408.7 feet), confirming no net centrifugal flight; operating campus ID continuity audited with NCESSCH IDs (89.3% / 25 of 28 declining LEAs with unchanged operating counts kept 100% identical campus IDs, and remaining 3 reconfigured buildings); charter sector in KCPS + Jackson County charter LEAs audited at 48.46% (up from 41.51%), disproving a 1-for-1 substitution model, while individual student flows require microdata; CRDC curricular breadth tradeoffs documented across 587 regular high schools; complexity associations stratified; Figures 9–11 added; EDU-002 declared genuinely exhausted; authorized transition to EDU-003.
+  - `2026-09-26 (Task 004A)`: Synchronized canonical dossier with Task 003E final integrity audit: corrected residual kindergarten causal wording, centroid vs. distance disambiguation, charter microdata boundaries, and replaced absolute local image URIs with repository-relative paths. Status confirmed: AUDITED / FROZEN.
+

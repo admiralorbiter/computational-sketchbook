@@ -1,4 +1,7 @@
 """
+# [HISTORICAL / EXPLORATORY SCRIPT — TASK 003C]
+# Note: For canonical audited Task 003E findings, see measures/EDU-002-student-enrollment/README.md.
+
 Comprehensive exploration script for Task 003C:
 1. LEA-School Membership Reconciliation Gap audit (77 fully regional LEAs vs 2 statewide agencies)
 2. Longitudinal enrollment universes (dynamic fully-regional vs balanced 75-LEA vs unfiltered)

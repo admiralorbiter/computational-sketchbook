@@ -10,12 +10,17 @@ Empirical Investigation for EDU-003 Reported Classroom Teacher FTE
 - Part 7: Job 5 — Macro PTR (EDU-001 = EDU-002 / EDU-003) vs. Course Class Sizes (EDU-012)
 """
 
+# [HISTORICAL / EXPLORATORY SCRIPT — TASK 004]
+# Note: For canonical Task 004A audited calculations, see task004a_empirical_audit.py and generate_edu003_visuals.py.
+
 import os
+from pathlib import Path
 import pandas as pd
 import numpy as np
 
-BASE_DIR = r"c:\Users\admir\Github\computational-sketchbook"
-KC_DIR = os.path.join(BASE_DIR, "2026", "2026-09-23-kc-education-capacity")
+script_dir = Path(__file__).resolve().parent
+repo_dir = script_dir.parent.parent
+KC_DIR = repo_dir.parent / "2026-09-23-kc-education-capacity"
 
 sch_long = pd.read_csv(os.path.join(KC_DIR, "data", "processed", "kc_school_capacity_long_2014_15_2024_25.csv"))
 lea_long = pd.read_csv(os.path.join(KC_DIR, "data", "processed", "kc_lea_capacity_long_2014_15_2024_25.csv"))

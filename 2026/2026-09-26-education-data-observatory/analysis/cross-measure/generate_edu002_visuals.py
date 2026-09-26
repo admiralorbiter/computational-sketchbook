@@ -1,5 +1,6 @@
 import os
 import shutil
+from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -15,7 +16,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 KC_DIR = os.path.join(os.path.dirname(BASE_DIR), "2026-09-23-kc-education-capacity")
 
 output_dir = os.path.join(BASE_DIR, "dashboard")
-artifact_dir = r"C:\Users\admir\.gemini\antigravity\brain\341419bd-5669-4622-8d51-d6eecec301ff"
+artifact_env = os.environ.get("ANTIGRAVITY_ARTIFACT_DIR")
+artifact_dir = Path(artifact_env) if artifact_env and Path(artifact_env).exists() else None
 os.makedirs(output_dir, exist_ok=True)
 
 # Data paths
@@ -78,7 +80,8 @@ plt.subplots_adjust(top=0.88, bottom=0.18)
 fig4_path = os.path.join(output_dir, "fig04_school_size_distribution.png")
 plt.savefig(fig4_path)
 plt.close()
-shutil.copy(fig4_path, os.path.join(artifact_dir, "fig04_school_size_distribution.png"))
+if artifact_dir:
+    shutil.copy(fig4_path, artifact_dir / "fig04_school_size_distribution.png")
 
 # -------------------------------------------------------------
 # FIGURE 5: DESCRIPTIVE OBSERVATION (CORRECTED UNIVERSE)
@@ -129,7 +132,8 @@ plt.subplots_adjust(left=0.28, bottom=0.20, right=0.92, top=0.86)
 fig5_path = os.path.join(output_dir, "fig05_campus_vs_lea_enrollment_gap.png")
 plt.savefig(fig5_path)
 plt.close()
-shutil.copy(fig5_path, os.path.join(artifact_dir, "fig05_campus_vs_lea_enrollment_gap.png"))
+if artifact_dir:
+    shutil.copy(fig5_path, artifact_dir / "fig05_campus_vs_lea_enrollment_gap.png")
 
 # -------------------------------------------------------------
 # FIGURE 6: DESCRIPTIVE OBSERVATION (CORRECTED LONGITUDINAL UNIVERSES)
@@ -200,6 +204,7 @@ plt.subplots_adjust(bottom=0.22, top=0.88, left=0.10, right=0.95)
 fig6_path = os.path.join(output_dir, "fig06_longitudinal_enrollment_trajectory.png")
 plt.savefig(fig6_path)
 plt.close()
-shutil.copy(fig6_path, os.path.join(artifact_dir, "fig06_longitudinal_enrollment_trajectory.png"))
+if artifact_dir:
+    shutil.copy(fig6_path, artifact_dir / "fig06_longitudinal_enrollment_trajectory.png")
 
 print("Figures 4, 5, and 6 successfully generated and copied to artifact directory!")

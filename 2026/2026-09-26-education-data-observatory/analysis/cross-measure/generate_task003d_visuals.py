@@ -7,6 +7,7 @@ Figure 11: Institutional Scale vs. Curricular Breadth: Advanced STEM Course Offe
 
 import os
 import shutil
+from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -21,7 +22,8 @@ plt.rcParams['axes.linewidth'] = 0.8
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 KC_DIR = os.path.join(os.path.dirname(BASE_DIR), "2026-09-23-kc-education-capacity")
 output_dir = os.path.join(BASE_DIR, "dashboard")
-artifact_dir = r"C:\Users\admir\.gemini\antigravity\brain\341419bd-5669-4622-8d51-d6eecec301ff"
+artifact_env = os.environ.get("ANTIGRAVITY_ARTIFACT_DIR")
+artifact_dir = Path(artifact_env) if artifact_env and Path(artifact_env).exists() else None
 os.makedirs(output_dir, exist_ok=True)
 
 lea_long = pd.read_csv(os.path.join(KC_DIR, "data", "processed", "kc_lea_capacity_long_2014_15_2024_25.csv"))
@@ -110,7 +112,8 @@ plt.subplots_adjust(bottom=0.20, top=0.88, left=0.10, right=0.95)
 fig9_path = os.path.join(output_dir, "fig09_post_2020_recovery_typology.png")
 plt.savefig(fig9_path)
 plt.close()
-shutil.copy(fig9_path, os.path.join(artifact_dir, "fig09_post_2020_recovery_typology.png"))
+if artifact_dir:
+    shutil.copy(fig9_path, artifact_dir / "fig09_post_2020_recovery_typology.png")
 
 # ------------------------------------------------------------------------------
 # FIGURE 10: KINDERGARTEN AS A DEMOGRAPHIC WARNING INDICATOR
@@ -174,7 +177,8 @@ plt.subplots_adjust(bottom=0.22, top=0.88, left=0.10, right=0.95)
 fig10_path = os.path.join(output_dir, "fig10_kindergarten_pipeline_indicator.png")
 plt.savefig(fig10_path)
 plt.close()
-shutil.copy(fig10_path, os.path.join(artifact_dir, "fig10_kindergarten_pipeline_indicator.png"))
+if artifact_dir:
+    shutil.copy(fig10_path, artifact_dir / "fig10_kindergarten_pipeline_indicator.png")
 
 # ------------------------------------------------------------------------------
 # FIGURE 11: INSTITUTIONAL SCALE VS. CURRICULAR BREADTH (CRDC)
@@ -238,6 +242,7 @@ plt.subplots_adjust(bottom=0.20, top=0.88, left=0.08, right=0.95)
 fig11_path = os.path.join(output_dir, "fig11_school_scale_vs_curricular_breadth.png")
 plt.savefig(fig11_path)
 plt.close()
-shutil.copy(fig11_path, os.path.join(artifact_dir, "fig11_school_scale_vs_curricular_breadth.png"))
+if artifact_dir:
+    shutil.copy(fig11_path, artifact_dir / "fig11_school_scale_vs_curricular_breadth.png")
 
 print("Figures 9, 10, and 11 successfully generated and copied to artifact directory!")

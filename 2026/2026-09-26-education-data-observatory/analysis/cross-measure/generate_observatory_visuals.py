@@ -9,9 +9,15 @@ plt.rcParams['font.sans-serif'] = 'Helvetica, Arial, sans-serif'
 plt.rcParams['axes.edgecolor'] = '#cbd5e1'
 plt.rcParams['axes.linewidth'] = 0.8
 
-output_dir = r"c:\Users\admir\Github\computational-sketchbook\2026\2026-09-26-education-data-observatory\dashboard"
-artifact_dir = r"C:\Users\admir\.gemini\antigravity\brain\341419bd-5669-4622-8d51-d6eecec301ff"
-os.makedirs(output_dir, exist_ok=True)
+from pathlib import Path
+
+script_dir = Path(__file__).resolve().parent
+repo_dir = script_dir.parent.parent
+output_dir = repo_dir / "dashboard"
+output_dir.mkdir(parents=True, exist_ok=True)
+
+artifact_env = os.environ.get("ANTIGRAVITY_ARTIFACT_DIR")
+artifact_dir = Path(artifact_env) if artifact_env and Path(artifact_env).exists() else None
 
 # -------------------------------------------------------------
 # FIGURE 1: CROSS-SOURCE COMPARISON
@@ -78,7 +84,8 @@ plt.subplots_adjust(bottom=0.15)
 fig1_path = os.path.join(output_dir, "fig01_macro_ptr_vs_actual_class_size.png")
 plt.savefig(fig1_path)
 plt.close()
-shutil.copy(fig1_path, os.path.join(artifact_dir, "fig01_macro_ptr_vs_actual_class_size.png"))
+if artifact_dir:
+    shutil.copy(fig1_path, artifact_dir / "fig01_macro_ptr_vs_actual_class_size.png")
 
 # -------------------------------------------------------------
 # FIGURE 2: DESCRIPTIVE OBSERVATION
@@ -131,7 +138,8 @@ plt.subplots_adjust(bottom=0.15)
 fig2_path = os.path.join(output_dir, "fig02_kc_10yr_capacity_paradox.png")
 plt.savefig(fig2_path)
 plt.close()
-shutil.copy(fig2_path, os.path.join(artifact_dir, "fig02_kc_10yr_capacity_paradox.png"))
+if artifact_dir:
+    shutil.copy(fig2_path, artifact_dir / "fig02_kc_10yr_capacity_paradox.png")
 
 # -------------------------------------------------------------
 # FIGURE 3: MODEL / CALIBRATED CASE STUDY
@@ -184,6 +192,7 @@ plt.subplots_adjust(bottom=0.15)
 fig3_path = os.path.join(output_dir, "fig03_schedule_waterfall_decomposition.png")
 plt.savefig(fig3_path)
 plt.close()
-shutil.copy(fig3_path, os.path.join(artifact_dir, "fig03_schedule_waterfall_decomposition.png"))
+if artifact_dir:
+    shutil.copy(fig3_path, artifact_dir / "fig03_schedule_waterfall_decomposition.png")
 
 print("All 3 figures successfully updated with explicit visual provenance and classification standards!")
