@@ -8,7 +8,7 @@ A longitudinal, multi-layered empirical investigation into how externally funded
 
 In 2019, the Ewing Marion Kauffman Foundation initiated the **Real World Learning (RWL)** regional initiative across Greater Kansas City, aiming for every high school student to graduate with at least one **Market Value Asset (MVA)** by 2030 (work-based learning/internships, client-connected projects, industry-recognized credentials, dual college credit, or entrepreneurial experiences). The initiative provided substantial multi-year philanthropic implementation grants, technical assistance, cohort coaching, and intermediary support (via organizations such as PREP-KC).
 
-As specific district implementation grants reach their conclusion or transition to new phases, an essential institutional and organizational question emerges:
+As district implementation support changes, transitions, or eventually expires, an essential institutional and organizational question emerges. **The timing and terms of those changes are measured variables, not assumed facts; for Grandview C-4 they remain unresolved after Task 001.**
 
 $$\mathbf{PHILANTHROPY} \longrightarrow \mathbf{INCENTIVE} \longrightarrow \mathbf{ADOPTION} \overset{?}{\longrightarrow} \mathbf{INSTITUTIONALIZATION} \lor \mathbf{REBRANDING} \lor \mathbf{DECAY}$$
 
@@ -77,7 +77,7 @@ The project unfolds in structured phases starting with targeted case studies rep
 
 ```mermaid
 flowchart LR
-    P1["<b>Case 1: Grandview C-4</b><br/><i>Original Cohort 1 (2019-20)<br/>PREP-KC Partner<br/>South KC Microregion</i>"]
+    P1["<b>Case 1: Grandview C-4</b><br/><i>RWL Cohort 1 (current network lists 2020-21)<br/>PREP-KC Partner<br/>South KC Microregion</i>"]
     P2["<b>Case 2: Shawnee Mission</b><br/><i>Clean Grant End<br/>Board Documented 2024-25<br/>Final Kauffman Year</i>"]
     P3["<b>Regional Panel (34 Districts)</b><br/><i>Cross-District × Year Panel<br/>2018–2026 Matrix<br/>Event-Time Analysis</i>"]
 
@@ -85,8 +85,21 @@ flowchart LR
 ```
 
 ### Project Phasing
-- **Task 001**: Grandview C-4 Public Evidence Inventory (Establish baseline source taxonomy, verify public systems, reconstruct primary timeline).
+- **Task 001**: Grandview C-4 Public Evidence Inventory — **audited with acquisition gates open**. Source taxonomy, Simbli census, initial timeline, and public-system inventory exist; grant lifecycle, exact RWL evaluation artifacts, validated Board Brief corpus, and archived personnel snapshots remain Task 002 prerequisites.
 - **Task 002**: Automated Corpus Ingestion & Preservation (Agendas, Simbli packets, Board Briefs, Google Drive budgets, DESE MCDS data).
 - **Task 003**: Chronological Evidence Matrix Construction (Manual and semi-automated coding of primary events).
 - **Task 004**: Multi-Modal Governance Extraction (Transcribe audio/video recordings, extract item-level debate and votes).
 - **Task 005**: Comparative Institutionalization Metrics & Panel Scaling.
+
+---
+
+## 6. Task 001 Audit Finding
+
+The first-pass inventory successfully discovered the district information environment, but the audit identified four corrections that materially affect downstream analysis:
+
+1. **Grandview grant status is unresolved.** Current RWL network language still describes Cohort 1 districts, including Grandview, as receiving financial support. The study must establish district-specific award terms before using a post-grant treatment date.
+2. **The current strategic plan is 2024–2027, not 2022–2027.** A March 20, 2025 Board Brief reports that the Board approved the current plan on June 20, 2024.
+3. **The Edlio Board Brief category is contaminated.** It returns ordinary district news as well as Board Briefs. The harvester now validates content and writes rejected items separately.
+4. **Inventory status must describe files actually preserved.** The source registries now distinguish identified sources from archived artifacts and partial/contaminated collections.
+
+See `TASK_001_AUDIT.md` for the completion criteria and Task 002 gates.
