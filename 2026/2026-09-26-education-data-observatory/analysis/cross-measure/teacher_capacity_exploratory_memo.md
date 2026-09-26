@@ -1,4 +1,4 @@
-# Research Monograph: Instructional Labor Stock, Fixed-Plant Stickiness, and the Secondary Staffing Wedge
+# Research Monograph: Instructional Labor Stock, Downward Staffing Stickiness, and the Secondary Staffing Wedge
 
 **Education Data Observatory — Cross-Measure Empirical Memo (Task 004)**  
 **Date of Audit:** September 26, 2026  
@@ -11,11 +11,11 @@
 
 ## Executive Summary & Core Epistemic Distinctions
 
-This monograph executes the comprehensive empirical investigation and semantic audit of **`EDU-003 Reported Classroom Teacher FTE`**, transitioning it from `proposed` to `audited` status. Following the Observatory's foundational rule—**Source ≠ Field ≠ Operationalization ≠ Measure ≠ Claim**—this investigation addresses instructional labor not as an abstract budget line, but as a physical, organizational reality structured by school plant, master schedules, statutory grade reporting, and student enrollment shifts.
+This monograph executes the comprehensive empirical investigation and semantic audit of **`EDU-003 Reported Classroom Teacher FTE`**, transitioning it from `proposed` to `audited` status. Following the Observatory's foundational rule—**Source ≠ Field ≠ Operationalization ≠ Measure ≠ Claim**—this investigation addresses instructional labor not as an abstract budget line, but as an organizational reality structured by school facilities, master schedules, statutory grade reporting, and student enrollment shifts.
 
 Five key analytical jobs were executed using the integrated 11-year administrative panel and multi-wave CRDC microdata. The core empirical findings are:
 
-1. **Fixed-Plant Staffing Stickiness (`Job 1`):** In the 28 school districts that experienced enrollment declines while keeping their physical operating plant unchanged, classroom teaching staff contracted by only **$-3.63\%$ ($-136.3$ FTE)** despite an **$-8.33\%$ drop in K–12 enrollment ($-4,388$ students)**. School administrative personnel contracted in near-perfect lockstep with students (**$-9.78\%$**), while total district staff across all roles expanded (**$+9.41\%$, $+675.2$ FTE**), driven by increases in paraprofessionals ($+8.64\%$), instructional coordinators ($+29.08\%$), and student counselors ($+12.76\%$). Because teacher staffing was sticky downward across existing buildings, headline pupil/teacher ratios actually *decreased* from $14.02$ to $13.34$. This stickiness is robust across multiple sensitivity specifications (e.g., $-3.35\%$ teacher change in the 25 districts with 100% identical campus IDs).
+1. **Downward Staffing Stickiness (`Job 1`):** In the 28 school districts that experienced enrollment declines while keeping their net operating-school count unchanged, classroom teaching staff contracted by only **$-3.63\%$ ($-136.3$ FTE)** despite an **$-8.33\%$ drop in K–12 enrollment ($-4,388$ students)**. School administrative personnel contracted in near-perfect lockstep with students (**$-9.78\%$**), while total district staff across all roles expanded (**$+9.41\%$, $+675.2$ FTE**), driven by increases in paraprofessionals ($+8.64\%$), instructional coordinators ($+29.08\%$), and student counselors ($+12.76\%$). Because teacher staffing was sticky downward across existing facilities, headline pupil/teacher ratios actually *decreased* from $14.02$ to $13.34$. This stickiness is robust across sensitivity specifications (e.g., $-3.35\%$ teacher change vs. $-10.50\%$ enrollment change in the 25 districts with 100% identical campus NCESSCH ID sets).
 2. **Curricular Breadth Staffing Penalty (`Job 2`):** In secondary schools, school scale buys curricular offerings, not smaller classes. In high schools under 800 students, offering Advanced Placement / advanced STEM coursework (Calculus and Physics) requires substantial instructional scale. However, a strict $\ge 35$ FTE threshold is empirically retracted: in 2023–24, offering schools included faculties as small as $15.63$ FTE (Drexel High), with half of offering schools under 35 FTE. Crucially, a matched-cohort panel of 28 high schools under 800 students present in both 2013–14 and 2023–24 reveals that Calculus offerings collapsed from **$67.9\%$ (19 of 28)** down to **$35.7\%$ (10 of 28)**, with 12 schools dropping Calculus and only 3 adding it.
 3. **Kindergarten Staffing Resilience (`Job 3`):** When regional Kindergarten enrollment experienced an acute shock in Fall 2020 (dropping $-11.43\%$, $-2,871$ pupils), districts did *not* cut kindergarten teaching positions; reported Kindergarten FTE in the Balanced 75 actually *increased* by **$+3.67\%$ ($+115.2$ FTE)**, causing an immediate drop in primary pupil/teacher ratios. Over the 10-year span, total primary instructional labor expanded by **$+23.87\%$**.
 4. **Charter Staffing Elasticity (`Job 4`):** In the Kansas City urban core (KCPS + Jackson County independent charters), charter enrollment expanded by **$+29.02\%$ ($+2,955$ students)** while charter classroom teacher FTE surged by **$+59.50\%$ ($+470.2$ FTE)**. Charters hired at an endpoint ratio of **$1.0$ teacher FTE per $6.28$ additional students** ($0.1591$ FTE/student), operating at an average macro PTR of **$10.42$** in 2024–25, substantially lower than KCPS ($12.92$).
@@ -68,10 +68,10 @@ The apparent discrepancy between campus sums and LEA reports is entirely explain
 
 ---
 
-## 2. Job 1 — The Fixed-Plant Staffing Penalty in Declining Districts
+## 2. Job 1 — Downward Staffing Stickiness in Declining Districts
 
-### 2.1 Theoretical Framework: Physical Plant as a Staffing Anchor
-School district staffing models operate under structural step-functions dictated by physical plant. When a district loses 200 to 500 students, those students rarely depart from a single grade in a single school; they trickle out across dozens of classrooms across multiple facilities. Unless the school board votes to physically close and consolidate school buildings, every campus must maintain:
+### 2.1 Theoretical Framework: Operating Plant & School Scale as Staffing Anchors
+School district staffing models operate under structural step-functions dictated by the number of active operating school facilities. When a district loses 200 to 500 students, those students rarely depart from a single grade in a single school; they trickle out across dozens of classrooms across multiple facilities. Unless the school board votes to consolidate or close school buildings, every campus must maintain:
 1. At least one certified teacher per grade level (or course period).
 2. Specialized subject teachers (art, music, physical education, special education).
 3. A building principal, nurse, counselor, and clerical staff.
@@ -81,14 +81,13 @@ In Task 003D/003E, the Observatory identified **28 school districts** in the Bal
 ### 2.2 Empirical Audit Findings & Sensitivity Specifications
 Across these 28 districts, the 10-year reallocation of labor shows a profound structural divergence between instructional staff, administrative overhead, and non-teaching support staff. 
 
-To verify that this result is not driven by district reconfiguration, the Observatory evaluated three nested sensitivity specifications:
-1. **Specification 1 (All 28 Unchanged-Count Decliners):** All districts in the Balanced 75 experiencing negative net enrollment while maintaining the same total number of operating schools.
-2. **Specification 2 (25 Strictly Identical NCESSCH LEAs):** Restricting to the 25 districts whose active school NCESSCH ID sets remained 100% identical from 2014–15 to 2024–25 (excluding Kansas City KS USD 500, Louisburg, and Grandview C-4, which experienced administrative school ID turnover or campus restructuring).
-3. **Specification 3 (Physical-Plant Matched Facilities):** Confirming that all 28 districts operated in the exact same physical building footprint across the decade.
+To verify that this result is not driven by administrative reconfiguration or school turnover, the Observatory evaluated two nested specifications:
+1. **Specification 1 (All 28 Unchanged-Count Decliners):** All districts in the Balanced 75 experiencing negative net enrollment while maintaining the same total number of operating schools ($132$ schools).
+2. **Specification 2 (25 Strictly Identical NCESSCH LEAs):** Restricting to the 25 districts whose active school NCESSCH ID sets remained 100% identical from 2014–15 to 2024–25 (excluding Kansas City KS USD 500, Louisburg, and Grandview C-4, which experienced administrative school ID turnover or campus restructuring). This provides a stricter institutional-continuity test confirming the stickiness pattern is not an artifact of administrative school ID churn (without asserting physical building tracking).
 
 ```
 ====================================================================================================
-SENSITIVITY ANALYSIS: FIXED-PLANT DOWNWARD STAFFING STICKINESS (2014–15 TO 2024–25)
+SENSITIVITY ANALYSIS: DOWNWARD STAFFING STICKINESS IN DECLINING DISTRICTS (2014–15 TO 2024–25)
 ====================================================================================================
 Metric                       Specification 1 (N=28 LEAs)       Specification 2 (N=25 LEAs)
 ----------------------------------------------------------------------------------------------------
@@ -112,7 +111,7 @@ Examining clean, consistently reported personnel categories reveals the true rea
 
 ```
 ====================================================================================================
-CLEAN STAFF CATEGORY REALLOCATION (N = 28 DECLINING LEAs WITH UNCHANGED PLANT)
+CLEAN STAFF CATEGORY REALLOCATION (N = 28 DECLINING LEAs WITH UNCHANGED SCHOOL COUNT)
 ====================================================================================================
 Staff Category                   SY 2014–15      SY 2024–25      Net Change      % Change
 ----------------------------------------------------------------------------------------------------
@@ -134,7 +133,7 @@ The expansion of non-instructional labor was heavily concentrated in **paraprofe
 ```
            +-------------------------------------------------------+
            |       ENROLLMENT CONTRACTION: -8.33% (-4,388)         |
-           |             Unchanged Physical Plant (N=28)           |
+           |       Unchanged Operating-School Count (N=28)         |
            +-------------------------------------------------------+
                                       |
          +----------------------------+----------------------------+
@@ -148,7 +147,7 @@ The expansion of non-instructional labor was heavily concentrated in **paraprofe
 ```
 
 ### 2.3 Deconstruction of the Big 8 Decliners
-Among the 8 districts that lost $>200$ students with unchanged plant:
+Among the 8 districts that lost $>200$ students with unchanged operating-school counts:
 - **Fort Leavenworth (USD 207):** Lost $-21.67\%$ of students ($-378$), but maintained $+0.23\%$ teacher FTE ($125.3 \to 125.6$). Macro PTR plummeted from $13.92$ to **$10.88$**.
 - **Hogan Preparatory Academy:** Lost $-21.66\%$ of students ($-224$), but expanded teachers by $+6.20\%$ ($86.2 \to 91.5$). Macro PTR fell from $12.00$ to **$8.85$**.
 - **Grandview C-4:** Lost $-16.52\%$ of students ($-699$), cut teachers by $-9.36\%$ ($-26.0$ FTE). Macro PTR fell from $15.25$ to **$14.05$**.
@@ -332,5 +331,5 @@ Across all six CRDC waves, the Algebra I staffing wedge has remained consistentl
 The visual evidence packet for `EDU-003` comprises three newly produced high-resolution graphics, active in `dashboard/` and copied to the Observatory artifacts directory:
 
 1. **Figure 12 (`fig12_kc_vs_us_teacher_trajectory.png`):** Longitudinal Teacher FTE Trajectories (Kansas City vs. United States, 2014–15 to 2024–25). Documents the $+8.88\%$ adjusted regional teacher expansion, contrasts it with national growth ($+2.16\%$), and explicitly flags the artificial 2015–16 Kansas reporting break alongside the illustrative linear interpolation. Located at [Figure 12](../../dashboard/fig12_kc_vs_us_teacher_trajectory.png).
-2. **Figure 13 (`fig13_fixed_plant_staffing_stickiness.png`):** Fixed-Plant Staffing Stickiness in Declining Districts. Illustrates the $-3.63\%$ downward stickiness of classroom teachers vs. $-8.33\%$ enrollment loss across 28 districts, the lockstep $-9.78\%$ contraction of administrators, and the $+9.41\%$ expansion of total district staff (+8.64% paraprofessionals). Located at [Figure 13](../../dashboard/fig13_fixed_plant_staffing_stickiness.png).
+2. **Figure 13 (`fig13_fixed_plant_staffing_stickiness.png`):** Downward Staffing Stickiness in Declining Districts (Unchanged School Counts). Illustrates the $-3.63\%$ downward stickiness of classroom teachers vs. $-8.33\%$ enrollment loss across 28 districts with unchanged operating school counts, the lockstep $-9.78\%$ contraction of administrators, and the $+9.41\%$ expansion of total district staff (+8.64% paraprofessionals). Located at [Figure 13](../../dashboard/fig13_fixed_plant_staffing_stickiness.png).
 3. **Figure 14 (`fig14_secondary_staffing_wedge.png`):** The Secondary Staffing Wedge. Illustrates the $+3.5$ to $+4.5$ student gap between macro school PTR ($14.74$) and core course class sizes (Algebra I: $19.28$), and shows the 10-year longitudinal persistence of this wedge across all six CRDC waves. Located at [Figure 14](../../dashboard/fig14_secondary_staffing_wedge.png).

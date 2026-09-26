@@ -506,7 +506,164 @@ def test_claims_ledger_integrity(repo_dir: Path):
 
 
 # ----------------------------------------------------------------------
-# Named Test 14: source_dossier_measure_table_consistency
+# Named Test 14: claim_numeric_internal_consistency
+# ----------------------------------------------------------------------
+def test_claim_numeric_internal_consistency(repo_dir: Path):
+    errors = []
+    warnings = []
+    
+    claims_csv = repo_dir / "analysis" / "results" / "claims.csv"
+    if not claims_csv.exists():
+        return False, ["claims.csv missing"], [], "claims.csv missing"
+        
+    verified = 0
+    with open(claims_csv, mode="r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for r in reader:
+            cid = r["claim_id"].strip()
+            v_start_str = r["value_start"].strip()
+            v_end_str = r["value_end"].strip()
+            abs_chg_str = r["absolute_change"].strip()
+            pct_chg_str = r["percent_change"].strip()
+            
+            # Check absolute change arithmetic: v_end - v_start == absolute_change
+            if v_start_str not in ("NA", "nan", "") and v_end_str not in ("NA", "nan", "") and abs_chg_str not in ("NA", "nan", ""):
+                try:
+                    v_start = float(v_start_str)
+                    v_end = float(v_end_str)
+                    abs_chg = float(abs_chg_str)
+                    expected_abs = v_end - v_start
+                    if abs(abs_chg - expected_abs) > 0.02:
+                        errors.append(f"Claim '{cid}' absolute_change mismatch: got {abs_chg}, expected {expected_abs:+.2f}")
+                except ValueError as e:
+                    errors.append(f"Claim '{cid}' float parse error for absolute_change: {e}")
+                    
+            # Check percent change arithmetic: pct == (v_end - v_start) / v_start (or / v_end for reconciliation gaps)
+            if pct_chg_str not in ("NA", "nan", "") and v_start_str not in ("NA", "nan", "") and v_end_str not in ("NA", "nan", ""):
+                try:
+                    v_start = float(v_start_str)
+                    v_end = float(v_end_str)
+                    pct_chg = float(pct_chg_str)
+                    if abs(v_start) > 1e-6:
+                        exp_pct_start = (v_end - v_start) / v_start * 100.0
+                        exp_pct_end = (v_end - v_start) / v_end * 100.0 if abs(v_end) > 1e-6 else exp_pct_start
+                        diff_pct = min(abs(pct_chg - exp_pct_start), abs(pct_chg - exp_pct_end))
+                        if diff_pct > 0.05:
+                            errors.append(f"Claim '{cid}' percent_change mismatch: got {pct_chg}%, expected {exp_pct_start:+.2f}%")
+                except ValueError as e:
+                    errors.append(f"Claim '{cid}' float parse error for percent_change: {e}")
+                    
+            verified += 1
+            
+    detail = f"{verified} claims internally reconciled for absolute and percent change arithmetic"
+    return len(errors) == 0, errors, warnings, detail
+
+
+# ----------------------------------------------------------------------
+# Named Test 15: claim_universe_support_consistency
+# ----------------------------------------------------------------------
+def test_claim_universe_support_consistency(repo_dir: Path):
+    errors = []
+    warnings = []
+    
+    claims_csv = repo_dir / "analysis" / "results" / "claims.csv"
+    universes_csv = repo_dir / "registry" / "universes.csv"
+    if not claims_csv.exists() or not universes_csv.exists():
+        return False, ["claims.csv or universes.csv missing"], [], "Files missing"
+        
+    universes = {}
+    with open(universes_csv, mode="r", encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            universes[r["universe_id"].strip()] = r
+            
+    checked = 0
+    with open(claims_csv, mode="r", encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            checked += 1
+            cid = r["claim_id"].strip()
+            uid = r["universe_id"].strip()
+            sup_str = r["support_n"].strip()
+            
+            if uid not in universes:
+                errors.append(f"Claim '{cid}' references unknown universe '{uid}'")
+                continue
+                
+            u_info = universes[uid]
+            u_cnt_str = u_info["entity_count"].strip()
+            u_notes = u_info.get("notes", "").lower()
+            
+            # If support_n is a dynamic range (e.g. "78 to 77")
+            if "to" in sup_str:
+                if "to" not in u_cnt_str:
+                    errors.append(f"Claim '{cid}' has range support_n '{sup_str}' but universe '{uid}' entity_count is '{u_cnt_str}'")
+                continue
+                
+            if sup_str.isdigit():
+                sn = int(sup_str)
+                if u_cnt_str.isdigit():
+                    uc = int(u_cnt_str)
+                    if sn > uc:
+                        if "union" not in u_notes and "longitudinal" not in u_notes and "historical" not in u_notes:
+                            errors.append(f"Claim '{cid}' support_n ({sn}) exceeds universe '{uid}' entity_count ({uc}) without documented longitudinal union")
+                elif "to" in u_cnt_str:
+                    parts = [int(p.strip()) for p in u_cnt_str.split("to") if p.strip().isdigit()]
+                    if parts and sn > max(parts):
+                        errors.append(f"Claim '{cid}' support_n ({sn}) exceeds maximum universe '{uid}' count ({max(parts)})")
+            else:
+                warnings.append(f"Claim '{cid}' support_n is non-numeric: '{sup_str}'")
+                
+    detail = f"{checked} claims verified for universe support_n consistency (support_n <= entity_count)"
+    return len(errors) == 0, errors, warnings, detail
+
+
+# ----------------------------------------------------------------------
+# Named Test 16: claim_note_numeric_drift
+# ----------------------------------------------------------------------
+def test_claim_note_numeric_drift(repo_dir: Path):
+    errors = []
+    warnings = []
+    
+    claims_csv = repo_dir / "analysis" / "results" / "claims.csv"
+    if not claims_csv.exists():
+        return False, ["claims.csv missing"], [], "claims.csv missing"
+        
+    stale_patterns = [
+        (re.compile(r"disproving centrifugal suburban flight", re.IGNORECASE), "stale centrifugal flight language"),
+        (re.compile(r"-\s*0\.36%"), "stale -0.36% enrollment change"),
+        (re.compile(r"-\s*8\.00%"), "stale -8.00% enrollment sensitivity"),
+        (re.compile(r"-\s*3\.26%"), "stale -3.26% teacher sensitivity"),
+        (re.compile(r"\b22,860\.8\b"), "retracted 22,860.8 draft baseline"),
+        (re.compile(r"\b24,028\.9\b"), "retracted 24,028.9 draft end level"),
+        (re.compile(r"\+5\.11%"), "retracted +5.11% Balanced 77 figure"),
+        (re.compile(r"-\s*9\.58%"), "retracted -9.58% declining district figure"),
+        (re.compile(r"\+0\.73%"), "retracted +0.73% declining district teacher figure"),
+        (re.compile(r"\b10,812\.24\b"), "retracted 10,812.24 Kansas baseline"),
+        (re.compile(r"\b11,267\.50\b"), "retracted 11,267.50 Kansas LEA total"),
+    ]
+    
+    checked = 0
+    with open(claims_csv, mode="r", encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            checked += 1
+            cid = r["claim_id"].strip()
+            note = r["notes"].strip()
+            
+            for pat, desc in stale_patterns:
+                if pat.search(note):
+                    errors.append(f"Claim '{cid}' note contains {desc}: '{pat.pattern}'")
+                    
+            # Check for any percentage mentioned in notes (prohibited by design rule: numbers owned by columns)
+            found_pcts = re.findall(r"([+-]?\d+\.?\d*)\s*%", note)
+            if found_pcts:
+                for p in found_pcts:
+                    errors.append(f"Claim '{cid}' note contains redundant/drifting percentage '{p}%'; numbers must be owned by structured columns")
+                    
+    detail = f"{checked} claims verified free of stale/conflicting numbers in notes"
+    return len(errors) == 0, errors, warnings, detail
+
+
+# ----------------------------------------------------------------------
+# Named Test 17: source_dossier_measure_table_consistency
 # ----------------------------------------------------------------------
 def test_source_dossier_measure_table_consistency(repo_dir: Path):
     errors = []
@@ -524,7 +681,6 @@ def test_source_dossier_measure_table_consistency(repo_dir: Path):
     checked_mappings = 0
     for sd in source_dossiers:
         text = sd.read_text(encoding="utf-8")
-        # Match rows in Markdown table: | `EDU-XXX` | Measure Name | ...
         matches = re.findall(r"\|\s*`?(EDU-\d{3})`?\s*\|\s*([^|]+?)\s*\|", text)
         for mid, mname in matches:
             checked_mappings += 1
@@ -534,11 +690,9 @@ def test_source_dossier_measure_table_consistency(repo_dir: Path):
                 continue
                 
             expected_name = canonical_names[mid]
-            # Normalize whitespace and hyphens/slashes
             norm_actual = re.sub(r"[\s/]+", "", mname_clean.lower())
             norm_expected = re.sub(r"[\s/]+", "", expected_name.lower())
             
-            # Allow common descriptive prefixes or exact matches
             if norm_actual not in norm_expected and norm_expected not in norm_actual:
                 errors.append(
                     f"Source dossier {sd.relative_to(repo_dir)} labels {mid} as '{mname_clean}', "
@@ -550,17 +704,17 @@ def test_source_dossier_measure_table_consistency(repo_dir: Path):
 
 
 # ----------------------------------------------------------------------
-# Named Test 15: claims_dossier_numeric_consistency
+# Named Test 18: claim_specific_dossier_consistency
 # ----------------------------------------------------------------------
-def test_claims_dossier_numeric_consistency(repo_dir: Path):
+def test_claim_specific_dossier_consistency(repo_dir: Path):
     errors = []
     warnings = []
     
     claims_csv = repo_dir / "analysis" / "results" / "claims.csv"
-    if not claims_csv.exists():
-        return False, ["claims.csv missing"], [], "claims.csv missing"
-        
     measures_csv = repo_dir / "registry" / "measures.csv"
+    if not claims_csv.exists() or not measures_csv.exists():
+        return False, ["Required files missing"], [], "Files missing"
+        
     reg_status = {}
     dossier_paths = {}
     with open(measures_csv, mode="r", encoding="utf-8") as f:
@@ -575,8 +729,7 @@ def test_claims_dossier_numeric_consistency(repo_dir: Path):
             mid = r["measure_id"].strip()
             claims_by_measure.setdefault(mid, []).append(r)
             
-    verified_numerical_anchors = 0
-    # Check audited/frozen measures
+    verified_claim_rows = 0
     for mid, mstatus in reg_status.items():
         if mstatus != "audited":
             continue
@@ -587,29 +740,48 @@ def test_claims_dossier_numeric_consistency(repo_dir: Path):
         
         m_claims = claims_by_measure.get(mid, [])
         for c in m_claims:
-            cid = c["claim_id"]
-            # Check if key values appear in the text
-            v_end = float(c["value_end"]) if c["value_end"] not in ("NA", "nan") else None
-            pct = float(c["percent_change"]) if c["percent_change"] not in ("NA", "nan") else None
+            cid = c["claim_id"].strip()
+            v_end_str = c["value_end"].strip()
+            pct_str = c["percent_change"].strip()
+            abs_str = c["absolute_change"].strip()
             
-            found = False
-            candidates = []
-            if pct is not None:
-                candidates.extend([f"{pct:+.2f}%", f"{pct:.2f}%", f"{pct:+.1f}%", f"{pct:.1f}%", f"{abs(pct):.1f}%", f"{abs(pct):.2f}%"])
-            if v_end is not None:
-                candidates.extend([f"{v_end:,.0f}", f"{v_end:,.2f}", f"{v_end:.0f}", f"{v_end:.2f}"])
+            # Find the specific row in Markdown tables containing this claim_id
+            target_line = None
+            for line in d_text.splitlines():
+                if line.strip().startswith("|"):
+                    cells = [cell.strip().strip("*` ") for cell in line.split("|")]
+                    if cid in cells:
+                        target_line = line
+                        break
+                        
+            if not target_line:
+                errors.append(f"Dossier {d_path.relative_to(repo_dir)} missing structured table row for claim '{cid}'")
+                continue
                 
-            for cand in candidates:
-                if cand in d_text:
-                    found = True
-                    break
-                    
-            if found:
-                verified_numerical_anchors += 1
+            matched_row = False
+            # Check percent_change
+            if pct_str not in ("NA", "nan", ""):
+                pct_val = float(pct_str)
+                pct_cands = [f"{pct_val:+.2f}%", f"{pct_val:.2f}%", f"{pct_val:+.1f}%", f"{pct_val:.1f}%", f"{abs(pct_val):.2f}%"]
+                for cand in pct_cands:
+                    if cand in target_line:
+                        matched_row = True
+                        break
+            # Check value_end or absolute_change
+            if not matched_row and v_end_str not in ("NA", "nan", ""):
+                v_end = float(v_end_str)
+                v_cands = [f"{v_end:,.2f}", f"{v_end:,.0f}", f"{v_end:.2f}", f"{v_end:.0f}"]
+                for cand in v_cands:
+                    if cand in target_line:
+                        matched_row = True
+                        break
+                        
+            if matched_row:
+                verified_claim_rows += 1
             else:
-                warnings.append(f"Dossier for {mid} does not explicitly display primary value from claim {cid} (candidates: {candidates[:3]})")
+                errors.append(f"Dossier row for claim '{cid}' does not match registered numeric values (v_end={v_end_str}, pct={pct_str})")
                 
-    detail = f"{verified_numerical_anchors} primary numerical anchors in audited dossiers verified against claims ledger"
+    detail = f"{verified_claim_rows} claim rows explicitly verified against dossier summary tables"
     return len(errors) == 0, errors, warnings, detail
 
 
@@ -638,8 +810,11 @@ def validate_observatory():
         ("source_inventory_consistency", test_source_inventory_consistency),
         ("canonical_measure_names_consistency", test_canonical_measure_names_consistency),
         ("claims_ledger_integrity", test_claims_ledger_integrity),
+        ("claim_numeric_internal_consistency", test_claim_numeric_internal_consistency),
+        ("claim_universe_support_consistency", test_claim_universe_support_consistency),
+        ("claim_note_numeric_drift", test_claim_note_numeric_drift),
         ("source_dossier_measure_table_consistency", test_source_dossier_measure_table_consistency),
-        ("claims_dossier_numeric_consistency", test_claims_dossier_numeric_consistency),
+        ("claim_specific_dossier_consistency", test_claim_specific_dossier_consistency),
     ]
     
     total_tests = len(named_tests)
@@ -658,10 +833,10 @@ def validate_observatory():
                 all_errors.extend([f"[{name}] {e}" for e in errors])
                 
             all_warnings.extend([f"[{name}] {w}" for w in warnings])
-            print(f"  {status_str} {idx:02d}. {name:<36} : {detail}")
+            print(f"  {status_str} {idx:02d}. {name:<40} : {detail}")
             
         except Exception as e:
-            print(f"  [FAIL] {idx:02d}. {name:<36} : CRITICAL EXCEPTION {e}")
+            print(f"  [FAIL] {idx:02d}. {name:<40} : CRITICAL EXCEPTION {e}")
             all_errors.append(f"[{name}] Uncaught exception: {e}")
             
     print("\n" + "=" * 80)
@@ -690,3 +865,4 @@ def validate_observatory():
 
 if __name__ == "__main__":
     sys.exit(validate_observatory())
+

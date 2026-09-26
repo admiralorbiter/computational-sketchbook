@@ -182,7 +182,7 @@ for bar, val in zip(bars, aggregate_pcts):
     sign = "+" if val > 0 else ""
     ax1.text(bar.get_x() + bar.get_width()/2.0, yval + offset, f"{sign}{val:.1f}%", ha='center', va=va, fontsize=9.0, fontweight='bold')
 
-ax1.text(0.5, 0.05, "Fixed plant creates downward staffing stickiness:\nClassroom teachers contract at < half the rate of enrollment (-3.6% vs -8.3%).\nAdministrators contract proportionally (-9.8%), while total staff expands (+9.4%).",
+ax1.text(0.5, 0.05, "Unchanged school counts create downward staffing stickiness:\nClassroom teachers contract at < half the rate of enrollment (-3.6% vs -8.3%).\nAdministrators contract proportionally (-9.8%), while total staff expands (+9.4%).",
          transform=ax1.transAxes, ha='center', fontsize=8.2, style='italic',
          bbox=dict(boxstyle="round,pad=0.4", fc="#f8fafc", ec="#cbd5e1", lw=0.8))
 

@@ -110,7 +110,7 @@ claims.append({
     "percent_change": f"{epct_b75:+.2f}",
     "support_n": len(b75),
     "epistemic_status": "audited_fact",
-    "notes": "Balanced 75 LEA cohort continuously operating across 10 years; net change is essentially flat (-0.36%)"
+    "notes": "Balanced 75 LEA endpoint cohort; regional K-12 enrollment remained close to flat."
 })
 
 # CLM-ENR-002 (Total Headcount Reconciliation)
@@ -134,7 +134,7 @@ claims.append({
     "percent_change": f"{pct_tot_77:+.2f}",
     "support_n": len(lea_77),
     "epistemic_status": "audited_fact",
-    "notes": "Net unassigned regional total enrollment across 77 fully regional LEAs; 61 LEAs reconcile exactly to 0"
+    "notes": "Net unassigned regional total enrollment across 77 fully regional LEAs; 61 LEAs reconcile exactly to 0."
 })
 
 # CLM-ENR-002-K12 (K-12 Headcount Reconciliation)
@@ -158,7 +158,7 @@ claims.append({
     "percent_change": f"{pct_enr_77:+.2f}",
     "support_n": len(lea_77),
     "epistemic_status": "audited_fact",
-    "notes": "Net unassigned regional K-12 enrollment across 77 fully regional LEAs"
+    "notes": "Net unassigned regional K-12 enrollment across 77 fully regional LEAs."
 })
 
 # CLM-ENR-003
@@ -178,7 +178,7 @@ claims.append({
     "percent_change": "-9.14",
     "support_n": len(b75),
     "epistemic_status": "audited_fact",
-    "notes": "Kindergarten dropped -9.14% while Grades 1-12 grew +0.10%; Fall 2020 drop alone was -11.43%"
+    "notes": "Ten-year kindergarten contraction concentrated in the Fall 2020 COVID cohort while Grades 1-12 grew slightly."
 })
 
 # CLM-ENR-004
@@ -198,7 +198,7 @@ claims.append({
     "percent_change": "NA",
     "support_n": len(b75),
     "epistemic_status": "audited_fact",
-    "notes": "Centroid moved only 1686.5 feet (0.32 miles) disproving centrifugal suburban flight"
+    "notes": "Centroid moved only 1686.5 feet (0.32 miles); no meaningful net outward displacement of the enrollment-weighted regional centroid was observed."
 })
 
 # --- EDU-003 CLAIMS ---
@@ -223,7 +223,7 @@ claims.append({
     "percent_change": f"{tpct_b75:+.2f}",
     "support_n": len(b75),
     "epistemic_status": "audited_fact",
-    "notes": "Balanced 75 LEA reported classroom teacher FTE grew +8.88% despite flat enrollment"
+    "notes": "Balanced 75 LEA reported classroom teacher FTE grew steadily over the decade despite flat enrollment."
 })
 
 # CLM-TCH-001-ALT-TOT
@@ -245,7 +245,7 @@ claims.append({
     "percent_change": f"{(tot24_b75 - tot14_b75)/tot14_b75*100:+.2f}",
     "support_n": len(b75),
     "epistemic_status": "audited_fact",
-    "notes": "Alternative total reported teacher FTE estimand including Pre-K staff"
+    "notes": "Alternative total reported teacher FTE estimand including Pre-K staff across Balanced 75 LEAs."
 })
 
 # CLM-TCH-001-DYN
@@ -265,7 +265,7 @@ claims.append({
     "percent_change": f"{(lea_dyn_24['teachers_k12_fte'].sum() - lea_dyn_14['teachers_k12_fte'].sum())/lea_dyn_14['teachers_k12_fte'].sum()*100:+.2f}",
     "support_n": f"{len(lea_dyn_14)} to {len(lea_dyn_24)}",
     "epistemic_status": "audited_fact",
-    "notes": "Dynamic fully regional LEA universe capturing annual entry/exit"
+    "notes": "Dynamic fully regional LEA universe capturing annual entry/exit."
 })
 
 # CLM-TCH-002-ENR
@@ -287,7 +287,7 @@ claims.append({
     "percent_change": f"{(e24_d28 - e14_d28)/e14_d28*100:+.2f}",
     "support_n": len(decliners_28),
     "epistemic_status": "audited_fact",
-    "notes": "Enrollment contraction in 28 declining LEAs with unchanged school counts (-8.33%)"
+    "notes": "Enrollment contraction in 28 declining LEAs with unchanged operating-school counts."
 })
 
 # CLM-TCH-002
@@ -302,14 +302,14 @@ claims.append({
     "universe_id": "KC_DECLINING_UNCHANGED_COUNT_28",
     "reference_period_start": "2014-2015",
     "reference_period_end": "2024-2025",
-    "estimand": "Fixed-Plant Downward Staffing Stickiness (Classroom Teachers)",
+    "estimand": "Downward Staffing Stickiness (Unchanged School Count)",
     "value_start": f"{t14_d28:.2f}",
     "value_end": f"{t24_d28:.2f}",
     "absolute_change": f"{t24_d28 - t14_d28:+.2f}",
     "percent_change": f"{(t24_d28 - t14_d28)/t14_d28*100:+.2f}",
     "support_n": len(decliners_28),
     "epistemic_status": "audited_fact",
-    "notes": "28 declining LEAs with unchanged school counts (132 schools); classroom teachers contracted by only -3.63% against -8.33% enrollment loss"
+    "notes": "Declining LEAs with unchanged operating-school counts (132 schools); classroom teacher contraction was materially smaller than enrollment contraction."
 })
 
 # CLM-TCH-002-SENS
@@ -332,7 +332,7 @@ claims.append({
     "percent_change": f"{(t24_d25 - t14_d25)/t14_d25*100:+.2f}",
     "support_n": len(decl_25),
     "epistemic_status": "audited_fact",
-    "notes": "25 LEAs with 100% identical endpoint NCESSCH sets; enrollment fell -8.00% while teachers fell -3.26%"
+    "notes": "Sensitivity cohort restricted to 25 LEAs with identical endpoint NCESSCH sets."
 })
 
 # CLM-TCH-003-KS
@@ -354,7 +354,7 @@ claims.append({
     "percent_change": f"{(ks_lea - ks_sch)/ks_lea*100:+.2f}",
     "support_n": len(lea_77[lea_77['state'] == 'KS']),
     "epistemic_status": "descriptive_fact",
-    "notes": "LEA total reported teachers exceeds school classroom sum by +455.26 FTE; mechanism (central/itinerant) candidate pending KPTEN microdata"
+    "notes": "LEA total reported teachers exceeds school classroom sum; candidate mechanisms (central/itinerant staff) pending state microdata."
 })
 
 # CLM-TCH-003-MO
@@ -376,7 +376,7 @@ claims.append({
     "percent_change": f"{(mo_lea - mo_sch)/mo_lea*100:+.2f}",
     "support_n": len(lea_77[lea_77['state'] == 'MO']),
     "epistemic_status": "descriptive_fact",
-    "notes": "LEA total reported teachers exceeds school classroom sum by +63.23 FTE across 56 Missouri LEAs; K-12 only sum is 13350.66 FTE"
+    "notes": "LEA total reported teachers exceeds school classroom sum; Missouri LEAs report Pre-K teachers separately from K-12."
 })
 
 # CLM-TCH-004
@@ -398,7 +398,7 @@ claims.append({
     "percent_change": f"{(c23_pct - c13_pct)/c13_pct*100:+.2f}",
     "support_n": len(m_under800),
     "epistemic_status": "descriptive_association",
-    "notes": "Continuously operating regular high schools with <800 enrollment in both waves; 12 dropped Calculus while 3 added"
+    "notes": "Continuously operating regular high schools with <800 enrollment in both waves; 12 schools dropped Calculus while 3 added."
 })
 
 # CLM-TCH-005
@@ -421,7 +421,7 @@ claims.append({
     "percent_change": f"{(alg1_mean - ptr_mean)/ptr_mean*100:+.2f}",
     "support_n": len(sub_valid_alg1),
     "epistemic_status": "empirical_wedge",
-    "notes": "Algebra I mean class size exceeds mean campus PTR by +4.53 students across 101 reporting high schools; consistent with schedule model"
+    "notes": "Algebra I mean class size exceeds mean campus PTR across reporting high schools with both valid observations; consistent with schedule model."
 })
 
 # CLM-TCH-006
@@ -435,7 +435,7 @@ claims.append({
     "claim_class": "sector_elasticity",
     "analysis_script": "analysis/cross-measure/task004a_empirical_audit.py",
     "source_artifact_ids": "kc_lea_capacity_long_2014_15_2024_25",
-    "universe_id": "KC_URBAN_KCPS_CHARTER_11YR",
+    "universe_id": "KC_JACKSON_CHARTER_LEA_HISTORY",
     "reference_period_start": "2014-2015",
     "reference_period_end": "2024-2025",
     "estimand": "Jackson County Charter Sector Teacher FTE Expansion",
@@ -445,7 +445,7 @@ claims.append({
     "percent_change": f"{(c_t24 - c_t14)/c_t14*100:+.2f}",
     "support_n": len(cht_leas),
     "epistemic_status": "audited_fact",
-    "notes": "Charter enrollment expanded +29.02% while teachers expanded +59.50%, yielding 6.28 students per added teacher FTE"
+    "notes": "Jackson County independent charter sector; teacher FTE expanded at more than double the rate of student enrollment."
 })
 
 claims_df = pd.DataFrame(claims)
