@@ -15,8 +15,9 @@
 | **Short Identifier / Slug** | `lowercase-hyphenated-slug` |
 | **Status** | `proposed` \| `audited` \| `validated` \| `deprecated` |
 | **Lifecycle Stage** | Epistemic Ladder Stage: `source` $\to$ `measurement` $\to$ `description` $\to$ `validation` $\to$ `relationships` $\to$ `explanation` |
-| **Category** | e.g., Staffing Capacity \| Enrollment & Demographics \| Student Need & Complexity \| Coursework & Curricular Load \| Fiscal |
-| **Derived or Directly Reported** | `Directly Reported` (raw from agency) \| `Derived` (arithmetic calculation) |
+| **Category** | Staffing Capacity \| Enrollment & Demographics \| Student Need & Complexity \| Coursework & Curricular Load \| Fiscal |
+| **Derived or Directly Reported** | `Directly Reported` (raw administrative item) \| `Derived` (arithmetic calculation) |
+| **Provenance Tier** | `Tier 1: Harmonized National Census` (e.g., NCES CCD)<br/>`Tier 2: State-Specific Disaggregated Administrative System` (e.g., KSDE KPTEN, MO DESE MOSIS)<br/>`Tier 3: Local Administrative / Master Schedule Microdata` (e.g., District SIS, CRDC course sections)<br/>`Tier 4: Sample Survey / Benchmark` (e.g., NCES NTPS/SASS) |
 
 ---
 
@@ -28,12 +29,20 @@
 ### 2.2 Formal / Statistical Definition
 *The exact mathematical and statistical formulation. Include mathematical notation, equations, and aggregation logic.*
 
-$$\text{Measure} = \frac{\text{Numerator}}{\text{Denominator}}$$
+$$\text{Measure}_{i,t} = \frac{\text{Numerator}_{i,t}}{\text{Denominator}_{i,t}}$$
 
-### 2.3 Unit & Scale
-- **Unit of Measurement:** (e.g., students per teacher FTE, percent of enrollment, count of persons, hours per week)
+### 2.3 Aggregation & Weighting Discipline
+*Explicit mathematical rule for aggregating from the observation unit to higher geographies (district, county, state, nation).*
+
+$$\overline{\text{Measure}}_{\text{aggregate}} = \frac{\sum_{i} \text{Numerator}_i}{\sum_{i} \text{Denominator}_i} \ne \frac{1}{N}\sum_{i} \text{Measure}_i$$
+
+*Specify whether unweighted averaging is prohibited and explain the nature of aggregation bias (e.g., small-school upward distortion).*
+
+### 2.4 Unit & Scale
+- **Unit of Measurement:** (e.g., `students_per_fte`, `percent`, `count_persons`, `hours_per_week`)
 - **Theoretical Range:** (e.g., $[0, \infty)$, $[0, 100\%]$)
 - **Empirical Realistic Range:** (e.g., $8.0$ to $35.0$)
+- **Resolution / Precision:** (e.g., rounded to 1 decimal place, full float)
 
 ---
 
@@ -45,74 +54,89 @@ $$\text{Measure} = \frac{\text{Numerator}}{\text{Denominator}}$$
 | `source-id` | `table_name.csv` | `RAW_FIELD_1` | Exact description in codebook | Float/Integer | Codebook definition |
 | `source-id` | `table_name.csv` | `RAW_FIELD_2` | Exact description in codebook | Float/Integer | Codebook definition |
 
-### 3.2 Calculation Formula (If Derived)
-*Detailed step-by-step arithmetic derivation including intermediate variable handling, rounding rules, and aggregation order (e.g., ratio of sums vs. sum of ratios).*
-
-- **Numerator:** Exactly which fields are summed, filtered, or weighted.
-- **Denominator:** Exactly which fields are summed, filtered, or weighted.
-- **Weighting Scheme:** (e.g., unweighted campus level, student-weighted district level, teacher-weighted section level).
+### 3.2 Calculation Formula & Intermediate Operations (If Derived)
+*Step-by-step arithmetic pipeline including handling of intermediate values, deductions, and fallback rules.*
+1. **Deductions:** (e.g., Pre-K enrollment and Pre-K staff deductions).
+2. **Intermediate Variables:** Definitions and formulas.
+3. **Division Guardrails:** Condition under which denominator is invalid or results in `NaN`.
 
 ---
 
-## 4. Scope, Granularity & Coverage
+## 4. Scope, Granularity & Temporal Disambiguation
 
 | Dimension | Specification | Notes & Boundary Conditions |
 | :--- | :--- | :--- |
-| **Target Population** | e.g., Public regular elementary/secondary students | Specify grade levels (PreK vs K-12), school types included |
-| **Unit of Observation** | e.g., Campus (School) \| LEA (District) \| Classroom Section \| Student | Must distinguish reporting unit from observation unit |
-| **Geographic Granularity** | e.g., Campus \| LEA \| County \| Metro (MARC) \| State \| National | |
-| **Temporal Granularity** | e.g., Annual Fall Snapshot \| Biennial Survey \| Cumulative School Year | State the official collection date (e.g., October 1) |
-| **Earliest Known Availability** | e.g., SY 1986–87 | Earliest continuous digital or published record |
-| **Latest Known Availability** | e.g., SY 2024–25 | Most recent audited release |
-| **Expected Update Cadence** | e.g., Annual (provisional in Spring, final in Autumn) | Publication lag from collection date |
+| **Target Population** | e.g., Public regular elementary/secondary students | Specify grade levels (Pre-K vs K–12) and student sub-populations |
+| **Unit of Observation** | Campus (`NCESSCH`) \| District (`LEAID`) \| Section \| Student | Must distinguish reporting entity from analytical observation unit |
+| **Geographic Granularity** | Campus \| LEA \| County \| Metro \| State \| National | Explicitly state geographic boundary rules |
+| **Temporal Granularity** | Annual Snapshot \| Biennial Survey \| Cumulative School Year | State the exact collection mechanism |
+| **School Year of Reference (SY)** | e.g., `2024-25` | **Primary Indexing Dimension.** Academic year of observation |
+| **Collection Snapshot Date** | e.g., On or near October 1 of school year | Official reference date for student/staff counts |
+| **Publication / Release Date** | e.g., December 2025 (Provisional), August 2026 (Final) | Calendar date when data was released to the public |
+| **Publication Lag** | e.g., 12 to 24 months | Time elapsed between snapshot and public availability |
+| **Earliest Available Year** | e.g., SY 1986–87 | Earliest continuous digital or published record |
+| **Latest Audited Year** | e.g., SY 2024–25 | Most recent audited release |
+| **Expected Update Cadence** | Annual \| Biennial \| Quadrennial | Frequency of future releases |
+
+> [!IMPORTANT]
+> **Temporal Disambiguation Standard:** Never use a single calendar year (e.g., "2024") without specifying whether it denotes the **School Year of Reference** (`SY 2024–25`) or the **Data Publication Release Year** (`2024`). The Observatory strictly indexes all measures by School Year of Reference.
 
 ---
 
-## 5. Collection Mechanism & Ingestion Mechanics
+## 5. Collection Mechanism, Organizational Allocation & Ingestion Mechanics
 
 ### 5.1 Collection Mechanism
 *How are these numbers collected? Administrative census, survey sampling, statutory compliance filing, civil rights survey, or financial audit? Who reports them (school clerk, LEA central HR, state data team)?*
 
-### 5.2 Inclusion Rules
-*Which entities or records are legitimately included in this measure?*
-- School type inclusions (e.g., Regular local public schools, charter schools, vocational schools).
-- Operational status criteria (e.g., Open, operating, non-zero enrollment).
+### 5.2 Organizational Allocation Sensitivity (Campus vs. Central Office)
+*How does this measure handle personnel or resources shared across multiple campuses or held centrally at the district office?*
+- **Itinerant Staff Allocation:** Are shared teachers (e.g., art, music, SPED, speech) reported as fractional FTEs across school buildings or aggregated at the central office?
+- **Central Allocation Gap:** 
+  $$\Delta_{\text{central}} = \text{Measure}_{\text{campus\_aggregate}} - \text{Measure}_{\text{district\_direct}}$$
+- **Guidance:** Rules for comparing campus-level values across districts with contrasting allocation practices.
 
-### 5.3 Exclusion Rules
-*Which entities or records MUST be excluded to prevent catastrophic bias?*
-- Exclusions (e.g., Virtual-only academies, specialized special-education day facilities, detention centers, closed campuses, summer-only facilities).
+### 5.3 Step-by-Step Analytical Filtering & Outlier Protocol
+*Standardized 5-step data sanitation protocol required before analysis:*
+1. **Exception Code Sanitization:** Map negative exception codes (`-1`, `-2`, `-9`) to `NaN`.
+2. **Entity Universe Filtering:** Filter for operating regular public schools (`TYPE == 1`, `STATUS in [1, 3, 8]`).
+3. **Threshold Guardrails:** Minimum size requirements (e.g., $\text{Students} \ge 10$, $\text{FTE} \ge 1.0$).
+4. **Outlier Triage:** Explicit upper and lower bounds triggering diagnostic review vs. automatic exclusion.
+5. **Denominator Weighting:** Enforce ratio-of-sums aggregation for higher geographic units.
 
-### 5.4 Missing Values & Suppression Codes
-*Explicit inventory of negative numbers, codes, and character flags used by the source agency.*
+### 5.4 Exclusion Rules
+*Explicit list of non-standard educational entities that MUST be excluded to prevent catastrophic bias:*
+- Virtual / cyber schools.
+- Specialized special education day facilities.
+- Juvenile justice / detention center schools.
+- Career and Technical Education (CTE) centers with shared enrollment.
+- Inactive, closed, or future-opening schools.
 
-| Source Code | Meaning | Remediation Action in Observatory Pipeline |
+### 5.5 Missing Values & Native Codebook Flags
+| Source Code | Code Meaning | Pipeline Action |
 | :--- | :--- | :--- |
-| `-1` | Missing / Not reported | Recode to `NaN`; do NOT treat as zero |
+| `-1` | Missing / Not reported | Recode to `NaN`; never treat as zero |
 | `-2` | Not applicable | Recode to `NaN` or explicit `NA` category |
 | `-9` | Suppressed for privacy / FERPA | Recode to `NaN`; flag as `suppressed` |
-| `.` / `NULL` | Empty cell | Verify reason; recode to `NaN` |
+| `0` | Reported zero | Verify if plausible (e.g., zero teachers with positive enrollment = non-reporting) |
 
 ---
 
 ## 6. Methodological Breaks & Comparability Warnings
 
-### 6.1 Known Methodological Changes
-*Chronological list of changes to definitions, reporting guidelines, survey forms, or federal statutes that affect longitudinal consistency.*
+### 6.1 Known Historical Breaks & Variable Shifts
+*Chronological register of statutory, survey, or layout changes.*
+- **Year YYYY–YY:** Change description, affected variables, and pipeline correction.
 
-- **Year YYYY–YY:** Change description and impact.
-- **Year YYYY–YY:** Change description and impact.
+### 6.2 Jurisdictional Portability Boundaries
+*Why can this measure NOT be compared naively across state lines, district types, or governance models?*
+- Differences in state job codes, certification requirements, or administrative definitions.
+- Discrepancies between federal CCD aggregates and state report card metrics.
 
-### 6.2 Comparability Warnings across Jurisdictions / Time
-*Why can this measure NOT be compared naively across state lines, district types, or decades?*
-- State-to-state variation in job codes or categorization.
-- Differences between federal CCD definitions and state report card definitions.
-
-### 6.3 Plausible Measurement Error
-*Where do the errors come from?*
-- Roster churn / mobility between snapshot date and end of year.
-- Split-campus or itinerant personnel allocation ambiguities.
-- Part-time FTE rounding errors.
-- Self-reporting social desirability or regulatory avoidance.
+### 6.3 Plausible Measurement Error & Administrative Friction
+*Where do errors, distortions, and noise originate in the real world?*
+- Roster churn / student mobility between snapshot date and end-of-year testing.
+- Rounding of fractional FTE assignments.
+- Strategic classification to meet accreditation standards or funding thresholds.
 
 ---
 
@@ -122,19 +146,28 @@ $$\text{Measure} = \frac{\text{Numerator}}{\text{Denominator}}$$
 > The primary epistemic defense of the Observatory is establishing what a measure answers **before** correlating it with anything else.
 
 ### 7.1 What Question Does This Measure Legitimately Answer?
-*Clear, precise research questions that this number is structurally and mathematically equipped to address.*
+*Clear, precise research questions that this metric is structurally and mathematically equipped to address.*
 1. 
 2. 
 3. 
 
 ### 7.2 What Question Does This Measure NOT Answer?
-*Questions that this number is frequently forced to answer, but cannot answer validly.*
+*Questions that this metric is frequently misapplied to answer, but cannot answer validly.*
 1. 
 2. 
 3. 
 
-### 7.3 Common Misinterpretations & Traps
-*Document widely held public, journalistic, or academic misconceptions.*
+### 7.3 Structural Transformation Multipliers & Wedges
+*Mathematical identities and conversion factors that bridge this macro measure to classroom realities.*
+
+$$\text{Classroom Reality} \approx \text{Macro Measure} + \sum \Delta_k$$
+
+- **Wedge $\Delta_1$ (Role Composition):** Difference attributable to specialized non-classroom personnel.
+- **Wedge $\Delta_2$ (Schedule Capacity Multiplier $\phi$):** Structural expansion driven by teacher planning and bell schedules:
+  $$\phi = \frac{P_{\text{student}}}{P_{\text{teacher}}}$$
+- **Wedge $\Delta_3$ (Curricular Distribution):** Allocation differences between elective/advanced courses and core gateway courses.
+
+### 7.4 Common Misinterpretations & Policy Traps
 - **Misinterpretation 1:** 
 - **Misinterpretation 2:** 
 
@@ -150,15 +183,16 @@ $$\text{Measure} = \frac{\text{Numerator}}{\text{Denominator}}$$
   - `EDU-ZZZ`: Name
 
 ### 8.2 Related & Alternative Measures
-| Measure ID | Measure Name | Nature of Difference / Contrast |
-| :--- | :--- | :--- |
-| `EDU-XXX` | Alternative Name | Why and when would a researcher choose that over this? |
+| Measure ID | Measure Name | Nature of Difference / Contrast | When to Prefer |
+| :--- | :--- | :--- | :--- |
+| `EDU-XXX` | Alternative Name | Structural difference in denominator or scope | Specific research context |
 
 ### 8.3 Candidate External Validation Sources
-*Independent datasets, surveys, or audits that can triangulate or stress-test this measure.*
-- Independent administrative sources (e.g., State retirement board records vs. district headcount).
-- Sample surveys (e.g., NCES NTPS teacher self-reports).
-- Microdata / Course files (e.g., Civil Rights Data Collection section records).
+*Independent datasets, sample surveys, microdata, or court audits that can triangulate or stress-test this measure.*
+- Sample surveys (e.g., NCES NTPS / SASS teacher questionnaires).
+- Course-level compliance collections (e.g., OCR CRDC course rosters).
+- State longitudinal personnel registers (e.g., KPTEN, MOSIS).
+- Non-administrative physical audits (e.g., master schedules, school board filings).
 
 ---
 
@@ -170,20 +204,20 @@ $$\text{Measure} = \frac{\text{Numerator}}{\text{Denominator}}$$
 
 ## 10. Initial Empirical & Descriptive Sanity Checks
 
-*Mandatory descriptive checklist to execute before using this measure in any cross-measure analysis:*
+*Mandatory assertions and descriptive checks to execute before including this measure in downstream models:*
 
-- [ ] **Range & Extremes Audit:** Min, max, 1st percentile, 99th percentile checked against physical realities.
-- [ ] **Missingness Pattern:** Missing rate calculated overall, by year, by state, and by locale.
-- [ ] **Zero-Value Audit:** Confirm whether zero is mathematically plausible or indicates non-reporting.
-- [ ] **Longitudinal Jump Detection:** Flag entities exhibiting annual shifts $> \pm 30\%$ without known boundary changes.
-- [ ] **Weighting Parity Check:** Compare unweighted campus mean against student-weighted district mean.
+- [ ] **Assertion 1 (Non-Negativity):** All negative missing codes mapped to `NaN`. Zero negative values allowed.
+- [ ] **Assertion 2 (Range & Extremes):** Min, max, 1st percentile, 99th percentile checked against physical realities.
+- [ ] **Assertion 3 (Zero Denominator):** Check for $\text{Denominator} \le 0$; recode invalid ratios to `NaN`.
+- [ ] **Assertion 4 (Aggregation Discipline):** Enforce ratio-of-sums aggregation; test difference between unweighted mean and weighted ratio.
+- [ ] **Assertion 5 (Longitudinal Discontinuity Detection):** Flag entities exhibiting annual step-changes $> \pm 25\%$ without verified boundary changes.
 
 ---
 
 ## 11. Observatory Usage & Dashboard Role
 
-- **Dashboard Role:** (e.g., Contextual background metric \| Core exploratory dimension \| Guardrail metric \| NOT RECOMMENDED for headline display).
-- **Presentation Caveat:** Standard disclaimer text required whenever this measure appears in a chart or table.
+- **Dashboard Role:** (e.g., Contextual background metric \| Core exploratory dimension \| Guardrail metric \| Prohibited for headline display).
+- **Mandatory Presentation Disclaimer:** Exact standard text required whenever this measure appears in a chart, table, or user-facing view.
 - **Dossier Audit History:**
   - `YYYY-MM-DD`: Initial draft authored.
   - `YYYY-MM-DD`: Audited against empirical evidence.
