@@ -136,7 +136,8 @@ All work in this repository adheres to ten foundational principles:
 │   ├── crdc/README.md             # Civil Rights Data Collection source dossier
 │   ├── ntps/README.md             # National Teacher and Principal Survey source dossier
 │   ├── mo-dese/README.md          # Missouri DESE administrative register dossier
-│   └── ksde/README.md             # Kansas State Dept of Education register dossier
+│   ├── ksde/README.md             # Kansas State Dept of Education register dossier
+│   └── edfacts/README.md          # U.S. ED EDFacts federal reporting system dossier
 ├── data/                          # Segregated data storage
 │   ├── upstream_artifacts.csv     # Cryptographic audit ledger linking validated upstream panels
 │   ├── raw/                       # Immutable external downloads (by source and year)
@@ -196,12 +197,13 @@ Key empirical foundations inherited from that work include:
   - Documented kindergarten pipeline shock: Fall 2020 dropped $-11.43\%$, accounting for $36.9\%$ of the regional drop; 10-year Grades 1–12 enrollment remained net positive (+0.10%), while Kindergarten dropped $-9.14\%$.
   - Spatial stability: Metro enrollment-weighted centroid shifted only $0.32$ miles ($1,686.5$ feet), disproving suburban centrifugal flight.
   - Published Figures 4 through 11 in [`dashboard/`](dashboard/). Status: `AUDITED / FROZEN`.
-- **Task 004 & 004A (In Progress / Auditing):** Empirical audit and stabilization of `EDU-003 Reported Classroom Teacher FTE`:
+- **Task 004, 004A, & 004B (Completed & Audited):** Empirical audit and stabilization of `EDU-003 Reported Classroom Teacher FTE`:
   - Reconciled Campus Sum ($23,820$ FTE) vs LEA reported totals across 77 regional districts.
-  - Audited the 2015–16 Kansas CCD non-reporting artifact: Olathe (`LEAID 2010140`) and Gardner Edgerton (`LEAID 2006420`) missing $-2,311$ FTE.
+  - Audited the 2015–16 Kansas CCD non-reporting artifact: Olathe (`LEAID 2010140`) and Gardner Edgerton (`LEAID 2006420`) missing $-2,311$ FTE; established illustrative linear interpolation for macro series.
   - Audited fixed-plant staffing stickiness across 28 declining districts with unchanged school counts.
   - Retracted unsupported $\ge 35$ FTE Calculus threshold; documented association and matched-cohort drop from $67.9\%$ to $35.7\%$.
-  - Quantified the Secondary Staffing Wedge across 6 CRDC waves ($+3.5$ to $+4.5$ students).
-  - Published Figures 12, 13, 14 in [`dashboard/`](dashboard/). Status: `IN PROGRESS / AUDITING`.
+  - Quantified the Secondary Staffing Wedge across 6 CRDC waves ($+3.5$ to $+4.5$ students), consistent with calibrated schedule model.
+  - Established formal caution on longitudinal librarian comparability ($-54.39\%$ due partly to job reclassification).
+  - Published Figures 12, 13, 14 in [`dashboard/`](dashboard/). Status: `AUDITED / FROZEN`.
 - **Task 005 (Upcoming):** Re-audit `EDU-001 Pupil/Teacher Ratio` synthesizing audited `EDU-002` and `EDU-003` foundations.
 - **Task 006 (Upcoming):** Scaffold `EDU-005 Paraprofessional FTE`.

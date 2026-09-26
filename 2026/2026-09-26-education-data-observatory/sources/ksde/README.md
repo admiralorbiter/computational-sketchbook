@@ -84,10 +84,8 @@ Student demographic cells $<10$ are suppressed in public reporting to maintain s
 
 ---
 
-## 8. Known Longitudinal Traps & Historical Anomalies
-
-1. **The 2015–16 Federal Non-Reporting Repair:** In SY 2015–16, the federal NCES CCD failed to capture teacher counts for Olathe USD 233 (`2010140`) and Gardner Edgerton USD 231 (`2006420`), creating an artificial $-2,311$ regional teacher drop. Audited KSDE Licensed Personnel Reports confirm the actual certified teacher stocks ($1,940.3$ FTE in Olathe and $370.8$ FTE in Gardner Edgerton), enabling the Observatory to repair this federal data break.
-2. **Centralized / Itinerant Instructional Staff:** In Kansas USDs, central district rosters carry substantial itinerant teaching personnel (special education itinerants, traveling art/music/PE specialists, curriculum coaches) who are not assigned to individual school building codes. Across the 21 Kansas regional districts, LEA Total Reported teacher FTE exceeds the campus sum by $+455.26$ FTE (+4.32%).
+1. **The 2015–16 Federal Non-Reporting Break & Illustrative Repair:** In SY 2015–16, the federal NCES CCD failed to capture teacher counts for Olathe USD 233 (`2010140`) and Gardner Edgerton USD 231 (`2006420`), creating an artificial $-2,311$ regional teacher drop. While state-level reporting historically records ongoing operations in these districts, the Observatory relies on the raw CCD file with an explicitly labeled illustrative linear interpolation across the 2014–15 and 2016–17 endpoints, pending registration of a dedicated KSDE personnel artifact in the upstream ledger.
+2. **Centralized / Itinerant Instructional Staff (Reporting Gap):** Across the 21 Kansas regional school districts in SY 2024–25, LEA Total Reported teacher FTE exceeds the campus sum by **$+455.26$ FTE (+4.32%)**. This descriptive reporting gap is consistent with centrally or non-building-assigned instructional personnel (such as traveling art/music/PE teachers, itinerant special education specialists, and district curriculum coaches carried on central office payroll rather than individual building rosters). Until a formal role-level KPTEN reconciliation dataset is registered, this compositional explanation is treated as a plausible organizational mechanism rather than an independently verified census fact.
 3. **Headcount vs. FTE Enrollment:** Kansas state foundation aid uses audited FTE student counts (where half-day kindergarten students historically counted as $0.5$ FTE), which is lower than the full headcount reported to federal CCD.
 
 ---

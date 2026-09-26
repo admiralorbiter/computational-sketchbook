@@ -18,7 +18,7 @@
 | **Lifecycle Stage** | Epistemic Ladder Stage: `source` $\to$ `field` $\to$ `operationalization` $\to$ `measure` $\to$ `description` $\to$ `validation` $\to$ `relationships` $\to$ `explanation` |
 | **Category** | Staffing Capacity \| Enrollment & Demographics \| Student Need & Complexity \| Coursework & Curricular Load \| Fiscal |
 | **Construct Nature** | `Directly Reported Administrative Item` \| `Derived Mathematical Construct` \| `Survey Benchmark` |
-| **Associated Operationalizations** | Links to operationalization IDs registered in [`../../registry/operationalizations.csv`](../../registry/operationalizations.csv) |
+| **Associated Operationalizations** | Links to operationalization IDs registered in [`../registry/operationalizations.csv`](../registry/operationalizations.csv) |
 
 ---
 

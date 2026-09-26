@@ -1,6 +1,6 @@
 # Measure Dossier: EDU-001 — Pupil / Teacher Ratio (PTR)
 
-> **Observatory Standard:** This dossier represents the calibration specimen for the Education Data Observatory. It consolidates authoritative source definitions, empirical findings, and structural models established across four decades of public data in the Kansas City Education Capacity Study ([`kc_education_capacity`](../../../2026/2026-09-23-kc-education-capacity/README.md)).
+> **Observatory Standard:** This dossier represents the calibration specimen for the Education Data Observatory. It consolidates authoritative source definitions, empirical findings, and structural models established across four decades of public data in the Kansas City Education Capacity Study ([`kc_education_capacity`](../../../2026-09-23-kc-education-capacity/README.md)).
 
 ---
 

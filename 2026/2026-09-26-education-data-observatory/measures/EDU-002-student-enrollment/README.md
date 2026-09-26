@@ -62,7 +62,7 @@ $$\begin{aligned}
 | **Student-Weighted Campus Exposure** | Student-weighted mean ($\frac{\sum E^2}{\sum E}$) | *What is the enrollment size of the school attended by a randomly selected enrolled student?* | Elementary: **445** \| Middle: **643** \| High: **1,419** |
 
 > [!NOTE]
-> **The High School Scale Skew:** While the median Kansas City high school enrolls 843 students, the **student-weighted high school size is 1,419 students** (a 1.68x ratio). Because mega-campuses like Blue Springs High (2,429 students) and Liberty North High (2,262 students) hold disproportionate shares of the student population, the typical enrolled teenager attends a high school significantly larger than the median campus building plant.
+> **The High School Scale Skew:** While the median Kansas City high school enrolls 843 students, the **student-weighted high school size is 1,419 students** (a 1.68x ratio). Because mega-campuses like Blue Springs High (2,429 students) and Liberty North High (2,262 students) hold disproportionate shares of the student population, the typical enrolled teenager attends a high school substantially larger than the median campus building plant.
 
 ### 2.4 Unit & Scale
 - **Unit of Measurement:** `students` (discrete integer count of persons).

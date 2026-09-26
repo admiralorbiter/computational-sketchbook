@@ -14,7 +14,7 @@
 | **Measure ID** | `EDU-003` |
 | **Canonical Human-Readable Name** | Reported Classroom Teacher FTE |
 | **Short Identifier / Slug** | `reported-classroom-teacher-fte` |
-| **Status** | `in_progress` (Under Task 004A Audit) |
+| **Status** | `audited` |
 | **Lifecycle Stage** | `stage_4_measure` $\to$ `stage_5_description` $\to$ `stage_6_validation` (Epistemic Ladder) |
 | **Category** | Staffing Capacity |
 | **Construct Nature** | Directly Reported Administrative Full-Time Equivalent (FTE) |
@@ -130,7 +130,7 @@ All public educational entities reporting to the NCES Common Core of Data Non-Fi
 > - **Olathe Unified School District 233 (`LEAID 2010140`):** `teachers_k12_fte = NaN` (missing ~1,940 teacher FTE; 55 of 59 campuses unrecorded in CCD).
 > - **Gardner Edgerton School District 231 (`LEAID 2006420`):** `teachers_k12_fte = NaN` (missing ~371 teacher FTE).
 > 
-> This non-reporting created an artificial, single-year administrative drop of **$-2,311$ teacher FTE** in the raw regional panel ($21,583 \to 19,412$ FTE), driving the unadjusted regional macro PTR to an artificial spike of $16.65$. An uncritical longitudinal analysis would falsely diagnose a catastrophic teacher shortage in 2015. In reality, state KSDE records confirm normal staffing operations. The Observatory's primary visual displays raw reported CCD data with an explicit non-reporting marker, while providing an illustrative linear interpolation line `(2014-15 + 2016-17) / 2` to demonstrate the underlying smooth trajectory.
+> This non-reporting created an artificial, single-year administrative drop of **$-2,311$ teacher FTE** in the raw regional panel ($21,583 \to 19,412$ FTE), driving the unadjusted regional macro PTR to an artificial spike of $16.65$. An uncritical longitudinal analysis would falsely diagnose a catastrophic teacher shortage in 2015. While state-level historical reporting records ongoing district operations, the Observatory displays raw reported CCD data with an explicit non-reporting marker alongside an illustrative linear interpolation line `(2014-15 + 2016-17) / 2` to demonstrate the underlying smooth trajectory without asserting unregistered replacement values.
 
 ### 6.2 Pre-K Inclusion & State Reporting Asymmetry (MO vs. KS)
 When reconciling campus-sum teacher FTE with LEA-reported teacher FTE across the 77 regional districts in SY 2024–25:
@@ -140,7 +140,7 @@ When reconciling campus-sum teacher FTE with LEA-reported teacher FTE across the
 
 This divergence is driven by distinct state reporting mechanics:
 - **Missouri ($N=56$ LEAs):** Campus-level `classroom_teacher_fte` reports classroom teachers physically assigned to buildings, including early-childhood/Pre-K teachers ($455.42$ Pre-K teacher FTE). Consequently, Campus Sum ($13,742.85$) exceeds LEA K-12 reported ($13,350.66$) by $392.19$ FTE. When comparing Campus Sum to LEA *Total* Reported ($13,806.08$), the reconciliation difference across all 56 Missouri districts is only **$+63.23$ FTE (+0.46%)**.
-- **Kansas ($N=21$ LEAs):** LEA Total Reported ($10,532.18$ FTE) exceeds Campus Sum ($10,076.92$ FTE) by **$+455.26$ FTE (+4.32%)**. Kansas districts employ centralized and itinerant instructional personnel (e.g. traveling art, music, physical education, and special education teachers) who are carried on district-level master payrolls rather than assigned to individual campus school codes.
+- **Kansas ($N=21$ LEAs):** LEA Total Reported ($10,532.18$ FTE) exceeds Campus Sum ($10,076.92$ FTE) by **$+455.26$ FTE (+4.32%)**. This descriptive reporting gap is consistent with centrally or non-building-assigned instructional personnel (e.g. traveling art, music, physical education, and special education teachers carried on district-level master payrolls rather than assigned to individual campus school codes). In the absence of a registered role-level KPTEN reconciliation dataset, this compositional explanation is treated as a plausible organizational mechanism rather than an independently verified census fact.
 
 ---
 
