@@ -462,3 +462,44 @@ Catalog these metrics in `outputs/tables/task003a1_reporting_coverage.csv` and r
      - *Pandemic Wave Context:* 2020–21 NTPS is not treated as a clean endpoint in a seamless trend due to NCES school-level category changes and remote/hybrid scheduling perturbations.
   4. **The Aggregation Guardrail:**
      - Acknowledge that while SASS/NTPS is far more descriptive of classroom reality than PTR, state averages still smooth over the internal distribution (a state average of 19 naturally combines Algebra I at 29 with Calculus at 11). Pillar 4 (CRDC) and Pillar 3 (Jenkins) provide the critical granular distribution that explains where localized bottleneck pressure concentrates.
+
+
+#### Decision 037: Adoption of the School Conditions Profile & Version 1 (MOSIS) / Version 2 (SIS) Metric Architecture
+* **Status:** Adopted
+* **Date:** 2026-09-25
+* **Context:** The Four-Pillar Measurement Framework (Decision 036) resolved the macro empirical paradox by establishing that pupil/teacher ratio (PTR) measures institutional staffing inventory rather than classroom section size, while representative teacher surveys (SASS/NTPS) demonstrate a persistent 5 to 8 student wedge between PTR and high school classes. However, translating this insight into operational practice requires a concrete measurement architecture that practitioners and regional partners (e.g., PREP-KC) can execute. Missouri DESE explicitly recognizes in policy that class size and planning time matter (MSIP 6 standards: recommended 17 K–2, 20 3–4, 22 5–6, 25 7–12; upper ceiling 33; 250 min/wk planning time), and already collects the requisite relational microdata annually in Core Data / MOSIS October collections (teacher -> section -> students). On September 15, 2026, the Missouri State Board of Education approved a new A–F School and District Grading Framework. To avoid Goodhart’s Law and prevent class size from becoming another distorted accountability target, instructional conditions must be reported as an independent descriptive diagnostic rather than an aggregated accountability score.
+* **Decision:**
+  1. **Establish the School Conditions Profile as a Standalone Operational Diagnostic:**
+     - Reject creating a single composite index or inserting class size into the state A–F formula.
+     - Maintain an explicit structural separation between:
+       - **School Outcome Report:** *What happened?* (Academic achievement, growth, graduation, readiness).
+       - **School Conditions Profile:** *Under what conditions did students and teachers operate?* (Class size distributions, teacher student-seat loads, prep complexity, student need concentration, and staffing stability).
+  2. **Adopt a Two-Tier Implementation Architecture:**
+     - **Version 1 (Existing State Administrative Data — Zero Local Burden):** 100% computable from annual DESE October submissions:
+       - Course Assignment (Screen 20): AssignNum, EDSSN, CourseNum, LocSecNum, CourseMins, CombinedCourse, Caseload, VirtualInstruction.
+       - Student Assignment: AssignNum, StateID, EDSSN, Disadvantaged (FRL), IEPDisability.
+       - Educator Core & School (Screen 18): EDSSN, TotExpMO, TotExpDistrict, AssignmentFTE.
+       - Student Core: StateID, LEP (ELL indicator).
+       - Educator Vacancy (Screen 21): Initial vacant FTE, total applicants, certified applicants.
+     - **Version 2 (Local SIS / Master Schedule Data Expansion):** Captures high-friction operational dimensions invisible in state reporting:
+       - Exact bell-schedule structure (7-period vs. 4x4 block; planning multiplier $\\phi$).
+       - Consecutive teaching blocks (measuring unbroken teaching stretches without breaks).
+       - Room hopping / floating teacher counts (physical room changes).
+       - Non-instructional duty assignments (cafeteria, hall, bus, advisory).
+       - In-class paraprofessionals and certified co-teachers.
+       - Curricular novelty ('new preps' never previously taught by that educator).
+       - Mid-semester roster churn (student entry/exit velocity).
+  3. **Adopt the Core Metric Family & Mathematical Formulations:**
+     - **Section Distributions:** Unweighted median, student-weighted mean ($\\bar{s}_w = \\sum s_i^2 / \\sum s_i$), student-weighted median, 75th and 90th percentiles, and MSIP 6 threshold exceedances ($>25, >30, >33$).
+     - **Teacher Workload & Capacity:** Total student-seat load (^{\\text{seat}} = \\sum s_i$, replicating *Jenkins*), unique students taught (^{\\text{unique}} = |\\bigcup \\mathcal{J}_i|$), distinct course preps ( = |\\text{Unique}(\\text{CourseNum})|$), combined-course incidence, and net weekly planning time (^{\\text{plan}} < 250$).
+     - **Classroom Complexity Overlays:** Section-level IEP concentration (^{\\text{IEP}}$), ELL concentration (^{\\text{ELL}}$), and compound complexity flags ( \\ge 25$ with $\\ge 20\\%$ IEP or $\\ge 25\\%$ ELL).
+     - **Novice Teacher Equity Check:** Compares educators in Years 1–2 vs. veterans on distinct preps, total student-seat load, and exposure to compound high-need sections to test for systematic 'new teacher assignment taxing.'
+  4. **Adopt the Four Foundational Demonstration Figures (The PREP-KC Pilot Suite):**
+     - **Figure 19:** Macro PTR vs. Actual Student-Weighted Class Size (visualizing the ratio illusion).
+     - **Figure 20:** Section Size Distribution vs. Missouri State Standards (MSIP 6 caps at 25 and 33).
+     - **Figure 21:** Teacher Student-Seat Load vs. Distinct Preps (Jenkins $\\le 125$ daily contact load ceiling).
+     - **Figure 22:** Novice vs. Veteran Assignment Equity Disparities (preps and compound complexity).
+  5. **Deliverables & Specifications:**
+     - Complete metric specification and data dictionary published in 
+esearch/school_conditions_profile_metric_specification.md.
+     - Prototype relational processing pipeline executed in src/analysis/prototype_school_conditions_profile.py, outputting comparison report outputs/tables/prototype_school_conditions_report.md and Figures 19–22 in outputs/figures/.

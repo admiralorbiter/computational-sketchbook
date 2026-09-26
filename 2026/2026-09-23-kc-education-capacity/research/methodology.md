@@ -76,3 +76,27 @@
 
 
 
+
+5. **Phase 5: The School Conditions Profile Architecture (Operational Translation & PREP-KC Pilot)**
+   * **Core Strategic Premise:** Shifts from defensive policy debates ('reducing class size requires new billions') to an unassailable empirical reality: *The public education system is currently reporting an administrative statistic (PTR) that does not measure what practitioners think it measures, while already collecting the relational microdata necessary to measure classroom conditions much better.*
+   * **Regulatory Alignment with Missouri MSIP 6:** Grounded in Missouri DESE\'s existing *Class Size and Assigned Enrollments* standard (recommended: K–2 $\\le 17$, 3–4 $\\le 20$, 5–6 $\\le 22$, 7–12 $\\le 25$; upper ceiling: 33; 250 min/wk planning time; combined course rules).
+   * **Goodhart\'s Law Guardrail:** Reject converting instructional conditions into a single composite accountability index or inserting them into Missouri\'s newly approved A–F grading framework (approved Sept 15, 2026). Maintain strict separation between:
+     - **School Outcome Report:** *What happened?* (Academic achievement, growth, graduation, readiness).
+     - **School Conditions Profile:** *Under what conditions did students and teachers operate?* (Class size distributions, teacher student-seat loads, prep complexity, student need concentration, and staffing stability).
+   * **Two-Tier Architecture:**
+     - **Version 1 (Existing State MOSIS Data — Zero Local Burden):** Relational linkage engine connecting October Course Assignment (Screen 20), Student Assignment, Educator Core/School (Screen 18), Student Core, and Vacancy (Screen 21) via 	eacher -> section -> students.
+     - **Version 2 (Local SIS / Master Schedule Data Expansion):** Adds high-friction operational dimensions invisible in state files (exact bell schedule / planning multiplier $\\phi$, consecutive teaching blocks, room hopping / floating teachers, non-instructional duties, co-teaching / aides, novice new-prep novelty, and mid-semester roster churn).
+   * **Core Metric Family:**
+     - *Section Level:* Median section size, student-weighted mean ($\\bar{s}_w = \\sum s_i^2 / \\sum s_i$), student-weighted median, 75th/90th percentiles, and MSIP 6 exposure rates ($>25, >30, >33$).
+     - *Teacher Workload:* Total daily student-seat load (^{\\text{seat}} = \\sum s_i$, replicating *Jenkins*), unique students taught (^{\\text{unique}} = |\\bigcup \\mathcal{J}_i|$), distinct course preps ($), combined-course incidence, and net planning minutes (^{\\text{plan}} < 250$).
+     - *Complexity Overlays:* IEP concentration (^{\\text{IEP}}$), ELL concentration (^{\\text{ELL}}$), and compound complexity sections ( \\ge 25$ with $\\ge 20\\%$ IEP or $\\ge 25\\%$ ELL).
+     - *Novice Teacher Equity Check:* Compares teachers in Years 1–2 vs. veterans on distinct preps, total student-seat load, and compound complexity exposure to detect systematic new-teacher overloading.
+   * **Four Foundational Demonstration Figures (PREP-KC Pilot Suite):**
+     - **Figure 19:** Macro PTR vs. Actual Student-Weighted Class Size.
+     - **Figure 20:** Classroom Section Size Distributions vs. Missouri State Standards (MSIP 6 caps at 25 and 33).
+     - **Figure 21:** Teacher Student-Seat Load vs. Distinct Preps (Jenkins $\\le 125$ ceiling).
+     - **Figure 22:** Novice vs. Veteran Assignment Equity Disparities.
+   * **Documentation & Implementation:**
+     - Full technical specification: 
+esearch/school_conditions_profile_metric_specification.md.
+     - Executable prototype and figures: src/analysis/prototype_school_conditions_profile.py.

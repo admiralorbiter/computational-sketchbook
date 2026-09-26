@@ -134,3 +134,16 @@ esearch/paper_kc_education_capacity_synthesis.md](research/paper_kc_education_ca
 
 
 
+
+- **Phase 4 (The Four-Pillar Measurement Framework & District Trajectories - Decisions 035 & 036):** Complete (outputs/tables/four_pillar_capacity_report.md, outputs/figures/fig16_district_capacity_vs_need_trajectories.png, outputs/figures/fig17_district_growth_scatter_capacity_vs_need.png, outputs/figures/fig18_structural_staffing_vs_actual_class_size.png).
+  - **Macro Staffing vs. Classroom Class Size:** Preserves both administrative staffing census (CCD: regional PTR contracted 14.85 -> 13.54; teachers +8.9%) and teacher-reported high school class sizes (SASS/NTPS: MO 21.8 -> 22.5; KS 19.7 -> 19.8), demonstrating a structural Class-Size / Macro-PTR Gap (+5 to +8 students) driven by bell-schedule planning multipliers ($\\phi = 1.400$) and non-classroom roles.
+  - **Judicial Contact Ceilings (*Jenkins*):** Documents that federal court audits looked beyond PTR, finding teaching assignments and daily loads 'more revealing' (*Jenkins v. Missouri*, 639 F. Supp. at 33; 149–154 contact load baseline; remedial ceiling $\\le 125$).
+  - **CRDC Course Gateway Bottlenecks:** Exposes localized high-volume bottlenecks (Wyandotte Algebra I at 28.5 across 46 sections, Lincoln Prep Math at 29.5) demonstrating how aggregate averages conceal acute classroom pressure.
+  - **Capacity vs. Need Across 56 Districts:** Proves that in 48 of 56 eligible longitudinal districts (85.7% of the eligible sample), teacher staffing density expanded while student accommodations burden escalated.
+- **Phase 5 (The School Conditions Profile Architecture & PREP-KC Pilot - Decision 037):** Complete (
+esearch/school_conditions_profile_metric_specification.md, src/analysis/prototype_school_conditions_profile.py, outputs/tables/prototype_school_conditions_report.md, outputs/figures/fig19_macro_ptr_vs_student_weighted_class_size.png, outputs/figures/fig20_section_size_distribution_msip6.png, outputs/figures/fig21_teacher_seat_load_vs_preps.png, outputs/figures/fig22_novice_vs_veteran_assignment_disparities.png).
+  - **The Policy Argument:** 'We are currently using a statistic (PTR) that does not measure what people think it measures, while already collecting the data necessary to measure that reality much better.'
+  - **MSIP 6 Regulatory Alignment:** Directly operationalizes Missouri\'s *Class Size and Assigned Enrollments* standards (recommended caps: 17 K–2, 20 3–4, 22 5–6, 25 7–12; upper ceiling 33; 250 min/wk planning time).
+  - **Goodhart\'s Law Guardrail:** Keeps the School Conditions Profile strictly descriptive and separate from Missouri\'s newly approved A–F school accountability system (approved Sept 15, 2026).
+  - **Two-Tier Architecture:** Version 1 (Existing State MOSIS data: October Course Assignment, Student Assignment, Screen 18, Screen 21) vs. Version 2 (Local SIS master schedule expansion: bell schedules, consecutive blocks, room floating, duties, co-teaching, roster churn).
+  - **Executable Prototype:** Relational engine executed on contrasting high schools with identical 15.0:1 PTR, proving that in high-friction schools, 49.5% of students sit in classes >25, novice teachers carry 3.0 distinct preps (vs 1.7 for veterans), and 19.6% of novice sections face compound high-need complexity.
