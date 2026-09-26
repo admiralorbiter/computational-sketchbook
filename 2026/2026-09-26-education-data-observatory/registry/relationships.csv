@@ -1,0 +1,17 @@
+source_node,target_node,relationship_type,description,parameter
+EDU-001,EDU-002,derived_from_numerator,Pupil/Teacher Ratio numerator is total student headcount enrollment (K-12),numerator
+EDU-001,EDU-003,derived_from_denominator,Pupil/Teacher Ratio denominator is total certified teacher FTE,denominator
+EDU-001,EDU-004,contrasted_with,Classroom Teacher FTE excludes instructional specialists isolating the Specialist Denominator Wedge,Delta_1_specialist_wedge
+EDU-001,EDU-007,contrasted_with,Structural macro staffing ratio relates to actual class size through the schedule planning multiplier phi,phi_schedule_multiplier
+EDU-006,EDU-007,aggregates_to,Individual course section enrollments aggregate to student-weighted or class-weighted class size,aggregation
+EDU-001,nces-ccd,sourced_from,Reported and derived from NCES CCD Non-Fiscal School and LEA universe files,primary_source
+EDU-002,nces-ccd,sourced_from,Reported directly as student membership headcount (MEMBER) in CCD non-fiscal survey,primary_source
+EDU-003,nces-ccd,sourced_from,Reported directly as total teacher FTE (TEACHERS_FTE) in CCD non-fiscal survey,primary_source
+EDU-004,ksde,sourced_from,Reported as distinct classroom teacher FTE in state personnel systems (KPTEN/MOSIS),state_source
+EDU-005,nces-ccd,sourced_from,Reported as instructional paraprofessionals/aides FTE in CCD LEA survey,primary_source
+EDU-006,crdc,sourced_from,Reported as course section counts and enrollments in biennial CRDC waves,primary_source
+EDU-007,ntps,sourced_from,Direct self-reported average class size from NTPS/SASS teacher questionnaire,survey_benchmark
+EDU-008,edfacts,sourced_from,Federal reporting of students chronically absent (missing >= 10% school days),primary_source
+EDU-009,edfacts,sourced_from,IDEA Part B child count reported through EDFacts and state report cards,primary_source
+EDU-010,crdc,sourced_from,Students with Section 504 plans reported biennially in CRDC,primary_source
+EDU-007,EDU-001,validates,Survey teacher reports and course-level sections provide empirical calibration against macro PTR,validation_contrast
