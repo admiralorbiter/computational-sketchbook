@@ -214,7 +214,7 @@ claims.append({
     "percent_basis": "start_value",
     "support_n": len(lea_77),
     "epistemic_status": "audited_fact",
-    "notes": "Campus aggregate PTR exceeds LEA-reported PTR because LEAs report centralized and itinerant instructional staff."
+    "notes": "LEA pooled PTR is lower than campus PTR; teacher denominator difference is dominant arithmetic driver while role composition remains unresolved."
 })
 
 # --- EDU-002 CLAIMS ---

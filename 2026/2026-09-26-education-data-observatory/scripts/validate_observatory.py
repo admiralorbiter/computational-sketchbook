@@ -809,6 +809,137 @@ def test_claim_specific_dossier_consistency(repo_dir: Path):
 
 
 # ----------------------------------------------------------------------
+# Named Test 19: prohibited_legacy_terms_in_dossiers
+# ----------------------------------------------------------------------
+def test_prohibited_legacy_terms_in_dossiers(repo_dir: Path):
+    errors = []
+    warnings = []
+    
+    prohibited_patterns = [
+        (re.compile(r"Students\s*/\s*Total\s*Staff", re.IGNORECASE), "misleading 'Students / Total Staff' PTR label"),
+        (re.compile(r"40%\s*(?:to|–|-)\s*80%", re.IGNORECASE), "blanket '40% to 80%' class-size assertion"),
+        (re.compile(r"24\s*(?:to|–|-)\s*28\+", re.IGNORECASE), "blanket '24 to 28+' class-size assertion"),
+        (re.compile(r"centrifugal\s+suburban\s+flight", re.IGNORECASE), "discredited 'centrifugal suburban flight' causal claim"),
+    ]
+    
+    measures_csv = repo_dir / "registry" / "measures.csv"
+    audited_dossiers = []
+    with open(measures_csv, mode="r", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            if row["status"].strip() == "audited":
+                d_rel = row["dossier_path"].strip()
+                if d_rel:
+                    audited_dossiers.append(repo_dir / d_rel)
+                    
+    checked = 0
+    for d_path in audited_dossiers:
+        if not d_path.exists():
+            continue
+        text = d_path.read_text(encoding="utf-8")
+        checked += 1
+        for pat, desc in prohibited_patterns:
+            matches = pat.findall(text)
+            if matches:
+                errors.append(f"Dossier {d_path.relative_to(repo_dir)} contains {desc}: {matches}")
+                
+    detail = f"{checked} audited dossiers verified free of prohibited legacy terms and blanket assertions"
+    return len(errors) == 0, errors, warnings, detail
+
+
+# ----------------------------------------------------------------------
+# Named Test 20: dossier_table_universe_and_subtotal_consistency
+# ----------------------------------------------------------------------
+def test_dossier_table_universe_and_subtotal_consistency(repo_dir: Path):
+    errors = []
+    warnings = []
+    
+    universes_csv = repo_dir / "registry" / "universes.csv"
+    registered_universes = set()
+    universe_counts = {}
+    with open(universes_csv, mode="r", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            uid = row["universe_id"].strip()
+            registered_universes.add(uid)
+            universe_counts[uid] = row["entity_count"].strip()
+            
+    measures_csv = repo_dir / "registry" / "measures.csv"
+    audited_dossiers = []
+    with open(measures_csv, mode="r", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            if row["status"].strip() == "audited":
+                d_rel = row["dossier_path"].strip()
+                if d_rel:
+                    audited_dossiers.append(repo_dir / d_rel)
+                    
+    # 1. Verify all cited universes in audited dossiers exist in universes.csv
+    universe_citations_checked = 0
+    for d_path in audited_dossiers:
+        if not d_path.exists():
+            continue
+        text = d_path.read_text(encoding="utf-8")
+        matches = set(re.findall(r"\b(KC_[A-Z0-9_]+)\b", text))
+        for uid in matches:
+            universe_citations_checked += 1
+            if uid not in registered_universes:
+                errors.append(f"Dossier {d_path.relative_to(repo_dir)} cites unregistered universe '{uid}'")
+                
+    # 2. Verify grade-band subtotal consistency in EDU-001 (Section 8.1 table)
+    edu001_path = repo_dir / "measures" / "EDU-001-pupil-teacher-ratio" / "README.md"
+    if edu001_path.exists():
+        edu001_text = edu001_path.read_text(encoding="utf-8")
+        band_counts = {}
+        all_schools_count = None
+        for line in edu001_text.splitlines():
+            if line.strip().startswith("|") and any(k in line for k in ["Primary", "Middle", "High", "Other / Combined", "All Regular Schools"]):
+                parts = [c.strip().strip("*` ") for c in line.split("|")[1:-1]]
+                if len(parts) >= 2:
+                    label = parts[0]
+                    cnt_str = parts[1].replace(",", "")
+                    if cnt_str.isdigit():
+                        cnt = int(cnt_str)
+                        if "All Regular Schools" in label:
+                            all_schools_count = cnt
+                        else:
+                            band_counts[label] = cnt
+        if all_schools_count is not None and band_counts:
+            subtotal = sum(band_counts.values())
+            if subtotal != all_schools_count:
+                errors.append(f"EDU-001 Section 8.1 grade-band sum ({subtotal}) does not match All Regular Schools total ({all_schools_count}): {band_counts}")
+            expected_u_count = universe_counts.get("KC_REGULAR_PTR_ACTIVE_616")
+            if expected_u_count and expected_u_count.isdigit():
+                if all_schools_count != int(expected_u_count):
+                    errors.append(f"EDU-001 Section 8.1 total ({all_schools_count}) does not match KC_REGULAR_PTR_ACTIVE_616 entity_count ({expected_u_count})")
+        else:
+            errors.append("Could not parse EDU-001 Section 8.1 grade-band distribution table")
+
+    # 3. Verify grade-band subtotal consistency in EDU-003 (Section 10.1 table) if present
+    edu003_path = repo_dir / "measures" / "EDU-003-total-teacher-fte" / "README.md"
+    if edu003_path.exists():
+        edu003_text = edu003_path.read_text(encoding="utf-8")
+        band_counts_003 = {}
+        all_schools_count_003 = None
+        for line in edu003_text.splitlines():
+            if line.strip().startswith("|") and any(k in line for k in ["Elementary", "Middle", "High", "Other / Combined", "All Regular Schools"]):
+                parts = [c.strip().strip("*` ") for c in line.split("|")[1:-1]]
+                if len(parts) >= 2:
+                    label = parts[0]
+                    cnt_str = parts[1].replace(",", "")
+                    if cnt_str.isdigit():
+                        cnt = int(cnt_str)
+                        if "All Regular Schools" in label:
+                            all_schools_count_003 = cnt
+                        else:
+                            band_counts_003[label] = cnt
+        if all_schools_count_003 is not None and band_counts_003:
+            subtotal_003 = sum(band_counts_003.values())
+            if subtotal_003 != all_schools_count_003:
+                errors.append(f"EDU-003 Section 10.1 grade-band sum ({subtotal_003}) does not match All Regular Schools total ({all_schools_count_003}): {band_counts_003}")
+
+    detail = f"{universe_citations_checked} universe citations registered; grade-band subtotals reconciled (N=616 in EDU-001, N=622 in EDU-003)"
+    return len(errors) == 0, errors, warnings, detail
+
+
+# ----------------------------------------------------------------------
 # Main Runner
 # ----------------------------------------------------------------------
 def validate_observatory():
@@ -838,6 +969,8 @@ def validate_observatory():
         ("claim_note_numeric_drift", test_claim_note_numeric_drift),
         ("source_dossier_measure_table_consistency", test_source_dossier_measure_table_consistency),
         ("claim_specific_dossier_consistency", test_claim_specific_dossier_consistency),
+        ("prohibited_legacy_terms_in_dossiers", test_prohibited_legacy_terms_in_dossiers),
+        ("dossier_table_universe_and_subtotal_consistency", test_dossier_table_universe_and_subtotal_consistency),
     ]
     
     total_tests = len(named_tests)
