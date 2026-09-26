@@ -14,7 +14,7 @@
 | **Student Enrollment** | $\sim 3,500$ Students (K–12) | NCES CCD / DESE MCDS 2024–25 |
 | **Demographic Context** | Majority-minority, high Free/Reduced Lunch ($\sim 75\%+$), Title I Schoolwide | DESE Demographic Profile |
 | **Key Regional Intermediary** | **PREP-KC** (Longstanding Urban/Suburban Partner) | PREP-KC Collaborative Roster |
-| **RWL Consortium Role** | **Cohort 1 (2019–20 Design / 2020–21 Implementation)**; South KC Microregion | Kauffman Foundation RWL Hub |
+| **RWL Consortium Role** | **Cohort 1 (2020–21)** in the current RWL network listing; earlier design activity requires separate source verification | Kauffman Foundation RWL Hub |
 | **Microregion Partners** | Center School District (South), Hickman Mills C-1 School District | South KC Chamber / Kauffman |
 | **Executive Leadership** | Dr. Stephanie Amaya (Superintendent, July 2026–Present; prev. Asst Supt HR); Dr. Kenny Rodrequiz (Superintendent, 2014–2026) | Grandview Board Briefs & Press Releases |
 
@@ -22,7 +22,7 @@ Grandview C-4 constitutes an optimal foundational case for the study of educatio
 1. **Original Cohort Longevity**: As a Cohort 1 participant in the Kauffman Foundation's Real World Learning initiative, Grandview possesses the longest continuous exposure to the reform ($\sim 2019 \rightarrow 2026$).
 2. **Distinct Microregional Strategy**: Rather than operating in isolation, Grandview pooled resources with neighboring South Kansas City districts (Center and Hickman Mills) and intermediary PREP-KC to share pathway courses.
 3. **High Governance Transparency**: Grandview publishes meeting documentation across multiple distinct public platforms (Simbli by eBOARDsolutions, Edlio CMS Board Briefs, Google Drive financial repositories, and open YouTube video streams).
-4. **Recent Accountability Cadence**: The Board of Education formally conducted a comprehensive program evaluation of Real-World Learning in **December 2024**, and subsequently reaffirmed pathway commitments in **January 2025** and **June 2026**, establishing an empirical paper trail during the exact period of philanthropic funding transitions.
+4. **Recent Accountability Cadence**: The Board of Education formally reviewed a Real-World Learning program evaluation in **December 2024**, discussed shared pathway expansion in **January 2025**, reported continued RWL opportunities in **April 2026**, and documented continued/new career partnerships in **June 2026**. These events establish a strong longitudinal paper trail, but the district-specific Kauffman grant end date remains unresolved.
 
 ---
 
@@ -60,7 +60,7 @@ flowchart TD
 ## 3. Detailed Source Availability by Evidence Layer
 
 ### Layer 1: Formal Strategy
-- **Current CSIP (2022–2027)**: Formally adopted under Missouri School Improvement Program (MSIP 6) rules. The plan is organized into four strategic pillars: *Success-Ready Students*, *Workforce Excellence*, *Operational Readiness*, and *Climate & Culture*.
+- **Current Strategic Plan (2024–2027)**: Formally adopted under Missouri School Improvement Program (MSIP 6) rules. The current plan is organized into four strategic pillars: *Success-Ready Students*, *Workforce Excellence*, *Operational Readiness*, and *Climate & Culture*. A March 20, 2025 Board Brief states that the Board approved the 2024–2027 Strategic Plan on June 20, 2024.
   - *Direct One-Pager*: Available as PDF (`https://4.files.edl.io/3a86/08/25/25/160646-bcbc4635-7cd9-4400-a3e8-f4930d61e833.pdf`).
   - *Comprehensive Narrative Document*: Embedded via Issuu interactive reader (`https://e.issuu.com/embed.html?d=gsd_strategicplan_6_hu&u=grandviewc4schools`).
   - *Web Portal*: Landing page with strategic planning committee disclosures (`/apps/pages/index.jsp?uREC_ID=422366&type=d&pREC_ID=1602601`).
@@ -77,8 +77,8 @@ flowchart TD
   - Verified critical meetings:
     - **December 19, 2024**: Program Evaluation of Real-World Learning (metrics: MVA attainment, college prep/placement, career-center enrollment, STEM participation) + 2024 MSIP 6 APR presentation (127.5/200 points, 63.7%).
     - **January 16, 2025**: Real World Learning shared pathways update (cosmetology, graphic design, welding, healthcare, advanced manufacturing with Honeywell).
-    - **April 16, 2026**: Appointment of Dr. Stephanie Amaya as Superintendent; Real World Learning affirmed as core strategic priority.
-    - **June 18, 2026**: Update on T&L Welding partnership (200 hours coursework, 100% AWS credential completion) + Preliminary 2026–27 Operating Budget adoption.
+    - **April 16, 2026**: Board Brief reports progress with Real World Learning opportunities and highlights student participation in Foundations for the Future Week. Dr. Stephanie Amaya had been appointed next superintendent in a separate March 9, 2026 district announcement; that announcement does **not** independently establish RWL as her stated priority.
+    - **June 18, 2026**: Board Brief states the district is **continuing** its T&L Welding partnership (200 hours of coursework) and is partnering with Between Me 2 You for healthcare training; the Board also adopted a preliminary 2026–27 operating budget.
     - **September 17, 2026**: Review of multi-tier student behavior services and community grant recognitions.
 - **Meeting Video Recordings**:
   - Regular open sessions broadcast to YouTube (`@GrandviewC-4SchoolDistrict`) and shared on district media.
@@ -105,7 +105,7 @@ flowchart TD
   - `https://www.grandviewc4.net/apps/staff/`.
   - Dynamic searchable index of certified and classified personnel across all school facilities.
 - **Wayback Machine Personnel Snapshots**:
-  - Over 50 historical snapshots of `/apps/staff/` between 2018 and 2025 in the Internet Archive, allowing reconstruction of coordinator positions and title migration.
+  - The current targeted CDX inventory returned 53 `/apps/staff/` captures from January 2018 through April 2026. These are capture-index records, not yet a fully archived personnel corpus.
 
 ### Layer 5: Operations & Course Pathways
 - **Grandview High School Course Planning Guide**:
@@ -124,7 +124,7 @@ flowchart TD
   - `/apps/news/` on `grandviewc4.net`.
   - Longitudinal archive of press releases, student showcases, and event recaps.
 - **Wayback Machine CDX Index**:
-  - 5,000+ snapshots of `grandviewc4.net` cataloged in Internet Archive CDX API from 2018 through 2026.
+  - Targeted Internet Archive CDX queries currently return 53 staff-directory captures and 500 news captures. The existing script previously hit query limits and should not be interpreted as a complete census of all site snapshots.
   - Enables NLP-based lexical evolution analysis (measuring shift from Kauffman "MVA" terminology to MSIP 6 "Success-Ready Students" terminology).
 
 ### Layer 7: Outcomes & State Accreditation
@@ -142,7 +142,7 @@ flowchart TD
 | Evidentiary Barrier | Severity | Description | Mitigation Strategy |
 | :--- | :---: | :--- | :--- |
 | **CMS User-Agent Filtering** | Medium | Edlio CMS and Cloudflare return 403 Forbidden to standard automated bots and scripts without standard browser headers. | Ingestion scripts configure standard Chrome/Mozilla User-Agent, referer headers, and session cookies (`curl.exe` or `requests.Session`). |
-| **Simbli Dynamic Rendering** | Medium | Meeting listing data is populated dynamically via client-side JavaScript calls to `/Services/api/GetMeetingListing` using an encrypted connection token. | Script extracts `meetingCustGrd` and `constr` parameters directly from initial page HTML to issue valid JSON POST requests. |
+| **Simbli Dynamic Rendering** | Medium | Meeting listing data is populated dynamically via client-side JavaScript calls to `/Services/api/GetMeetingListing` using an encrypted connection token. | Script extracts `meetingCustGrd` and `constr` parameters directly from initial page HTML to issue valid JSON POST requests. The returned raw meeting census currently contains 788 records. |
 | **External Google Drive Storage** | Low | High-value budget and audit PDFs are hosted on Google Drive rather than directly on the CMS web server. | Scripts resolve Google Drive file IDs and utilize standard direct download endpoints (`uc?export=download&id={ID}`). |
 | **Issuu Document Containment** | Low | The complete 40-page CSIP is embedded in an Issuu reader widget rather than exposed as a single static PDF download link. | Harvest individual page renders via Issuu JSON API or download the companion official one-pager summary PDF. |
 | **Video Audio Transcription** | High | Board meeting debate and nuanced spoken exchanges exist only as raw video streams on YouTube without official transcripts. | Pipeline isolates board meeting stream URLs, extracts audio tracks via `yt-dlp`, and processes speech-to-text using Whisper / Gemini audio transcription. |
@@ -171,3 +171,22 @@ flowchart TD
 - **Never Overwrite or Summarize Away Raw Sources**: Every PDF, HTML file, JSON response, and audio track is preserved immutably in `data/raw/grandview-c4/{layer}/`.
 - **Relational Integrity**: Every entry in `districts/grandview-c4/timeline.csv` and `registry/evidence.csv` must cite a valid `source_id` matching an entry in `registry/sources.csv`.
 - **Page and Timestamp Pinning**: Claims derived from multi-page documents must cite explicit page numbers (`p. 14`); claims derived from video recordings must cite exact minute/second timestamps (`01:24:15`).
+
+
+---
+
+## 7. Task 001 Audit Status
+
+The initial inventory is sufficient to proceed, but Task 001 should be considered **audited with open acquisition gaps**, not a completed archival corpus.
+
+### Verified strengths
+- Simbli governance census: 788 returned meeting records spanning 2014–2026.
+- Specific Board Brief events for December 2024, January 2025, April 2026, and June 2026 are now represented as distinct source records rather than as one generic category source.
+- Raw copies currently exist for the strategic-plan one-pager, current budget, current audit, tax notice, Simbli census, targeted Wayback CDX inventory, and a subset of 2026 district articles.
+
+### Open gates before causal or post-grant analysis
+1. Establish Grandview's **district-specific Kauffman award amount, award dates, renewals, and end/transition date** from grant, budget, board, or funder records.
+2. Acquire the exact December 2024 RWL evaluation packet and January 2025 pathway materials.
+3. Re-run the hardened Board Brief harvester and replace the contaminated index with a validated corpus plus rejection log.
+4. Re-run Wayback archaeology with the revised coverage/truncation logic, then archive selected snapshots used for personnel genealogy.
+5. Do not describe any 2026 Grandview event as "post-grant" until Gate 1 is resolved.
