@@ -2,6 +2,14 @@
 
 A systematic, cumulative, measure-by-measure research instrument for public education data.
 
+> [!IMPORTANT]
+> **Project Paused at Milestone 1.** The foundational core measures ([`EDU-001`](measures/EDU-001-pupil-teacher-ratio/README.md), [`EDU-002`](measures/EDU-002-student-enrollment/README.md), [`EDU-003`](measures/EDU-003-total-teacher-fte/README.md)) are fully audited, cryptographically validated, and permanently frozen.
+>
+> **Essential Orientation & Handoff Documents:**
+> - [**`HANDOFF.md`**](HANDOFF.md): Authoritative cold-start orientation, epistemic trust hierarchy, frozen claims summary, and reproduction instructions.
+> - [**`DECISIONS.md`**](DECISIONS.md): Durable methodological decision log documenting foundational modeling, geographic, and universe choices.
+> - [**`RESUME_PROMPT.md`**](RESUME_PROMPT.md): Ready-to-paste briefing prompt for resuming work in fresh LLM sessions.
+
 ---
 
 ## 1. Central Organizing Principle
@@ -132,21 +140,25 @@ All work in this repository adheres to ten foundational principles:
 ```text
 2026-09-26-education-data-observatory/
 ├── README.md                      # Observatory manifesto, architecture, and principles
+├── HANDOFF.md                     # Canonical cold-start orientation & handoff document
+├── DECISIONS.md                   # Durable methodological decision log
+├── RESUME_PROMPT.md               # Ready-to-paste prompt for resuming work in fresh sessions
 ├── registry/                      # Machine-readable registry ledgers
 │   ├── measures.csv               # Master catalog of education measures (canonical names/IDs)
 │   ├── operationalizations.csv    # Concrete formula and universe implementations
 │   ├── sources.csv                # Master catalog of external data sources
+│   ├── universes.csv              # Population boundaries, inclusion/exclusion rules, and entity counts
 │   └── relationships.csv          # Measurement graph edge list (inputs, outputs, models)
 ├── templates/                     # Standardized research dossiers
 │   ├── measure_dossier.md         # Template specification for all measures
 │   └── source_dossier.md          # Template specification for external data sources
 ├── measures/                      # Individual measure dossiers (the core research unit)
 │   ├── EDU-001-pupil-teacher-ratio/
-│   │   └── README.md              # Calibration specimen dossier for PTR
+│   │   └── README.md              # Calibration specimen dossier for PTR (Audited & Frozen)
 │   ├── EDU-002-student-enrollment/
 │   │   └── README.md              # Audited and frozen dossier for Student Headcount Enrollment
 │   └── EDU-003-total-teacher-fte/
-│       └── README.md              # Audited dossier for Reported Classroom Teacher FTE
+│       └── README.md              # Audited dossier for Reported Classroom Teacher FTE (Frozen)
 ├── sources/                       # Documentation and audit dossiers for external data sources
 │   ├── nces-ccd/README.md         # NCES Common Core of Data source dossier
 │   ├── crdc/README.md             # Civil Rights Data Collection source dossier
@@ -160,8 +172,12 @@ All work in this repository adheres to ten foundational principles:
 │   ├── interim/                   # Cleaned, standardized tabular intermediate files
 │   └── processed/                 # Validated measure extractions
 ├── analysis/                      # Cross-measure analyses
+│   ├── results/claims.csv         # Authoritative machine-readable empirical claims ledger
 │   ├── cross-measure/             # Relational and multivariate explorations consuming measures
 │   └── archive/                   # Superseded or diagnostic exploration scripts
+├── scripts/                       # Automated repo generation & integrity validation
+│   ├── generate_claims_ledger.py  # Code generation of claims.csv directly from upstream data
+│   └── validate_observatory.py    # 21-test automated integrity validation suite
 └── dashboard/                     # Downstream visualization views over the registry
 ```
 
@@ -227,8 +243,12 @@ Key empirical foundations inherited from that work include:
   - Reconciled 10-year longitudinal PTR compression across the Balanced 75 LEA cohort: $14.85:1 \to 13.55:1$ ($-1.30$, $-8.75\%$; `CLM-PTR-001`).
   - Synchronized Dynamic regional LEA trajectory: $14.85:1 \to 13.54:1$ ($-1.31$, $-8.82\%$; `CLM-PTR-001-DYN`).
   - Quantified downward staffing stickiness across 28 declining LEAs with unchanged operating-school counts: PTR compressed from $14.02:1 \to 13.34:1$ ($-0.68$, $-4.85\%$; `CLM-PTR-002`) as enrollment fell $-8.33\%$ while teacher FTE contracted only $-3.63\%$.
-  - Quantified the Central Allocation Gap across 77 regional LEAs: campus aggregate PTR ($13.81:1$) exceeds LEA reported PTR ($13.57:1$) by $+0.24$ students per teacher FTE ($+1.74\%$; `CLM-PTR-003`) due to itinerant and centralized staff.
-  - Formalized regular campus distribution across 616 schools: Primary ($12.86:1$), Middle ($13.35:1$), High ($15.43:1$).
+  - Quantified the Regional Campus vs LEA Allocation Gap across 77 regional LEAs: LEA reported PTR ($13.57:1$) is $0.24$ lower than campus aggregate PTR ($13.81:1$, $-1.74\%$ relative to campus; `CLM-PTR-003`); the teacher denominator difference is the dominant arithmetic contributor ($-0.29$ vs $+0.06$ enrollment) while exact personnel role composition remains unresolved pending state microdata.
+  - Formalized regular campus distribution across 616 schools (`KC_REGULAR_PTR_ACTIVE_616`): Primary ($12.86:1$), Middle ($13.35:1$), High ($15.43:1$), Other/Combined ($19.51:1$).
   - Integrated Figure 14 into the visual packet, demonstrating large-sample empirical confirmation of the secondary staffing wedge. Status: `AUDITED / FROZEN`.
-- **Task 006 (Upcoming):** Scaffold `EDU-005 Paraprofessional FTE`.
+- **Project Paused at Milestone 1 (Completed & Frozen):**
+  - Foundational measurement core (`EDU-001`, `EDU-002`, `EDU-003`) audited, cryptographically verified, and permanently frozen across 20 machine-readable claims.
+  - Repository stabilized with 21-test automated validation suite.
+  - Cold-start documentation established in [`HANDOFF.md`](HANDOFF.md), [`DECISIONS.md`](DECISIONS.md), and [`RESUME_PROMPT.md`](RESUME_PROMPT.md).
+  - Next candidate measure when research resumes: `EDU-005 Paraprofessional FTE` (Deferred).
 
