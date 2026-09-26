@@ -92,7 +92,8 @@ NCES applies strict statistical disclosure control: cells with unweighted respon
 
 ## 9. Downstream Measures & Model Dependencies
 
-| Relationship / Model | Role in Measurement Graph | Key Parameters Extracted |
+| Measure ID / Model | Role in Measurement Graph | Key Parameters Extracted |
 | :--- | :--- | :--- |
+| `EDU-007` | Teacher-Reported Average Class Size | Survey questionnaire Table 7 benchmark distributions |
 | `REL-002 (EDU-001 -> EDU-012)` | Structural empirical conversion model | Mean secondary teacher teaching fraction ($\lambda = 0.75$ to $0.80$), planning period allocations |
 | `REL-003 (EDU-003 -> EDU-004)` | FTE to headcount conversion | Part-time teacher share and itinerant teacher adjustments |

@@ -217,7 +217,7 @@ prov_text = (
     "• Sources: NCES Common Core of Data (CCD) School and LEA Universe Panels (SY 2014-15 to 2024-25)\n"
     "• Target Population: Balanced 75 Cohort LEAs experiencing negative enrollment change with unchanged operating school count (N=28 LEAs)\n"
     "• Figure Classification: EMPIRICAL ORGANIZATIONAL DYNAMICS & HYPOTHESIS TESTING\n"
-    "• Pipeline: analysis/cross-measure/generate_edu003_visuals.py | Sensitivity: 25 LEAs with identical NCESSCH sets show identical stickiness (-3.3% vs -8.0%)."
+    "• Pipeline: analysis/cross-measure/generate_edu003_visuals.py | Sensitivity: 25 LEAs with identical NCESSCH sets show identical stickiness (-3.35% vs -10.50%)."
 )
 fig.text(0.06, -0.12, prov_text, fontsize=7.2, color='#475569', family='monospace', bbox=dict(boxstyle='square,pad=0.5', fc='#f8fafc', ec='#cbd5e1', lw=0.6))
 

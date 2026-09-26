@@ -101,9 +101,9 @@ CRDC public data files apply small-cell protection. When demographic cell counts
 ## 8. Known Longitudinal Traps & Historical Anomalies
 
 1. **Course Class Size is NOT Collected Directly:** CRDC does not collect student section rosters or direct classroom headcount. Derived class size must be operationalized as:
-   $$\text{Derived Class Size (EDU-012)} = \frac{\text{Course Student Enrollment (EDU-011)}}{\text{Course Section Count (EDU-007)}}$$
+   $$\text{Derived Class Size (EDU-012)} = \frac{\text{Course Student Enrollment (EDU-006)}}{\text{Course Class Count (EDU-011)}}$$
 2. **Pandemic Scheduling Disruption:** The 2019–20 collection was cancelled due to nationwide school closures. The subsequent 2020–21 wave was collected during peak hybrid/remote instruction, creating anomalous section counts and enrollment structures.
-3. **Singleton Course Sections:** In small high schools (<800 enrollment), courses such as Calculus or Physics are frequently offered as a single section ($\text{EDU-007} = 1$). A change from 1 section to 0 sections represents complete cancellation of the curriculum.
+3. **Singleton Course Sections:** In small high schools (<800 enrollment), courses such as Calculus or Physics are frequently offered as a single section ($\text{EDU-011} = 1$). A change from 1 section to 0 sections represents complete cancellation of the curriculum.
 
 ---
 
@@ -111,8 +111,7 @@ CRDC public data files apply small-cell protection. When demographic cell counts
 
 | Measure ID | Measure Name | Observation Level | Primary Fields Ingested |
 | :--- | :--- | :--- | :--- |
-| `EDU-007` | Course Section Count | School / Course | `SCH_MATHCLASSES_CALC`, `SCH_SCICLASSES_PHYS`, etc. |
-| `EDU-011` | Course Student Enrollment | School / Course | `SCH_MATHENR_CALC_TOT`, `SCH_SCIENR_PHYS_TOT`, etc. |
-| `EDU-012` | Derived School-Course Mean Class Size | School / Course | Ratio of `EDU-011` to `EDU-007` |
-| `EDU-013` | Advanced Course Availability (Indicator) | School / Course | Boolean indicator ($\text{EDU-007} > 0$) |
-| `EDU-014` | Advanced STEM Pipeline Participation Rate | School / Course | Ratio of `EDU-011` to Grade 11–12 enrollment |
+| `EDU-006` | Course Student Enrollment | School / Course | `SCH_MATHENR_CALC_TOT`, `SCH_SCIENR_PHYS_TOT`, etc. |
+| `EDU-010` | Section 504 Accommodation Enrollment | School / LEA | `SCH_504ENR` |
+| `EDU-011` | Course Class Count | School / Course | `SCH_MATHCLASSES_CALC`, `SCH_SCICLASSES_PHYS`, etc. |
+| `EDU-012` | Derived School-Course Mean Class Size | School / Course | Ratio of `EDU-006` to `EDU-011` |

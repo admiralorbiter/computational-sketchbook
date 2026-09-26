@@ -441,6 +441,179 @@ def test_canonical_measure_names_consistency(repo_dir: Path):
 
 
 # ----------------------------------------------------------------------
+# Named Test 13: claims_ledger_integrity
+# ----------------------------------------------------------------------
+def test_claims_ledger_integrity(repo_dir: Path):
+    errors = []
+    warnings = []
+    
+    claims_csv = repo_dir / "analysis" / "results" / "claims.csv"
+    if not claims_csv.exists():
+        errors.append("Machine-readable claims ledger 'analysis/results/claims.csv' does not exist")
+        return False, errors, warnings, "claims.csv missing"
+        
+    measures_csv = repo_dir / "registry" / "measures.csv"
+    reg_measures = set()
+    with open(measures_csv, mode="r", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            reg_measures.add(row["measure_id"].strip())
+            
+    universes_csv = repo_dir / "registry" / "universes.csv"
+    reg_universes = set()
+    if universes_csv.exists():
+        with open(universes_csv, mode="r", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                reg_universes.add(row["universe_id"].strip())
+    else:
+        errors.append("Universes registry 'registry/universes.csv' does not exist")
+        
+    upstream_csv = repo_dir / "data" / "upstream_artifacts.csv"
+    reg_artifacts = set()
+    with open(upstream_csv, mode="r", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            reg_artifacts.add(row["artifact_id"].strip())
+            
+    claim_ids = set()
+    claims_count = 0
+    with open(claims_csv, mode="r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for r in reader:
+            claims_count += 1
+            cid = r["claim_id"].strip()
+            if cid in claim_ids:
+                errors.append(f"Duplicate claim_id in claims.csv: '{cid}'")
+            claim_ids.add(cid)
+            
+            mid = r["measure_id"].strip()
+            if mid not in reg_measures:
+                errors.append(f"Claim '{cid}' references unregistered measure_id '{mid}'")
+                
+            uid = r["universe_id"].strip()
+            if uid not in reg_universes:
+                errors.append(f"Claim '{cid}' references unregistered universe_id '{uid}'")
+                
+            script_rel = r["analysis_script"].strip()
+            if not (repo_dir / script_rel).exists():
+                errors.append(f"Claim '{cid}' references missing analysis_script '{script_rel}'")
+                
+            art_ids = [a.strip() for a in r["source_artifact_ids"].split(",") if a.strip()]
+            for aid in art_ids:
+                if aid not in reg_artifacts:
+                    errors.append(f"Claim '{cid}' references unregistered source_artifact_id '{aid}'")
+                    
+    detail = f"{claims_count} machine-readable claims verified across measures, universes, and scripts"
+    return len(errors) == 0, errors, warnings, detail
+
+
+# ----------------------------------------------------------------------
+# Named Test 14: source_dossier_measure_table_consistency
+# ----------------------------------------------------------------------
+def test_source_dossier_measure_table_consistency(repo_dir: Path):
+    errors = []
+    warnings = []
+    
+    measures_csv = repo_dir / "registry" / "measures.csv"
+    canonical_names = {}
+    with open(measures_csv, mode="r", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            canonical_names[row["measure_id"].strip()] = row["canonical_name"].strip()
+            
+    sources_dir = repo_dir / "sources"
+    source_dossiers = list(sources_dir.glob("*/README.md"))
+    
+    checked_mappings = 0
+    for sd in source_dossiers:
+        text = sd.read_text(encoding="utf-8")
+        # Match rows in Markdown table: | `EDU-XXX` | Measure Name | ...
+        matches = re.findall(r"\|\s*`?(EDU-\d{3})`?\s*\|\s*([^|]+?)\s*\|", text)
+        for mid, mname in matches:
+            checked_mappings += 1
+            mname_clean = mname.strip().strip("`")
+            if mid not in canonical_names:
+                errors.append(f"Source dossier {sd.relative_to(repo_dir)} references unknown measure ID '{mid}'")
+                continue
+                
+            expected_name = canonical_names[mid]
+            # Normalize whitespace and hyphens/slashes
+            norm_actual = re.sub(r"[\s/]+", "", mname_clean.lower())
+            norm_expected = re.sub(r"[\s/]+", "", expected_name.lower())
+            
+            # Allow common descriptive prefixes or exact matches
+            if norm_actual not in norm_expected and norm_expected not in norm_actual:
+                errors.append(
+                    f"Source dossier {sd.relative_to(repo_dir)} labels {mid} as '{mname_clean}', "
+                    f"expected canonical name '{expected_name}'"
+                )
+                
+    detail = f"{checked_mappings} source-dossier downstream measure mappings verified against registry"
+    return len(errors) == 0, errors, warnings, detail
+
+
+# ----------------------------------------------------------------------
+# Named Test 15: claims_dossier_numeric_consistency
+# ----------------------------------------------------------------------
+def test_claims_dossier_numeric_consistency(repo_dir: Path):
+    errors = []
+    warnings = []
+    
+    claims_csv = repo_dir / "analysis" / "results" / "claims.csv"
+    if not claims_csv.exists():
+        return False, ["claims.csv missing"], [], "claims.csv missing"
+        
+    measures_csv = repo_dir / "registry" / "measures.csv"
+    reg_status = {}
+    dossier_paths = {}
+    with open(measures_csv, mode="r", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            mid = row["measure_id"].strip()
+            reg_status[mid] = row["status"].strip()
+            dossier_paths[mid] = row["dossier_path"].strip()
+            
+    claims_by_measure = {}
+    with open(claims_csv, mode="r", encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            mid = r["measure_id"].strip()
+            claims_by_measure.setdefault(mid, []).append(r)
+            
+    verified_numerical_anchors = 0
+    # Check audited/frozen measures
+    for mid, mstatus in reg_status.items():
+        if mstatus != "audited":
+            continue
+        d_path = repo_dir / dossier_paths[mid]
+        if not d_path.exists():
+            continue
+        d_text = d_path.read_text(encoding="utf-8")
+        
+        m_claims = claims_by_measure.get(mid, [])
+        for c in m_claims:
+            cid = c["claim_id"]
+            # Check if key values appear in the text
+            v_end = float(c["value_end"]) if c["value_end"] not in ("NA", "nan") else None
+            pct = float(c["percent_change"]) if c["percent_change"] not in ("NA", "nan") else None
+            
+            found = False
+            candidates = []
+            if pct is not None:
+                candidates.extend([f"{pct:+.2f}%", f"{pct:.2f}%", f"{pct:+.1f}%", f"{pct:.1f}%", f"{abs(pct):.1f}%", f"{abs(pct):.2f}%"])
+            if v_end is not None:
+                candidates.extend([f"{v_end:,.0f}", f"{v_end:,.2f}", f"{v_end:.0f}", f"{v_end:.2f}"])
+                
+            for cand in candidates:
+                if cand in d_text:
+                    found = True
+                    break
+                    
+            if found:
+                verified_numerical_anchors += 1
+            else:
+                warnings.append(f"Dossier for {mid} does not explicitly display primary value from claim {cid} (candidates: {candidates[:3]})")
+                
+    detail = f"{verified_numerical_anchors} primary numerical anchors in audited dossiers verified against claims ledger"
+    return len(errors) == 0, errors, warnings, detail
+
+
+# ----------------------------------------------------------------------
 # Main Runner
 # ----------------------------------------------------------------------
 def validate_observatory():
@@ -464,6 +637,9 @@ def validate_observatory():
         ("roadmap_status_consistency", test_roadmap_status_consistency),
         ("source_inventory_consistency", test_source_inventory_consistency),
         ("canonical_measure_names_consistency", test_canonical_measure_names_consistency),
+        ("claims_ledger_integrity", test_claims_ledger_integrity),
+        ("source_dossier_measure_table_consistency", test_source_dossier_measure_table_consistency),
+        ("claims_dossier_numeric_consistency", test_claims_dossier_numeric_consistency),
     ]
     
     total_tests = len(named_tests)

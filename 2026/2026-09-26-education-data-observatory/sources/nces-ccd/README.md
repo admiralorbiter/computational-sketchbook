@@ -99,7 +99,7 @@ In standard public non-fiscal universe files, aggregate membership and total FTE
 
 ## 8. Known Longitudinal Traps & Historical Anomalies
 
-1. **The 2015–16 Kansas Staff Non-Reporting Break:** In the SY 2015–16 federal CCD LEA and School Non-Fiscal files, Kansas failed to submit teacher counts for major districts including Olathe USD 233 (`2010140`) and Gardner Edgerton USD 231 (`2006420`), causing an artificial regional undercount of $-2,311$ FTE. Pipeline interpolation via continuous KSDE records is required.
+1. **The 2015–16 Kansas Staff Non-Reporting Break:** In the SY 2015–16 federal CCD LEA and School Non-Fiscal files, Kansas did not report teacher counts for major districts including Olathe USD 233 (`2010140`) and Gardner Edgerton USD 231 (`2006420`), causing an artificial regional undercount of $-2,311$ FTE. Rather than treating this missing report as substantive zero teachers, the Observatory maintains raw CCD missingness (NaN) alongside an explicitly labeled illustrative linear interpolation for macro trajectories, pending registration of an audited state personnel artifact.
 2. **Variable Renaming (`TOTENR` $\to$ `MEMBER`):** In SY 2014–15, NCES transitioned core variable names, moving total school enrollment from `TOTENR` to `MEMBER`.
 3. **Zero-Membership Operating Schools:** Legitimate operating public schools (particularly technical/vocational centers and specialized shared-time programs) report $0$ official October 1 membership because students are enrolled and counted primarily at their home comprehensive campus.
 4. **Campus-Sum vs. LEA Membership Gap:** Across the Kansas City 9-county metropolitan area, LEA-reported enrollment exceeds the sum of campus enrollment by $+1,472$ students across regular districts (primarily Pre-K and centralized special education programs) plus $+973$ students in non-traditional regional/statewide LEAs.
@@ -111,8 +111,8 @@ In standard public non-fiscal universe files, aggregate membership and total FTE
 
 | Measure ID | Measure Name | Observation Level | Primary Fields Ingested |
 | :--- | :--- | :--- | :--- |
-| `EDU-001` | Pupil/Teacher Ratio (PTR) | School / LEA | `enrollment`, `teachers_fte` |
-| `EDU-002` | Student Enrollment (Headcount) | School / LEA | `enrollment`, `grade_level` |
+| `EDU-001` | Pupil / Teacher Ratio | School / LEA | `enrollment`, `teachers_fte` |
+| `EDU-002` | Student Headcount Enrollment | School / LEA | `enrollment`, `grade_level` |
 | `EDU-003` | Reported Classroom Teacher FTE | School / LEA | `teachers_fte` |
-| `EDU-005` | Paraprofessional / Aide FTE | LEA | `paraprofessionals_fte` |
-| `EDU-006` | School Administrator FTE | LEA / School | `school_administrators_fte`, `lea_administrators_fte` |
+| `EDU-005` | Paraprofessional FTE | LEA | `paraprofessionals_fte` |
+| `EDU-017` | Current Operating Expenditures | LEA / State | `total_current_expenditures` (F-33) |

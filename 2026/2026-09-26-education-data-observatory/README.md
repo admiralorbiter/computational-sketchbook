@@ -197,13 +197,13 @@ Key empirical foundations inherited from that work include:
   - Documented kindergarten pipeline shock: Fall 2020 dropped $-11.43\%$, accounting for $36.9\%$ of the regional drop; 10-year Grades 1–12 enrollment remained net positive (+0.10%), while Kindergarten dropped $-9.14\%$.
   - Spatial stability: Metro enrollment-weighted centroid shifted only $0.32$ miles ($1,686.5$ feet), disproving suburban centrifugal flight.
   - Published Figures 4 through 11 in [`dashboard/`](dashboard/). Status: `AUDITED / FROZEN`.
-- **Task 004, 004A, & 004B (Completed & Audited):** Empirical audit and stabilization of `EDU-003 Reported Classroom Teacher FTE`:
-  - Reconciled Campus Sum ($23,820$ FTE) vs LEA reported totals across 77 regional districts.
+- **Task 004, 004A, 004B, & 004C (Completed & Audited):** Empirical audit, numerical reconciliation, and stabilization of `EDU-003 Reported Classroom Teacher FTE`:
+  - Reconciled Campus Sum vs LEA reported totals across 77 regional districts.
   - Audited the 2015–16 Kansas CCD non-reporting artifact: Olathe (`LEAID 2010140`) and Gardner Edgerton (`LEAID 2006420`) missing $-2,311$ FTE; established illustrative linear interpolation for macro series.
-  - Audited fixed-plant staffing stickiness across 28 declining districts with unchanged school counts.
+  - Audited fixed-plant staffing stickiness across 28 declining districts with unchanged school counts ($-3.63\%$ teachers vs. $-8.33\%$ enrollment; robust to $-3.35\%$ vs. $-10.50\%$ across 25 identical-school-ID LEAs).
   - Retracted unsupported $\ge 35$ FTE Calculus threshold; documented association and matched-cohort drop from $67.9\%$ to $35.7\%$.
-  - Quantified the Secondary Staffing Wedge across 6 CRDC waves ($+3.5$ to $+4.5$ students), consistent with calibrated schedule model.
+  - Quantified the Secondary Staffing Wedge across 6 CRDC waves ($+3.5$ to $+4.5$ students), consistent with calibrated schedule model (2023–24 Algebra I: $19.28$ vs. macro PTR $14.76$, wedge $= +4.53$).
   - Established formal caution on longitudinal librarian comparability ($-54.39\%$ due partly to job reclassification).
-  - Published Figures 12, 13, 14 in [`dashboard/`](dashboard/). Status: `AUDITED / FROZEN`.
+  - Executed Task 004C numerical claim ledger reconciliation to eliminate prose-report drift: created `registry/universes.csv`, `scripts/generate_claims_ledger.py`, and `analysis/results/claims.csv`. Published Figures 12 through 14 in [`dashboard/`](dashboard/). Status: `AUDITED / FROZEN`.
 - **Task 005 (Upcoming):** Re-audit `EDU-001 Pupil/Teacher Ratio` synthesizing audited `EDU-002` and `EDU-003` foundations.
 - **Task 006 (Upcoming):** Scaffold `EDU-005 Paraprofessional FTE`.

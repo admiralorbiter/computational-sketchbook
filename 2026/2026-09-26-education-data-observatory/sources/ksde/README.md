@@ -94,6 +94,8 @@ Student demographic cells $<10$ are suppressed in public reporting to maintain s
 
 | Measure ID | Measure Name | Observation Level | Primary Fields Ingested |
 | :--- | :--- | :--- | :--- |
-| `EDU-001` | Pupil/Teacher Ratio | School / LEA | Building membership, licensed teacher FTE |
-| `EDU-002` | Student Enrollment | School / LEA | Audited September 20 headcount, building enrollment |
+| `EDU-001` | Pupil / Teacher Ratio | School / LEA | Building membership, licensed teacher FTE |
+| `EDU-002` | Student Headcount Enrollment | School / LEA | Audited September 20 headcount, building enrollment |
 | `EDU-003` | Reported Classroom Teacher FTE | School / LEA | KPTEN certified classroom teacher FTE |
+| `EDU-004` | State Classroom Teacher FTE (Disaggregated) | School / LEA | General/subject teacher assignments excluding specialists |
+| `EDU-016` | State Funding Enrollment / Weighted Enrollment | LEA / State | Audited lookback FTE and programmatic weights |

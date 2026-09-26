@@ -97,6 +97,9 @@ MO DESE suppresses student counts $<5$ in public reporting to prevent disclosure
 
 | Measure ID | Measure Name | Observation Level | Primary Fields Ingested |
 | :--- | :--- | :--- | :--- |
-| `EDU-001` | Pupil/Teacher Ratio | School / LEA | Building membership, building teacher FTE |
-| `EDU-002` | Student Enrollment | School / LEA | October membership, September headcount |
+| `EDU-001` | Pupil / Teacher Ratio | School / LEA | Building membership, building teacher FTE |
+| `EDU-002` | Student Headcount Enrollment | School / LEA | October membership, September headcount |
 | `EDU-003` | Reported Classroom Teacher FTE | School / LEA | Certified teacher assignment FTE |
+| `EDU-013` | Individual Section Enrollment | Section | MOSIS Screen 21 Course Assignment file |
+| `EDU-014` | Student-Weighted Class Size Exposure | School / Grade | Derived from section roster microdata |
+| `EDU-015` | Average Daily Attendance (ADA) | LEA / School | Core Data Attendance Hours / Calendar Hours |
