@@ -2,6 +2,14 @@
 Build Task 002 Gate 2 Priority Governance Corpus for Grandview C-4.
 Processes Simbli API responses, Edlio Board Briefs, and metadata across 5 priority meetings.
 Generates directory structure, raw artifacts, interim search-ready text, manifests, and indexes.
+
+Epistemically remediated version:
+- Separates observed facts from derived inferences.
+- Extracts explicit motions, seconds, and roll call votes from minutes JSON.
+- Populates presenter and presenting_department only when explicitly named in accessible records.
+- Labels rule-based semantic coding as derived.
+- Binds evaluation schema strictly to observable claims in accessible text.
+- Formally bounds video status as 'no_public_recording_located'.
 """
 
 import os
@@ -43,12 +51,19 @@ def clean_html_text(html_str):
     if not html_str:
         return ""
     soup = BeautifulSoup(html_str, "html.parser")
-    # preserve line breaks for block tags
     for br in soup.find_all(["br", "p", "div", "h1", "h2", "h3", "h4", "li", "tr"]):
         br.append("\n")
     text = soup.get_text()
     lines = [line.strip() for line in text.split("\n") if line.strip()]
     return "\n".join(lines)
+
+def clean_inline_text(html_str):
+    if not html_str:
+        return ""
+    soup = BeautifulSoup(html_str, "html.parser")
+    for br in soup.find_all(["br", "p", "div", "li", "tr"]):
+        br.append(" ")
+    return " ".join(soup.get_text().split())
 
 def build_corpus():
     print("[*] Loading meeting crawl data...")
@@ -58,7 +73,6 @@ def build_corpus():
     artifacts_records = []
     items_records = []
 
-    # Sort meetings chronologically
     sorted_mids = ["16764", "16922", "17411", "24913", "25898"]
 
     for mid in sorted_mids:
@@ -115,8 +129,6 @@ def build_corpus():
         if os.path.exists(src_brief_file):
             with open(src_brief_file, "r", encoding="utf-8") as f:
                 brief_html = f.read()
-        else:
-            print(f"[!] Warning: {src_brief_file} not found!")
 
         with open(dest_brief_html, "w", encoding="utf-8") as f:
             f.write(brief_html)
@@ -149,10 +161,10 @@ def build_corpus():
         video_obj = {
             "master_meeting_id": mid,
             "meeting_date": date,
-            "video_access_status": "not_published",
-            "search_audit": "Queried YouTube channel @GrandviewC-4SchoolDistrict, official Grandview TV channel, and grandviewc4.net Board of Education video portals. No public video or livestream archive exists for this regular meeting date.",
+            "video_access_status": "no_public_recording_located",
+            "search_audit": "Queried YouTube channel @GrandviewC-4SchoolDistrict, official Grandview TV channel, and grandviewc4.net Board of Education video portals. No public video or livestream archive was located for this regular meeting date.",
             "public_channel": "https://www.youtube.com/@GrandviewC-4SchoolDistrict",
-            "recommendation": "If district recording archives or sunshine audio files are obtained via FOIA, align timestamps to priority agenda items indexed in priority_meeting_items.csv."
+            "recommendation": "If district internal recording archives or sunshine audio files are obtained via public records requests, align timestamps to priority agenda items indexed in priority_meeting_items.csv."
         }
         with open(video_metadata_path, "w", encoding="utf-8") as f:
             json.dump(video_obj, f, indent=2)
@@ -373,8 +385,8 @@ def build_corpus():
             "file_format": "json",
             "page_count": 1,
             "sha256": sha256_file(video_metadata_path),
-            "access_status": "not_published",
-            "notes": "Exhaustive YouTube and district site audit confirmed no public open-session recording exists for this date."
+            "access_status": "no_public_recording_located",
+            "notes": "Exhaustive YouTube and district site audit confirmed no public open-session recording located for this date."
         })
 
         # Attached documents
@@ -383,17 +395,16 @@ def build_corpus():
             encr_id = att.get("EncrId")
             fname = att.get("FileName") or ""
             title = att.get("Title") or ""
-            it_title = att.get("item_title") or ""
-            ext = att.get("FileExtension") or "pdf"
-            art_code = f"ART-GV-ATT-{att_id_num}"
-            
-            # Access status: linked in Simbli, but direct download URL blocked by Imperva hCaptcha
+            it_num_att = att.get("ItemSeq") or ""
+            it_title = att.get("ItemTitle") or ""
+            ext = os.path.splitext(fname)[1].replace(".", "") if fname else "bin"
+
             artifacts_records.append({
-                "artifact_id": art_code,
+                "artifact_id": f"ART-GV-ATT-{att_id_num}",
                 "meeting_date": date,
                 "master_meeting_id": mid,
                 "meeting_type": "Regular Open Meeting",
-                "agenda_item_number": it_title.split(".")[0].strip() if "." in it_title else "N/A",
+                "agenda_item_number": it_num_att,
                 "agenda_item_title": it_title,
                 "artifact_type": "item_attachment",
                 "original_filename": fname,
@@ -408,33 +419,165 @@ def build_corpus():
                 "notes": f"Linked as primary attachment to agenda item '{it_title}'. Direct programmatic download blocked by Imperva Incapsula hCaptcha on ViewAgendaMinuteDocument.aspx."
             })
 
-        # 9. Agenda Items Extraction (priority_meeting_items.csv)
+        # 9. Agenda Items Extraction with Epistemic Separation (priority_meeting_items.csv)
+        min_by_encr = {}
+        def index_min(ilist):
+            for mi in ilist:
+                eid = mi.get("EncrId")
+                if eid:
+                    min_by_encr[eid] = mi
+                index_min(mi.get("ChildMinutesLst") or [])
+        index_min(min_data.get("LstItemMinutes") or [])
+
+        consent_item_id = None
+        consent_motion_by = "none"
+        consent_second_by = "none"
+        consent_approved = False
+
+        for it in mdata["items_with_contents"]:
+            if "consent agenda" in (it.get("Title") or "").lower():
+                consent_item_id = it.get("ID")
+                mi = min_by_encr.get(consent_item_id)
+                if mi:
+                    for mov in (mi.get("MeetingOnlineVotings") or []):
+                        if mov.get("AllVotingApproved"):
+                            consent_approved = True
+                        for vh in (mov.get("VotingHTML") or []):
+                            vh_clean = clean_inline_text(vh)
+                            if vh_clean and "motion made by:" in vh_clean.lower():
+                                consent_motion_by = vh_clean.split("Motion made by:")[-1].strip()
+                            elif vh_clean and "motion seconded by:" in vh_clean.lower():
+                                consent_second_by = vh_clean.split("Motion seconded by:")[-1].strip()
+                break
+
+        is_in_consent_section = False
+
         for idx, it in enumerate(mdata["items_with_contents"]):
+            it_id = it.get("ID")
             it_title = it.get("Title") or ""
-            it_num = it_title.split(".")[0].strip() if "." in it_title else str(idx + 1)
-            
-            # Extract content fields
+            it_level = it.get("Level", 0)
+
+            if it_level == 0:
+                if "consent agenda" in it_title.lower():
+                    is_in_consent_section = True
+                elif it_title.strip() != "":
+                    is_in_consent_section = False
+
             bg_text = ""
             action_req = ""
             fin_text = ""
             for fld in it.get("fields", []):
                 fn = fld.get("FieldName")
-                c = clean_html_text(fld.get("Content") or "")
+                c = clean_inline_text(fld.get("Content") or "")
                 if fn in ["Custom1", "summary", "abstract"]:
                     bg_text += " " + c
                 elif fn in ["requestedAction", "recommendations"]:
                     action_req += " " + c
                 elif fn in ["financialImpact"]:
                     fin_text += " " + c
-                    
+
+            action_req = action_req.strip()
+            action_req_source = "agenda_recommendation" if action_req else "not_specified"
+            if not action_req:
+                action_req = "none"
+
             combined_text = f"{it_title} {bg_text} {action_req} {fin_text}".lower()
 
-            # Coding attributes factually
+            mi = min_by_encr.get(it_id)
+            min_text = clean_inline_text(mi.get("Minutes")) if mi else ""
+
+            item_motion_by = "none"
+            item_second_by = "none"
+            item_approved = None
+            roll_call_details = "none"
+
+            if mi:
+                for mov in (mi.get("MeetingOnlineVotings") or []):
+                    if mov.get("AllVotingApproved"):
+                        item_approved = True
+                    elif mov.get("AllVotingNotApproved"):
+                        item_approved = False
+                    for vh in (mov.get("VotingHTML") or []):
+                        vh_clean = clean_inline_text(vh)
+                        if "motion made by:" in vh_clean.lower():
+                            item_motion_by = vh_clean.split("Motion made by:")[-1].strip()
+                        elif "motion seconded by:" in vh_clean.lower():
+                            item_second_by = vh_clean.split("Motion seconded by:")[-1].strip()
+                        elif "yes:" in vh_clean.lower() or "no:" in vh_clean.lower() or "abstain:" in vh_clean.lower():
+                            roll_call_details = vh_clean
+
+            is_consent_child = is_in_consent_section and (it_id != consent_item_id)
+
+            if it_id == consent_item_id:
+                board_action = "approved" if consent_approved else "pending_or_unknown"
+                vote_result = "motion_approved" if consent_approved else "unknown"
+            elif is_consent_child:
+                if consent_approved:
+                    board_action = "approved_via_consent"
+                    vote_result = "approved_via_consent_vote"
+                    item_motion_by = f"{consent_motion_by} (Consent Agenda)"
+                    item_second_by = f"{consent_second_by} (Consent Agenda)"
+                else:
+                    board_action = "consent_item_unverified"
+                    vote_result = "unknown"
+            elif item_approved is True:
+                board_action = "approved"
+                if roll_call_details != "none":
+                    vote_result = f"roll_call_approved: {roll_call_details}"
+                else:
+                    vote_result = "motion_approved"
+            elif item_approved is False:
+                board_action = "failed"
+                vote_result = "motion_failed"
+            elif any(k in it_title.lower() for k in ["call to order", "pledge of allegiance", "quorum", "adjournment"]):
+                if "adjournment" in it_title.lower() and item_approved:
+                    board_action = "approved"
+                    vote_result = "motion_approved"
+                else:
+                    board_action = "procedural"
+                    vote_result = "no_vote_taken"
+            elif any(k in it_title.lower() for k in ["audience participation", "report of board members", "salient dates", "recapitulation of funds"]):
+                board_action = "procedural"
+                vote_result = "no_vote_taken"
+            elif it_level > 0 and len(it.get("fields", [])) == 0 and not is_consent_child:
+                board_action = "agenda_section_heading"
+                vote_result = "not_applicable"
+            elif "update" in it_title.lower() or "presentation" in it_title.lower() or "report" in it_title.lower() or "review" in it_title.lower():
+                board_action = "information_presentation"
+                vote_result = "no_vote_taken"
+            elif action_req != "none":
+                board_action = "action_requested_record_silent"
+                vote_result = "no_individual_vote_recorded"
+            else:
+                board_action = "information_review"
+                vote_result = "no_vote_taken"
+
+            # Presenter & Presenting Department: STRICT OBSERVABILITY
+            presenter = "unknown"
+            presenting_department = "unknown"
+
+            if "eric wollerman" in combined_text or "eric wollerman" in min_text.lower():
+                presenter = "Eric Wollerman (President, Honeywell FM&T)"
+            elif "president terry" in min_text.lower():
+                if any(k in it_title.lower() for k in ["call to order", "pledge", "adjourn"]):
+                    presenter = "Monica Terry (Board President)"
+            elif "dr. rodrequez" in min_text.lower() or "dr. rodrequez" in combined_text:
+                if "superintendent" in it_title.lower() or "approval of agenda" in it_title.lower():
+                    presenter = "Dr. Kenny Rodrequez (Superintendent)"
+
+            if "curriculum & instruction" in combined_text or "c&i" in it_title.lower():
+                presenting_department = "Curriculum & Instruction"
+            elif "human resources" in combined_text or "personnel transactions" in it_title.lower():
+                presenting_department = "Human Resources"
+            elif "finance committee" in combined_text or "finance & operations" in combined_text:
+                presenting_department = "Finance & Operations"
+            elif "superintendent" in it_title.lower():
+                presenting_department = "Superintendent Office"
+
             explicit_rwl = bool(re.search(r'\breal[\s-]world\s+learning\b|\brwl\b', combined_text, re.I))
             explicit_mva = bool(re.search(r'\bmarket\s+value\s+asset\b|\bmva\b|\bmvas\b', combined_text, re.I))
             career_connected = bool(re.search(r'\b(welding|cosmetology|barbering|healthcare|cna|phlebotomy|advanced manufacturing|honeywell|prep-kc|career|pathway|internship|externship|dual credit|credential)\b', combined_text, re.I))
-            
-            # Money mentioned
+
             money_m = re.search(r'\$\s*([0-9,]+(?:\.[0-9]{2})?)', combined_text)
             money_mentioned = bool(money_m) or bool(re.search(r'\b(budget|funds|warrants|revenue|expenditure|salary|cost|dollars)\b', combined_text, re.I))
             amount_val = money_m.group(1).replace(",", "") if money_m else ""
@@ -444,88 +587,46 @@ def build_corpus():
                 amount_val = "unspecified"
 
             staffing_mentioned = bool(re.search(r'\b(personnel|salary|hiring|resignation|retirement|coach|facilitator|teacher|superintendent|staff|intern)\b', combined_text, re.I))
-            
-            # Partner mentioned
-            partners = []
-            if "honeywell" in combined_text or "kcnsc" in combined_text:
-                partners.append("Honeywell / KCNSC")
-            if "prep-kc" in combined_text or "prepkc" in combined_text:
-                partners.append("PREP-KC")
-            if "t&l" in combined_text or "t and l" in combined_text:
-                partners.append("T&L Welding")
-            if "between me 2 you" in combined_text:
-                partners.append("Between Me 2 You")
-            if "cornerstones of care" in combined_text:
-                partners.append("Cornerstones of Care")
-            if "cass community health" in combined_text or "cass county" in combined_text:
-                partners.append("Cass Community Health Foundation")
-            if "strategos" in combined_text:
-                partners.append("Strategos Group")
-            if "kauffman" in combined_text:
-                partners.append("Kauffman Foundation")
-            if "grandview education foundation" in combined_text or "gef" in combined_text:
-                partners.append("Grandview Education Foundation")
-            if "apple" in combined_text:
-                partners.append("Apple Inc.")
-            if "zeta" in combined_text:
-                partners.append("Zeta")
 
+            partners = []
+            if "honeywell" in combined_text or "kcnsc" in combined_text: partners.append("Honeywell / KCNSC")
+            if "prep-kc" in combined_text or "prepkc" in combined_text: partners.append("PREP-KC")
+            if "t&l" in combined_text or "t and l" in combined_text: partners.append("T&L Welding")
+            if "between me 2 you" in combined_text: partners.append("Between Me 2 You")
+            if "cornerstones of care" in combined_text: partners.append("Cornerstones of Care")
+            if "cass community health" in combined_text or "cass county" in combined_text: partners.append("Cass Community Health Foundation")
+            if "strategos" in combined_text: partners.append("Strategos Group")
+            if "kauffman" in combined_text: partners.append("Kauffman Foundation")
+            if "grandview education foundation" in combined_text or "gef" in combined_text: partners.append("Grandview Education Foundation")
+            if "apple" in combined_text: partners.append("Apple Inc.")
+            if "zeta" in combined_text: partners.append("Zeta")
             partner_str = "; ".join(partners) if partners else "None"
 
-            # Metric mentioned
             metrics = []
-            if "mva" in combined_text:
-                metrics.append("MVA attainment")
-            if "apr" in combined_text or "msip" in combined_text:
-                metrics.append("MSIP 6 APR")
-            if "iready" in combined_text or "i-ready" in combined_text:
-                metrics.append("i-Ready reading/math")
-            if "attendance" in combined_text:
-                metrics.append("Attendance rate")
-            if "graduation" in combined_text:
-                metrics.append("Graduation rate")
-            if "credential" in combined_text or "aws" in combined_text:
-                metrics.append("Industry credentials")
-
+            if "mva" in combined_text: metrics.append("MVA attainment")
+            if "apr" in combined_text or "msip" in combined_text: metrics.append("MSIP 6 APR")
+            if "iready" in combined_text or "i-ready" in combined_text: metrics.append("i-Ready reading/math")
+            if "attendance" in combined_text: metrics.append("Attendance rate")
+            if "graduation" in combined_text: metrics.append("Graduation rate")
+            if "credential" in combined_text or "aws" in combined_text: metrics.append("Industry credentials")
             metric_str = "; ".join(metrics) if metrics else "None"
 
-            # Presenter and department inference
-            dept = "Administration"
-            presenter = "Administration"
-            if "c&i" in it_title.lower() or "curriculum" in it_title.lower() or "summer school" in it_title.lower() or "handbook" in it_title.lower():
-                dept = "Curriculum & Instruction"
-                presenter = "Assistant Superintendent Curriculum & Instruction"
-            elif "personnel" in it_title.lower() or "salary" in it_title.lower() or "employment" in it_title.lower():
-                dept = "Human Resources"
-                presenter = "Dr. Stephanie Amaya (Asst Supt HR / Supt)"
-            elif "finance" in it_title.lower() or "bills" in it_title.lower() or "budget" in it_title.lower() or "funds" in it_title.lower() or "tax" in it_title.lower() or "audit" in it_title.lower() or "bids" in it_title.lower() or "bid" in it_title.lower():
-                dept = "Finance & Operations"
-                presenter = "Chief Financial Officer / Finance Committee"
-            elif "superintendent" in it_title.lower():
-                dept = "Superintendent Office"
-                presenter = "Dr. Kenny Rodrequez (Supt) / Dr. Stephanie Amaya"
-            elif "strategic plan" in it_title.lower() or "policy" in it_title.lower():
-                dept = "Governance / Board of Education"
-                presenter = "Board Leadership & Administration"
-
-            # Board action from minutes if available
-            board_act = "Information / Review"
-            vote_res = "Unanimous / Voice Vote"
-            if action_req:
-                board_act = "Approved"
-            elif "approval" in it_title.lower() or "adoption" in it_title.lower() or "proposal" in it_title.lower() or "contract" in it_title.lower() or "mou" in it_title.lower() or "moa" in it_title.lower():
-                board_act = "Approved"
+            it_num = it_title.split(".")[0].strip() if "." in it_title else str(idx + 1)
 
             items_records.append({
                 "meeting_date": date,
                 "master_meeting_id": mid,
                 "item_number": it_num,
                 "item_title": it_title,
-                "presenting_department": dept,
+                "source_item_id": it_id,
+                "presenting_department": presenting_department,
                 "presenter": presenter,
-                "action_requested": action_req.strip() if action_req else "Report presented; no formal vote requested",
-                "board_action": board_act,
-                "vote_result": vote_res,
+                "action_requested": action_req,
+                "action_requested_source": action_req_source,
+                "board_action": board_action,
+                "vote_result": vote_result,
+                "motion_made_by": item_motion_by,
+                "motion_seconded_by": item_second_by,
                 "explicit_rwl": explicit_rwl,
                 "explicit_mva": explicit_mva,
                 "career_connected_semantic": career_connected,
@@ -534,8 +635,9 @@ def build_corpus():
                 "staffing_mentioned": staffing_mentioned,
                 "partner_mentioned": partner_str,
                 "metric_mentioned": metric_str,
+                "coding_method": "rule_based_derived",
                 "source_artifact_id": f"ART-GV-GOV-{mid}-AGD-JSON",
-                "page_or_timestamp": f"Item ID {it.get('ID')}"
+                "page_or_timestamp": f"Item ID {it_id}"
             })
 
     # Write priority_meeting_artifacts.csv
@@ -557,10 +659,11 @@ def build_corpus():
     items_csv_path = os.path.join(GOV_DIR, "priority_meeting_items.csv")
     items_fields = [
         "meeting_date", "master_meeting_id", "item_number", "item_title",
-        "presenting_department", "presenter", "action_requested", "board_action",
-        "vote_result", "explicit_rwl", "explicit_mva", "career_connected_semantic",
+        "source_item_id", "presenting_department", "presenter", "action_requested",
+        "action_requested_source", "board_action", "vote_result", "motion_made_by",
+        "motion_seconded_by", "explicit_rwl", "explicit_mva", "career_connected_semantic",
         "money_mentioned", "amount", "staffing_mentioned", "partner_mentioned",
-        "metric_mentioned", "source_artifact_id", "page_or_timestamp"
+        "metric_mentioned", "coding_method", "source_artifact_id", "page_or_timestamp"
     ]
     with open(items_csv_path, "w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=items_fields)
@@ -572,101 +675,130 @@ def build_corpus():
     # Write rwl_evaluation_2024_schema.csv
     schema_csv_path = os.path.join(GOV_DIR, "rwl_evaluation_2024_schema.csv")
     schema_fields = [
-        "metric_name", "metric_definition", "numerator", "denominator",
-        "school_year", "target", "reported_value", "comparison_value",
-        "source_artifact_id", "page", "notes"
+        "domain_or_topic", "domain_type", "observable_claim_or_metric", "evidence_source",
+        "source_artifact_id", "accessible_text_excerpt", "numerator", "denominator",
+        "target", "reported_numeric_value", "comparison_value", "governance_action", "notes"
     ]
     schema_rows = [
         {
-            "metric_name": "Market Value Asset (MVA) Attainment",
-            "metric_definition": "Percentage of high school graduates earning at least one Market Value Asset (work-based learning, college credit, industry credential, or entrepreneurial experience)",
-            "numerator": "Graduates with >= 1 MVA",
-            "denominator": "Total graduating cohort seniors",
-            "school_year": "2023-2024 / 2024-2025",
-            "target": "District CSIP Success-Ready benchmark",
-            "reported_value": "Documented in RWL Program Evaluation; sustained and significant growth reported",
-            "comparison_value": "Regional average (79% in 2024-25 per Kauffman regional hub)",
-            "source_artifact_id": "ART-GV-ATT-387812",
-            "page": "Item G.1.c Supporting Documents; Board Brief Dec 19 2024",
-            "notes": "Evaluation presented under Policy IM; underlying PDF 2022-2024 Real World Learning Program Evaluation.pdf preserved in metadata."
+            "domain_or_topic": "College Preparation & Placement",
+            "domain_type": "rwl_evaluation_domain",
+            "observable_claim_or_metric": "Data analyses of college preparation and placement included in evaluation",
+            "evidence_source": "Board Brief Dec 19 2024 (Article 2011053)",
+            "source_artifact_id": "ART-GV-GOV-16764-BRF-HTML",
+            "accessible_text_excerpt": "The evaluation includes data analyses of college preparation and placement...",
+            "numerator": "unobservable_in_accessible_text",
+            "denominator": "unobservable_in_accessible_text",
+            "target": "unobservable_in_accessible_text",
+            "reported_numeric_value": "unobservable_in_accessible_text",
+            "comparison_value": "unobservable_in_accessible_text",
+            "governance_action": "Formally reviewed and approved by Board of Education",
+            "notes": "Underlying metric calculations and data tables remain inside WAF-protected attachment 387812 (2022-2024 Real World Learning Program Evaluation.pdf)."
         },
         {
-            "metric_name": "College Preparation & Placement",
-            "metric_definition": "Rate of graduating seniors enrolling in 2-year or 4-year postsecondary educational institutions or dual-credit coursework",
-            "numerator": "Enrolled graduates",
-            "denominator": "Total graduating cohort",
-            "school_year": "2022-2024 longitudinal",
-            "target": "MSIP 6 College and Career Readiness standard",
-            "reported_value": "Longitudinal growth trends reported in December 2024 presentation",
-            "comparison_value": "Historical district baseline (2018-2020)",
-            "source_artifact_id": "ART-GV-ATT-387812",
-            "page": "Item G.1.c Supporting Documents; Board Brief Dec 19 2024",
-            "notes": "Dual credit articulated through MCC-Longview, UMKC, and UCM."
+            "domain_or_topic": "Career Center & Academy Enrollment",
+            "domain_type": "rwl_evaluation_domain",
+            "observable_claim_or_metric": "Data analyses of enrollment in career centers and academies included in evaluation",
+            "evidence_source": "Board Brief Dec 19 2024 (Article 2011053)",
+            "source_artifact_id": "ART-GV-GOV-16764-BRF-HTML",
+            "accessible_text_excerpt": "...enrollment in career centers/academies...",
+            "numerator": "unobservable_in_accessible_text",
+            "denominator": "unobservable_in_accessible_text",
+            "target": "unobservable_in_accessible_text",
+            "reported_numeric_value": "unobservable_in_accessible_text",
+            "comparison_value": "unobservable_in_accessible_text",
+            "governance_action": "Formally reviewed and approved by Board of Education",
+            "notes": "Program-specific enrollment counts across partner career centers remain inside attachment 387812."
         },
         {
-            "metric_name": "Career Center & Academy Enrollment",
-            "metric_definition": "Number of Grandview High School students enrolled in off-campus and on-campus career academies (Herndon Career Center, Southland CAPS, STA, and in-district programs)",
-            "numerator": "Participating students",
-            "denominator": "Eligible high school student population",
-            "school_year": "2023-2024 / 2024-2025",
-            "target": "Expansion of shared regional pathway seats",
-            "reported_value": "Significant enrollment growth across technical career programs",
-            "comparison_value": "Prior year enrollment",
-            "source_artifact_id": "ART-GV-ATT-387812",
-            "page": "Item G.1.c Supporting Documents; Board Brief Dec 19 2024",
-            "notes": "Includes Herndon Career Center sending slots and shared pathways with Center and Hickman Mills."
+            "domain_or_topic": "Market Value Asset (MVA) Attainment",
+            "domain_type": "rwl_evaluation_domain",
+            "observable_claim_or_metric": "Data analyses of market value asset attainment included in evaluation",
+            "evidence_source": "Board Brief Dec 19 2024 (Article 2011053)",
+            "source_artifact_id": "ART-GV-GOV-16764-BRF-HTML",
+            "accessible_text_excerpt": "...market value asset attainment...",
+            "numerator": "unobservable_in_accessible_text",
+            "denominator": "unobservable_in_accessible_text",
+            "target": "unobservable_in_accessible_text",
+            "reported_numeric_value": "unobservable_in_accessible_text",
+            "comparison_value": "unobservable_in_accessible_text",
+            "governance_action": "Formally reviewed and approved by Board of Education",
+            "notes": "District-specific senior attainment rates are not reported in the Board Brief text; regional aggregate figures must not be substituted."
         },
         {
-            "metric_name": "STEM Course Participation",
-            "metric_definition": "Student course enrollment counts and completion rates across Science, Technology, Engineering, and Mathematics courses including Project Lead The Way (PLTW)",
-            "numerator": "STEM/PLTW enrolled students",
-            "denominator": "Total secondary enrollment",
-            "school_year": "2022-2024",
-            "target": "District CSIP Success-Ready STEM goal",
-            "reported_value": "Sustained increase in STEM course enrollment reported",
-            "comparison_value": "Pre-Kauffman baseline (2018-2019)",
-            "source_artifact_id": "ART-GV-ATT-387812",
-            "page": "Item G.1.c Supporting Documents; Board Brief Dec 19 2024",
-            "notes": "Directly linked to Honeywell FM&T equipment and curriculum partnerships."
+            "domain_or_topic": "STEM Course Participation",
+            "domain_type": "rwl_evaluation_domain",
+            "observable_claim_or_metric": "Data analyses of student participation in Science, Technology, Engineering and Math (STEM) classes",
+            "evidence_source": "Board Brief Dec 19 2024 (Article 2011053)",
+            "source_artifact_id": "ART-GV-GOV-16764-BRF-HTML",
+            "accessible_text_excerpt": "...and student participation in Science, Technology, Engineering and Math (STEM) classes.",
+            "numerator": "unobservable_in_accessible_text",
+            "denominator": "unobservable_in_accessible_text",
+            "target": "unobservable_in_accessible_text",
+            "reported_numeric_value": "unobservable_in_accessible_text",
+            "comparison_value": "unobservable_in_accessible_text",
+            "governance_action": "Formally reviewed and approved by Board of Education",
+            "notes": "Specific course-level enrollment figures and PLTW course breakdowns remain inside attachment 387812."
         },
         {
-            "metric_name": "MSIP 6 Annual Performance Report (APR) Total Score",
-            "metric_definition": "Missouri Department of Elementary and Secondary Education composite accountability score combining performance and continuous improvement",
-            "numerator": "Points earned (127.5)",
-            "denominator": "Total possible points (200.0)",
-            "school_year": "2023-2024 (reported Dec 2024)",
-            "target": "Accreditation standard (>= 70% for Full Accreditation threshold)",
-            "reported_value": "63.7% (127.5 / 200 points)",
-            "comparison_value": "Prior year APR score",
-            "source_artifact_id": "ART-GV-ATT-387905",
-            "page": "Item G.1.a Supporting Documents; Board Brief Dec 19 2024",
-            "notes": "Reported concurrently with RWL Evaluation by C&I Department; APR measures state accountability context, not direct RWL outcome."
+            "domain_or_topic": "Program Growth Trajectory (Qualitative Reporting)",
+            "domain_type": "rwl_evaluation_qualitative_finding",
+            "observable_claim_or_metric": "District reporting of sustained and significant growth in Real-World Learning programming in recent years",
+            "evidence_source": "Board Brief Dec 19 2024 (Article 2011053)",
+            "source_artifact_id": "ART-GV-GOV-16764-BRF-HTML",
+            "accessible_text_excerpt": "The district has experienced sustained and significant growth in Real-World Learning programming in recent years.",
+            "numerator": "not_applicable",
+            "denominator": "not_applicable",
+            "target": "not_applicable",
+            "reported_numeric_value": "not_applicable",
+            "comparison_value": "not_applicable",
+            "governance_action": "Public communication summary of evaluation findings",
+            "notes": "Qualitative characterization published by district communications; underlying quantitative time series unobservable in accessible text."
         },
         {
-            "metric_name": "MSIP 6 Continuous Improvement Points Earned",
-            "metric_definition": "Sub-score of DESE APR measuring growth in ELA, math, science, social studies, attendance, and strategic plan milestones",
-            "numerator": "Points earned in Continuous Improvement",
-            "denominator": "Total Continuous Improvement points possible",
-            "school_year": "2023-2024",
-            "target": "District CSIP target",
-            "reported_value": "86.6% points earned",
-            "comparison_value": "State average continuous improvement",
-            "source_artifact_id": "ART-GV-ATT-387912",
-            "page": "Item G.1.a Presentation; Board Brief Dec 19 2024",
-            "notes": "District highlighted strong continuous growth in English Language Arts while earmarking math and attendance for improvement."
+            "domain_or_topic": "Policy IM Program Evaluation Process",
+            "domain_type": "governance_policy_mandate",
+            "observable_claim_or_metric": "Inclusion of Real World Learning in standing annual/biennial instructional program evaluation cycle under Policy IM",
+            "evidence_source": "Simbli Agenda Item G.1.c Background (MID 16764)",
+            "source_artifact_id": "ART-GV-GOV-16764-AGD-JSON",
+            "accessible_text_excerpt": "District programs are evaluated annually or biennially per Policy IM. These evaluations assess progress toward meeting established goals and provide recommendations for improvement... Program Evaluation for Finance and Real World Learning and the 2024-25 Program Evaluation Schedule are attached...",
+            "numerator": "not_applicable",
+            "denominator": "not_applicable",
+            "target": "not_applicable",
+            "reported_numeric_value": "not_applicable",
+            "comparison_value": "not_applicable",
+            "governance_action": "Unanimously approved under motion by Damon Greene, seconded by Stacy Wright",
+            "notes": "Documents that RWL was evaluated under the district instructional policy framework; does not independently establish permanent institutionalization."
         },
         {
-            "metric_name": "Policy IM Program Evaluation Cadence",
-            "metric_definition": "Board governance compliance requirement mandating annual or biennial formal administrative evaluations of instructional programs",
-            "numerator": "Evaluations conducted",
-            "denominator": "Adopted Evaluation Schedule requirements",
-            "school_year": "2024-2025",
-            "target": "100% adherence to Program Evaluation Schedule 24-25",
-            "reported_value": "Compliant (RWL evaluated on December 19, 2024 along with Finance)",
-            "comparison_value": "Board Policy IM standard",
-            "source_artifact_id": "ART-GV-ATT-387813",
-            "page": "Item G.1.c Attachment 2",
-            "notes": "Affirms formal institutionalization of RWL into standing board governance review cycle."
+            "domain_or_topic": "MSIP 6 Annual Performance Report (APR) Total Score",
+            "domain_type": "concurrent_accountability_context",
+            "observable_claim_or_metric": "Missouri DESE 2024 APR score: 127.5 out of 200 points (63.7%)",
+            "evidence_source": "Simbli Agenda Item G.1.a & Board Brief Dec 19 2024",
+            "source_artifact_id": "ART-GV-GOV-16764-AGD-JSON",
+            "accessible_text_excerpt": "The district earned 127.5 out of 200 points, or 63.7%, on the 2024 Annual Performance Report.",
+            "numerator": "127.5",
+            "denominator": "200.0",
+            "target": "70.0% (Full Accreditation Benchmark)",
+            "reported_numeric_value": "63.7%",
+            "comparison_value": "Prior Year APR",
+            "governance_action": "Accepted as informational by Board of Education",
+            "notes": "Reported concurrently by Curriculum & Instruction in separate agenda item G.1.a; state accountability metric, not an RWL-specific evaluation metric."
+        },
+        {
+            "domain_or_topic": "MSIP 6 Continuous Improvement Points Earned",
+            "domain_type": "concurrent_accountability_context",
+            "observable_claim_or_metric": "Continuous improvement sub-score: 86.6% points earned",
+            "evidence_source": "Board Brief Dec 19 2024 (Article 2011053)",
+            "source_artifact_id": "ART-GV-GOV-16764-BRF-HTML",
+            "accessible_text_excerpt": "In Continuous Improvement, Grandview earned 86.6% of the points...",
+            "numerator": "unobservable_in_accessible_text",
+            "denominator": "unobservable_in_accessible_text",
+            "target": "CSIP Continuous Improvement Benchmark",
+            "reported_numeric_value": "86.6%",
+            "comparison_value": "State Continuous Improvement Average",
+            "governance_action": "Accepted as informational by Board of Education",
+            "notes": "Reported as part of DESE accountability presentation; measures district-wide growth milestones."
         }
     ]
     with open(schema_csv_path, "w", encoding="utf-8", newline="") as f:
@@ -679,7 +811,7 @@ def build_corpus():
     # Write priority_meeting_video_index.csv
     video_csv_path = os.path.join(GOV_DIR, "priority_meeting_video_index.csv")
     video_fields = [
-        "meeting_date", "master_meeting_id", "video_url", "duration",
+        "meeting_date", "master_meeting_id", "video_url", "video_status",
         "official_captions", "transcript_available", "agenda_timestamps_available",
         "recommended_transcription_segments"
     ]
@@ -688,7 +820,7 @@ def build_corpus():
             "meeting_date": "2024-12-19",
             "master_meeting_id": "16764",
             "video_url": "https://www.youtube.com/@GrandviewC-4SchoolDistrict/search?query=2024-12-19",
-            "duration": "unrecorded / not_published",
+            "video_status": "no_public_recording_located",
             "official_captions": "false",
             "transcript_available": "false",
             "agenda_timestamps_available": "false",
@@ -698,7 +830,7 @@ def build_corpus():
             "meeting_date": "2025-01-16",
             "master_meeting_id": "16922",
             "video_url": "https://www.youtube.com/@GrandviewC-4SchoolDistrict/search?query=2025-01-16",
-            "duration": "unrecorded / not_published",
+            "video_status": "no_public_recording_located",
             "official_captions": "false",
             "transcript_available": "false",
             "agenda_timestamps_available": "false",
@@ -708,7 +840,7 @@ def build_corpus():
             "meeting_date": "2025-03-20",
             "master_meeting_id": "17411",
             "video_url": "https://www.youtube.com/@GrandviewC-4SchoolDistrict/search?query=2025-03-20",
-            "duration": "unrecorded / not_published",
+            "video_status": "no_public_recording_located",
             "official_captions": "false",
             "transcript_available": "false",
             "agenda_timestamps_available": "false",
@@ -718,7 +850,7 @@ def build_corpus():
             "meeting_date": "2026-04-16",
             "master_meeting_id": "24913",
             "video_url": "https://www.youtube.com/@GrandviewC-4SchoolDistrict/search?query=2026-04-16",
-            "duration": "unrecorded / not_published",
+            "video_status": "no_public_recording_located",
             "official_captions": "false",
             "transcript_available": "false",
             "agenda_timestamps_available": "false",
@@ -728,7 +860,7 @@ def build_corpus():
             "meeting_date": "2026-06-18",
             "master_meeting_id": "25898",
             "video_url": "https://www.youtube.com/@GrandviewC-4SchoolDistrict/search?query=2026-06-18",
-            "duration": "unrecorded / not_published",
+            "video_status": "no_public_recording_located",
             "official_captions": "false",
             "transcript_available": "false",
             "agenda_timestamps_available": "false",
