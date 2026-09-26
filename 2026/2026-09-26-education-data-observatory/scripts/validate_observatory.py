@@ -525,6 +525,7 @@ def test_claim_numeric_internal_consistency(repo_dir: Path):
             v_end_str = r["value_end"].strip()
             abs_chg_str = r["absolute_change"].strip()
             pct_chg_str = r["percent_change"].strip()
+            basis = r.get("percent_basis", "").strip()
             
             # Check absolute change arithmetic: v_end - v_start == absolute_change
             if v_start_str not in ("NA", "nan", "") and v_end_str not in ("NA", "nan", "") and abs_chg_str not in ("NA", "nan", ""):
@@ -538,24 +539,46 @@ def test_claim_numeric_internal_consistency(repo_dir: Path):
                 except ValueError as e:
                     errors.append(f"Claim '{cid}' float parse error for absolute_change: {e}")
                     
-            # Check percent change arithmetic: pct == (v_end - v_start) / v_start (or / v_end for reconciliation gaps)
-            if pct_chg_str not in ("NA", "nan", "") and v_start_str not in ("NA", "nan", "") and v_end_str not in ("NA", "nan", ""):
-                try:
-                    v_start = float(v_start_str)
-                    v_end = float(v_end_str)
-                    pct_chg = float(pct_chg_str)
-                    if abs(v_start) > 1e-6:
-                        exp_pct_start = (v_end - v_start) / v_start * 100.0
-                        exp_pct_end = (v_end - v_start) / v_end * 100.0 if abs(v_end) > 1e-6 else exp_pct_start
-                        diff_pct = min(abs(pct_chg - exp_pct_start), abs(pct_chg - exp_pct_end))
-                        if diff_pct > 0.05:
-                            errors.append(f"Claim '{cid}' percent_change mismatch: got {pct_chg}%, expected {exp_pct_start:+.2f}%")
-                except ValueError as e:
-                    errors.append(f"Claim '{cid}' float parse error for percent_change: {e}")
+            # Check percent change arithmetic using percent_basis:
+            if not basis:
+                errors.append(f"Claim '{cid}' missing percent_basis field in claims.csv")
+            elif basis == "not_applicable":
+                if pct_chg_str not in ("NA", "nan", ""):
+                    errors.append(f"Claim '{cid}' has percent_basis 'not_applicable' but percent_change is '{pct_chg_str}'")
+            elif basis == "start_value":
+                if pct_chg_str in ("NA", "nan", ""):
+                    errors.append(f"Claim '{cid}' has percent_basis 'start_value' but percent_change is missing/NA")
+                else:
+                    try:
+                        v_start = float(v_start_str)
+                        v_end = float(v_end_str)
+                        pct_chg = float(pct_chg_str)
+                        if abs(v_start) > 1e-6:
+                            expected_pct = (v_end - v_start) / v_start * 100.0
+                            if abs(pct_chg - expected_pct) > 0.05:
+                                errors.append(f"Claim '{cid}' percent_change mismatch against start_value: got {pct_chg}%, expected {expected_pct:+.2f}%")
+                    except ValueError as e:
+                        errors.append(f"Claim '{cid}' float parse error for percent_change: {e}")
+            elif basis == "end_value":
+                if pct_chg_str in ("NA", "nan", ""):
+                    errors.append(f"Claim '{cid}' has percent_basis 'end_value' but percent_change is missing/NA")
+                else:
+                    try:
+                        v_start = float(v_start_str)
+                        v_end = float(v_end_str)
+                        pct_chg = float(pct_chg_str)
+                        if abs(v_end) > 1e-6:
+                            expected_pct = (v_end - v_start) / v_end * 100.0
+                            if abs(pct_chg - expected_pct) > 0.05:
+                                errors.append(f"Claim '{cid}' percent_change mismatch against end_value: got {pct_chg}%, expected {expected_pct:+.2f}%")
+                    except ValueError as e:
+                        errors.append(f"Claim '{cid}' float parse error for percent_change: {e}")
+            else:
+                errors.append(f"Claim '{cid}' has unknown percent_basis '{basis}' (expected: start_value, end_value, or not_applicable)")
                     
             verified += 1
             
-    detail = f"{verified} claims internally reconciled for absolute and percent change arithmetic"
+    detail = f"{verified} claims internally reconciled for absolute and percent change arithmetic (percent_basis verified)"
     return len(errors) == 0, errors, warnings, detail
 
 

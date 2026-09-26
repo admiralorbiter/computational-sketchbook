@@ -1,6 +1,9 @@
 # Measure Dossier: EDU-001 — Pupil / Teacher Ratio (PTR)
 
-> **Observatory Standard:** This dossier represents the calibration specimen for the Education Data Observatory. It consolidates authoritative source definitions, empirical findings, and structural models established across four decades of public data in the Kansas City Education Capacity Study ([`kc_education_capacity`](../../../2026-09-23-kc-education-capacity/README.md)).
+> **Observatory Standard:** Pupil/Teacher Ratio (PTR) is a macro-level administrative measure of adult staffing density. It measures the total count of enrolled students divided by the full-time equivalent (FTE) count of teachers employed by a school or district. This dossier re-audits `EDU-001` from its now-audited, frozen numerator ([`EDU-002 Student Headcount Enrollment`](../EDU-002-student-enrollment/README.md)) and denominator ([`EDU-003 Reported Classroom Teacher FTE`](../EDU-003-total-teacher-fte/README.md)), formalizing its multi-layered aggregation estimands, quantifying the **Central Allocation Gap**, the **Downward Staffing Stickiness** under enrollment decline, and establishing the empirical and structural bridge between macro PTR and secondary core class sizes.
+>
+> *Principle: SOURCE → FIELD → OPERATIONALIZATION → MEASURE → UNIVERSE → ESTIMAND → CLAIM.*
+> *Rule of thumb: Complete measurement semantics before modeling. Description before explanation.*
 
 ---
 
@@ -11,11 +14,14 @@
 | **Measure ID** | `EDU-001` |
 | **Canonical Name** | Pupil / Teacher Ratio (PTR) |
 | **Short Identifier / Slug** | `pupil-teacher-ratio` |
-| **Status** | `audited` |
-| **Lifecycle Stage** | Epistemic Ladder: `source` $\to$ `field` $\to$ `operationalization` $\to$ `measure` $\to$ `description` $\to$ `validation` $\to$ `relationships` $\to$ `explanation` |
+| **Status** | `audited` (**FROZEN / READY FOR CROSS-MEASURE USE**) |
+| **Lifecycle Stage** | Epistemic Ladder: `source` $\to$ `field` $\to$ `operationalization` $\to$ `measure` $\to$ `universe` $\to$ `estimand` $\to$ `claim` |
 | **Category** | Staffing Capacity |
-| **Construct Nature** | Derived Mathematical Construct (Ratio of Enrollment to Teacher FTE) |
-| **Associated Operationalizations** | [`PTR-NCES-SCHOOL`](../../registry/operationalizations.csv), [`PTR-NCES-LEA`](../../registry/operationalizations.csv), [`PTR-OBS-K12-ADJUSTED`](../../registry/operationalizations.csv), [`PTR-KSDE-CLASSROOM`](../../registry/operationalizations.csv) |
+| **Construct Nature** | Derived Mathematical Construct (Ratio of Headcount Enrollment to Teacher FTE) |
+| **Numerator Measure** | [`EDU-002 Student Headcount Enrollment`](../EDU-002-student-enrollment/README.md) |
+| **Denominator Measure** | [`EDU-003 Reported Classroom Teacher FTE`](../EDU-003-total-teacher-fte/README.md) |
+| **Associated Operationalizations** | [`PTR-NCES-SCHOOL`](../../registry/operationalizations.csv), [`PTR-NCES-LEA`](../../registry/operationalizations.csv), [`PTR-OBS-K12-ADJUSTED`](../../registry/operationalizations.csv), [`PTR-KSDE-CLASSROOM`](../../registry/operationalizations.csv), [`PTR-KSDE-TOTAL`](../../registry/operationalizations.csv) |
+| **Excluded / Contrasting Constructs** | Teacher-Reported Class Size ([`EDU-007`](../../registry/measures.csv)), Derived School-Course Mean Class Size ([`EDU-012`](../../registry/measures.csv)), Student-Weighted Class Size Exposure ([`EDU-014`](../../registry/measures.csv)) |
 
 ---
 
@@ -33,23 +39,30 @@ For an educational observation unit $i$ (school campus or district LEA) in schoo
 $$\text{PTR}_{i,t} = \frac{E_{i,t}}{T_{i,t}}$$
 
 Where:
-- $E_{i,t}$ is student headcount enrollment.
-- $T_{i,t}$ is full-time equivalent (FTE) teachers.
+- $E_{i,t}$ is student headcount enrollment (`EDU-002`).
+- $T_{i,t}$ is full-time equivalent (FTE) teachers (`EDU-003`).
 
-### 2.3 Aggregation Rules & Three Distinct Estimands
-When examining a collection of schools (e.g., across an LEA, metropolitan region, or state), researchers must choose an estimand based on their specific research question. None of these is inherently "biased"; they answer fundamentally different questions:
+### 2.3 Aggregation Rules & Four Distinct Estimands
+When examining a collection of schools or districts (e.g., across an LEA, metropolitan region, or state), researchers must choose an estimand based on their specific research question. None of these is inherently "biased"; they answer fundamentally different questions:
 
 $$\begin{aligned}
 \text{1. Pooled (Aggregate) PTR:} \quad \overline{\text{PTR}}_{\text{pooled}} &= \frac{\sum_{i=1}^N E_i}{\sum_{i=1}^N T_i} = \sum_{i=1}^N \left(\frac{T_i}{\sum_{j} T_j}\right) \frac{E_i}{T_i} = \sum_{i=1}^N w_i \cdot r_i \\
 \text{2. Unweighted Mean School PTR:} \quad \overline{\text{PTR}}_{\text{unweighted}} &= \frac{1}{N}\sum_{i=1}^N \frac{E_i}{T_i} = \frac{1}{N}\sum_{i=1}^N r_i \\
-\text{3. Median School PTR:} \quad \text{PTR}_{\text{median}} &= \text{Median}(r_1, r_2, \dots, r_N)
+\text{3. Median School PTR:} \quad \text{PTR}_{\text{median}} &= \text{Median}(r_1, r_2, \dots, r_N) \\
+\text{4. Student-Weighted PTR Exposure:} \quad \overline{\text{PTR}}_{\text{student-weighted}} &= \sum_{i=1}^N \left(\frac{E_i}{\sum_{j} E_j}\right) \frac{E_i}{T_i}
 \end{aligned}$$
 
-| Estimand | Mathematical Nature | Research Question Answered | Behavioral Characteristics |
+| Estimand | Mathematical Nature | Research Question Answered | Kansas City Metro Benchmark (SY 2024–25) |
 | :--- | :--- | :--- | :--- |
-| **Pooled PTR** ($\frac{\sum E}{\sum T}$) | Teacher-FTE-weighted mean of school PTRs ($w_i = \frac{T_i}{\sum T}$) | *What is the macro adult staffing density across the entire combined student and teacher population?* | Dominated by large high schools and suburban campuses; reflects total regional fiscal investment. |
-| **Unweighted Mean School PTR** | Simple arithmetic mean across school campuses | *What staffing ratio does the typical public school campus exhibit?* | Gives equal weight to small rural schools, alternative centers, and large comprehensive campuses. Sensitive to small-school tails. |
-| **Median School PTR** | 50th percentile of campus distribution | *What does the middle school look like in the institutional distribution?* | Robust to extreme outliers (both small low-PTR specialized day centers and large high-PTR cyber academies). |
+| **Pooled PTR** ($\frac{\sum E}{\sum T}$) | Teacher-FTE-weighted mean of school PTRs ($w_i = \frac{T_i}{\sum T}$) | *What is the macro adult staffing density across the entire combined student and teacher population?* | **13.55:1** (Balanced 75 LEA K–12) / **13.54:1** (Dynamic Regional K–12) / **13.72:1** (Regular School Campuses) |
+| **Unweighted Mean School PTR** | Simple arithmetic mean across school campuses | *What staffing ratio does the typical public school campus exhibit?* | **12.06:1** (Balanced 75 LEA mean) / **13.36:1** (Regular School Campuses) |
+| **Median School PTR** | 50th percentile of campus distribution | *What does the middle school look like in the institutional distribution?* | **12.84:1** (Balanced 75 LEA median) / **13.30:1** (Regular School Campuses) |
+| **Student-Weighted PTR Exposure** | Student-enrollment-weighted mean ($\sum E \cdot r / \sum E$) | *What staffing density environment surrounds a randomly selected enrolled student?* | **13.82:1** (Regular School Campuses) |
+
+### 2.4 Unit & Scale
+- **Unit of Measurement:** `students_per_fte` (ratio of discrete student count to continuous teacher FTE).
+- **Theoretical Range:** $[0, \infty)$.
+- **Empirical Realistic Range:** Typically $8.0:1$ to $25.0:1$ in standard regular public schools. Extreme tails ($<6.0:1$ in specialized day centers; $>35.0:1$ in virtual academies) represent distinct institutional delivery models.
 
 ---
 
@@ -63,6 +76,7 @@ The Observatory catalogs multiple distinct operationalizations of `EDU-001` in [
 | **`PTR-NCES-LEA`** | NCES CCD Non-Fiscal LEA Survey | Operating public school districts | $\frac{\sum \text{MEMBER}}{\sum \text{TEACHERS}}$ | **District-Wide Total Teacher FTE.** Includes central-office and itinerant teachers. |
 | **`PTR-OBS-K12-ADJUSTED`** | Observatory Research Specification | Regular elementary & secondary schools | $\frac{\text{MEMBER} - \max(0, \text{PK})}{\text{TEACHERS} - \max(0, \text{TEACHERS\_PK})}$ | **K–12 Classroom Staffing.** Deducts Pre-K enrollment and reported Pre-K teachers to avoid early childhood distortion. |
 | **`PTR-KSDE-CLASSROOM`** | KSDE KPTEN / CPFS System | Kansas Unified School Districts | $\frac{\text{Headcount}}{\text{FTE Classroom Teachers}}$ | **General Classroom Teachers Only.** Strictly excludes SPED, Title I, and reading specialists. |
+| **`PTR-KSDE-TOTAL`** | KSDE KPTEN / CPFS System | Kansas Unified School Districts | $\frac{\text{Headcount}}{\text{FTE Instructional Total}}$ | **Total Certified Instructional Staff.** Includes specialists and general classroom teachers. |
 
 ---
 
@@ -72,7 +86,7 @@ The Observatory catalogs multiple distinct operationalizations of `EDU-001` in [
 | :--- | :--- | :--- |
 | **Target Population** | Public K–12 students and certified classroom teachers | Grade levels and staff scope depend on operationalization |
 | **Unit of Observation** | School campus (`NCESSCH`) or LEA District (`LEAID`) | Must distinguish campus reporting from district reporting |
-| **Geographic Granularity** | Campus, LEA, County, Metropolitan Region, State, National | |
+| **Geographic Granularity** | Campus, LEA, County, Metropolitan Region, State, National | 9-county MARC/study region encompasses 5 MO and 4 KS counties |
 | **Temporal Granularity** | Annual Fall Snapshot | Collected on or near October 1 of academic year |
 | **School Year of Reference (SY)** | `SY 2024–25` (Anchor Year) | **Primary Indexing Dimension** |
 | **Collection Snapshot Date** | October 1 of school year | Universal state fall count date |
@@ -91,49 +105,49 @@ The Observatory catalogs multiple distinct operationalizations of `EDU-001` in [
 > [!NOTE]
 > The Observatory preserves unusual observations rather than deleting them. A cyber charter school with a PTR of 70:1, or a specialized therapeutic center with a PTR of 3:1, is valid empirical data about that organizational form, not "dirty data."
 
-### A. Source Universe
+### 5.1 Source Universe
 All records present in the raw NCES CCD Public School Universe Directory file (`ccd_sch_029_XX_l_1a.csv`), including regular local public schools, special education schools, vocational/technical schools, alternative schools, charter campuses, and state-operated facilities.
 
-### B. Mathematical Validity Requirements
+### 5.2 Mathematical Validity Requirements
 To compute a mathematically defined ratio:
 - $E_{i,t} \ge 0$ and $T_{i,t} > 0$.
 - All negative missing/suppression codes (`-1`, `-2`, `-9`) mapped to `NaN`.
 - Records where $T_{i,t} = 0$ with $E_{i,t} > 0$ are classified as `validity_failure_zero_denominator` and evaluated for staff non-reporting.
 
-### C. Entity-Type & Anomaly Flags
-Records are tagged with descriptive flags to allow researchers to construct customized subsets:
-- `flag_virtual`: Virtual / cyber school (`VIRTUAL == 'YES'`).
-- `flag_special_ed`: Dedicated special education day facility (`TYPE == 2`).
-- `flag_vocational`: Vocational / CTE center (`TYPE == 3`).
-- `flag_alternative`: Alternative / disciplinary facility (`TYPE == 4`).
-- `flag_low_ratio`: PTR $< 6.0$ (trigger for specialized staffing audit).
-- `flag_high_ratio`: PTR $> 35.0$ (trigger for non-reporting or cyber audit).
-
-### D. Recommended Analytic Comparison Universes
-1. **Standard Regular Public School Universe:**
-   - Operating local regular public schools (`TYPE == 1`, `STATUS in [1, 3, 8]`).
-   - Non-zero thresholds: $E \ge 10$ and $T \ge 1.0$.
-   - Flagged outliers retained and reported in distributional tables.
-2. **Comprehensive Secondary Academic Universe:**
-   - Regular high schools offering standard grades 9–12 core academic coursework.
-3. **Alternative & Specialized Facility Universe:**
-   - Distinct panel evaluating non-traditional delivery models without contaminating regular school distributions.
+### 5.3 Core Analytical Universes
+1. **`KC_BALANCED_LEA_75` (Longitudinally Balanced Cohort, $N=75$):**
+   Continuously operating public LEAs fully within the 9-county MARC/study region present in both 2014–15 and 2024–25 endpoint files. Authoritative panel for 10-year trend and capacity growth calculations.
+2. **`KC_DYNAMIC_REGIONAL_LEA` (Dynamic Contemporary Panel, $N=78 \to 77$):**
+   Operating public LEAs within the region in each respective school year, reflecting contemporaneous system boundaries.
+3. **`KC_FULLY_REGIONAL_CURRENT_77` (Current Regional Snapshot, $N=77$):**
+   All 77 operating public LEAs (21 KS, 56 MO) whose physical campuses fall entirely within the 9-county study region in SY 2024–25.
+4. **`KC_DECLINING_UNCHANGED_COUNT_28` (Declining LEA Cohort, $N=28$):**
+   LEAs in `KC_BALANCED_LEA_75` experiencing negative 10-year enrollment change with zero net change in operating school count (132 schools).
 
 ---
 
-## 6. Staff Semantics & Organizational Sensitivity
+## 6. Staff Semantics & The Four Structural Wedges
 
-### 6.1 Authoritative NCES Teacher Semantics
-Authoritative NCES documentation specifies:
-- In the **CCD Public School Universe**, the reported teacher field represents **Full-Time Equivalent (FTE) Classroom Teachers**.
-- It does **not** include guidance counselors, librarians, instructional coordinators, school principals, or paraprofessionals.
-- **Why the "Specialist Wedge" Still Occurs:** In federal CCD reporting, states categorize certified reading specialists, special education resource teachers, and pull-out interventionists under "classroom teachers" if they hold teaching certificates, even when they do not manage general classroom rosters. In Kansas, state data systems (`KPTEN`) disaggregate classroom teachers from specialized teachers; in federal data, they remain pooled.
+Why does a district with a 14:1 pupil/teacher ratio routinely place 26 students in an Algebra I classroom? In the Kansas City Education Capacity Study, empirical microdata across CRDC course filings, state personnel registers, and master bell schedules revealed four structural wedges:
 
-### 6.2 Organizational Allocation Sensitivity (Campus vs. Central Office)
-- In many LEAs, itinerant specialists (elementary art, music, physical education, speech) are assigned to the district central office (`LEAID`) rather than individual school building rosters (`NCESSCH`).
-- This produces the **Central Allocation Gap**:
-  $$\Delta_{\text{central}} = \text{PTR}_{\text{campus\_aggregate}} - \text{PTR}_{\text{district\_direct}}$$
-- In metropolitan Kansas City, large suburban districts show $\Delta_{\text{central}} \in [0.8, 2.2]$ students/FTE. Analysts comparing individual schools across districts must account for whether itinerant staff are held centrally or distributed to buildings.
+$$\text{Observed Core Section Size} \approx \text{PTR}_{\text{macro}} + \Delta_1 + \Delta_2 + \Delta_3 + \Delta_{\text{central}}$$
+
+### 6.1 Wedge $\Delta_1$: Specialist Denominator Wedge ($\approx +2.7$ students)
+In federal CCD reporting, states categorize certified reading specialists, special education resource teachers, and pull-out interventionists under "classroom teachers" if they hold teaching certificates, even when they do not manage general classroom rosters. In Kansas, state data systems (`KPTEN`) disaggregate general classroom teachers from specialists; in federal data, they remain pooled.
+
+### 6.2 Wedge $\Delta_2$: Schedule Planning Multiplier ($\phi \approx 1.400$, $\approx +5.7$ to $+8.0$ students)
+Contractually protected teacher planning time requires a schedule multiplier $\phi = \frac{P_{\text{student}}}{P_{\text{teacher}}}$. Under a standard "5 of 7" secondary teaching regime ($\phi = 1.400$), only $5/7$ of certified teachers are instructing students during any given period. This schedule identity structurally expands period contact loads:
+
+$$\text{Period Contact Load} = \text{PTR}_{\text{adjusted}} \times \phi$$
+
+### 6.3 Wedge $\Delta_3$: Curricular Allocation Residual ($\approx -1.5$ to $+5.0$ students)
+Secondary course catalogs distribute seats heterogeneously. Low-enrollment specialized electives, AP/IB courses, and remediation labs force core gateway sections (Algebra I, Biology, English 9) to expand to absorb the remaining student body.
+
+### 6.4 Wedge $\Delta_{\text{central}}$: Central Allocation Gap ($+0.24$ students/FTE)
+In metropolitan Kansas City, LEAs employ centralized and itinerant instructional specialists (art, music, PE, speech, ELL) who are reported on LEA surveys but not assigned to individual school building rosters. In SY 2024–25 across the 77 fully regional LEAs:
+- School Universe Sum: $328,884$ students / $23,819.77$ teachers = **$13.81:1$**
+- LEA Survey Sum: $330,356$ students / $24,338.26$ teachers = **$13.57:1$**
+- Allocation Gap: $\Delta_{\text{central}} = \mathbf{+0.24}$ students per teacher FTE ($+1.74\%$).
 
 ---
 
@@ -149,81 +163,88 @@ Authoritative NCES documentation specifies:
 2. **Teacher Daily Workload / Contact Load:** It does **not** indicate how many unique student papers, grades, and parent communications a secondary teacher manages daily.
 3. **Student Peer Exposure:** It does **not** reflect the classroom environment experienced by an average child during instructional time.
 
-### 7.3 Calibrated Empirical Decomposition (Kansas City Secondary Model)
-In the Kansas City Education Capacity Study, empirical microdata across 6 waves of CRDC course records and state personnel registers revealed the multi-stage structural bridge between macro PTR and secondary core class sizes:
-
-$$\text{Observed Core Section Size} \approx \text{PTR}_{\text{macro}} + \Delta_1 + \Delta_2 + \Delta_3$$
-
-- **Wedge $\Delta_1$ (Specialist Denominator Wedge $\approx +2.7$):** Accounting for certified specialists who do not head general rosters.
-- **Wedge $\Delta_2$ (Schedule Planning Multiplier $\phi \approx +5.7$ to $+8.0$):** Contractually protected teacher planning time requires $\phi = \frac{P_{\text{student}}}{P_{\text{teacher}}}$. Under a standard "5 of 7" secondary teaching regime ($\phi = 1.400$), only $5/7$ of teachers are in front of students at any bell.
-- **Wedge $\Delta_3$ (Curricular Allocation Residual $\approx -1.5$ to $+5.0$):** High school course catalogs distribute seats heterogeneously; low-enrollment advanced and specialized electives force core gateway sections (Algebra I, Biology) to expand.
+### 7.3 Judicial Evidentiary Validation (*Jenkins v. Missouri*)
+In *Jenkins v. Missouri* (639 F. Supp. 19 [W.D. Mo. 1985], aff'd 890 F.2d 65 [8th Cir. 1989]), Federal District Judge Russell G. Clark addressed the severe misinterpretation of aggregate teacher counts:
+- The State of Missouri argued that Kansas City Missouri School District (KCMSD) maintained low pupil/teacher ratios and therefore possessed adequate instructional capacity.
+- The court rejected this defense, demonstrating through evidentiary exhibits that counting total certified staff disguised regular classroom crowding. In Grades 1–3, Chapter I remediation programs deployed two teachers per room in 58 classes (116 teachers), masking the fact that regular classes averaged $26.55$ students rather than the headline ratio of $22.14$ (KCMSD Ex. K-56).
+- In secondary schools, Judge Clark established binding remedial ceilings: elementary classes were capped at 22 (K–3) and 27 (4–6), while secondary teachers were restricted to a maximum daily student load of 125 students across 5 teaching periods (KCMSD Ex. K-58, K-59).
+- In 1997 (*Jenkins*, 959 F. Supp. 1151), the court observed that while building-level staffing ratios hovered between $8.6$ and $18.4$, regular elementary classes commonly enrolled 22–28 students, and high school teachers routinely instructed 135–140 students daily.
 
 ---
 
-## 8. Relational Architecture & Validation
+## 8. Initial Empirical & Descriptive Sanity Checks
 
-### 8.1 Upstream & Downstream Relationships
-- **Derived From (Inputs):** `EDU-002` (Student Enrollment) and `EDU-003` (Reported Classroom Teacher FTE).
-- **Contrasts With:** `EDU-004` (Classroom Teacher FTE - KSDE audited), `EDU-006` (School-Course Class Size - CRDC), `EDU-007` (Survey Class Size - NTPS).
+### 8.1 Regular School Campus Distribution (SY 2024–25, $N = 616$ Valid Regular Schools)
 
-### 8.2 Candidate External Validation Sources
-- **NCES NTPS / SASS Public School Teacher Questionnaire:** Nationally and state-representative self-reported class size.
-- **OCR Civil Rights Data Collection (CRDC):** Course-level enrollment and class counts.
-- **State Personnel Registries (KSDE KPTEN / MO DESE MOSIS):** Administrative microdata with distinct job codes.
-- **Historical Judicial Records (*Jenkins v. Missouri*):** Federal court desegregation daily contact load audits.
+| Grade Level | Valid Campuses | Min PTR | Q25 PTR | Median PTR | Mean PTR | Q75 PTR | Max PTR | Pooled PTR |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Primary (Elementary)** | 391 | 4.24 | 11.60 | 12.95 | 12.85 | 14.15 | 22.84 | **12.86** |
+| **Middle (Junior High)** | 122 | 7.74 | 12.28 | 13.40 | 13.21 | 14.48 | 21.05 | **13.35** |
+| **High (Secondary)** | 101 | 8.89 | 13.78 | 15.09 | 15.46 | 16.94 | 91.52 | **15.43** |
+| **All Regular Schools** | **616** | **4.24** | **11.82** | **13.30** | **13.36** | **14.65** | **91.52** | **13.72** |
 
----
+### 8.2 Outlier Triage & Delivery Model Identification
+- **Low Ratio Outliers ($\text{PTR} < 6.0$, $N=6$):** Confirmed specialized therapeutic and alternative campuses (e.g., Gillis Campus, Marillac School, Day Treatment Centers).
+- **High Ratio Outliers ($\text{PTR} > 35.0$, $N=2$):** Confirmed virtual academies (e.g., Missouri Virtual Academy, Kansas Virtual Academy) where digital course management software enables high student-to-teacher caseloads.
 
-## 9. Historical & Institutional Context
+### 8.3 Machine-Readable Claims Ledger Summary ([`analysis/results/claims.csv`](../../analysis/results/claims.csv))
 
-Between 2014–15 and 2024–25 in the Kansas City metropolitan area, K–12 enrollment was flat ($-0.73\%$), while teacher FTE expanded $+8.88\%$, driving regional PTR down from $14.85:1$ to $13.54:1$. Yet classroom teachers reported no relief in class sizes.
+Every headline empirical claim for `EDU-001` is formally generated by code and registered in the machine-readable claims ledger:
 
-The institutional explanation: Districts utilized staff additions to reduce secondary teaching loads from "6 of 7" periods to "5 of 7" periods (e.g., Shawnee Mission Board of Education, January 2020). Shifting from $6/7$ to $5/7$ structurally demands a **$+20\%$ staffing increase** just to maintain constant class sizes. Districts hired teachers to buy back teacher planning and grading time, not to shrink class rosters.
-
----
-
-## 10. Initial Empirical & Descriptive Sanity Checks
-
-- [ ] **Sanitization Assertion:** All negative codes (`-1`, `-2`, `-9`) mapped to `NaN`. Zero negative values allowed.
-- [ ] **Denominator Assertion:** Filter $T > 0$; tag zero-denominator records for staff non-reporting audit.
-- [ ] **Outlier Triage:** Flag PTR $< 6.0$ and PTR $> 35.0$ for institutional audit (preserve observations).
-- [ ] **Estimand Verification:** Report both Pooled PTR and Median School PTR when summarizing districts.
-- [ ] **Longitudinal Jump Detection:** Flag entities exhibiting annual step-changes $> \pm 25\%$ without verified boundary changes.
+| Claim ID | Universe ID | Estimand | Reference Period | Start Value | End Value | Net Change | % Change | Epistemic Status |
+| :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| **`CLM-PTR-001`** | `KC_BALANCED_LEA_75` | 10-Year Balanced Pooled K-12 Pupil/Teacher Ratio Compression | 2014–15 to 2024–25 | $14.85$ | $13.55$ | $-1.30$ | **$-8.75\%$** | `audited_fact` |
+| **`CLM-PTR-001-DYN`** | `KC_DYNAMIC_REGIONAL_LEA` | Dynamic Regional Pooled K-12 Pupil/Teacher Ratio Trajectory | 2014–15 to 2024–25 | $14.85$ | $13.54$ | $-1.31$ | **$-8.82\%$** | `audited_fact` |
+| **`CLM-PTR-002`** | `KC_DECLINING_UNCHANGED_COUNT_28` | Declining LEA Downward PTR Compression (Unchanged School Count) | 2014–15 to 2024–25 | $14.02$ | $13.34$ | $-0.68$ | **$-4.85\%$** | `audited_fact` |
+| **`CLM-PTR-003`** | `KC_FULLY_REGIONAL_CURRENT_77` | Regional Campus vs LEA Total Membership Pooled PTR Allocation Gap | 2024–25 | $13.81$ | $13.57$ | $-0.24$ | **$-1.74\%$** | `audited_fact` |
 
 ---
 
-## 11. Visual Evidence Packet
+## 9. Visual Evidence Packet
 
-The Observatory maintains three visual artifacts for `EDU-001`, documenting their provenance and analytical classifications:
+The Observatory maintains four visual artifacts for `EDU-001`, documenting its provenance, structural decomposition, longitudinal trajectory, and secondary course contrast:
 
 ### Figure 1: Illustrative Cross-Source Comparison — Macro PTR vs. Secondary Classroom Reality
+![Figure 1: Macro PTR vs Actual Class Size](../../dashboard/fig01_macro_ptr_vs_actual_class_size.png)
 - **Classification:** `CROSS-SOURCE COMPARISON`
 - **Purpose:** Illustrate that administrative staffing ratios (CCD) systematically sit 6 to 14 students below secondary classroom class sizes across multiple jurisdictions.
 - **Provenance by Bar:**
-  1. *United States (National):* Macro PTR = **15.4:1** (NCES Digest of Education Statistics 2022, Table 208.20, SY 2020–21; note that national totals are suppressed in preliminary 2024–25 CCD Table 2). Secondary Departmentalized Class Size = **23.3** (NCES NTPS 2017–18 Table A-7a; 2020–21 NTPS published at 21.0).
+  1. *United States (National):* Macro PTR = **15.4:1** (NCES Digest of Education Statistics 2022, Table 208.20, SY 2020–21). Secondary Departmentalized Class Size = **23.3** (NCES NTPS 2017–18 Table A-7a; 2020–21 NTPS published at 21.0).
   2. *Missouri (Statewide):* Macro PTR = **13.8:1** (CCD SY 2020–21). High School Class Size = **22.5** (NTPS 2017–18 Table A-7a).
   3. *Kansas (Statewide):* Macro PTR = **13.6:1** (CCD SY 2020–21). High School Class Size = **19.8** (NTPS 2017–18 Table A-7a).
   4. *Shawnee Mission North HS (KC Suburb):* Macro PTR = **14.2:1** (CCD SY 2021–22). Algebra I Mean Class Size = **25.7** (CRDC SY 2021–22 course enrollment / classes).
   5. *Lincoln College Prep (KCPS Urban Core):* Macro PTR = **17.3:1** (CCD SY 2021–22). Geometry Mean Class Size = **31.0** (CRDC SY 2021–22 course enrollment / classes).
-- **Caveat:** Bars represent asynchronous reference periods and distinct estimands; they are intentionally juxtaposed to demonstrate that the macro-to-classroom gap is a systemic property of secondary schooling rather than a local data error.
-- **Generator Script:** [`analysis/cross-measure/generate_observatory_visuals.py`](../../analysis/cross-measure/generate_observatory_visuals.py)
-
-### Figure 2: The Kansas City 10-Year Capacity Paradox (SY 2014–15 to SY 2024–25)
-- **Classification:** `DESCRIPTIVE OBSERVATION`
-- **Purpose:** Document the longitudinal divergence between flat student enrollment ($-0.73\%$, $-2,345$ students) and expanding instructional staffing ($+8.88\%$ teachers, $+11.85\%$ paraprofessionals), which drove regional pooled PTR down from $14.85:1$ to $13.54:1$.
-- **Population:** 77 public school districts in the 9-county Mid-America Regional Council (MARC) region.
-- **Source:** Audited NCES CCD LEA Longitudinal Panel (`kc_lea_capacity_long_2014_15_2024_25.csv`).
-- **Generator Script:** [`analysis/cross-measure/generate_observatory_visuals.py`](../../analysis/cross-measure/generate_observatory_visuals.py)
-
-### Figure 3: Multi-Stage Waterfall Decomposition (Shawnee Mission North Case)
-- **Classification:** `MODEL / CALIBRATED CASE STUDY`
-- **Purpose:** Demonstrate how the Schedule Capacity Identity ($\phi = 1.400$), Specialist Wedge ($\Delta_1$), and Curricular Hierarchy Residual ($\Delta_3$) bridge the $11.5$-student gap between a $14.19:1$ macro PTR and an observed $25.71$ Algebra I class size.
-- **Status:** Empirical calibration model, not a raw descriptive census.
 - **Generator Script:** [`analysis/cross-measure/generate_observatory_visuals.py`](../../analysis/cross-measure/generate_observatory_visuals.py)
 
 ---
 
-## 12. Observatory Usage & Status
+### Figure 2: The Kansas City 10-Year Capacity Paradox (SY 2014–15 to SY 2024–25)
+![Figure 2: The KC 10-Year Capacity Paradox](../../dashboard/fig02_kc_10yr_capacity_paradox.png)
+- **Classification:** `DESCRIPTIVE OBSERVATION`
+- **Purpose:** Document the longitudinal divergence between flat student enrollment ($-0.73\%$ dynamic, $-0.64\%$ balanced) and expanding instructional staffing ($+8.88\%$ teachers, $+11.85\%$ paraprofessionals), which drove regional pooled PTR down from $14.85:1$ to $13.55:1$ ($-8.75\%$).
+- **Source:** Audited NCES CCD LEA Longitudinal Panel (`kc_lea_capacity_long_2014_15_2024_25.csv`).
+- **Generator Script:** [`analysis/cross-measure/generate_observatory_visuals.py`](../../analysis/cross-measure/generate_observatory_visuals.py)
+
+---
+
+### Figure 3: Multi-Stage Waterfall Decomposition (Shawnee Mission North Case)
+![Figure 3: Schedule Waterfall Decomposition](../../dashboard/fig03_schedule_waterfall_decomposition.png)
+- **Classification:** `MODEL / CALIBRATED CASE STUDY`
+- **Purpose:** Demonstrate how the Schedule Capacity Identity ($\phi = 1.400$), Specialist Wedge ($\Delta_1 = +2.67$), and Curricular Hierarchy Residual ($\Delta_3 = +3.17$) bridge the $11.5$-student gap between a $14.19:1$ macro PTR and an observed $25.71$ Algebra I class size.
+- **Generator Script:** [`analysis/cross-measure/generate_observatory_visuals.py`](../../analysis/cross-measure/generate_observatory_visuals.py)
+
+---
+
+### Figure 14: The Secondary Staffing Wedge — CRDC Course Roster Sizes vs. School Macro PTR
+![Figure 14: Secondary Staffing Wedge](../../dashboard/fig14_secondary_staffing_wedge.png)
+- **Classification:** `CROSS-SOURCE CONTRAST & STRUCTURAL DECOMPOSITION`
+- **Purpose:** Direct empirical comparison of building-level macro PTR against derived mean class sizes in Algebra I, Geometry, and Biology across 101 regular operating high schools.
+- **Findings:** Mean Algebra I class size ($19.28$) exceeds mean high school PTR ($14.76$) by **$+4.53$ students ($+30.66\%$)**, providing large-sample empirical confirmation of the secondary staffing wedge.
+- **Generator Script:** [`analysis/cross-measure/generate_edu003_visuals.py`](../../analysis/cross-measure/generate_edu003_visuals.py)
+
+---
+
+## 10. Observatory Usage & Status
 
 - **Observatory Role:** `Contextual Background Metric` (Systemic Investment Layer).
 - **Prohibited Use:** Prohibited as a standalone measure of student classroom exposure, class size, or teacher workload.
@@ -232,3 +253,4 @@ The Observatory maintains three visual artifacts for `EDU-001`, documenting thei
 - **Dossier Audit History:**
   - `2026-09-26`: Initial calibration dossier drafted.
   - `2026-09-26 (Task 002B)`: Audited against authoritative NCES documentation; aggregation semantics corrected to Pooled PTR; four-tier universe implemented; visual evidence provenance codified.
+  - `2026-09-26 (Task 005)`: Re-audited and synthesized from frozen `EDU-002` (numerator) and `EDU-003` (denominator); 7-layer architecture codified; 4 machine-readable claims formalized in `claims.csv` (`CLM-PTR-001`, `CLM-PTR-001-DYN`, `CLM-PTR-002`, `CLM-PTR-003`); Balanced 75 cohort reconciled ($14.85:1 \to 13.55:1$, $-1.30$, $-8.75\%$); Dynamic regional series synchronized ($14.85:1 \to 13.54:1$, $-1.31$, $-8.82\%$); downward staffing stickiness quantified across 28 declining LEAs ($14.02:1 \to 13.34:1$, $-0.68$, $-4.85\%$); campus vs. LEA allocation gap quantified ($+0.24$, $+1.74\%$); Figure 14 added to visual packet; dossier frozen. Status confirmed: **AUDITED / FROZEN / READY FOR CROSS-MEASURE USE**.

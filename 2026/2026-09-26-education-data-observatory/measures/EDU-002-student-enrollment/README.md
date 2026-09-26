@@ -2,7 +2,7 @@
 
 > **Observatory Standard:** Student enrollment is the foundational denominator of public education finance and capacity analysis. Yet in administrative data systems, "how many students there are" is not a single unambiguous quantity. This dossier audits the multi-layered semantics of enrollment: the **LEA–School Membership Reconciliation Gap** (why LEA membership does not equal the sum of school enrollments), the **Pre-K Inclusion Wedge**, the verified taxonomy of **26 operational zero-membership campuses**, the **Fall 2020 enrollment drop**, and the **National Contextualization** of regional school scales.
 >
-> *Principle: Source ≠ Field ≠ Operationalization ≠ Measure ≠ Claim.*
+> *Principle: SOURCE → FIELD → OPERATIONALIZATION → MEASURE → UNIVERSE → ESTIMAND → CLAIM.*
 > *Rule of thumb: Complete measurement semantics before modeling. Description before explanation.*
 
 ---

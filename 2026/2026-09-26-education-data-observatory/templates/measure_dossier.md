@@ -2,7 +2,7 @@
 
 > **Observatory Standard:** Every measure in the Education Data Observatory must maintain a complete dossier prior to empirical correlation, indexing, or dashboard presentation. The durable research unit is the **measure**, connected to external sources via explicit **operationalizations**.
 > 
-> *Principle: Source ≠ Field ≠ Operationalization ≠ Measure ≠ Claim.*
+> *Principle: SOURCE → FIELD → OPERATIONALIZATION → MEASURE → UNIVERSE → ESTIMAND → CLAIM.*
 > *Rule of thumb: Complete measurement semantics before modeling. Description before explanation.*
 
 ---

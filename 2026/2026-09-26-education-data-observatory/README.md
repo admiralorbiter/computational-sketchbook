@@ -6,18 +6,20 @@ A systematic, cumulative, measure-by-measure research instrument for public educ
 
 ## 1. Central Organizing Principle
 
-$$\mathbf{SOURCE} \ne \mathbf{FIELD} \ne \mathbf{OPERATIONALIZATION} \ne \mathbf{MEASURE} \ne \mathbf{CLAIM}$$
+$$\mathbf{SOURCE} \rightarrow \mathbf{FIELD} \rightarrow \mathbf{OPERATIONALIZATION} \rightarrow \mathbf{MEASURE} \rightarrow \mathbf{UNIVERSE} \rightarrow \mathbf{ESTIMAND} \rightarrow \mathbf{CLAIM}$$
 
-Contemporary public education research and policy reporting routinely collapse these five distinct epistemic layers together:
+Contemporary public education research and policy reporting routinely collapse these seven distinct epistemic layers together:
 - A CSV file downloaded from the National Center for Education Statistics is a **Source Artifact**.
 - `TEACHERS` or `MEMBER` is a **Raw Field**.
 - The specific formula, inclusion criteria, and grade adjustments applied to raw fields (e.g., NCES unadjusted school PTR vs. Observatory K–12 adjusted PTR vs. KSDE classroom teacher ratio) constitute an **Operationalization**.
 - The abstract, standardized construct of interest (e.g., `EDU-001 Pupil / Teacher Ratio`, `EDU-002 Student Enrollment`, `EDU-003 Reported Classroom Teacher FTE`) is the **Measure**.
-- *"Kansas City public schools expanded instructional capacity over the past decade"* is an interpretive **Claim** that can only be evaluated after examining multiple converging measures, staffing distributions, bell schedules, and accommodation loads.
+- The specific population boundary or cohort analyzed (e.g., `KC_BALANCED_LEA_75`, `KC_FULLY_REGIONAL_CURRENT_77`, `KC_REGULAR_HS_2023_24`) is the **Universe**.
+- The precise target parameter evaluated on that universe (e.g., 10-year percentage change, campus vs. LEA reconciliation gap, Algebra I vs. PTR staffing wedge) is the **Estimand**.
+- *"Kansas City regional classroom teacher FTE grew +8.88% across 75 balanced LEAs over a decade despite flat enrollment"* is an audited empirical **Claim** registered with explicit epistemic status in `analysis/results/claims.csv`.
 
 When these layers are collapsed, empirical investigations devolve into fishing expeditions—running correlation matrices across hundreds of raw columns before establishing what the columns actually capture. 
 
-The Education Data Observatory deliberately pulls these layers apart. The durable research unit of this project is the **Measure**, connected to immutable raw fields via explicit, cataloged **Operationalizations**.
+The Education Data Observatory deliberately pulls these layers apart. The durable research unit of this project is the **Measure**, connected to immutable raw fields via explicit, cataloged **Operationalizations**, and linked to empirical findings through well-defined **Universes**, **Estimands**, and **Claims**.
 
 ```mermaid
 flowchart TD
@@ -42,8 +44,16 @@ flowchart TD
         M3["<b>EDU-003: Reported Classroom Teacher FTE</b>"]
     end
 
-    subgraph C["5. EMPIRICAL CLAIM"]
-        C1["<b>Claim:</b> <i>'Suburban high schools expanded adult staffing density, but daily core course roster sizes remain anchored at 25-28 students due to planning schedule regimes.'</i>"]
+    subgraph U["5. UNIVERSE"]
+        U1["<b>KC_BALANCED_LEA_75</b><br/><i>10-Year Balanced Regional Panel</i>"]
+    end
+
+    subgraph E["6. ESTIMAND"]
+        E1["<b>10-Year Balanced Trajectory</b><br/><i>(Value_2025 - Value_2015) / Value_2015</i>"]
+    end
+
+    subgraph C["7. EMPIRICAL CLAIM"]
+        C1["<b>CLM-TCH-001:</b> <i>Teacher FTE grew +8.88% over decade across Balanced 75 LEAs despite flat enrollment.</i>"]
     end
 
     S1 --> F1
@@ -58,18 +68,24 @@ flowchart TD
     O2 --> M1
     M2 --> M1
     M3 --> M1
-    M1 -.->|Tested alongside Schedule Multipliers & CRDC sections| C1
+    M1 --> U1
+    U1 --> E1
+    E1 --> C1
 
     classDef sourceStyle fill:#eceff1,stroke:#455a64,stroke-width:1.5px;
     classDef fieldStyle fill:#e3f2fd,stroke:#1565c0,stroke-width:1.5px;
     classDef opStyle fill:#f3e5f5,stroke:#7b1fa2,stroke-width:1.5px;
     classDef measureStyle fill:#e8f5e9,stroke:#2e7d32,stroke-width:1.5px;
+    classDef universeStyle fill:#e0f2f1,stroke:#00695c,stroke-width:1.5px;
+    classDef estimandStyle fill:#ede7f6,stroke:#4527a0,stroke-width:1.5px;
     classDef claimStyle fill:#fff3e0,stroke:#e65100,stroke-width:1.5px;
 
     class S1 sourceStyle;
     class F1,F2,F3 fieldStyle;
     class O1,O2 opStyle;
     class M1,M2,M3 measureStyle;
+    class U1 universeStyle;
+    class E1 estimandStyle;
     class C1 claimStyle;
 ```
 
@@ -205,5 +221,14 @@ Key empirical foundations inherited from that work include:
   - Quantified the Secondary Staffing Wedge across 6 CRDC waves ($+3.5$ to $+4.5$ students), consistent with calibrated schedule model (2023–24 Algebra I: $19.28$ vs. macro PTR $14.76$, wedge $= +4.53$).
   - Established formal caution on longitudinal librarian comparability ($-54.39\%$ due partly to job reclassification).
   - Executed Task 004C numerical claim ledger reconciliation to eliminate prose-report drift: created `registry/universes.csv`, `scripts/generate_claims_ledger.py`, and `analysis/results/claims.csv`. Published Figures 12 through 14 in [`dashboard/`](dashboard/). Status: `AUDITED / FROZEN`.
-- **Task 005 (Upcoming):** Re-audit `EDU-001 Pupil/Teacher Ratio` synthesizing audited `EDU-002` and `EDU-003` foundations.
+- **Task 005 (Completed & Frozen):** Re-audit and synthesis of `EDU-001 Pupil / Teacher Ratio`:
+  - Completed Observatory Preflight: formalized 7-layer architecture (`SOURCE → FIELD → OPERATIONALIZATION → MEASURE → UNIVERSE → ESTIMAND → CLAIM`), refined universe definitions to the 9-county MARC study region, removed Lafayette County registry description artifact, added operational campus coverage criteria, and established strict `percent_basis` column in `claims.csv`.
+  - Re-audited `EDU-001` against frozen `EDU-002` (numerator) and `EDU-003` (denominator).
+  - Reconciled 10-year longitudinal PTR compression across the Balanced 75 LEA cohort: $14.85:1 \to 13.55:1$ ($-1.30$, $-8.75\%$; `CLM-PTR-001`).
+  - Synchronized Dynamic regional LEA trajectory: $14.85:1 \to 13.54:1$ ($-1.31$, $-8.82\%$; `CLM-PTR-001-DYN`).
+  - Quantified downward staffing stickiness across 28 declining LEAs with unchanged operating-school counts: PTR compressed from $14.02:1 \to 13.34:1$ ($-0.68$, $-4.85\%$; `CLM-PTR-002`) as enrollment fell $-8.33\%$ while teacher FTE contracted only $-3.63\%$.
+  - Quantified the Central Allocation Gap across 77 regional LEAs: campus aggregate PTR ($13.81:1$) exceeds LEA reported PTR ($13.57:1$) by $+0.24$ students per teacher FTE ($+1.74\%$; `CLM-PTR-003`) due to itinerant and centralized staff.
+  - Formalized regular campus distribution across 616 schools: Primary ($12.86:1$), Middle ($13.35:1$), High ($15.43:1$).
+  - Integrated Figure 14 into the visual packet, demonstrating large-sample empirical confirmation of the secondary staffing wedge. Status: `AUDITED / FROZEN`.
 - **Task 006 (Upcoming):** Scaffold `EDU-005 Paraprofessional FTE`.
+
