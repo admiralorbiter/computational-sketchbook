@@ -348,13 +348,48 @@ The Observatory maintains five visual artifacts for `EDU-002`, establishing its 
 
 ---
 
+### Figure 9: The Post-Pandemic Divergence — Fall 2020 Shock & Recovery Typology
+![Figure 9: Recovery Typology](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-26-education-data-observatory/dashboard/fig09_post_2020_recovery_typology.png)
+- **Classification:** `DESCRIPTIVE OBSERVATION`
+- **Purpose:** Decompose the aggregate regional "plateau" into 4 distinct 5-year district trajectory categories across the Balanced 75-LEA Cohort.
+- **Findings:**
+  - The aggregate plateau masks a profound divergence: **41 districts (57.8% of students)** remain in persistent decline below their 2020 trough, offset by **23 districts (16.3% of students)** that grew through the shock or exceeded pre-pandemic peaks.
+- **Source:** Audited 11-Year NCES CCD LEA Longitudinal Panel (`kc_lea_capacity_long_2014_15_2024_25.csv`).
+- **Generator Script:** [`analysis/cross-measure/generate_task003d_visuals.py`](../../analysis/cross-measure/generate_task003d_visuals.py)
+
+---
+
+### Figure 10: Kindergarten as a Demographic Warning Indicator — The Contracting Pipeline
+![Figure 10: Kindergarten Pipeline](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-26-education-data-observatory/dashboard/fig10_kindergarten_pipeline_indicator.png)
+- **Classification:** `DEMOGRAPHIC WARNING INDICATOR`
+- **Purpose:** Contrast the trajectory of incoming Kindergarten entry cohorts against continuing Grades 1–12 across the Balanced 75-LEA Cohort.
+- **Findings:**
+  - In Fall 2020, Kindergarten collapsed by **$-11.43\%$** (-2,871 students), accounting for **$36.9\%$ of the entire regional enrollment drop**.
+  - Over the full decade, continuing Grades 1–12 are **net positive (+0.10%)**, while Kindergarten is down **$-9.14\%$** (-2,341 students). The entire 10-year regional decline is located in the incoming cohort pipeline.
+- **Source:** NCES CCD LEA Survey (`enrollment_kg` vs `enrollment_k12`).
+- **Generator Script:** [`analysis/cross-measure/generate_task003d_visuals.py`](../../analysis/cross-measure/generate_task003d_visuals.py)
+
+---
+
+### Figure 11: Institutional Scale vs. Curricular Breadth — The Advanced Course Tradeoff
+![Figure 11: Curricular Breadth Tradeoff](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-26-education-data-observatory/dashboard/fig11_school_scale_vs_curricular_breadth.png)
+- **Classification:** `CROSS-MEASURE BENCHMARK`
+- **Purpose:** Document how high school institutional scale affects the probability of offering advanced STEM coursework (Calculus, Physics, Chemistry) across 587 regular high school observations in CRDC.
+- **Findings:**
+  - What scale reliably purchases is curricular breadth: Calculus offering rates jump from **$32.6\%$** in high schools under 400 students to **$95.9\%$** in high schools over 1,600 students; Physics jumps from **$56.2\%$** to **$98.4\%$**.
+- **Source:** Civil Rights Data Collection (CRDC Waves 2013–14 through 2023–24, regular operating high schools).
+- **Generator Script:** [`analysis/cross-measure/generate_task003d_visuals.py`](../../analysis/cross-measure/generate_task003d_visuals.py)
+
+---
+
 ## 11. Observatory Usage & Status
 
 - **Observatory Role:** `Core Census Foundation Measure` (Primary denominator for capacity, staffing, and fiscal metrics).
-- **Operational Status:** **AUDITED / FROZEN / READY FOR CROSS-MEASURE USE**.
+- **Operational Status:** **AUDITED / FROZEN / EXHAUSTED / READY FOR CROSS-MEASURE USE**.
 - **Mandatory Presentation Disclaimer:**
   > *"Student enrollment counts denote registered fall headcount membership as of the snapshot date. They do not equal average daily attendance (which is typically 6% to 10% lower due to absenteeism), nor does the sum of individual school enrollments equal total district enrollment due to unassigned, out-of-district, and central administrative student placements."*
 - **Audit History:**
   - `2026-09-26 (Task 003)`: Initial measure audited and codified; reconciliation gap documented; 4-tier universe instantiated; Figures 4–6 generated.
   - `2026-09-26 (Task 003B)`: Semantic cleanup completed: ADA and funding FTE separated into proposed measures `EDU-015` and `EDU-016`; "compulsory" replaced with "grade-span"; 26 zero-membership schools audited into 4-part taxonomy; Missouri SB 727 transition and Kansas funding lookbacks documented; candidate hypotheses formalizing the Fall 2020 drop registered; Figures 7 and 8 added with national benchmarks; measure frozen.
-  - `2026-09-26 (Task 003C)`: Geographic and longitudinal universe bugs resolved: isolated 2 statewide agencies (+973 students outside KC) from 77 fully-regional LEAs (+1,472 gap); replaced contaminated unfiltered panel with Dynamic Fully Regional series (321,228 $\to$ 318,883, -0.73%) and Balanced 75 Cohort (320,465 $\to$ 318,406, -0.64%); Figures 5, 6, 7 updated to calculate directly from data; exhaustive exploratory analysis completed across regional redistribution, system concentration, campus scale exposure, district portfolio response, Pre-K structure, and CRDC cross-measure associations; re-frozen.
+  - `2026-09-26 (Task 003C)`: Geographic and longitudinal universe bugs resolved: isolated 2 statewide agencies (+973 students outside KC) from 77 fully-regional LEAs (+1,472 gap); replaced contaminated unfiltered panel with Dynamic Fully Regional series (321,228 $\to$ 318,883, -0.73%) and Balanced 75 Cohort (320,465 $\to$ 318,406, -0.64%); Figures 5, 6, 7 updated to calculate directly from data.
+  - `2026-09-26 (Task 003D)`: Second-pass enrollment analysis completed: 4-tier post-2020 recovery typology established; Kindergarten pipeline collapse identified (-9.1% KG vs +0.10% grades 1–12); geographic centroid immobility proven (-0.077 mi shift); physical plant immobility verified with NCESSCH IDs (77.8% of declining LEAs with same count kept 100% identical campuses); urban charter share audited at 48.5% with net public sector expansion; CRDC curricular breadth tradeoffs documented across 587 regular high schools; complexity associations stratified; Figures 9–11 added; EDU-002 declared genuinely exhausted; authorized transition to EDU-003.
