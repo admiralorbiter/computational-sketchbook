@@ -1,0 +1,2728 @@
+{
+  "RSSFeedLink": "",
+  "AttendessHtml": "<html><head>\t<title></title>\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\" />\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\" />\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\" /></head><div class=\"wsc-contenteditable-mirror wsc-element\" style=\"border:none; display:inline; float:left; height:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; margin-top:0px; overflow:visible; padding:0px; position:relative; width:0px; z-index:1\"><div style=\"border-color:transparent; border-style:none; border-width:0px; box-sizing:content-box; color:transparent; height:432px; left:8px; overflow:hidden; padding:0px; pointer-events:none; position:relative; top:8px; width:702.667px\"><div style=\"border:0px; height:432px; margin-bottom:0px; margin-left:0px; margin-right:0px; margin-top:0px; min-height:100%; min-width:100%; padding:0px; position:relative; width:703px\">&nbsp;</div></div></div><body data-gramm_editor=\"false\" data-wsc-instance=\"true\"><strong>Voting Members</strong><br />Marcie Calvin, Board President<br />Gayla Smith, Board Vice President<br />Cecelia Ball, Board Member<br />Ira Boydston IV, Board Member<br />Ron Fritz, Board Member<br />Mariah Roady, Board Member<br />Michael Sarver, Board Member<br /><br /><strong>Superintendent</strong><br />Dr. Yolanda Cargile<br /><br /><strong>Central Office Leadership</strong><br />Meagan Patterson, Assistant Superintendent of Student Support and Success<br />Dr. Amy Casey, Assistant Superintendent of Accelerated Learning<br />Dr. April Sutherland, Assistant Superintendent of Talent, Recruitment &amp; Retention, Equity &amp; District-Wide Operations<br />Lane&#39; Johnson, Director of Communications<br />Zack Danner, Director of Operations<br />Brian Walter, Director of Technology<br />Dr. Jim Cummins, Director of Business Services (CFO) &amp; Support<br /><br /><strong>Board Secretary</strong><br />Rebecca Sanders</body></html>",
+  "MeetingMinutes": {
+    "EncrId": null,
+    "Title": null,
+    "Minutes": "",
+    "VotingHTML": null,
+    "VotingHTMLs": null,
+    "ChildMinutesLst": null,
+    "IsEdit": false,
+    "IsShow": false,
+    "IsReady": false,
+    "Visibility": 0,
+    "Level": 0,
+    "VotingComment": null,
+    "ItemID": null,
+    "HyperLinks": null,
+    "Attachments": null,
+    "MeetingOnlineVotings": null,
+    "AllVotingApproved": false,
+    "AllVotingNotApproved": false
+  },
+  "LstItemMinutes": [
+    {
+      "EncrId": "KYn9w4UfSXtoFvplusFiqxBVA==",
+      "Title": "I. CALL TO ORDER AND ROLL CALL",
+      "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Board President Calvin called the meeting to order at 7:00pm.&nbsp; It was noted a quorum was present.&nbsp;&nbsp;</body>\n</html>\n",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": null,
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "KYn9w4UfSXtoFvplusFiqxBVA==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            null,
+            null,
+            null
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false,
+          "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Board President Calvin called the meeting to order at 7:00pm.&nbsp; It was noted a quorum was present.&nbsp;&nbsp;</body>\n</html>\n"
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "BgjJajbtCnAApisqyrwRiA==",
+      "Title": "II. PLEDGE OF ALLEGIANCE",
+      "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Board President Calvin led the audience in the pledge of allegiance.&nbsp;&nbsp;</body>\n</html>\n",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": [
+        {
+          "EncrId": "GIhoefjULQ6ikplusuhopsWsg==",
+          "Title": "A. CSD Vision and Mission - BOE Member Fritz",
+          "Minutes": "",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "GIhoefjULQ6ikplusuhopsWsg==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": ""
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "fLOPBOWsLAUQ8vM9bN4jsA==",
+          "Title": "B. CSD Core Values - BOE Member Sarver",
+          "Minutes": "",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "fLOPBOWsLAUQ8vM9bN4jsA==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": ""
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "HYIPVLGVnp9Ml3hi2voCcw==",
+          "Title": "C. Equity Quote - BOE Member Ball",
+          "Minutes": "",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "HYIPVLGVnp9Ml3hi2voCcw==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": ""
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        }
+      ],
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "BgjJajbtCnAApisqyrwRiA==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            null,
+            null,
+            null
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false,
+          "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Board President Calvin led the audience in the pledge of allegiance.&nbsp;&nbsp;</body>\n</html>\n"
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "irPRqFD0UNC0sNfzlfg4DA==",
+      "Title": "III. APPROVAL OF THE AGENDA",
+      "Minutes": "",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": null,
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "irPRqFD0UNC0sNfzlfg4DA==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            "<span class='latoBold'>Motion made by:</span>&nbsp;Dr. Ronald Fritz",
+            "<span class='latoBold'>Motion seconded by:</span>&nbsp;Michael Sarver",
+            ""
+          ],
+          "AllVotingApproved": true,
+          "AllVotingNotApproved": false,
+          "Minutes": ""
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "HFhVWlDM12UBhU6gymKNQA==",
+      "Title": "IV. ANNOUNCEMENTS",
+      "Minutes": "",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": [
+        {
+          "EncrId": "RmLnS93oPrHYtEk3iTFHXQ==",
+          "Title": "A. Oct 29, 2024 - NHS Blood Drive 8:00am to 2:00pm CHS",
+          "Minutes": null,
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "RmLnS93oPrHYtEk3iTFHXQ==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": null
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "awAi61S1eCLEuYl5fapd6A==",
+          "Title": "B. Oct 29, 2024 - Cultural Fair/Parent Involvement Night 6:30pm - 8:00pm CMS",
+          "Minutes": null,
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "awAi61S1eCLEuYl5fapd6A==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": null
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "E7Sj1bZxlaNslshH9SpkBdsNQ==",
+          "Title": "C. Oct 29, 2024 - Trunk or Treat 4:00pm - 5:30pm CAS",
+          "Minutes": null,
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "E7Sj1bZxlaNslshH9SpkBdsNQ==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": null
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "bp7zp9hyETRMOCplus9RHnYyQ==",
+          "Title": "D. Nov 5, 2024 - No School District PD Day",
+          "Minutes": null,
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "bp7zp9hyETRMOCplus9RHnYyQ==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": null
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "PgEUxhBNFYPCzncvDlS8yA==",
+          "Title": "E. Nov 5, 2024 - General Election Voting 6:00am to 7:30pm CHS",
+          "Minutes": "",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "PgEUxhBNFYPCzncvDlS8yA==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": ""
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "TWqyRWlslsh0ZdGlH9dnOplusybA==",
+          "Title": "F. Nov 7, 2024 - Math/Science/Reading Night 5:30pm - 7:00pm RBE",
+          "Minutes": null,
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "TWqyRWlslsh0ZdGlH9dnOplusybA==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": null
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "o00SyL0Y7Z3FQ9jEJUmzxw==",
+          "Title": "G. Nov 13, 2024 - Family Engagement Night 6:00pm - 7:30pm ICE",
+          "Minutes": null,
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "o00SyL0Y7Z3FQ9jEJUmzxw==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": null
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "CCmTUV2CplushdcbJdngZGYQQ==",
+          "Title": "H. Nov 19, 2024 - Soup Cook Off Parent Involvement Night 6:30pm - 7:30pm CMS",
+          "Minutes": "",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "CCmTUV2CplushdcbJdngZGYQQ==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": ""
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "Aib3plusAoRUkCKoX18sBeBQQ==",
+          "Title": "I. Nov 25, 2024 - Regular Session Meeting 7:00pm",
+          "Minutes": "",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "Aib3plusAoRUkCKoX18sBeBQQ==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": ""
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "Y0Xp9OaAMP6ZwJt1MIOslshvw==",
+          "Title": "J. CMS Football Team MRVC Conference Champions",
+          "Minutes": null,
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "Y0Xp9OaAMP6ZwJt1MIOslshvw==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": null
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "Yqrivp5iIplusA0pluseGzjplusz5Vw==",
+          "Title": "K. CHS Girls Volleyball Team District 14 Champions",
+          "Minutes": null,
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "Yqrivp5iIplusA0pluseGzjplusz5Vw==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": null
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "iIxJDqT2xmbHSzplusJtYV2OA==",
+          "Title": "L. Bob Ray - Trails West District 2024 Administrator of the Year ",
+          "Minutes": null,
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "iIxJDqT2xmbHSzplusJtYV2OA==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": null
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        }
+      ],
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "HFhVWlDM12UBhU6gymKNQA==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            null,
+            null,
+            null
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false,
+          "Minutes": ""
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "oBqzS7jmrYHDGMJlRfnCZw==",
+      "Title": "V. RECOGNITIONS",
+      "Minutes": "",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": [
+        {
+          "EncrId": "cdno3YPqDZ8vC8soiEYAwA==",
+          "Title": "A. Center High School student Josephine Mosby was formally selected as an Outstanding Young Achiever Award winner. ",
+          "Minutes": "",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "cdno3YPqDZ8vC8soiEYAwA==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": ""
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        }
+      ],
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "oBqzS7jmrYHDGMJlRfnCZw==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            null,
+            null,
+            null
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false,
+          "Minutes": ""
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "QGplusrZZ42IlHx5QTKY52slshyA==",
+      "Title": "VI. RECEPTION",
+      "Minutes": null,
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": null,
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "QGplusrZZ42IlHx5QTKY52slshyA==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            null,
+            null,
+            null
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false,
+          "Minutes": null
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "XplusplusM3fRzzobldslshzebAPHWQ==",
+      "Title": "VII. PUBLIC COMMENT",
+      "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">No public comments.&nbsp;</body>\n</html>\n",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": null,
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "XplusplusM3fRzzobldslshzebAPHWQ==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            null,
+            null,
+            null
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false,
+          "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">No public comments.&nbsp;</body>\n</html>\n"
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "BoNdhFz6R1PIsEfyNMvQEA==",
+      "Title": "VIII. CONSENT ITEMS",
+      "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">The consent agenda items were approved with the exception of A, C1, D1, D2 and E.&nbsp;&nbsp;</body>\n</html>\n",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": [
+        {
+          "EncrId": "YKTXfplusVLxsTEj0mY09Hmvg==",
+          "Title": "A. Approval of Bills",
+          "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">A motion by Fritz was seconded by Calvin.&nbsp; The motion carried 5-0-2.&nbsp;&nbsp;</body>\n</html>\n",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "YKTXfplusVLxsTEj0mY09Hmvg==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                ""
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">A motion by Fritz was seconded by Calvin.&nbsp; The motion carried 5-0-2.&nbsp;&nbsp;</body>\n</html>\n"
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "NUH9WRlSob2GdslshOEe2OdNQ==",
+          "Title": "B. Attendance",
+          "Minutes": "",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "NUH9WRlSob2GdslshOEe2OdNQ==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": ""
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "BJmXJvDJjJYYIjeTJ95Ghg==",
+          "Title": "C. Contracts",
+          "Minutes": null,
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": [
+            {
+              "EncrId": "4zwBYslshn4b5plus8RcnZ22Mwpw==",
+              "Title": "1. Department of Conservation Tree Removal ",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">\n<div data-olk-copy-source=\"MessageBody\" style=\"border:0px; color:inherit; font:inherit; margin-bottom:0px; margin-left:0px; margin-right:0px; margin-top:0px; padding:0px; vertical-align:baseline\">I move to accept the superintendents recommendation to enter into an agreement with the Missouri Department of Conversation to remove and replace trees in the high school parking lot not to exceed $500.00.&nbsp;</div>\n</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "4zwBYslshn4b5plus8RcnZ22Mwpw==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    "<span class='latoBold'>Motion made by:</span>&nbsp;Dr. Ronald Fritz",
+                    "<span class='latoBold'>Motion seconded by:</span>&nbsp;Marcie Calvin",
+                    ""
+                  ],
+                  "AllVotingApproved": true,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">\n<div data-olk-copy-source=\"MessageBody\" style=\"border:0px; color:inherit; font:inherit; margin-bottom:0px; margin-left:0px; margin-right:0px; margin-top:0px; padding:0px; vertical-align:baseline\">I move to accept the superintendents recommendation to enter into an agreement with the Missouri Department of Conversation to remove and replace trees in the high school parking lot not to exceed $500.00.&nbsp;</div>\n</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            }
+          ],
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "BJmXJvDJjJYYIjeTJ95Ghg==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": null
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "qe1ch4ZplusONVafcGW8seLHA==",
+          "Title": "D. Personnel",
+          "Minutes": "",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": [
+            {
+              "EncrId": "laAr1slshCPmSSPj7daOmApxA==",
+              "Title": "1. YELC ECSE Staffing Need",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\"><span data-olk-copy-source=\"MessageBody\">Motion to accept the superintendent&#39;s recommendation for an additional full-time Early Childhood Special Education Classroom Teacher and paraprofessional at no cost to the district.</span></body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "laAr1slshCPmSSPj7daOmApxA==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    "<span class='latoBold'>Motion made by:</span>&nbsp;Dr. Ronald Fritz",
+                    "<span class='latoBold'>Motion seconded by:</span>&nbsp;Cecelia Ball",
+                    ""
+                  ],
+                  "AllVotingApproved": true,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\"><span data-olk-copy-source=\"MessageBody\">Motion to accept the superintendent&#39;s recommendation for an additional full-time Early Childhood Special Education Classroom Teacher and paraprofessional at no cost to the district.</span></body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "9cBvpDhTcvplus1SAEVlxUs8g==",
+              "Title": "2. Personnel Report",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Motion to approve the personnel report.&nbsp;</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "9cBvpDhTcvplus1SAEVlxUs8g==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    "<span class='latoBold'>Motion made by:</span>&nbsp;Dr. Ronald Fritz",
+                    "<span class='latoBold'>Motion seconded by:</span>&nbsp;Michael Sarver",
+                    ""
+                  ],
+                  "AllVotingApproved": true,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Motion to approve the personnel report.&nbsp;</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            }
+          ],
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "qe1ch4ZplusONVafcGW8seLHA==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": ""
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "vtLWeOmZGvy1FRh605zL8A==",
+          "Title": "E. Transportation Routes ",
+          "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\"><span data-olk-copy-source=\"MessageBody\">Motion to approve the 2024-2025 Center School District Transportation Routes.</span></body>\n</html>\n",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "vtLWeOmZGvy1FRh605zL8A==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                "<span class='latoBold'>Motion made by:</span>&nbsp;Dr. Ronald Fritz",
+                "<span class='latoBold'>Motion seconded by:</span>&nbsp;Cecelia Ball",
+                ""
+              ],
+              "AllVotingApproved": true,
+              "AllVotingNotApproved": false,
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\"><span data-olk-copy-source=\"MessageBody\">Motion to approve the 2024-2025 Center School District Transportation Routes.</span></body>\n</html>\n"
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        }
+      ],
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "BoNdhFz6R1PIsEfyNMvQEA==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            null,
+            null,
+            null
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false,
+          "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">The consent agenda items were approved with the exception of A, C1, D1, D2 and E.&nbsp;&nbsp;</body>\n</html>\n"
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "rYBt3IslshmtDhAh2WSPnqSaA==",
+      "Title": "IX. ACTION ITEMS",
+      "Minutes": "",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": [
+        {
+          "EncrId": "ynKFFwy70vLAUyHza1plusbfg==",
+          "Title": "A. Approval of Minutes",
+          "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\"><span data-olk-copy-source=\"MessageBody\">Motion to accept the Regular Session Meeting minutes for May 20, June 17, August 26, and September 23, Soecial Meetings - June 28, September 26, Work session meeting August 12 as well as Special Tax Rate Hearing Meeting September 23, 2024.</span></body>\n</html>\n",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "ynKFFwy70vLAUyHza1plusbfg==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                "<span class='latoBold'>Motion made by:</span>&nbsp;Dr. Ronald Fritz",
+                "<span class='latoBold'>Motion seconded by:</span>&nbsp;Michael Sarver",
+                ""
+              ],
+              "AllVotingApproved": true,
+              "AllVotingNotApproved": false,
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\"><span data-olk-copy-source=\"MessageBody\">Motion to accept the Regular Session Meeting minutes for May 20, June 17, August 26, and September 23, Soecial Meetings - June 28, September 26, Work session meeting August 12 as well as Special Tax Rate Hearing Meeting September 23, 2024.</span></body>\n</html>\n"
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "9FNpufeAJhIBQl4ojHv1Nw==",
+          "Title": "B. Approval of Minutes 05/09/24 and 05/14/2024",
+          "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Motion by Fritz was seconded by Boydston to approve the Minutes from 05/09/24 and 05/14/24.&nbsp; The motion carried 6-0-1.&nbsp;&nbsp;</body>\n</html>\n",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "9FNpufeAJhIBQl4ojHv1Nw==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Motion by Fritz was seconded by Boydston to approve the Minutes from 05/09/24 and 05/14/24.&nbsp; The motion carried 6-0-1.&nbsp;&nbsp;</body>\n</html>\n"
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "xplus0uKAjuPCC6WkQSddslshKplusA==",
+          "Title": "C. Defeasance",
+          "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">\n<div data-olk-copy-source=\"MessageBody\" style=\"-webkit-text-stroke-width:0px; background-color:#ffffff; border:0px; color:#000000; font-family:&quot;Segoe UI&quot;,&quot;Segoe UI Web (West European)&quot;,-apple-system,BlinkMacSystemFont,Roboto,&quot;Helvetica Neue&quot;,sans-serif; font-feature-settings:inherit; font-kerning:inherit; font-optical-sizing:inherit; font-size-adjust:inherit; font-size:15px; font-stretch:inherit; font-style:normal; font-variant-alternates:inherit; font-variant-caps:normal; font-variant-east-asian:inherit; font-variant-ligatures:normal; font-variant-numeric:inherit; font-variant-position:inherit; font-variation-settings:inherit; font-weight:400; letter-spacing:normal; line-height:inherit; margin-bottom:0px; margin-left:0px; margin-right:0px; margin-top:0px; orphans:2; padding:0px; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-indent:0px; text-transform:none; vertical-align:baseline; white-space:normal; widows:2; word-spacing:0px\">Accept the superintendent&#39;s recommendation:</div>\n\n<div style=\"-webkit-text-stroke-width:0px; background-color:#ffffff; border:0px; color:#000000; font-family:&quot;Segoe UI&quot;,&quot;Segoe UI Web (West European)&quot;,-apple-system,BlinkMacSystemFont,Roboto,&quot;Helvetica Neue&quot;,sans-serif; font-feature-settings:inherit; font-kerning:inherit; font-optical-sizing:inherit; font-size-adjust:inherit; font-size:15px; font-stretch:inherit; font-style:normal; font-variant-alternates:inherit; font-variant-caps:normal; font-variant-east-asian:inherit; font-variant-ligatures:normal; font-variant-numeric:inherit; font-variant-position:inherit; font-variation-settings:inherit; font-weight:400; letter-spacing:normal; line-height:inherit; margin-bottom:0px; margin-left:0px; margin-right:0px; margin-top:0px; orphans:2; padding:0px; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-indent:0px; text-transform:none; vertical-align:baseline; white-space:normal; widows:2; word-spacing:0px\">&nbsp; &nbsp; &nbsp;1. THIRD AMENDMENT TO DIRECT DEPOSIT AGREEMENT (SERIES 2019A BONDS)</div>\n\n<div style=\"-webkit-text-stroke-width:0px; background-color:#ffffff; border:0px; color:#000000; font-family:&quot;Segoe UI&quot;,&quot;Segoe UI Web (West European)&quot;,-apple-system,BlinkMacSystemFont,Roboto,&quot;Helvetica Neue&quot;,sans-serif; font-feature-settings:inherit; font-kerning:inherit; font-optical-sizing:inherit; font-size-adjust:inherit; font-size:15px; font-stretch:inherit; font-style:normal; font-variant-alternates:inherit; font-variant-caps:normal; font-variant-east-asian:inherit; font-variant-ligatures:normal; font-variant-numeric:inherit; font-variant-position:inherit; font-variation-settings:inherit; font-weight:400; letter-spacing:normal; line-height:inherit; margin-bottom:0px; margin-left:0px; margin-right:0px; margin-top:0px; orphans:2; padding:0px; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-indent:0px; text-transform:none; vertical-align:baseline; white-space:normal; widows:2; word-spacing:0px\">&nbsp; &nbsp; &nbsp;2. ESCROW TRUST AGREEMENT</div>\n\n<div style=\"-webkit-text-stroke-width:0px; background-color:#ffffff; border:0px; color:#000000; font-family:&quot;Segoe UI&quot;,&quot;Segoe UI Web (West European)&quot;,-apple-system,BlinkMacSystemFont,Roboto,&quot;Helvetica Neue&quot;,sans-serif; font-feature-settings:inherit; font-kerning:inherit; font-optical-sizing:inherit; font-size-adjust:inherit; font-size:15px; font-stretch:inherit; font-style:normal; font-variant-alternates:inherit; font-variant-caps:normal; font-variant-east-asian:inherit; font-variant-ligatures:normal; font-variant-numeric:inherit; font-variant-position:inherit; font-variation-settings:inherit; font-weight:400; letter-spacing:normal; line-height:inherit; margin-bottom:0px; margin-left:0px; margin-right:0px; margin-top:0px; orphans:2; padding:0px; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-indent:0px; text-transform:none; vertical-align:baseline; white-space:normal; widows:2; word-spacing:0px\">&nbsp; &nbsp; &nbsp;3. AUTHORIZING THE DEFEASANCE OF A PORTION OF THE DISTRICT&rsquo;S OUTSTANDING&nbsp; GENERAL OBLIGATION BINDS AND CERTAIN OTHER ACTIONS IN CONNECTION THEREWITH THE ATTACHED RESOLUTION.</div>\n</body>\n</html>\n",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "xplus0uKAjuPCC6WkQSddslshKplusA==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                "<span class='latoBold'>Motion made by:</span>&nbsp;Dr. Ronald Fritz",
+                "<span class='latoBold'>Motion seconded by:</span>&nbsp;Cecelia Ball",
+                ""
+              ],
+              "AllVotingApproved": true,
+              "AllVotingNotApproved": false,
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">\n<div data-olk-copy-source=\"MessageBody\" style=\"-webkit-text-stroke-width:0px; background-color:#ffffff; border:0px; color:#000000; font-family:&quot;Segoe UI&quot;,&quot;Segoe UI Web (West European)&quot;,-apple-system,BlinkMacSystemFont,Roboto,&quot;Helvetica Neue&quot;,sans-serif; font-feature-settings:inherit; font-kerning:inherit; font-optical-sizing:inherit; font-size-adjust:inherit; font-size:15px; font-stretch:inherit; font-style:normal; font-variant-alternates:inherit; font-variant-caps:normal; font-variant-east-asian:inherit; font-variant-ligatures:normal; font-variant-numeric:inherit; font-variant-position:inherit; font-variation-settings:inherit; font-weight:400; letter-spacing:normal; line-height:inherit; margin-bottom:0px; margin-left:0px; margin-right:0px; margin-top:0px; orphans:2; padding:0px; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-indent:0px; text-transform:none; vertical-align:baseline; white-space:normal; widows:2; word-spacing:0px\">Accept the superintendent&#39;s recommendation:</div>\n\n<div style=\"-webkit-text-stroke-width:0px; background-color:#ffffff; border:0px; color:#000000; font-family:&quot;Segoe UI&quot;,&quot;Segoe UI Web (West European)&quot;,-apple-system,BlinkMacSystemFont,Roboto,&quot;Helvetica Neue&quot;,sans-serif; font-feature-settings:inherit; font-kerning:inherit; font-optical-sizing:inherit; font-size-adjust:inherit; font-size:15px; font-stretch:inherit; font-style:normal; font-variant-alternates:inherit; font-variant-caps:normal; font-variant-east-asian:inherit; font-variant-ligatures:normal; font-variant-numeric:inherit; font-variant-position:inherit; font-variation-settings:inherit; font-weight:400; letter-spacing:normal; line-height:inherit; margin-bottom:0px; margin-left:0px; margin-right:0px; margin-top:0px; orphans:2; padding:0px; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-indent:0px; text-transform:none; vertical-align:baseline; white-space:normal; widows:2; word-spacing:0px\">&nbsp; &nbsp; &nbsp;1. THIRD AMENDMENT TO DIRECT DEPOSIT AGREEMENT (SERIES 2019A BONDS)</div>\n\n<div style=\"-webkit-text-stroke-width:0px; background-color:#ffffff; border:0px; color:#000000; font-family:&quot;Segoe UI&quot;,&quot;Segoe UI Web (West European)&quot;,-apple-system,BlinkMacSystemFont,Roboto,&quot;Helvetica Neue&quot;,sans-serif; font-feature-settings:inherit; font-kerning:inherit; font-optical-sizing:inherit; font-size-adjust:inherit; font-size:15px; font-stretch:inherit; font-style:normal; font-variant-alternates:inherit; font-variant-caps:normal; font-variant-east-asian:inherit; font-variant-ligatures:normal; font-variant-numeric:inherit; font-variant-position:inherit; font-variation-settings:inherit; font-weight:400; letter-spacing:normal; line-height:inherit; margin-bottom:0px; margin-left:0px; margin-right:0px; margin-top:0px; orphans:2; padding:0px; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-indent:0px; text-transform:none; vertical-align:baseline; white-space:normal; widows:2; word-spacing:0px\">&nbsp; &nbsp; &nbsp;2. ESCROW TRUST AGREEMENT</div>\n\n<div style=\"-webkit-text-stroke-width:0px; background-color:#ffffff; border:0px; color:#000000; font-family:&quot;Segoe UI&quot;,&quot;Segoe UI Web (West European)&quot;,-apple-system,BlinkMacSystemFont,Roboto,&quot;Helvetica Neue&quot;,sans-serif; font-feature-settings:inherit; font-kerning:inherit; font-optical-sizing:inherit; font-size-adjust:inherit; font-size:15px; font-stretch:inherit; font-style:normal; font-variant-alternates:inherit; font-variant-caps:normal; font-variant-east-asian:inherit; font-variant-ligatures:normal; font-variant-numeric:inherit; font-variant-position:inherit; font-variation-settings:inherit; font-weight:400; letter-spacing:normal; line-height:inherit; margin-bottom:0px; margin-left:0px; margin-right:0px; margin-top:0px; orphans:2; padding:0px; text-align:start; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-indent:0px; text-transform:none; vertical-align:baseline; white-space:normal; widows:2; word-spacing:0px\">&nbsp; &nbsp; &nbsp;3. AUTHORIZING THE DEFEASANCE OF A PORTION OF THE DISTRICT&rsquo;S OUTSTANDING&nbsp; GENERAL OBLIGATION BINDS AND CERTAIN OTHER ACTIONS IN CONNECTION THEREWITH THE ATTACHED RESOLUTION.</div>\n</body>\n</html>\n"
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        }
+      ],
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "rYBt3IslshmtDhAh2WSPnqSaA==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            null,
+            null,
+            null
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false,
+          "Minutes": ""
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "slsh8EaL9sfU1eiDWGfxO2sslshQ==",
+      "Title": "X. SUPERINTENDENT REPORT",
+      "Minutes": "",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": [
+        {
+          "EncrId": "wOhK4Av0JGrR2JOlTjGaMA==",
+          "Title": "A. Quarterly Finance Report",
+          "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Dr. Jim Cummins presented the quarterly finance report.&nbsp;&nbsp;</body>\n</html>\n",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "wOhK4Av0JGrR2JOlTjGaMA==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Dr. Jim Cummins presented the quarterly finance report.&nbsp;&nbsp;</body>\n</html>\n"
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "wXzqSG8slshFQDMe4mqc2ailg==",
+          "Title": "B. Student Data Review",
+          "Minutes": "",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "wXzqSG8slshFQDMe4mqc2ailg==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": ""
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "lJe6Wa8P2EEa7d3LzkifcA==",
+          "Title": "C. Bond Levy Update",
+          "Minutes": "",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "lJe6Wa8P2EEa7d3LzkifcA==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": ""
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "83BHcDBpluslNJLynqlKzpWBA==",
+          "Title": "D. IDEA Child Find Notice Published",
+          "Minutes": null,
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": null,
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": null
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        }
+      ],
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "slsh8EaL9sfU1eiDWGfxO2sslshQ==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            null,
+            null,
+            null
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false,
+          "Minutes": ""
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "4sfPplus6HUCslsh0oQotkqayEeg==",
+      "Title": "XI. BOARD OF EDUCATION",
+      "Minutes": "",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": [
+        {
+          "EncrId": "c0Dp8oWXYK6p1G3v3wJ7eQ==",
+          "Title": "A. Action Items",
+          "Minutes": "",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": [
+            {
+              "EncrId": "aql4JNlttoOkplusHslshSwEMbkA==",
+              "Title": "1. Regulation JG-R1-3rd Reading",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Motion to approve Regulation JG-R1 with the proposed changes.&nbsp;&nbsp;</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "aql4JNlttoOkplusHslshSwEMbkA==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    "<span class='latoBold'>Motion made by:</span>&nbsp;Cecelia Ball",
+                    "<span class='latoBold'>Motion seconded by:</span>&nbsp;Dr. Ronald Fritz",
+                    ""
+                  ],
+                  "AllVotingApproved": true,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Motion to approve Regulation JG-R1 with the proposed changes.&nbsp;&nbsp;</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "cnrIK3nPzVCNKGsg0gJrlQ==",
+              "Title": "2. Policy Committee Report-Approve Regulations",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\"><span data-olk-copy-source=\"MessageBody\">Motion to remove CBG-R1, CBG-R2, CBG-R3, IKE-R1 and accept Policy Committees Recommendation as presented.</span><br>\n&nbsp;</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "cnrIK3nPzVCNKGsg0gJrlQ==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    "<span class='latoBold'>Motion made by:</span>&nbsp;Dr. Ronald Fritz",
+                    "<span class='latoBold'>Motion seconded by:</span>&nbsp;Cecelia Ball",
+                    ""
+                  ],
+                  "AllVotingApproved": true,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\"><span data-olk-copy-source=\"MessageBody\">Motion to remove CBG-R1, CBG-R2, CBG-R3, IKE-R1 and accept Policy Committees Recommendation as presented.</span><br>\n&nbsp;</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            }
+          ],
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "c0Dp8oWXYK6p1G3v3wJ7eQ==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": ""
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "p2mc4R9nzUcslshuYDjL6Oq4w==",
+          "Title": "B. Announcements",
+          "Minutes": "",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": [
+            {
+              "EncrId": "pe4eFxxuWOysopiZRafKmw==",
+              "Title": "1. Nov 4, 2024 - BOE Special Session Meeting-Superintendent Formative 6:00pm",
+              "Minutes": null,
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": null,
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": null
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "RbUioeoK8k7xqBugeV0slsh6A==",
+              "Title": "2. Nov 5, 2024 - No School Professional Development Day",
+              "Minutes": null,
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": null,
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": null
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "UsuplusMS9HxslshryBM12Tk2yjA==",
+              "Title": "3. Nov 25, 2024 - BOE Regular Session Meeting",
+              "Minutes": null,
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": null,
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": null
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "zb0FDslshR2xaOKzmfsVuMgLQ==",
+              "Title": "4. Dec 10, 2024 - Board Candidate Filing Opens - 8:00am",
+              "Minutes": null,
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": null,
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": null
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "S89AXOMNn0bkdDVQDpT1NA==",
+              "Title": "5. Dec 31, 2024 - Board Candidate Filing Closes - 5:00pm",
+              "Minutes": null,
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": null,
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": null
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            }
+          ],
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "p2mc4R9nzUcslshuYDjL6Oq4w==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": ""
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        }
+      ],
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "4sfPplus6HUCslsh0oQotkqayEeg==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            null,
+            null,
+            null
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false,
+          "Minutes": ""
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "ry57PDXV5aslshG1pplus45vAihQ==",
+      "Title": "XII. MOTION TO ENTER CLOSED SESSION (If Necessary)",
+      "Minutes": null,
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": null,
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": null,
+          "VotingHTML": [
+            null,
+            null,
+            null
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false,
+          "Minutes": null
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "UDd4plusumaQWoUlRI8jaR0UQ==",
+      "Title": "XIII. MOTION TO ADJOURN",
+      "Minutes": "",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": null,
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "UDd4plusumaQWoUlRI8jaR0UQ==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            "<span class='latoBold'>Motion made by:</span>&nbsp;Dr. Ronald Fritz",
+            "<span class='latoBold'>Motion seconded by:</span>&nbsp;Cecelia Ball",
+            ""
+          ],
+          "AllVotingApproved": true,
+          "AllVotingNotApproved": false,
+          "Minutes": ""
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    }
+  ],
+  "PrintSettings": {
+    "IncludePrintDate": false,
+    "IncludePageNo": true,
+    "IncludeWaterMark": false,
+    "IncludeFooterText": false,
+    "WaterMark": null,
+    "FooterText": null,
+    "IncludeSignature": false
+  }
+}
