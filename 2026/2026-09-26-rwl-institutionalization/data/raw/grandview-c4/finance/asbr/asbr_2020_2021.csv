@@ -1,0 +1,8785 @@
+﻿Textbox4,Textbox36,Textbox20,Textbox2,Textbox30
+"State of Missouri
+Department of Elementary and Secondary Education
+School Finance Section
+","ANNUAL SECRETARY OF THE BOARD REPORT (ASBR) 
+Fiscal Year 2020-2021
+","SECTION 162.821, RSMo, requires that one copy be filed with ... the Department of
+Elementary and Secondary Education on or before August 15, 2021.
+
+SECTION 161.527, RSMo, concerning financially stressed school districts, requires that one
+copy be filed with the Department of Elementary and Secondary Education by July 15, 2021,
+to be eligible for the Proposition C rollback exemption.
+","Total Assessed Valuation as of December 31, 2020  565,982,916
+(Exclude Tax Increment Financing AV)",CASH
+
+Textbox68,Textbox70,Textbox61,Textbox69,Textbox63,Textbox54,INCID_FUND_UNADJ_RATE,TEACHER_FUND_UNADJ_RATE,DEBT_SERVICE_UNADJ_RATE,CAP_PROJECT_UNADJ_RATE,TOTAL_UNADJ_RATE,Textbox16,INCID_FUND_ADJ_RATE,TEACHER_FUND_ADJ_RATE,DEBT_SERVICE_ADJ_RATE,CAP_PROJECT_ADJ_RATE,TOTAL_ADJ_RATE
+"General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2020-2021 Levy Unadjusted,4.3057,0.0000,1.0500,0.0000,5.3557,2020-2021 Levy Adjusted,4.3057,0.0000,1.0500,0.0000,5.3557
+
+REVENUE_CODE,Textbox392,GENERAL_FUND,SPECIAL_REVENUE,Textbox393,CAPITAL_PROJECTS,TOTAL
+3111,Beginning Fund Balances,"8,448,592.69",0.00,"11,899,855.94","3,968,659.04","24,317,107.67"
+5899,Total Revenue (See Part II),"35,247,401.94","23,254,919.82","6,994,465.41","672,856.24","66,169,643.41"
+5999,Total Revenue And Balances,"43,695,994.63","23,254,919.82","18,894,321.35","4,641,515.28","90,486,751.08"
+5510,Transfer To,0.00,"7,524,733.50",0.00,0.00,"7,524,733.50"
+6710,Transfer From,"7,524,733.50",0.00,0.00,0.00,"7,524,733.50"
+9999,Expenditures (See Part III),"22,308,453.26","30,779,653.32","7,169,157.58","2,402,702.62","62,659,966.78"
+3112,Ending Fund Balances,"13,862,807.87",0.00,"11,725,163.77","2,238,812.66","27,826,784.30"
+3412,Restr Fund Balances,0.00,0.00,0.00,"774,932.92","774,932.92"
+
+UnrestEndFundBalPercentage
+26.11%
+
+Textbox71,Textbox72,Textbox65,Textbox73,Textbox74,LINE_NUMBER1,NAME1,GENERAL_FUND1,SPECIAL_REVENUE1,DEBT_SERVICE1,CAPITAL_PROJECTS1,TOTAL1
+"General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1001,Professional Development,0.00,0.00,0.00,0.00,0.00
+"General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1003,Student Scholarships,0.00,0.00,0.00,0.00,0.00
+"General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1004,Bond Proceeds,0.00,0.00,0.00,"774,932.92","774,932.92"
+"General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1005,Escrow Amt for Crossover Refunding of Bonded Debt,0.00,0.00,0.00,0.00,0.00
+"General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1006,Sinking Fund,0.00,0.00,0.00,0.00,0.00
+"General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1009,Other,0.00,0.00,0.00,0.00,0.00
+"General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1099,Total,0.00,0.00,0.00,"774,932.92","774,932.92"
+
+LINE_NUMBER,NAME2,Transfer_From,Transfer_To,FUND_AMOUNT
+002,Teachers Fund,General (Incidental) Fund,Special Revenue (Teachers) Fund,"7,524,733.50"
+003,Debt Service Balance,Debt Service Fund,Capital Projects Fund,0.00
+004,Transportation Calc Cost,General (Incidental) Fund,Capital Projects Fund,0.00
+005,Area Career Center,General (Incidental) Fund,Capital Projects Fund,0.00
+006,Grant Match,General (Incidental) Fund,Capital Projects Fund,0.00
+007,DNR Energy Conservation Loans,General (Incidental) Fund,Capital Projects Fund,0.00
+008,Food Services,General (Incidental) Fund,Capital Projects Fund,0.00
+009,Student Activities,General (Incidental) Fund,Capital Projects Fund,0.00
+010,"$162,326 or 7%xSATxWADA",General (Incidental) Fund,Capital Projects Fund,0.00
+011,Capital Projects Fund Interest,Capital Projects Fund,General (Incidental) Fund,0.00
+012,Unspent Bond Proceeds,Capital Projects Fund,Debt Service Fund,0.00
+014,Capital Projects Unrestricted Funds,Capital Projects Fund,General (Incidental) Fund,0.00
+015,FY06 Designated Levy or 5%xSATxWADA (Debt Service),General (Incidental) Fund,Debt Service Fund,0.00
+016,FY06 Designated Levy or 5%xSATxWADA (Capital Proje,General (Incidental) Fund,Capital Projects Fund,0.00
+017,Lease Purchase prior to 01/01/97,General (Incidental) Fund,Capital Projects Fund,0.00
+018,Guaranteed Energy Performance Savings Contract,General (Incidental) Fund,Capital Projects Fund,0.00
+019,Excess Incidental Fund Balance,General (Incidental) Fund,Special Revenue (Teachers) Fund,0.00
+
+Textbox164,Textbox166,TOTALS,Transfer_From_6710,Transfer_To_5510
+"Transfer From
+6710","Transfer To
+5510",General (Incidental) Fund,"7,524,733.50",0.00
+"Transfer From
+6710","Transfer To
+5510",Special Revenue (Teachers) Fund,0.00,"7,524,733.50"
+"Transfer From
+6710","Transfer To
+5510",Debt Service Fund,0.00,0.00
+"Transfer From
+6710","Transfer To
+5510",Capital Projects Fund,0.00,0.00
+"Transfer From
+6710","Transfer To
+5510",Total,"7,524,733.50","7,524,733.50"
+
+Category,Textbox12,Textbox75,Textbox76,Textbox62,Textbox77,Textbox64,REVENUE_CODE3,NAME3,GENERAL_FUND3,SPECIAL_REVENUE3,DEBT_SERVICE3,CAPITAL_PROJECTS3,TOTAL_UNADJ_RATE3
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5111,Current Taxes,"$22,931,066.96",$0.00,"$5,593,708.49",$0.00,"$28,524,775.45"
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5112,Delinquent Taxes,"$434,263.54",$0.00,"$101,331.95",$0.00,"$535,595.49"
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5113,School District Trust Fund (Prop C),$0.00,"$4,635,017.70",-,-,"$4,635,017.70"
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5114,Financial Institution Tax,"$4,838.84",$0.00,"$1,180.36",$0.00,"$6,019.20"
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5115,M&M Surtax,"$509,281.53",$0.00,"$248,464.01","$509,281.54","$1,267,027.08"
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5116,In Lieu of Tax,"$869,985.30",$0.00,"$212,220.58",$0.00,"$1,082,205.88"
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5117,City Sales Tax,$0.00,$0.00,$0.00,$0.00,$0.00
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5121,Reg Day School Tuition (K - 12) from Individuals,$0.00,$0.00,-,-,$0.00
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5122,Summer School Tuition (K - 12) from Individuals,$0.00,$0.00,-,-,$0.00
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5123,Adult/Continuing Education Tuition - Post Secondar,$0.00,$0.00,-,-,$0.00
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5131,Transportation Fees From Patrons,$0.00,-,-,-,$0.00
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5141,Earnings from Temporary Deposits,"$267,598.55",$0.00,"$177,115.14","$4,699.70","$449,413.39"
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5142,Accrued Interest on Bonds Sold,-,-,$0.00,-,$0.00
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5143,Premium on Bonds Sold,-,-,$0.00,$0.00,$0.00
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5151,Sales to Pupils - Reimbursable School Meals,$0.00,-,-,-,$0.00
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5161,Sales to Adults - Non-Program Food Sales,"$2,859.27",-,-,-,"$2,859.27"
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5165,Food Service Non-Program Food Sales,"$6,009.38",-,-,-,"$6,009.38"
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5171,Admissions - Student Activities,"$183,866.47",$0.00,-,$0.00,"$183,866.47"
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5172,Bookstore Sales,$0.00,$0.00,-,$0.00,$0.00
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5173,Student Organization Membership Dues and Fees,$0.00,$0.00,-,$0.00,$0.00
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5174,Revenue from Enterprise Activities,$0.00,$0.00,-,$0.00,$0.00
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5179,Other Pupil Activity Income,$0.00,$0.00,-,$0.00,$0.00
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5181,Community Services,$0.00,$0.00,$0.00,$0.00,$0.00
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5182,PK Tuition from Parents,$0.00,$0.00,-,$0.00,$0.00
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5191,Rentals,"$22,250.75",-,-,$0.00,"$22,250.75"
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5192,Gifts,$0.00,$0.00,$0.00,$0.00,$0.00
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5195,Prior Period Adjustment,"$50,498.10",$0.00,$0.00,$0.00,"$50,498.10"
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5196,Net Receipts From Clearing Accounts,$0.00,$0.00,$0.00,$0.00,$0.00
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5198,Miscellaneous Local Revenue,"$260,778.50",$0.00,$0.00,"$121,000.00","$381,778.50"
+Local Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5199,Local - Subtotal,"$25,543,297.19","$4,635,017.70","$6,334,020.53","$634,981.24","$37,147,316.66"
+County Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5211,"Fines, Escheats, Etc.",-,"$13,744.38",-,-,"$13,744.38"
+County Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5221,State Assessed Utilities,"$669,751.97",$0.00,"$291,399.71",$0.00,"$961,151.68"
+County Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5222,County Stock Insurance Fund,$0.00,$0.00,$0.00,$0.00,$0.00
+County Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5231,"Fed Prop (Include Fed Forest, Flood & Mineral)",$0.00,$0.00,$0.00,$0.00,$0.00
+County Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5232,"Penalties, Concentrated Animal Feed Oper",-,$0.00,-,-,$0.00
+County Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5237,Other - County,$0.00,$0.00,$0.00,$0.00,$0.00
+County Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5299,County - Subtotal,"$669,751.97","$13,744.38","$291,399.71",$0.00,"$974,896.06"
+State Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5311,Basic Formula - State Monies,$0.00,"$13,536,039.80",-,-,"$13,536,039.80"
+State Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5312,Transportation,"$432,204.00",-,-,-,"$432,204.00"
+State Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5314,Early Childhood Special Education,"$646,830.10",$0.00,-,$0.00,"$646,830.10"
+State Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5317,Career Ladder/Excellence in Education Act,-,$0.00,-,-,$0.00
+State Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5319,Basic Formula - Classroom Trust Fund,"$1,533,107.85",$0.00,$0.00,$0.00,"$1,533,107.85"
+State Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5324,Educational Screening Prog/PAT,"$96,586.15",$0.00,-,-,"$96,586.15"
+State Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5325,Small Schools Grant,$0.00,$0.00,-,-,$0.00
+State Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5332,Career Education,"$19,115.00",$0.00,-,$0.00,"$19,115.00"
+State Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5333,Food Service - State,"$18,203.20",-,-,-,"$18,203.20"
+State Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5337,Adult Education & Literacy (AEL),$0.00,$0.00,-,$0.00,$0.00
+State Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5366,MO Dept of Nat Res (DNR) Energy Loan,$0.00,$0.00,-,$0.00,$0.00
+State Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5369,Residential Placement/Excess Cost,"$408,023.95",$0.00,-,$0.00,"$408,023.95"
+State Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5371,Readers For The Blind,$0.00,$0.00,-,$0.00,$0.00
+State Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5372,State Emer Management Agency (SEMA) Funds,$0.00,$0.00,-,$0.00,$0.00
+State Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5381,High Need Fund - Special Education,"$68,503.90",$0.00,-,$0.00,"$68,503.90"
+State Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5382,Missouri Preschool Project,$0.00,$0.00,-,$0.00,$0.00
+State Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5397,Other - State,$0.00,$0.00,-,$0.00,$0.00
+State Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5399,State - Subtotal,"$3,222,574.15","$13,536,039.80",$0.00,$0.00,"$16,758,613.95"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5411,Impact Aid (P.L. 81-874),$0.00,$0.00,-,$0.00,$0.00
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5412,Medicaid,"$249,205.94",$0.00,-,$0.00,"$249,205.94"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5418,Reserve Officer Training Corps (ROTC),$0.00,$0.00,-,$0.00,$0.00
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5423,CRRSA - ESSER II,$0.00,"$4,863,201.00",-,$0.00,"$4,863,201.00"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5424,CARES - ESSER Fund,"$396,019.74",$0.00,-,$0.00,"$396,019.74"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5425,CARES - Governor’s Emergency Education Relief Fund,"$246,586.84",$0.00,-,$0.00,"$246,586.84"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5427,"Perkins Basic Grant, Career Education","$50,223.81",$0.00,-,$0.00,"$50,223.81"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5428,Coronavirus Relief Fund (OA CRF),"$381,234.64",$0.00,-,$0.00,"$381,234.64"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5429,Emergency Worker Childcare Grant (CCDF),$0.00,$0.00,-,$0.00,$0.00
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5436,Adult Education & Literacy (AEL),$0.00,$0.00,-,$0.00,$0.00
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5437,IDEA Grants,"$3,343.50",$0.00,-,$0.00,"$3,343.50"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5438,Non-IDEA Special Education Grants,$0.00,$0.00,-,$0.00,$0.00
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5441,"IDEA Entitlement Funds, Part B IDEA","$910,167.52",$0.00,-,$0.00,"$910,167.52"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5442,Early Childhood Special Education - Federal,"$134,218.00",$0.00,-,$0.00,"$134,218.00"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5444,National School Lunch Equipment Grant,-,-,-,$0.00,$0.00
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5445,School Lunch Program,"$624,171.60",-,-,-,"$624,171.60"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5446,School Breakfast Program,"$323,283.96",-,-,-,"$323,283.96"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5447,Special Milk Program,$0.00,-,-,-,$0.00
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5448,After School Snack Program,$0.00,-,-,-,$0.00
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5449,Fresh Fruits and Vegetable Program,"$126,504.00",-,-,-,"$126,504.00"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5451,Title I - ESEA,"$1,098,477.70",$0.00,-,$0.00,"$1,098,477.70"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5452,"Title I, Part C - Migrant Education",$0.00,$0.00,-,$0.00,$0.00
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5459,21st Century Community Learning Center/Afterschool,$0.00,$0.00,-,$0.00,$0.00
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5461,Title IV.A Student Support and Academic Enrichment,"$90,980.05",$0.00,-,$0.00,"$90,980.05"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5462,"Title III, ESEA - English Language Acquisition","$36,998.77",$0.00,-,$0.00,"$36,998.77"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5463,Educ For Homeless Children & Youth,$0.00,$0.00,-,$0.00,$0.00
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5465,"Title II, Part A&B, ESEA - Teacher & Principal Tra","$173,881.06",$0.00,-,$0.00,"$173,881.06"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5472,Childcare Development Fund Grant,$0.00,$0.00,-,$0.00,$0.00
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5473,CARES – School Lunch Program,"$65,214.00",-,-,-,"$65,214.00"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5474,CARES – School Breakfast Program,"$41,037.82",-,-,-,"$41,037.82"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5475,CARES – After-School Snack Program,$0.00,-,-,-,$0.00
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5476,CARES – Special Milk Program,$0.00,-,-,-,$0.00
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5477,Federal Emergency Mgt Agency (FEMA) Funds,$0.00,$0.00,-,$0.00,$0.00
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5478,Vocational Rehabilitation,$0.00,$0.00,-,-,$0.00
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5481,Dept of Health Food Service Program,$0.00,$0.00,-,$0.00,$0.00
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5483,Headstart,"$506,955.35",$0.00,-,$0.00,"$506,955.35"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5484,Pell Grants,$0.00,-,-,-,$0.00
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5486,"Impact Aid, Restricted Purpose",$0.00,$0.00,-,$0.00,$0.00
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5492,"Title VI, Part B Rural Education Initiative",$0.00,$0.00,-,$0.00,$0.00
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5497,Other - Federal,"$277,662.11",$0.00,"$369,045.17",$0.00,"$646,707.28"
+Federal Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5499,Federal - Subtotal,"$5,736,166.41","$4,863,201.00","$369,045.17",$0.00,"$10,968,412.58"
+Other Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5611,Sale of Bonds,-,-,-,$0.00,$0.00
+Other Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5613,Sales of Bonds - QZAB (ARRA),-,-,-,$0.00,$0.00
+Other Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5631,Net Insurance Recovery,"$57,554.97",-,-,$0.00,"$57,554.97"
+Other Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5641,Sale of School Buses,-,-,-,"$25,275.00","$25,275.00"
+Other Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5651,Sale of Other Property,"$2,450.00",-,-,"$12,600.00","$15,050.00"
+Other Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5691,Temporary Direct Deposit Revenues,-,-,$0.00,-,$0.00
+Other Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5692,Refunding Bonds,-,-,$0.00,-,$0.00
+Other Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5699,Other Revenue Subtotal,"$60,004.97",$0.00,$0.00,"$37,875.00","$97,879.97"
+Other Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5811,Tuition From Other LEAs - Regular Term,$0.00,"$206,916.94",-,-,"$206,916.94"
+Other Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5812,Tuition From Other LEAs - Summer School,$0.00,$0.00,-,-,$0.00
+Other Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5821,Area Voc Fees From Other LEAs,$0.00,$0.00,-,-,$0.00
+Other Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5831,Contracted Educational Services,$0.00,$0.00,-,-,$0.00
+Other Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5841,Transportation From Other LEAs for Non-Disabled Ro,"$15,607.25",-,-,-,"$15,607.25"
+Other Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5842,Trans. Amts. from other LEAs for K-12 Disabled Stu,$0.00,-,-,$0.00,$0.00
+Other Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5843,Transportation from other LEAs for ECSE,$0.00,-,-,-,$0.00
+Other Revenue Detail,"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5898,Receipts Other Districts - Subtotal,"$15,607.25","$206,916.94",$0.00,$0.00,"$222,524.19"
+
+Textbox17,Textbox87,Textbox90,Textbox66,Textbox91,Textbox67,REVENUE_CODE2,Name,GENERAL_FUND2,SPECIAL_REVENUE2,DEBT_SERVICE2,CAPITAL_PROJECTS2,TOTAL_UNADJ_RATE2
+"Revenue
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5899,Total Revenues,"35,247,401.94","23,254,919.82","6,994,465.41","672,856.24","66,169,643.41"
+
+Project_Code1,CodeName,General_Fund_Project_Code,Special_Revenue_Project_Code,Debt_Service_Project_Code,Capital_Projects_Project_Code,Total_Project_Code
+33200,CTE Base and Performance Grant,"$16,346.00",$0.00,$0.00,$0.00,"$16,346.00"
+33204,CTE Program Improvement Grant-Family Consumer Sciences,"$2,769.00",$0.00,$0.00,$0.00,"$2,769.00"
+42701,Perkins Grant - Secondary,"$50,223.81",$0.00,$0.00,$0.00,"$50,223.81"
+
+Textbox348,Textbox351,Textbox352,Textbox353,Textbox354,Textbox355,Textbox356
+-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+
+Category2,Textbox229,Textbox231,Textbox232,Textbox233,Textbox234,Textbox235,REPORTING_FUND_CODE,NAME4,GENERAL_FUND4,SPECIAL_REVENUE4,Textbox236,CAPITAL_PROJECTS4,TOTAL_UNADJ_RATE4
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1111,Elementary,"$1,257,195.80","$9,271,053.29",-,"$48,940.55","$10,577,189.64"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1131,Middle/Junior High,"$431,279.64","$4,192,476.92",-,"$18,880.07","$4,642,636.63"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1151,Senior High,"$417,120.97","$4,524,204.55",-,"$8,097.60","$4,949,423.12"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1191,Summer School (Regular),"$29,345.42","$101,929.98",-,$0.00,"$131,275.40"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1192,Juvenile Program,$0.00,$0.00,-,$0.00,$0.00
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1193,Alternative Programs,"$68,910.70","$363,038.42",-,$0.00,"$431,949.12"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1194,Residential/Treatment Facilities,$0.00,$0.00,-,$0.00,$0.00
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1195,Virtual Instruction,$0.00,$0.00,-,$0.00,$0.00
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1211,Gifted & Talented,"$1,199.93","$282,764.57",-,$0.00,"$283,964.50"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1221,Special Education and Related Services,"$1,691,966.87","$2,571,320.94",-,$0.00,"$4,263,287.81"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1223,Coordinated Early Intervening Services,$0.00,$0.00,-,$0.00,$0.00
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1224,Proportionate Share Services,$465.00,"$4,840.00",-,$0.00,"$5,305.00"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1251,Supplemental Instruction,"$641,747.95","$95,680.78",-,$0.00,"$737,428.73"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1252,Migrant,$0.00,$0.00,-,$0.00,$0.00
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1253,Institutions for Adjudicated Students,$0.00,$0.00,-,$0.00,$0.00
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1254,Institutions for Neglected Students,$0.00,$0.00,-,$0.00,$0.00
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1271,Bilingual,"$54,067.49","$752,960.14",-,$0.00,"$807,027.63"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1281,Early Childhood Special Education,"$386,456.07","$332,484.48",-,$0.00,"$718,940.55"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1311,Agricultural Education,$0.00,$0.00,-,$0.00,$0.00
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1321,Business Education,"$3,729.00",$0.00,-,$0.00,"$3,729.00"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1331,Family Consumer Sciences Education,"$3,089.00",$0.00,-,$0.00,"$3,089.00"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1341,Health Sciences Education,"$3,951.73",$0.00,-,$0.00,"$3,951.73"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1351,Marketing and Cooperative Education,$0.00,$0.00,-,$0.00,$0.00
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1361,Trade and Industrial Education,$0.00,$0.00,-,$0.00,$0.00
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1371,Project Lead the Way,"$6,150.00",$0.00,-,$0.00,"$6,150.00"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1381,Career Education Special Populations,$0.00,$0.00,-,$0.00,$0.00
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1391,Other Career Education (Non-Program Specific),$0.00,$0.00,-,$0.00,$0.00
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1411,Student Activities,"$386,974.05","$211,141.18",-,$0.00,"$598,115.23"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1421,School-Sponsored Athletics,"$142,878.61","$311,230.19",-,$0.00,"$454,108.80"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1491,Other Student Activities,$0.00,$0.00,-,$0.00,$0.00
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1911,Tuition to Other Districts within the State,$0.00,"$40,436.55",-,-,"$40,436.55"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1912,Tuition to Districts Outside the State,$0.00,$0.00,-,-,$0.00
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1913,Tuition to Private Agencies,$0.00,$0.00,-,-,$0.00
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1921,Area Career Center Fees,$0.00,"$60,125.40",-,-,"$60,125.40"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1931,"Tuition, Special Ed Services-Other Distr in State",$0.00,"$764,388.35",-,-,"$764,388.35"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1932,"Tuition, Spec Ed Prog Outside the State",$0.00,$0.00,-,-,$0.00
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1933,Tuition for Special Ed Svcs to Private Agencies,$0.00,"$30,213.00",-,-,"$30,213.00"
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1941,Contracted Education Services,$0.00,$0.00,-,-,$0.00
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1942,Supplemental Education Services,$0.00,$0.00,-,$0.00,$0.00
+Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1999,Total Instruction (K-12 only),"$5,526,528.23","$23,910,288.74",-,"$75,918.22","$29,512,735.19"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2111,Attendance and Social Work Services Area Direction,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2112,Attendance Services,"$145,659.74",$0.00,-,$0.00,"$145,659.74"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2113,Social Work Services,"$82,530.56",$0.00,-,$0.00,"$82,530.56"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2114,Pupil Accounting Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2119,Other Attendance and Social Work Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2121,System Support for Guidance Services,"$125,525.46","$1,172,716.80",-,$0.00,"$1,298,242.26"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2122,Counseling Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2123,Appraisal Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2124,Information Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2125,Record Maintenance Services,"$66,362.19",$0.00,-,$0.00,"$66,362.19"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2126,Placement Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2129,Other Guidance Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2131,"Health, Psych, Speech, and Audio - Serive Area Dir",$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2132,Medical Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2133,Dental Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2134,Nursing Services,"$417,582.42",$0.00,-,$0.00,"$417,582.42"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2139,Other Health Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2141,Pyschological Services - Service Area Direction,$0.00,"$71,492.35",-,$0.00,"$71,492.35"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2142,Psychological Testing Services,"$7,746.02","$379,347.17",-,$0.00,"$387,093.19"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2151,Speech Path. and Audio. Services-Service Area Dire,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2152,Speech Pathology and Audiology Services,"$94,947.86","$307,838.64",-,$0.00,"$402,786.50"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2161,Occupational Therapy-Related Service Area Directio,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2162,Occupational Therapy-Related Services,"$152,685.44",$0.00,-,$0.00,"$152,685.44"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2171,Physical Therapy-Related Servies Area Direction,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2172,Physical Therapy-Related Services,"$15,355.00",$0.00,-,$0.00,"$15,355.00"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2181,Visually Impaired/Vision Service Area Direction,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2182,Visually Impaired/Vision Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2191,Other Support Services - Students,"$309,339.80",$0.00,-,$0.00,"$309,339.80"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2211,Service Area Direction-Improvement of Instruction,$0.00,"$130,720.40",-,$0.00,"$130,720.40"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2212,Instruction and Curriculum Development Services,"$916,300.40","$344,259.78",-,$0.00,"$1,260,560.18"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2213,Instructional Staff Training Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2214,Professional Development,"$88,130.43","$8,819.22",-,-,"$96,949.65"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2219,Other Improvement of Instruction Services,$0.00,$0.00,-,"$7,548.50","$7,548.50"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2221,Service Area Direction-Educational Media Services,"$111,437.23","$643,329.95",-,"$25,308.44","$780,075.62"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2222,School Library Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2223,Audiovisual Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2224,Educational Television Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2225,Instruction-Related Technology,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2229,Other Educational Media Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2291,Other Support Services - Instructional Staff,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2311,Board of Education Services,"$161,154.65",$0.00,-,$0.00,"$161,154.65"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2321,Executive Administration Services,"$1,153,747.17","$692,465.27",-,"$27,305.96","$1,873,518.40"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2322,Community Relations Services,"$125,159.17",$0.00,-,$0.00,"$125,159.17"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2323,Staff Relations and Negotiations Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2324,State and Federal Relations Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2329,Other Executive Administration Services,"$136,932.13","$765,762.14",$0.00,$0.00,"$902,694.27"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2331,Administrative Technology Services,"$969,737.75",$0.00,-,"$170,659.69","$1,140,397.44"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2411,Office of the Principal Services,"$650,679.22","$2,054,499.45",-,$0.00,"$2,705,178.67"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2491,Other Support Services - School Administration,"$19,336.86",$0.00,-,$0.00,"$19,336.86"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2511,Support Services-Business-Services Area Direction,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2521,Fiscal Services - Service Area Direction,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2522,Budgeting Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2523,Receiving and Disbursing Funds Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2524,Payroll Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2525,Financial Accounting Services,"$15,803.67",$0.00,-,$0.00,"$15,803.67"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2526,Internal Auditing Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2527,Property Accounting Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2529,Other Fiscal Services,"$11,788.64",$0.00,-,$0.00,"$11,788.64"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2541,Operation and Maintenance of Plant Services,"$3,560,965.41",$0.00,-,"$159,631.80","$3,720,597.21"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2542,Care and Upkeep of Building Services,"$2,563,497.11",$0.00,-,$0.00,"$2,563,497.11"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2543,Care and Upkeep of Grounds Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2544,Care and Upkeep of Equipment Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2545,Vehicle Servicing and Maintenance Services - Other,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2546,Security Services,"$60,253.25",$0.00,-,$0.00,"$60,253.25"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2549,Other Operation and Maintenance of Plant Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2551,Contracted Transportation Services for Students,"$28,495.92",$0.00,-,$0.00,"$28,495.92"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2552,District Operated Non-Disabled Student Trans Cost,"$1,742,027.29",$0.00,-,"$230,335.94","$1,972,363.23"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2553,Contracted K-12 Disabled Transportation Services,"$69,865.00",$0.00,-,$0.00,"$69,865.00"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2554,District Operated K-12 Disabled Trans. Services,"$340,145.88",$0.00,-,$0.00,"$340,145.88"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2555,Payment to Other Districts for Non-Disabled Trans.,"$15,676.47",-,-,-,"$15,676.47"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2556,Payments to Other Dist. for K-12 Disabled Trans.,$0.00,-,-,-,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2557,School Choice (ESEA)/Prop Share (IDEA) Trans Cost,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2558,Non-Allowable Transportation Expenditure,"$49,319.64",$0.00,-,"$6,230.00","$55,549.64"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2559,Early Childhood Special Education Trans. Serv.,"$79,073.85",$0.00,-,$0.00,"$79,073.85"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2561,Food Services - Service Area Direction,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2562,Food Preparation and Dispensing Services,"$1,276,479.70",$0.00,-,"$49,791.51","$1,326,271.21"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2563,Food Delivery Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2569,Other Food Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2571,Internal Services - Services Area Direction,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2572,Purchasing Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2573,Warehousing and Distributing Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2574,"Printing, Publishing, and Duplicating Services",$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2579,Other Internal Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2591,Other Business Support Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2611,Central Office Services - Service Area Direction,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2621,"Plan, Rsrch, Dev, and Eval.-Service Area Direction",$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2622,Development Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2623,Evaluation Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2624,Planning Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2625,Research Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2629,"Other Plan, Rsrch, Dev., and Eval. Services",$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2631,Information Services - Service Area Direction,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2632,Internal Information Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2633,Public Information Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2634,Management Information Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2639,Other Information Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2641,Staff Services - Service Area Direction,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2642,Recruitment and Placement Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2643,Staff Accounting Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2644,In-Service Training for Non-Instructional Staff,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2645,Health Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2649,Other Staff Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2651,Statistical Services - Service Area Direction,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2652,Statistical Analysis Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2653,Statistical Reporting Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2659,Other Statistical Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2661,Data Processing Services - Service Area Direction,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2662,Systems Analysis Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2663,Programming Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2664,Operations Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2669,Other Data Processing Services,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2691,Other Support Services - Central,$0.00,$0.00,-,$0.00,$0.00
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2911,Other Supporting Services,"$101,076.64",$0.00,-,$0.00,"$101,076.64"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2998,Total Support Services,"$15,664,817.97","$6,571,251.17",$0.00,"$676,811.84","$22,912,880.98"
+Support Services,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",2999,Total Instruction & Support,"$21,191,346.20","$30,481,539.91",$0.00,"$752,730.06","$52,425,616.17"
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1611,Adult Education,$832.74,$0.00,-,$0.00,$832.74
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1612,Workplace Literacy,$0.00,$0.00,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1613,Family Literacy,$0.00,$0.00,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1614,English as 2nd Lang./English to Spkrs of Othr Lang,$0.00,$0.00,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1615,English Literacy/Civics Education,$0.00,$0.00,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1621,Adult Vocational Education,$0.00,$0.00,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1671,Community Education/Life Enrichment,$0.00,$0.00,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",1691,Other Adult/Continuing Education Programs,$0.00,$0.00,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",3111,Direction of Community Services-Service Area Direc,$0.00,$0.00,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",3211,Community Rec. Services-Service Area Direction,$0.00,$0.00,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",3311,Civic Services,$0.00,$0.00,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",3411,Public Library Services,$0.00,$0.00,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",3511,Early Childhood Program,"$360,335.33",$0.00,-,$0.00,"$360,335.33"
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",3512,Early Childhood Instruction,"$177,637.66","$156,578.20",-,"$2,941.50","$337,157.36"
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",3611,Welfare Activities Services,"$26,000.00",$0.00,-,$0.00,"$26,000.00"
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",3711,Non-Public School Students' Services,"$154,840.92",$0.00,-,$0.00,"$154,840.92"
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",3811,Custody and Care of Children Services,"$379,461.58","$141,535.21",-,$0.00,"$520,996.79"
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",3812,Afterschool Program,$0.00,$0.00,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",3911,Other Community Services,$0.00,$0.00,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",3912,Parental Involvement,"$17,432.16",$0.00,-,$0.00,"$17,432.16"
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",3913,Service-Learning,$0.00,$0.00,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",4011,Facilities Acq.and Constr.-Service Area Direction,-,-,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",4021,Facilities Acquisition and Construction Services-S,-,-,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",4031,"Architecture, Engineering and Legal Services",-,-,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",4041,Educational Specifications Development Services,-,-,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",4051,"Building Acq., Constr. and Improvements Services",-,-,-,"$1,620,895.94","$1,620,895.94"
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",4091,Other Facilities Acq. and Constr. Services,-,-,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5111,Principal - Bonded Indebtedness,-,-,"$6,292,733.37",$0.00,"$6,292,733.37"
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5121,Principal - Short Term Loans,-,-,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5122,Principal - Long Term Loans,-,-,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5131,Principal - Lease Purchase Agreement,-,-,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5211,Interest - Bonded Indebtedness,-,-,"$873,562.21",$0.00,"$873,562.21"
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5221,Interest - Short Term Loans,$566.67,$0.00,$0.00,$0.00,$566.67
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5222,Interest - Long Term Loans,-,-,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5231,Interest - Lease Purchase Agreements,-,-,-,"$25,335.12","$25,335.12"
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5241,Discount on Bonds Sold - Interest Adjustment,-,-,$0.00,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5311,Fees - Bonded Indebtedness,$0.00,-,"$2,862.00",$0.00,"$2,862.00"
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5321,Fees - Short Term Loans,$0.00,$0.00,$0.00,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5322,Fees - Long Term Loans,-,-,-,$800.00,$800.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",5331,Fees - Lease Purchase Agreements,-,-,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",9998,Total Non-Instruction/Support,"$1,117,107.06","$298,113.41","$7,169,157.58","$1,649,972.56","$10,234,350.61"
+
+Textbox245,Textbox247,Textbox248,Textbox249,Textbox250,Textbox251,GENERAL_FUND5,SPECIAL_REVENUE5,CAPITAL_PROJECTS11,CAPITAL_PROJECTS5,GrandTotal
+"Function
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+ServiceFund","Capital
+Projects
+Fund","Total
+All
+Funds","22,308,453.26","30,779,653.32","7,169,157.58","2,402,702.62","62,659,966.78"
+
+Textbox390,Textbox391,Textbox394,Textbox395,Textbox396,Textbox397,Textbox398,Textbox476,Textbox477,Textbox478,Textbox479,Textbox480,Textbox481,Textbox482
+12210,Special Education*,"$2,372,958.60","$3,718,234.08",$0.00,$0.00,"$6,091,192.68",-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+12810,Early Childhood Special Education (paid with state or local funds),"$331,311.92","$332,484.48",$0.00,$0.00,"$663,796.40",-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+33200,CTE Base and Performance Grant,$0.00,"$16,346.00",$0.00,$0.00,"$16,346.00",-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+43703,Special Education High Need Fund - Federal,"$2,871.12",$0.00,$0.00,$0.00,"$2,871.12",-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+44100,"IDEA Entitlement Funds, Part B IDEA",$465.00,"$1,017,742.72",$0.00,$0.00,"$1,018,207.72",-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+44200,IDEA - 611 ECSE Portion,"$107,932.00",$0.00,$0.00,$0.00,"$107,932.00",-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+44201,IDEA - 619 Preschool Grant,"$26,286.00",$0.00,$0.00,$0.00,"$26,286.00",-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+45100,Title I,"$1,199,899.35","$547,878.44",$0.00,$0.00,"$1,747,777.79",-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+46200,Title III LEP,"$35,597.53",$0.00,$0.00,$0.00,"$35,597.53",-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+46201,Title III Immigrant,"$12,960.00",$0.00,$0.00,$0.00,"$12,960.00",-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+
+Category3,Textbox256,Textbox258,Textbox259,Textbox260,Textbox261,Textbox262,Textbox263,Textbox373,REV_CODE_RANGE2,NAME5,GENERAL_FUND6,SPECIAL_REVENUE6,DEBT_SERVICE4,CAPITAL_PROJECTS6,TOTAL_UNADJ_RATE5,Textbox266,Textbox375,Textbox267
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1111,Elementary,"$6,975,383.45","$324,160.52","$2,516,965.78","$299,857.55","$411,881.79","$48,940.55",-,"$10,577,189.64"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1131,Middle/Junior High,"$3,158,229.74","$118,853.49","$1,148,384.97","$86,267.12","$112,021.24","$18,880.07",-,"$4,642,636.63"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1151,Senior High,"$3,392,078.88","$67,145.25","$1,209,977.25","$184,941.57","$87,182.57","$8,097.60",-,"$4,949,423.12"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1191,Summer School (Regular),"$86,034.12","$15,252.24","$18,131.28",$0.00,"$11,857.76",$0.00,-,"$131,275.40"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1192,Juvenile Program,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1193,Alternative Programs,"$275,870.00",$0.00,"$87,168.42","$53,143.01","$15,767.69",$0.00,-,"$431,949.12"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1194,Residential/Treatment Facilities,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1195,Virtual Instruction,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1211,Gifted & Talented,"$215,574.94",$0.00,"$67,189.63",$0.00,"$1,199.93",$0.00,-,"$283,964.50"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1221,Special Education and Related Services,"$1,927,383.46","$1,065,558.16","$1,181,520.44","$72,915.06","$15,910.69",$0.00,-,"$4,263,287.81"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1223,Coordinated Early Intervening Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1224,Proportionate Share Services,"$4,771.57",$0.00,$68.43,$465.00,$0.00,$0.00,-,"$5,305.00"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1251,Supplemental Instruction,"$72,475.41","$35,343.83","$47,543.56","$60,000.00","$522,065.93",$0.00,-,"$737,428.73"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1252,Migrant,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1253,Institutions for Adjudicated Students,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1254,Institutions for Neglected Students,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1271,Bilingual,"$565,152.49","$6,151.42","$188,588.93",$0.00,"$47,134.79",$0.00,-,"$807,027.63"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1281,Early Childhood Special Education,"$239,924.32","$267,027.45","$206,046.27",$0.00,"$5,942.51",$0.00,-,"$718,940.55"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1311,Agricultural Education,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1321,Business Education,$0.00,$0.00,$0.00,$0.00,"$3,729.00",$0.00,-,"$3,729.00"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1331,Family Consumer Sciences Education,$0.00,$0.00,$0.00,$465.00,"$2,624.00",$0.00,-,"$3,089.00"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1341,Health Sciences Education,$0.00,$0.00,$0.00,"$3,150.00",$801.73,$0.00,-,"$3,951.73"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1351,Marketing and Cooperative Education,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1361,Trade and Industrial Education,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1371,Project Lead the Way,$0.00,$0.00,$0.00,"$6,150.00",$0.00,$0.00,-,"$6,150.00"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1381,Career Education Special Populations,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1391,Other Career Education (Non-Program Specific),$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1411,Student Activities,"$182,331.67","$6,832.50","$29,569.02","$26,809.05","$352,572.99",$0.00,-,"$598,115.23"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1421,School-Sponsored Athletics,"$273,192.34","$39,224.85","$43,725.80","$58,389.47","$39,576.34",$0.00,-,"$454,108.80"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1491,Other Student Activities,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1911,Tuition to Other Districts within the State,-,-,-,"$40,436.55",-,-,-,"$40,436.55"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1912,Tuition to Districts Outside the State,-,-,-,$0.00,-,-,-,$0.00
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1913,Tuition to Private Agencies,-,-,-,$0.00,-,-,-,$0.00
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1921,Area Career Center Fees,-,-,-,"$60,125.40",-,-,-,"$60,125.40"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1931,"Tuition, Special Ed Services-Other Distr in State",-,-,-,"$764,388.35",-,-,-,"$764,388.35"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1932,"Tuition, Spec Ed Prog Outside the State",-,-,-,$0.00,-,-,-,$0.00
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1933,Tuition for Special Ed Svcs to Private Agencies,-,-,-,"$30,213.00",-,-,-,"$30,213.00"
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1941,Contracted Education Services,-,-,-,$0.00,-,-,-,$0.00
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1942,Supplemental Education Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1999,Total Instruction (K-12 only),"$17,368,402.39","$1,945,549.71","$6,744,879.78","$1,747,716.13","$1,630,268.96","$75,918.22",-,"$29,512,735.19"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2111,Attendance and Social Work Services Area Direction,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2112,Attendance Services,$0.00,"$96,885.33","$48,774.41",$0.00,$0.00,$0.00,-,"$145,659.74"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2113,Social Work Services,$0.00,"$63,264.20","$19,266.36",$0.00,$0.00,$0.00,-,"$82,530.56"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2114,Pupil Accounting Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2119,Other Attendance and Social Work Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2121,System Support for Guidance Services,"$883,159.29","$84,324.29","$328,514.36",$0.00,"$2,244.32",$0.00,-,"$1,298,242.26"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2122,Counseling Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2123,Appraisal Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2124,Information Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2125,Record Maintenance Services,$0.00,$0.00,$0.00,"$60,553.77","$5,808.42",$0.00,-,"$66,362.19"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2126,Placement Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2129,Other Guidance Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2131,"Health, Psych, Speech, and Audio - Serive Area Dir",$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2132,Medical Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2133,Dental Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2134,Nursing Services,$0.00,"$297,117.05","$116,753.16",$253.75,"$3,458.46",$0.00,-,"$417,582.42"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2139,Other Health Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2141,Pyschological Services - Service Area Direction,"$52,279.60",$0.00,"$19,212.75",$0.00,$0.00,$0.00,-,"$71,492.35"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2142,Psychological Testing Services,"$288,772.56",$0.00,"$90,574.61",$465.00,"$7,281.02",$0.00,-,"$387,093.19"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2151,Speech Path. and Audio. Services-Service Area Dire,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2152,Speech Pathology and Audiology Services,"$235,568.50","$65,873.70","$83,063.05","$18,281.25",$0.00,$0.00,-,"$402,786.50"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2161,Occupational Therapy-Related Service Area Directio,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2162,Occupational Therapy-Related Services,$0.00,"$127,376.15","$25,309.29",$0.00,$0.00,$0.00,-,"$152,685.44"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2171,Physical Therapy-Related Servies Area Direction,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2172,Physical Therapy-Related Services,$0.00,$0.00,$0.00,"$15,355.00",$0.00,$0.00,-,"$15,355.00"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2181,Visually Impaired/Vision Service Area Direction,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2182,Visually Impaired/Vision Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2191,Other Support Services - Students,$0.00,"$233,399.12","$75,940.68",$0.00,$0.00,$0.00,-,"$309,339.80"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2211,Service Area Direction-Improvement of Instruction,"$103,316.00",$0.00,"$27,404.40",$0.00,$0.00,$0.00,-,"$130,720.40"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2212,Instruction and Curriculum Development Services,"$279,579.24","$132,759.97","$105,732.95","$189,559.70","$552,928.32",$0.00,-,"$1,260,560.18"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2213,Instructional Staff Training Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2214,Professional Development,"$7,606.00",$0.00,"$1,213.22","$77,508.62","$10,621.81",-,-,"$96,949.65"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2219,Other Improvement of Instruction Services,$0.00,$0.00,$0.00,$0.00,$0.00,"$7,548.50",-,"$7,548.50"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2221,Service Area Direction-Educational Media Services,"$492,840.41","$21,502.76","$153,609.58",$0.00,"$86,814.43","$25,308.44",-,"$780,075.62"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2222,School Library Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2223,Audiovisual Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2224,Educational Television Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2225,Instruction-Related Technology,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2229,Other Educational Media Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2291,Other Support Services - Instructional Staff,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2311,Board of Education Services,$0.00,"$14,389.29","$2,087.88","$137,995.94","$6,681.54",$0.00,-,"$161,154.65"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2321,Executive Administration Services,"$569,742.80","$726,867.41","$375,403.41","$59,386.01","$114,812.81","$27,305.96",-,"$1,873,518.40"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2322,Community Relations Services,$0.00,"$89,669.90","$22,991.36","$11,286.19","$1,211.72",$0.00,-,"$125,159.17"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2323,Staff Relations and Negotiations Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2324,State and Federal Relations Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2329,Other Executive Administration Services,"$603,724.73","$108,534.01","$187,466.63","$2,968.90",$0.00,$0.00,-,"$902,694.27"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2331,Administrative Technology Services,$0.00,"$586,411.31","$151,549.14","$107,452.32","$124,324.98","$170,659.69",-,"$1,140,397.44"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2411,Office of the Principal Services,"$1,638,355.86","$440,329.55","$603,833.33","$5,454.66","$17,205.27",$0.00,-,"$2,705,178.67"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2491,Other Support Services - School Administration,$0.00,$0.00,$0.00,"$2,709.13","$16,627.73",$0.00,-,"$19,336.86"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2511,Support Services-Business-Services Area Direction,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2521,Fiscal Services - Service Area Direction,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2522,Budgeting Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2523,Receiving and Disbursing Funds Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2524,Payroll Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2525,Financial Accounting Services,$0.00,$0.00,$0.00,$0.00,"$15,803.67",$0.00,-,"$15,803.67"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2526,Internal Auditing Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2527,Property Accounting Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2529,Other Fiscal Services,$0.00,$0.00,$0.00,"$11,788.64",$0.00,$0.00,-,"$11,788.64"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2541,Operation and Maintenance of Plant Services,$0.00,"$22,037.03","$2,967.12","$3,324,168.99","$211,792.27","$159,631.80",-,"$3,720,597.21"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2542,Care and Upkeep of Building Services,$0.00,"$702,089.31","$257,025.16","$572,215.99","$1,032,166.65",$0.00,-,"$2,563,497.11"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2543,Care and Upkeep of Grounds Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2544,Care and Upkeep of Equipment Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2545,Vehicle Servicing and Maintenance Services - Other,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2546,Security Services,$0.00,"$22,408.00","$1,714.26","$36,130.99",$0.00,$0.00,-,"$60,253.25"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2549,Other Operation and Maintenance of Plant Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2551,Contracted Transportation Services for Students,$0.00,$0.00,$0.00,"$28,495.92",$0.00,$0.00,-,"$28,495.92"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2552,District Operated Non-Disabled Student Trans Cost,$0.00,"$1,035,222.27","$529,221.21","$88,825.04","$88,758.77","$230,335.94",-,"$1,972,363.23"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2553,Contracted K-12 Disabled Transportation Services,$0.00,$0.00,$0.00,"$69,865.00",$0.00,$0.00,-,"$69,865.00"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2554,District Operated K-12 Disabled Trans. Services,$0.00,"$200,769.29","$102,636.28","$19,526.58","$17,213.73",$0.00,-,"$340,145.88"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2555,Payment to Other Districts for Non-Disabled Trans.,-,-,-,"$15,676.47",-,-,-,"$15,676.47"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2556,Payments to Other Dist. for K-12 Disabled Trans.,-,-,-,$0.00,-,-,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2557,School Choice (ESEA)/Prop Share (IDEA) Trans Cost,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2558,Non-Allowable Transportation Expenditure,$0.00,"$10,000.00","$1,420.00","$12,264.00","$25,635.64","$6,230.00",-,"$55,549.64"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2559,Early Childhood Special Education Trans. Serv.,$0.00,"$51,019.59","$24,022.33","$4,031.93",$0.00,$0.00,$0.00,"$79,073.85"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2561,Food Services - Service Area Direction,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2562,Food Preparation and Dispensing Services,$0.00,"$152,410.67","$69,651.31","$948,416.87","$106,000.85","$49,791.51",-,"$1,326,271.21"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2563,Food Delivery Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2569,Other Food Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2571,Internal Services - Services Area Direction,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2572,Purchasing Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2573,Warehousing and Distributing Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2574,"Printing, Publishing, and Duplicating Services",$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2579,Other Internal Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2591,Other Business Support Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2611,Central Office Services - Service Area Direction,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2621,"Plan, Rsrch, Dev, and Eval.-Service Area Direction",$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2622,Development Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2623,Evaluation Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2624,Planning Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2625,Research Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2629,"Other Plan, Rsrch, Dev., and Eval. Services",$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2631,Information Services - Service Area Direction,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2632,Internal Information Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2633,Public Information Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2634,Management Information Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2639,Other Information Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2641,Staff Services - Service Area Direction,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2642,Recruitment and Placement Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2643,Staff Accounting Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2644,In-Service Training for Non-Instructional Staff,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2645,Health Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2649,Other Staff Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2651,Statistical Services - Service Area Direction,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2652,Statistical Analysis Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2653,Statistical Reporting Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2659,Other Statistical Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2661,Data Processing Services - Service Area Direction,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2662,Systems Analysis Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2663,Programming Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2664,Operations Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2669,Other Data Processing Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2691,Other Support Services - Central,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2911,Other Supporting Services,$0.00,$0.00,$0.00,"$101,076.64",$0.00,$0.00,-,"$101,076.64"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2998,Total Support Services,"$5,154,944.99","$5,284,660.20","$3,427,358.24","$5,921,713.30","$2,447,392.41","$676,811.84",-,"$22,912,880.98"
+Support Services,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",2999,Total Instruction & Support,"$22,523,347.38","$7,230,209.91","$10,172,238.02","$7,669,429.43","$4,077,661.37","$752,730.06",-,"$52,425,616.17"
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1611,Adult Education,$0.00,$0.00,$0.00,$0.00,$832.74,$0.00,-,$832.74
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1612,Workplace Literacy,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1613,Family Literacy,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1614,English as 2nd Lang./English to Spkrs of Othr Lang,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1615,English Literacy/Civics Education,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1621,Adult Vocational Education,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1671,Community Education/Life Enrichment,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",1691,Other Adult/Continuing Education Programs,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",3111,Direction of Community Services-Service Area Direc,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",3211,Community Rec. Services-Service Area Direction,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",3311,Civic Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",3411,Public Library Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",3511,Early Childhood Program,$0.00,"$293,630.05","$55,996.65","$5,196.05","$5,512.58",$0.00,$0.00,"$360,335.33"
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",3512,Early Childhood Instruction,"$114,959.70","$20,014.56","$55,334.35","$134,316.26","$9,590.99","$2,941.50",$0.00,"$337,157.36"
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",3611,Welfare Activities Services,$0.00,$0.00,$0.00,"$26,000.00",$0.00,$0.00,-,"$26,000.00"
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",3711,Non-Public School Students' Services,$0.00,$0.00,$0.00,"$1,501.08","$153,339.84",$0.00,-,"$154,840.92"
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",3811,Custody and Care of Children Services,"$103,411.20","$263,004.57","$135,966.51","$6,372.60","$12,241.91",$0.00,-,"$520,996.79"
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",3812,Afterschool Program,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",3911,Other Community Services,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",3912,Parental Involvement,$0.00,$0.00,$0.00,$0.00,"$17,432.16",$0.00,-,"$17,432.16"
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",3913,Service-Learning,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,-,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",4011,Facilities Acq.and Constr.-Service Area Direction,-,-,-,-,-,$0.00,-,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",4021,Facilities Acquisition and Construction Services-S,-,-,-,-,-,$0.00,-,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",4031,"Architecture, Engineering and Legal Services",-,-,-,-,-,$0.00,-,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",4041,Educational Specifications Development Services,-,-,-,-,-,$0.00,-,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",4051,"Building Acq., Constr. and Improvements Services",-,-,-,-,-,"$1,620,895.94",-,"$1,620,895.94"
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",4091,Other Facilities Acq. and Constr. Services,-,-,-,-,-,$0.00,-,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",5111,Principal - Bonded Indebtedness,-,-,-,-,-,-,"$6,292,733.37","$6,292,733.37"
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",5121,Principal - Short Term Loans,-,-,-,-,-,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",5122,Principal - Long Term Loans,-,-,-,-,-,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",5131,Principal - Lease Purchase Agreement,-,-,-,-,-,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",5211,Interest - Bonded Indebtedness,-,-,-,-,-,-,"$873,562.21","$873,562.21"
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",5221,Interest - Short Term Loans,-,-,-,-,-,-,$566.67,$566.67
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",5222,Interest - Long Term Loans,-,-,-,-,-,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",5231,Interest - Lease Purchase Agreements,-,-,-,-,-,-,"$25,335.12","$25,335.12"
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",5241,Discount on Bonds Sold - Interest Adjustment,-,-,-,-,-,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",5311,Fees - Bonded Indebtedness,-,-,-,-,-,-,"$2,862.00","$2,862.00"
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",5321,Fees - Short Term Loans,-,-,-,-,-,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",5322,Fees - Long Term Loans,-,-,-,-,-,-,$800.00,$800.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",5331,Fees - Lease Purchase Agreements,-,-,-,-,-,-,$0.00,$0.00
+Non-Instruction Expenditures,"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",9998,Total Non-Instruction/Support,"$218,370.90","$576,649.18","$247,297.51","$173,385.99","$198,950.22","$1,623,837.44","$7,195,859.37","$10,234,350.61"
+
+Textbox291,Textbox293,Textbox294,Textbox295,Textbox296,Textbox297,Textbox183,Textbox298,SUPPORT_SERVICE_CODE,GENERAL_FUND8,SPECIAL_REVENUE8,DEBT_SERVICE6,CAPITAL_PROJECTS8,TOTAL_UNADJ_RATE7,Textbox339,Textbox301,Textbox302
+"Function
+Code","6110
+Certificated
+Salaries","6150
+Non-Certificated
+Salaries","6200
+Employee
+Benefits","6300
+Purchased
+Services","6400
+
+Supplies","6500
+Capital
+Outlay","6600
+Other
+Objects",9999,"22,741,718.28","7,806,859.09","10,419,535.53","7,842,815.42","4,276,611.59","2,376,567.50","7,195,859.37","62,659,966.78"
+
+Textbox136,Textbox342,Textbox381,Textbox371,Textbox345,Textbox367,Textbox364,Textbox361,Textbox358,Textbox347,Textbox405,Textbox406,Textbox407,Textbox408,Textbox409,Textbox410,Textbox411,Textbox412,Textbox413,Textbox414
+12210,Special Education*,"$2,132,979.19","$1,456,706.18","$1,466,974.98","$994,126.89","$40,405.44",$0.00,$0.00,"$6,091,192.68",-,-,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00
+12810,Early Childhood Special Education (paid with state or local funds),"$239,924.32","$189,417.04","$224,480.60","$4,031.93","$5,942.51",$0.00,$0.00,"$663,796.40",-,-,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00
+33200,CTE Base and Performance Grant,$0.00,$0.00,$0.00,"$16,346.00",$0.00,$0.00,$0.00,"$16,346.00",-,-,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00
+43703,Special Education High Need Fund - Federal,$0.00,"$2,871.12",$0.00,$0.00,$0.00,$0.00,$0.00,"$2,871.12",-,-,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00
+44100,"IDEA Entitlement Funds, Part B IDEA","$859,674.29",$0.00,"$158,068.43",$465.00,$0.00,$0.00,$0.00,"$1,018,207.72",-,-,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00
+44200,IDEA - 611 ECSE Portion,$0.00,"$107,932.00",$0.00,$0.00,$0.00,$0.00,$0.00,"$107,932.00",-,-,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00
+44201,IDEA - 619 Preschool Grant,$0.00,"$20,698.00","$5,588.00",$0.00,$0.00,$0.00,$0.00,"$26,286.00",-,-,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00
+45100,Title I,"$411,782.16","$322,635.69","$236,311.12","$241,877.88","$535,170.94",$0.00,$0.00,"$1,747,777.79",-,-,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00
+46200,Title III LEP,$0.00,$0.00,$0.00,$590.00,"$35,007.53",$0.00,$0.00,"$35,597.53",-,-,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00
+46201,Title III Immigrant,$0.00,$0.00,$0.00,$0.00,"$12,960.00",$0.00,$0.00,"$12,960.00",-,-,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00,$0.00
+
+Category5,Textbox313,Textbox315,Textbox316,Textbox317,Textbox318,Textbox319,REV_CODE_RANGE4,NAME7,GENERAL_FUND9,SPECIAL_REVENUE9,Debt_Service,CAPITAL_PROJECTS9,TOTAL_UNADJ_RATE8
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6111,Certificated - Regular Salaries,$0.00,"$22,372,017.83",-,-,"$22,372,017.83"
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6112,Certificated - Administrators Salaries,$0.00,$0.00,-,-,$0.00
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6121,Certificated - Part-Time Salaries,$0.00,"$22,221.79",-,-,"$22,221.79"
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6122,Certificated - Other Part-Time Salaries,$0.00,$0.00,-,-,$0.00
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6131,Certificated Supplemental Pay,$0.00,"$163,689.80",-,-,"$163,689.80"
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6141,Certificated Unused Leave and/or Severance Pay,$0.00,"$183,788.86",-,-,"$183,788.86"
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6151,Classified Salaries Regular,"$7,629,378.70",$0.00,-,-,"$7,629,378.70"
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6152,Classifed Instructional Aide Salaries,$0.00,$0.00,-,-,$0.00
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6153,Classified Substitute Salaries,$0.00,$0.00,-,-,$0.00
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6161,Classified Salaries - Part-Time,"$63,843.43",$0.00,-,-,"$63,843.43"
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6171,Classified Employees Unused Leave and/or Severance,"$113,636.96",$0.00,-,-,"$113,636.96"
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6199,Salaries - Subtotal,"$7,806,859.09","$22,741,718.28",-,-,"$30,548,577.37"
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6211,Teacher's Retirement,"$43,286.02","$3,702,744.78",-,-,"$3,746,030.80"
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6221,Non-Teacher Retirement,"$606,152.43",$0.00,-,-,"$606,152.43"
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6231,Old Age Survivor and Disability (OASDI),"$444,167.37","$21,360.05",-,-,"$465,527.42"
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6232,Medicare,"$104,384.37","$312,542.23",-,-,"$416,926.60"
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6241,Employee Insurance,"$1,651,850.72","$3,106,124.68",-,-,"$4,757,975.40"
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6261,Workers' Compensation Insurance,"$389,423.99",$0.00,-,-,"$389,423.99"
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6271,Unemployment Compensation,"$32,498.89",$0.00,-,-,"$32,498.89"
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6291,Other Employer Provided Benefits,"$5,000.00",$0.00,-,-,"$5,000.00"
+Salary and Employee Benefits,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6299,Employee Benefits - Subtotal,"$3,276,763.79","$7,142,771.74",-,$0.00,"$10,419,535.53"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6311,Purchased Instructional Services - Tuition,"$540,251.05","$895,163.30",-,-,"$1,435,414.35"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6312,Instructional Program Improvement Services,"$493,840.07",$0.00,-,-,"$493,840.07"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6313,Pupil Services,"$36,944.37",$0.00,-,-,"$36,944.37"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6314,Staff Services,$0.00,$0.00,-,-,$0.00
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6315,Audit Services,"$17,925.00",-,-,-,"$17,925.00"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6316,Data Processing and Technology Related Services,"$8,036.75",-,-,-,"$8,036.75"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6317,Legal Services,"$59,123.00",-,-,-,"$59,123.00"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6318,Election Services,"$22,817.10",-,-,-,"$22,817.10"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6319,Other Professional Services,"$388,316.37",-,-,-,"$388,316.37"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6321,"Subawards Under Subagreements First $25,000",$0.00,$0.00,$0.00,$0.00,$0.00
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6322,"Subawards Under Subagreements In excess of $25,000",$0.00,$0.00,$0.00,$0.00,$0.00
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6331,Cleaning Services,$0.00,-,-,-,$0.00
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6332,Repairs and Maintenance,"$3,275,790.78",-,-,-,"$3,275,790.78"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6333,Rentals - Land and Buildings,"$1,170.00",-,-,-,"$1,170.00"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6334,Rentals - Equipment,"$103,376.64",-,-,-,"$103,376.64"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6335,Water and Sewer,"$108,318.13",-,-,-,"$108,318.13"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6336,Trash Removal,"$78,699.25",-,-,-,"$78,699.25"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6337,Technology-Related Repairs and Maintenance,"$150,370.53",-,-,-,"$150,370.53"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6338,Rentals of Computers and Related Equipment,$0.00,-,-,-,$0.00
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6339,Other Property Services,$0.00,-,-,-,$0.00
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6341,Contracted Transportation To and From School,"$106,576.24",-,-,-,"$106,576.24"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6342,Other Contracted Pupil Transportation (Non-Route),"$7,461.15",-,-,-,"$7,461.15"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6343,Travel,"$42,627.35",-,-,-,"$42,627.35"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6349,Other Transportation Services,$0.00,-,-,-,$0.00
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6351,Property Insurance,"$197,061.00",-,-,-,"$197,061.00"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6352,Liability Insurance,"$134,666.62",-,-,-,"$134,666.62"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6353,Fidelity Bond Premiums,$0.00,-,-,-,$0.00
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6359,Judgments Against LEA and Settlements,$0.00,$0.00,-,-,$0.00
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6361,Communication,"$85,799.75",-,-,-,"$85,799.75"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6362,Advertising,"$19,248.00",-,-,-,"$19,248.00"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6363,Printing and Binding,$0.00,-,-,-,$0.00
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6371,Dues and Membership,"$46,135.33",-,-,-,"$46,135.33"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6391,Other Purchased Services,"$1,023,097.64",-,$0.00,-,"$1,023,097.64"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6398,Other Expenses,$0.00,$0.00,$0.00,$0.00,$0.00
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6399,Purchased Services - Subtotal,"$6,947,652.12","$895,163.30",$0.00,$0.00,"$7,842,815.42"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6411,General Supplies (Excludes 6412),"$1,455,665.91",-,-,-,"$1,455,665.91"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6412,Supplies - Technology - Related,"$1,328,590.31",-,-,-,"$1,328,590.31"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6431,Textbook,"$258,774.86",-,-,-,"$258,774.86"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6441,Library Books,"$62,300.07",-,-,-,"$62,300.07"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6451,Resource Materials,"$5,174.15",-,-,-,"$5,174.15"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6461,Warehouse Inventory Adjustments,$0.00,-,-,-,$0.00
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6471,Food Supplies - Exclude Non-Food Supplies,"$87,743.34",-,-,-,"$87,743.34"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6481,Electric,"$628,350.40",-,-,-,"$628,350.40"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6482,Gas - Natural,"$422,540.96",-,-,-,"$422,540.96"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6483,Gas - L.P.,$0.00,-,-,-,$0.00
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6484,Fuel Oil,$0.00,-,-,-,$0.00
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6485,Coal,$0.00,-,-,-,$0.00
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6486,Gasoline/Diesel,"$27,471.59",-,-,-,"$27,471.59"
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6491,Other Supplies and Materials,$0.00,-,-,-,$0.00
+Purchased Services and Supplies,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6499,Supplies - Subtotal,"$4,276,611.59",-,-,-,"$4,276,611.59"
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6511,Land,-,-,-,$0.00,$0.00
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6521,Buildings,-,-,-,$0.00,$0.00
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6531,Improvements Other than Buildings,-,-,-,"$1,300,629.98","$1,300,629.98"
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6541,Regular Equipment,-,-,-,"$175,781.38","$175,781.38"
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6542,Equipment - Classroom Instructional Apparatus,-,-,-,"$373,212.63","$373,212.63"
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6543,Technology - Related Hardware,-,-,-,"$202,070.29","$202,070.29"
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6544,Technology Software,-,-,-,$0.00,$0.00
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6551,Vehicles - Except School Buses,-,-,-,"$96,247.88","$96,247.88"
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6552,Pupil Transportation Vehicles - School Buses,-,-,-,"$228,625.34","$228,625.34"
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6553,School Buses - Purchased with Specific Funds,-,-,-,$0.00,$0.00
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6591,Other Capital Outlay,-,-,-,$0.00,$0.00
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6599,Capital Outlay - Subtotal,$0.00,-,-,"$2,376,567.50","$2,376,567.50"
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6611,Principal - Bonded Indebtedness,-,-,"$6,292,733.37",$0.00,"$6,292,733.37"
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6612,Principal - Short Term Loans,$0.00,$0.00,$0.00,$0.00,$0.00
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6613,Principal - Lease Purchase Agreements,-,-,-,$0.00,$0.00
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6614,Principal - Long Term Loans,-,-,-,$0.00,$0.00
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6621,Interest - Bonded Indebtedness,-,-,"$873,562.21",$0.00,"$873,562.21"
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6622,Interest - Short Term Loans,$566.67,$0.00,$0.00,$0.00,$566.67
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6623,Interest - Lease Purchase Agreements,-,-,-,"$25,335.12","$25,335.12"
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6624,Interest - Long Term Loans,-,-,$0.00,$0.00,$0.00
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6631,Fees - Bonded Indebtedness,$0.00,-,"$2,862.00",$0.00,"$2,862.00"
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6632,Fees - Short Term Loans,$0.00,$0.00,$0.00,$0.00,$0.00
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6633,Fees - Lease Purchase Agreements,-,-,-,$0.00,$0.00
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6634,Fees - Long Term Loans,-,-,-,$800.00,$800.00
+Capital Outlay and Other,"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds",6699,Other Objects - Subtotal,$566.67,$0.00,"$7,169,157.58","$26,135.12","$7,195,859.37"
+
+Textbox329,Textbox331,Textbox332,Textbox333,Textbox334,Textbox335,GENERAL_FUND10,SPECIAL_REVENUE10,Debt_Servicegt,CAPITAL_PROJECTS10,TOTAL_UNADJ_RATE9
+"Object
+Code","General
+(Incidental)
+Fund","Special
+Revenue
+(Teachers) Fund","Debt
+Service
+Fund","Capital
+Projects
+Fund","Total
+All
+Funds","22,308,453.26","30,779,653.32","7,169,157.58","2,402,702.62","62,659,966.78"
+
+Textbox344,Textbox357,Textbox363,Textbox369,Textbox418,Textbox416,Textbox420,Textbox435,Textbox436,Textbox439,Textbox440,Textbox441,Textbox442,Textbox443
+12210,Special Education*,"$2,372,958.60","$3,718,234.08",$0.00,$0.00,"$6,091,192.68",-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+12810,Early Childhood Special Education (paid with state or local funds),"$331,311.92","$332,484.48",$0.00,$0.00,"$663,796.40",-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+33200,CTE Base and Performance Grant,$0.00,"$16,346.00",$0.00,$0.00,"$16,346.00",-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+43703,Special Education High Need Fund - Federal,"$2,871.12",$0.00,$0.00,$0.00,"$2,871.12",-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+44100,"IDEA Entitlement Funds, Part B IDEA",$465.00,"$1,017,742.72",$0.00,$0.00,"$1,018,207.72",-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+44200,IDEA - 611 ECSE Portion,"$107,932.00",$0.00,$0.00,$0.00,"$107,932.00",-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+44201,IDEA - 619 Preschool Grant,"$26,286.00",$0.00,$0.00,$0.00,"$26,286.00",-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+45100,Title I,"$1,199,899.35","$547,878.44",$0.00,$0.00,"$1,747,777.79",-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+46200,Title III LEP,"$35,597.53",$0.00,$0.00,$0.00,"$35,597.53",-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+46201,Title III Immigrant,"$12,960.00",$0.00,$0.00,$0.00,"$12,960.00",-,-,$0.00,$0.00,$0.00,$0.00,$0.00
+
+REPORTING_FUND_CODE1,NAME10,TOTAL2
+8010,Exp. for Building Project(s) (Funded by Bond Proce,0.00
+8011,Exp. for Building Project(s) (Funded by Impact Aid,0.00
+
+Textbox19,Textbox21,Textbox24,Textbox31,Textbox33,Textbox34,BEGINNING_BALANCE2,BORROWED_AMOUNT2,REPAID_AMOUNT2,ENDING_BALANCE2,INTEREST_PAID2
+"8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",General Obligations Bonds,"31,657,866.52",0.00,"6,292,733.37","25,365,133.15","873,562.21"
+"8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",Lease Purchase,0.00,0.00,0.00,0.00,0.00
+"8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",Energy Loan,0.00,0.00,0.00,0.00,0.00
+"8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",Guaranteed Energy Cost Savings Contract,0.00,0.00,0.00,0.00,0.00
+"8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",Other Debt,"915,558.19","302,395.00","531,830.39","686,122.80","25,335.12"
+"8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",SubTotal,"32,573,424.71","302,395.00","6,824,563.76","26,051,255.95","898,897.33"
+"8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",Tax Anticipation Note (TAN),0.00,"1,700,000.00","1,700,000.00",0.00,566.67
+"8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",Advance Funding,0.00,0.00,0.00,0.00,0.00
+"8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",Revenue Bonds,0.00,0.00,0.00,0.00,0.00
+"8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",Total All Debt,"32,573,424.71","2,002,395.00","8,524,563.76","26,051,255.95","899,464.00"
+
+Textbox42,Textbox43,Textbox44,Textbox45,Textbox58,Textbox59,Textbox60,Textbox97,BOND_TYPE1,SERIES,TERM_LENGTH,BEGINNING_BALANCE9,Textbox387,REPAID_AMOUNT9,ENDING_BALANCE9,INTEREST_PAID9,Textbox46,BEGINNING_BALANCE10,BORROWED_AMOUNT10,REPAID_AMOUNT10,ENDING_BALANCE10,INTEREST_PAID10,Textbox114,Textbox130
+"General Obligation Bonds (Bonded Indebtedness)
+Section 164.121
+","Type of
+Bond Issue","Length
+Term","8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",,,0,,,,,,Total General Obligation Bonds (Bonded Indebtedness),"31,657,866.52",0.00,"6,292,733.37","25,365,133.15","873,562.21",Portion of 8002 ''Amount Borrowed During Year'' Refunding Bonds,
+"General Obligation Bonds (Bonded Indebtedness)
+Section 164.121
+","Type of
+Bond Issue","Length
+Term","8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",,,0,"27,657,866.52",0.00,"6,292,733.37","21,365,133.15","873,562.21",Total General Obligation Bonds (Bonded Indebtedness),"31,657,866.52",0.00,"6,292,733.37","25,365,133.15","873,562.21",Portion of 8002 ''Amount Borrowed During Year'' Refunding Bonds,
+"General Obligation Bonds (Bonded Indebtedness)
+Section 164.121
+","Type of
+Bond Issue","Length
+Term","8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",New Issue,2019,15,"4,000,000.00",0.00,0.00,"4,000,000.00",0.00,Total General Obligation Bonds (Bonded Indebtedness),"31,657,866.52",0.00,"6,292,733.37","25,365,133.15","873,562.21",Portion of 8002 ''Amount Borrowed During Year'' Refunding Bonds,
+
+Textbox41,Textbox101,Textbox103,Textbox104,Textbox105,Textbox170,Textbox37,Textbox92,Textbox93,Textbox94,Textbox95,BOND_TYPE7,TERM_LENGTH7,DEBT_BEGIN_DATE7,ORIGINAL_PRINCIPAL7,ORIGINAL_PRINCIPAL,BEGINNING_BALANCE13,BORROWED_AMOUNT13,REPAID_AMOUNT13,ENDING_BALANCE13,INTEREST_PAID13,Textbox38,BEGINNING_BALANCE14,BORROWED_AMOUNT14,REPAID_AMOUNT14,ENDING_BALANCE14,INTEREST_PAID14,Textbox116,Textbox143
+"Lease Purchase
+Section 177.088
+","Type of
+Lease
+Purchase","Length
+Term","Begin
+Date","Refinance
+Date","Original
+Principal","8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",,,,,,,,,,,Total Lease Purchase,0.00,0.00,0.00,0.00,0.00,There is no Lease Purchase debt.,
+
+Textbox47,Textbox48,Textbox107,Textbox108,Textbox109,Textbox49,Textbox98,Textbox99,Textbox100,Textbox102,VENDOR_NAME,TERM_LENGTH8,DEBT_BEGIN_DATE8,ORIGINAL_PRINCIPAL8,BEGINNING_BALANCE15,BORROWED_AMOUNT15,REPAID_AMOUNT15,ENDING_BALANCE15,INTEREST_PAID15,Textbox50,BEGINNING_BALANCE16,BORROWED_AMOUNT16,REPAID_AMOUNT16,ENDING_BALANCE16,INTEREST_PAID16
+"Energy Loan
+Section 640.653
+","Type of
+Project","Length
+Term","Begin
+Date","Original
+Principal","8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",,,,,,,,,,Total Energy Loan,0.00,0.00,0.00,0.00,0.00
+
+Textbox51,Textbox106,Textbox111,Textbox264,Textbox173,Textbox174,Textbox52,Textbox112,Textbox113,Textbox115,Textbox118,BOND_TYPE4,SHORT_DESCRIPTION,TERM_LENGTH4,DEBT_BEGIN_DATE4,ORIGINAL_PRINCIPAL4,BEGINNING_BALANCE7,BORROWED_AMOUNT7,REPAID_AMOUNT7,ENDING_BALANCE7,INTEREST_PAID7,Textbox119,BEGINNING_BALANCE8,BORROWED_AMOUNT8,REPAID_AMOUNT8,ENDING_BALANCE8,INTEREST_PAID8
+"Guaranteed Energy Cost Savings Contract
+Section 8.231
+","Vendor
+Name","Method
+of
+Financing","Length
+Term","Begin
+Date","Original
+Principal","8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",,,,,,,,,,,Total Guaranteed Energy Cost Savings Contract,0.00,0.00,0.00,0.00,0.00
+
+Textbox121,Textbox160,Textbox125,Textbox161,Textbox163,Textbox126,Textbox139,Textbox140,Textbox165,Textbox167,Textbox141,TERM_LENGTH11,REFINANCE_DATE,DEBT_BEGIN_DATE11,ORIGINAL_PRINCIPAL11,BEGINNING_BALANCE21,BORROWED_AMOUNT21,REPAID_AMOUNT21,ENDING_BALANCE21,INTEREST_PAID21,Textbox142,BEGINNING_BALANCE22,BORROWED_AMOUNT22,REPAID_AMOUNT22,ENDING_BALANCE22,INTEREST_PAID22
+"Other Debt
+Section 177.082, etc.
+","Length
+Term","Begin
+Date","Refinance
+Date","Original
+Principal","8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",,,,,,,,,,,Total Other Debt,"915,558.19","302,395.00","531,830.39","686,122.80","25,335.12"
+"Other Debt
+Section 177.082, etc.
+","Length
+Term","Begin
+Date","Refinance
+Date","Original
+Principal","8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",APPLE COMPUTER LEASE PURCH,4,07/14/2017,,"1,108,020.00","277,678.68",0.00,"277,678.68",0.00,"1,360.62",Total Other Debt,"915,558.19","302,395.00","531,830.39","686,122.80","25,335.12"
+"Other Debt
+Section 177.082, etc.
+","Length
+Term","Begin
+Date","Refinance
+Date","Original
+Principal","8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",13 BUS LEASE PURCHASE,6,08/15/2017,,"919,065.00","419,547.15",0.00,"133,476.17","286,070.98","15,201.04",Total Other Debt,"915,558.19","302,395.00","531,830.39","686,122.80","25,335.12"
+"Other Debt
+Section 177.082, etc.
+","Length
+Term","Begin
+Date","Refinance
+Date","Original
+Principal","8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",BUS LEASE PURCHASE,6,10/15/2018,,"74,425.00","49,509.82",0.00,"11,449.20","38,060.62","2,584.87",Total Other Debt,"915,558.19","302,395.00","531,830.39","686,122.80","25,335.12"
+"Other Debt
+Section 177.082, etc.
+","Length
+Term","Begin
+Date","Refinance
+Date","Original
+Principal","8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",BUS LEASE PURCHASE,6,12/15/2018,,"63,250.00","42,075.86",0.00,"9,730.10","32,345.76","2,196.74",Total Other Debt,"915,558.19","302,395.00","531,830.39","686,122.80","25,335.12"
+"Other Debt
+Section 177.082, etc.
+","Length
+Term","Begin
+Date","Refinance
+Date","Original
+Principal","8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",BUS LEASE PURCHASE,6,06/08/2020,,"124,000.00","101,220.32",0.00,"19,026.21","82,194.11","3,353.47",Total Other Debt,"915,558.19","302,395.00","531,830.39","686,122.80","25,335.12"
+"Other Debt
+Section 177.082, etc.
+","Length
+Term","Begin
+Date","Refinance
+Date","Original
+Principal","8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",APPLE LEASE,3,07/01/2019,,"76,592.00","25,526.36",0.00,"25,526.36",0.00,510.98,Total Other Debt,"915,558.19","302,395.00","531,830.39","686,122.80","25,335.12"
+"Other Debt
+Section 177.082, etc.
+","Length
+Term","Begin
+Date","Refinance
+Date","Original
+Principal","8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",BUS LEASE PURCHASE,6,07/23/2020,,"139,000.00",0.00,"139,000.00","25,086.90","113,913.10",0.00,Total Other Debt,"915,558.19","302,395.00","531,830.39","686,122.80","25,335.12"
+"Other Debt
+Section 177.082, etc.
+","Length
+Term","Begin
+Date","Refinance
+Date","Original
+Principal","8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",BUS LEASE PURCHASE,6,07/23/2020,,"98,000.00",0.00,"98,000.00","17,687.16","80,312.84",0.00,Total Other Debt,"915,558.19","302,395.00","531,830.39","686,122.80","25,335.12"
+"Other Debt
+Section 177.082, etc.
+","Length
+Term","Begin
+Date","Refinance
+Date","Original
+Principal","8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",BUS LEASE PURCHASE,6,09/15/2020,,"65,395.00",0.00,"65,395.00","12,169.61","53,225.39",127.40,Total Other Debt,"915,558.19","302,395.00","531,830.39","686,122.80","25,335.12"
+
+Textbox184,Textbox185,Textbox186,Textbox187,Textbox188,Textbox189,Textbox190,Textbox191,Textbox192,Textbox193,PAYOFF_DATE,DEBT_BEGIN_DATE9,ORIGINAL_PRINCIPAL9,BEGINNING_BALANCE19,BORROWED_AMOUNT19,REPAID_AMOUNT19,ENDING_BALANCE19,INTEREST_PAID19,Textbox195,BEGINNING_BALANCE20,BORROWED_AMOUNT20,REPAID_AMOUNT20,ENDING_BALANCE20,INTEREST_PAID20
+"Tax Anticipation Note (TAN)
+Section 165.131
+","Fund
+Borrowed
+For","Begin
+Date","Date
+Paid
+Off","Original
+Principal","8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",,,,,,,,,Total Tax Anticipation Note (TAN),0.00,"1,700,000.00","1,700,000.00",0.00,566.67
+"Tax Anticipation Note (TAN)
+Section 165.131
+","Fund
+Borrowed
+For","Begin
+Date","Date
+Paid
+Off","Original
+Principal","8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",12/18/2020 12:00:00 AM,12/21/2020,"1,700,000.00",0.00,"1,700,000.00","1,700,000.00",0.00,566.67,Total Tax Anticipation Note (TAN),0.00,"1,700,000.00","1,700,000.00",0.00,566.67
+
+Textbox150,Textbox158,Textbox157,Textbox159,Textbox176,Textbox177,Textbox178,Textbox179,Textbox180,Textbox349,Textbox350,ORIGINAL_PRINCIPAL10,BEGINNING_BALANCE23,BORROWED_AMOUNT23,REPAID_AMOUNT23,ENDING_BALANCE23,INTEREST_PAID23,Textbox201,BEGINNING_BALANCE24,BORROWED_AMOUNT24,REPAID_AMOUNT24,ENDING_BALANCE24,INTEREST_PAID24
+"Advance Funding
+Section 360.106/165.131
+","Begin
+Date","Refinance
+Date","Original
+Principal","8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",,,,,,,,,Total Advance Funding,0.00,0.00,0.00,0.00,0.00
+
+Textbox207,Textbox209,Textbox210,Textbox212,Textbox213,Textbox214,Textbox215,Textbox216,Textbox217,Textbox218,BOND_TYPE,BOND_TYPE2,SERIES1,TERM_LENGTH12,REFINANCE_DATE2,BEGINNING_BALANCE11,BORROWED_AMOUNT11,REPAID_AMOUNT11,ENDING_BALANCE11,INTEREST_PAID11,Textbox220,BEGINNING_BALANCE12,BORROWED_AMOUNT12,REPAID_AMOUNT12,ENDING_BALANCE12,INTEREST_PAID12
+"Revenue Bonds (Bonded Indebtedness)
+Section 164.231
+","Type of
+Revenue Generating
+Facility","Type of
+Issue","Length
+Term","Refinance
+Date","8001
+Balance
+Beginning of
+Year","8002
+Amount
+Borrowed
+During Year","8003
+Amount Repaid
+During Year","8004
+Balance End of
+Year","8005
+Interest Paid
+During Year",,,,,,,,,,,Total Revenue Bonds (Bonded Indebtedness),0.00,0.00,0.00,0.00,0.00
+

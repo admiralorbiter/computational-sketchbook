@@ -29,6 +29,13 @@ After direct Kauffman Real World Learning (RWL) grant support ended at Grandview
   - `2025-03-20` (`MID 17411`): Strategic Plan 2024–2027 review; Seal of Biliteracy MVA presentation.
   - `2026-04-16` (`MID 24913`): RWL progress reporting during superintendent leadership transition.
   - `2026-06-18` (`MID 25898`): T&L Welding MOA continuation, Between Me 2 You healthcare MOU, and preliminary FY27 budget adoption.
+- **Longitudinal Statutory Financial Series (DESE ASBR 2018–2024)**: 6 full years of official Missouri Annual Secretary of the Board Reports directly harvested via automated SSRS ReportViewer export (`data/raw/grandview-c4/finance/asbr/`):
+  - Career and Technical Education (Function 1311–1391) expenditures grew from $169,978 (FY19) to $332,616 (FY24), showing substantial local operational scaling.
+  - Area Career Center tuition fees (Function 1921 sent to Herndon / Summit Tech) grew from $158,300 (FY19) to $140,616 (FY24).
+  - Assessed valuation expanded from $474.7M to $803.8M, lifting total revenue from $58.99M to $80.56M.
+  - Total ending fund balances grew from $20.02M (FY19) to $48.20M (FY24), showing robust general fund capacity for local absorption.
+- **Longitudinal Staff Directory Panel (2019–2026)**: 2,283 employee records parsed across 21 historical Wayback Machine HTML snapshots and live directory scrape (`districts/grandview-c4/organization/staff_directory_longitudinal.csv`), establishing personnel continuity across 105 distinct administrative and instructional roles.
+- **Operational & Pathway Agreements**: GHS counseling tools and credit check planners preserved; 8 formal CTE/pathway agreements mapped across board minutes (Honeywell, T&L Welding, Between Me 2 You, Herndon, and Southland CAPS).
 - **Post-Direct-Grant Continuity Signals**: Documented persistence in shared pathway expansion, strategic-plan reporting, standing board evaluation under Policy IM, welding instruction, and new healthcare training partnerships.
 - **Persistent Outside Capital**: External investments (e.g., $125,000 KCNSC/Honeywell investment to Grandview Educational Foundation; PREP-KC support) continue post-2024, confirming that `post_direct_grant` is the methodologically correct regime label rather than an assumed cutoff of all grant capital.
 
@@ -37,22 +44,18 @@ After direct Kauffman Real World Learning (RWL) grant support ended at Grandview
 ## 3. What Is Not Yet Known
 
 - **Contents of 237 WAF-Protected Attachments**: Especially the underlying quantitative metric tables in the December 2024 RWL Program Evaluation (`AttachmentID: 387812`), which remain behind Simbli's Imperva Incapsula hCaptcha challenge.
-- **Longitudinal District-Funded Staffing Genealogy**: District coordinator and pathway facilitator position histories, salary lines, and whether positions transitioned to local operating funds.
-- **Local Budget / Account-Code Substitution**: Line-item accounting entries in DESE Annual Secretary of the Board Reports (ASBR) and annual adopted operating budgets tracking whether Kauffman revenue replacement occurred.
-- **Longitudinal Course / Pathway Availability**: Actual high school course catalog history and student enrollment counts across specific career pathways.
+- **FY25 & FY26 Final ASBR Filings**: DESE has not yet released final audited ASBR workbooks for the initial post-direct-grant year (2024–2025).
 - **District-Level MVA Outcome Trajectory**: Longitudinal graduate MVA attainment counts specifically for Grandview C-4 (as opposed to regional aggregates).
-- **Trajectory Classification**: Whether observed persistence represents genuine institutionalization, programmatic rebranding, or gradual decay cannot be evaluated without longitudinal resource and outcome series.
+- **Comprehensive 80-Page Course Guide PDF**: Full course description catalog for 2024–2026 (counseling site lists 2025-2026 edition as "coming soon").
 
 ---
 
-## 4. Next Task When Resumed (Gate 3 Entry Point)
+## 4. Next Task (Cross-Stream Analysis & Trajectory Modeling)
 
-When work resumes, **Gate 3 must establish one longitudinal resource stream and one longitudinal operational stream** before attempting any institutionalization classification.
-
-### Recommended First Targets:
-1. **Staff / Position Genealogy**: Build longitudinal title and FTE tracking for RWL/MVA coordinators and pathway directors using district staff directories and Wayback CDX snapshots (`data/raw/grandview-c4/communications/wayback_cdx_index.json`).
-2. **Annual Course / Pathway Guides**: Acquire and parse annual Grandview High School Course Description & Planning Guides (`SRC-GV-OPS-001`) from 2019 to 2026 to track formal course adoption.
-3. **District Finance & ASBR Alignment**: Integrate DESE MCDS finance records and local ASBR reports using district code `048074` to analyze local expenditure trends in career-connected instruction.
+With empirical series now established across Governance (Gate 2), Statutory Finance (ASBR 2018–2024), Staffing Genealogy (2019–2026), and Operations:
+1. **Fiscal Substitution Audit**: Contrast Kauffman grant disbursements against ASBR Function 1300 and local revenues to test whether grant dollars replaced or supplemented local funds.
+2. **Staff Role Evolution**: Track specific personnel title changes from grant-funded titles to standardized district lines.
+3. **Synthesis & Reporting**: Build comparative visualizations and audit institutionalization vs. absorption patterns.
 
 ---
 

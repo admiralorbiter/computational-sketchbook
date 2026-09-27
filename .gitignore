@@ -17,4 +17,5 @@ Thumbs.db
 .venv
 env/
 venv/
-
+# Large raw video binaries (>50MB)
+*transcript_review_tutorial.pdf
