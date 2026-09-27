@@ -55,7 +55,13 @@ The comparative empirical pipeline has now fully harvested, reconciled, and synt
   1. *Grandview C-4*: Central cabinet anchoring under Assistant Superintendent of Curriculum & Instruction Prissy LeMay.
   2. *Center 58*: Consortia out-tasking with internal high school counseling and business/industrial tech educators.
   3. *Hickman Mills C-1*: Standalone facility administration (Principal Ryan Beatty, Asst Principal Natalie Johnson, Coordinator Bethany Kelly, Trades/Entrepreneurial faculty, and 13 official Student Intern lines).
-- **Panel & Report**: [`synthesis/tri_district_staff_panel.csv`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-26-rwl-institutionalization/synthesis/tri_district_staff_panel.csv), [`synthesis/TRI_DISTRICT_STAFFING_COMPARATIVE_ANALYSIS.md`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-26-rwl-institutionalization/synthesis/TRI_DISTRICT_STAFFING_COMPARATIVE_ANALYSIS.md).
+### D. Course Catalogs, Master Schedules & Shared Consortium Pathways (Layer 5)
+- **Harmonized Panel**: 42 distinct pathway and course catalog offerings systematically classified across the three districts.
+- **Microregional Consortium Architecture**:
+  1. *Synchronized Bell Schedules*: Grandview, Center, and Ruskin high schools synchronized master daily bell schedules (e.g. A-Day / 3rd Hour) to enable shared student enrollment across campus boundaries.
+  2. *Campus Specialization*: Center High School physically hosts the First Responder Academy for the region; Hickman Mills dedicated the Real-World Learning Center for Skilled Trades I & II and student enterprises; Grandview High School anchors advanced manufacturing via Honeywell FM&T.
+  3. *Unique Credentials*: Senior Class A Commercial Driver's Licenses via Zeta Driving School (Center 58); Missouri Board Barber/Cosmetology licensing via Transformed Academy; 200-hour AWS Combination Welding via T&L Welding Academy; 100% district-funded Associate of Arts blocks (up to 42 credits) at MCC-Longview Early College Academy.
+- **Panel & Report**: [`synthesis/tri_district_course_and_pathway_panel.csv`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-26-rwl-institutionalization/synthesis/tri_district_course_and_pathway_panel.csv), [`synthesis/TRI_DISTRICT_CURRICULUM_AND_PATHWAYS_ANALYSIS.md`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-26-rwl-institutionalization/synthesis/TRI_DISTRICT_CURRICULUM_AND_PATHWAYS_ANALYSIS.md).
 
 ---
 
