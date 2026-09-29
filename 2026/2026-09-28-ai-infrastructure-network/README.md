@@ -87,7 +87,7 @@ Phase 0.7.2 establishes an economically literal baseline across five core compan
 * **NVIDIA Corporation (`NVDA`):** Dominant accelerated silicon supplier (CIK: `0001045810`).
 * **Super Micro Computer, Inc. (`SMCI`):** Accelerated server OEM & liquid cooling integrator (CIK: `0001375365`).
 * **CoreWeave, Inc. (`CRWV`):** Leveraged neocloud operator (CIK: `0001769628`) and its equipment vehicle `CRWV_SPV_VIII`.
-* **Applied Digital Corporation (`APLD`):** HPC data center developer (CIK: `0001144879`), intermediate financing issuers (`APLD_COMPUTECO`, `APLD_COMPUTECO2`), and Polaris Forge 1 Landlord SPVs (`APLD_ELN02_LLC`, `APLD_ELN03_LLC`, `APLD_ELN02C_LLC`).
+* **Applied Digital Corporation (`APLD`):** HPC data center developer (CIK: `0001144879`), intermediate financing issuers (`APLD_COMPUTECO`, `APLD_COMPUTECO2`, `APLD_COMPUTECO3`), holding vehicle `APLD_HPC_HOLDINGS2`, and Polaris Forge 1 Landlord SPVs (`APLD_ELN02_LLC`, `APLD_ELN03_LLC`, `APLD_ELN02C_LLC`).
 * **Oracle Corporation (`ORCL`):** Hyperscaler cloud operator expanding OCI superclusters (CIK: `0001341439`).
 * **Key Counterparties:** Microsoft Corporation (`MSFT`, anchor customer), Blackstone/Magnetar Debt Syndicate (`BLACKSTONE_MAGNETAR_SYN`), Institutional Bondholders, Hardware Suppliers, and Polaris Forge 1 Campus (`POLARIS_FORGE_1`).
 
@@ -121,16 +121,15 @@ Phase 0.7.2 establishes an economically literal baseline across five core compan
      - Under Exhibit 10.1 and Exhibit 10.2, the guarantees activate upon explicit Springing Events: (i) equipment-financing rating trigger [***], (ii) colocation agreement default, material modification, or payment reduction/cessation, (iii) insolvency/bankruptcy, (iv) equipment financing acceleration, etc.
 3. **Exact CoreWeave & Applied Digital Debt Reconciliations:**
    * **CoreWeave ($35.551B):** Indebtedness is reconciled across 11 modeled debt components/edges: DDTL 1.0 ($1.300B), DDTL 2.0 ($3.190B), DDTL 2.1 ($3.000B), DDTL 3.0 ($2.215B), Non-Recourse DDTL 4.0 ($2.837B drawn of $8.500B capacity), DDTL 5.0 ($1.101B), Senior Secured Notes ($10.029B), Convertible Senior Notes ($6.588B), Recourse OEM ($4.220B), Non-Recourse OEM ($0.882B), and Magnetar Loan ($0.189B), summing to **$35.551B** (exact 0.00% drift).
-   * **Applied Digital Duality ($5.307B Gross Principal vs $4.976B Carrying Debt) & Obligation Conservation:** Form 10-K balance sheet reports net carrying debt of **$4.976B** ($4,959.5M net long-term + $16.4M current portion), while Note 8 discloses gross contractual remaining principal payments of **$5.307B** ($5,306.7M), with $330.7M in unamortized discount and deferred financing costs. Decomposed into 6 contract-literal instruments in the master ledger: $2.35B 9.25% PF1 notes (issued by `APLD_COMPUTECO` due Dec 15, 2030), $2.15B 6.75% PF2 notes (issued by `APLD_COMPUTECO2` due Mar 15, 2031), $450M 2.75% convertible notes (due Jun 30, 2030), $300M floating bridge facility (SOFR, entered May 1, 2026, due Apr 30, 2027; retired June 16, 2026), $56.68M aggregate residual debt (summing to $5,306.68M at May 31, 2026; 0.00% drift), and $1.59B 7.00% Senior Secured Notes (`OBL-APLD-DEBT-7PCT-2026`, entered June 16, 2026, due June 15, 2031; Note 19 Subsequent Events) issued to refinance the bridge facility and conserve post-refinancing indebtedness in the temporal graph.
+   * **Applied Digital Duality ($5.307B Gross Principal vs $4.976B Carrying Debt) & Obligation Conservation:** Form 10-K balance sheet reports net carrying debt of **$4.976B** ($4,959.5M net long-term + $16.4M current portion), while Note 8 discloses gross contractual remaining principal payments of **$5.307B** ($5,306.7M), with $330.7M in unamortized discount and deferred financing costs. Decomposed into 6 contract-literal instruments in the master ledger: $2.35B 9.25% PF1 notes (issued by `APLD_COMPUTECO` due Dec 15, 2030), $2.15B 6.75% PF2 notes (issued by `APLD_COMPUTECO2` due Mar 15, 2031), $450M 2.75% convertible notes (due Jun 30, 2030), $300M floating bridge facility (SOFR, entered May 1, 2026, due Apr 30, 2027; retired June 16, 2026), $56.68M aggregate residual debt (summing to $5,306.68M at May 31, 2026; 0.00% drift), and $1.59B 7.00% Senior Secured Notes (`OBL-APLD-DEBT-7PCT-2026`, entered June 16, 2026, due June 15, 2031; issued by `APLD_COMPUTECO3` via Form 8-K filed June 18, 2026 and Note 19 Subsequent Events) issued to refinance the bridge facility and fund ELN-04, conserving post-refinancing indebtedness in the temporal graph.
 4. **Pure Amount-Type Reachability vs Parameterized Financial Stress Prototype:**
    * We eliminate non-fungible dollar mixing across different categories. Reachability reports the percentage of each `amount_type` reachable within 2 hops of an assumption alongside edge reachability percentages.
    * The stress engine is framed as a **parameterized financial stress prototype** with contract-calibrated transmission functions.
-5. **Dynamic SPV Unwrapping & Bitemporal Graph Architecture (Economic vs Knowledge Time):**
-   * **Dynamic Entity Hierarchy:** Rather than static lookup maps, the network traverses `parent_entity_id` attributes dynamically (`APLD_ELN02_LLC` $\to$ `APLD_COMPUTECO` $\to$ `APLD`), leaving 0 SPV nodes in the consolidated corporate graph.
-   * **Bitemporal Architecture & Obligation Conservation:** Contracts record `economic_valid_from`, `economic_valid_to`, `publicly_known_from`, `rate_type`, `benchmark_rate`, `supersedes`, and `superseded_by`.
-     - **Economic Clock (`economic_as_of`):** Calling `network.economic_as_of("2026-05-31")` captures the balance-sheet snapshot including the $300M bridge facility ($235.4M/yr network SOFR shock across 22 active edges, $5,306.68M gross debt). Calling `network.economic_as_of("2026-09-28")` accurately retires the bridge (`superseded_by = "OBL-APLD-DEBT-7PCT-2026"`) and activates the $1.59B 7.00% notes, conserving network topology at exactly 22 active edges ($6,596.68M APLD debt) without dropping debt into a void.
-     - **Information Clock (`known_as_of`):** Eliminates look-ahead bias by filtering based on `publicly_known_from` SEC disclosure publication dates. Calling `network.known_as_of("2026-06-30")` strictly returns the 18 edges publicly disclosed as of June 30 (subsequent events and July/August 10-K/10-Q filings are excluded); querying as of September 28 reflects all 22 active edges.
-   * **Dynamic Stress Engine Coupling:** `FinancialStressEngine(network=net)` dynamically evaluates active floating debt via `eval_engine.get_active_floating_debt(entity_id)`, deriving $235.4M/yr direct cash hit at May 31 (with the $300M floating bridge active) vs $226.4M/yr at Sep 28 (where APLD floating debt is $0 after refinancing into fixed notes).
+5. **Dynamic SPV Unwrapping & Fact-Level Bitemporal Graph Architecture (Economic vs Knowledge Time, ADR-013):**
+   * **Dynamic Entity Hierarchy:** Rather than static lookup maps, the network traverses `parent_entity_id` attributes dynamically (`APLD_COMPUTECO3` $\to$ `APLD_HPC_HOLDINGS2` $\to$ `APLD`), leaving 0 SPV nodes in the consolidated corporate graph.
+   * **Fact-Level Bitemporality (`obligation_facts`):** Invariant contract definitions in `obligations.parquet` are decoupled from time-varying point-in-time measurements in `obligation_facts.parquet` (27 audited facts). When querying `network.known_as_of("2026-06-30")`, contract facilities known in 2024 (e.g. CoreWeave DDTL 1.0) exist as edges, but their June 30 balances resolve to `None` (`amount_known = False`) because they were disclosed on August 12, 2026, completely eliminating edge-value look-ahead leakage. Concurrently, APLD 7.00% notes balance ($1.59B) is known on June 30 via its June 18 Form 8-K.
+   * **Half-Open Validity Intervals $[v\_from, v\_to)$:** Supersession boundaries exclude `date >= valid_to`. On June 16, 2026, the $300M bridge is cleanly retired and the $1.59B notes are active, preserving exactly 22 edges without double-counting.
+   * **Dynamic Stress Engine & Epistemic Decoupling:** `FinancialStressEngine(network=net)` dynamically derives floating debt and swap notional from active edges/facts. Under June 30 knowledge mode, `swap_notional_known = False`, bounding unhedged floating exposure across an epistemic sensitivity band ($18.3M min to $366.2M max) without leaking future disclosures.
    * **100% Verbatim Substring Certification:** All `"exact_quote"` claims are verified with 100% character-level contiguous substring fidelity against cached raw SEC EDGAR exhibits (`APLD_ex10_1.htm` and `APLD_ex10_2.htm`).
 
 ### Parameterized Financial Stress Prototype Results (`src/stress.py`)
@@ -161,16 +160,17 @@ Phase 0.7.2 establishes an economically literal baseline across five core compan
 ├── docs/
 │   ├── methodology.md             # Theoretical framework, 5 opacities, and contagion math
 │   ├── data_dictionary.md         # Schema specifications for all Parquet and CSV tables
-│   ├── decisions.md               # Architectural Decision Records (ADR-001 through 012)
+│   ├── decisions.md               # Architectural Decision Records (ADR-001 through 013)
 │   └── evidence_contract.md       # Epistemic trust hierarchy (Class A/B/C) and audit rules
 ├── data/
 │   ├── raw/sec/                   # Cached primary SEC EDGAR company facts JSON and exhibit HTMLs
 │   └── processed/                 # Standardized Parquet files and human-readable CSV mirrors
-│       ├── entities.parquet       # 18 entities (corporates, landlord SPVs, syndicates)
+│       ├── entities.parquet       # 20 entities (corporates, landlord SPVs, holding SPVs, syndicates)
 │       ├── financials.parquet     # 5,440 standardized accounting observations (quarterly & annual)
 │       ├── obligations.parquet    # 23 decomposed obligations exactly reconciling debt
+│       ├── obligation_facts.parquet# 27 fact-level bitemporal measurements (balances, capacities, swaps)
 │       ├── assumptions.parquet    # 7 assumption registries
-│       └── evidence_claims.parquet# 16 audited SEC citations with verbatim quotes and accession numbers
+│       └── evidence_claims.parquet# 17 audited SEC citations with verbatim quotes and accession numbers
 ├── src/
 │   ├── sec_ingest.py              # Automated data.sec.gov XBRL ingestion pipeline (duration-aware)
 │   ├── curate_obligations.py      # Audited obligation and evidence claim builder

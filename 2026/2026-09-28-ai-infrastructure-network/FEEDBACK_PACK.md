@@ -23,7 +23,7 @@ Please review the methodology, empirical findings, and contract-calibrated stres
 
 ### 1. The Three Epistemic Layers
 - Layer 1: Standardized SEC EDGAR XBRL Financials (Duration-aware flows, derived Q4 flows, and aggregated funded debt).
-- Layer 2: The Contractual Obligation Multi-Graph (MultiDiGraph preserving distinct facilities; dynamic SPV unwrapping via recursive parent entity traversal; bitemporal architecture separating economic time `economic_as_of` from knowledge time `known_as_of` to eliminate look-ahead bias; obligation conservation via refinancing supersession; categorized strictly by amount_type with zero false netting or non-fungible dollar mixing).
+- Layer 2: The Contractual Obligation Multi-Graph (MultiDiGraph preserving distinct facilities; dynamic SPV unwrapping via recursive parent entity traversal; bitemporal architecture separating economic time `economic_as_of` from knowledge time `known_as_of` to eliminate look-ahead bias; fact-level bitemporality via `obligation_facts` ensuring known edges do not leak future unmeasured amounts; obligation conservation via refinancing supersession with half-open validity intervals $[v\_from, v\_to)$; categorized strictly by amount_type with zero false netting or non-fungible dollar mixing).
 - Layer 3: Shared Systemic Assumptions (Underlying economic propositions supporting multiple independent balance sheets).
 
 ### 2. Audited Balance Sheet Baselines (Latest Reported SEC Filings)
@@ -60,7 +60,7 @@ Please review the methodology, empirical findings, and contract-calibrated stres
 20. `OBL-APLD-DEBT-CONV` ($450.0M principal): Applied Digital 2.75% Convertible Senior Notes due Jun 30, 2030 (Fixed rate coupon). (APLD 10-K, Note 8).
 21. `OBL-APLD-DEBT-BRIDGE` ($300.0M principal): Applied Digital Floating-Rate Bridge Facility (SOFR benchmark, entered May 1, 2026, due Apr 30, 2027; retired June 16, 2026, superseded by $1.59B 7.00% Senior Secured Notes). (APLD 10-K, Note 8 & Note 19).
 22. `OBL-APLD-DEBT-OTHER` ($56.68M principal): Applied Digital aggregate residual debt across equipment notes and promissory agreements. (APLD 10-K, Note 8).
-23. `OBL-APLD-DEBT-7PCT-2026` ($1.590B principal): Applied Digital 7.00% Senior Secured Notes due June 15, 2031, issued June 16, 2026 to refinance the $300M bridge facility and conserve post-refinancing debt in the temporal graph. (APLD 10-K, Note 19 Subsequent Events).
+23. `OBL-APLD-DEBT-7PCT-2026` ($1.590B principal): Applied Digital 7.00% Senior Secured Notes due June 15, 2031, issued June 16, 2026 by APLD ComputeCo 3 LLC (`APLD_COMPUTECO3`, direct parent `APLD_HPC_HOLDINGS2`) to refinance the $300M bridge facility and fund ELN-04, conserving post-refinancing debt in the temporal graph. (APLD Form 8-K filed 2026-06-18, `CLM-APLD-008` & 10-K Note 19 Subsequent Events).
     *(Applied Digital 6 modeled debt components in master ledger: 5 active at May 31, 2026 snapshot summing to $5,306.68M gross principal payments vs $4,975.94M net carrying debt, exact 0.00% drift; post-refinancing snapshot at September 28, 2026 conserves debt with 7.00% notes replacing bridge for $6,596.68M total gross debt).*
 
 ### 4. Shared Systemic Assumptions

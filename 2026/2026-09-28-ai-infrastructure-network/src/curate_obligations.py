@@ -292,6 +292,20 @@ def build_evidence_claims():
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR 10-K Note 19 direct audit",
             "verifier_notes": "Subsequent event audit verifying that on June 16, 2026, Applied Digital issued $1.59B 7.00% senior secured notes due 2031, which extinguished the $300M floating bridge credit facility and provided expansion liquidity."
+        },
+        {
+            "claim_id": "CLM-APLD-008",
+            "entity_id": "APLD",
+            "filing_type": "8-K",
+            "accession_number": "0001144879-26-000036",
+            "filing_date": "2026-06-18",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000114487926000036/apld-20260618.htm",
+            "section_locator": "Item 1.01 Entry into a Material Definitive Agreement / Item 2.03 Creation of a Direct Financial Obligation",
+            "quote_type": "source_excerpt",
+            "exact_quote": "On June 16, 2026, APLD ComputeCo 3 LLC, a subsidiary of Applied Digital Corporation, completed its private offering of $1,590.0 million aggregate principal amount of 7.000% Senior Secured Notes due 2031. Net proceeds were used to fund 150 MW of critical IT load ('ELN-04') at Polaris Forge 1 and repay in full the $300.0 million bridge credit facility.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 8-K direct audit",
+            "verifier_notes": "Form 8-K filed June 18, 2026 establishing closing of $1.59B 7.00% Senior Secured Notes issued by APLD ComputeCo 3 LLC (direct parent APLD HPC Holdings 2 LLC) and extinguishment of the $300M bridge loan facility as of June 18, 2026."
         }
     ]
     df = pd.DataFrame(claims)
@@ -544,12 +558,16 @@ def build_obligations():
             "valid_to": "2031-12-31",
             "term_years": 7.0,
             "capacity_mw": None,
+            "facility_capacity": 8500000000.0,
+            "floating_principal": 1400000000.0,
             "committed_or_optional": "committed",
             "recourse": "non_recourse_spv",
             "collateral": "Non-recourse SPV project assets; $8.5B facility capacity ($1.4B floating / $1.437B fixed)",
             "guarantee": "Non-recourse to parent CoreWeave",
             "termination_rights": "Project financing covenants",
             "payment_conditions": "Blended floating/fixed; contract covenants >=95% interest rate hedge coverage on floating loans ($1.40B)",
+            "rate_type": "floating",
+            "benchmark_rate": "SOFR",
             "superseded_by": None,
             "claim_ids": "CLM-CRWV-001,CLM-CRWV-004",
             "evidence_class": "A",
@@ -735,7 +753,7 @@ def build_obligations():
             "collateral": "Subordinated asset pledge",
             "guarantee": "Parent direct obligation",
             "termination_rights": "Standard term loan default triggers",
-            "payment_conditions": "Floating rate interest",
+            "payment_conditions": "Term loan financing",
             "superseded_by": None,
             "claim_ids": "CLM-CRWV-001,CLM-CRWV-002",
             "evidence_class": "A",
@@ -968,7 +986,7 @@ def build_obligations():
         # 21. Applied Digital 7.00% Senior Secured Notes due 2031 (Refinancing Successor)
         {
             "obligation_id": "OBL-APLD-DEBT-7PCT-2026",
-            "from_entity": "APLD",
+            "from_entity": "APLD_COMPUTECO3",
             "to_entity": "INSTITUTIONAL_BONDHOLDERS",
             "project_id": "POLARIS_FORGE_1",
             "obligation_type": "debt_facility",
@@ -976,7 +994,7 @@ def build_obligations():
             "amount_type": "principal_outstanding",
             "amount_known": True,
             "as_of_date": "2026-06-16",
-            "observed_as_of": "2026-07-29",
+            "observed_as_of": "2026-06-18",
             "currency": "USD",
             "effective_date": "2026-06-16",
             "valid_from": "2026-06-16",
@@ -988,16 +1006,17 @@ def build_obligations():
             "term_years": 5.0,
             "capacity_mw": None,
             "committed_or_optional": "committed",
-            "recourse": "full_recourse",
-            "collateral": "First-priority liens on Ellendale campus infrastructure and subsidiary equity pledges",
-            "guarantee": "Parent direct obligation and subsidiary guarantees",
+            "recourse": "senior_secured_spv",
+            "collateral": "First-priority liens on ELN-04 campus infrastructure and subsidiary equity pledges",
+            "guarantee": "Guaranteed by APLD ComputeCo 3 subsidiaries and direct parent APLD HPC Holdings 2 LLC; parent Applied Digital completion support",
             "termination_rights": "Senior secured note indenture default acceleration",
-            "payment_conditions": "Fixed 7.00% Senior Secured Notes due June 15, 2031; issued June 16, 2026 to refinance and extinguish the $300.0M floating bridge facility with remaining net proceeds funding campus construction; insulates APLD from floating SOFR rate hikes",
+            "payment_conditions": "Fixed 7.00% Senior Secured Notes due June 15, 2031 issued by APLD ComputeCo 3 LLC; proceeds repay $300.0M bridge facility and fund 150 MW ELN-04; insulates APLD from floating SOFR rate hikes",
             "rate_type": "fixed",
             "benchmark_rate": None,
+            "floating_principal": 0.0,
             "supersedes": "OBL-APLD-DEBT-BRIDGE",
             "superseded_by": None,
-            "claim_ids": "CLM-APLD-003,CLM-APLD-007",
+            "claim_ids": "CLM-APLD-003,CLM-APLD-007,CLM-APLD-008",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A002,A004"
@@ -1056,7 +1075,7 @@ def build_obligations():
         "OBL-CRWV-DEBT-CONV": {"economic_valid_from": "2024-04-15", "economic_valid_to": "2032-06-30", "publicly_known_from": "2024-05-01", "rate_type": "fixed", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
         "OBL-CRWV-DEBT-OEM": {"economic_valid_from": "2024-01-01", "economic_valid_to": "2030-07-31", "publicly_known_from": "2024-05-01", "rate_type": "fixed", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
         "OBL-CRWV-DEBT-OEM-NR": {"economic_valid_from": "2024-06-01", "economic_valid_to": "2029-12-31", "publicly_known_from": "2026-08-12", "rate_type": "fixed", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
-        "OBL-CRWV-DEBT-MAGNETAR": {"economic_valid_from": "2024-01-15", "economic_valid_to": "2029-01-31", "publicly_known_from": "2024-03-15", "rate_type": "floating", "benchmark_rate": "SOFR", "supersedes": None, "superseded_by": None},
+        "OBL-CRWV-DEBT-MAGNETAR": {"economic_valid_from": "2024-01-15", "economic_valid_to": "2029-01-31", "publicly_known_from": "2024-03-15", "rate_type": "fixed", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
         "REL-MSFT-CRWV-REVENUE-CONCENTRATION": {"economic_valid_from": "2025-01-01", "economic_valid_to": None, "publicly_known_from": "2026-03-31", "rate_type": "none", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
         "OBL-SMCI-SUPPLIER-COMMIT": {"economic_valid_from": "2025-07-01", "economic_valid_to": "2027-06-30", "publicly_known_from": "2026-08-31", "rate_type": "none", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
         "OBL-NVDA-CRWV-EQUITY": {"economic_valid_from": "2026-01-15", "economic_valid_to": "2099-12-31", "publicly_known_from": "2026-05-08", "rate_type": "none", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
@@ -1083,13 +1102,371 @@ def build_obligations():
     return df
 
 
+def build_obligation_facts_table():
+    """
+    Builds the Fact-Level Bitemporal Ledger (ADR-013).
+    Decouples invariant contract identity (in obligations.parquet) from time-varying
+    measurements (principal balances, swap notional, facility capacity, lease values).
+    Each fact records:
+      - fact_id: unique fact identifier
+      - obligation_id: target obligation
+      - entity_id: associated corporate or SPV entity
+      - attribute: measured financial attribute (e.g. principal_outstanding, swap_notional, facility_capacity)
+      - value: numeric measurement (float or None)
+      - unit: currency or physical unit (USD, MW)
+      - economic_as_of: balance sheet date / period end of the economic measurement
+      - publicly_known_from: filing or disclosure date when the measurement became public knowledge
+      - claim_id: audited evidence claim
+      - evidence_class: epistemic trust class (Class A / Class B / Class C)
+    """
+    facts = [
+        # Polaris Forge 1 Master Lease
+        {
+            "fact_id": "FACT-CRWV-LEASE-CAP-20250528",
+            "obligation_id": "OBL-CRWV-APLD-LEASE",
+            "entity_id": "CRWV",
+            "attribute": "capacity_mw",
+            "value": 400.0,
+            "unit": "MW",
+            "economic_as_of": "2025-05-28",
+            "publicly_known_from": "2025-06-02",
+            "claim_id": "CLM-APLD-001",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-CRWV-LEASE-VAL-20250528",
+            "obligation_id": "OBL-CRWV-APLD-LEASE",
+            "entity_id": "CRWV",
+            "attribute": "lifetime_contract_value",
+            "value": 11000000000.0,
+            "unit": "USD",
+            "economic_as_of": "2025-05-28",
+            "publicly_known_from": "2025-06-02",
+            "claim_id": "CLM-APLD-001",
+            "evidence_class": "A"
+        },
+        # Springing Guarantees
+        {
+            "fact_id": "FACT-CRWV-GNTY-ELN02-20260330",
+            "obligation_id": "OBL-CRWV-APLD-GUARANTY-ELN02",
+            "entity_id": "CRWV",
+            "attribute": "contingent_obligations",
+            "value": None,
+            "unit": "USD",
+            "economic_as_of": "2026-03-30",
+            "publicly_known_from": "2026-04-01",
+            "claim_id": "CLM-APLD-005",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-CRWV-GNTY-ELN03-REF-20260330",
+            "obligation_id": "OBL-CRWV-APLD-GUARANTY-ELN03",
+            "entity_id": "CRWV",
+            "attribute": "reference_exposure_estimate",
+            "value": 4125000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-03-30",
+            "publicly_known_from": "2026-04-01",
+            "claim_id": "CLM-APLD-006",
+            "evidence_class": "C"
+        },
+        # CoreWeave Indebtedness & Derivatives (Q2 period ended 2026-06-30, filed 2026-08-12)
+        {
+            "fact_id": "FACT-CRWV-DDTL1-PRIN-20260630",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL1",
+            "entity_id": "CRWV",
+            "attribute": "principal_outstanding",
+            "value": 1300000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-06-30",
+            "publicly_known_from": "2026-08-12",
+            "claim_id": "CLM-CRWV-001",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-CRWV-DDTL2-PRIN-20260630",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL2",
+            "entity_id": "CRWV",
+            "attribute": "principal_outstanding",
+            "value": 3190000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-06-30",
+            "publicly_known_from": "2026-08-12",
+            "claim_id": "CLM-CRWV-001",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-CRWV-DDTL21-PRIN-20260630",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL2-1",
+            "entity_id": "CRWV",
+            "attribute": "principal_outstanding",
+            "value": 3000000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-06-30",
+            "publicly_known_from": "2026-08-12",
+            "claim_id": "CLM-CRWV-001",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-CRWV-DDTL3-PRIN-20260630",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL3",
+            "entity_id": "CRWV",
+            "attribute": "principal_outstanding",
+            "value": 2215000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-06-30",
+            "publicly_known_from": "2026-08-12",
+            "claim_id": "CLM-CRWV-001",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-CRWV-DDTL4-PRIN-20260630",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL4",
+            "entity_id": "CRWV",
+            "attribute": "principal_outstanding",
+            "value": 2837000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-06-30",
+            "publicly_known_from": "2026-08-12",
+            "claim_id": "CLM-CRWV-004",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-CRWV-DDTL4-CAP-20260630",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL4",
+            "entity_id": "CRWV",
+            "attribute": "facility_capacity",
+            "value": 8500000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-06-30",
+            "publicly_known_from": "2026-08-12",
+            "claim_id": "CLM-CRWV-004",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-CRWV-DDTL4-FLT-20260630",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL4",
+            "entity_id": "CRWV",
+            "attribute": "floating_principal",
+            "value": 1400000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-06-30",
+            "publicly_known_from": "2026-08-12",
+            "claim_id": "CLM-CRWV-004",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-CRWV-DDTL5-PRIN-20260630",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL5",
+            "entity_id": "CRWV",
+            "attribute": "principal_outstanding",
+            "value": 1101000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-06-30",
+            "publicly_known_from": "2026-08-12",
+            "claim_id": "CLM-CRWV-001",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-CRWV-NOTES-PRIN-20260630",
+            "obligation_id": "OBL-CRWV-DEBT-NOTES",
+            "entity_id": "CRWV",
+            "attribute": "principal_outstanding",
+            "value": 10029000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-06-30",
+            "publicly_known_from": "2026-08-12",
+            "claim_id": "CLM-CRWV-001",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-CRWV-CONV-PRIN-20260630",
+            "obligation_id": "OBL-CRWV-DEBT-CONV",
+            "entity_id": "CRWV",
+            "attribute": "principal_outstanding",
+            "value": 6588000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-06-30",
+            "publicly_known_from": "2026-08-12",
+            "claim_id": "CLM-CRWV-001",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-CRWV-OEM-PRIN-20260630",
+            "obligation_id": "OBL-CRWV-DEBT-OEM",
+            "entity_id": "CRWV",
+            "attribute": "principal_outstanding",
+            "value": 4220000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-06-30",
+            "publicly_known_from": "2026-08-12",
+            "claim_id": "CLM-CRWV-001",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-CRWV-OEMNR-PRIN-20260630",
+            "obligation_id": "OBL-CRWV-DEBT-OEM-NR",
+            "entity_id": "CRWV",
+            "attribute": "principal_outstanding",
+            "value": 882000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-06-30",
+            "publicly_known_from": "2026-08-12",
+            "claim_id": "CLM-CRWV-004",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-CRWV-MAG-PRIN-20260630",
+            "obligation_id": "OBL-CRWV-DEBT-MAGNETAR",
+            "entity_id": "CRWV",
+            "attribute": "principal_outstanding",
+            "value": 189000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-06-30",
+            "publicly_known_from": "2026-08-12",
+            "claim_id": "CLM-CRWV-001",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-CRWV-SWAP-NOTIONAL-20260630",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL5",
+            "entity_id": "CRWV",
+            "attribute": "swap_notional",
+            "value": 4661000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-06-30",
+            "publicly_known_from": "2026-08-12",
+            "claim_id": "CLM-CRWV-005",
+            "evidence_class": "A"
+        },
+        # Microsoft Recognized Revenue
+        {
+            "fact_id": "FACT-MSFT-CRWV-REV-20251231",
+            "obligation_id": "REL-MSFT-CRWV-REVENUE-CONCENTRATION",
+            "entity_id": "MSFT",
+            "attribute": "recognized_revenue",
+            "value": 3438000000.0,
+            "unit": "USD",
+            "economic_as_of": "2025-12-31",
+            "publicly_known_from": "2026-03-31",
+            "claim_id": "CLM-CRWV-003",
+            "evidence_class": "A"
+        },
+        # Supermicro Non-cancelable Purchase Commitments
+        {
+            "fact_id": "FACT-SMCI-COMMIT-20260630",
+            "obligation_id": "OBL-SMCI-SUPPLIER-COMMIT",
+            "entity_id": "SMCI",
+            "attribute": "remaining_commitment",
+            "value": 34200000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-06-30",
+            "publicly_known_from": "2026-08-31",
+            "claim_id": "CLM-SMCI-001",
+            "evidence_class": "A"
+        },
+        # NVIDIA Strategic Equity Placement
+        {
+            "fact_id": "FACT-NVDA-CRWV-EQ-20260131",
+            "obligation_id": "OBL-NVDA-CRWV-EQUITY",
+            "entity_id": "NVDA",
+            "attribute": "equity_investment",
+            "value": 2000000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-01-31",
+            "publicly_known_from": "2026-05-08",
+            "claim_id": "CLM-NVDA-CRWV-001",
+            "evidence_class": "A"
+        },
+        # Applied Digital Debt Facilities
+        {
+            "fact_id": "FACT-APLD-PF1-PRIN-20260531",
+            "obligation_id": "OBL-APLD-DEBT-PF1",
+            "entity_id": "APLD_COMPUTECO",
+            "attribute": "principal_outstanding",
+            "value": 2350000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-05-31",
+            "publicly_known_from": "2024-06-15",
+            "claim_id": "CLM-APLD-003",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-APLD-PF2-PRIN-20260531",
+            "obligation_id": "OBL-APLD-DEBT-PF2",
+            "entity_id": "APLD_COMPUTECO2",
+            "attribute": "principal_outstanding",
+            "value": 2150000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-05-31",
+            "publicly_known_from": "2025-01-25",
+            "claim_id": "CLM-APLD-003",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-APLD-CONV-PRIN-20260531",
+            "obligation_id": "OBL-APLD-DEBT-CONV",
+            "entity_id": "APLD",
+            "attribute": "principal_outstanding",
+            "value": 450000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-05-31",
+            "publicly_known_from": "2024-11-20",
+            "claim_id": "CLM-APLD-003",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-APLD-BRIDGE-PRIN-20260531",
+            "obligation_id": "OBL-APLD-DEBT-BRIDGE",
+            "entity_id": "APLD",
+            "attribute": "principal_outstanding",
+            "value": 300000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-05-31",
+            "publicly_known_from": "2026-05-08",
+            "claim_id": "CLM-APLD-003",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-APLD-7PCT-PRIN-20260616",
+            "obligation_id": "OBL-APLD-DEBT-7PCT-2026",
+            "entity_id": "APLD_COMPUTECO3",
+            "attribute": "principal_outstanding",
+            "value": 1590000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-06-16",
+            "publicly_known_from": "2026-06-18",
+            "claim_id": "CLM-APLD-008",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-APLD-OTHER-PRIN-20260531",
+            "obligation_id": "OBL-APLD-DEBT-OTHER",
+            "entity_id": "APLD",
+            "attribute": "principal_outstanding",
+            "value": 56680000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-05-31",
+            "publicly_known_from": "2026-07-29",
+            "claim_id": "CLM-APLD-003",
+            "evidence_class": "A"
+        }
+    ]
+    df = pd.DataFrame(facts)
+    df.to_parquet(PROCESSED_DIR / "obligation_facts.parquet", index=False)
+    df.to_csv(PROCESSED_DIR / "obligation_facts.csv", index=False)
+    return df
+
+
 if __name__ == "__main__":
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     df_ent = build_entities_table()
     df_ass = build_assumptions_table()
     df_clm = build_evidence_claims()
     df_obl = build_obligations()
+    df_facts = build_obligation_facts_table()
     print(f"Entities: {len(df_ent)} rows")
     print(f"Assumptions: {len(df_ass)} rows")
     print(f"Evidence Claims: {len(df_clm)} rows")
     print(f"Obligations: {len(df_obl)} rows")
+    print(f"Obligation Facts: {len(df_facts)} rows")

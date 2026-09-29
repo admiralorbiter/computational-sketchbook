@@ -119,3 +119,21 @@ This document defines the schema, types, constraints, and operational definition
 | `evidence_class` | String | No | Trust class: `A` (Filed), `B` (Asserted), `C` (Inferred). | `A` |
 | `extraction_method` | String | No | Protocol used to retrieve the disclosure. | `SEC EDGAR 10-K direct audit` |
 | `verifier_notes` | String | Yes | Analytical context on structural leverage. | *Text* |
+
+---
+
+## 6. Fact-Level Bitemporal Ledger (`obligation_facts.parquet` / `obligation_facts.csv`)
+
+| Column Name | Data Type | Nullable | Description / Controlled Vocabulary | Example |
+| :--- | :--- | :--- | :--- | :--- |
+| `fact_id` | String | No | Primary Key: `FACT-{ENTITY/OBL}-{ATTR}-{YYYYMMDD}`. | `FACT-CRWV-DDTL1-PRIN-20260630` |
+| `obligation_id` | String | Yes | Foreign Key referencing `obligations.obligation_id`; null for entity-level facts (e.g. aggregate swaps). | `OBL-CRWV-DEBT-DDTL1` |
+| `entity_id` | String | No | Foreign Key referencing `entities.entity_id`. | `CRWV` |
+| `attribute` | String | No | Measured attribute name: `principal_outstanding`, `swap_notional`, `facility_capacity`, `capacity_mw`, `lifetime_contract_value`, `reference_exposure_estimate`. | `principal_outstanding` |
+| `value` | Float | Yes | Numeric measured value in base units; null if unquantified/uncapped. | `1300000000.0` |
+| `unit` | String | No | Measurement unit: `USD`, `MW`. | `USD` |
+| `economic_as_of` | Date (str)| No | Balance sheet or period-end date of the measurement in economic reality (`YYYY-MM-DD`). | `2026-06-30` |
+| `publicly_known_from` | Date (str)| No | SEC filing or announcement date when the measurement became public knowledge (Information Clock). | `2026-08-12` |
+| `claim_id` | String | No | Foreign Key referencing `evidence_claims.claim_id`. | `CLM-CRWV-001` |
+| `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted), `C` (Inferred). | `A` |
+

@@ -179,6 +179,27 @@ This log records the durable architectural, methodological, and data design choi
 - **Consequences:**
   Eliminates look-ahead bias, establishes institutional-grade bitemporal graph querying, ensures conservation of obligations across debt rollovers, and decouples the stress simulation engine from hardcoded calendar dates.
 
+---
+
+### ADR-013: Fact-Level Bitemporality (`obligation_facts`), Half-Open Validity Intervals, ComputeCo 3 Hierarchy, and Epistemic Stress Decoupling
+- **Status:** Accepted (2026-09-28, Phase 0 Epistemic Hardening & Certification)
+- **Context:**
+  Following review of commit `fdfafb5`, four temporal, epistemic, and entity-modeling issues were identified to achieve true look-ahead-free backtesting certification:
+  1. *Fact-Level Bitemporality (`obligation_facts`):* While `known_as_of()` filtered entire obligations on `publicly_known_from`, an obligation's contract existence can be known long before its periodic measured attributes are known. For example, CoreWeave's DDTL 1.0 facility economically existed from 2023 and was publicly disclosed in 2024, but its June 30, 2026 principal balance ($1.300B) was not disclosed until August 12, 2026 (Form 10-Q Note 7). Under `known_as_of("2026-06-30")`, the edge must exist in the topology, but its balance must resolve to `None` (`amount_known = False`), avoiding edge-value look-ahead leakage.
+  2. *Half-Open Validity Intervals $[v\_from, v\_to)$:* Using closed intervals $[v\_from, v\_to]$ caused a double-counting boundary clash on June 16, 2026, where both the $300M bridge and the $1.59B 7% notes were active simultaneously (23 edges). Implementing half-open intervals $[v\_from, v\_to)$ (excluding when `date >= valid_to`) cleanly retires the bridge at the start of June 16, conserving exactly 22 edges.
+  3. *Contract-Literal Issuer & Hierarchy for $1.59B Notes:* Form 8-K (filed 2026-06-18) establishes that the $1.59B 7.00% Senior Secured Notes were issued by `APLD ComputeCo 3 LLC` (`APLD_COMPUTECO3`), a direct subsidiary of `APLD HPC Holdings 2 LLC` (`APLD_HPC_HOLDINGS2`), whose parent is `Applied Digital Corporation` (`APLD`), with recourse classified as `senior_secured_spv`.
+  4. *Epistemic Decoupling of Stress Engine:* In `simulate_sofr_base_rate_shock()`, swap notional and floating exposures must be dynamically derived from the active graph/fact ledger. When evaluated under `known_as_of("2026-06-30")` (before the August 12 swap disclosure), `swap_notional_known` is flagged `False`, `swap_notional_reported_usd` is `None`, and the engine reports an explicit epistemic uncertainty band ($18.3M fully hedged to $366.2M unhedged) rather than leaking post-period disclosures.
+- **Decision:**
+  1. Create `obligation_facts.parquet` and `.csv` (27 rows) decoupling invariant contract definitions from time-varying point-in-time measurements (`principal_outstanding`, `swap_notional`, `facility_capacity`, `capacity_mw`, `reference_exposure_estimate`).
+  2. Implement fact-level bitemporal attribute resolution in `ObligationNetwork.economic_as_of()` and `ObligationNetwork.known_as_of()`, attaching `amount = None` and `amount_known = False` if the measured fact has not yet been publicly disclosed as of `publicly_known_from`.
+  3. Implement half-open validity intervals $[v\_from, v\_to)$ (`date < valid_to`).
+  4. Add `APLD_HPC_HOLDINGS2` and `APLD_COMPUTECO3` to `config/entities.yml` (total 20 entities) and implement `get_parent(entity_id)` and recursive `get_root_parent(entity_id)` multi-tier unwrapping in `src/graph.py`.
+  5. Add claim `CLM-APLD-008` citing the June 18, 2026 Form 8-K (total 17 claims).
+  6. Dynamically couple `FinancialStressEngine` to the fact ledger for swap notional and floating debt, surfacing epistemic uncertainty ranges under knowledge-mode evaluation.
+- **Consequences:**
+  Guarantees 100% look-ahead-free backtesting capability, exact obligation conservation across debt rollovers, contract-literal SPV perimeter consolidation, and complete epistemic transparency across historical and public knowledge timelines.
+
+
 
 
 

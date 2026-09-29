@@ -188,6 +188,36 @@ entities:
     description: "Applied Digital project financing subsidiary owning the Polaris Forge 2 campus, funded via $2.15B 6.75% senior notes."
     key_counterparties: [APLD, PROJECT_LENDERS]
 
+  APLD_HPC_HOLDINGS2:
+    entity_id: APLD_HPC_HOLDINGS2
+    name: APLD HPC Holdings 2 LLC
+    ticker: null
+    cik: null
+    parent_entity_id: APLD
+    category: project_spv
+    subsector: project_financing_holdco
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "05-31"
+    description: "Applied Digital intermediate holding company subsidiary; direct parent of APLD ComputeCo 3 LLC."
+    key_counterparties: [APLD, APLD_COMPUTECO3]
+
+  APLD_COMPUTECO3:
+    entity_id: APLD_COMPUTECO3
+    name: APLD ComputeCo 3 LLC
+    ticker: null
+    cik: null
+    parent_entity_id: APLD_HPC_HOLDINGS2
+    category: project_spv
+    subsector: project_financing_holdco
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "05-31"
+    description: "Applied Digital financing subsidiary owning ELN-04 (150 MW) at Polaris Forge 1 campus; issuer of $1.59B 7.00% Senior Secured Notes due June 15, 2031."
+    key_counterparties: [APLD_HPC_HOLDINGS2, INSTITUTIONAL_BONDHOLDERS, POLARIS_FORGE_1]
+
   POLARIS_FORGE_1:
     entity_id: POLARIS_FORGE_1
     name: Polaris Forge 1 Campus (Ellendale, North Dakota)
