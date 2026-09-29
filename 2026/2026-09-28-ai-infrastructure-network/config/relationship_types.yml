@@ -1,0 +1,99 @@
+# Relationship Types Taxonomy for AI Infrastructure Financial Network
+relationship_types:
+  datacenter_lease:
+    category: contractual_real_estate
+    directionality: directed
+    description: "Long-term data center capacity lease or hosting agreement specifying critical IT megawatts, lease term, and rental revenue stream."
+    primary_attributes:
+      - capacity_mw
+      - term_years
+      - total_contract_value_usd
+      - termination_clauses
+      - security_deposit_or_lc
+    solvency_sensitivity: high
+
+  debt_facility:
+    category: financial_leverage
+    directionality: directed
+    description: "Credit facility, delayed draw term loan (DDTL), or senior secured notes between borrower and credit syndicate/lenders."
+    primary_attributes:
+      - principal_amount_usd
+      - drawn_amount_usd
+      - maturity_date
+      - interest_rate_spread
+      - covenant_package
+      - collateral_type
+    solvency_sensitivity: critical
+
+  collateral_pledge:
+    category: legal_security_interest
+    directionality: directed
+    description: "Formal first-lien security interest pledged to lenders covering physical assets, IP, or contractual receivables."
+    primary_attributes:
+      - collateral_class
+      - advance_rate_pct
+      - valuation_frequency
+      - margin_call_triggers
+    solvency_sensitivity: critical
+
+  gpu_procurement:
+    category: supply_chain_hardware
+    directionality: directed
+    description: "Purchase agreement or priority allocation for GPU accelerators and networking silicon."
+    primary_attributes:
+      - unit_type
+      - volume_units
+      - advance_commitment_usd
+      - cancellation_penalty
+    solvency_sensitivity: medium
+
+  server_assembly:
+    category: supply_chain_hardware
+    directionality: directed
+    description: "Server OEM manufacturing and integration agreement for fully racked, liquid-cooled compute clusters."
+    primary_attributes:
+      - lead_time_weeks
+      - inventory_carrying_terms
+      - payment_terms
+    solvency_sensitivity: medium
+
+  anchor_offtake:
+    category: commercial_compute_contract
+    directionality: directed
+    description: "Multi-year compute off-take contract with anchor hyperscaler or enterprise customer."
+    primary_attributes:
+      - annual_run_rate_usd
+      - term_years
+      - min_commitment_pct
+      - service_level_remedies
+    solvency_sensitivity: critical
+
+  equity_investment:
+    category: capital_structure
+    directionality: directed
+    description: "Direct equity stake, warrants, or convertible debt held by a supplier, partner, or sponsor."
+    primary_attributes:
+      - equity_stake_pct
+      - governance_seats
+      - commercial_side_letters
+    solvency_sensitivity: low
+
+  guarantee_parent:
+    category: contingent_liability
+    directionality: directed
+    description: "Unconditional parent guarantee backing subsidiary or SPV contractual performance."
+    primary_attributes:
+      - max_exposure_usd
+      - trigger_events
+      - recourse_scope
+    solvency_sensitivity: high
+
+  spv_assignment:
+    category: structural_isolation
+    directionality: directed
+    description: "Assignment and assumption agreement transferring contract rights and obligations to a bankruptcy-remote subsidiary SPV."
+    primary_attributes:
+      - releasing_parent_flag
+      - carve_outs
+      - bankruptcy_remoteness
+    solvency_sensitivity: high

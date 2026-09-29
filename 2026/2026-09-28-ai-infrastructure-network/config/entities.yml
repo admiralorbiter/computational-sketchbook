@@ -1,0 +1,141 @@
+# Entities Registry for AI Infrastructure Financial Network (Phase 0 Pilot)
+entities:
+  NVDA:
+    entity_id: NVDA
+    name: NVIDIA Corporation
+    ticker: NVDA
+    cik: "0001045810"
+    category: hardware_supplier
+    subsector: accelerated_computing_silicon
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "01-31"
+    description: "Dominant supplier of GPU accelerators (H100/H200/B200), NVLink networking, and AI systems."
+    key_counterparties: [CRWV, SMCI, ORCL, MSFT]
+
+  ORCL:
+    entity_id: ORCL
+    name: Oracle Corporation
+    ticker: ORCL
+    cik: "0001341439"
+    category: hyperscaler_cloud
+    subsector: enterprise_cloud_infrastructure
+    jurisdiction: US-TX
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "05-31"
+    description: "Enterprise software and cloud infrastructure provider (OCI), aggressively expanding large-scale GPU clusters and multicloud interconnects."
+    key_counterparties: [NVDA, MSFT]
+
+  CRWV:
+    entity_id: CRWV
+    name: CoreWeave, Inc.
+    ticker: CRWV
+    cik: "0001769628"
+    category: neocloud_operator
+    subsector: specialized_gpu_cloud
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Specialized GPU cloud provider operating high-density AI clusters financed through asset-backed private credit facilities."
+    key_counterparties: [NVDA, APLD, MSFT, BLACKSTONE_MAGNETAR_SYN]
+
+  APLD:
+    entity_id: APLD
+    name: Applied Digital Corporation
+    ticker: APLD
+    cik: "0001144879"
+    category: datacenter_developer
+    subsector: digital_infrastructure_hosting
+    jurisdiction: US-NV
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "05-31"
+    description: "Designs, develops, and operates next-generation digital infrastructure campuses engineered for HPC and AI loads."
+    key_counterparties: [CRWV, POLARIS_FORGE_1]
+
+  SMCI:
+    entity_id: SMCI
+    name: Super Micro Computer, Inc.
+    ticker: SMCI
+    cik: "0001375365"
+    category: server_oem
+    subsector: liquid_cooled_server_solutions
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "06-30"
+    description: "Accelerated compute server integrator delivering plug-and-play liquid-cooled GPU clusters."
+    key_counterparties: [NVDA, CRWV]
+
+  MSFT:
+    entity_id: MSFT
+    name: Microsoft Corporation
+    ticker: MSFT
+    cik: "0000789019"
+    category: hyperscaler_anchor
+    subsector: cloud_ai_offtaker
+    jurisdiction: US-WA
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "06-30"
+    description: "Primary cloud and AI hyperscaler; anchor offtaker for CoreWeave capacity representing 67% of CoreWeave FY25 recognized revenue."
+    key_counterparties: [CRWV, NVDA, ORCL]
+
+  BLACKSTONE_MAGNETAR_SYN:
+    entity_id: BLACKSTONE_MAGNETAR_SYN
+    name: Private Credit Syndicate (Blackstone / Magnetar / Coatue / Carlyle)
+    ticker: null
+    cik: null
+    category: private_credit_syndicate
+    subsector: asset_backed_infrastructure_credit
+    jurisdiction: US
+    status: private_syndicate
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Syndicate of private credit and asset management funds providing multi-billion dollar asset-backed debt and delayed-draw term loans secured by GPU collateral."
+    key_counterparties: [CRWV]
+
+  CRWV_SPV_VIII:
+    entity_id: CRWV_SPV_VIII
+    name: CoreWeave Compute Acquisition Co. VIII, LLC
+    ticker: null
+    cik: null
+    category: project_spv
+    subsector: equipment_financing_bankruptcy_remote_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "12-31"
+    description: "Bankruptcy-remote Special Purpose Vehicle created by CoreWeave to hold compute equipment and lease obligations at Polaris Forge 1."
+    key_counterparties: [CRWV, APLD_ELN_LLC]
+
+  APLD_ELN_LLC:
+    entity_id: APLD_ELN_LLC
+    name: APLD ELN-02 LLC & ELN-03 LLC
+    ticker: null
+    cik: null
+    category: project_spv
+    subsector: real_estate_facility_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "05-31"
+    description: "Applied Digital project financing subsidiaries owning the 400 MW Ellendale data center assets and executing master lease agreements."
+    key_counterparties: [APLD, CRWV_SPV_VIII, POLARIS_FORGE_1]
+
+  POLARIS_FORGE_1:
+    entity_id: POLARIS_FORGE_1
+    name: Polaris Forge 1 Campus (Ellendale, North Dakota)
+    ticker: null
+    cik: null
+    category: physical_asset_project
+    subsector: hpc_megawatt_campus
+    jurisdiction: US-ND
+    status: physical_asset
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Planned 400 MW ultra-dense computing campus in Ellendale, ND, contracted to CoreWeave under a 15-year, ~$11.0B revenue agreement."
+    key_counterparties: [APLD_ELN_LLC, CRWV_SPV_VIII]
