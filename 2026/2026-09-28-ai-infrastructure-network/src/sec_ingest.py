@@ -1,8 +1,8 @@
 """
-SEC EDGAR XBRL Ingestion Pipeline (Phase 0.5 Refactor)
+SEC EDGAR XBRL Ingestion Pipeline (Phase 0.6 Refactor)
 Fetches standardized financial facts from data.sec.gov for network entities,
-distinguishes instant balance-sheet facts from duration flow facts,
-aggregates funded debt components and lease liabilities accurately,
+distinguishes instant balance-sheet facts from duration flow facts (quarterly vs annual),
+aggregates multi-component funded debt and lease liabilities,
 and exports clean, normalized Parquet and CSV tables.
 """
 
@@ -22,10 +22,11 @@ logger = logging.getLogger(__name__)
 USER_AGENT = "ComputationalSketchbook/1.0 (researcher@computational-sketchbook.org)"
 SEC_HEADERS = {"User-Agent": USER_AGENT, "Accept-Encoding": "gzip, deflate"}
 
+# Concepts for Duration Flow Metrics (Modern ASC 606 first)
 FLOW_METRIC_CONCEPTS = {
     "revenue": [
-        "Revenues",
         "RevenueFromContractWithCustomerExcludingAssessedTax",
+        "Revenues",
         "SalesRevenueNet"
     ],
     "cost_of_revenue": [
@@ -47,6 +48,7 @@ FLOW_METRIC_CONCEPTS = {
     ]
 }
 
+# Concepts for Instant Balance Sheet Metrics
 INSTANT_METRIC_CONCEPTS = {
     "cash_and_equivalents": [
         "CashAndCashEquivalentsAtCarryingValue"
@@ -95,20 +97,20 @@ class SECIngestPipeline:
         return data
 
     def _classify_duration(self, start_date: Optional[str], end_date: str) -> Tuple[str, int]:
-        """Classify flow observation duration type (quarterly, ytd, annual)."""
+        """Classify flow observation duration type (quarterly, semi_annual, annual)."""
         if not start_date or start_date == end_date:
             return "instant", 0
         try:
             d_start = datetime.strptime(start_date, "%Y-%m-%d")
             d_end = datetime.strptime(end_date, "%Y-%m-%d")
             days = (d_end - d_start).days
-            if 70 <= days <= 120:
+            if 60 <= days <= 125:
                 return "quarterly", days
-            elif 160 <= days <= 210:
+            elif 160 <= days <= 215:
                 return "semi_annual", days
-            elif 250 <= days <= 305:
+            elif 250 <= days <= 310:
                 return "nine_months", days
-            elif 340 <= days <= 385:
+            elif 335 <= days <= 385:
                 return "annual", days
             else:
                 return f"other_{days}d", days
@@ -120,84 +122,130 @@ class SECIngestPipeline:
         facts_gaap = data.get("facts", {}).get("us-gaap", {})
         extracted = []
 
-        # 1. Flow metrics
+        # 1. Flow metrics - inspect all concepts with priority and deduplicate
         for metric, concepts in FLOW_METRIC_CONCEPTS.items():
-            for c in concepts:
+            metric_flow_records = []
+            for p_idx, c in enumerate(concepts):
                 if c in facts_gaap:
                     units = facts_gaap[c].get("units", {}).get("USD", [])
-                    matched_items = []
-                    for item in units:
-                        form = item.get("form", "")
-                        if form not in ["10-K", "10-Q", "10-K/A", "10-Q/A"]:
-                            continue
+                    recent_units = [u for u in units if u.get("form") in ["10-K", "10-Q", "10-K/A", "10-Q/A"]]
+                    for item in recent_units:
                         end_date = item.get("end")
                         start_date = item.get("start")
                         val = item.get("val")
                         if val is None or not end_date:
                             continue
                         dur_type, dur_days = self._classify_duration(start_date, end_date)
-                        matched_items.append({
+                        metric_flow_records.append({
                             "entity_id": entity_id,
                             "ticker": ticker,
                             "cik": cik,
                             "metric": metric,
                             "concept_name": c,
+                            "priority": p_idx,
                             "period_end": end_date,
                             "start_date": start_date,
                             "duration_type": dur_type,
                             "duration_days": dur_days,
                             "fiscal_year": item.get("fy"),
                             "fiscal_period": item.get("fp"),
-                            "form": form,
+                            "form": item.get("form"),
                             "value": float(val),
                             "unit": "USD",
                             "filed_date": item.get("filed"),
                             "accession_number": item.get("accn")
                         })
-                    if matched_items:
-                        extracted.extend(matched_items)
-                        break  # Take highest priority concept that actually has periodic units
+            if metric_flow_records:
+                df_flow = pd.DataFrame(metric_flow_records)
+                # Sort by filed_date descending, then priority ascending (preferred concept first)
+                df_flow = df_flow.sort_values(by=["filed_date", "priority"], ascending=[False, True])
+                df_flow_dedup = df_flow.drop_duplicates(subset=["period_end", "duration_type", "fiscal_period"], keep="first")
+                
+                # Check for derived Q4: if annual and nine_months exist for the same fiscal year
+                annual_rows = df_flow_dedup[df_flow_dedup["duration_type"] == "annual"]
+                nine_rows = df_flow_dedup[df_flow_dedup["duration_type"] == "nine_months"]
+                derived_q4_records = []
+                for _, a_row in annual_rows.iterrows():
+                    a_end = a_row["period_end"]
+                    matched_9m = nine_rows[nine_rows["period_end"] < a_end].sort_values(by="period_end", ascending=False)
+                    if not matched_9m.empty:
+                        m_row = matched_9m.iloc[0]
+                        try:
+                            d_a = datetime.strptime(a_end, "%Y-%m-%d")
+                            d_m = datetime.strptime(m_row["period_end"], "%Y-%m-%d")
+                            gap_days = (d_a - d_m).days
+                            if 60 <= gap_days <= 125:
+                                q4_val = float(a_row["value"]) - float(m_row["value"])
+                                existing_q4 = df_flow_dedup[(df_flow_dedup["period_end"] == a_end) & (df_flow_dedup["duration_type"] == "quarterly")]
+                                if existing_q4.empty:
+                                    derived_q4_records.append({
+                                        "entity_id": entity_id,
+                                        "ticker": ticker,
+                                        "cik": cik,
+                                        "metric": metric,
+                                        "concept_name": f"{a_row['concept_name']} (Derived Q4: FY - 9M)",
+                                        "period_end": a_row["period_end"],
+                                        "start_date": m_row["period_end"],
+                                        "duration_type": "quarterly",
+                                        "duration_days": gap_days,
+                                        "fiscal_year": a_row["fiscal_year"],
+                                        "fiscal_period": "Q4",
+                                        "form": "10-K (derived)",
+                                        "value": q4_val,
+                                        "unit": "USD",
+                                        "filed_date": a_row["filed_date"],
+                                        "accession_number": a_row["accession_number"]
+                                    })
+                        except Exception:
+                            pass
 
-        # 2. Instant metrics
+                for r in df_flow_dedup.to_dict(orient="records"):
+                    r.pop("priority", None)
+                    extracted.append(r)
+                extracted.extend(derived_q4_records)
+
+        # 2. Instant metrics - inspect all concepts with priority and deduplicate
         for metric, concepts in INSTANT_METRIC_CONCEPTS.items():
-            for c in concepts:
+            metric_inst_records = []
+            for p_idx, c in enumerate(concepts):
                 if c in facts_gaap:
                     units = facts_gaap[c].get("units", {}).get("USD", [])
-                    matched_items = []
-                    for item in units:
-                        form = item.get("form", "")
-                        if form not in ["10-K", "10-Q", "10-K/A", "10-Q/A"]:
-                            continue
+                    matched = [u for u in units if u.get("form") in ["10-K", "10-Q", "10-K/A", "10-Q/A"]]
+                    for item in matched:
                         end_date = item.get("end")
                         val = item.get("val")
                         if val is None or not end_date:
                             continue
-                        matched_items.append({
+                        metric_inst_records.append({
                             "entity_id": entity_id,
                             "ticker": ticker,
                             "cik": cik,
                             "metric": metric,
                             "concept_name": c,
+                            "priority": p_idx,
                             "period_end": end_date,
                             "start_date": None,
                             "duration_type": "instant",
                             "duration_days": 0,
                             "fiscal_year": item.get("fy"),
                             "fiscal_period": item.get("fp"),
-                            "form": form,
+                            "form": item.get("form"),
                             "value": float(val),
                             "unit": "USD",
                             "filed_date": item.get("filed"),
                             "accession_number": item.get("accn")
                         })
-                    if matched_items:
-                        extracted.extend(matched_items)
-                        break
+            if metric_inst_records:
+                df_inst = pd.DataFrame(metric_inst_records)
+                df_inst = df_inst.sort_values(by=["filed_date", "priority"], ascending=[False, True])
+                df_inst_dedup = df_inst.drop_duplicates(subset=["period_end", "form"], keep="first")
+                for r in df_inst_dedup.to_dict(orient="records"):
+                    r.pop("priority", None)
+                    extracted.append(r)
 
-        # 3. Debt Calculation per Reporting Period
-        # Find all distinct reporting dates
+        # 3. Debt Extraction
         reporting_dates = set()
-        for k in ["Revenues", "CashAndCashEquivalentsAtCarryingValue", "OperatingIncomeLoss"]:
+        for k in ["Revenues", "RevenueFromContractWithCustomerExcludingAssessedTax", "CashAndCashEquivalentsAtCarryingValue", "OperatingIncomeLoss"]:
             if k in facts_gaap:
                 for u in facts_gaap[k].get("units", {}).get("USD", []):
                     if u.get("form") in ["10-K", "10-Q"]:
@@ -207,7 +255,6 @@ class SECIngestPipeline:
             if not end_date:
                 continue
 
-            # Check debt concepts for this specific (end_date, form)
             def get_val(concept_list):
                 for c in concept_list:
                     if c in facts_gaap:
@@ -216,17 +263,13 @@ class SECIngestPipeline:
                                 return float(u.get("val", 0.0)), c
                 return 0.0, None
 
-            # 1. Total carrying amount / combined debt
+            # Combined total or carrying amount
             v_comb, c_comb = get_val(["DebtLongtermAndShorttermCombinedAmount", "DebtInstrumentCarryingAmount"])
-            # 2. Components
+            # Separate components
             v_lt, c_lt = get_val(["LongTermDebtNoncurrent", "LongTermNotesPayable", "LongTermNotesAndLoans", "LongTermDebtAndCapitalLeaseObligations"])
             v_cur, c_cur = get_val(["LongTermDebtCurrent", "NotesPayableCurrent", "DebtCurrent"])
             v_conv, c_conv = get_val(["ConvertibleLongTermNotesPayable", "ConvertibleDebtNoncurrent"])
 
-            # Rule for total funded debt:
-            # If entity is CoreWeave and DebtInstrumentCarryingAmount is available, use carrying debt ($35.55B)
-            # If entity is SMCI, add combined debt ($4.06B) + convertible notes ($4.66B) = $8.72B
-            # If combined debt exists and covers total, use it; otherwise sum components
             total_debt = 0.0
             concept_used = ""
 
@@ -267,7 +310,7 @@ class SECIngestPipeline:
                     "accession_number": accn
                 })
 
-            # Lease liabilities for this date
+            # Lease liabilities
             v_lease_comb, c_lease_comb = get_val(["OperatingLeaseLiability"])
             v_lease_nc, c_lease_nc = get_val(["OperatingLeaseLiabilityNoncurrent"])
             v_lease_c, c_lease_c = get_val(["OperatingLeaseLiabilityCurrent"])

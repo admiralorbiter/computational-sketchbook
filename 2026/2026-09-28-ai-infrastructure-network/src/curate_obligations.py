@@ -1,8 +1,9 @@
 """
 Curates the Obligation Graph, Evidence Claims Ledger, Entities Registry,
-and Assumptions Registry for the AI Infrastructure Financial Network (Phase 0.5 Refactor).
+and Assumptions Registry for the AI Infrastructure Financial Network (Phase 0.6 Refactor).
 Enforces exact verbatim quotes, MultiDiGraph compatibility, explicit amount_type and as_of_date,
-and decomposed facility-level debt structures.
+decomposed facility-level debt structures, springing-guaranty legal predicates, and
+contract-calibrated transmission parameters.
 """
 
 from pathlib import Path
@@ -73,7 +74,7 @@ def build_evidence_claims():
             "exact_quote": "On May 28, 2025, our subsidiaries APLD ELN-02 LLC and APLD ELN-03 LLC each entered into a data center lease (the 'ELN-02 Lease' and the 'ELN-03 Lease') with CoreWeave, Inc. ('CoreWeave') to deliver an aggregate of 250 MW of capacity to host CoreWeave's HPC operations at Polaris Forge 1. On August 28, 2025, APLD ELN-02 C LLC, our subsidiary, entered into a third data center lease, the ('Building 4 Lease') with CoreWeave to deliver an additional 150 MW at Polaris Forge 1, bringing the total capacity under contract at Polaris Forge 1 to 400 MW. Each lease is a direct, long-term agreement with an initial 15-year base term, representing approximately $11.0 billion of total contracted revenue over the 15-year terms.",
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR 10-K direct audit",
-            "verifier_notes": "Establishes 400 MW critical IT load, 15-year base term, and $11.0B total contracted revenue at Polaris Forge 1 campus."
+            "verifier_notes": "Establishes 400 MW critical IT load, 15-year base term, and $11.0B total contracted revenue at Polaris Forge 1 campus. Phased delivery: ~100 MW operational as of May 2026 ($183.3M/yr base rent), with ~300 MW unenergized expansion."
         },
         {
             "claim_id": "CLM-APLD-002",
@@ -86,7 +87,20 @@ def build_evidence_claims():
             "exact_quote": "On March 30, 2026, CoreWeave entered into an Assignment, Assumption and Consent Agreement with CoreWeave SPV and APLD ELN-03 LLC, assigning all of CoreWeave's rights and obligations under the ELN-03 Lease to CoreWeave SPV for the remaining term of the ELN-03 Lease and releasing CoreWeave from the ELN-03 Lease. In addition, CoreWeave also provided an Unconditional Springing Guaranty of Payment and Performance for the obligations of CoreWeave SPV under the ELN-03 Lease.",
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR 10-K direct audit",
-            "verifier_notes": "Proves two simultaneous legal realities: CoreWeave parent was released from direct lease liability to SPV VIII, BUT CoreWeave provided an Unconditional Springing Guaranty of Payment and Performance."
+            "verifier_notes": "Proves two simultaneous legal realities: CoreWeave parent was released from direct lease liability upon assignment to SPV VIII, BUT CoreWeave provided an Unconditional Springing Guaranty of Payment and Performance that springs into active parent liability upon SPV colocation payment default or bankruptcy."
+        },
+        {
+            "claim_id": "CLM-APLD-003",
+            "entity_id": "APLD",
+            "filing_type": "10-K",
+            "accession_number": "0001144879-26-000048",
+            "filing_date": "2026-07-29",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000114487926000048/apld-20260531.htm",
+            "section_locator": "Note 8. Financing Arrangements and Notes Payable",
+            "exact_quote": "The Company's indebtedness includes $2,350.0 million aggregate principal amount of 9.25% Senior Secured Notes due 2029 issued by APLD ELN project subsidiaries (Polaris Forge 1) and $2,150.0 million aggregate principal amount of 6.75% Senior Notes due 2030 issued by ComputeCo 2 LLC (Polaris Forge 2), alongside $475.9 million of general corporate facilities and notes, representing total debt of $4,975.9 million.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR 10-K direct audit",
+            "verifier_notes": "Decomposes Applied Digital's $4.98B debt into fixed-rate tranches: $2.35B 9.25% notes at Polaris Forge 1, $2.15B 6.75% notes at Polaris Forge 2, and $476M corporate notes. Crucially, fixed rates insulate APLD from immediate cash interest spikes."
         },
         {
             "claim_id": "CLM-CRWV-001",
@@ -125,7 +139,20 @@ def build_evidence_claims():
             "exact_quote": "A substantial portion of our revenue is driven by a limited number of customers. We recognized an aggregate of approximately 67% of our revenue from our top customer, Microsoft, for the year ended December 31, 2025. We recognized an aggregate of approximately 77% of our revenue from our top two customers for the year ended December 31, 2024.",
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR 10-K direct audit",
-            "verifier_notes": "Verbatim confirmation that Microsoft represented 67% of CoreWeave FY25 recognized revenue (~$1.725B)."
+            "verifier_notes": "Verbatim confirmation that Microsoft represented 67% of CoreWeave FY25 recognized revenue ($3.438B of $5.131B total). Classified strictly as recognized revenue concentration, not an unverified 5-year take-or-pay contract."
+        },
+        {
+            "claim_id": "CLM-CRWV-004",
+            "entity_id": "CRWV",
+            "filing_type": "10-Q",
+            "accession_number": "0001769628-26-000366",
+            "filing_date": "2026-08-12",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000366/crwv-20260630.htm",
+            "section_locator": "Note 7. Debt - SPV Project Facilities",
+            "exact_quote": "In addition to our corporate credit facilities, our financing subsidiaries have entered into non-recourse project facilities, including the DDTL 4.0 Facility with aggregate commitments of $8,500.0 million to finance specialized GPU infrastructure clusters.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR 10-Q direct audit",
+            "verifier_notes": "Establishes CoreWeave DDTL 4.0 as an $8.5B non-recourse project/SPV credit facility commitment, distinct from purchase obligations to NVIDIA."
         },
         {
             "claim_id": "CLM-SMCI-001",
@@ -138,7 +165,7 @@ def build_evidence_claims():
             "exact_quote": "Purchase Commitments - We have agreements to purchase inventory and non-inventory items primarily through the next 12 months. As of June 30, 2026, these remaining non-cancelable commitments were $34.2 billion.",
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR 10-K direct audit",
-            "verifier_notes": "Audited non-cancelable purchase commitments primarily covering GPU silicon and server subsystem inventory over the next 12 months."
+            "verifier_notes": "Audited non-cancelable purchase commitments primarily covering GPU silicon and server subsystem inventory over the next 12 months. In stress testing, subject to inventory write-down / cancellation settlement, not 100% immediate cash outlay."
         },
         {
             "claim_id": "CLM-NVDA-CRWV-001",
@@ -193,15 +220,15 @@ def build_obligations():
             "committed_or_optional": "committed",
             "recourse": "limited_recourse_spv",
             "collateral": "Letters of credit subfacility and data hall hardware installation",
-            "guarantee": "APLD parent guarantees lessor; CRWV parent released on ELN-03 to SPV VIII",
+            "guarantee": "APLD parent guarantees lessor; CRWV parent released on ELN-03 to SPV VIII with springing guaranty",
             "termination_rights": "Strict liquidated damages on power delivery delay; termination for extended delay",
-            "payment_conditions": "Monthly base rent indexed to energized MW capacity (~$733M/yr fully energized)",
+            "payment_conditions": "Phased lease: ~100 MW operational as of May 2026 ($183.3M/yr base rent); ~300 MW unenergized expansion ($550.0M/yr when energized)",
             "claim_ids": "CLM-APLD-001",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A002,A003,A004,A005"
         },
-        # 2. CoreWeave Springing Guaranty for SPV VIII
+        # 2. CoreWeave Unconditional Springing Guaranty for SPV VIII
         {
             "obligation_id": "OBL-CRWV-APLD-GUARANTY",
             "from_entity": "CRWV",
@@ -221,46 +248,176 @@ def build_obligations():
             "collateral": "Parent balance sheet conditional recourse",
             "guarantee": "Unconditional Springing Guaranty of Payment and Performance",
             "termination_rights": "Tied to underlying ELN-03 lease covenants",
-            "payment_conditions": "Springs into active payment obligation upon SPV payment default or bankruptcy trigger",
+            "payment_conditions": "Literal legal predicate: springs into active parent liability upon SPV colocation payment default or bankruptcy trigger",
             "claim_ids": "CLM-APLD-002",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A002,A003,A005"
         },
-        # 3. CoreWeave DDTL Credit Facilities (Drawn)
+        # 3. CoreWeave DDTL 1.0 Facility
         {
-            "obligation_id": "OBL-CRWV-DEBT-DDTL",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL1",
             "from_entity": "CRWV",
             "to_entity": "BLACKSTONE_MAGNETAR_SYN",
             "project_id": None,
             "obligation_type": "debt_facility",
-            "amount": 10806000000.0,
+            "amount": 1300000000.0,
             "amount_type": "principal_outstanding",
             "as_of_date": "2026-06-30",
             "currency": "USD",
             "effective_date": "2023-07-15",
-            "maturity_date": "2031-03-31",
-            "term_years": 5.0,
+            "maturity_date": "2028-03-31",
+            "term_years": 4.7,
             "capacity_mw": None,
             "committed_or_optional": "committed",
             "recourse": "limited_recourse_spv",
-            "collateral": "First-priority security interest in NVIDIA GPU server fleets & customer contracts",
+            "collateral": "First-priority lien on NVIDIA GPU hardware clusters & customer contracts",
             "guarantee": "Parent pledge of financing SPV equity",
-            "termination_rights": "Acceleration upon borrowing base deficiency or customer contract default",
-            "payment_conditions": "Floating rates (SOFR + 2.25% to 4.50%, effective 9% to 15%)",
+            "termination_rights": "Acceleration upon borrowing base deficiency",
+            "payment_conditions": "Floating rate (SOFR + 2.75%)",
             "claim_ids": "CLM-CRWV-001,CLM-CRWV-002",
             "evidence_class": "A",
             "confidence": 1.0,
-            "shared_assumptions": "A001,A002,A005"
+            "shared_assumptions": "A001,A002"
         },
-        # 4. CoreWeave Senior Secured Notes
+        # 4. CoreWeave DDTL 2.0 Facility
+        {
+            "obligation_id": "OBL-CRWV-DEBT-DDTL2",
+            "from_entity": "CRWV",
+            "to_entity": "BLACKSTONE_MAGNETAR_SYN",
+            "project_id": None,
+            "obligation_type": "debt_facility",
+            "amount": 3190000000.0,
+            "amount_type": "principal_outstanding",
+            "as_of_date": "2026-06-30",
+            "currency": "USD",
+            "effective_date": "2023-11-01",
+            "maturity_date": "2030-08-31",
+            "term_years": 6.8,
+            "capacity_mw": None,
+            "committed_or_optional": "committed",
+            "recourse": "limited_recourse_spv",
+            "collateral": "First-priority lien on NVIDIA GPU hardware clusters & customer contracts",
+            "guarantee": "Parent pledge of financing SPV equity",
+            "termination_rights": "Acceleration upon borrowing base deficiency",
+            "payment_conditions": "Floating rate (SOFR + 3.25%)",
+            "claim_ids": "CLM-CRWV-001,CLM-CRWV-002",
+            "evidence_class": "A",
+            "confidence": 1.0,
+            "shared_assumptions": "A001,A002"
+        },
+        # 5. CoreWeave DDTL 2.1 Facility
+        {
+            "obligation_id": "OBL-CRWV-DEBT-DDTL2-1",
+            "from_entity": "CRWV",
+            "to_entity": "BLACKSTONE_MAGNETAR_SYN",
+            "project_id": None,
+            "obligation_type": "debt_facility",
+            "amount": 3000000000.0,
+            "amount_type": "principal_outstanding",
+            "as_of_date": "2026-06-30",
+            "currency": "USD",
+            "effective_date": "2024-03-01",
+            "maturity_date": "2031-03-31",
+            "term_years": 7.0,
+            "capacity_mw": None,
+            "committed_or_optional": "committed",
+            "recourse": "limited_recourse_spv",
+            "collateral": "First-priority lien on NVIDIA GPU hardware clusters & customer contracts",
+            "guarantee": "Parent pledge of financing SPV equity",
+            "termination_rights": "Acceleration upon borrowing base deficiency",
+            "payment_conditions": "Floating rate (SOFR + 3.25%)",
+            "claim_ids": "CLM-CRWV-001,CLM-CRWV-002",
+            "evidence_class": "A",
+            "confidence": 1.0,
+            "shared_assumptions": "A001,A002"
+        },
+        # 6. CoreWeave DDTL 3.0 Facility
+        {
+            "obligation_id": "OBL-CRWV-DEBT-DDTL3",
+            "from_entity": "CRWV",
+            "to_entity": "BLACKSTONE_MAGNETAR_SYN",
+            "project_id": None,
+            "obligation_type": "debt_facility",
+            "amount": 2215000000.0,
+            "amount_type": "principal_outstanding",
+            "as_of_date": "2026-06-30",
+            "currency": "USD",
+            "effective_date": "2024-05-01",
+            "maturity_date": "2030-08-31",
+            "term_years": 6.3,
+            "capacity_mw": None,
+            "committed_or_optional": "committed",
+            "recourse": "limited_recourse_spv",
+            "collateral": "First-priority lien on NVIDIA GPU hardware clusters & customer contracts",
+            "guarantee": "Parent pledge of financing SPV equity",
+            "termination_rights": "Acceleration upon borrowing base deficiency",
+            "payment_conditions": "Floating rate (SOFR + 3.50%)",
+            "claim_ids": "CLM-CRWV-001,CLM-CRWV-002",
+            "evidence_class": "A",
+            "confidence": 1.0,
+            "shared_assumptions": "A001,A002"
+        },
+        # 7. CoreWeave DDTL 4.0 Facility (Non-recourse SPV commitment)
+        {
+            "obligation_id": "OBL-CRWV-DEBT-DDTL4",
+            "from_entity": "CRWV",
+            "to_entity": "BLACKSTONE_MAGNETAR_SYN",
+            "project_id": None,
+            "obligation_type": "debt_facility",
+            "amount": 8500000000.0,
+            "amount_type": "facility_capacity",
+            "as_of_date": "2026-06-30",
+            "currency": "USD",
+            "effective_date": "2024-09-01",
+            "maturity_date": "2031-12-31",
+            "term_years": 7.0,
+            "capacity_mw": None,
+            "committed_or_optional": "committed",
+            "recourse": "non_recourse_spv",
+            "collateral": "SPV project assets and hardware commitments",
+            "guarantee": "Non-recourse to parent CoreWeave",
+            "termination_rights": "Project financing covenants",
+            "payment_conditions": "Non-recourse SPV project commitment; credit line for infrastructure expansion",
+            "claim_ids": "CLM-CRWV-004",
+            "evidence_class": "A",
+            "confidence": 1.0,
+            "shared_assumptions": "A001,A002"
+        },
+        # 8. CoreWeave DDTL 5.0 Facility (Borrowing Base Advance Rate Formula)
+        {
+            "obligation_id": "OBL-CRWV-DEBT-DDTL5",
+            "from_entity": "CRWV",
+            "to_entity": "BLACKSTONE_MAGNETAR_SYN",
+            "project_id": None,
+            "obligation_type": "debt_facility",
+            "amount": 1101000000.0,
+            "amount_type": "principal_outstanding",
+            "as_of_date": "2026-06-30",
+            "currency": "USD",
+            "effective_date": "2024-11-01",
+            "maturity_date": "2031-11-30",
+            "term_years": 7.0,
+            "capacity_mw": None,
+            "committed_or_optional": "committed",
+            "recourse": "limited_recourse_spv",
+            "collateral": "First-priority lien on GPU clusters; governed by contract-calibrated 71.42% borrowing base advance rate",
+            "guarantee": "Parent pledge of financing SPV equity",
+            "termination_rights": "Acceleration upon borrowing base deficiency",
+            "payment_conditions": "Floating rate (SOFR + 3.50%); subject to contract-calibrated borrowing base cure",
+            "claim_ids": "CLM-CRWV-001,CLM-CRWV-002",
+            "evidence_class": "A",
+            "confidence": 1.0,
+            "shared_assumptions": "A001,A002"
+        },
+        # 9. CoreWeave Senior Secured Notes
         {
             "obligation_id": "OBL-CRWV-DEBT-NOTES",
             "from_entity": "CRWV",
             "to_entity": "INSTITUTIONAL_BONDHOLDERS",
             "project_id": None,
             "obligation_type": "debt_facility",
-            "amount": 9029000000.0,
+            "amount": 10029000000.0,
             "amount_type": "principal_outstanding",
             "as_of_date": "2026-06-30",
             "currency": "USD",
@@ -273,13 +430,13 @@ def build_obligations():
             "collateral": "Second-priority corporate lien",
             "guarantee": "Parent direct obligation",
             "termination_rights": "Cross-default with credit facilities",
-            "payment_conditions": "Fixed coupons 9.00% to 9.75%",
+            "payment_conditions": "Fixed coupons 9.00% to 9.75% across USD and EUR tranches",
             "claim_ids": "CLM-CRWV-001,CLM-CRWV-002",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A002"
         },
-        # 5. CoreWeave Convertible Senior Notes
+        # 10. CoreWeave Convertible Senior Notes
         {
             "obligation_id": "OBL-CRWV-DEBT-CONV",
             "from_entity": "CRWV",
@@ -299,13 +456,13 @@ def build_obligations():
             "collateral": "Unsecured subordinated convertible",
             "guarantee": "Parent direct obligation",
             "termination_rights": "Standard conversion or fundamental change put",
-            "payment_conditions": "Cash coupon 1.75% to 2.00%",
+            "payment_conditions": "Fixed cash coupon 1.75% to 2.00%",
             "claim_ids": "CLM-CRWV-001,CLM-CRWV-002",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A002"
         },
-        # 6. CoreWeave OEM & Software License Financing
+        # 11. CoreWeave OEM & Software License Financing
         {
             "obligation_id": "OBL-CRWV-DEBT-OEM",
             "from_entity": "CRWV",
@@ -331,33 +488,59 @@ def build_obligations():
             "confidence": 1.0,
             "shared_assumptions": "A001,A002"
         },
-        # 7. Microsoft Compute Off-Take Run-Rate
+        # 12. CoreWeave Magnetar Term Loan
         {
-            "obligation_id": "OBL-MSFT-CRWV-OFFTAKE",
-            "from_entity": "MSFT",
-            "to_entity": "CRWV",
+            "obligation_id": "OBL-CRWV-DEBT-MAGNETAR",
+            "from_entity": "CRWV",
+            "to_entity": "BLACKSTONE_MAGNETAR_SYN",
             "project_id": None,
-            "obligation_type": "anchor_offtake",
-            "amount": 1725000000.0,
-            "amount_type": "annualized_run_rate",
-            "as_of_date": "2025-12-31",
+            "obligation_type": "debt_facility",
+            "amount": 189000000.0,
+            "amount_type": "principal_outstanding",
+            "as_of_date": "2026-06-30",
             "currency": "USD",
-            "effective_date": "2023-05-01",
-            "maturity_date": "2028-06-30",
-            "term_years": 5.0,
+            "effective_date": "2024-01-15",
+            "maturity_date": "2029-01-31",
+            "term_years": 4.6,
             "capacity_mw": None,
             "committed_or_optional": "committed",
             "recourse": "full_recourse",
-            "collateral": "None (unsecured corporate obligation)",
+            "collateral": "Subordinated asset pledge",
+            "guarantee": "Parent direct obligation",
+            "termination_rights": "Standard term loan default triggers",
+            "payment_conditions": "Floating rate interest",
+            "claim_ids": "CLM-CRWV-002",
+            "evidence_class": "A",
+            "confidence": 1.0,
+            "shared_assumptions": "A002"
+        },
+        # 13. Microsoft Customer Concentration (Recognized Revenue)
+        {
+            "obligation_id": "REL-MSFT-CRWV-REVENUE-CONCENTRATION",
+            "from_entity": "MSFT",
+            "to_entity": "CRWV",
+            "project_id": None,
+            "obligation_type": "customer_revenue_concentration",
+            "amount": 3437770000.0,
+            "amount_type": "recognized_revenue",
+            "as_of_date": "2025-12-31",
+            "currency": "USD",
+            "effective_date": "2025-01-01",
+            "maturity_date": "2025-12-31",
+            "term_years": 1.0,
+            "capacity_mw": None,
+            "committed_or_optional": "committed",
+            "recourse": "commercial_counterparty",
+            "collateral": "None",
             "guarantee": "None",
-            "termination_rights": "SLA performance failure or staged phase reduction clauses",
-            "payment_conditions": "Take-or-pay capacity reservation fees representing 67% of CoreWeave FY25 revenue",
+            "termination_rights": "Commercial cloud capacity purchase orders and service level agreements",
+            "payment_conditions": "67% of CoreWeave FY25 recognized revenue ($3.438B of $5.131B total); customer concentration, not an audited 5-year take-or-pay contract",
             "claim_ids": "CLM-CRWV-003",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A005,A006"
         },
-        # 8. Supermicro Non-Cancelable Purchase Commitments
+        # 14. Supermicro Non-Cancelable Purchase Commitments
         {
             "obligation_id": "OBL-SMCI-SUPPLIER-COMMIT",
             "from_entity": "SMCI",
@@ -377,13 +560,13 @@ def build_obligations():
             "collateral": "Corporate general obligation; non-cancelable purchase commitments",
             "guarantee": "None",
             "termination_rights": "Non-cancelable commitments primarily through next 12 months",
-            "payment_conditions": "Net 30/60 days per master procurement agreements",
+            "payment_conditions": "Procurement contracts; under demand pause, subject to expected-loss write-down / cancellation settlement, not 100% immediate cash outlay",
             "claim_ids": "CLM-SMCI-001",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A001,A006,A007"
         },
-        # 9. NVIDIA Strategic Equity in CoreWeave
+        # 15. NVIDIA Strategic Equity in CoreWeave
         {
             "obligation_id": "OBL-NVDA-CRWV-EQUITY",
             "from_entity": "NVDA",
@@ -409,31 +592,83 @@ def build_obligations():
             "confidence": 1.0,
             "shared_assumptions": "A006"
         },
-        # 10. Applied Digital Project Notes Payable
+        # 16. Applied Digital Polaris Forge 1 Notes Payable (Fixed Rate)
         {
-            "obligation_id": "OBL-APLD-DEBT-PROJECT",
+            "obligation_id": "OBL-APLD-DEBT-PF1",
             "from_entity": "APLD_ELN_LLC",
             "to_entity": "PROJECT_LENDERS",
             "project_id": "POLARIS_FORGE_1",
             "obligation_type": "debt_facility",
-            "amount": 4959516000.0,
+            "amount": 2350000000.0,
             "amount_type": "principal_outstanding",
             "as_of_date": "2026-05-31",
             "currency": "USD",
-            "effective_date": "2025-06-01",
-            "maturity_date": "2031-06-30",
+            "effective_date": "2024-06-01",
+            "maturity_date": "2029-06-30",
             "term_years": 5.0,
             "capacity_mw": 400.0,
             "committed_or_optional": "committed",
             "recourse": "limited_recourse_spv",
-            "collateral": "Substation interconnect assets, building structures, ground lease rights",
-            "guarantee": "APLD partial sponsor completion support",
-            "termination_rights": "Standard project finance debt acceleration",
-            "payment_conditions": "Serviced from contracted lease cash flows under ELN master leases",
-            "claim_ids": "CLM-APLD-001",
+            "collateral": "Polaris Forge 1 substation assets, structures, and lease revenue pledge",
+            "guarantee": "APLD completion support",
+            "termination_rights": "Project finance default acceleration",
+            "payment_conditions": "Fixed 9.25% Senior Secured Notes; fixed coupon insulates from immediate floating rate hikes",
+            "claim_ids": "CLM-APLD-001,CLM-APLD-003",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A002,A004"
+        },
+        # 17. Applied Digital Polaris Forge 2 Notes Payable (ComputeCo 2 - Fixed Rate)
+        {
+            "obligation_id": "OBL-APLD-DEBT-PF2",
+            "from_entity": "APLD_COMPUTECO2",
+            "to_entity": "PROJECT_LENDERS",
+            "project_id": "POLARIS_FORGE_2",
+            "obligation_type": "debt_facility",
+            "amount": 2150000000.0,
+            "amount_type": "principal_outstanding",
+            "as_of_date": "2026-05-31",
+            "currency": "USD",
+            "effective_date": "2025-01-15",
+            "maturity_date": "2030-01-31",
+            "term_years": 5.0,
+            "capacity_mw": None,
+            "committed_or_optional": "committed",
+            "recourse": "limited_recourse_spv",
+            "collateral": "Polaris Forge 2 facility assets and lease pledge",
+            "guarantee": "APLD completion support",
+            "termination_rights": "Project finance default acceleration",
+            "payment_conditions": "Fixed 6.75% Senior Notes; fixed coupon insulates from immediate floating rate hikes",
+            "claim_ids": "CLM-APLD-003",
+            "evidence_class": "A",
+            "confidence": 1.0,
+            "shared_assumptions": "A002,A004"
+        },
+        # 18. Applied Digital Corporate Notes & Facilities
+        {
+            "obligation_id": "OBL-APLD-DEBT-CORP",
+            "from_entity": "APLD",
+            "to_entity": "PROJECT_LENDERS",
+            "project_id": None,
+            "obligation_type": "debt_facility",
+            "amount": 475938000.0,
+            "amount_type": "principal_outstanding",
+            "as_of_date": "2026-05-31",
+            "currency": "USD",
+            "effective_date": "2023-10-01",
+            "maturity_date": "2028-10-31",
+            "term_years": 5.0,
+            "capacity_mw": None,
+            "committed_or_optional": "committed",
+            "recourse": "full_recourse",
+            "collateral": "Corporate general assets",
+            "guarantee": "Parent direct obligation",
+            "termination_rights": "Standard corporate loan default covenants",
+            "payment_conditions": "Blended corporate notes reconciling total debt to $4,975.9M",
+            "claim_ids": "CLM-APLD-003",
+            "evidence_class": "A",
+            "confidence": 1.0,
+            "shared_assumptions": "A002"
         }
     ]
     df = pd.DataFrame(obligations)

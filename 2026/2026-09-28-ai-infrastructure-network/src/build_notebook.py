@@ -1,7 +1,8 @@
 """
-Builds and executes 01_five_company_pilot.ipynb (Phase 0.5 Refactor).
-Incorporate audited balance sheets, MultiDiGraph representation, decomposed debt facilities,
-springing guaranty modeling, assumption reachability footprints, and true quantitative stress simulation.
+Builds and executes 01_five_company_pilot.ipynb (Phase 0.6 Refactor).
+Incorporates audited duration-aware balance sheets and flow metrics, MultiDiGraph representation,
+decomposed debt facilities, springing guaranty legal predicates, reachability by amount_type,
+and contract-calibrated transmission functions for the parameterized financial stress prototype.
 """
 
 from pathlib import Path
@@ -17,8 +18,8 @@ nb = nbf.v4.new_notebook()
 cells = []
 
 # Cell 1: Markdown - Header & Thesis
-cells.append(nbf.v4.new_markdown_cell("""# AI Infrastructure Financial Network: Phase 0.5 Five-Company Pilot
-### *The Bubble Lives in the Joins: Emerging Coordination Failures, Multi-Contract Graphs, and Shared Vulnerabilities in AI Infrastructure*
+cells.append(nbf.v4.new_markdown_cell("""# AI Infrastructure Financial Network: Phase 0.6 Five-Company Pilot
+### *The Bubble Lives in the Joins: Emerging Coordination Failures, Multi-Contract Graphs, and Contract-Calibrated Stress Transmission*
 
 ---
 
@@ -30,13 +31,13 @@ The thing that blows up in a financial bubble is often **not hidden data**. It i
 * **Long-Term Capital Management (1998):** Every counterparty believed its collateral agreement and mark-to-market procedures protected it. Collectively, they had enabled a massive correlated position.
 
 ### The Five Kinds of Opacity in 2020s AI Capital Structures
-1. **Perimeter Opacity:** Risk is isolated in Special Purpose Vehicles (SPVs) or project-level subsidiaries rather than the consolidated parent balance sheet (e.g. CoreWeave SPV VIII and APLD ELN project LLCs).
-2. **Network Opacity:** Participants see direct counterparty commitments, but none observe the aggregate dependence on identical customers, lenders, or suppliers (e.g. 67% of CoreWeave revenue tied to Microsoft).
+1. **Perimeter Opacity:** Risk is isolated in Special Purpose Vehicles (SPVs) or project-level subsidiaries rather than the consolidated parent balance sheet (e.g. CoreWeave SPV VIII and Applied Digital ELN project LLCs).
+2. **Network Opacity:** Participants see direct counterparty commitments, but none observe the aggregate dependence on identical customers, lenders, or suppliers (e.g. 67% of CoreWeave FY25 recognized revenue tied to Microsoft).
 3. **Contract Opacity:** Multi-billion dollar backlogs and lease agreements are announced, but termination remedies, liquidated damages, milestone triggers, and **unconditional springing guarantees** remain buried in Exhibit 10 agreements.
 4. **Valuation Opacity:** Collateral (GPU clusters) is marked at historical cost or recent transaction prices, ignoring secondary liquidation value under simultaneous distress.
-5. **Temporal Opacity:** Severe cash flow maturity mismatches: 5-year debt facilities funding 15-year lease obligations subject to 24–36 month utility substation lead times.
+5. **Temporal Opacity:** Severe cash flow maturity mismatches: 5-year debt facilities funding 15-year lease obligations subject to utility substation lead times.
 
-This notebook establishes **Phase 0.5** of the AI Infrastructure Financial Network across five core companies forming a closed capital, hardware, and lease chain: **NVIDIA (NVDA)**, **Supermicro (SMCI)**, **CoreWeave (CRWV)**, **Applied Digital (APLD)**, and **Oracle (ORCL)**, linked to strategic counterparties **Microsoft (MSFT)**, institutional bondholders, and private credit syndicates.
+This notebook establishes **Phase 0.6** of the AI Infrastructure Financial Network across five core companies forming a closed capital, hardware, and lease chain: **NVIDIA (NVDA)**, **Supermicro (SMCI)**, **CoreWeave (CRWV)**, **Applied Digital (APLD)**, and **Oracle (ORCL)**, linked to strategic counterparties **Microsoft (MSFT)**, institutional bondholders, and private credit syndicates.
 """))
 
 # Cell 2: Code - Setup
@@ -73,8 +74,8 @@ We model the network across four functional tiers:
 1. **Accelerated Silicon Supplier:** NVIDIA (`NVDA`)
 2. **Server OEM / Integrator:** Supermicro (`SMCI`)
 3. **Leveraged Neocloud Operator:** CoreWeave (`CRWV`) & Equipment SPV (`CRWV_SPV_VIII`)
-4. **HPC Data Center Developer:** Applied Digital (`APLD`) & Facility SPV (`APLD_ELN_LLC`)
-5. **Enterprise Cloud Hyperscaler:** Oracle (`ORCL`) & Off-take Anchor Microsoft (`MSFT`)
+4. **HPC Data Center Developer:** Applied Digital (`APLD`), Polaris Forge 1 SPV (`APLD_ELN_LLC`), and Polaris Forge 2 SPV (`APLD_COMPUTECO2`)
+5. **Enterprise Cloud Hyperscaler:** Oracle (`ORCL`) & Anchor Customer Microsoft (`MSFT`)
 6. **Capital Providers & Infrastructure:** Private Credit Syndicate (`BLACKSTONE_MAGNETAR_SYN`), Institutional Bondholders, and Polaris Forge 1 Campus (`POLARIS_FORGE_1`)
 """))
 
@@ -87,7 +88,10 @@ entities_df[["entity_id", "name", "category", "status", "cik", "reporting_standa
 cells.append(nbf.v4.new_markdown_cell("""## 2. Layer 1: Audited Accounting Baselines (Direct SEC XBRL Ingestion)
 
 We query `data.sec.gov` directly via `src/sec_ingest.py`, parsing standardized US-GAAP concepts from Form 10-K and 10-Q periodic filings.
-Crucially, we distinguish **instant balance sheet facts** from **duration flow facts** (3-month quarterly vs 12-month annual), and aggregate funded debt components (long-term debt, current portion, convertible senior notes, and credit facilities) rather than relying on single unaggregated tags.
+Crucially, our Phase 0.6 pipeline:
+* Distinguishes **instant balance sheet facts** from **duration flow facts** (3-month quarterly vs 12-month annual).
+* Synthesizes derived Q4 flows where Form 10-K only reports annual numbers (e.g. Microsoft FY26 $331.84B - 9M $241.83B = **$90.01B Q4**; APLD FY26 $611.31M - 9M $352.56M = **$258.75M Q4**).
+* Aggregates multi-component funded debt (long-term debt, current portion, convertible notes, credit facilities) reconciling exact totals (APLD $4.98B, CRWV $35.55B, SMCI $8.72B).
 """))
 
 # Cell 6: Code - Pivot Financials
@@ -144,9 +148,12 @@ plt.show()
 cells.append(nbf.v4.new_markdown_cell("""## 3. Layer 2: The Contractual Obligation Multi-Graph
 
 We model obligations using `nx.MultiDiGraph` with `obligation_id` as the edge key.
-This architecture preserves multiple distinct facilities between the same counterparty pair (e.g. CoreWeave's distinct DDTLs, senior notes, convertibles, and lease + springing guarantee) without risk of overwrite.
+This architecture preserves multiple distinct facilities between the same counterparty pair:
+* **CoreWeave Indebtedness Decomposed:** DDTL 1.0 ($1.30B), DDTL 2.0 ($3.19B), DDTL 2.1 ($3.00B), DDTL 3.0 ($2.215B), DDTL 5.0 ($1.101B), Senior Notes ($10.029B), Convertibles ($6.588B), OEM Financing ($4.220B), Magnetar Loan ($0.189B), and non-recourse SPV DDTL 4.0 ($8.5B commitment).
+* **Applied Digital Debt Segmented:** $2.35B 9.25% Senior Notes (Polaris Forge 1 - fixed rate), $2.15B 6.75% Senior Notes (Polaris Forge 2 - fixed rate), and $476M corporate notes.
+* **Microsoft Relationship:** Characterized strictly as `REL-MSFT-CRWV-REVENUE-CONCENTRATION` ($3.438B recognized revenue, 67% concentration of FY25 revenue) with `amount_type = "recognized_revenue"` (NOT an unverified 5-year take-or-pay contract).
 
-Crucially, we **do not compute a naive net exposure** (netting a 15-year lease against a 2-year purchase commitment or equity stake). Instead, exposure is categorized strictly by **`amount_type`**.
+Crucially, we **do not compute a naive net exposure** across different obligation types. Instead, exposure is categorized strictly by **`amount_type`**.
 """))
 
 # Cell 9: Code - Exposure by Amount Type
@@ -155,13 +162,14 @@ exposure_df = net.compute_exposure_by_amount_type()
 
 exposure_table = exposure_df.assign(
     principal_debt_B=lambda df: (df["outgoing_principal_debt_usd"] / 1e9).round(2),
+    facility_capacity_B=lambda df: (df["outgoing_facility_capacity_usd"] / 1e9).round(2),
     lease_lifetime_B=lambda df: (df["outgoing_lease_lifetime_usd"] / 1e9).round(2),
     purchase_commitments_B=lambda df: (df["outgoing_purchase_commitments_usd"] / 1e9).round(2),
     contingent_guarantee_B=lambda df: (df["outgoing_contingent_guarantees_usd"] / 1e9).round(2),
     equity_investment_B=lambda df: (df["outgoing_equity_investments_usd"] / 1e9).round(2)
-)[["entity_id", "category", "principal_debt_B", "lease_lifetime_B", "purchase_commitments_B", "contingent_guarantee_B", "equity_investment_B"]]
+)[["entity_id", "category", "principal_debt_B", "facility_capacity_B", "lease_lifetime_B", "purchase_commitments_B", "contingent_guarantee_B", "equity_investment_B"]]
 
-exposure_table[exposure_table[["principal_debt_B", "lease_lifetime_B", "purchase_commitments_B", "contingent_guarantee_B", "equity_investment_B"]].sum(axis=1) > 0]
+exposure_table[exposure_table[["principal_debt_B", "facility_capacity_B", "lease_lifetime_B", "purchase_commitments_B", "contingent_guarantee_B", "equity_investment_B"]].sum(axis=1) > 0]
 """))
 
 # Cell 10: Code - Obligations Ledger
@@ -174,7 +182,7 @@ obl_df[["obligation_id", "from_entity", "to_entity", "obligation_type", "amount"
 # Cell 11: Code - MultiDiGraph Topology Plot
 cells.append(nbf.v4.new_code_cell("""G = net.graph
 
-plt.figure(figsize=(14, 10))
+plt.figure(figsize=(15, 11))
 pos = {
     "NVDA": np.array([0.0, 1.0]),
     "SMCI": np.array([-0.7, 0.4]),
@@ -186,9 +194,10 @@ pos = {
     "OEM_FINANCING_PARTNERS": np.array([0.7, -0.4]),
     "CRWV_SPV_VIII": np.array([0.2, -0.6]),
     "APLD_ELN_LLC": np.array([0.6, -0.8]),
-    "PROJECT_LENDERS": np.array([1.0, -0.9]),
+    "APLD_COMPUTECO2": np.array([0.8, -1.0]),
+    "PROJECT_LENDERS": np.array([1.1, -0.85]),
     "POLARIS_FORGE_1": np.array([0.2, -1.0]),
-    "APLD": np.array([0.7, -1.0]),
+    "APLD": np.array([0.5, -1.1]),
     "ORCL": np.array([-0.4, 0.8])
 }
 
@@ -207,7 +216,7 @@ category_colors = {
 }
 
 node_colors = [category_colors.get(G.nodes[n].get("category", ""), "#333333") for n in G.nodes()]
-node_sizes = [max(900, len(n) * 230) for n in G.nodes()]
+node_sizes = [max(950, len(n) * 230) for n in G.nodes()]
 
 nx.draw_networkx_nodes(G, pos, node_color=node_colors, node_size=node_sizes, alpha=0.9, edgecolors="black", linewidths=1.5)
 nx.draw_networkx_labels(G, pos, font_size=8, font_weight="bold", font_family="sans-serif")
@@ -225,7 +234,7 @@ for u, v, k, d in G.edges(data=True, keys=True):
 edge_labels = {(u, v): f"${d.get('amount', 0)/1e9:.1f}B" for u, v, k, d in G.edges(data=True, keys=True) if d.get("amount", 0) >= 2e9}
 nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, font_color="#2c3e50")
 
-plt.title("AI Infrastructure Multi-Graph Obligation Network (Phase 0.5)\\n(Edges Represent Distinct Legal Facilities, Leases, Guarantees, and Commitments)", fontsize=13, fontweight="bold")
+plt.title("AI Infrastructure Multi-Graph Obligation Network (Phase 0.6)\\n(Edges Represent Distinct Legal Facilities, Leases, Guarantees, and Commitments)", fontsize=13, fontweight="bold")
 plt.axis("off")
 plt.tight_layout()
 plt.savefig(project_root / "outputs/figures/obligation_network_topology.png", dpi=300)
@@ -235,10 +244,11 @@ plt.show()
 # Cell 12: Markdown - Unwrapping SPVs
 cells.append(nbf.v4.new_markdown_cell("""## 4. Unwrapping Perimeter Opacity: The Springing Guaranty
 
-Notice the structural legal architecture revealed in APLD's Form 10-K (Note 14):
-* CoreWeave assigned its direct lease liabilities for Polaris Forge 1 to `CRWV_SPV_VIII` and was released from direct lease obligations.
+Notice the literal contractual reality revealed in APLD's Form 10-K (Note 14 & Exhibit 10):
+* CoreWeave assigned its direct lease liabilities for Polaris Forge 1 to `CRWV_SPV_VIII` and was formally released from direct lease obligations.
 * **HOWEVER**, CoreWeave concurrently executed an **Unconditional Springing Guaranty of Payment and Performance** for the SPV's obligations.
-* Thus, perimeter isolation does NOT eliminate parent corporate risk; it creates a **contingent liquidity cliff** that springs back to the parent if the SPV's cash flows falter!
+* **The Literal Legal Predicate:** The guaranty is dormant during ordinary operations, but *springs* into an active, direct parent liability upon an SPV colocation payment default or bankruptcy trigger.
+* Thus, SPV restructuring did NOT insulate CoreWeave; it introduced a **contingent liquidity cliff** where an operating deficit at the SPV level immediately reactivates parent balance sheet liability for the full $11.0B lease.
 """))
 
 # Cell 13: Code - Unwrap SPVs
@@ -260,29 +270,28 @@ pd.DataFrame(collapsed_records).sort_values(by="amount_B", ascending=False)
 """))
 
 # Cell 14: Markdown - Reachability vs Stress
-cells.append(nbf.v4.new_markdown_cell("""## 5. Topological Reachability vs. True Financial Stress
+cells.append(nbf.v4.new_markdown_cell("""## 5. Topological Reachability by Amount Type
 
-We explicitly separate two analytical concepts:
-1. **Assumption Dependency Footprint (Reachability):** What proportion of the network's face value and edges are reachable within 1 or 2 hops of an underlying economic assumption? (Topological exposure metric).
-2. **Financial Stress Engine:** A quantitative transmission simulation modeling cash flow losses, collateral haircuts, borrowing base contractions, and liquidity depletion.
+In Phase 0.6, we eliminate naive cross-category dollar aggregation.
+Summing non-fungible quantities ($34.2B purchase commitments + $11.0B lease + $35.5B debt principal) into a single dollar pool produces mathematically flawed ratios.
+Instead, our Reachability Engine (`src/reachability.py`) reports dependency footprints **broken down strictly by `amount_type`** alongside edge count reachability:
 """))
 
 # Cell 15: Code - Reachability Analysis
 cells.append(nbf.v4.new_code_cell("""reach_engine = ContractualReachability(network=net)
 reach_summary = reach_engine.run_standard_footprints()
-
-reach_display = reach_summary.assign(
-    total_reachable_value_B=lambda df: (df["total_reachable_value_usd"] / 1e9).round(2)
-)[["scenario_id", "assumptions", "total_reachable_edges", "edge_reachability_pct", "total_reachable_value_B", "value_reachability_pct"]]
-reach_display
+reach_summary[[
+    "scenario_id", "assumptions", "reachable_edges", "edge_reach_pct",
+    "debt_principal_reach_pct", "purchase_commit_reach_pct", "lease_value_reach_pct", "revenue_reach_pct"
+]]
 """))
 
 # Cell 16: Code - Reachability Bar Chart
-cells.append(nbf.v4.new_code_cell("""fig, ax = plt.subplots(figsize=(10, 5))
-reach_plot = reach_summary.sort_values(by="value_reachability_pct", ascending=True)
-bars = ax.barh(reach_plot["scenario_id"].str.replace("REACH_", ""), reach_plot["value_reachability_pct"], color="#34495e", height=0.55)
-ax.set_title("Assumption Dependency Footprint (% of Network Value Reachable Within 2 Hops)", fontsize=12, fontweight="bold")
-ax.set_xlabel("% of Network Contract Value Within Reachability Footprint")
+cells.append(nbf.v4.new_code_cell("""fig, ax = plt.subplots(figsize=(11, 5))
+reach_plot = reach_summary.sort_values(by="edge_reach_pct", ascending=True)
+bars = ax.barh(reach_plot["scenario_id"].str.replace("REACH_", ""), reach_plot["edge_reach_pct"], color="#2c3e50", height=0.55)
+ax.set_title("Assumption Dependency Footprint (% of Network Edges Reachable Within 2 Hops)", fontsize=12, fontweight="bold")
+ax.set_xlabel("% of Contractual Edges Within Reachability Footprint")
 ax.set_xlim(0, 115)
 
 for bar in bars:
@@ -295,17 +304,22 @@ plt.show()
 """))
 
 # Cell 17: Markdown - Financial Stress Simulation
-cells.append(nbf.v4.new_markdown_cell("""## 6. Financial Stress & Transmission Engine
+cells.append(nbf.v4.new_markdown_cell("""## 6. Parameterized Financial Stress Prototype
 
-Using `src/stress.py`, we execute quantitative mathematical simulations:
-$$\text{Shock} \longrightarrow \Delta \text{ Cash Flow} \longrightarrow \text{Collateral / Covenant Breach} \longrightarrow \text{Liquidity Cure} \longrightarrow \text{Next Edge}$$
+Using `src/stress.py`, we execute contract-calibrated transmission functions:
+$$\text{Shock} \longrightarrow \Delta \text{ Cash Flow} \longrightarrow \text{Borrowing Base / Covenant Breach} \longrightarrow \text{Liquidity Cure} \longrightarrow \text{Next Edge}$$
 
-We test five adversarial scenarios:
-1. **GPU Collateral Valuation Haircut (-40%):** Evaluates borrowing base contraction on CoreWeave's $10.8B DDTLs, computes mandatory prepayment call against CoreWeave's $5.52B cash.
-2. **Anchor Customer Demand Trim (-30%):** Reduces CoreWeave recognized revenue by $518M/yr, testing debt service coverage and springing guaranty activation on the $11.0B lease.
-3. **Refinancing Spread Spike (+300 bps):** Computes $473M annual floating interest expansion across CoreWeave and Applied Digital.
-4. **Grid Substation Energization Delay (12 Months):** Defers $733M in rent to Applied Digital while construction debt carrying costs run ($397M drain on $1.59B cash).
-5. **Hardware OEM Purchase Commitment Markdown (15%):** Tests Supermicro's $34.2B purchase commitments, forcing a $5.13B write-down against $7.52B cash reserves.
+We test five adversarial scenarios grounded in contractual terms:
+1. **Modeled Borrowing Base Contraction (-40% GPU Collateral):**
+   Evaluates CoreWeave's drawn DDTLs ($10.8B) against the contract-calibrated **71.42% borrowing base advance rate** (DDTL 5.0 formula), forcing a **$4.32B mandatory debt prepayment**, consuming 78.2% of CoreWeave's cash and triggering a capex freeze.
+2. **Anchor Customer Concentration & Springing Guaranty (-30% Microsoft Off-Take):**
+   Reduces CoreWeave's recognized annual cash flow by **$1.03B/yr**, causing an SPV colocation lease shortfall that satisfies the legal predicate triggering CoreWeave parent's **Unconditional Springing Guaranty** on the $11.0B lease.
+3. **Credit Refinancing Spread Spike (+300 bps):**
+   Rigorously isolates floating debt (adding **$324M/yr** cash interest to CRWV DDTLs and $14M to APLD corporate facilities) from fixed debt (APLD $4.5B notes and CRWV $20.8B notes are fixed coupons, experiencing zero immediate cash impact but facing rollover refinancing risk).
+4. **Phased Grid Energization Delay (12 Months at Polaris Forge 1):**
+   Models the operational reality: ~100 MW operational generates **$183.3M/yr** base rent ongoing, while the unenergized ~300 MW expansion is deferred ($550M rent delayed), leaving APLD to self-fund **$163M** in construction debt carrying costs (consuming only 10.2% of APLD cash).
+5. **OEM Purchase Commitment Expected Loss (SMCI 15% Demand Pause):**
+   Models Supermicro's $34.2B purchase commitments under US-GAAP NRV write-down (40% loss severity on $5.13B excess allocation), generating a **$2.05B pre-tax loss provision** consuming 27.3% of cash.
 """))
 
 # Cell 18: Code - Execute Financial Stress
@@ -322,7 +336,7 @@ stress_display
 cells.append(nbf.v4.new_code_cell("""fig, ax = plt.subplots(figsize=(11, 5))
 stress_plot = stress_summary.sort_values(by="direct_cash_or_collateral_hit_usd", ascending=True)
 bars = ax.barh(stress_plot["scenario_name"], stress_plot["direct_cash_or_collateral_hit_usd"] / 1e9, color="#c0392b", height=0.55)
-ax.set_title("Quantitative Financial Stress: Direct Cash or Collateral Impact ($ Billions)", fontsize=12, fontweight="bold")
+ax.set_title("Parameterized Financial Stress Prototype: Direct Cash or Collateral Impact ($ Billions)", fontsize=12, fontweight="bold")
 ax.set_xlabel("Direct Cash / Collateral Drain ($ Billions)")
 
 for bar in bars:
@@ -349,15 +363,17 @@ claims_df[["claim_id", "entity_id", "filing_type", "filing_date", "section_locat
 # Cell 22: Markdown - Synthesis
 cells.append(nbf.v4.new_markdown_cell("""## 8. Synthesis & Computational Sketchbook Findings
 
-### What Phase 0.5 Established
+### What Phase 0.6 Established
 1. **The Bubble Lives in the Joins:** On consolidated statements, Applied Digital appears as a standalone host with $1.59B in cash and $4.98B in debt. But through the join at Polaris Forge 1 ($11.0B 15-year lease with CoreWeave), APLD's cash flows are tied to CoreWeave's solvency.
-2. **Perimeter Opacity & The Springing Guaranty:** CoreWeave did not simply dump lease obligations into an isolated SPV; it provided an **Unconditional Springing Guaranty of Payment and Performance**, creating a contingent liquidity cliff back to the parent.
-3. **Decomposed Debt Realities:** CoreWeave's indebtedness is not a monolithic loan, but $35.551B in future principal across DDTLs ($10.8B), senior notes ($9.0B), convertible debt ($6.6B), and OEM financing ($4.2B).
-4. **Mathematical Transmission:** A -40% GPU collateral haircut triggers a **$4.32B mandatory debt prepayment**, consuming 78.2% of CoreWeave's cash and forcing operational capex freezes down the supply chain.
+2. **Perimeter Opacity & The Springing Guaranty:** CoreWeave did not simply isolate lease obligations in an SPV; it executed an **Unconditional Springing Guaranty of Payment and Performance**. If SPV VIII defaults on colocation rent, parent liability is reactivated.
+3. **Decomposed Debt Realities:** CoreWeave's indebtedness is not a monolithic loan, but $35.551B across DDTLs ($10.8B drawn), senior notes ($10.0B), convertible debt ($6.6B), OEM financing ($4.2B), and Magnetar ($0.19B).
+4. **Floating vs. Fixed Insulation:** Applied Digital's $4.50B in project notes and CoreWeave's $20.8B in senior/convertible notes bear fixed coupons, suffering zero immediate cash hit from rate spikes but facing maturity rollover risk.
+5. **Modeled Borrowing Base Contraction:** A -40% GPU collateral haircut triggers a **$4.32B mandatory debt prepayment**, consuming 78.2% of CoreWeave's cash and forcing operational capex freezes down the supply chain.
 
 ### Next Steps for Phase 1
-* Expand the entity universe from 5 pilot companies to 25–30 public and private players across upstream silicon (TSMC, ASML), power utilities (GE Vernova, Constellation), and private credit syndicates.
+* Maintain epistemic discipline on the five-company pilot before expanding the universe.
 * Incorporate FINRA TRACE secondary bond prices to observe real-time market-implied credit spreads.
+* Refine contract-calibrated liquidity transmission functions.
 """))
 
 nb.cells = cells

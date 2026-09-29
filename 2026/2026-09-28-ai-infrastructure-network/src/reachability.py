@@ -1,6 +1,10 @@
 """
-Contractual Reachability and Assumption Dependency Footprint Engine
+Contractual Reachability and Assumption Dependency Footprint Engine (Phase 0.6 Refactor)
 Measures the topological reachability of edges and entities within 1 and 2 hops of shared assumptions.
+Eliminates unweighted cross-category dollar aggregation; reports reachability strictly broken down
+by amount_type (principal debt %, purchase commitments %, lease value %, revenue %, guarantees %)
+alongside edge reachability percentages.
+
 NOTE: This is an epistemic dependency footprint metric measuring network exposure, NOT a financial loss or impairment engine.
 """
 
@@ -21,6 +25,15 @@ class ContractualReachability:
     def __init__(self, network: Optional[ObligationNetwork] = None):
         self.network = network or ObligationNetwork()
         self.graph = self.network.graph
+        self.network_by_amount_type = self._compute_network_totals_by_amount_type()
+
+    def _compute_network_totals_by_amount_type(self) -> Dict[str, float]:
+        """Compute aggregate baseline values per amount_type across the entire network."""
+        totals = {}
+        for _, _, _, d in self.graph.edges(data=True, keys=True):
+            atype = d.get("amount_type", "unspecified")
+            totals[atype] = totals.get(atype, 0.0) + d.get("amount", 0.0)
+        return totals
 
     def analyze_assumption_footprint(self, scenario_id: str, assumptions: List[str], description: str) -> Dict[str, Any]:
         """
@@ -28,10 +41,9 @@ class ContractualReachability:
         
         1st Order: Edges whose performance explicitly depends on the assumption(s).
         1st Order Nodes: Entities at either end of 1st-order edges.
-        2nd Order: Outgoing contractual edges originating from 1st-order nodes.
+        2nd Order: Outgoing contractual edges originating from 1st-order nodes (including SPV perimeters).
         """
         order_1_edges = []
-        order_1_value = 0.0
         order_1_nodes = set()
         seen_keys = set()
 
@@ -40,68 +52,82 @@ class ContractualReachability:
             intersect = set(assumptions).intersection(set(edge_assumptions))
             if intersect:
                 amt = d.get("amount", 0.0)
+                atype = d.get("amount_type", "unspecified")
                 order_1_edges.append({
                     "obligation_id": k,
                     "from_entity": u,
                     "to_entity": v,
                     "type": d.get("obligation_type"),
                     "amount_usd": amt,
-                    "amount_type": d.get("amount_type"),
+                    "amount_type": atype,
                     "recourse": d.get("recourse"),
                     "matched_assumptions": list(intersect)
                 })
-                order_1_value += amt
                 order_1_nodes.add(u)
                 order_1_nodes.add(v)
                 seen_keys.add(k)
 
         order_2_edges = []
-        order_2_value = 0.0
         for u in order_1_nodes:
             search_nodes = [u]
             if u == "CRWV":
                 search_nodes.append("CRWV_SPV_VIII")
             elif u == "APLD":
-                search_nodes.append("APLD_ELN_LLC")
+                search_nodes.extend(["APLD_ELN_LLC", "APLD_COMPUTECO2"])
 
             for node in search_nodes:
                 if self.graph.has_node(node):
                     for _, to_node, k, d in self.graph.out_edges(node, data=True, keys=True):
                         if k not in seen_keys:
                             amt = d.get("amount", 0.0)
+                            atype = d.get("amount_type", "unspecified")
                             order_2_edges.append({
                                 "obligation_id": k,
                                 "from_entity": node,
                                 "to_entity": to_node,
                                 "type": d.get("obligation_type"),
                                 "amount_usd": amt,
-                                "amount_type": d.get("amount_type"),
+                                "amount_type": atype,
                                 "recourse": d.get("recourse"),
                                 "reachable_via": u
                             })
-                            order_2_value += amt
                             seen_keys.add(k)
 
-        total_network_value = sum(d.get("amount", 0.0) for _, _, _, d in self.graph.edges(data=True, keys=True))
+        all_reachable_edges = order_1_edges + order_2_edges
         total_edges = self.graph.number_of_edges()
-        total_reachable_value = order_1_value + order_2_value
-        total_reachable_edges = len(order_1_edges) + len(order_2_edges)
+        total_reachable_edges = len(all_reachable_edges)
+
+        # Reachability broken down strictly by amount_type
+        reachable_by_amount_type = {}
+        for e in all_reachable_edges:
+            atype = e.get("amount_type", "unspecified")
+            reachable_by_amount_type[atype] = reachable_by_amount_type.get(atype, 0.0) + e.get("amount_usd", 0.0)
+
+        reachability_pct_by_type = {}
+        for atype, total_val in self.network_by_amount_type.items():
+            reach_val = reachable_by_amount_type.get(atype, 0.0)
+            reachability_pct_by_type[atype] = round((reach_val / total_val) * 100.0, 1) if total_val > 0 else 0.0
+
+        all_reachable_nodes = set(order_1_nodes)
+        for e in order_2_edges:
+            all_reachable_nodes.add(e["from_entity"])
+            all_reachable_nodes.add(e["to_entity"])
 
         return {
             "scenario_id": scenario_id,
             "description": description,
             "assumptions": assumptions,
             "order_1_edges_count": len(order_1_edges),
-            "order_1_value_usd": order_1_value,
             "order_1_nodes": sorted(list(order_1_nodes)),
             "order_2_edges_count": len(order_2_edges),
-            "order_2_value_usd": order_2_value,
             "total_reachable_edges": total_reachable_edges,
             "total_network_edges": total_edges,
             "edge_reachability_pct": round((total_reachable_edges / total_edges) * 100, 1) if total_edges else 0,
-            "total_reachable_value_usd": total_reachable_value,
-            "total_network_value_usd": total_network_value,
-            "value_reachability_pct": round((total_reachable_value / total_network_value) * 100, 1) if total_network_value else 0
+            "reachable_by_amount_type_usd": reachable_by_amount_type,
+            "reachability_pct_by_type": reachability_pct_by_type,
+            "all_reachable_nodes": sorted(list(all_reachable_nodes)),
+            "order_1_edges": order_1_edges,
+            "order_2_edges": order_2_edges
         }
 
     def run_standard_footprints(self) -> pd.DataFrame:
@@ -146,26 +172,30 @@ class ContractualReachability:
                 assumptions=s["assumptions"],
                 description=s["description"]
             )
+            pcts = res["reachability_pct_by_type"]
             results.append({
                 "scenario_id": s["scenario_id"],
                 "assumptions": ", ".join(s["assumptions"]),
+                "reachable_edges": res["total_reachable_edges"],
+                "total_edges": res["total_network_edges"],
+                "edge_reach_pct": res["edge_reachability_pct"],
                 "order_1_edges": res["order_1_edges_count"],
-                "order_1_value_usd": res["order_1_value_usd"],
                 "order_2_edges": res["order_2_edges_count"],
-                "order_2_value_usd": res["order_2_value_usd"],
-                "total_reachable_edges": res["total_reachable_edges"],
-                "edge_reachability_pct": res["edge_reachability_pct"],
-                "total_reachable_value_usd": res["total_reachable_value_usd"],
-                "value_reachability_pct": res["value_reachability_pct"],
+                "debt_principal_reach_pct": pcts.get("principal_outstanding", 0.0),
+                "purchase_commit_reach_pct": pcts.get("remaining_commitment", 0.0),
+                "lease_value_reach_pct": pcts.get("lifetime_contract_value", 0.0),
+                "revenue_reach_pct": pcts.get("recognized_revenue", 0.0),
+                "guarantee_reach_pct": pcts.get("contingent_guarantee", 0.0),
+                "reachable_entities_count": len(res["all_reachable_nodes"]),
                 "description": s["description"]
             })
 
-        df = pd.DataFrame(results).sort_values(by="total_reachable_value_usd", ascending=False)
+        df = pd.DataFrame(results).sort_values(by="edge_reach_pct", ascending=False)
         return df
 
 
 if __name__ == "__main__":
     reach = ContractualReachability()
     df = reach.run_standard_footprints()
-    print("=== Contractual Reachability & Assumption Footprints ===")
-    print(df[["scenario_id", "total_reachable_edges", "edge_reachability_pct", "total_reachable_value_usd", "value_reachability_pct"]])
+    print("=== Contractual Reachability & Assumption Footprints (By Amount Type) ===")
+    print(df[["scenario_id", "reachable_edges", "edge_reach_pct", "debt_principal_reach_pct", "purchase_commit_reach_pct", "lease_value_reach_pct"]])

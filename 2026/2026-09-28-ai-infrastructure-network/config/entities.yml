@@ -126,6 +126,20 @@ entities:
     description: "Applied Digital project financing subsidiaries owning the 400 MW Ellendale data center assets and executing master lease agreements."
     key_counterparties: [APLD, CRWV_SPV_VIII, POLARIS_FORGE_1]
 
+  APLD_COMPUTECO2:
+    entity_id: APLD_COMPUTECO2
+    name: Applied Digital ComputeCo 2 LLC
+    ticker: null
+    cik: null
+    category: project_spv
+    subsector: real_estate_facility_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "05-31"
+    description: "Applied Digital project financing subsidiary owning the Polaris Forge 2 campus, funded via $2.15B 6.75% senior notes."
+    key_counterparties: [APLD, PROJECT_LENDERS]
+
   POLARIS_FORGE_1:
     entity_id: POLARIS_FORGE_1
     name: Polaris Forge 1 Campus (Ellendale, North Dakota)

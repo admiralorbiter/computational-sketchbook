@@ -99,6 +99,7 @@ class ObligationNetwork:
                 "num_outgoing_contracts": len(out_edges),
                 "num_incoming_contracts": len(in_edges),
                 "outgoing_principal_debt_usd": out_by_type.get("principal_outstanding", 0.0),
+                "outgoing_facility_capacity_usd": out_by_type.get("facility_capacity", 0.0),
                 "outgoing_lease_lifetime_usd": out_by_type.get("lifetime_contract_value", 0.0),
                 "outgoing_purchase_commitments_usd": out_by_type.get("remaining_commitment", 0.0),
                 "outgoing_contingent_guarantees_usd": out_by_type.get("contingent_guarantee", 0.0),
@@ -106,7 +107,7 @@ class ObligationNetwork:
                 "incoming_lease_claims_usd": in_by_type.get("lifetime_contract_value", 0.0),
                 "incoming_debt_claims_usd": in_by_type.get("principal_outstanding", 0.0),
                 "incoming_purchase_claims_usd": in_by_type.get("remaining_commitment", 0.0),
-                "incoming_annualized_run_rate_usd": in_by_type.get("annualized_run_rate", 0.0)
+                "incoming_recognized_revenue_usd": in_by_type.get("recognized_revenue", 0.0)
             })
 
         df = pd.DataFrame(records).sort_values(by="outgoing_principal_debt_usd", ascending=False)
@@ -178,7 +179,8 @@ class ObligationNetwork:
         collapsed = nx.MultiDiGraph()
         spv_map = {
             "CRWV_SPV_VIII": "CRWV",
-            "APLD_ELN_LLC": "APLD"
+            "APLD_ELN_LLC": "APLD",
+            "APLD_COMPUTECO2": "APLD"
         }
 
         for u, v, k, d in self.graph.edges(data=True, keys=True):
