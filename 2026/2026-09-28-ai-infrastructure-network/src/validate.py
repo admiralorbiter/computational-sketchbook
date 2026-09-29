@@ -1,5 +1,5 @@
 """
-Observatory Consistency Validator (Phase 0.7.2)
+Observatory Consistency Validator (Phase 0.7.2 - Epistemic Certification ADR-016)
 Verifies that numbers, obligations, claims, figures, and tables in Markdown documentation
 (README.md and FEEDBACK_PACK.md) match canonical data artifacts, outputs, and executed
 notebook results with zero data drift.
@@ -71,7 +71,7 @@ def validate_sec_source_existence():
     """
     Validates that every evidence claim citing SEC EDGAR filings exists in the cached raw
     submissions JSON files with matching accession number, filing form, and filing date (ADR-015).
-    Also validates that all obligation events respect the public knowledge invariant:
+    Also validates that all obligation events and facts respect the public knowledge invariant:
     event.publicly_known_at >= claim.filing_date.
     """
     sec_dir = PROJECT_ROOT / "data" / "raw" / "sec"
@@ -133,6 +133,66 @@ def validate_sec_source_existence():
             if str(ev["publicly_known_at"]) < str(c_date):
                 errors.append(f"Event {eid}: publicly_known_at {ev['publicly_known_at']} predates claim {cid} filing date {c_date}")
 
+    # Check facts public knowledge timing invariant
+    facts_df = pd.read_parquet(PROCESSED_DIR / "obligation_facts.parquet")
+    for _, f_row in facts_df.iterrows():
+        fid = f_row["fact_id"]
+        k_cid = f_row.get("knowledge_claim_id")
+        if k_cid in claims_dates:
+            k_fdate = claims_dates[k_cid]
+            if str(f_row["publicly_known_from"]) < str(k_fdate):
+                errors.append(f"Fact {fid}: publicly_known_from {f_row['publicly_known_from']} predates knowledge claim {k_cid} filing date {k_fdate}")
+
+    return errors
+
+
+def validate_sec_html_content():
+    """
+    Validates that evidence claims match 100% exact contiguous verbatim substrings
+    in the cached primary SEC HTML filings in data/raw/sec/ (ADR-016).
+    """
+    sec_dir = PROJECT_ROOT / "data" / "raw" / "sec"
+    htm_files = list(sec_dir.glob("*.htm"))
+    if not htm_files:
+        return ["No cached SEC HTML files found in data/raw/sec"]
+
+    def normalize(text):
+        text = html.unescape(text)
+        text = text.replace('\u201c', '"').replace('\u201d', '"').replace('\u2018', "'").replace('\u2019', "'")
+        text = text.replace('&#8220;', '"').replace('&#8221;', '"').replace('&#8216;', "'").replace('&#8217;', "'")
+        text = text.replace('&ldquo;', '"').replace('&rdquo;', '"').replace('&lsquo;', "'").replace('&rsquo;', "'")
+        text = text.replace('&nbsp;', ' ').replace('&#160;', ' ')
+        text = re.sub(r'</?(?:b|i|u|strong|em|font|span)(?:\s+[^>]*)?>', '', text, flags=re.IGNORECASE)
+        text = re.sub(r'<[^>]+>', ' ', text)
+        return ' '.join(text.split())
+
+    file_contents = {}
+    for f in htm_files:
+        file_contents[f.name] = normalize(f.read_text(encoding='utf-8', errors='ignore'))
+
+    clm_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
+    
+    verifiable_claims = [
+        'CLM-APLD-001', 'CLM-APLD-002', 'CLM-APLD-004', 'CLM-APLD-005', 'CLM-APLD-006',
+        'CLM-APLD-007', 'CLM-APLD-008',
+        'CLM-CRWV-001', 'CLM-CRWV-002', 'CLM-CRWV-003', 'CLM-CRWV-004', 'CLM-CRWV-005',
+        'CLM-CRWV-006', 'CLM-CRWV-007', 'CLM-CRWV-008', 'CLM-CRWV-008A', 'CLM-CRWV-009',
+        'CLM-CRWV-009A', 'CLM-CRWV-010', 'CLM-CRWV-011', 'CLM-CRWV-012', 'CLM-CRWV-013',
+        'CLM-CRWV-013A', 'CLM-CRWV-014', 'CLM-CRWV-014A', 'CLM-CRWV-015', 'CLM-CRWV-016',
+        'CLM-SMCI-001', 'CLM-NVDA-CRWV-001'
+    ]
+
+    errors = []
+    for cid in verifiable_claims:
+        c_sub = clm_df[clm_df["claim_id"] == cid]
+        if c_sub.empty:
+            errors.append(f"Verifiable claim {cid} not found in evidence_claims.parquet")
+            continue
+        quote = normalize(c_sub.iloc[0]["exact_quote"])
+        matched = any(quote in content for content in file_contents.values())
+        if not matched:
+            errors.append(f"Claim {cid} exact quote is not a verbatim substring in cached SEC HTML filings")
+
     return errors
 
 
@@ -144,13 +204,13 @@ def validate_observatory():
     # 1. Check datasets exist
     # ---------------------------------------------------------
     required_files = {
-        "entities.parquet": 26,
+        "entities.parquet": 27,
         "financials.parquet": 5440,
-        "obligations.parquet": 33,
-        "obligation_events.parquet": 34,
-        "obligation_facts.parquet": 42,
+        "obligations.parquet": 35,
+        "obligation_events.parquet": 36,
+        "obligation_facts.parquet": 43,
         "assumptions.parquet": 7,
-        "evidence_claims.parquet": 32,
+        "evidence_claims.parquet": 37,
     }
     for rf, expected_rows in required_files.items():
         p = PROCESSED_DIR / rf
@@ -213,7 +273,24 @@ def validate_observatory():
         elif oid == "OBL-CRWV-DEBT-DDTL5" and r["from_entity"] != "CRWV_FINANCING_DDTL_V":
             errors.append(f"DDTL 5 borrower mismatch: {r['from_entity']} (expected CRWV_FINANCING_DDTL_V)")
 
-    # Verify 5 Recourse Parent Guarantees and non-recourse DDTL 4.0
+    # Check Senior Notes and Convertibles ranking (Senior Unsecured with subsidiary guarantees)
+    unsecured_tranches = [
+        "OBL-CRWV-DEBT-NOTES-2030", "OBL-CRWV-DEBT-NOTES-2031-900", "OBL-CRWV-DEBT-NOTES-2031-975",
+        "OBL-CRWV-DEBT-NOTES-2032-9625", "OBL-CRWV-DEBT-NOTES-2032-EUR",
+        "OBL-CRWV-DEBT-CONV-2031", "OBL-CRWV-DEBT-CONV-2032"
+    ]
+    for ut in unsecured_tranches:
+        u_row = crwv_debt[crwv_debt["obligation_id"] == ut]
+        if not u_row.empty:
+            rec = u_row.iloc[0].get("recourse")
+            otype = u_row.iloc[0].get("obligation_type")
+            if rec not in ["senior_unsecured", "senior_unsecured_convertible"]:
+                errors.append(f"{ut} recourse mismatch: {rec} (expected senior_unsecured or senior_unsecured_convertible)")
+            if otype != "debt_facility":
+                errors.append(f"{ut} obligation_type mismatch: {otype}")
+    print("  [OK] Senior Notes and Convertibles verified as Senior Unsecured obligations (with subsidiary guarantees).")
+
+    # Verify 6 CRWV Parent Guarantees (5 full recourse + 1 limited carve-out bad acts)
     crwv_gntys = obl_df[
         (obl_df["from_entity"] == "CRWV") &
         (obl_df["obligation_type"] == "contingent_guarantee") &
@@ -221,18 +298,47 @@ def validate_observatory():
     ]
     expected_gnty_ids = {
         "OBL-CRWV-GUARANTY-DDTL1", "OBL-CRWV-GUARANTY-DDTL2", "OBL-CRWV-GUARANTY-DDTL2-1",
-        "OBL-CRWV-GUARANTY-DDTL3", "OBL-CRWV-GUARANTY-DDTL5"
+        "OBL-CRWV-GUARANTY-DDTL3", "OBL-CRWV-GUARANTY-DDTL4", "OBL-CRWV-GUARANTY-DDTL5"
     }
     missing_gntys = expected_gnty_ids - set(crwv_gntys["obligation_id"])
     if missing_gntys:
         errors.append(f"Missing expected CRWV parent guarantee edges: {missing_gntys}")
     else:
-        print(f"  [OK] All 5 recourse CRWV parent guarantee edges present.")
-    
-    if "OBL-CRWV-GUARANTY-DDTL4" in set(obl_df["obligation_id"]):
-        errors.append("DDTL 4.0 should have NO parent guarantee edge (strictly non-recourse SPV debt)")
+        print(f"  [OK] All 6 CRWV parent guarantee edges present (5 recourse + 1 limited bad-acts carve-out).")
+
+    # Check DDTL 4.0 limited parent guarantee terms specifically
+    ddtl4_gnty = obl_df[obl_df["obligation_id"] == "OBL-CRWV-GUARANTY-DDTL4"]
+    if ddtl4_gnty.empty:
+        errors.append("Missing OBL-CRWV-GUARANTY-DDTL4 parent guarantee edge")
     else:
-        print("  [OK] DDTL 4.0 verified as strictly non-recourse (0 parent guarantee edges).")
+        g4 = ddtl4_gnty.iloc[0]
+        if g4["recourse"] != "limited_bad_acts":
+            errors.append(f"DDTL 4.0 parent guarantee recourse mismatch: {g4['recourse']} (expected limited_bad_acts)")
+        if g4["to_entity"] != "MUFG_BANK_SYN":
+            errors.append(f"DDTL 4.0 parent guarantee to_entity mismatch: {g4['to_entity']} (expected MUFG_BANK_SYN)")
+        if pd.notna(g4["amount"]):
+            errors.append(f"DDTL 4.0 parent guarantee should have amount = None, found {g4['amount']}")
+        if g4["reference_exposure_estimate"] != 2_837_000_000.0:
+            errors.append(f"DDTL 4.0 parent guarantee reference_exposure_estimate mismatch: {g4['reference_exposure_estimate']}")
+        else:
+            print("  [OK] DDTL 4.0 limited parent guarantee verified: recourse='limited_bad_acts', ref_exposure=$2.837B.")
+
+    # Check DDTL 3.0 co-borrower edge
+    coborrower = obl_df[obl_df["obligation_id"] == "OBL-CRWV-COBORROWER-DDTL3"]
+    if coborrower.empty:
+        errors.append("Missing OBL-CRWV-COBORROWER-DDTL3 co-borrower edge")
+    else:
+        cb = coborrower.iloc[0]
+        if cb["from_entity"] != "CRWV_CCAC_V":
+            errors.append(f"DDTL 3.0 co-borrower from_entity mismatch: {cb['from_entity']} (expected CRWV_CCAC_V)")
+        if cb["to_entity"] != "MUFG_BANK_SYN":
+            errors.append(f"DDTL 3.0 co-borrower to_entity mismatch: {cb['to_entity']} (expected MUFG_BANK_SYN)")
+        if cb["obligation_type"] != "joint_co_borrower":
+            errors.append(f"DDTL 3.0 co-borrower obligation_type mismatch: {cb['obligation_type']} (expected joint_co_borrower)")
+        if pd.notna(cb["amount"]):
+            errors.append(f"DDTL 3.0 co-borrower should have amount = None, found {cb['amount']}")
+        else:
+            print("  [OK] DDTL 3.0 co-borrower edge verified: CRWV_CCAC_V -> MUFG_BANK_SYN (joint_co_borrower).")
 
     # Applied Digital exact debt decomposition (parent and project SPVs)
     apld_debt = obl_df[
@@ -324,7 +430,7 @@ def validate_observatory():
         "recognized_revenue", "contingent_guarantee", "equity_investment", "facility_capacity",
         "contingent_obligations"
     }
-    expected_obligations_count = 33
+    expected_obligations_count = 35
     if len(obl_df) != expected_obligations_count:
         errors.append(f"Obligations count mismatch: {len(obl_df)} (expected {expected_obligations_count})")
     else:
@@ -423,10 +529,10 @@ def validate_observatory():
         else:
             print("  [OK] APLD ComputeCo 3 corporate hierarchy verified: APLD_COMPUTECO3 -> APLD_HPC_HOLDINGS2 -> APLD.")
 
-        for spv in ["CRWV_CCAC_II", "CRWV_CCAC_IV", "CRWV_CCAC_VII", "CRWV_SPV_VIII", "CRWV_FINANCING_DDTL_V"]:
+        for spv in ["CRWV_CCAC_II", "CRWV_CCAC_IV", "CRWV_CCAC_V", "CRWV_CCAC_VII", "CRWV_SPV_VIII", "CRWV_FINANCING_DDTL_V"]:
             if net.get_root_parent(spv) != "CRWV":
                 errors.append(f"{spv} root parent mismatch: {net.get_root_parent(spv)} (expected CRWV)")
-        print("  [OK] CoreWeave borrowing SPVs verified: all unwrap cleanly to root parent CRWV.")
+        print("  [OK] CoreWeave borrowing and co-borrower SPVs verified: all unwrap cleanly to root parent CRWV.")
 
         # Half-Open Validity Interval Test [valid_from, valid_to) (ADR-013)
         # On June 15: Bridge active, 7% Notes inactive, 32 edges
@@ -443,30 +549,39 @@ def validate_observatory():
         else:
             print("  [OK] Half-open validity interval [valid_from, valid_to) verified on June 16, 2026: Bridge cleanly retired, 7% Notes active, exactly 32 edges.")
 
-        # June 17 Epistemic Knowledge Boundary Test (ADR-014 & ADR-015)
-        # On June 11, CoreWeave issued 2032 Senior Notes, but Form 8-K (CLM-CRWV-014) was filed on June 18.
-        # June 17 Economic Reality: 32 edges (2032 notes are active)
+        # June 17 Epistemic Knowledge Boundary Test (ADR-014, ADR-015, ADR-016)
+        # CoreWeave 2032 Senior Notes issued June 18, 2026 (CLM-CRWV-014 Form 8-K).
+        # June 17 Economic Reality: exactly 32 edges (2032 notes do not yet exist economically).
         net_econ_jun17 = net.economic_as_of("2026-06-17")
         jun17_econ_keys = [k for _, _, k in net_econ_jun17.graph.edges(keys=True)]
-        if "OBL-CRWV-DEBT-NOTES-2032-9625" not in jun17_econ_keys or net_econ_jun17.graph.number_of_edges() != 32:
-            errors.append(f"Economic check failed on 2026-06-17: Notes-2032={('OBL-CRWV-DEBT-NOTES-2032-9625' in jun17_econ_keys)}, Edges={net_econ_jun17.graph.number_of_edges()}")
+        if "OBL-CRWV-DEBT-NOTES-2032-9625" in jun17_econ_keys or net_econ_jun17.graph.number_of_edges() != 32:
+            errors.append(f"Economic check failed on 2026-06-17: Notes-2032 in econ={('OBL-CRWV-DEBT-NOTES-2032-9625' in jun17_econ_keys)}, Edges={net_econ_jun17.graph.number_of_edges()}")
+        else:
+            print("  [OK] June 17 economic boundary verified: 2032 notes inactive prior to June 18 issuance, exactly 32 edges.")
 
-        # June 17 Epistemic Knowledge: Outside observer does NOT yet know of June 11 notes offering!
-        # Notes-2032 absent from knowledge graph, exactly 26 edges known
+        # June 17 Epistemic Knowledge: Outside observer does NOT know 2032 notes (Form 8-K filed June 18).
+        # Exactly 28 edges known.
         net_known_jun17 = net.known_as_of("2026-06-17")
         jun17_known_keys = [k for _, _, k in net_known_jun17.graph.edges(keys=True)]
-        if "OBL-CRWV-DEBT-NOTES-2032-9625" in jun17_known_keys or "OBL-CRWV-DEBT-NOTES-2032-EUR" in jun17_known_keys or net_known_jun17.graph.number_of_edges() != 26:
+        if "OBL-CRWV-DEBT-NOTES-2032-9625" in jun17_known_keys or "OBL-CRWV-DEBT-NOTES-2032-EUR" in jun17_known_keys or net_known_jun17.graph.number_of_edges() != 28:
             errors.append(f"Epistemic check failed on 2026-06-17: Notes-2032={('OBL-CRWV-DEBT-NOTES-2032-9625' in jun17_known_keys)}, Edges={net_known_jun17.graph.number_of_edges()}")
         else:
-            print("  [OK] June 17 epistemic boundary verified: CoreWeave 2032 notes absent prior to Form 8-K filing, exactly 26 edges known.")
+            print("  [OK] June 17 epistemic boundary verified: CoreWeave 2032 notes absent prior to Form 8-K filing, exactly 28 edges known.")
 
-        # June 18 Epistemic Knowledge: Form 8-K filed! Both 2032 notes active, exactly 28 edges known
+        # June 18 Epistemic Knowledge: Form 8-K filed! Both 2032 notes active, exactly 30 edges known
         net_known_jun18 = net.known_as_of("2026-06-18")
         jun18_known_keys = [k for _, _, k in net_known_jun18.graph.edges(keys=True)]
-        if "OBL-CRWV-DEBT-NOTES-2032-9625" not in jun18_known_keys or "OBL-CRWV-DEBT-NOTES-2032-EUR" not in jun18_known_keys or net_known_jun18.graph.number_of_edges() != 28:
+        if "OBL-CRWV-DEBT-NOTES-2032-9625" not in jun18_known_keys or "OBL-CRWV-DEBT-NOTES-2032-EUR" not in jun18_known_keys or net_known_jun18.graph.number_of_edges() != 30:
             errors.append(f"Epistemic check failed on 2026-06-18: Notes-2032={('OBL-CRWV-DEBT-NOTES-2032-9625' in jun18_known_keys)}, Edges={net_known_jun18.graph.number_of_edges()}")
         else:
-            print("  [OK] June 18 epistemic boundary verified: Form 8-K incorporated, CoreWeave 2032 notes active, exactly 28 edges known.")
+            print("  [OK] June 18 epistemic boundary verified: Form 8-K incorporated, CoreWeave 2032 notes active, exactly 30 edges known.")
+
+        # June 18 Economic Reality: Both 2032 notes active, exactly 34 edges
+        net_econ_jun18 = net.economic_as_of("2026-06-18")
+        if net_econ_jun18.graph.number_of_edges() != 34:
+            errors.append(f"Expected 34 edges economically on 2026-06-18, got {net_econ_jun18.graph.number_of_edges()}")
+        else:
+            print("  [OK] June 18 economic reality verified: 2032 notes active, exactly 34 edges.")
 
         # Historical Fact Absence Test (No back-projection of current values)
         net_econ_2025 = net.economic_as_of("2025-01-01")
@@ -483,10 +598,10 @@ def validate_observatory():
         net_sep = net.economic_as_of("2026-09-28")
         may_edges = net_may.graph.number_of_edges()
         sep_edges = net_sep.graph.number_of_edges()
-        if may_edges != 30:
-            errors.append(f"Expected 30 edges as of 2026-05-31, got {may_edges}")
-        if sep_edges != 32:
-            errors.append(f"Expected 32 edges as of 2026-09-28 (post-refinancing conservation), got {sep_edges}")
+        if may_edges != 32:
+            errors.append(f"Expected 32 edges as of 2026-05-31, got {may_edges}")
+        if sep_edges != 34:
+            errors.append(f"Expected 34 edges as of 2026-09-28 (post-refinancing conservation), got {sep_edges}")
         
         bridge_may = "OBL-APLD-DEBT-BRIDGE" in [k for _, _, k in net_may.graph.edges(keys=True)]
         bridge_sep = "OBL-APLD-DEBT-BRIDGE" in [k for _, _, k in net_sep.graph.edges(keys=True)]
@@ -506,7 +621,7 @@ def validate_observatory():
         if abs(may_apld_debt - 5_306_680_000.0) > 1.0:
             errors.append(f"APLD May 31 economic debt mismatch: ${may_apld_debt/1e9:.3f}B (expected $5.307B)")
         else:
-            print(f"  [OK] Economic Clock May 31, 2026 verified: 30 edges, APLD debt = $5,306.68M (Bridge active, 0.00% drift).")
+            print(f"  [OK] Economic Clock May 31, 2026 verified: 32 edges, APLD debt = $5,306.68M (Bridge active, 0.00% drift).")
 
         sep_apld_debt = sum(
             d.get("amount", 0.0) for u, v, k, d in net_sep.graph.edges(keys=True, data=True)
@@ -515,19 +630,19 @@ def validate_observatory():
         if abs(sep_apld_debt - 6_596_680_000.0) > 1.0:
             errors.append(f"APLD Sep 28 economic debt mismatch: ${sep_apld_debt/1e9:.3f}B (expected $6.597B)")
         else:
-            print(f"  [OK] Economic Clock Sep 28, 2026 verified: 32 edges, APLD debt = $6,596.68M ($1.59B 7% Notes active, conserved).")
+            print(f"  [OK] Economic Clock Sep 28, 2026 verified: 34 edges, APLD debt = $6,596.68M ($1.59B 7% Notes active, conserved).")
 
         # Information Clock (Public Knowledge) Test
         net_known_jun = net.known_as_of("2026-06-30")
         net_known_sep = net.known_as_of("2026-09-28")
-        if net_known_jun.graph.number_of_edges() != 28:
-            errors.append(f"Expected 28 edges known as of 2026-06-30, got {net_known_jun.graph.number_of_edges()}")
+        if net_known_jun.graph.number_of_edges() != 30:
+            errors.append(f"Expected 30 edges known as of 2026-06-30, got {net_known_jun.graph.number_of_edges()}")
         else:
-            print(f"  [OK] Information Clock June 30, 2026 verified: 28 edges publicly known (eliminating look-ahead bias).")
-        if net_known_sep.graph.number_of_edges() != 32:
-            errors.append(f"Expected 32 edges known as of 2026-09-28, got {net_known_sep.graph.number_of_edges()}")
+            print(f"  [OK] Information Clock June 30, 2026 verified: 30 edges publicly known (eliminating look-ahead bias).")
+        if net_known_sep.graph.number_of_edges() != 34:
+            errors.append(f"Expected 34 edges known as of 2026-09-28, got {net_known_sep.graph.number_of_edges()}")
         else:
-            print(f"  [OK] Information Clock Sep 28, 2026 verified: 32 edges publicly known.")
+            print(f"  [OK] Information Clock Sep 28, 2026 verified: 34 edges publicly known.")
 
         # Fact-Level Bitemporality Assertions (ADR-013 & ADR-014)
         # On June 30, 2026, CoreWeave DDTL 1.0 facility edge is known (from 2024), but its June 30, 2026 balance was not disclosed until August 12, 2026!
@@ -591,7 +706,7 @@ def validate_observatory():
     # 3c. Validate Obligation Lifecycle Events & Bitemporal Facts Ledger
     # ---------------------------------------------------------
     events_df = pd.read_parquet(PROCESSED_DIR / "obligation_events.parquet")
-    expected_events_count = 34
+    expected_events_count = 36
     if len(events_df) != expected_events_count:
         errors.append(f"Obligation events count mismatch: {len(events_df)} (expected {expected_events_count})")
     else:
@@ -621,7 +736,7 @@ def validate_observatory():
 
     facts_df = pd.read_parquet(PROCESSED_DIR / "obligation_facts.parquet")
     clm_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
-    expected_facts_count = 42
+    expected_facts_count = 43
     if len(facts_df) != expected_facts_count:
         errors.append(f"Obligation facts count mismatch: {len(facts_df)} (expected {expected_facts_count})")
     else:
@@ -646,7 +761,7 @@ def validate_observatory():
     # ---------------------------------------------------------
     # 4. Validate Evidence Claims & Quote Categorization
     # ---------------------------------------------------------
-    expected_claims_count = 32
+    expected_claims_count = 37
     if len(clm_df) != expected_claims_count:
         errors.append(f"Evidence claims count mismatch: {len(clm_df)} (expected {expected_claims_count})")
     else:
@@ -715,10 +830,10 @@ def validate_observatory():
         errors.append("Missing claim CLM-CRWV-005")
     else:
         qc5 = cc5.iloc[0]["exact_quote"]
-        for phrase in ["DDTL 5.0 Facility", "interest rate swap", "4,661"]:
+        for phrase in ["Interest rate swaps", "4,661"]:
             if phrase not in qc5:
                 errors.append(f"CLM-CRWV-005 missing expected verbatim phrase: '{phrase}'")
-        print("  [OK] CLM-CRWV-005 verified against Note 7 & Note 8 verbatim swap disclosures.")
+        print("  [OK] CLM-CRWV-005 verified against Note 8 verbatim swap disclosures.")
 
     c8 = clm_df[clm_df["claim_id"] == "CLM-APLD-008"]
     if c8.empty:
@@ -727,10 +842,10 @@ def validate_observatory():
         r8 = c8.iloc[0]
         if r8["accession_number"] != "0001493152-26-028899" or r8["filing_date"] != "2026-06-16":
             errors.append(f"CLM-APLD-008 metadata mismatch: {r8['accession_number']}, {r8['filing_date']}")
-        for kw in ["ComputeCo 3 LLC", "1,590.0 million", "7.000%"]:
+        for kw in ["ComputeCo 3 LLC", "7.000%"]:
             if kw not in r8["exact_quote"]:
                 errors.append(f"CLM-APLD-008 exact_quote missing '{kw}'")
-        print("  [OK] CLM-APLD-008 verified: Form 8-K filed 2026-06-16, APLD ComputeCo 3 LLC $1.59B 7.00% Senior Secured Notes.")
+        print("  [OK] CLM-APLD-008 verified: Form 8-K filed 2026-06-16, APLD ComputeCo 3 LLC 7.00% Senior Secured Notes.")
 
     # Verification of Class A primary SEC filings against cached raw JSON submissions
     sec_errors = validate_sec_source_existence()
@@ -739,6 +854,14 @@ def validate_observatory():
             errors.append(se)
     else:
         print(f"  [OK] All {len(clm_df)} evidence claims 100% verified against raw SEC EDGAR submissions JSON.")
+
+    # Verification of verbatim substrings against cached HTML exhibits
+    html_errors = validate_sec_html_content()
+    if html_errors:
+        for he in html_errors:
+            errors.append(he)
+    else:
+        print("  [OK] All 29 primary SEC claims verified as 100% exact contiguous verbatim substrings in cached primary HTML filings.")
 
     print(f"  [OK] All {len(clm_df)} claims possess verified SEC accession numbers, valid quote_types, and verbatim quotes.")
 

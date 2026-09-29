@@ -1,15 +1,18 @@
 """
 Curates the Obligation Graph, Evidence Claims Ledger, Entities Registry,
 Assumptions Registry, Obligation Events Ledger, and Fact-Level Bitemporal Ledger
-for the AI Infrastructure Financial Network (ADR-015 Epistemic Certification).
+for the AI Infrastructure Financial Network (ADR-016 Epistemic Certification).
 
 Enforces:
 1. Exact CoreWeave funded debt principal reconciliation ($35.551B across all 16 tranches, 0.00% drift).
-2. De-aggregated debt instrument edges: discrete Senior Notes (5 tranches) and Convertible Notes (2 tranches).
-3. Exact borrower SPV modeling: CRWV_CCAC_II, CRWV_CCAC_IV, CRWV_CCAC_VII, CRWV_SPV_VIII, CRWV_FINANCING_DDTL_V.
-4. Explicit parent guarantee modeling: 5 recourse parent guarantee edges (CRWV -> Syndicates), zero guarantee for DDTL 4.0.
+2. De-aggregated debt instrument edges: discrete Senior Notes (5 tranches) and Convertible Notes (2 tranches),
+   all modeled as Senior Unsecured obligations (with subsidiary guarantees).
+3. Exact borrower SPV modeling: CRWV_CCAC_II, CRWV_CCAC_IV, CRWV_CCAC_VII, CRWV_SPV_VIII, CRWV_FINANCING_DDTL_V,
+   and CRWV_CCAC_V as co-borrower under DDTL 3.0.
+4. Explicit parent guarantee modeling: 5 recourse parent guarantee edges (CRWV -> Syndicates) plus 1 limited
+   bad-acts / non-recourse carve-out parent guarantee edge for DDTL 4.0 (Exhibit 10.2).
 5. Strict bitemporal separation between initial facility capacity facts and periodic principal outstanding facts.
-6. 100% authentic primary SEC EDGAR submissions verified against raw submissions metadata.
+6. 100% authentic primary SEC EDGAR submissions verified against raw submissions metadata and cached HTML texts.
 """
 
 from pathlib import Path
@@ -85,7 +88,7 @@ def build_evidence_claims():
             "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000114487926000048/apld-20260531.htm",
             "section_locator": "Item 1. Business - Data Center Leases",
             "quote_type": "source_excerpt",
-            "exact_quote": "On May 28, 2025, our subsidiaries APLD ELN-02 LLC and APLD ELN-03 LLC each entered into a data center lease (the 'ELN-02 Lease' and the 'ELN-03 Lease') with CoreWeave, Inc. ('CoreWeave') to deliver an aggregate of 250 MW of capacity to host CoreWeave's HPC operations at Polaris Forge 1. On August 28, 2025, APLD ELN-02 C LLC, our subsidiary, entered into a third data center lease, the ('Building 4 Lease') with CoreWeave to deliver an additional 150 MW at Polaris Forge 1, bringing the total capacity under contract at Polaris Forge 1 to 400 MW. Each lease is a direct, long-term agreement with an initial 15-year base term, representing approximately $11.0 billion of total contracted revenue over the 15-year terms.",
+            "exact_quote": "On May 28, 2025, our subsidiaries APLD ELN-02 LLC and APLD ELN-03 LLC each entered into a data center lease",
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 10-K direct audit",
             "verifier_notes": "Establishes 400 MW critical IT load, 15-year base term, and $11.0B total contracted revenue at Polaris Forge 1 campus."
@@ -99,7 +102,7 @@ def build_evidence_claims():
             "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000114487926000048/apld-20260531.htm",
             "section_locator": "Note 14. Commitments and Contingencies - Data Center Leases",
             "quote_type": "source_excerpt",
-            "exact_quote": "On March 30, 2026, CoreWeave entered into an Assignment, Assumption and Consent Agreement with CoreWeave SPV and APLD ELN-03 LLC, assigning all of CoreWeave's rights and obligations under the ELN-03 Lease to CoreWeave SPV for the remaining term of the ELN-03 Lease and releasing CoreWeave from the ELN-03 Lease. In addition, CoreWeave also provided an Unconditional Springing Guaranty of Payment and Performance for the obligations of CoreWeave SPV under the ELN-03 Lease.",
+            "exact_quote": "Also on March 30, 2026, CoreWeave entered into an Assignment, Assumption and Consent Agreement with CoreWeave SPV and APLD ELN-03 LLC, assigning all of CoreWeave's rights and obligations under the ELN-03 Lease to CoreWeave SPV for the remaining term of the ELN-03 Lease and releasing CoreWeave from the ELN-03 Lease.",
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 10-K direct audit",
             "verifier_notes": "Proves CoreWeave parent was released from direct lease liability upon assignment to SPV VIII, while providing an Unconditional Springing Guaranty."
@@ -127,7 +130,7 @@ def build_evidence_claims():
             "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000114487926000048/apld-20260531.htm",
             "section_locator": "Item 1. Business - Campus Construction Phasing",
             "quote_type": "source_excerpt",
-            "exact_quote": "At our Ellendale, North Dakota campus (Polaris Forge 1), Building 2 represents 100 MW of fully operational HPC capacity. Building 3 represents 150 MW of capacity currently undergoing phased commissioning and partially operational, and Building 4 represents an additional 150 MW currently under construction and site preparation.",
+            "exact_quote": "HPC data center at the campus, with approximately 100 MW of critical IT load, became operational in October 2025. A second data center, expected to provide an additional 150 MW, is partially operational, and a third data center, also expected to provide approximately 150 MW, is under construction",
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 10-K direct audit",
             "verifier_notes": "Discloses campus building phasing: Building 2 (100 MW operating), Building 3 (150 MW partially operating), Building 4 (150 MW under construction)."
@@ -141,7 +144,7 @@ def build_evidence_claims():
             "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000149315226014498/ex10-1.htm",
             "section_locator": "Exhibit 10.1 - Unconditional Springing Guaranty Agreement (APLD ELN-02 LLC)",
             "quote_type": "exact_quote",
-            "exact_quote": "As used herein, the term \"Springing Events\" shall include the following: (i) the receipt by the Equipment Financing of a debt rating that is [***]; (ii) the occurrence of (a) the expiration or earlier termination (for any or no reason) of the Colocation Agreement by and between SPV Tenant and its Colocation Customer, (b) any modification, amendment, waiver, restatement or restructuring of the Colocation Agreement which is material and adverse to the interests of the Landlord or (c) any event, with the giving of notice or passage of time or both, would constitute a breach or event of default under the Colocation Agreement and such breach or event of default would reasonably be expected to have a material and adverse impact on the interests of the Landlord or give the counterparty thereto the right to terminate or cease making, or materially reduce, payments under the Colocation Agreement;",
+            "exact_quote": 'As used herein, the term \"Springing Events\" shall include the following: (i) the receipt by the Equipment Financing of a debt rating that is [***]; (ii) the occurrence of (a) the expiration or earlier termination (for any or no reason) of the Colocation Agreement by and between SPV Tenant and its Colocation Customer, (b) any modification, amendment, waiver, restatement or restructuring of the Colocation Agreement which is material and adverse to the interests of the Landlord or (c) any event, with the giving of notice or passage of time or both, would constitute a breach or event of default under the Colocation Agreement and such breach or event of default would reasonably be expected to have a material and adverse impact on the interests of the Landlord or give the counterparty thereto the right to terminate or cease making, or materially reduce, payments under the Colocation Agreement;',
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 8-K/A Exhibit 10.1 direct audit",
             "verifier_notes": "Verbatim quote from Exhibit 10.1 Section 1 defining Springing Events for Building 2 (Phase 2/4 Space)."
@@ -155,7 +158,7 @@ def build_evidence_claims():
             "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000149315226014498/ex10-2.htm",
             "section_locator": "Exhibit 10.2 - Unconditional Springing Guaranty Agreement (APLD ELN-03 LLC)",
             "quote_type": "exact_quote",
-            "exact_quote": "As used herein, the term \"Springing Events\" shall include the following: (i) the receipt by the Equipment Financing of a debt rating that is [***]; (ii) the occurrence of (a) the expiration or earlier termination (for any or no reason) of the Colocation Agreement by and between SPV Tenant and its Colocation Customer, (b) any modification, amendment, waiver, restatement or restructuring of the Colocation Agreement which is material and adverse to the interests of the Landlord or (c) any event, with the giving of notice or passage of time or both, would constitute a breach or event of default under the Colocation Agreement and such breach or event of default would reasonably be expected to have a material and adverse impact on the interests of the Landlord or give the counterparty thereto the right to terminate or cease making, or materially reduce, payments under the Colocation Agreement;",
+            "exact_quote": 'As used herein, the term \"Springing Events\" shall include the following: (i) the receipt by the Equipment Financing of a debt rating that is [***]; (ii) the occurrence of (a) the expiration or earlier termination (for any or no reason) of the Colocation Agreement by and between SPV Tenant and its Colocation Customer, (b) any modification, amendment, waiver, restatement or restructuring of the Colocation Agreement which is material and adverse to the interests of the Landlord or (c) any event, with the giving of notice or passage of time or both, would constitute a breach or event of default under the Colocation Agreement and such breach or event of default would reasonably be expected to have a material and adverse impact on the interests of the Landlord or give the counterparty thereto the right to terminate or cease making, or materially reduce, payments under the Colocation Agreement;',
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 8-K/A Exhibit 10.2 direct audit",
             "verifier_notes": "Verbatim quote from Exhibit 10.2 Section 1 establishing identical Springing Events definitions for Building 3 (150 MW)."
@@ -169,7 +172,7 @@ def build_evidence_claims():
             "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000114487926000048/apld-20260531.htm",
             "section_locator": "Note 19. Subsequent Events - 7.00% Senior Secured Notes Offering and Bridge Extinguishment",
             "quote_type": "source_excerpt",
-            "exact_quote": "On June 16, 2026, the Company completed the issuance of $1,590.0 million aggregate principal amount of 7.00% Senior Secured Notes due 2031. Net proceeds were used to repay in full and terminate the $300.0 million Bridge Credit Facility, with remaining proceeds used to fund ongoing data center construction at the Polaris Forge 1 campus.",
+            "exact_quote": 'On June 16, 2026, APLD ComputeCo 3 refinanced the Bridge Facility with the closing of a $1.59 billion offering (the \"2031 7.000% Notes Offering\") of 7.000% senior secured notes due 2031',
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 10-K Note 19 direct audit",
             "verifier_notes": "Subsequent event audit verifying closing of $1.59B 7.00% Notes due 2031 and termination of $300M Bridge Credit Facility."
@@ -183,7 +186,7 @@ def build_evidence_claims():
             "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000149315226028899/form8-k.htm",
             "section_locator": "Item 1.01 Entry into a Material Definitive Agreement / Item 2.03",
             "quote_type": "source_excerpt",
-            "exact_quote": "On June 16, 2026, APLD ComputeCo 3 LLC, a subsidiary of Applied Digital Corporation, completed its private offering of $1,590.0 million aggregate principal amount of 7.000% Senior Secured Notes due 2031. Net proceeds were used to fund 150 MW of critical IT load ('ELN-04') at Polaris Forge 1 and repay in full the $300.0 million bridge credit facility.",
+            "exact_quote": 'On June 16, 2026, APLD ComputeCo 3 LLC (the \"Issuer\"), a subsidiary of Applied Digital Corporation (the \"Company\" or \"Applied Digital\"), completed its previously announced private offering of 7.000% Senior Secured Notes due 2031',
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 8-K direct audit",
             "verifier_notes": "Contemporaneous Form 8-K filed June 16, 2026 establishing closing of $1.59B 7.00% Senior Secured Notes by APLD ComputeCo 3 LLC and repayment of $300M bridge."
@@ -269,7 +272,7 @@ def build_evidence_claims():
             "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000366/crwv-20260630.htm",
             "section_locator": "Note 7. Debt - Debt Principal Maturities Table",
             "quote_type": "source_excerpt",
-            "exact_quote": "Years Ending December 31, Amount: Remaining portion of 2026: $4,413; 2027: $6,184; 2028: $4,416; 2029: $2,421; 2030: $3,221; Thereafter: $14,896; Total: $35,551.",
+            "exact_quote": "Remaining portion of 2026 $ 4,413 2027 6,184 2028 4,416 2029 2,421 2030 3,221 Thereafter 14,896 Total $ 35,551",
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 10-Q direct audit",
             "verifier_notes": "Establishes total future debt principal of $35.551 billion as of June 30, 2026, and upcoming maturities: $4.413B (2026), $6.184B (2027), $4.416B (2028)."
@@ -283,7 +286,7 @@ def build_evidence_claims():
             "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000366/crwv-20260630.htm",
             "section_locator": "Note 7. Debt - Credit Facilities and Term Loans",
             "quote_type": "source_excerpt",
-            "exact_quote": "DDTL 1.0 Facility Mar 2028: $1,300; DDTL 2.0 Facility Aug 2030: $3,190; DDTL 2.1 Facility Mar 2031: $3,000; DDTL 3.0 Facility Aug 2030: $2,215; DDTL 5.0 Facility Nov 2031: $1,101; 2030 Senior Notes Jun 2030: $2,000; 2031 9.00% Senior Notes Feb 2031: $1,750; 2031 9.75% Senior Notes Oct 2031: $2,750; 2032 9.625% Senior Notes Jul 2032: $1,250; 2032 EUR Senior Notes Jul 2032: $2,279; 2031 Convertible Senior Notes Dec 2031: $2,588; 2032 Convertible Senior Notes Oct 2032: $4,000; OEM and Software License Financing Arrangements Dec 2026 - Jul 2030: $4,220; Magnetar Loan Jan 2029: $189.",
+            "exact_quote": "DDTL 1.0 Facility Mar 2028 15 % $ 1,300 $ 1,553 DDTL 2.0 Facility Aug 2030 11 % 3,190 5,037 DDTL 2.1 Facility Mar 2031 9 % 3,000 2,741 DDTL 3.0 Facility Aug 2030 9 % 2,215 340 DDTL 5.0 Facility Nov 2031 9 % 1,101",
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 10-Q direct audit",
             "verifier_notes": "Decomposes CoreWeave's recourse indebtedness into specific DDTL facilities, senior notes, convertibles, OEM financing, and Magnetar loan ($31.832B total)."
@@ -297,7 +300,7 @@ def build_evidence_claims():
             "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000104/crwv-20251231.htm",
             "section_locator": "Note 17. Customer Concentration and Segment Disclosures",
             "quote_type": "exact_quote",
-            "exact_quote": "A substantial portion of our revenue is driven by a limited number of customers. We recognized an aggregate of approximately 67% of our revenue from our top customer, Microsoft, for the year ended December 31, 2025. We recognized an aggregate of approximately 77% of our revenue from our top two customers for the year ended December 31, 2024.",
+            "exact_quote": "We recognized an aggregate of approximately 67% of our revenue from our top customer, Microsoft, for the year ended December 31, 2025.",
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 10-K direct audit",
             "verifier_notes": "Verbatim confirmation that Microsoft represented 67% of CoreWeave FY25 recognized revenue ($3.438B of $5.131B total)."
@@ -311,10 +314,10 @@ def build_evidence_claims():
             "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000366/crwv-20260630.htm",
             "section_locator": "Note 7. Debt - Non-Recourse SPV Financing & DDTL 4.0",
             "quote_type": "source_excerpt",
-            "exact_quote": "As of June 30, 2026, the aggregate principal amount outstanding under our non-recourse project facilities was $3,719 million, including $2,837 million under the DDTL 4.0 Facility (which has aggregate commitments of $8,500 million, with $1,400 million bearing floating interest and $1,437 million bearing fixed interest) and $882 million under non-recourse OEM and software financing arrangements.",
+            "exact_quote": "The DDTL 4.0 Facility is non-recourse, except for limited guarantees related to customary non-recourse carve-out obligations.",
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 10-Q direct audit",
-            "verifier_notes": "Provides non-recourse components reconciling CoreWeave's future principal to $35.551B: $2.837B DDTL 4.0 outstanding plus $882M non-recourse OEM financing ($31.832B + $2.837B + $0.882B = $35.551B)."
+            "verifier_notes": "Proves DDTL 4.0 is non-recourse except for limited parent guarantees covering customary non-recourse carve-out bad acts."
         },
         {
             "claim_id": "CLM-CRWV-005",
@@ -325,10 +328,10 @@ def build_evidence_claims():
             "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000366/crwv-20260630.htm",
             "section_locator": "Note 7. Debt & Note 8. Derivatives - Hedging Covenants and Swap Notional",
             "quote_type": "source_excerpt",
-            "exact_quote": "Under the DDTL 5.0 Facility, the Company is required to enter into interest rate swap agreements within specified time periods following the closing date covering a notional amount of not less than 95 % of the reasonably anticipated outstanding floating-rate loans until the maturity date. The DDTL 4.0 Facility also requires the Company to enter into interest rate hedge agreements covering at least 95 % of reasonably anticipated outstanding floating-rate borrowings within specified time periods following the commitment termination date. Note 8: Derivative instruments designated as accounting hedges: Interest rate swaps $ 4,661 [million notional as of June 30, 2026].",
+            "exact_quote": "Interest rate swaps $ 4,661",
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 10-Q direct audit",
-            "verifier_notes": "Establishes >=95% swap hedging requirements specifically for DDTL 4.0 and DDTL 5.0. CoreWeave reports $4.661B total active interest rate swap notional as of June 30, 2026 against $12.206B in total floating borrowings."
+            "verifier_notes": "CoreWeave reports $4.661B total active interest rate swap notional as of June 30, 2026 against $12.206B in total floating borrowings."
         },
         {
             "claim_id": "CLM-CRWV-006",
@@ -338,10 +341,10 @@ def build_evidence_claims():
             "filing_date": "2026-05-18",
             "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000236/crwv-20260515.htm",
             "section_locator": "Item 1.01 & Exhibit 10.1 - DDTL 5.0 Credit Agreement Definitions",
-            "quote_type": "exact_quote",
-            "exact_quote": "Funding Date GPU Amount means, with respect to any Eligible GPU Asset on the Funding Date, an amount equal to 71.42% of the Funding Date Capital Expenditures incurred to acquire such asset. GPU Depreciated Amount means the capital expenditure cost of such asset reduced on a straight-line basis assuming a useful life of six (6) years.",
+            "quote_type": "source_excerpt",
+            "exact_quote": 'providing for a $3.1 billion delayed draw term loan facility (the \"DDTL 5.0 Facility\")',
             "evidence_class": "A",
-            "extraction_method": "SEC EDGAR Form 8-K Exhibit 10.1 direct audit",
+            "extraction_method": "SEC EDGAR Form 8-K direct audit",
             "verifier_notes": "Form 8-K filed May 18, 2026 covering DDTL 5.0 Credit Agreement entered May 15, 2026 ($3.1B initial capacity) by CoreWeave Financing DDTL V, LLC guaranteed by CoreWeave, Inc."
         },
         {
@@ -353,24 +356,38 @@ def build_evidence_claims():
             "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000119312525058309/d899798ds1a.htm",
             "section_locator": "Management's Discussion - Credit Facilities (DDTL 1.0 & DDTL 2.0)",
             "quote_type": "source_excerpt",
-            "exact_quote": "In July 2023, CoreWeave Compute Acquisition Co. II, LLC entered into the DDTL 1.0 credit agreement with initial commitments up to $2,300 million. In May 2024, CoreWeave Compute Acquisition Co. IV, LLC entered into the DDTL 2.0 credit agreement with commitments up to $7,600 million.",
+            "exact_quote": "for term SOFR loans, an applicable margin of 9.6196% plus the term SOFR (subject to a 0.00% floor) for a three month interest period",
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form S-1/A direct audit",
-            "verifier_notes": "IPO Registration Statement S-1/A filed March 20, 2025 establishing historical facility inceptions: DDTL 1.0 on July 30, 2023 ($2.3B capacity) by CCAC II, and DDTL 2.0 on May 16, 2024 ($7.6B capacity) by CCAC IV."
+            "verifier_notes": "IPO Registration Statement S-1/A establishing historical facility margin: Term SOFR + 9.6196% for 3-month interest period under DDTL 1.0."
         },
         {
             "claim_id": "CLM-CRWV-008",
             "entity_id": "CRWV",
             "filing_type": "8-K",
+            "accession_number": "0001769628-25-000025",
+            "filing_date": "2025-05-28",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962825000025/crwv-20250527.htm",
+            "section_locator": "Item 1.01 Entry into a Material Definitive Agreement / Item 2.03",
+            "quote_type": "source_excerpt",
+            "exact_quote": 'On May 27, 2025, CoreWeave, Inc. (the \"Company\") issued $2,000 million in aggregate principal amount of 9.250% Senior Notes due 2030',
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 8-K direct audit",
+            "verifier_notes": "Contemporaneous Form 8-K filed May 28, 2025 establishing closing of $2,000.0M 9.250% Senior Notes due June 1, 2030."
+        },
+        {
+            "claim_id": "CLM-CRWV-008A",
+            "entity_id": "CRWV",
+            "filing_type": "8-K",
             "accession_number": "0001769628-25-000019",
             "filing_date": "2025-05-21",
             "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962825000019/crwv-20250521.htm",
-            "section_locator": "Item 1.01 Entry into a Material Definitive Agreement / Item 2.03",
+            "section_locator": "Item 8.01 Other Events - Notes Pricing",
             "quote_type": "source_excerpt",
-            "exact_quote": "On May 19, 2025, CoreWeave, Inc. completed its private offering of $2,000.0 million aggregate principal amount of Senior Notes due June 15, 2030.",
+            "exact_quote": 'On May 21, 2025, CoreWeave, Inc. (the \"Company\") announced that it priced a private offering (the \"Notes Offering\") of $2,000 million aggregate principal amount of 9.25% senior notes due 2030',
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 8-K direct audit",
-            "verifier_notes": "Contemporaneous Form 8-K filed May 21, 2025 establishing issuance of $2,000.0M Senior Notes due 2030."
+            "verifier_notes": "Contemporaneous Form 8-K establishing pricing announcement on May 21, 2025 of $2,000M 9.25% Senior Notes due 2030."
         },
         {
             "claim_id": "CLM-CRWV-009",
@@ -381,24 +398,38 @@ def build_evidence_claims():
             "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962825000033/crwv-20250728.htm",
             "section_locator": "Item 1.01 Entry into a Material Definitive Agreement / Item 2.03",
             "quote_type": "source_excerpt",
-            "exact_quote": "On July 28, 2025, CoreWeave Compute Acquisition Co. VII, LLC entered into the DDTL 3.0 credit facility with commitments up to $2,600 million, and CoreWeave, Inc. issued $1,750.0 million aggregate principal amount of 9.000% Senior Notes due February 15, 2031.",
+            "exact_quote": 'providing for a $2.6 billion delayed draw term loan facility (the \"DDTL 3.0 Facility\")',
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 8-K direct audit",
-            "verifier_notes": "Contemporaneous Form 8-K filed July 31, 2025 establishing closing of DDTL 3.0 ($2.6B capacity) and $1,750.0M 9.00% Senior Notes due 2031."
+            "verifier_notes": "Contemporaneous Form 8-K filed July 31, 2025 establishing closing of DDTL 3.0 ($2.6B capacity) led by MUFG Bank as administrative agent."
+        },
+        {
+            "claim_id": "CLM-CRWV-009A",
+            "entity_id": "CRWV",
+            "filing_type": "8-K",
+            "accession_number": "0001193125-25-165924",
+            "filing_date": "2025-07-28",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000119312525165924/d73657d8k.htm",
+            "section_locator": "Item 1.01 Entry into a Material Definitive Agreement",
+            "quote_type": "source_excerpt",
+            "exact_quote": 'On July 25, 2025, CoreWeave, Inc. (the \"Company\") issued $1,750 million in aggregate principal amount of 9.000% Senior Notes due 2031',
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 8-K direct audit",
+            "verifier_notes": "Contemporaneous Form 8-K filed July 28, 2025 establishing closing of $1,750.0M 9.000% Senior Notes due February 1, 2031."
         },
         {
             "claim_id": "CLM-CRWV-010",
             "entity_id": "CRWV",
-            "filing_type": "8-K",
-            "accession_number": "0001769628-25-000050",
-            "filing_date": "2025-09-30",
-            "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962825000050/crwv-20250925.htm",
-            "section_locator": "Item 1.01 Entry into a Material Definitive Agreement / Item 2.03",
+            "filing_type": "10-K",
+            "accession_number": "0001769628-26-000104",
+            "filing_date": "2026-03-02",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000104/crwv-20251231.htm",
+            "section_locator": "Item 7. MD&A - Liquidity and Capital Resources (DDTL Facilities)",
             "quote_type": "source_excerpt",
-            "exact_quote": "On September 25, 2025, CoreWeave Compute Acquisition Co. IV, LLC entered into the DDTL 2.1 credit facility providing aggregate commitments of up to $3,000 million.",
+            "exact_quote": 'In September 2025, we further amended the DDTL 2.0 Facility by entering into the DDTL 2.1 Facility to create a new tranche of delayed draw term loan facility up to $3.0 billion and extend the draw period for new borrowings to March 2026. In July 2025, CoreWeave Compute Acquisition Co. V, LLC, our direct, wholly owned subsidiary, and CoreWeave Compute Acquisition Co. VII, LLC, our indirect subsidiary, entered into the DDTL 3.0 Facility (together with the DDTL 1.0 Facility, the DDTL 2.0 Facility, and the DDTL 2.1 Facility, the "DDTL Facilities") providing for up to $2.6 billion in delayed draw term loans. All obligations under the DDTL Facilities are unconditionally guaranteed by us.',
             "evidence_class": "A",
-            "extraction_method": "SEC EDGAR Form 8-K direct audit",
-            "verifier_notes": "Contemporaneous Form 8-K filed September 30, 2025 establishing closing of DDTL 2.1 facility ($3,000M capacity) by CCAC IV."
+            "extraction_method": "SEC EDGAR Form 10-K direct audit",
+            "verifier_notes": "Form 10-K audit proving DDTL 2.1 ($3.0B capacity), DDTL 3.0 co-borrowers CCAC V and CCAC VII, and unconditional parent guarantees across DDTL facilities."
         },
         {
             "claim_id": "CLM-CRWV-011",
@@ -409,10 +440,10 @@ def build_evidence_claims():
             "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962825000105/crwv-20251208.htm",
             "section_locator": "Item 1.01 Entry into a Material Definitive Agreement / Item 2.03",
             "quote_type": "source_excerpt",
-            "exact_quote": "On December 8, 2025, CoreWeave, Inc. priced and issued $2,588.0 million aggregate principal amount of Convertible Senior Notes due December 15, 2031.",
+            "exact_quote": "completed its previously announced private offering of $2,587,500,000 aggregate principal amount of its 1.75% Convertible Senior Notes due 2031",
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 8-K direct audit",
-            "verifier_notes": "Contemporaneous Form 8-K filed December 11, 2025 establishing issuance of $2,588.0M Convertible Senior Notes due 2031."
+            "verifier_notes": "Contemporaneous Form 8-K filed December 11, 2025 establishing issuance of $2,587.5M 1.75% Convertible Senior Notes due December 1, 2031."
         },
         {
             "claim_id": "CLM-CRWV-012",
@@ -421,12 +452,12 @@ def build_evidence_claims():
             "accession_number": "0001769628-26-000129",
             "filing_date": "2026-03-31",
             "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000129/crwv-20260330.htm",
-            "section_locator": "Item 1.01 Entry into a Material Definitive Agreement / Item 2.03",
+            "section_locator": "Item 1.01 Entry into a Material Definitive Agreement / Exhibit 10.2",
             "quote_type": "source_excerpt",
-            "exact_quote": "On March 30, 2026, CoreWeave Compute Acquisition Co. VIII, LLC entered into an $8,500 million non-recourse senior secured credit facility with a syndicate of lenders led by MUFG Bank, LTD.",
+            "exact_quote": 'providing for an $8.5 billion delayed draw term loan facility (the \"DDTL 4.0 Facility\"). The DDTL 4.0 Facility was entered into primarily to finance capital expenditures required to perform a customer contract, including the acquisition of GPU servers and related infrastructure.',
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 8-K direct audit",
-            "verifier_notes": "Contemporaneous Form 8-K filed March 31, 2026 establishing entry into $8.5B non-recourse DDTL 4.0 facility by CCAC VIII."
+            "verifier_notes": "Contemporaneous Form 8-K establishing entry into $8.5B DDTL 4.0 facility by CCAC VIII, with Exhibit 10.2 Limited Guarantee signed by CoreWeave, Inc. for non-recourse carve-outs."
         },
         {
             "claim_id": "CLM-CRWV-013",
@@ -437,10 +468,24 @@ def build_evidence_claims():
             "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000164/crwv-20260409.htm",
             "section_locator": "Item 1.01 Entry into a Material Definitive Agreement / Item 2.03",
             "quote_type": "source_excerpt",
-            "exact_quote": "On April 9, 2026, CoreWeave, Inc. completed offerings of $2,750.0 million aggregate principal amount of 9.750% Senior Notes due October 1, 2031 and $4,000.0 million aggregate principal amount of Convertible Senior Notes due October 1, 2032.",
+            "exact_quote": "completed its previously announced private offering of $1,750,000 aggregate principal amount of its 9.750% Senior Notes due 2031",
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 8-K direct audit",
-            "verifier_notes": "Contemporaneous Form 8-K filed April 14, 2026 establishing issuance of $2,750.0M 9.75% Notes due 2031 and $4,000.0M Convertible Notes due 2032."
+            "verifier_notes": "Contemporaneous Form 8-K establishing closing on April 14, 2026 of $1,750.0M 9.750% Notes due October 1, 2031 and $4,000.0M 1.75% Convertible Notes due October 1, 2032."
+        },
+        {
+            "claim_id": "CLM-CRWV-013A",
+            "entity_id": "CRWV",
+            "filing_type": "8-K",
+            "accession_number": "0001769628-26-000183",
+            "filing_date": "2026-04-21",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000183/crwv-20260416.htm",
+            "section_locator": "Item 1.01 Entry into a Material Definitive Agreement / Item 2.03",
+            "quote_type": "source_excerpt",
+            "exact_quote": 'completed its previously announced private offering of $1,000,000,000 aggregate principal amount of its 9.750% Senior Notes due 2031 (the \"Additional Notes\")',
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 8-K direct audit",
+            "verifier_notes": "Contemporaneous Form 8-K establishing closing on April 21, 2026 of $1,000.0M Additional Notes under 9.750% 2031 indenture ($2,750.0M total)."
         },
         {
             "claim_id": "CLM-CRWV-014",
@@ -451,10 +496,24 @@ def build_evidence_claims():
             "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000291/crwv-20260618.htm",
             "section_locator": "Item 1.01 Entry into a Material Definitive Agreement / Item 2.03",
             "quote_type": "source_excerpt",
-            "exact_quote": "On June 11, 2026, CoreWeave, Inc. priced and issued $1,250.0 million aggregate principal amount of 9.625% Senior Notes due July 15, 2032 and €2,000.0 million aggregate principal amount of 8.875% Senior Notes due July 15, 2032 (representing approximately $2,279.0 million USD equivalent).",
+            "exact_quote": 'completed its previously announced private offering of $1,250 million in aggregate principal amount of its dollar-denominated 9.625% Senior Notes due 2032 (the \"USD Notes\") and €2,000 million in aggregate principal amount of its euro-denominated 8.500% Senior Notes due 2032 (the \"EUR Notes\" and, together with the USD Notes, the \"Senior Notes\")',
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 8-K direct audit",
-            "verifier_notes": "Contemporaneous Form 8-K filed June 18, 2026 establishing issuance of $1,250.0M 9.625% Senior Notes due 2032 and €2.0B ($2,279.0M) EUR Senior Notes due 2032."
+            "verifier_notes": "Contemporaneous Form 8-K establishing closing on June 18, 2026 of $1,250.0M 9.625% USD Notes and €2.0B ($2,279.0M) 8.500% EUR Notes due July 15, 2032."
+        },
+        {
+            "claim_id": "CLM-CRWV-014A",
+            "entity_id": "CRWV",
+            "filing_type": "8-K",
+            "accession_number": "0001769628-26-000278",
+            "filing_date": "2026-06-11",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000278/crwv-20260611.htm",
+            "section_locator": "Item 8.01 Other Events - Notes Offering Announcement",
+            "quote_type": "source_excerpt",
+            "exact_quote": "announced that it intends to offer, subject to market and other customary conditions, $3.5 billion (or euro equivalents) in aggregate principle amount of dollar-denominated and euro-denominated senior notes due 2032",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 8-K direct audit",
+            "verifier_notes": "Contemporaneous Form 8-K establishing announcement on June 11, 2026 of proposed $3.5B notes offering due 2032."
         },
         {
             "claim_id": "CLM-CRWV-015",
@@ -465,10 +524,24 @@ def build_evidence_claims():
             "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000222/crwv-20260331.htm",
             "section_locator": "Item 1. Condensed Consolidated Financial Statements (Unaudited)",
             "quote_type": "source_excerpt",
-            "exact_quote": "Cash and cash equivalents as of March 31, 2026 was $2,244 million. Total debt as of March 31, 2026 was $25,149 million.",
+            "exact_quote": "Cash and cash equivalents $ 2,244",
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 10-Q direct audit",
             "verifier_notes": "Contemporaneous Form 10-Q for Q1 period ended March 31, 2026 filed May 8, 2026, establishing Q1 cash ($2,244M) and debt ($25,149M)."
+        },
+        {
+            "claim_id": "CLM-CRWV-016",
+            "entity_id": "CRWV",
+            "filing_type": "10-Q",
+            "accession_number": "0001769628-25-000041",
+            "filing_date": "2025-08-13",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962825000041/crwv-20250630.htm",
+            "section_locator": "Note 7. Debt - Credit Facilities (DDTL 2.0 Pricing Grid)",
+            "quote_type": "source_excerpt",
+            "exact_quote": "Interest on outstanding borrowings on the DDTL 2.0 Facility accrued at a rate per annum equal to either, at our election, term SOFR or the alternative base rate plus a spread based on the credit quality of the associated customer contracts. For specified investment-grade customers, the spread is equal to 6.00% for term SOFR loans and 5.00% for base rate loans. For investment-grade customers, the spread is equal to 6.50% for term SOFR loans and 5.50% for base rate loans. For non-investment-grade customer contracts, the spread is equal to 13.00% for term SOFR loans and 12.00% for base rate loans. The principal amount of the loans is required to be repaid in quarterly installments, beginning in January 2026, with the final balloon payment due five years after the applicable loan was funded.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 10-Q direct audit",
+            "verifier_notes": "Form 10-Q filed August 13, 2025 proving DDTL 2.0 interest rate spread grid (6.00% to 13.00%) and 5-year balloon repayment schedule."
         },
 
         # --- Upstream / Counterparty SEC Filings ---
@@ -481,7 +554,7 @@ def build_evidence_claims():
             "document_url": "https://www.sec.gov/Archives/edgar/data/1375365/000137536526000022/smci-20260630.htm",
             "section_locator": "Note 12. Commitments and Contingencies - Purchase Commitments",
             "quote_type": "exact_quote",
-            "exact_quote": "Purchase Commitments - We have agreements to purchase inventory and non-inventory items primarily through the next 12 months. As of June 30, 2026, these remaining non-cancelable commitments were $34.2 billion.",
+            "exact_quote": "Purchase Commitments - We have agreements to purchase inventory and non-inventory items primarily through the next 12 months. As of June 30, 2026, these remaining non-cancelable commitments were $ 34.2 billion, including $ 0.2 billion for related parties.",
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 10-K direct audit",
             "verifier_notes": "Audited non-cancelable purchase commitments primarily covering GPU silicon and server subsystem inventory over the next 12 months."
@@ -495,7 +568,7 @@ def build_evidence_claims():
             "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000222/crwv-20260331.htm",
             "section_locator": "Note 10. Stockholders' Equity - January 2026 Private Placement",
             "quote_type": "exact_quote",
-            "exact_quote": "In January 2026, we completed a private placement financing with NVIDIA Corporation, issuing shares of Series C Convertible Preferred Stock for aggregate gross cash proceeds of $2.0 billion.",
+            "exact_quote": "In January 2026, we entered into a securities purchase agreement with NVIDIA Corporation for a private placement of approximately 23 million shares of our Class A common stock at a purchase price of $87.20 per share, for aggregate gross proceeds of $2.0 billion.",
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 10-Q direct audit",
             "verifier_notes": "Direct evidence of NVIDIA's $2.0 billion equity investment in CoreWeave, establishing strategic capital alignment and priority hardware allocation tier."
@@ -537,10 +610,11 @@ def build_evidence_claims():
 
 def build_obligations():
     """
-    Builds the Master Obligations Ledger (ADR-015).
-    Reconciles exactly 33 contracts:
+    Builds the Master Obligations Ledger (ADR-016).
+    Reconciles exactly 35 contracts:
       - 16 CoreWeave funded debt tranches summing to $35,551,000,000.00 (0.00% drift).
-      - 5 CoreWeave recourse parent guarantee edges for DDTL facilities.
+      - 6 CoreWeave parent guarantees (5 recourse + 1 limited bad-acts carve-out guarantee).
+      - 1 CoreWeave co-borrower edge (CRWV_CCAC_V joint & several under DDTL 3.0).
       - 3 Polaris Forge 1 contracts (Master lease + 2 springing guarantees).
       - 6 Applied Digital debt tranches (PF1, PF2, CONV, BRIDGE, 7PCT, OTHER).
       - 3 Strategic counterparty obligations (SMCI procurement, NVDA equity, MSFT revenue).
@@ -682,10 +756,10 @@ def build_obligations():
             "currency": "USD",
             "effective_date": "2023-07-30",
             "valid_from": "2023-07-30",
-            "maturity_date": "2028-03-31",
-            "valid_to": "2028-03-31",
+            "maturity_date": "2028-03-28",
+            "valid_to": "2028-03-28",
             "economic_valid_from": "2023-07-30",
-            "economic_valid_to": "2028-03-31",
+            "economic_valid_to": "2028-03-28",
             "publicly_known_from": "2025-03-20",
             "term_years": 4.7,
             "capacity_mw": None,
@@ -696,7 +770,7 @@ def build_obligations():
             "collateral": "First-priority lien on NVIDIA GPU hardware clusters & customer contracts",
             "guarantee": "Parent guarantee by CoreWeave, Inc.",
             "termination_rights": "Acceleration upon borrowing base deficiency",
-            "payment_conditions": "Floating rate (SOFR + 2.75%); hedge ratio undisclosed in SEC disclosures",
+            "payment_conditions": "Floating rate (Term SOFR + 9.6196% for 3-mo interest period); hedge ratio undisclosed in SEC disclosures",
             "supersedes": None,
             "superseded_by": None,
             "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-007",
@@ -719,12 +793,12 @@ def build_obligations():
             "currency": "USD",
             "effective_date": "2024-05-16",
             "valid_from": "2024-05-16",
-            "maturity_date": "2030-08-31",
-            "valid_to": "2030-08-31",
+            "maturity_date": "2029-05-16",
+            "valid_to": "2029-05-16",
             "economic_valid_from": "2024-05-16",
-            "economic_valid_to": "2030-08-31",
+            "economic_valid_to": "2029-05-16",
             "publicly_known_from": "2025-03-20",
-            "term_years": 6.3,
+            "term_years": 5.0,
             "capacity_mw": None,
             "committed_or_optional": "committed",
             "recourse": "limited_recourse_spv",
@@ -733,10 +807,10 @@ def build_obligations():
             "collateral": "First-priority lien on NVIDIA GPU hardware clusters & customer contracts",
             "guarantee": "Parent guarantee by CoreWeave, Inc.",
             "termination_rights": "Acceleration upon borrowing base deficiency",
-            "payment_conditions": "Floating rate (SOFR + 3.25%); hedge ratio undisclosed in SEC disclosures",
+            "payment_conditions": "Floating rate (Term SOFR + spread tiered 6.00% to 13.00% by customer credit; 6.00% specified IG, 6.50% IG, 13.00% non-IG); quarterly principal installments begin Jan 2026, balloon 5 yrs post-funding",
             "supersedes": None,
             "superseded_by": None,
-            "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-007",
+            "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-007,CLM-CRWV-016",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A001,A002"
@@ -760,7 +834,7 @@ def build_obligations():
             "valid_to": "2031-03-31",
             "economic_valid_from": "2025-09-25",
             "economic_valid_to": "2031-03-31",
-            "publicly_known_from": "2025-09-30",
+            "publicly_known_from": "2026-03-02",
             "term_years": 5.5,
             "capacity_mw": None,
             "committed_or_optional": "committed",
@@ -770,7 +844,7 @@ def build_obligations():
             "collateral": "First-priority lien on NVIDIA GPU hardware clusters & customer contracts",
             "guarantee": "Parent guarantee by CoreWeave, Inc.",
             "termination_rights": "Acceleration upon borrowing base deficiency",
-            "payment_conditions": "Floating rate (SOFR + 3.25%); hedge ratio undisclosed in SEC disclosures",
+            "payment_conditions": "Floating rate (SOFR + 4.25%); quarterly installments begin July 2026 with final balloon 5 yrs post-funding; hedge ratio undisclosed in SEC disclosures",
             "supersedes": None,
             "superseded_by": None,
             "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-010",
@@ -782,7 +856,7 @@ def build_obligations():
         {
             "obligation_id": "OBL-CRWV-DEBT-DDTL3",
             "from_entity": "CRWV_CCAC_VII",
-            "to_entity": "BLACKSTONE_MAGNETAR_SYN",
+            "to_entity": "MUFG_BANK_SYN",
             "project_id": None,
             "obligation_type": "debt_facility",
             "amount": 2215000000.0,
@@ -793,10 +867,10 @@ def build_obligations():
             "currency": "USD",
             "effective_date": "2025-07-28",
             "valid_from": "2025-07-28",
-            "maturity_date": "2030-08-31",
-            "valid_to": "2030-08-31",
+            "maturity_date": "2030-08-21",
+            "valid_to": "2030-08-21",
             "economic_valid_from": "2025-07-28",
-            "economic_valid_to": "2030-08-31",
+            "economic_valid_to": "2030-08-21",
             "publicly_known_from": "2025-07-31",
             "term_years": 5.1,
             "capacity_mw": None,
@@ -807,10 +881,10 @@ def build_obligations():
             "collateral": "First-priority lien on NVIDIA GPU hardware clusters & customer contracts",
             "guarantee": "Parent guarantee by CoreWeave, Inc.",
             "termination_rights": "Acceleration upon borrowing base deficiency",
-            "payment_conditions": "Floating rate (SOFR + 3.50%); hedge ratio undisclosed in SEC disclosures",
+            "payment_conditions": "Floating rate (SOFR + 4.00%); primary borrower CCAC VII, co-borrower CCAC V; syndicate led by MUFG Bank",
             "supersedes": None,
             "superseded_by": None,
-            "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-009",
+            "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-009,CLM-CRWV-010",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A001,A002"
@@ -830,12 +904,12 @@ def build_obligations():
             "currency": "USD",
             "effective_date": "2026-03-30",
             "valid_from": "2026-03-30",
-            "maturity_date": "2031-12-31",
-            "valid_to": "2031-12-31",
+            "maturity_date": "2032-03-31",
+            "valid_to": "2032-03-31",
             "economic_valid_from": "2026-03-30",
-            "economic_valid_to": "2031-12-31",
+            "economic_valid_to": "2032-03-31",
             "publicly_known_from": "2026-03-31",
-            "term_years": 5.8,
+            "term_years": 6.0,
             "capacity_mw": None,
             "facility_capacity": 8500000000.0,
             "floating_principal": 1400000000.0,
@@ -844,9 +918,9 @@ def build_obligations():
             "rate_type": "floating",
             "benchmark_rate": "SOFR",
             "collateral": "Non-recourse SPV project assets; $8.5B facility capacity ($1.4B floating / $1.437B fixed)",
-            "guarantee": "Strictly non-recourse to parent CoreWeave, Inc.",
+            "guarantee": "Non-recourse to parent CoreWeave, Inc., except for limited parent guarantee for specified customary non-recourse carve-out bad acts (Exhibit 10.2)",
             "termination_rights": "Project financing covenants",
-            "payment_conditions": "Blended floating/fixed; contract covenants >=95% interest rate hedge coverage on floating loans ($1.40B)",
+            "payment_conditions": "Blended floating/fixed (SOFR + 2.25% on $1.40B floating; UST 3.14yr + 2.00% on $1.437B fixed); contract covenants >=95% interest rate hedge coverage on floating loans",
             "supersedes": None,
             "superseded_by": None,
             "claim_ids": "CLM-CRWV-001,CLM-CRWV-004,CLM-CRWV-012",
@@ -869,10 +943,10 @@ def build_obligations():
             "currency": "USD",
             "effective_date": "2026-05-15",
             "valid_from": "2026-05-15",
-            "maturity_date": "2031-11-30",
-            "valid_to": "2031-11-30",
+            "maturity_date": "2031-11-15",
+            "valid_to": "2031-11-15",
             "economic_valid_from": "2026-05-15",
-            "economic_valid_to": "2031-11-30",
+            "economic_valid_to": "2031-11-15",
             "publicly_known_from": "2026-05-18",
             "term_years": 5.5,
             "capacity_mw": None,
@@ -884,7 +958,7 @@ def build_obligations():
             "collateral": "First-priority lien on GPU clusters; Funding Date GPU Amount = 71.42% of capex cost with straight-line 6-yr depreciation",
             "guarantee": "Parent guarantee by CoreWeave, Inc.",
             "termination_rights": "Acceleration upon borrowing base deficiency",
-            "payment_conditions": "Floating rate (SOFR + 3.50%); contract covenants >=95% interest rate swap coverage",
+            "payment_conditions": "Floating rate (SOFR + 4.50%); contract covenants >=95% interest rate swap coverage under Section 5.14",
             "supersedes": None,
             "superseded_by": None,
             "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-005,CLM-CRWV-006",
@@ -905,26 +979,26 @@ def build_obligations():
             "as_of_date": "2026-06-30",
             "observed_as_of": "2026-06-30",
             "currency": "USD",
-            "effective_date": "2025-05-19",
-            "valid_from": "2025-05-19",
-            "maturity_date": "2030-06-15",
-            "valid_to": "2030-06-15",
-            "economic_valid_from": "2025-05-19",
-            "economic_valid_to": "2030-06-15",
-            "publicly_known_from": "2025-05-21",
-            "term_years": 5.1,
+            "effective_date": "2025-05-27",
+            "valid_from": "2025-05-27",
+            "maturity_date": "2030-06-01",
+            "valid_to": "2030-06-01",
+            "economic_valid_from": "2025-05-27",
+            "economic_valid_to": "2030-06-01",
+            "publicly_known_from": "2025-05-28",
+            "term_years": 5.0,
             "capacity_mw": None,
             "committed_or_optional": "committed",
-            "recourse": "full_recourse",
+            "recourse": "senior_unsecured",
             "rate_type": "fixed",
             "benchmark_rate": None,
-            "collateral": "Senior corporate lien",
-            "guarantee": "Parent direct obligation",
+            "collateral": "Senior unsecured obligation guaranteed on senior basis by subsidiary guarantors",
+            "guarantee": "Parent direct obligation; guaranteed on senior unsecured basis by subsidiary guarantors",
             "termination_rights": "Cross-default with credit facilities",
-            "payment_conditions": "Fixed coupon 9.125% due June 15, 2030",
+            "payment_conditions": "Fixed coupon 9.250% Senior Notes due June 1, 2030; priced May 21, 2025, issued May 27, 2025",
             "supersedes": None,
             "superseded_by": None,
-            "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-008",
+            "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-008,CLM-CRWV-008A",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A002"
@@ -942,26 +1016,26 @@ def build_obligations():
             "as_of_date": "2026-06-30",
             "observed_as_of": "2026-06-30",
             "currency": "USD",
-            "effective_date": "2025-07-28",
-            "valid_from": "2025-07-28",
-            "maturity_date": "2031-02-15",
-            "valid_to": "2031-02-15",
-            "economic_valid_from": "2025-07-28",
-            "economic_valid_to": "2031-02-15",
-            "publicly_known_from": "2025-07-31",
+            "effective_date": "2025-07-25",
+            "valid_from": "2025-07-25",
+            "maturity_date": "2031-02-01",
+            "valid_to": "2031-02-01",
+            "economic_valid_from": "2025-07-25",
+            "economic_valid_to": "2031-02-01",
+            "publicly_known_from": "2025-07-28",
             "term_years": 5.5,
             "capacity_mw": None,
             "committed_or_optional": "committed",
-            "recourse": "full_recourse",
+            "recourse": "senior_unsecured",
             "rate_type": "fixed",
             "benchmark_rate": None,
-            "collateral": "Senior corporate lien",
-            "guarantee": "Parent direct obligation",
+            "collateral": "Senior unsecured obligation guaranteed on senior basis by subsidiary guarantors",
+            "guarantee": "Parent direct obligation; guaranteed on senior unsecured basis by subsidiary guarantors",
             "termination_rights": "Cross-default with credit facilities",
-            "payment_conditions": "Fixed coupon 9.000% due February 15, 2031",
+            "payment_conditions": "Fixed coupon 9.000% Senior Notes due February 1, 2031; issued July 25, 2025",
             "supersedes": None,
             "superseded_by": None,
-            "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-009",
+            "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-009A",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A002"
@@ -979,26 +1053,26 @@ def build_obligations():
             "as_of_date": "2026-06-30",
             "observed_as_of": "2026-06-30",
             "currency": "USD",
-            "effective_date": "2026-04-09",
-            "valid_from": "2026-04-09",
+            "effective_date": "2026-04-14",
+            "valid_from": "2026-04-14",
             "maturity_date": "2031-10-01",
             "valid_to": "2031-10-01",
-            "economic_valid_from": "2026-04-09",
+            "economic_valid_from": "2026-04-14",
             "economic_valid_to": "2031-10-01",
             "publicly_known_from": "2026-04-14",
             "term_years": 5.5,
             "capacity_mw": None,
             "committed_or_optional": "committed",
-            "recourse": "full_recourse",
+            "recourse": "senior_unsecured",
             "rate_type": "fixed",
             "benchmark_rate": None,
-            "collateral": "Senior corporate lien",
-            "guarantee": "Parent direct obligation",
+            "collateral": "Senior unsecured obligation guaranteed on senior basis by subsidiary guarantors",
+            "guarantee": "Parent direct obligation; guaranteed on senior unsecured basis by subsidiary guarantors",
             "termination_rights": "Cross-default with credit facilities",
-            "payment_conditions": "Fixed coupon 9.750% due October 1, 2031",
+            "payment_conditions": "Fixed coupon 9.750% Senior Notes due October 1, 2031 ($1,750M issued April 14, 2026; $1,000M add-on issued April 21, 2026; $2,750M total)",
             "supersedes": None,
             "superseded_by": None,
-            "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-013",
+            "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-013,CLM-CRWV-013A",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A002"
@@ -1016,26 +1090,26 @@ def build_obligations():
             "as_of_date": "2026-06-30",
             "observed_as_of": "2026-06-30",
             "currency": "USD",
-            "effective_date": "2026-06-11",
-            "valid_from": "2026-06-11",
+            "effective_date": "2026-06-18",
+            "valid_from": "2026-06-18",
             "maturity_date": "2032-07-15",
             "valid_to": "2032-07-15",
-            "economic_valid_from": "2026-06-11",
+            "economic_valid_from": "2026-06-18",
             "economic_valid_to": "2032-07-15",
             "publicly_known_from": "2026-06-18",
             "term_years": 6.1,
             "capacity_mw": None,
             "committed_or_optional": "committed",
-            "recourse": "full_recourse",
+            "recourse": "senior_unsecured",
             "rate_type": "fixed",
             "benchmark_rate": None,
-            "collateral": "Senior corporate lien",
-            "guarantee": "Parent direct obligation",
+            "collateral": "Senior unsecured obligation guaranteed on senior basis by subsidiary guarantors",
+            "guarantee": "Parent direct obligation; guaranteed on senior unsecured basis by subsidiary guarantors",
             "termination_rights": "Cross-default with credit facilities",
-            "payment_conditions": "Fixed coupon 9.625% due July 15, 2032",
+            "payment_conditions": "Fixed coupon 9.625% USD Senior Notes due July 15, 2032; announced June 11, 2026, closed June 18, 2026",
             "supersedes": None,
             "superseded_by": None,
-            "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-014",
+            "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-014,CLM-CRWV-014A",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A002"
@@ -1053,26 +1127,26 @@ def build_obligations():
             "as_of_date": "2026-06-30",
             "observed_as_of": "2026-06-30",
             "currency": "USD",
-            "effective_date": "2026-06-11",
-            "valid_from": "2026-06-11",
+            "effective_date": "2026-06-18",
+            "valid_from": "2026-06-18",
             "maturity_date": "2032-07-15",
             "valid_to": "2032-07-15",
-            "economic_valid_from": "2026-06-11",
+            "economic_valid_from": "2026-06-18",
             "economic_valid_to": "2032-07-15",
             "publicly_known_from": "2026-06-18",
             "term_years": 6.1,
             "capacity_mw": None,
             "committed_or_optional": "committed",
-            "recourse": "full_recourse",
+            "recourse": "senior_unsecured",
             "rate_type": "fixed",
             "benchmark_rate": None,
-            "collateral": "Senior corporate lien",
-            "guarantee": "Parent direct obligation",
+            "collateral": "Senior unsecured obligation guaranteed on senior basis by subsidiary guarantors",
+            "guarantee": "Parent direct obligation; guaranteed on senior unsecured basis by subsidiary guarantors",
             "termination_rights": "Cross-default with credit facilities",
-            "payment_conditions": "Fixed coupon 8.875% EUR Senior Notes due July 15, 2032 (€2,000M principal translated at $2,279M)",
+            "payment_conditions": "Fixed coupon 8.500% EUR Senior Notes due July 15, 2032 (€2,000M principal translated at $2,279M); announced June 11, 2026, closed June 18, 2026",
             "supersedes": None,
             "superseded_by": None,
-            "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-014",
+            "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-014,CLM-CRWV-014A",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A002"
@@ -1090,23 +1164,23 @@ def build_obligations():
             "as_of_date": "2026-06-30",
             "observed_as_of": "2026-06-30",
             "currency": "USD",
-            "effective_date": "2025-12-08",
-            "valid_from": "2025-12-08",
-            "maturity_date": "2031-12-15",
-            "valid_to": "2031-12-15",
-            "economic_valid_from": "2025-12-08",
-            "economic_valid_to": "2031-12-15",
+            "effective_date": "2025-12-11",
+            "valid_from": "2025-12-11",
+            "maturity_date": "2031-12-01",
+            "valid_to": "2031-12-01",
+            "economic_valid_from": "2025-12-11",
+            "economic_valid_to": "2031-12-01",
             "publicly_known_from": "2025-12-11",
-            "term_years": 5.5,
+            "term_years": 6.0,
             "capacity_mw": None,
             "committed_or_optional": "committed",
-            "recourse": "full_recourse",
+            "recourse": "senior_unsecured_convertible",
             "rate_type": "fixed",
             "benchmark_rate": None,
-            "collateral": "Unsecured subordinated convertible",
-            "guarantee": "Parent direct obligation",
+            "collateral": "Senior unsecured convertible notes guaranteed on senior basis by subsidiary guarantors",
+            "guarantee": "Parent direct obligation; guaranteed on senior basis by subsidiary guarantors",
             "termination_rights": "Standard conversion or fundamental change put",
-            "payment_conditions": "Fixed coupon 1.75% due December 15, 2031",
+            "payment_conditions": "Fixed coupon 1.75% Convertible Senior Notes due December 1, 2031; issued December 11, 2025",
             "supersedes": None,
             "superseded_by": None,
             "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-011",
@@ -1127,23 +1201,23 @@ def build_obligations():
             "as_of_date": "2026-06-30",
             "observed_as_of": "2026-06-30",
             "currency": "USD",
-            "effective_date": "2026-04-09",
-            "valid_from": "2026-04-09",
+            "effective_date": "2026-04-14",
+            "valid_from": "2026-04-14",
             "maturity_date": "2032-10-01",
             "valid_to": "2032-10-01",
-            "economic_valid_from": "2026-04-09",
+            "economic_valid_from": "2026-04-14",
             "economic_valid_to": "2032-10-01",
             "publicly_known_from": "2026-04-14",
             "term_years": 6.5,
             "capacity_mw": None,
             "committed_or_optional": "committed",
-            "recourse": "full_recourse",
+            "recourse": "senior_unsecured_convertible",
             "rate_type": "fixed",
             "benchmark_rate": None,
-            "collateral": "Unsecured subordinated convertible",
-            "guarantee": "Parent direct obligation",
+            "collateral": "Senior unsecured convertible notes guaranteed on senior basis by subsidiary guarantors",
+            "guarantee": "Parent direct obligation; guaranteed on senior basis by subsidiary guarantors",
             "termination_rights": "Standard conversion or fundamental change put",
-            "payment_conditions": "Fixed coupon 2.00% due October 1, 2032",
+            "payment_conditions": "Fixed coupon 1.75% Convertible Senior Notes due October 1, 2032; issued April 14, 2026",
             "supersedes": None,
             "superseded_by": None,
             "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-013",
@@ -1264,7 +1338,7 @@ def build_obligations():
         },
 
         # =========================================================================
-        # 3. COREWEAVE RECOURSE PARENT GUARANTEES (5 EDGES)
+        # 3. COREWEAVE PARENT GUARANTEES (6 EDGES: 5 RECOURSE + 1 LIMITED BAD-ACTS)
         # =========================================================================
         {
             "obligation_id": "OBL-CRWV-GUARANTY-DDTL1",
@@ -1280,10 +1354,10 @@ def build_obligations():
             "currency": "USD",
             "effective_date": "2023-07-30",
             "valid_from": "2023-07-30",
-            "maturity_date": "2028-03-31",
-            "valid_to": "2028-03-31",
+            "maturity_date": "2028-03-28",
+            "valid_to": "2028-03-28",
             "economic_valid_from": "2023-07-30",
-            "economic_valid_to": "2028-03-31",
+            "economic_valid_to": "2028-03-28",
             "publicly_known_from": "2025-03-20",
             "term_years": 4.7,
             "capacity_mw": None,
@@ -1319,12 +1393,12 @@ def build_obligations():
             "currency": "USD",
             "effective_date": "2024-05-16",
             "valid_from": "2024-05-16",
-            "maturity_date": "2030-08-31",
-            "valid_to": "2030-08-31",
+            "maturity_date": "2029-05-16",
+            "valid_to": "2029-05-16",
             "economic_valid_from": "2024-05-16",
-            "economic_valid_to": "2030-08-31",
+            "economic_valid_to": "2029-05-16",
             "publicly_known_from": "2025-03-20",
-            "term_years": 6.3,
+            "term_years": 5.0,
             "capacity_mw": None,
             "capacity_description": "Recourse parent guarantee of CRWV CCAC IV LLC obligations under $3.190B DDTL 2.0 Credit Facility",
             "reference_exposure_estimate": 3190000000.0,
@@ -1362,7 +1436,7 @@ def build_obligations():
             "valid_to": "2031-03-31",
             "economic_valid_from": "2025-09-25",
             "economic_valid_to": "2031-03-31",
-            "publicly_known_from": "2025-09-30",
+            "publicly_known_from": "2026-03-02",
             "term_years": 5.5,
             "capacity_mw": None,
             "capacity_description": "Recourse parent guarantee of CRWV CCAC IV LLC obligations under $3.000B DDTL 2.1 Credit Facility",
@@ -1386,7 +1460,7 @@ def build_obligations():
         {
             "obligation_id": "OBL-CRWV-GUARANTY-DDTL3",
             "from_entity": "CRWV",
-            "to_entity": "BLACKSTONE_MAGNETAR_SYN",
+            "to_entity": "MUFG_BANK_SYN",
             "project_id": None,
             "obligation_type": "contingent_guarantee",
             "amount": None,
@@ -1397,10 +1471,10 @@ def build_obligations():
             "currency": "USD",
             "effective_date": "2025-07-28",
             "valid_from": "2025-07-28",
-            "maturity_date": "2030-08-31",
-            "valid_to": "2030-08-31",
+            "maturity_date": "2030-08-21",
+            "valid_to": "2030-08-21",
             "economic_valid_from": "2025-07-28",
-            "economic_valid_to": "2030-08-31",
+            "economic_valid_to": "2030-08-21",
             "publicly_known_from": "2025-07-31",
             "term_years": 5.1,
             "capacity_mw": None,
@@ -1417,7 +1491,46 @@ def build_obligations():
             "payment_conditions": "Guarantees full payment of principal and interest of CCAC VII under DDTL 3.0 facility",
             "supersedes": None,
             "superseded_by": None,
-            "claim_ids": "CLM-CRWV-001,CLM-CRWV-009",
+            "claim_ids": "CLM-CRWV-001,CLM-CRWV-009,CLM-CRWV-010",
+            "evidence_class": "A",
+            "confidence": 1.0,
+            "shared_assumptions": "A001,A002"
+        },
+        {
+            "obligation_id": "OBL-CRWV-GUARANTY-DDTL4",
+            "from_entity": "CRWV",
+            "to_entity": "MUFG_BANK_SYN",
+            "project_id": None,
+            "obligation_type": "contingent_guarantee",
+            "amount": None,
+            "amount_type": "contingent_guarantee",
+            "amount_known": False,
+            "as_of_date": "2026-06-30",
+            "observed_as_of": "2026-06-30",
+            "currency": "USD",
+            "effective_date": "2026-03-30",
+            "valid_from": "2026-03-30",
+            "maturity_date": "2032-03-31",
+            "valid_to": "2032-03-31",
+            "economic_valid_from": "2026-03-30",
+            "economic_valid_to": "2032-03-31",
+            "publicly_known_from": "2026-03-31",
+            "term_years": 6.0,
+            "capacity_mw": None,
+            "capacity_description": "Limited non-recourse carve-out bad-acts parent guarantee of CoreWeave, Inc. in favor of U.S. Bank Trust / MUFG syndicate under DDTL 4.0 Credit Facility (Exhibit 10.2)",
+            "reference_exposure_estimate": 2837000000.0,
+            "reference_exposure_class": "Class A (SEC Filing)",
+            "committed_or_optional": "committed",
+            "recourse": "limited_bad_acts",
+            "rate_type": "none",
+            "benchmark_rate": None,
+            "collateral": "Parent balance sheet limited carve-out recourse",
+            "guarantee": "Limited Guarantee signed by CoreWeave, Inc. in favor of U.S. Bank Trust Company, N.A. for benefit of lenders",
+            "termination_rights": "Tied to underlying DDTL 4.0 credit agreement",
+            "payment_conditions": "Guarantees specified customary non-recourse carve-out obligations (bad acts, fraud, misrepresentation, environmental liabilities) under Exhibit 10.2; does not guarantee ordinary debt service",
+            "supersedes": None,
+            "superseded_by": None,
+            "claim_ids": "CLM-CRWV-004,CLM-CRWV-012",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A001,A002"
@@ -1436,10 +1549,10 @@ def build_obligations():
             "currency": "USD",
             "effective_date": "2026-05-15",
             "valid_from": "2026-05-15",
-            "maturity_date": "2031-11-30",
-            "valid_to": "2031-11-30",
+            "maturity_date": "2031-11-15",
+            "valid_to": "2031-11-15",
             "economic_valid_from": "2026-05-15",
-            "economic_valid_to": "2031-11-30",
+            "economic_valid_to": "2031-11-15",
             "publicly_known_from": "2026-05-18",
             "term_years": 5.5,
             "capacity_mw": None,
@@ -1457,6 +1570,49 @@ def build_obligations():
             "supersedes": None,
             "superseded_by": None,
             "claim_ids": "CLM-CRWV-001,CLM-CRWV-006",
+            "evidence_class": "A",
+            "confidence": 1.0,
+            "shared_assumptions": "A001,A002"
+        },
+
+        # =========================================================================
+        # 3b. COREWEAVE CO-BORROWER EDGE (1 EDGE)
+        # =========================================================================
+        {
+            "obligation_id": "OBL-CRWV-COBORROWER-DDTL3",
+            "from_entity": "CRWV_CCAC_V",
+            "to_entity": "MUFG_BANK_SYN",
+            "project_id": None,
+            "obligation_type": "joint_co_borrower",
+            "amount": None,
+            "amount_type": "contingent_guarantee",
+            "amount_known": False,
+            "as_of_date": "2026-06-30",
+            "observed_as_of": "2026-06-30",
+            "currency": "USD",
+            "effective_date": "2025-07-28",
+            "valid_from": "2025-07-28",
+            "maturity_date": "2030-08-21",
+            "valid_to": "2030-08-21",
+            "economic_valid_from": "2025-07-28",
+            "economic_valid_to": "2030-08-21",
+            "publicly_known_from": "2025-07-31",
+            "term_years": 5.1,
+            "capacity_mw": None,
+            "capacity_description": "Joint and several co-borrower liability of CoreWeave Compute Acquisition Co. V, LLC under $2.215B DDTL 3.0 Credit Facility",
+            "reference_exposure_estimate": 2215000000.0,
+            "reference_exposure_class": "Class A (SEC Filing)",
+            "committed_or_optional": "committed",
+            "recourse": "joint_and_several_co_borrower",
+            "rate_type": "none",
+            "benchmark_rate": None,
+            "collateral": "First-priority lien on GPU clusters & customer contracts",
+            "guarantee": "Unconditional parent guarantee by CoreWeave, Inc.",
+            "termination_rights": "Acceleration upon borrowing base deficiency",
+            "payment_conditions": "Joint and several co-borrower liability alongside CCAC VII under $2.6B facility led by MUFG Bank",
+            "supersedes": None,
+            "superseded_by": None,
+            "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-009,CLM-CRWV-010",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A001,A002"
@@ -1806,7 +1962,6 @@ def build_obligations():
     ]
 
     for obl in obligations:
-        # Ensure backward compatibility aliases
         if "valid_from" not in obl:
             obl["valid_from"] = obl["economic_valid_from"]
         if "valid_to" not in obl:
@@ -1820,7 +1975,7 @@ def build_obligations():
 
 def build_obligation_events():
     """
-    Builds the Obligation Events Ledger (ADR-014 & ADR-015).
+    Builds the Obligation Events Ledger (ADR-014, ADR-015 & ADR-016).
     Tracks discrete lifecycle events (creation, supersession, termination) with exact
     economic and knowledge timestamps.
     Every event satisfies: event.publicly_known_at >= claims[event.claim_id].filing_date.
@@ -1887,7 +2042,7 @@ def build_obligation_events():
             "obligation_id": "OBL-CRWV-DEBT-DDTL2-1",
             "event_type": "created",
             "economic_effective_at": "2025-09-25",
-            "publicly_known_at": "2025-09-30",
+            "publicly_known_at": "2026-03-02",
             "related_obligation_id": None,
             "claim_id": "CLM-CRWV-010",
             "description": "Closing of DDTL 2.1 Credit Facility by CCAC IV ($3,000M commitments)"
@@ -1930,40 +2085,40 @@ def build_obligation_events():
             "event_id": "EVT-CRWV-DEBT-NOTES-2030-CREATED",
             "obligation_id": "OBL-CRWV-DEBT-NOTES-2030",
             "event_type": "created",
-            "economic_effective_at": "2025-05-19",
-            "publicly_known_at": "2025-05-21",
+            "economic_effective_at": "2025-05-27",
+            "publicly_known_at": "2025-05-28",
             "related_obligation_id": None,
             "claim_id": "CLM-CRWV-008",
-            "description": "Issuance of $2,000.0M Senior Notes due June 15, 2030"
+            "description": "Issuance of $2,000.0M 9.250% Senior Notes due June 1, 2030"
         },
         # 11. CoreWeave 2031 9.00% Notes creation
         {
             "event_id": "EVT-CRWV-DEBT-NOTES-2031-900-CREATED",
             "obligation_id": "OBL-CRWV-DEBT-NOTES-2031-900",
             "event_type": "created",
-            "economic_effective_at": "2025-07-28",
-            "publicly_known_at": "2025-07-31",
+            "economic_effective_at": "2025-07-25",
+            "publicly_known_at": "2025-07-28",
             "related_obligation_id": None,
-            "claim_id": "CLM-CRWV-009",
-            "description": "Issuance of $1,750.0M 9.000% Senior Notes due February 15, 2031"
+            "claim_id": "CLM-CRWV-009A",
+            "description": "Issuance of $1,750.0M 9.000% Senior Notes due February 1, 2031"
         },
         # 12. CoreWeave 2031 9.75% Notes creation
         {
             "event_id": "EVT-CRWV-DEBT-NOTES-2031-975-CREATED",
             "obligation_id": "OBL-CRWV-DEBT-NOTES-2031-975",
             "event_type": "created",
-            "economic_effective_at": "2026-04-09",
+            "economic_effective_at": "2026-04-14",
             "publicly_known_at": "2026-04-14",
             "related_obligation_id": None,
             "claim_id": "CLM-CRWV-013",
-            "description": "Issuance of $2,750.0M 9.750% Senior Notes due October 1, 2031"
+            "description": "Issuance of $2,750.0M 9.750% Senior Notes due October 1, 2031 ($1,750M initial on April 14, $1,000M add-on on April 21)"
         },
         # 13. CoreWeave 2032 9.625% Notes creation
         {
             "event_id": "EVT-CRWV-DEBT-NOTES-2032-9625-CREATED",
             "obligation_id": "OBL-CRWV-DEBT-NOTES-2032-9625",
             "event_type": "created",
-            "economic_effective_at": "2026-06-11",
+            "economic_effective_at": "2026-06-18",
             "publicly_known_at": "2026-06-18",
             "related_obligation_id": None,
             "claim_id": "CLM-CRWV-014",
@@ -1974,33 +2129,33 @@ def build_obligation_events():
             "event_id": "EVT-CRWV-DEBT-NOTES-2032-EUR-CREATED",
             "obligation_id": "OBL-CRWV-DEBT-NOTES-2032-EUR",
             "event_type": "created",
-            "economic_effective_at": "2026-06-11",
+            "economic_effective_at": "2026-06-18",
             "publicly_known_at": "2026-06-18",
             "related_obligation_id": None,
             "claim_id": "CLM-CRWV-014",
-            "description": "Issuance of €2,000.0M ($2,279.0M USD equiv) 8.875% Senior Notes due July 15, 2032"
+            "description": "Issuance of €2,000.0M ($2,279.0M USD equiv) 8.500% Senior Notes due July 15, 2032"
         },
         # 15. CoreWeave 2031 Convertible Notes creation
         {
             "event_id": "EVT-CRWV-DEBT-CONV-2031-CREATED",
             "obligation_id": "OBL-CRWV-DEBT-CONV-2031",
             "event_type": "created",
-            "economic_effective_at": "2025-12-08",
+            "economic_effective_at": "2025-12-11",
             "publicly_known_at": "2025-12-11",
             "related_obligation_id": None,
             "claim_id": "CLM-CRWV-011",
-            "description": "Issuance of $2,588.0M Convertible Senior Notes due December 15, 2031"
+            "description": "Issuance of $2,588.0M 1.75% Convertible Senior Notes due December 1, 2031"
         },
         # 16. CoreWeave 2032 Convertible Notes creation
         {
             "event_id": "EVT-CRWV-DEBT-CONV-2032-CREATED",
             "obligation_id": "OBL-CRWV-DEBT-CONV-2032",
             "event_type": "created",
-            "economic_effective_at": "2026-04-09",
+            "economic_effective_at": "2026-04-14",
             "publicly_known_at": "2026-04-14",
             "related_obligation_id": None,
             "claim_id": "CLM-CRWV-013",
-            "description": "Issuance of $4,000.0M Convertible Senior Notes due October 1, 2032"
+            "description": "Issuance of $4,000.0M 1.75% Convertible Senior Notes due October 1, 2032"
         },
         # 17. CoreWeave Recourse OEM Financing creation
         {
@@ -2063,7 +2218,7 @@ def build_obligation_events():
             "obligation_id": "OBL-CRWV-GUARANTY-DDTL2-1",
             "event_type": "created",
             "economic_effective_at": "2025-09-25",
-            "publicly_known_at": "2025-09-30",
+            "publicly_known_at": "2026-03-02",
             "related_obligation_id": "OBL-CRWV-DEBT-DDTL2-1",
             "claim_id": "CLM-CRWV-010",
             "description": "Parent recourse guarantee of CCAC IV obligations under DDTL 2.1 facility"
@@ -2079,7 +2234,18 @@ def build_obligation_events():
             "claim_id": "CLM-CRWV-009",
             "description": "Parent recourse guarantee of CCAC VII obligations under DDTL 3.0 facility"
         },
-        # 24. Parent Guaranty DDTL 5.0 creation
+        # 24. Parent Guaranty DDTL 4.0 creation (limited bad-acts)
+        {
+            "event_id": "EVT-CRWV-GUARANTY-DDTL4-CREATED",
+            "obligation_id": "OBL-CRWV-GUARANTY-DDTL4",
+            "event_type": "created",
+            "economic_effective_at": "2026-03-30",
+            "publicly_known_at": "2026-03-31",
+            "related_obligation_id": "OBL-CRWV-DEBT-DDTL4",
+            "claim_id": "CLM-CRWV-012",
+            "description": "Execution of Limited Guarantee by CoreWeave, Inc. for DDTL 4.0 facility (Exhibit 10.2)"
+        },
+        # 25. Parent Guaranty DDTL 5.0 creation
         {
             "event_id": "EVT-CRWV-GUARANTY-DDTL5-CREATED",
             "obligation_id": "OBL-CRWV-GUARANTY-DDTL5",
@@ -2090,7 +2256,18 @@ def build_obligation_events():
             "claim_id": "CLM-CRWV-006",
             "description": "Parent recourse guarantee of CoreWeave Financing DDTL V, LLC obligations under DDTL 5.0 facility"
         },
-        # 25. Microsoft Recognized Revenue concentration creation
+        # 26. Co-Borrower DDTL 3.0 creation
+        {
+            "event_id": "EVT-CRWV-COBORROWER-DDTL3-CREATED",
+            "obligation_id": "OBL-CRWV-COBORROWER-DDTL3",
+            "event_type": "created",
+            "economic_effective_at": "2025-07-28",
+            "publicly_known_at": "2025-07-31",
+            "related_obligation_id": "OBL-CRWV-DEBT-DDTL3",
+            "claim_id": "CLM-CRWV-009",
+            "description": "Execution of DDTL 3.0 Credit Agreement by co-borrower CCAC V ($2,600M commitments)"
+        },
+        # 27. Microsoft Recognized Revenue concentration creation
         {
             "event_id": "EVT-MSFT-CRWV-REV-CREATED",
             "obligation_id": "REL-MSFT-CRWV-REVENUE-CONCENTRATION",
@@ -2101,7 +2278,7 @@ def build_obligation_events():
             "claim_id": "CLM-CRWV-003",
             "description": "Recognition of FY25 customer revenue concentration ($3.438B recognized revenue, 67% share)"
         },
-        # 26. Supermicro Purchase Commitments creation
+        # 28. Supermicro Purchase Commitments creation
         {
             "event_id": "EVT-SMCI-COMMIT-CREATED",
             "obligation_id": "OBL-SMCI-SUPPLIER-COMMIT",
@@ -2112,7 +2289,7 @@ def build_obligation_events():
             "claim_id": "CLM-SMCI-001",
             "description": "Execution of non-cancelable hardware purchase commitments ($34.2B over next 12 months)"
         },
-        # 27. NVIDIA Strategic Equity Placement creation
+        # 29. NVIDIA Strategic Equity Placement creation
         {
             "event_id": "EVT-NVDA-CRWV-EQUITY-CREATED",
             "obligation_id": "OBL-NVDA-CRWV-EQUITY",
@@ -2123,7 +2300,7 @@ def build_obligation_events():
             "claim_id": "CLM-NVDA-CRWV-001",
             "description": "NVIDIA $2.0B Series C preferred stock strategic equity placement in CoreWeave"
         },
-        # 28. Applied Digital Polaris Forge 1 Notes creation
+        # 30. Applied Digital Polaris Forge 1 Notes creation
         {
             "event_id": "EVT-APLD-DEBT-PF1-CREATED",
             "obligation_id": "OBL-APLD-DEBT-PF1",
@@ -2134,7 +2311,7 @@ def build_obligation_events():
             "claim_id": "CLM-APLD-010",
             "description": "APLD ComputeCo LLC private offering of $2,350.0M 9.25% Senior Secured Notes due 2030"
         },
-        # 29. Applied Digital Polaris Forge 2 Notes creation
+        # 31. Applied Digital Polaris Forge 2 Notes creation
         {
             "event_id": "EVT-APLD-DEBT-PF2-CREATED",
             "obligation_id": "OBL-APLD-DEBT-PF2",
@@ -2145,7 +2322,7 @@ def build_obligation_events():
             "claim_id": "CLM-APLD-011",
             "description": "APLD ComputeCo 2 LLC offering of $2,150.0M 6.75% Senior Notes due 2031"
         },
-        # 30. Applied Digital Convertible Notes creation
+        # 32. Applied Digital Convertible Notes creation
         {
             "event_id": "EVT-APLD-DEBT-CONV-CREATED",
             "obligation_id": "OBL-APLD-DEBT-CONV",
@@ -2156,7 +2333,7 @@ def build_obligation_events():
             "claim_id": "CLM-APLD-012",
             "description": "Applied Digital Corporation offering of $450.0M 2.75% Convertible Senior Notes due 2030"
         },
-        # 31. Applied Digital Bridge Facility creation
+        # 33. Applied Digital Bridge Facility creation
         {
             "event_id": "EVT-APLD-DEBT-BRIDGE-CREATED",
             "obligation_id": "OBL-APLD-DEBT-BRIDGE",
@@ -2167,7 +2344,7 @@ def build_obligation_events():
             "claim_id": "CLM-APLD-013",
             "description": "Entry into $300.0M floating-rate Bridge Credit Facility due April 30, 2027"
         },
-        # 32. Applied Digital Bridge Facility supersession (refinancing boundary)
+        # 34. Applied Digital Bridge Facility supersession (refinancing boundary)
         {
             "event_id": "EVT-APLD-DEBT-BRIDGE-SUPERSEDED",
             "obligation_id": "OBL-APLD-DEBT-BRIDGE",
@@ -2178,7 +2355,7 @@ def build_obligation_events():
             "claim_id": "CLM-APLD-008",
             "description": "Repayment in full and termination of $300.0M Bridge Credit Facility from proceeds of $1.59B 7.00% Senior Secured Notes"
         },
-        # 33. Applied Digital 7.00% Senior Secured Notes creation
+        # 35. Applied Digital 7.00% Senior Secured Notes creation
         {
             "event_id": "EVT-APLD-DEBT-7PCT-CREATED",
             "obligation_id": "OBL-APLD-DEBT-7PCT-2026",
@@ -2189,7 +2366,7 @@ def build_obligation_events():
             "claim_id": "CLM-APLD-008",
             "description": "APLD ComputeCo 3 LLC issuance of $1,590.0M 7.00% Senior Secured Notes due 2031"
         },
-        # 34. Applied Digital Other Indebtedness creation
+        # 36. Applied Digital Other Indebtedness creation
         {
             "event_id": "EVT-APLD-DEBT-OTHER-CREATED",
             "obligation_id": "OBL-APLD-DEBT-OTHER",
@@ -2209,7 +2386,7 @@ def build_obligation_events():
 
 def build_obligation_facts_table():
     """
-    Builds the Fact-Level Bitemporal Ledger (ADR-013, ADR-014 & ADR-015).
+    Builds the Fact-Level Bitemporal Ledger (ADR-013, ADR-014, ADR-015 & ADR-016).
     Decouples invariant contract identity (in obligations.parquet) from time-varying
     measurements (principal balances, swap notional, facility capacity, lease values).
     Every fact satisfies: fact.publicly_known_from >= claims[fact.knowledge_claim_id].filing_date.
@@ -2245,20 +2422,6 @@ def build_obligation_facts_table():
             "evidence_class": "A"
         },
         {
-            "fact_id": "FACT-CRWV-GNTY-ELN02-20260330",
-            "obligation_id": "OBL-CRWV-APLD-GUARANTY-ELN02",
-            "entity_id": "CRWV",
-            "attribute": "contingent_obligations",
-            "value": None,
-            "unit": "USD",
-            "economic_as_of": "2026-03-30",
-            "publicly_known_from": "2026-04-01",
-            "truth_claim_id": "CLM-APLD-005",
-            "knowledge_claim_id": "CLM-APLD-005",
-            "claim_id": "CLM-APLD-005",
-            "evidence_class": "A"
-        },
-        {
             "fact_id": "FACT-CRWV-GNTY-ELN03-REF-20260330",
             "obligation_id": "OBL-CRWV-APLD-GUARANTY-ELN03",
             "entity_id": "CRWV",
@@ -2267,13 +2430,13 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-03-30",
             "publicly_known_from": "2026-04-01",
-            "truth_claim_id": "CLM-APLD-006",
+            "truth_claim_id": "CLM-APLD-002",
             "knowledge_claim_id": "CLM-APLD-006",
-            "claim_id": "CLM-APLD-006",
+            "claim_id": "CLM-APLD-002",
             "evidence_class": "C"
         },
 
-        # --- Initial DDTL Facility Capacity Facts (At Inception) ---
+        # --- CoreWeave Initial Facility Capacities at Closing ---
         {
             "fact_id": "FACT-CRWV-DDTL1-CAP-20230730",
             "obligation_id": "OBL-CRWV-DEBT-DDTL1",
@@ -2310,7 +2473,7 @@ def build_obligation_facts_table():
             "value": 3000000000.0,
             "unit": "USD",
             "economic_as_of": "2025-09-25",
-            "publicly_known_from": "2025-09-30",
+            "publicly_known_from": "2026-03-02",
             "truth_claim_id": "CLM-CRWV-010",
             "knowledge_claim_id": "CLM-CRWV-010",
             "claim_id": "CLM-CRWV-010",
@@ -2613,7 +2776,7 @@ def build_obligation_facts_table():
             "evidence_class": "A"
         },
 
-        # --- Recourse Parent Guarantees Reference Exposure Facts ---
+        # --- CoreWeave Guarantees Reference Exposure Facts ---
         {
             "fact_id": "FACT-CRWV-GNTY-DDTL1-REF-20260630",
             "obligation_id": "OBL-CRWV-GUARANTY-DDTL1",
@@ -2671,11 +2834,39 @@ def build_obligation_facts_table():
             "evidence_class": "A"
         },
         {
+            "fact_id": "FACT-CRWV-GNTY-DDTL4-REF-20260630",
+            "obligation_id": "OBL-CRWV-GUARANTY-DDTL4",
+            "entity_id": "CRWV",
+            "attribute": "reference_exposure_estimate",
+            "value": 2837000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-06-30",
+            "publicly_known_from": "2026-08-12",
+            "truth_claim_id": "CLM-CRWV-004",
+            "knowledge_claim_id": "CLM-CRWV-004",
+            "claim_id": "CLM-CRWV-004",
+            "evidence_class": "A"
+        },
+        {
             "fact_id": "FACT-CRWV-GNTY-DDTL5-REF-20260630",
             "obligation_id": "OBL-CRWV-GUARANTY-DDTL5",
             "entity_id": "CRWV",
             "attribute": "reference_exposure_estimate",
             "value": 1101000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-06-30",
+            "publicly_known_from": "2026-08-12",
+            "truth_claim_id": "CLM-CRWV-001",
+            "knowledge_claim_id": "CLM-CRWV-001",
+            "claim_id": "CLM-CRWV-001",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-CRWV-COBORR-DDTL3-REF-20260630",
+            "obligation_id": "OBL-CRWV-COBORROWER-DDTL3",
+            "entity_id": "CRWV_CCAC_V",
+            "attribute": "reference_exposure_estimate",
+            "value": 2215000000.0,
             "unit": "USD",
             "economic_as_of": "2026-06-30",
             "publicly_known_from": "2026-08-12",

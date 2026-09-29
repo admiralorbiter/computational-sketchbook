@@ -195,25 +195,51 @@ class FinancialStressEngine:
             "OBL-CRWV-DEBT-DDTL3", "OBL-CRWV-DEBT-DDTL5"
         ]
         drawn_debt = 0.0
+        all_known = True
         for u, v, k, d in self.graph.edges(keys=True, data=True):
             if k in drawn_ddtl_keys:
                 amt = d.get("amount")
                 if amt is not None and d.get("amount_known", True):
                     drawn_debt += float(amt)
+                else:
+                    all_known = False
 
-        if drawn_debt == 0.0:
-            drawn_debt = 10806000000.0
+        if self.temporal_mode in ["known", "knowledge"]:
+            if not all_known or drawn_debt == 0.0:
+                drawn_debt = None
+        else:
+            if drawn_debt == 0.0:
+                drawn_debt = 10806000000.0
 
-        # Baseline implied asset base to support drawn debt at funding ratio
-        base_asset_value = drawn_debt / funding_ratio_proxy  # ~$15.130B
-        stressed_asset_value = base_asset_value * (1.0 - haircut_pct)  # ~$9.078B
-        allowable_capacity = stressed_asset_value * funding_ratio_proxy  # ~$6.484B
-
-        modeled_refinancing_gap = max(0.0, drawn_debt - allowable_capacity)  # ~$4.322B
         crwv_cash = self.financials.get("CRWV", {}).get("cash_and_equivalents", 5520000000.0)
-        # Note: Under DDTL 5.0 Credit Agreement Section 2.05, secondary market price declines do NOT trigger
-        # an automated mandatory cash margin call or prepayment. Cash remains intact at $5.52B.
-        gap_to_cash_pct = (modeled_refinancing_gap / crwv_cash) * 100.0 if crwv_cash else 0.0
+
+        if drawn_debt is None:
+            base_asset_value = None
+            stressed_asset_value = None
+            allowable_capacity = None
+            modeled_refinancing_gap = None
+            gap_to_cash_pct = None
+            narrative = (
+                f"As of {self.as_of_date}, drawn debt balances for CoreWeave's recourse DDTL facilities remain "
+                f"unmeasured and undisclosed prior to the Form 10-Q filing on 2026-08-12. Under zero-lookahead "
+                f"epistemic constraints, secondary collateral refinancing sensitivity cannot be computed (unmeasured)."
+            )
+        else:
+            # Baseline implied asset base to support drawn debt at funding ratio
+            base_asset_value = drawn_debt / funding_ratio_proxy  # ~$15.130B
+            stressed_asset_value = base_asset_value * (1.0 - haircut_pct)  # ~$9.078B
+            allowable_capacity = stressed_asset_value * funding_ratio_proxy  # ~$6.484B
+
+            modeled_refinancing_gap = max(0.0, drawn_debt - allowable_capacity)  # ~$4.322B
+            # Note: Under DDTL 5.0 Credit Agreement Section 2.05, secondary market price declines do NOT trigger
+            # an automated mandatory cash margin call or prepayment. Cash remains intact at $5.52B.
+            gap_to_cash_pct = (modeled_refinancing_gap / crwv_cash) * 100.0 if crwv_cash else 0.0
+            narrative = (
+                f"Applying a {int(haircut_pct*100)}% secondary market haircut against the 71.42% funding-ratio proxy models a "
+                f"${modeled_refinancing_gap/1e9:.2f}B refinancing-capacity contraction across CoreWeave's ${drawn_debt/1e9:.2f}B in recourse DDTLs. "
+                f"Under the Credit Agreement, this decline does NOT trigger an automatic contractual cash margin call or prepayment (cash remains ${crwv_cash/1e9:.2f}B), "
+                f"but it eliminates borrowing availability on undrawn commitments and represents severe rollover friction upon loan maturity."
+            )
 
         return {
             "scenario_name": "Hypothetical MTM Financing Sensitivity (Class C Proxy)",
@@ -227,19 +253,14 @@ class FinancialStressEngine:
             "direct_cash_hit_usd": 0.0,  # Zero contractual mandatory cash prepayment
             "crwv_starting_cash_usd": crwv_cash,
             "crwv_cash_after_scenario_usd": crwv_cash,  # Cash intact
-            "modeled_gap_to_cash_pct": round(gap_to_cash_pct, 1),
+            "modeled_gap_to_cash_pct": round(gap_to_cash_pct, 1) if gap_to_cash_pct is not None else None,
             "contractual_caveat": (
                 "Under Exhibit 10.1 and Section 2.05 of the DDTL 5.0 Credit Agreement, debt sizing is tied to Funding Date Capex (cost) "
                 "with straight-line 6-year depreciation, and mandatory prepayments govern asset sales, debt issuances, and defaults—not an automatic "
                 "secondary market mark-to-market appraisal margin call. This $4.32B gap is an analytical sensitivity proxy (Class C) measuring "
                 "refinancing capacity contraction rather than a contractual cash call."
             ),
-            "transmission_narrative": (
-                f"Applying a {int(haircut_pct*100)}% secondary market haircut against the 71.42% funding-ratio proxy models a "
-                f"${modeled_refinancing_gap/1e9:.2f}B refinancing-capacity contraction across CoreWeave's ${drawn_debt/1e9:.2f}B in recourse DDTLs. "
-                f"Under the Credit Agreement, this decline does NOT trigger an automatic contractual cash margin call or prepayment (cash remains ${crwv_cash/1e9:.2f}B), "
-                f"but it eliminates borrowing availability on undrawn commitments and represents severe rollover friction upon loan maturity."
-            )
+            "transmission_narrative": narrative
         }
 
     def simulate_anchor_customer_trim(self, trim_pct: float = 0.30) -> Dict[str, Any]:
@@ -465,6 +486,39 @@ class FinancialStressEngine:
         The refi_rollover_fraction (default 1.0) parameterizes the portion that must be refinanced into debt rather than retired from cash.
         """
         delta_spread = spread_increase_bps / 10000.0  # 0.03
+        crwv_cash = self.financials.get("CRWV", {}).get("cash_and_equivalents", 5520000000.0)
+
+        # Note 7 debt maturities were disclosed on 2026-08-12 in Form 10-Q (CLM-CRWV-005)
+        maturities_known = True
+        if self.temporal_mode in ["known", "knowledge"]:
+            if str(self.as_of_date) < "2026-08-12":
+                maturities_known = False
+
+        if not maturities_known:
+            return {
+                "scenario_name": "Credit Spread / Refinancing Shock at Maturity",
+                "spread_increase_bps": spread_increase_bps,
+                "refi_rollover_fraction": refi_rollover_fraction,
+                "crwv_maturing_2026_usd": None,
+                "crwv_maturing_2027_usd": None,
+                "crwv_maturing_2028_usd": None,
+                "crwv_refi_annual_penalty_2026_usd": None,
+                "crwv_refi_annual_penalty_2027_usd": None,
+                "crwv_refi_cumulative_penalty_2yr_usd": None,
+                "crwv_refi_cumulative_penalty_3yr_usd": None,
+                "refinancing_sensitivity_2yr": {
+                    "50pct_rollover_usd": None,
+                    "75pct_rollover_usd": None,
+                    "100pct_rollover_usd": None,
+                },
+                "crwv_starting_cash_usd": crwv_cash,
+                "transmission_narrative": (
+                    f"As of {self.as_of_date}, CoreWeave contractual debt maturity schedule (Note 7) remains unfiled "
+                    f"and undisclosed prior to the Form 10-Q filing on 2026-08-12. Under zero-lookahead epistemic "
+                    f"constraints, rollover refinancing sensitivity cannot be computed without lookahead bias."
+                )
+            }
+
         maturing_2026 = 4413000000.0
         maturing_2027 = 6184000000.0
         maturing_2028 = 4416000000.0
@@ -482,8 +536,6 @@ class FinancialStressEngine:
             "75pct_rollover_usd": cumulative_refi_cost_2yr * 0.75,
             "100pct_rollover_usd": cumulative_refi_cost_2yr * 1.00,
         }
-
-        crwv_cash = self.financials.get("CRWV", {}).get("cash_and_equivalents", 5520000000.0)
 
         return {
             "scenario_name": "Credit Spread / Refinancing Shock at Maturity",
@@ -582,6 +634,35 @@ class FinancialStressEngine:
         1. Accounting Channel (P&L / Equity): Non-cash Net Realizable Value (NRV) write-down provision under ASC 330.
         2. Cash Liquidity Channel: Working capital cash drain if taking delivery of unabsorbed inventory vs cancellation penalty.
         """
+        commitments_known = True
+        if self.temporal_mode in ["known", "knowledge"]:
+            if str(self.as_of_date) < "2026-08-31":
+                commitments_known = False
+
+        smci_cash = self.financials.get("SMCI", {}).get("cash_and_equivalents", 7520000000.0)
+
+        if not commitments_known:
+            return {
+                "scenario_name": "OEM Purchase Commitment Expected Loss (SMCI)",
+                "excess_allocation_pct": excess_allocation_pct,
+                "modeled_recovery_haircut": modeled_recovery_haircut,
+                "cancellation_fee_rate": cancellation_fee_rate,
+                "target_entity": "SMCI",
+                "total_purchase_commitments_usd": None,
+                "excess_commitments_usd": None,
+                "accounting_nrv_write_down_usd": None,
+                "cancellation_settlement_cash_drain_usd": None,
+                "gross_inventory_cash_drain_usd": None,
+                "smci_starting_cash_usd": smci_cash,
+                "cancellation_cash_drain_pct": None,
+                "gross_delivery_cash_drain_pct": None,
+                "transmission_narrative": (
+                    f"As of {self.as_of_date}, Supermicro purchase commitments ($34.2B) remain unfiled and undisclosed "
+                    f"prior to the Form 10-K filing on 2026-08-31. Under zero-lookahead epistemic constraints, "
+                    f"purchase commitment markdown cannot be computed without lookahead bias."
+                )
+            }
+
         total_commitments = 34200000000.0
         excess_commitments = total_commitments * excess_allocation_pct  # $5.13B excess hardware allocation
         
@@ -594,7 +675,6 @@ class FinancialStressEngine:
         # B) Gross Inventory Delivery (taking full physical delivery of excess racks into working capital): $5.13B cash drain
         gross_inventory_cash_drain = excess_commitments  # $5.13B
 
-        smci_cash = self.financials.get("SMCI", {}).get("cash_and_equivalents", 7520000000.0)
         cancellation_cash_drain_pct = (modeled_cancellation_cash_drain / smci_cash) * 100.0 if smci_cash else 100.0
         gross_delivery_cash_drain_pct = (gross_inventory_cash_drain / smci_cash) * 100.0 if smci_cash else 100.0
 
@@ -608,7 +688,7 @@ class FinancialStressEngine:
             "excess_commitments_usd": excess_commitments,
             "accounting_nrv_write_down_usd": modeled_nrv_provision,
             "cancellation_settlement_cash_drain_usd": modeled_cancellation_cash_drain,
-            "gross_delivery_cash_drain_usd": gross_inventory_cash_drain,
+            "gross_inventory_cash_drain_usd": gross_inventory_cash_drain,
             "smci_starting_cash_usd": smci_cash,
             "cancellation_cash_drain_pct": round(cancellation_cash_drain_pct, 1),
             "gross_delivery_cash_drain_pct": round(gross_delivery_cash_drain_pct, 1),
@@ -630,13 +710,38 @@ class FinancialStressEngine:
         res_grid = self.simulate_grid_energization_delay(delay_months=12, building3_operational_mw=50.0)
         res_oem = self.simulate_oem_purchase_commitment_markdown(excess_allocation_pct=0.15, modeled_recovery_haircut=0.40, cancellation_fee_rate=0.15)
 
+        gpu_hit_desc = (
+            f"Cash Intact ($5.52B) / ${res_gpu['modeled_refinancing_gap_usd']/1e9:.2f}B Refinancing Capacity Gap"
+            if res_gpu["modeled_refinancing_gap_usd"] is not None
+            else "Unmeasured prior to 2026-08-12 Form 10-Q filing"
+        )
+        sofr_drain = res_sofr.get("network_cash_drain_may31_snapshot_usd")
+        sofr_desc = (
+            f"Reported Swaps Cash Drain: ${sofr_drain/1e6:.1f}M/yr (Range: $27.3M - $303.9M/yr)"
+            if sofr_drain is not None
+            else "Unmeasured prior to 2026-08-12 Form 10-Q filing"
+        )
+        refi_cost = res_refi.get("crwv_refi_cumulative_penalty_2yr_usd")
+        refi_desc = (
+            f"${refi_cost/1e6:.0f}M/yr Added Refinancing Interest (Range: ${refi_cost*0.5/1e6:.0f}M - ${refi_cost/1e6:.0f}M/yr)"
+            if refi_cost is not None
+            else "Unmeasured prior to 2026-08-12 Form 10-Q filing"
+        )
+        oem_drain_pct = res_oem.get("cancellation_cash_drain_pct")
+        oem_gross_pct = res_oem.get("gross_delivery_cash_drain_pct")
+        oem_desc = (
+            f"{oem_drain_pct}% to {oem_gross_pct}% Cash Drain"
+            if oem_drain_pct is not None
+            else "Unmeasured prior to 2026-08-31 Form 10-K filing"
+        )
+
         summary_rows = [
             {
                 "scenario_name": res_gpu["scenario_name"],
                 "shock_parameter": "-40% GPU Collateral Value",
                 "direct_cash_or_collateral_hit_usd": res_gpu["modeled_refinancing_gap_usd"],
                 "target_entity": "CRWV",
-                "covenant_or_liquidity_impact": f"Cash Intact ($5.52B) / ${res_gpu['modeled_refinancing_gap_usd']/1e9:.2f}B Refinancing Capacity Gap",
+                "covenant_or_liquidity_impact": gpu_hit_desc,
                 "contagion_mechanism": "Does not trigger automatic cash prepayment under DDTL 5.0 §2.05; creates a $4.32B modeled refinancing gap (Class C proxy) eliminating undrawn capacity."
             },
             {
@@ -652,7 +757,7 @@ class FinancialStressEngine:
                 "shock_parameter": "+300 bps SOFR Benchmark",
                 "direct_cash_or_collateral_hit_usd": res_sofr["network_cash_drain_may31_snapshot_usd"],
                 "target_entity": "CRWV / APLD",
-                "covenant_or_liquidity_impact": "Reported Swaps Cash Drain: $235.4M/yr (Range: $27.3M - $303.9M/yr)",
+                "covenant_or_liquidity_impact": sofr_desc,
                 "contagion_mechanism": "Audited $4.66B swap notional leaves $7.55B floating unhedged ($226.4M CRWV + $9.0M APLD bridge facility). Sensitivity band: $27.3M (95% full) to $303.9M (covenanted only)."
             },
             {
@@ -660,7 +765,7 @@ class FinancialStressEngine:
                 "shock_parameter": "+300 bps Credit Spread at Maturity",
                 "direct_cash_or_collateral_hit_usd": res_refi["crwv_refi_cumulative_penalty_2yr_usd"],
                 "target_entity": "CRWV",
-                "covenant_or_liquidity_impact": "$318M/yr Added Refinancing Interest (Range: $159M - $318M/yr)",
+                "covenant_or_liquidity_impact": refi_desc,
                 "contagion_mechanism": "Existing spreads unaffected; hits $10.60B scheduled principal across 2026-2027. Refi rollover fraction 1.0 (range: $159M at 50% to $318M at 100%)."
             },
             {
@@ -676,7 +781,7 @@ class FinancialStressEngine:
                 "shock_parameter": "15% Demand Pullback",
                 "direct_cash_or_collateral_hit_usd": res_oem["accounting_nrv_write_down_usd"],
                 "target_entity": "SMCI",
-                "covenant_or_liquidity_impact": f"{res_oem['cancellation_cash_drain_pct']}% to {res_oem['gross_delivery_cash_drain_pct']}% Cash Drain",
+                "covenant_or_liquidity_impact": oem_desc,
                 "contagion_mechanism": "Accounting: $2.05B NRV loss provision on equity. Cash: $769M cancellation fee at 15% (10% cash) or $5.13B delivery (68% cash)."
             }
         ]

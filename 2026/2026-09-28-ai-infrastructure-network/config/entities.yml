@@ -143,6 +143,21 @@ entities:
     description: "Direct wholly owned subsidiary and bankruptcy-remote borrowing SPV for CoreWeave DDTL 2.0 (May 16, 2024) and DDTL 2.1 (September 2025) Facilities."
     key_counterparties: [CRWV, BLACKSTONE_MAGNETAR_SYN]
 
+  CRWV_CCAC_V:
+    entity_id: CRWV_CCAC_V
+    name: CoreWeave Compute Acquisition Co. V, LLC
+    ticker: null
+    cik: null
+    parent_entity_id: CRWV
+    category: project_spv
+    subsector: equipment_financing_bankruptcy_remote_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "12-31"
+    description: "Direct subsidiary and co-borrowing SPV alongside CCAC VII for CoreWeave DDTL 3.0 Facility (July 28, 2025)."
+    key_counterparties: [CRWV, MUFG_BANK_SYN, CRWV_CCAC_VII]
+
   CRWV_CCAC_VII:
     entity_id: CRWV_CCAC_VII
     name: CoreWeave Compute Acquisition Co. VII, LLC
@@ -155,8 +170,8 @@ entities:
     status: subsidiary_spv
     reporting_standard: US-GAAP_consolidated
     fiscal_year_end: "12-31"
-    description: "Indirect subsidiary and bankruptcy-remote borrowing SPV for CoreWeave DDTL 3.0 Facility (July 2025)."
-    key_counterparties: [CRWV, BLACKSTONE_MAGNETAR_SYN]
+    description: "Indirect subsidiary and co-borrowing SPV alongside CCAC V for CoreWeave DDTL 3.0 Facility (July 28, 2025)."
+    key_counterparties: [CRWV, MUFG_BANK_SYN, CRWV_CCAC_V]
 
   CRWV_FINANCING_DDTL_V:
     entity_id: CRWV_FINANCING_DDTL_V
