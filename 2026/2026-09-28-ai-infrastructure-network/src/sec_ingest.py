@@ -67,6 +67,26 @@ INSTANT_METRIC_CONCEPTS = {
     ]
 }
 
+# Company-specific metric extraction overrides to keep the ingestion engine generic for Phase 1 scaling
+FINANCIAL_METRIC_OVERRIDES = {
+    "CRWV": {
+        "total_debt": {
+            "method": "preferred_concept",
+            "concept_order": ["DebtLongtermAndShorttermCombinedAmount", "DebtInstrumentCarryingAmount"],
+            "min_threshold": 1e10
+        }
+    },
+    "SMCI": {
+        "total_debt": {
+            "method": "sum_components",
+            "components": [
+                ["DebtLongtermAndShorttermCombinedAmount", "DebtInstrumentCarryingAmount"],
+                ["ConvertibleLongTermNotesPayable", "ConvertibleDebtNoncurrent"]
+            ]
+        }
+    }
+}
+
 
 class SECIngestPipeline:
     def __init__(self, raw_dir: Path, processed_dir: Path):
@@ -281,22 +301,39 @@ class SECIngestPipeline:
             total_debt = 0.0
             concept_used = ""
 
-            if ticker == "CRWV" and v_comb > 1e10:
-                total_debt = v_comb
-                concept_used = c_comb
-            elif ticker == "SMCI":
-                total_debt = v_comb + v_conv
-                concept_used = f"{c_comb}+{c_conv}" if c_comb and c_conv else (c_comb or c_conv or "ConvertibleNotes")
-            elif v_comb > 0 and v_comb >= (v_lt + v_cur):
-                total_debt = v_comb
-                concept_used = c_comb
-            elif (v_lt + v_cur + v_conv) > 0:
-                total_debt = v_lt + v_cur + v_conv
-                tags = [t for t in [c_lt, c_cur, c_conv] if t]
-                concept_used = "+".join(tags)
-            elif v_comb > 0:
-                total_debt = v_comb
-                concept_used = c_comb
+            # Check for configured company-specific override
+            override = FINANCIAL_METRIC_OVERRIDES.get(ticker, {}).get("total_debt")
+            if override:
+                method = override.get("method")
+                if method == "preferred_concept":
+                    v_pref, c_pref = get_val(override.get("concept_order", []))
+                    if v_pref >= override.get("min_threshold", 0.0):
+                        total_debt = v_pref
+                        concept_used = c_pref
+                elif method == "sum_components":
+                    comp_vals = []
+                    comp_tags = []
+                    for comp_concepts in override.get("components", []):
+                        cv, ct = get_val(comp_concepts)
+                        if cv > 0:
+                            comp_vals.append(cv)
+                            comp_tags.append(ct)
+                    if comp_vals:
+                        total_debt = sum(comp_vals)
+                        concept_used = "+".join(comp_tags)
+
+            # Generic fallback logic
+            if total_debt == 0.0:
+                if v_comb > 0 and v_comb >= (v_lt + v_cur):
+                    total_debt = v_comb
+                    concept_used = c_comb
+                elif (v_lt + v_cur + v_conv) > 0:
+                    total_debt = v_lt + v_cur + v_conv
+                    tags = [t for t in [c_lt, c_cur, c_conv] if t]
+                    concept_used = "+".join(tags)
+                elif v_comb > 0:
+                    total_debt = v_comb
+                    concept_used = c_comb
 
             if total_debt > 0:
                 extracted.append({

@@ -97,3 +97,23 @@ This log records the durable architectural, methodological, and data design choi
   7. In `sec_ingest.py`, enforce strict same-concept-family and identical `start_date` matching for derived Q4 flow calculations, and present both Full Year (FY) and Latest Quarter revenue columns in documentation to prevent time-horizon ambiguity.
 - **Consequences:** Eliminates all contractual over-claiming, reconciles debt to the penny ($35.551B), isolates accounting equity write-downs from cash drains, and establishes an institutional-grade foundation for the five-company pilot.
 
+---
+
+### ADR-009: Hedge Scope Calibration, Split Springing Guarantees ($6.88B / 250 MW), Operational MW Parameterization, and Config-Driven Ingestion Overrides
+- **Status:** Accepted (2026-09-28, Phase 0.7.1)
+- **Context:** Following external review of Phase 0.7 (commit `3a4a0902`), seven narrower evidentiary and contract-boundary findings required calibration before expanding beyond the 5-company universe:
+  1. *Hedge Scope Calibration:* Phase 0.7 applied a 95% swap hedging ratio across all $10.8B of floating DDTLs, yielding a minimal $72.5M/yr rate shock. However, Credit Agreement Section 5.14 only mandates $\ge 95\%$ hedges specifically for DDTL 4.0 and DDTL 5.0. Form 10-Q Note 8 reports an empirical total of $4,661M in active interest-rate swaps against $12.206B in total floating borrowings. Unhedged floating debt is $7.545B, producing an empirical cash drain of $226.4M/yr (CRWV) + $14.3M/yr (APLD) = $240.6M/yr at +300 bps.
+  2. *Split Springing Guarantee Scope:* Phase 0.7 assigned an $11.0B springing guarantee across the entire 400 MW Polaris Forge 1 campus. Underlying filings establish two separate guarantees: Exhibit 10.1 (ELN-02, Building 2, 100 MW, $2.750B contracted value) and Exhibit 10.2 (ELN-03, Building 3, 150 MW, $4.125B contracted value), totaling $6.875B across 250 MW. Building 4 (150 MW, $4.125B) carries no CoreWeave parent springing guarantee (APLD guarantees the landlord).
+  3. *Verbatim Quoting of Springing Events:* `CLM-APLD-005` in evidence claims misstated the legal events. Exhibit 10.1 establishes nine discrete event groups, including an equipment-financing rating trigger [***], colocation agreement default/modification/reduction, and equipment financing acceleration.
+  4. *Class C Operational MW Parameterization:* APLD Form 10-K notes Building 3 is partially operational but does not state 50 MW is live. The 50 MW live figure is an inferred Class C analytical proxy.
+  5. *Refinancing Principal vs Amortization:* CoreWeave's $10.60B maturing across 2026–2027 represents scheduled contractual principal payments; refinancing rollovers should be explicitly parameterized.
+  6. *Terminology & Ingest Scaling:* Replace "11 distinct debt tranches" with "11 modeled debt components/edges", parameterize Supermicro's cancellation fee rate, and replace hardcoded ticker overrides in `sec_ingest.py` with a config-driven `FINANCIAL_METRIC_OVERRIDES` mapping.
+- **Decision:**
+  1. In `src/stress.py`, calibrate the SOFR rate shock to report the empirical swaps baseline ($240.6M/yr) and expose a sensitivity band ($32.6M to $309.2M/yr).
+  2. In `config/entities.yml` and `src/curate_obligations.py`, split landlord SPVs into `APLD_ELN02_LLC`, `APLD_ELN03_LLC`, and `APLD_ELN02C_LLC`, and split springing guarantees into `OBL-CRWV-APLD-GUARANTY-ELN02` ($2.750B) and `OBL-CRWV-APLD-GUARANTY-ELN03` ($4.125B), totaling $6.875B covering 250 MW.
+  3. Update `CLM-APLD-005` to quote verbatim text covering the 9 Springing Events from Exhibit 10.1, add `CLM-APLD-006` for Exhibit 10.2, and calibrate `CLM-CRWV-005` to quote Note 7 and Note 8 swap text verbatim.
+  4. Parameterize `building3_operational_mw` (default 50.0 MW, Class C proxy) with an exposed sensitivity band (25–100 MW live), `refi_rollover_fraction` (default 1.0, range 0.5–1.0), and `cancellation_fee_rate` (default 0.15).
+  5. Migrate `sec_ingest.py` to a config-driven `FINANCIAL_METRIC_OVERRIDES` mapping for debt reconciliation.
+  6. Update `src/validate.py` to enforce zero data drift, assert 20 obligations, verify split springing guarantees, perform verbatim claim substring checks, and output `ALL INTERNAL CONSISTENCY CHECKS PASSED: ZERO DATA DRIFT`.
+- **Consequences:** Eliminates all remaining contractual over-claims and parameter mischaracterizations, grounds rate shocks in empirical SEC swap disclosures, and establishes full evidentiary precision before universe expansion.
+

@@ -114,7 +114,7 @@ entities:
 
   APLD_ELN_LLC:
     entity_id: APLD_ELN_LLC
-    name: APLD ELN-02 LLC & ELN-03 LLC
+    name: APLD ELN-02 LLC & ELN-03 LLC (HoldCo / Aggregate)
     ticker: null
     cik: null
     category: project_spv
@@ -125,6 +125,48 @@ entities:
     fiscal_year_end: "05-31"
     description: "Applied Digital project financing subsidiaries owning the 400 MW Ellendale data center assets and executing master lease agreements."
     key_counterparties: [APLD, CRWV_SPV_VIII, POLARIS_FORGE_1]
+
+  APLD_ELN02_LLC:
+    entity_id: APLD_ELN02_LLC
+    name: APLD ELN-02 LLC
+    ticker: null
+    cik: null
+    category: project_spv
+    subsector: real_estate_facility_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "05-31"
+    description: "Applied Digital subsidiary and landlord for Building 2 (100 MW operational) at Polaris Forge 1; counterparty to CoreWeave ELN-02 lease and Unconditional Springing Guaranty."
+    key_counterparties: [APLD, CRWV_SPV_VIII, CRWV, POLARIS_FORGE_1]
+
+  APLD_ELN03_LLC:
+    entity_id: APLD_ELN03_LLC
+    name: APLD ELN-03 LLC
+    ticker: null
+    cik: null
+    category: project_spv
+    subsector: real_estate_facility_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "05-31"
+    description: "Applied Digital subsidiary and landlord for Building 3 (150 MW partially operational) at Polaris Forge 1; counterparty to CoreWeave ELN-03 lease and Unconditional Springing Guaranty."
+    key_counterparties: [APLD, CRWV_SPV_VIII, CRWV, POLARIS_FORGE_1]
+
+  APLD_ELN02C_LLC:
+    entity_id: APLD_ELN02C_LLC
+    name: APLD ELN-02 C LLC
+    ticker: null
+    cik: null
+    category: project_spv
+    subsector: real_estate_facility_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "05-31"
+    description: "Applied Digital subsidiary and landlord for Building 4 (150 MW under construction) at Polaris Forge 1; guaranteed by APLD parent, with no CoreWeave parent springing guaranty."
+    key_counterparties: [APLD, CRWV, POLARIS_FORGE_1]
 
   APLD_COMPUTECO2:
     entity_id: APLD_COMPUTECO2

@@ -1,5 +1,5 @@
 """
-Observatory Consistency Validator (Phase 0.7)
+Observatory Consistency Validator (Phase 0.7.1)
 Verifies that numbers, obligations, claims, figures, and tables in Markdown documentation
 (README.md and FEEDBACK_PACK.md) match canonical data artifacts, outputs, and executed
 notebook results with zero data drift.
@@ -63,7 +63,7 @@ def parse_dollar(val_str: str):
 
 
 def validate_observatory():
-    print("=== Running AI Infrastructure Financial Network Consistency Validator (Phase 0.7) ===")
+    print("=== Running AI Infrastructure Financial Network Consistency Validator (Phase 0.7.1) ===")
     errors = []
 
     # ---------------------------------------------------------
@@ -89,7 +89,7 @@ def validate_observatory():
     
     expected_tranches = 11
     if len(crwv_debt) != expected_tranches:
-        errors.append(f"CRWV debt tranches count mismatch: {len(crwv_debt)} (expected {expected_tranches})")
+        errors.append(f"CRWV debt components count mismatch: {len(crwv_debt)} (expected {expected_tranches})")
     
     total_crwv_debt = crwv_debt["amount"].sum()
     target_debt = 35_551_000_000.0  # $35.551B from Form 10-Q Note 7 Table 36
@@ -97,7 +97,7 @@ def validate_observatory():
     if debt_drift > 1.0:
         errors.append(f"CRWV total debt drift: ${total_crwv_debt/1e9:.4f}B vs ${target_debt/1e9:.4f}B (drift ${debt_drift:,.2f})")
     else:
-        print(f"  [OK] CRWV 11 debt tranches sum exactly to ${total_crwv_debt/1e9:.3f}B ($35,551M, exact 0.00% drift).")
+        print(f"  [OK] CRWV 11 modeled debt components/edges sum exactly to ${total_crwv_debt/1e9:.3f}B ($35,551M, exact 0.00% drift).")
 
     # Check that required tranche IDs exist
     expected_ids = {
@@ -107,9 +107,9 @@ def validate_observatory():
     }
     missing_ids = expected_ids - set(crwv_debt["obligation_id"])
     if missing_ids:
-        errors.append(f"Missing expected CRWV debt tranches: {missing_ids}")
+        errors.append(f"Missing expected CRWV debt components: {missing_ids}")
     else:
-        print(f"  [OK] All 11 distinct CRWV debt tranches present.")
+        print(f"  [OK] All 11 distinct CRWV debt components present.")
 
     # ---------------------------------------------------------
     # 3. Validate Obligations & Polaris Forge 1 Phasing
@@ -118,6 +118,12 @@ def validate_observatory():
         "principal_outstanding", "lifetime_contract_value", "remaining_commitment",
         "recognized_revenue", "contingent_guarantee", "equity_investment", "facility_capacity"
     }
+    expected_obligations_count = 20
+    if len(obl_df) != expected_obligations_count:
+        errors.append(f"Obligations count mismatch: {len(obl_df)} (expected {expected_obligations_count})")
+    else:
+        print(f"  [OK] Exactly {expected_obligations_count} decomposed obligations present.")
+
     for _, row in obl_df.iterrows():
         oid = row["obligation_id"]
         atype = row.get("amount_type")
@@ -139,12 +145,37 @@ def validate_observatory():
         else:
             print("  [OK] OBL-CRWV-APLD-LEASE verified at 400.0 MW total campus capacity.")
 
+    # Check Split Springing Guarantees (ELN-02 and ELN-03)
+    g_eln02 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-APLD-GUARANTY-ELN02"]
+    g_eln03 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-APLD-GUARANTY-ELN03"]
+    if g_eln02.empty:
+        errors.append("Missing OBL-CRWV-APLD-GUARANTY-ELN02 obligation")
+    elif g_eln02.iloc[0]["amount"] != 2_750_000_000.0:
+        errors.append(f"OBL-CRWV-APLD-GUARANTY-ELN02 amount mismatch: ${g_eln02.iloc[0]['amount']/1e9:.3f}B")
+    if g_eln03.empty:
+        errors.append("Missing OBL-CRWV-APLD-GUARANTY-ELN03 obligation")
+    elif g_eln03.iloc[0]["amount"] != 4_125_000_000.0:
+        errors.append(f"OBL-CRWV-APLD-GUARANTY-ELN03 amount mismatch: ${g_eln03.iloc[0]['amount']/1e9:.3f}B")
+    
+    if not g_eln02.empty and not g_eln03.empty:
+        tot_g = g_eln02.iloc[0]["amount"] + g_eln03.iloc[0]["amount"]
+        if tot_g != 6_875_000_000.0:
+            errors.append(f"Split springing guarantees sum mismatch: ${tot_g/1e9:.3f}B (expected $6.875B)")
+        else:
+            print(f"  [OK] Split springing guarantees verified: ELN-02 ($2.750B) + ELN-03 ($4.125B) = ${tot_g/1e9:.3f}B across 250 MW.")
+
     print(f"  [OK] All {len(obl_df)} obligations have valid amount_type, positive values, and as_of_dates.")
 
     # ---------------------------------------------------------
     # 4. Validate Evidence Claims
     # ---------------------------------------------------------
     clm_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
+    expected_claims_count = 15
+    if len(clm_df) != expected_claims_count:
+        errors.append(f"Evidence claims count mismatch: {len(clm_df)} (expected {expected_claims_count})")
+    else:
+        print(f"  [OK] Exactly {expected_claims_count} audited evidence claims present.")
+
     for _, row in clm_df.iterrows():
         cid = row["claim_id"]
         quote = row.get("exact_quote", "")
@@ -152,6 +183,37 @@ def validate_observatory():
             errors.append(f"Claim {cid} has empty or short exact_quote")
         if not row.get("accession_number") or not row.get("filing_date"):
             errors.append(f"Claim {cid} missing SEC accession number or filing date")
+
+    # Verbatim substring assertions
+    c5 = clm_df[clm_df["claim_id"] == "CLM-APLD-005"]
+    if c5.empty:
+        errors.append("Missing claim CLM-APLD-005")
+    else:
+        q5 = c5.iloc[0]["exact_quote"]
+        for phrase in ["Springing Events", "Colocation Agreement", "Equipment Financing"]:
+            if phrase not in q5:
+                errors.append(f"CLM-APLD-005 missing expected verbatim phrase: '{phrase}'")
+        print("  [OK] CLM-APLD-005 verified against Exhibit 10.1 verbatim Springing Events text.")
+
+    c6 = clm_df[clm_df["claim_id"] == "CLM-APLD-006"]
+    if c6.empty:
+        errors.append("Missing claim CLM-APLD-006")
+    else:
+        q6 = c6.iloc[0]["exact_quote"]
+        for phrase in ["Unconditional Springing Guaranty", "ELN-03"]:
+            if phrase not in q6:
+                errors.append(f"CLM-APLD-006 missing expected verbatim phrase: '{phrase}'")
+        print("  [OK] CLM-APLD-006 verified against Exhibit 10.2 verbatim ELN-03 Guaranty text.")
+
+    cc5 = clm_df[clm_df["claim_id"] == "CLM-CRWV-005"]
+    if cc5.empty:
+        errors.append("Missing claim CLM-CRWV-005")
+    else:
+        qc5 = cc5.iloc[0]["exact_quote"]
+        for phrase in ["DDTL 5.0 Facility", "interest rate swap", "4,661"]:
+            if phrase not in qc5:
+                errors.append(f"CLM-CRWV-005 missing expected verbatim phrase: '{phrase}'")
+        print("  [OK] CLM-CRWV-005 verified against Note 7 & Note 8 verbatim swap disclosures.")
 
     print(f"  [OK] All {len(clm_df)} claims possess verified SEC accession numbers and verbatim quotes.")
 
@@ -294,7 +356,7 @@ def validate_observatory():
         expected_hits = {
             "Hypothetical MTM Financing Sensitivity": 4.32e9,
             "Anchor Customer Demand Trim": 1.03e9,
-            "SOFR Base Rate Shock": 72.5e6,
+            "SOFR Base Rate Shock": 240.6e6,
             "Credit Spread / Refinancing Shock": 317.9e6,
             "Phased Grid Energization Delay": 135.9e6,
             "OEM Purchase Commitment Expected Loss": 2.05e9,
@@ -304,7 +366,7 @@ def validate_observatory():
 
         for sname, hit_usd in expected_hits.items():
             # Check README stress table
-            # Must mention the dollar value in some form (e.g. $4.32B or $72.5M)
+            # Must mention the dollar value in some form (e.g. $4.32B or $240.6M)
             formatted_b = f"${hit_usd/1e9:.2f}B" if hit_usd >= 1e9 else f"${hit_usd/1e6:.1f}M"
             if formatted_b not in readme_text:
                 errors.append(f"README.md missing stress direct hit string: {formatted_b} for {sname}")
@@ -319,7 +381,7 @@ def validate_observatory():
             print(f"  - {err}")
         return False
     else:
-        print("\n[ALL VALIDATION CHECKS PASSED: ZERO DATA DRIFT]")
+        print("\nALL INTERNAL CONSISTENCY CHECKS PASSED: ZERO DATA DRIFT")
         return True
 
 

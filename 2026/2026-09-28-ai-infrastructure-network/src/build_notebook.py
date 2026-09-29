@@ -1,18 +1,19 @@
 """
-Builds and executes 01_five_company_pilot.ipynb (Phase 0.7 Refactor).
+Builds and executes 01_five_company_pilot.ipynb (Phase 0.7.1 Evidence-Calibration Refactor).
 Incorporates:
 1. Audited balance sheets with explicit distinction between Annual FY flows and Quarterly flows.
-2. Exact CoreWeave debt principal reconciliation ($35.551B across all 11 tranches).
+2. Exact CoreWeave debt principal reconciliation ($35.551B across 11 modeled debt components/edges).
 3. MultiDiGraph representation with building-level phasing at Polaris Forge 1.
-4. Literal legal predicates of the Unconditional Springing Guaranty (Springing Events i, ii, iii, iv).
-5. Pure amount-type reachability footprints (no cross-category dollar mixing).
-6. Contract-calibrated transmission functions for the Parameterized Financial Stress Prototype:
+4. Split Unconditional Springing Guarantees (ELN-02 $2.75B / ELN-03 $4.13B = $6.88B total; Building 4 excluded).
+5. Literal legal predicates of the Unconditional Springing Guaranty (9 event groups under Exhibit 10.1 & 10.2).
+6. Pure amount-type reachability footprints (no cross-category dollar mixing).
+7. Calibrated transmission functions for the Parameterized Financial Stress Prototype:
    - Hypothetical MTM Financing Sensitivity (71.42% funding-ratio proxy).
-   - Anchor Customer Concentration & Conditional Springing Guaranty.
-   - SOFR Benchmark Base Rate Shock (incorporating 95% swap hedging mandate).
-   - Credit Spread / Refinancing Shock at Maturity ($15.01B maturing 2026-2028).
-   - Phased Grid Energization Delay (Building 2, 3, 4 phasing).
-   - OEM Purchase Commitment Expected Loss (Accounting NRV write-down vs Cash working capital drain).
+   - Anchor Customer Concentration & Conditional Springing Guaranty ($4.13B ELN-03 / $6.88B total).
+   - SOFR Benchmark Base Rate Shock (anchored in reported $4.661B swap notional, sensitivity band $32.6M to $309.2M/yr).
+   - Credit Spread / Refinancing Shock at Maturity ($10.60B scheduled principal 2026-2027, parameterized rollover fraction).
+   - Phased Grid Energization Delay (parameterized Building 3 operational MW, sensitivity band 25-100 MW).
+   - OEM Purchase Commitment Expected Loss (Accounting NRV write-down vs Cash working capital drain with exposed fee parameter).
 """
 
 from pathlib import Path
@@ -28,7 +29,7 @@ nb = nbf.v4.new_notebook()
 cells = []
 
 # Cell 1: Markdown - Header & Thesis
-cells.append(nbf.v4.new_markdown_cell("""# AI Infrastructure Financial Network: Phase 0.7 Five-Company Pilot
+cells.append(nbf.v4.new_markdown_cell("""# AI Infrastructure Financial Network: Phase 0.7.1 Five-Company Pilot
 ### *The Bubble Lives in the Joins: Emerging Coordination Failures, Multi-Contract Graphs, and Contract-Calibrated Stress Transmission*
 
 ---
@@ -47,7 +48,7 @@ The thing that blows up in a financial bubble is often **not hidden data**. It i
 4. **Valuation Opacity:** Collateral (GPU clusters) is marked at historical cost or recent transaction prices, ignoring secondary liquidation value under simultaneous distress.
 5. **Temporal Opacity:** Severe cash flow maturity mismatches: 5-year debt facilities funding 15-year lease obligations subject to utility substation lead times.
 
-This notebook establishes **Phase 0.7** of the AI Infrastructure Financial Network across five core companies forming a closed capital, hardware, and lease chain: **NVIDIA (NVDA)**, **Supermicro (SMCI)**, **CoreWeave (CRWV)**, **Applied Digital (APLD)**, and **Oracle (ORCL)**, linked to strategic counterparties **Microsoft (MSFT)**, institutional bondholders, and private credit syndicates.
+This notebook establishes **Phase 0.7.1** of the AI Infrastructure Financial Network across five core companies forming a closed capital, hardware, and lease chain: **NVIDIA (NVDA)**, **Supermicro (SMCI)**, **CoreWeave (CRWV)**, **Applied Digital (APLD)**, and **Oracle (ORCL)**, linked to strategic counterparties **Microsoft (MSFT)**, institutional bondholders, and private credit syndicates.
 """))
 
 # Cell 2: Code - Setup
@@ -84,7 +85,7 @@ We model the network across four functional tiers:
 1. **Accelerated Silicon Supplier:** NVIDIA (`NVDA`)
 2. **Server OEM / Integrator:** Supermicro (`SMCI`)
 3. **Leveraged Neocloud Operator:** CoreWeave (`CRWV`) & Equipment SPV (`CRWV_SPV_VIII`)
-4. **HPC Data Center Developer:** Applied Digital (`APLD`), Polaris Forge 1 SPV (`APLD_ELN_LLC`), and Polaris Forge 2 SPV (`APLD_COMPUTECO2`)
+4. **HPC Data Center Developer:** Applied Digital (`APLD`), Polaris Forge 1 SPVs (`APLD_ELN02_LLC`, `APLD_ELN03_LLC`, `APLD_ELN02C_LLC`), and Polaris Forge 2 SPV (`APLD_COMPUTECO2`)
 5. **Enterprise Cloud Hyperscaler:** Oracle (`ORCL`) & Anchor Customer Microsoft (`MSFT`)
 6. **Capital Providers & Infrastructure:** Private Credit Syndicate (`BLACKSTONE_MAGNETAR_SYN`), Institutional Bondholders, and Polaris Forge 1 Campus (`POLARIS_FORGE_1`)
 """))
@@ -98,7 +99,7 @@ entities_df[["entity_id", "name", "category", "status", "cik", "reporting_standa
 cells.append(nbf.v4.new_markdown_cell("""## 2. Layer 1: Audited Accounting Baselines (Direct SEC XBRL Ingestion)
 
 We query `data.sec.gov` directly via `src/sec_ingest.py`, parsing standardized US-GAAP concepts from Form 10-K and 10-Q periodic filings.
-Crucially, our Phase 0.7 pipeline:
+Crucially, our pipeline:
 * Rigorously separates **instant balance sheet metrics** (Cash, Debt, ASC 842 Leases, PP&E) from **duration flow metrics** (Quarterly vs Annual).
 * Explicitly distinguishes **Full Year (FY) Annual Revenue** from **Latest Reported Quarterly Revenue** (eliminating any ambiguity between quarterly run-rates and annual totals).
 * Synthesizes derived Q4 flows ($\text{FY} - \text{9M}$) where Form 10-K only reports annual figures (e.g. Microsoft Q4 $90.01B, APLD Q4 $258.75M, SMCI Q4 $11.12B).
@@ -166,7 +167,7 @@ cells.append(nbf.v4.new_markdown_cell("""## 3. Layer 2: The Contractual Obligati
 
 We model obligations using `nx.MultiDiGraph` with `obligation_id` as the edge key.
 This architecture preserves multiple distinct facilities between the same counterparty pair:
-* **CoreWeave Indebtedness Exactly Reconciled:** 11 distinct tranches reconciling to the dollar with the **$35.551B** future principal total in Form 10-Q Note 7 (Table 36):
+* **CoreWeave Indebtedness Exactly Reconciled:** 11 modeled debt components/edges reconciling to the dollar with the **$35.551B** future principal total in Form 10-Q Note 7 (Table 36):
   - Recourse DDTLs: DDTL 1.0 ($1.300B), DDTL 2.0 ($3.190B), DDTL 2.1 ($3.000B), DDTL 3.0 ($2.215B), DDTL 5.0 ($1.101B) = $10.806B.
   - Non-Recourse SPV DDTL 4.0: **$2.837B** outstanding principal under an $8.500B facility capacity.
   - Senior Notes ($10.029B), Convertibles ($6.588B), Recourse OEM ($4.220B), Non-Recourse OEM (**$0.882B**), Magnetar ($0.189B).
@@ -219,14 +220,22 @@ pos = {
     "BLACKSTONE_MAGNETAR_SYN": np.array([0.8, 0.5]),
     "INSTITUTIONAL_BONDHOLDERS": np.array([0.9, 0.0]),
     "OEM_FINANCING_PARTNERS": np.array([0.7, -0.4]),
-    "CRWV_SPV_VIII": np.array([0.2, -0.6]),
-    "APLD_ELN_LLC": np.array([0.6, -0.8]),
-    "APLD_COMPUTECO2": np.array([0.8, -1.0]),
-    "PROJECT_LENDERS": np.array([1.1, -0.85]),
+    "CRWV_SPV_VIII": np.array([0.2, -0.5]),
+    "APLD_ELN_LLC": np.array([0.6, -0.7]),
+    "APLD_ELN02_LLC": np.array([0.45, -0.85]),
+    "APLD_ELN03_LLC": np.array([0.75, -0.85]),
+    "APLD_ELN02C_LLC": np.array([0.95, -0.85]),
+    "APLD_COMPUTECO2": np.array([0.8, -1.05]),
+    "PROJECT_LENDERS": np.array([1.1, -0.95]),
     "POLARIS_FORGE_1": np.array([0.2, -1.0]),
-    "APLD": np.array([0.5, -1.1]),
+    "APLD": np.array([0.5, -1.15]),
     "ORCL": np.array([-0.4, 0.8])
 }
+
+# Add default positions for any missing nodes
+for n in G.nodes():
+    if n not in pos:
+        pos[n] = np.random.uniform(-0.8, 0.8, size=2)
 
 category_colors = {
     "hardware_supplier": "#1f77b4",
@@ -261,7 +270,7 @@ for u, v, k, d in G.edges(data=True, keys=True):
 edge_labels = {(u, v): f"${d.get('amount', 0)/1e9:.1f}B" for u, v, k, d in G.edges(data=True, keys=True) if d.get("amount", 0) >= 2.5e9}
 nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, font_color="#2c3e50")
 
-plt.title("AI Infrastructure Multi-Graph Obligation Network (Phase 0.7)\\n(Edges Represent Distinct Legal Facilities, Leases, Guarantees, and Commitments)", fontsize=13, fontweight="bold")
+plt.title("AI Infrastructure Multi-Graph Obligation Network (Phase 0.7.1)\\n(Edges Represent Distinct Legal Facilities, Leases, Guarantees, and Commitments)", fontsize=13, fontweight="bold")
 plt.axis("off")
 plt.tight_layout()
 plt.savefig(project_root / "outputs/figures/obligation_network_topology.png", dpi=300)
@@ -269,17 +278,19 @@ plt.show()
 """))
 
 # Cell 12: Markdown - Unwrapping SPVs
-cells.append(nbf.v4.new_markdown_cell("""## 4. Unwrapping Perimeter Opacity: The Springing Guaranty
+cells.append(nbf.v4.new_markdown_cell("""## 4. Unwrapping Perimeter Opacity: The Springing Guarantees
 
-Notice the literal contractual reality revealed in APLD's Form 10-K (Note 14 & Exhibit 10.1):
-* CoreWeave assigned its direct lease liabilities for Polaris Forge 1 to `CRWV_SPV_VIII` and was formally released from direct lease obligations.
-* **HOWEVER**, CoreWeave concurrently executed an **Unconditional Springing Guaranty of Payment and Performance** for the SPV's obligations.
-* **The Springing Events Predicate Engine:** Under Exhibit 10.1, the guaranty springs into active parent liability upon:
-  - **Event (i):** Insolvency / bankruptcy of Tenant SPV.
-  - **Event (ii):** Material adverse amendment, default, or termination of the Colocation Agreement, or circumstances giving the Colocation Customer the right to cease or materially reduce monthly payments.
-  - **Event (iii):** Failure to maintain single-purpose bankruptcy-remote separateness covenants.
-  - **Event (iv):** Acceleration of tenant debt.
-* Thus, perimeter restructuring did NOT insulate the parent; it introduced a **contingent liquidity cliff** where a colocation default at the SPV level immediately reactivates parent balance sheet liability for the full $11.0B lease.
+Notice the literal contractual reality revealed in APLD's Form 10-K (Note 14, Exhibit 10.1, and Exhibit 10.2):
+* CoreWeave assigned its direct lease liabilities for Polaris Forge 1 to `CRWV_SPV_VIII` and was formally released from direct lease obligations on ELN-02 and ELN-03.
+* **HOWEVER**, CoreWeave concurrently executed separate **Unconditional Springing Guarantees of Payment and Performance** for Building 2 (`APLD_ELN02_LLC`, 100 MW, ~$2.75B) and Building 3 (`APLD_ELN03_LLC`, 150 MW, ~$4.13B).
+* **Scope Calibration:** The springing guarantees cover an aggregate of 250 MW ($6.88B total contracted revenue). Building 4 (150 MW, ~$4.13B) carries no CoreWeave parent guarantee (it is guaranteed by APLD parent).
+* **The Springing Events Predicate Engine:** Under Exhibit 10.1 & 10.2, the guarantees spring into active parent liability upon 9 explicit event groups:
+  - **Event (i):** Equipment financing debt rating trigger ([***] redacted).
+  - **Event (ii):** Material adverse amendment, default, or termination of the Colocation Agreement, or circumstances giving the counterparty the right to cease or materially reduce monthly payments.
+  - **Event (iii):** Insolvency Event of Tenant SPV or Guarantor (Title 11 Bankruptcy Code, receivership, assignment for creditors, liquidation).
+  - **Event (iv):** Equipment financing default, acceleration, refinancing, or termination.
+  - **Events (v-ix):** SPV lease default, reporting notice failure, and financial covenant breaches.
+* Thus, perimeter restructuring introduced a **contingent liquidity cliff** where a colocation reduction at the SPV level immediately reactivates parent balance sheet liability across $6.88B in master leases.
 """))
 
 # Cell 13: Code - Unwrap SPVs
@@ -303,7 +314,7 @@ pd.DataFrame(collapsed_records).sort_values(by="amount_B", ascending=False)
 # Cell 14: Markdown - Reachability vs Stress
 cells.append(nbf.v4.new_markdown_cell("""## 5. Topological Reachability by Amount Type
 
-In Phase 0.7, we eliminate non-fungible dollar mixing across different categories.
+In Phase 0.7.1, we eliminate non-fungible dollar mixing across different categories.
 Summing non-fungible quantities ($34.2B purchase commitments + $11.0B lease + $35.5B debt principal) into a single dollar pool produces mathematically flawed ratios.
 Instead, our Reachability Engine (`src/reachability.py`) reports dependency footprints **broken down strictly by `amount_type`** alongside edge count reachability:
 """))
@@ -341,16 +352,16 @@ Using `src/stress.py`, we execute contract-calibrated transmission functions gro
 1. **Hypothetical MTM Financing Sensitivity (71.42% Funding-Ratio Proxy):**
    Evaluates CoreWeave's drawn DDTLs ($10.8B) under a hypothetical secondary appraisal haircut. Contractually, DDTL 5.0 (Exhibit 10.1) defines 71.42% as the initial Funding Date GPU Amount against capex cost with straight-line 6-year depreciation. This scenario models a hypothetical refinancing/borrowing-base tightening using 71.42% as an analytical proxy (Class C), forcing a **$4.32B funding deficit** that consumes 78.2% of cash.
 2. **Anchor Customer Demand Trim & Conditional Springing Guaranty (-30% Microsoft volume):**
-   Reduces CoreWeave recognized revenue by **$1.03B/yr**. Formulates the transmission as a **conditional join**: *if* Microsoft is the Colocation Customer at SPV VIII (Building ELN-03) and reduces payments, this satisfies the literal legal predicate of **Springing Event (ii)** under Exhibit 10.1, activating CoreWeave parent's **$11.0B Unconditional Springing Guaranty**.
+   Reduces CoreWeave recognized revenue by **$1.03B/yr**. Formulates the transmission as a **conditional join**: *if* Microsoft is the Colocation Customer at SPV VIII (Building ELN-03) and reduces payments, this satisfies the literal legal predicate of **Springing Event (ii)** under Exhibit 10.2, activating CoreWeave parent's **$4.13B Unconditional Springing Guaranty** on Building ELN-03 (or $6.88B total across 250 MW; Building 4 is excluded).
 3. **Interest Rate Transmission Split:**
-   - **SOFR Base Rate Shock (+300 bps):** Evaluates immediate cash impact on unhedged floating debt. Crucially accounts for CoreWeave's contractual **95% interest rate swap mandate** under DDTL 5.0, limiting recourse floating cash drain to **$16.2M/yr** (versus $324.2M if unhedged). Including DDTL 4.0 floating ($42M) and APLD floating ($14.3M), hedged immediate cash drain is **$72.5M/yr**.
-   - **Credit Spread / Refinancing Shock at Maturity (+300 bps):** Existing contractual spreads do not adjust immediately; the shock hits debt *as it rolls over*. Using CoreWeave's audited maturities table ($4.41B in 2026, $6.18B in 2027), this imposes an incremental **$317.9M/yr** in debt service by 2027 ($450.4M/yr through 2028).
+   - **SOFR Base Rate Shock (+300 bps):** Evaluates immediate cash impact on unhedged floating debt. Grounded in CoreWeave's audited **$4.661B interest rate swap notional** (Note 8), leaving $7.55B in floating borrowings unhedged, creating a **$240.6M/yr network cash drain** ($226.4M at CoreWeave, $14.3M at Applied Digital). A sensitivity band shows an impact range from **$32.6M/yr** (if 95% hedged fleet-wide) to **$309.2M/yr** (if only DDTL 4/5 covenants are met).
+   - **Credit Spread / Refinancing Shock at Maturity (+300 bps):** Existing contractual spreads do not adjust immediately; the shock hits debt *as it rolls over*. Using CoreWeave's audited scheduled maturities table ($4.41B in 2026, $6.18B in 2027), this imposes an incremental **$317.9M/yr** in debt service by 2027 ($450.4M/yr through 2028 at 100% rollover, with a sensitivity range down to $159.0M at 50% rollover).
 4. **Phased Grid Energization Delay (12 Months at Polaris Forge 1):**
-   Models building-level operational phasing (APLD 10-K Item 1): Building 2 (100 MW operational) + Building 3 partial (~50 MW operational) continue producing **$275.0M/yr** in base rent, while ~250 MW pending expansion is deferred ($458.3M delayed rent). Applied Digital's modeled construction debt carrying cost is **$135.9M** (Class C allocation), consuming only **8.5%** of cash reserves.
+   Models building-level operational phasing (APLD 10-K Item 1): Building 2 (100 MW operational) + Building 3 partial (~50 MW operational Class C proxy) continue producing **$275.0M/yr** in base rent, while ~250 MW pending expansion is deferred ($458.3M delayed rent). Applied Digital's modeled construction debt carrying cost is **$135.9M** (consuming 8.5% of cash reserves, with a sensitivity range of 6.8% to 9.4% across 25MW-100MW live).
 5. **OEM Purchase Commitment Expected Loss (SMCI 15% Demand Pause):**
    Rigorously separates:
    - **Accounting Channel:** Non-cash Net Realizable Value (NRV) write-down provision under ASC 330 (40% modeled recovery haircut on $5.13B excess allocation = **$2.05B pre-tax loss provision** reducing equity).
-   - **Cash Liquidity Channel:** A negotiated cancellation settlement consumes **$769.5M cash** (10.2% of cash), whereas taking physical delivery of unabsorbed inventory would consume **$5.13B cash** (68.2% of cash).
+   - **Cash Liquidity Channel:** A negotiated cancellation settlement at 15% consumes **$769.5M cash** (10.2% of cash), whereas taking physical delivery of unabsorbed inventory would consume **$5.13B cash** (68.2% of cash).
 """))
 
 # Cell 18: Code - Execute Financial Stress
@@ -358,7 +369,7 @@ cells.append(nbf.v4.new_code_cell("""stress_engine = FinancialStressEngine(netwo
 stress_summary = stress_engine.run_all_stress_scenarios()
 
 stress_display = stress_summary.assign(
-    direct_hit_B=lambda df: (df["direct_cash_or_collateral_hit_usd"] / 1e9).round(2)
+    direct_hit_B=lambda df: (df["direct_cash_or_collateral_hit_usd"] / 1e9).round(3)
 )[["scenario_name", "shock_parameter", "target_entity", "direct_hit_B", "covenant_or_liquidity_impact", "contagion_mechanism"]]
 stress_display
 """))
@@ -372,7 +383,8 @@ ax.set_xlabel("Direct Cash / Collateral Drain ($ Billions)")
 
 for bar in bars:
     w = bar.get_width()
-    ax.text(w + 0.1, bar.get_y() + bar.get_height()/2, f"${w:.2f}B", va="center", fontsize=9, fontweight="bold", color="#922b21")
+    lbl = f"${w:.2f}B" if w >= 1.0 else f"${w*1000:.1f}M"
+    ax.text(w + 0.08, bar.get_y() + bar.get_height()/2, lbl, va="center", fontsize=9, fontweight="bold", color="#922b21")
 
 plt.tight_layout()
 plt.savefig(project_root / "outputs/figures/financial_stress_waterfall.png", dpi=300)
@@ -383,7 +395,7 @@ plt.show()
 cells.append(nbf.v4.new_markdown_cell("""## 7. Verifiable Evidence Ledger (Audit Receipts)
 
 Every contractual assertion in this notebook is backed by an audited SEC EDGAR citation in `data/processed/evidence_claims.parquet`.
-Below are the exact verbatim excerpts and accession numbers proving the $11.0B Polaris Forge lease, the $35.551B debt structure, the SPV springing guaranty, the $34.2B SMCI commitments, the 95% swap mandate, and the 67% Microsoft concentration.
+Below are the exact verbatim excerpts and accession numbers proving the $11.0B Polaris Forge lease, the $35.551B debt structure, the SPV springing guarantees, the $34.2B SMCI commitments, the 95% swap covenants, and the 67% Microsoft concentration.
 """))
 
 # Cell 21: Code - Inspect Evidence
@@ -394,12 +406,12 @@ claims_df[["claim_id", "entity_id", "filing_type", "filing_date", "section_locat
 # Cell 22: Markdown - Synthesis
 cells.append(nbf.v4.new_markdown_cell("""## 8. Synthesis & Computational Sketchbook Findings
 
-### What Phase 0.7 Established
+### What Phase 0.7.1 Established
 1. **The Bubble Lives in the Joins:** On consolidated statements, Applied Digital appears as a standalone host with $1.59B in cash and $4.98B in debt. But through the join at Polaris Forge 1 ($11.0B 15-year lease with CoreWeave), APLD's cash flows are tied to CoreWeave's solvency.
-2. **Perimeter Opacity & The Springing Guaranty:** CoreWeave executed an **Unconditional Springing Guaranty of Payment and Performance**. If the Colocation Customer defaults or reduces payments, Springing Event (ii) under Exhibit 10.1 activates parent liability.
-3. **Exact Debt Reconciliation:** Reconciled CoreWeave's indebtedness to the dollar with the **$35.551B** principal total across all 11 tranches (including $2.837B DDTL 4.0 and $882M non-recourse OEM financing).
-4. **Rate Transmission Rigor:** Distinguished immediate SOFR exposure (where CoreWeave's 95% swap covenant limits cash impact to $16.2M) from credit spread widening at maturity (imposing a $317.9M/yr refinancing penalty by 2027 as $10.60B matures).
-5. **Building-Level Operational Phasing:** Modeled Polaris Forge 1 building phasing (~150 MW operational producing $275M base rent vs ~250 MW pending expansion), reducing APLD's carrying drain to 8.5% of cash.
+2. **Perimeter Opacity & Split Springing Guarantees:** CoreWeave executed separate **Unconditional Springing Guarantees** for Building 2 ($2.75B) and Building 3 ($4.13B), totaling $6.88B across 250 MW. If the Colocation Customer defaults or reduces payments, Springing Event (ii) activates parent liability. Building 4 ($4.13B, 150 MW) is guaranteed by APLD, not CoreWeave parent.
+3. **Exact Debt Reconciliation:** Reconciled CoreWeave's indebtedness to the dollar with the **$35.551B** principal total across 11 modeled debt components/edges (including $2.837B DDTL 4.0 and $882M non-recourse OEM financing).
+4. **Rate Transmission Grounded in Swaps:** Anchored on CoreWeave's audited $4.66B interest rate swap notional, revealing that $7.55B in floating debt is unhedged, generating an immediate $240.6M/yr network cash drain (sensitivity band: $32.6M to $309.2M/yr). Maturing debt faces a $317.9M/yr refinancing penalty by 2027.
+5. **Building-Level Operational Phasing:** Modeled Polaris Forge 1 building phasing (~150 MW operational producing $275M base rent vs ~250 MW pending expansion), with carrying costs evaluated across a sensitivity band of 6.8% to 9.4% of cash.
 6. **Accounting vs. Cash Liquidity Separation:** Rigorously separated Supermicro's non-cash $2.05B NRV loss provision on equity from working capital inventory cash outflows ($769M cancellation fee vs $5.13B delivery).
 """))
 
