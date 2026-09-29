@@ -121,27 +121,21 @@ def validate_observatory():
         obl_df["from_entity"].isin(["APLD", "APLD_COMPUTECO", "APLD_COMPUTECO2"]) & 
         (obl_df["amount_type"] == "principal_outstanding")
     ]
-    expected_apld_tranches = 5
+    expected_apld_tranches = 6  # PF1, PF2, CONV, BRIDGE, 7PCT, OTHER
     if len(apld_debt) != expected_apld_tranches:
-        errors.append(f"APLD debt components count mismatch: {len(apld_debt)} (expected {expected_apld_tranches})")
-    
-    total_apld_debt = apld_debt["amount"].sum()
-    target_apld_debt = 5_306_680_000.0  # $5,306.680M from Form 10-K Note 8
-    apld_debt_drift = abs(total_apld_debt - target_apld_debt)
-    if apld_debt_drift > 1.0:
-        errors.append(f"APLD total debt drift: ${total_apld_debt/1e9:.4f}B vs ${target_apld_debt/1e9:.4f}B (drift ${apld_debt_drift:,.2f})")
+        errors.append(f"APLD debt components count mismatch in master ledger: {len(apld_debt)} (expected {expected_apld_tranches})")
     else:
-        print(f"  [OK] APLD 5 modeled debt components sum exactly to ${total_apld_debt/1e9:.3f}B ($5,306.68M gross principal, exact 0.00% drift).")
+        print(f"  [OK] APLD {expected_apld_tranches} modeled debt components present in master ledger (including 7.00% successor notes).")
 
     expected_apld_ids = {
         "OBL-APLD-DEBT-PF1", "OBL-APLD-DEBT-PF2", "OBL-APLD-DEBT-CONV",
-        "OBL-APLD-DEBT-BRIDGE", "OBL-APLD-DEBT-OTHER"
+        "OBL-APLD-DEBT-BRIDGE", "OBL-APLD-DEBT-7PCT-2026", "OBL-APLD-DEBT-OTHER"
     }
     missing_apld_ids = expected_apld_ids - set(apld_debt["obligation_id"])
     if missing_apld_ids:
         errors.append(f"Missing expected APLD debt components: {missing_apld_ids}")
     else:
-        print(f"  [OK] All 5 distinct APLD debt components present.")
+        print(f"  [OK] All 6 distinct APLD debt components present.")
 
     # Contract-literal checks on individual APLD debt tranches
     for _, r in apld_debt.iterrows():
@@ -176,8 +170,23 @@ def validate_observatory():
                 errors.append(f"OBL-APLD-DEBT-BRIDGE maturity mismatch: {r['maturity_date']} (expected 2027-04-30)")
             if r["valid_to"] != "2026-06-16":
                 errors.append(f"OBL-APLD-DEBT-BRIDGE valid_to mismatch: {r['valid_to']} (expected 2026-06-16)")
-            if not r.get("superseded_by"):
-                errors.append(f"OBL-APLD-DEBT-BRIDGE missing superseded_by disclosure")
+            if r.get("superseded_by") != "OBL-APLD-DEBT-7PCT-2026":
+                errors.append(f"OBL-APLD-DEBT-BRIDGE superseded_by mismatch: {r.get('superseded_by')} (expected OBL-APLD-DEBT-7PCT-2026)")
+            if r.get("rate_type") != "floating":
+                errors.append(f"OBL-APLD-DEBT-BRIDGE rate_type mismatch: {r.get('rate_type')} (expected floating)")
+        elif oid == "OBL-APLD-DEBT-7PCT-2026":
+            if r["from_entity"] != "APLD":
+                errors.append(f"OBL-APLD-DEBT-7PCT-2026 issuer mismatch: {r['from_entity']} (expected APLD)")
+            if r["amount"] != 1_590_000_000.0:
+                errors.append(f"OBL-APLD-DEBT-7PCT-2026 amount mismatch: {r['amount']} (expected 1590000000.0)")
+            if r["effective_date"] != "2026-06-16":
+                errors.append(f"OBL-APLD-DEBT-7PCT-2026 effective_date mismatch: {r['effective_date']} (expected 2026-06-16)")
+            if r["maturity_date"] != "2031-06-15":
+                errors.append(f"OBL-APLD-DEBT-7PCT-2026 maturity mismatch: {r['maturity_date']} (expected 2031-06-15)")
+            if r.get("supersedes") != "OBL-APLD-DEBT-BRIDGE":
+                errors.append(f"OBL-APLD-DEBT-7PCT-2026 supersedes mismatch: {r.get('supersedes')} (expected OBL-APLD-DEBT-BRIDGE)")
+            if r.get("rate_type") != "fixed":
+                errors.append(f"OBL-APLD-DEBT-7PCT-2026 rate_type mismatch: {r.get('rate_type')} (expected fixed)")
         elif oid == "OBL-APLD-DEBT-OTHER":
             if r["from_entity"] != "APLD":
                 errors.append(f"OBL-APLD-DEBT-OTHER issuer mismatch: {r['from_entity']} (expected APLD)")
@@ -185,7 +194,7 @@ def validate_observatory():
                 errors.append(f"OBL-APLD-DEBT-OTHER obligation_type mismatch: {r['obligation_type']} (expected aggregate_residual_debt)")
             if r["amount"] != 56680000.0:
                 errors.append(f"OBL-APLD-DEBT-OTHER amount mismatch: {r['amount']} (expected 56680000.0)")
-    print("  [OK] Contract-literal legal entities, effective dates, maturities, and types verified for all 5 APLD debt tranches.")
+    print("  [OK] Contract-literal legal entities, effective dates, maturities, supersession links, and types verified for all 6 APLD debt tranches.")
 
     # ---------------------------------------------------------
     # 3. Validate Obligations & Polaris Forge 1 Phasing
@@ -195,7 +204,7 @@ def validate_observatory():
         "recognized_revenue", "contingent_guarantee", "equity_investment", "facility_capacity",
         "contingent_obligations"
     }
-    expected_obligations_count = 22
+    expected_obligations_count = 23
     if len(obl_df) != expected_obligations_count:
         errors.append(f"Obligations count mismatch: {len(obl_df)} (expected {expected_obligations_count})")
     else:
@@ -218,8 +227,10 @@ def validate_observatory():
             errors.append(f"Obligation {oid} missing as_of_date")
         if not row.get("observed_as_of"):
             errors.append(f"Obligation {oid} missing observed_as_of")
-        if not row.get("valid_from"):
-            errors.append(f"Obligation {oid} missing valid_from")
+        if not row.get("economic_valid_from"):
+            errors.append(f"Obligation {oid} missing economic_valid_from")
+        if not row.get("publicly_known_from"):
+            errors.append(f"Obligation {oid} missing publicly_known_from")
 
     # Check Polaris Forge 1 Master Lease
     lease_row = obl_df[obl_df["obligation_id"] == "OBL-CRWV-APLD-LEASE"]
@@ -262,13 +273,15 @@ def validate_observatory():
         else:
             print("  [OK] ELN-03 verified as uncapped legal indemnity for Building 3 (150 MW) with $4.125B Class C reference proxy.")
 
-    print(f"  [OK] All {len(obl_df)} obligations have valid amount_type, valid values/uncapped attributes, and temporal fields.")
+    print(f"  [OK] All {len(obl_df)} obligations have valid amount_type, valid values/uncapped attributes, and bitemporal fields.")
 
     # ---------------------------------------------------------
-    # 3b. Validate Dynamic SPV Unwrapping & Temporal Filtering
+    # 3b. Validate Dynamic SPV Unwrapping & Bitemporal Filtering
     # ---------------------------------------------------------
     try:
         from src.graph import ObligationNetwork
+        from src.stress import FinancialStressEngine
+
         net = ObligationNetwork()
         collapsed = net.unwrap_spv_perimeter()
         spv_remaining = [n for n in collapsed.nodes() if "SPV" in n or "LLC" in n]
@@ -277,21 +290,69 @@ def validate_observatory():
         else:
             print(f"  [OK] Dynamic SPV unwrapping: 0 SPVs remaining in consolidated network ({collapsed.number_of_nodes()} parent nodes).")
 
-        # Temporal filtering test
-        net_may = net.as_of("2026-05-31")
-        net_sep = net.as_of("2026-09-28")
+        # Economic Clock Filtering Test
+        net_may = net.economic_as_of("2026-05-31")
+        net_sep = net.economic_as_of("2026-09-28")
         may_edges = net_may.graph.number_of_edges()
         sep_edges = net_sep.graph.number_of_edges()
         if may_edges != 22:
             errors.append(f"Expected 22 edges as of 2026-05-31, got {may_edges}")
-        if sep_edges != 21:
-            errors.append(f"Expected 21 edges as of 2026-09-28 (post-refinancing), got {sep_edges}")
+        if sep_edges != 22:
+            errors.append(f"Expected 22 edges as of 2026-09-28 (post-refinancing conservation), got {sep_edges}")
+        
         bridge_may = "OBL-APLD-DEBT-BRIDGE" in [k for _, _, k in net_may.graph.edges(keys=True)]
         bridge_sep = "OBL-APLD-DEBT-BRIDGE" in [k for _, _, k in net_sep.graph.edges(keys=True)]
+        notes_may = "OBL-APLD-DEBT-7PCT-2026" in [k for _, _, k in net_may.graph.edges(keys=True)]
+        notes_sep = "OBL-APLD-DEBT-7PCT-2026" in [k for _, _, k in net_sep.graph.edges(keys=True)]
+
         if not bridge_may or bridge_sep:
-            errors.append(f"Temporal bridge presence mismatch: may={bridge_may}, sep={bridge_sep} (expected True, False)")
+            errors.append(f"Economic bridge presence mismatch: may={bridge_may}, sep={bridge_sep} (expected True, False)")
+        if notes_may or not notes_sep:
+            errors.append(f"Economic 7% notes presence mismatch: may={notes_may}, sep={notes_sep} (expected False, True)")
+
+        # Economic debt totals for APLD
+        may_apld_debt = sum(
+            d.get("amount", 0.0) for u, v, k, d in net_may.graph.edges(keys=True, data=True)
+            if net_may.get_root_parent(u) == "APLD" and d.get("amount_type") == "principal_outstanding"
+        )
+        if abs(may_apld_debt - 5_306_680_000.0) > 1.0:
+            errors.append(f"APLD May 31 economic debt mismatch: ${may_apld_debt/1e9:.3f}B (expected $5.307B)")
         else:
-            print(f"  [OK] Temporal filtering verified: Bridge facility active at May 31, 2026; cleanly retired at Sep 28, 2026.")
+            print(f"  [OK] Economic Clock May 31, 2026 verified: 22 edges, APLD debt = $5,306.68M (Bridge active, 0.00% drift).")
+
+        sep_apld_debt = sum(
+            d.get("amount", 0.0) for u, v, k, d in net_sep.graph.edges(keys=True, data=True)
+            if net_sep.get_root_parent(u) == "APLD" and d.get("amount_type") == "principal_outstanding"
+        )
+        if abs(sep_apld_debt - 6_596_680_000.0) > 1.0:
+            errors.append(f"APLD Sep 28 economic debt mismatch: ${sep_apld_debt/1e9:.3f}B (expected $6.597B)")
+        else:
+            print(f"  [OK] Economic Clock Sep 28, 2026 verified: 22 edges, APLD debt = $6,596.68M ($1.59B 7% Notes active, conserved).")
+
+        # Information Clock (Public Knowledge) Test
+        net_known_jun = net.known_as_of("2026-06-30")
+        net_known_sep = net.known_as_of("2026-09-28")
+        if net_known_jun.graph.number_of_edges() != 18:
+            errors.append(f"Expected 18 edges known as of 2026-06-30, got {net_known_jun.graph.number_of_edges()}")
+        else:
+            print(f"  [OK] Information Clock June 30, 2026 verified: 18 edges publicly known (eliminating look-ahead bias).")
+        if net_known_sep.graph.number_of_edges() != 22:
+            errors.append(f"Expected 22 edges known as of 2026-09-28, got {net_known_sep.graph.number_of_edges()}")
+        else:
+            print(f"  [OK] Information Clock Sep 28, 2026 verified: 22 edges publicly known.")
+
+        # Coupling to Stress Engine Test (Dynamic Floating Debt Derivation)
+        engine_may = FinancialStressEngine(network=net_may)
+        engine_sep = FinancialStressEngine(network=net_sep)
+        sofr_may = engine_may.simulate_sofr_base_rate_shock()
+        sofr_sep = engine_sep.simulate_sofr_base_rate_shock()
+
+        if abs(sofr_may["network_cash_drain_reported_baseline_usd"] - 235_350_000.0) > 1e5:
+            errors.append(f"May 31 SOFR hit mismatch: ${sofr_may['network_cash_drain_reported_baseline_usd']:,.2f} (expected $235.35M)")
+        if abs(sofr_sep["network_cash_drain_reported_baseline_usd"] - 226_350_000.0) > 1e5:
+            errors.append(f"Sep 28 SOFR hit mismatch: ${sofr_sep['network_cash_drain_reported_baseline_usd']:,.2f} (expected $226.35M)")
+        print(f"  [OK] Stress engine dynamically coupled to graph: May 31 = $235.4M/yr, Sep 28 = $226.4M/yr (derived from active edges).")
+
     except Exception as e:
         errors.append(f"Error during graph unwrapping/temporal validation: {e}")
 
@@ -299,7 +360,7 @@ def validate_observatory():
     # 4. Validate Evidence Claims & Quote Categorization
     # ---------------------------------------------------------
     clm_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
-    expected_claims_count = 15
+    expected_claims_count = 16
     if len(clm_df) != expected_claims_count:
         errors.append(f"Evidence claims count mismatch: {len(clm_df)} (expected {expected_claims_count})")
     else:

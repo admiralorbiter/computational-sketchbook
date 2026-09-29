@@ -325,20 +325,43 @@ for u, v, k, d in collapsed_graph.edges(data=True, keys=True):
 pd.DataFrame(collapsed_records).sort_values(by="amount_B", ascending=False)
 """))
 
-# Cell 13b: Markdown & Code - Temporal Modeling & Subsequent Refinancing
-cells.append(nbf.v4.new_markdown_cell("""### Temporal Dynamics: Balance Sheet Snapshot vs Subsequent Refinancing
-Our network supports point-in-time temporal queries via `network.as_of(date_str)`.
-* At **May 31, 2026** (APLD Form 10-K balance sheet date), Applied Digital held a **$300.0M floating-rate bridge credit facility**, creating an immediate $9.0M/yr SOFR shock ($235.4M/yr network total).
-* On **June 16, 2026**, Applied Digital refinanced the bridge facility into $1.59B 7.00% fixed notes, eliminating APLD's floating debt exposure and leaving the active network floating rate shock at $226.4M/yr (CoreWeave only).
+# Cell 13b: Markdown & Code - Bitemporal Modeling: Economic Time vs Information Time
+cells.append(nbf.v4.new_markdown_cell("""### Bitemporal Dynamics: Economic Clock vs Information Clock
+Our network distinguishes between two independent temporal dimensions:
+1. **Economic Reality Clock (`network.economic_as_of(date)`):** When did contracts exist in the physical/corporate world?
+   * At **May 31, 2026**, Applied Digital held the **$300.0M floating bridge credit facility** ($5,306.68M total principal across 22 active edges).
+   * On **June 16, 2026**, the bridge was refinanced and extinguished by **$1.59B 7.00% Senior Secured Notes due 2031** (`OBL-APLD-DEBT-7PCT-2026`), conserving the obligation and transforming $300M floating debt into $1.59B fixed debt ($6,596.68M total principal across 22 conserved edges).
+2. **Information / Public Knowledge Clock (`network.known_as_of(date)`):** When did an outside observer actually learn about the contract from public SEC filings, eliminating look-ahead bias?
+   * On **June 30, 2026**, subsequent annual disclosures (such as APLD's Form 10-K filed July 29, 2026 or CoreWeave's Form 10-Q filed August 12, 2026) were not yet published, leaving 18 edges publicly known.
+   * On **September 28, 2026**, all disclosures are in the public record (22 active edges).
+3. **Dynamic Stress Engine Coupling:** Floating debt exposure is derived directly from active graph edges rather than hardcoded date conditionals.
 """))
 
-cells.append(nbf.v4.new_code_cell("""net_may = net.as_of("2026-05-31")
-net_sep = net.as_of("2026-09-28")
+cells.append(nbf.v4.new_code_cell("""# 1. Economic Clock: Conservation through Refinancing
+net_may = net.economic_as_of("2026-05-31")
+net_sep = net.economic_as_of("2026-09-28")
 
-print(f"Active Edges as of 2026-05-31: {net_may.graph.number_of_edges()} (Bridge Facility Active)")
-print(f"Active Edges as of 2026-09-28: {net_sep.graph.number_of_edges()} (Bridge Facility Refinanced into Fixed Notes)")
-print(f"Bridge present at May 31: {'OBL-APLD-DEBT-BRIDGE' in [k for _, _, k in net_may.graph.edges(keys=True)]}")
-print(f"Bridge present at Sep 28: {'OBL-APLD-DEBT-BRIDGE' in [k for _, _, k in net_sep.graph.edges(keys=True)]}")
+print(f"=== Economic Clock (Obligation Conservation) ===")
+print(f"Edges at 2026-05-31: {net_may.graph.number_of_edges()} (Bridge Active: { 'OBL-APLD-DEBT-BRIDGE' in [k for _, _, k in net_may.graph.edges(keys=True)] })")
+print(f"Edges at 2026-09-28: {net_sep.graph.number_of_edges()} (7% Notes Active: { 'OBL-APLD-DEBT-7PCT-2026' in [k for _, _, k in net_sep.graph.edges(keys=True)] })")
+
+# 2. Information Clock: Eliminating Look-Ahead Bias
+net_known_jun = net.known_as_of("2026-06-30")
+net_known_sep = net.known_as_of("2026-09-28")
+
+print(f"\\n=== Information Clock (Zero Look-Ahead Bias) ===")
+print(f"Publicly known edges on June 30, 2026: {net_known_jun.graph.number_of_edges()} (pre-10-K disclosures)")
+print(f"Publicly known edges on Sep 28, 2026:  {net_known_sep.graph.number_of_edges()} (full public awareness)")
+
+# 3. Dynamic Stress Engine Derivation from Active Edges
+engine_may = FinancialStressEngine(network=net_may)
+engine_sep = FinancialStressEngine(network=net_sep)
+hit_may = engine_may.simulate_sofr_base_rate_shock()["network_cash_drain_reported_baseline_usd"]
+hit_sep = engine_sep.simulate_sofr_base_rate_shock()["network_cash_drain_reported_baseline_usd"]
+
+print(f"\\n=== Dynamically Derived SOFR Rate Shock ===")
+print(f"May 31 Snapshot SOFR Drain:  ${hit_may/1e6:.1f}M/yr (APLD floating = ${engine_may.get_active_floating_debt('APLD')/1e6:.1f}M)")
+print(f"Sep 28 Post-Refi SOFR Drain: ${hit_sep/1e6:.1f}M/yr (APLD floating = ${engine_sep.get_active_floating_debt('APLD')/1e6:.1f}M)")
 """))
 
 # Cell 14: Markdown - Reachability vs Stress

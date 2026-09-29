@@ -107,10 +107,18 @@ class ContractualReachability:
             if amt is not None:
                 reachable_by_amount_type[atype] = reachable_by_amount_type.get(atype, 0.0) + float(amt)
 
+        total_contingent_edges = sum(1 for _, _, _, d in self.graph.edges(data=True, keys=True) if d.get("amount_type") == "contingent_obligations")
+        reachable_contingent_edges = sum(1 for e in all_reachable_edges if e.get("amount_type") == "contingent_obligations")
+        contingent_reach_pct = round((reachable_contingent_edges / total_contingent_edges) * 100.0, 1) if total_contingent_edges > 0 else 0.0
+
         reachability_pct_by_type = {}
         for atype, total_val in self.network_by_amount_type.items():
+            if atype == "contingent_obligations":
+                continue
             reach_val = reachable_by_amount_type.get(atype, 0.0)
             reachability_pct_by_type[atype] = round((reach_val / total_val) * 100.0, 1) if total_val > 0 else 0.0
+
+        reachability_pct_by_type["contingent_obligations"] = contingent_reach_pct
 
         all_reachable_nodes = set(order_1_nodes)
         for e in order_2_edges:
@@ -128,6 +136,9 @@ class ContractualReachability:
             "total_network_edges": total_edges,
             "edge_reachability_pct": round((total_reachable_edges / total_edges) * 100, 1) if total_edges else 0,
             "reachable_by_amount_type_usd": reachable_by_amount_type,
+            "reachable_contingent_count": reachable_contingent_edges,
+            "total_contingent_count": total_contingent_edges,
+            "contingent_obligations_reachability_pct": contingent_reach_pct,
             "reachability_pct_by_type": reachability_pct_by_type,
             "all_reachable_nodes": sorted(list(all_reachable_nodes)),
             "order_1_edges": order_1_edges,

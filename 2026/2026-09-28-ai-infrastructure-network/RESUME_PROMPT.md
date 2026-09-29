@@ -21,7 +21,7 @@ Before proposing any changes or running new extractions, follow these strict pre
    - `data/processed/evidence_claims.parquet` (or `.csv`)
    - `outputs/tables/financial_stress_summary.csv`
 5. Inspect the executed research notebook: `notebooks/01_five_company_pilot.ipynb`. All cells have been pre-executed with live outputs and figures.
-6. Phase 0.7.2 Hardened Status: Pre-Phase-1 Engineering Hardening is complete (ADR-011). The Five-Company Pilot (NVDA, SMCI, CRWV, APLD, ORCL + MSFT, Blackstone/Magnetar, Polaris Forge 1) is FULLY CERTIFIED and FROZEN (Zero Data Drift). Dynamic SPV unwrapping, temporal supersession modeling (`network.as_of(date)`), contract-literal APLD debt tranches (`APLD_COMPUTECO`, `APLD_COMPUTECO2`), first-class uncapped obligations, and 100% exact contiguous verbatim substring verification on cached raw SEC exhibits are verified.
+6. Phase 0.7.2 Hardened Status: Pre-Phase-1 Engineering Hardening and Temporal Hardening are complete (ADR-011, ADR-012). The Five-Company Pilot (NVDA, SMCI, CRWV, APLD, ORCL + MSFT, Blackstone/Magnetar, Polaris Forge 1) is FULLY CERTIFIED and FROZEN (Zero Data Drift across 23 obligations and 16 audited claims). Dynamic SPV unwrapping, bitemporal graph querying (`economic_as_of` vs `known_as_of` to eliminate look-ahead bias), obligation conservation through refinancing ($1.59B 7.00% notes replacing bridge debt), dynamic stress engine coupling, contract-literal APLD debt tranches (`APLD_COMPUTECO`, `APLD_COMPUTECO2`), first-class uncapped obligations, and 100% exact contiguous verbatim substring verification on cached raw SEC exhibits are verified.
 
 Once you have reviewed the repository, provide a concise briefing that reports:
 - The current state of the hardened pilot;

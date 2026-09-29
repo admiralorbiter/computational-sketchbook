@@ -70,6 +70,12 @@ class ObligationNetwork:
                 observed_as_of=row.get("observed_as_of"),
                 valid_from=row.get("valid_from"),
                 valid_to=row.get("valid_to"),
+                economic_valid_from=row.get("economic_valid_from", row.get("valid_from")),
+                economic_valid_to=row.get("economic_valid_to", row.get("valid_to")),
+                publicly_known_from=row.get("publicly_known_from", row.get("observed_as_of")),
+                rate_type=row.get("rate_type", "fixed" if row.get("obligation_type") == "debt_facility" else "none"),
+                benchmark_rate=row.get("benchmark_rate"),
+                supersedes=row.get("supersedes"),
                 superseded_by=row.get("superseded_by"),
                 currency=row.get("currency", "USD"),
                 term_years=row.get("term_years"),
@@ -104,22 +110,64 @@ class ObligationNetwork:
                 break
         return curr
 
-    def as_of(self, date_str: str) -> "ObligationNetwork":
+    def economic_as_of(self, date_str: str) -> "ObligationNetwork":
         """
-        Returns a new ObligationNetwork reflecting the contractual topology active as of date_str.
-        Filters out obligations where valid_from > date_str or valid_to < date_str.
+        Economic Clock: Returns the contractual topology active in economic reality on date_str.
+        Filters obligations where:
+          economic_valid_from <= date_str AND (economic_valid_to is None or economic_valid_to >= date_str).
         """
         valid_rows = []
         for _, row in self.obligations_df.iterrows():
-            v_from = row.get("valid_from")
-            v_to = row.get("valid_to")
+            v_from = row.get("economic_valid_from") or row.get("valid_from")
+            v_to = row.get("economic_valid_to") or row.get("valid_to")
             if pd.notna(v_from) and str(v_from) > date_str:
                 continue
             if pd.notna(v_to) and str(v_to) < date_str:
                 continue
             valid_rows.append(row)
         filtered_df = pd.DataFrame(valid_rows) if valid_rows else pd.DataFrame(columns=self.obligations_df.columns)
-        return ObligationNetwork(entities_df=self.entities_df.reset_index(), obligations_df=filtered_df)
+        net = ObligationNetwork(entities_df=self.entities_df.reset_index(), obligations_df=filtered_df)
+        net.as_of_date = date_str
+        net.temporal_mode = "economic"
+        return net
+
+    def known_as_of(self, date_str: str) -> "ObligationNetwork":
+        """
+        Information Clock (Public Knowledge / Epistemic Clock):
+        Returns the contractual topology that a public observer could actually have known on date_str
+        without look-ahead bias.
+        Filters obligations where:
+          publicly_known_from <= date_str
+          AND economic_valid_from <= date_str
+          AND (economic_valid_to is None or economic_valid_to >= date_str).
+        """
+        valid_rows = []
+        for _, row in self.obligations_df.iterrows():
+            k_from = row.get("publicly_known_from") or row.get("observed_as_of")
+            v_from = row.get("economic_valid_from") or row.get("valid_from")
+            v_to = row.get("economic_valid_to") or row.get("valid_to")
+            if pd.notna(k_from) and str(k_from) > date_str:
+                continue
+            if pd.notna(v_from) and str(v_from) > date_str:
+                continue
+            if pd.notna(v_to) and str(v_to) < date_str:
+                continue
+            valid_rows.append(row)
+        filtered_df = pd.DataFrame(valid_rows) if valid_rows else pd.DataFrame(columns=self.obligations_df.columns)
+        net = ObligationNetwork(entities_df=self.entities_df.reset_index(), obligations_df=filtered_df)
+        net.as_of_date = date_str
+        net.temporal_mode = "known"
+        return net
+
+    def as_of(self, date_str: str, mode: str = "economic") -> "ObligationNetwork":
+        """
+        Unified temporal query dispatcher.
+        mode='economic' (default): queries economic reality clock.
+        mode='known': queries public knowledge clock (eliminates look-ahead bias).
+        """
+        if mode == "known":
+            return self.known_as_of(date_str)
+        return self.economic_as_of(date_str)
 
     def compute_exposure_by_amount_type(self) -> pd.DataFrame:
         """
@@ -166,7 +214,6 @@ class ObligationNetwork:
                 "outgoing_facility_capacity_usd": out_by_type.get("facility_capacity", 0.0),
                 "outgoing_lease_lifetime_usd": out_by_type.get("lifetime_contract_value", 0.0),
                 "outgoing_purchase_commitments_usd": out_by_type.get("remaining_commitment", 0.0),
-                "outgoing_contingent_guarantees_usd": out_by_type.get("contingent_guarantee", 0.0),
                 "outgoing_contingent_obligations_count": out_contingent_count,
                 "outgoing_contingent_ref_proxy_usd": out_contingent_ref_proxy,
                 "outgoing_equity_investments_usd": out_by_type.get("equity_investment", 0.0),
@@ -265,7 +312,14 @@ class ObligationNetwork:
                 amount_known=d.get("amount_known", True),
                 amount_type=d.get("amount_type"),
                 primary_type=d.get("obligation_type"),
-                recourse=d.get("recourse")
+                recourse=d.get("recourse"),
+                rate_type=d.get("rate_type"),
+                benchmark_rate=d.get("benchmark_rate"),
+                economic_valid_from=d.get("economic_valid_from"),
+                economic_valid_to=d.get("economic_valid_to"),
+                publicly_known_from=d.get("publicly_known_from"),
+                supersedes=d.get("supersedes"),
+                superseded_by=d.get("superseded_by")
             )
 
         return collapsed
@@ -283,10 +337,19 @@ if __name__ == "__main__":
     spv_nodes = [n for n in collapsed.nodes() if "SPV" in n or "LLC" in n]
     print(f"SPVs remaining in collapsed graph: {len(spv_nodes)} (expected 0)")
 
-    print("\n=== Temporal Filtering: May 31, 2026 vs September 28, 2026 ===")
-    net_may = net.as_of("2026-05-31")
-    net_sep = net.as_of("2026-09-28")
+    print("\n=== Economic Clock: May 31, 2026 vs September 28, 2026 ===")
+    net_may = net.economic_as_of("2026-05-31")
+    net_sep = net.economic_as_of("2026-09-28")
     print(f"Edges at 2026-05-31: {net_may.graph.number_of_edges()}")
-    print(f"Edges at 2026-09-28: {net_sep.graph.number_of_edges()} (Bridge Facility retired/refinanced)")
+    print(f"Edges at 2026-09-28: {net_sep.graph.number_of_edges()} (Conserved: $300M Bridge -> $1.59B 7% Notes)")
     print(f"Bridge present at May 31: {'OBL-APLD-DEBT-BRIDGE' in [k for _, _, k in net_may.graph.edges(keys=True)]}")
     print(f"Bridge present at Sep 28: {'OBL-APLD-DEBT-BRIDGE' in [k for _, _, k in net_sep.graph.edges(keys=True)]}")
+    print(f"7% Notes present at May 31: {'OBL-APLD-DEBT-7PCT-2026' in [k for _, _, k in net_may.graph.edges(keys=True)]}")
+    print(f"7% Notes present at Sep 28: {'OBL-APLD-DEBT-7PCT-2026' in [k for _, _, k in net_sep.graph.edges(keys=True)]}")
+
+    print("\n=== Information Clock: Known as of June 30, 2026 vs September 28, 2026 ===")
+    net_known_jun = net.known_as_of("2026-06-30")
+    net_known_sep = net.known_as_of("2026-09-28")
+    print(f"Edges known as of 2026-06-30: {net_known_jun.graph.number_of_edges()} (Look-ahead bias eliminated)")
+    print(f"Edges known as of 2026-09-28: {net_known_sep.graph.number_of_edges()} (Full public knowledge)")
+

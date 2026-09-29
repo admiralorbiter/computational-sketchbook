@@ -23,7 +23,7 @@ Please review the methodology, empirical findings, and contract-calibrated stres
 
 ### 1. The Three Epistemic Layers
 - Layer 1: Standardized SEC EDGAR XBRL Financials (Duration-aware flows, derived Q4 flows, and aggregated funded debt).
-- Layer 2: The Contractual Obligation Multi-Graph (MultiDiGraph preserving distinct facilities; dynamic SPV unwrapping via recursive parent entity traversal; temporal modeling with point-in-time supersession; categorized strictly by amount_type with zero false netting or non-fungible dollar mixing).
+- Layer 2: The Contractual Obligation Multi-Graph (MultiDiGraph preserving distinct facilities; dynamic SPV unwrapping via recursive parent entity traversal; bitemporal architecture separating economic time `economic_as_of` from knowledge time `known_as_of` to eliminate look-ahead bias; obligation conservation via refinancing supersession; categorized strictly by amount_type with zero false netting or non-fungible dollar mixing).
 - Layer 3: Shared Systemic Assumptions (Underlying economic propositions supporting multiple independent balance sheets).
 
 ### 2. Audited Balance Sheet Baselines (Latest Reported SEC Filings)
@@ -36,7 +36,7 @@ Please review the methodology, empirical findings, and contract-calibrated stres
 | **ORCL** | Cloud Hyperscaler | $36.37B | $125.34B | $34.62B | $127.84B | $67.36B (FY26) | $19.34B (Q1 FY27) |
 | **MSFT** | Cloud Hyperscaler | $20.94B | $46.14B | $21.92B | $313.08B | $331.84B (FY26) | $90.01B (Q4 FY26) |
 
-### 3. The Obligation Ledger (Phase 0.7.2 Pilot: 22 Modeled Obligations)
+### 3. The Obligation Ledger (Phase 0.7.2 Pilot: 23 Modeled Obligations in Master Ledger)
 1. `OBL-CRWV-APLD-LEASE` ($11.0B lifetime value): CoreWeave SPV VIII leases 400 MW at Polaris Forge 1 from APLD ELN project LLCs for 15 years. Phased across Buildings 2, 3, and 4: ~150 MW operational (Building 2 100 MW + Building 3 partial 50 MW proxy, generating $275.0M/yr base rent), ~250 MW pending expansion (Building 3 remaining 100 MW + Building 4 150 MW, deferring $458.3M/yr). (APLD 10-K, Item 1 & Note 14).
 2. `OBL-CRWV-APLD-GUARANTY-ELN02` (uncapped contingent obligation): CoreWeave parent Unconditional Springing Guaranty specifically covering Phase 2/4 Space (2 of 4 data halls in Building 2; capacity_mw = None, unstated face value). Springs into active parent liability upon explicit Exhibit 10.1 predicates. (APLD 10-K, Note 14 & Exhibit 10.1).
 3. `OBL-CRWV-APLD-GUARANTY-ELN03` (uncapped contingent obligation with $4.125B Class C reference proxy): CoreWeave parent Unconditional Springing Guaranty for Building 3 (150 MW campus expansion lease assigned to SPV). Springs under Exhibit 10.2. Building 4 (150 MW, ~$4.13B) carries no CoreWeave parent springing guarantee (APLD guarantees the landlord).
@@ -58,9 +58,10 @@ Please review the methodology, empirical findings, and contract-calibrated stres
 18. `OBL-APLD-DEBT-PF1` ($2.350B principal): Applied Digital Polaris Forge 1 9.25% Senior Secured Notes issued by `APLD_COMPUTECO` due Dec 15, 2030 (Fixed rate coupon). (APLD 10-K, Note 8).
 19. `OBL-APLD-DEBT-PF2` ($2.150B principal): Applied Digital ComputeCo 2 6.75% Senior Notes issued by `APLD_COMPUTECO2` due Mar 15, 2031 (Fixed rate coupon). (APLD 10-K, Note 8).
 20. `OBL-APLD-DEBT-CONV` ($450.0M principal): Applied Digital 2.75% Convertible Senior Notes due Jun 30, 2030 (Fixed rate coupon). (APLD 10-K, Note 8).
-21. `OBL-APLD-DEBT-BRIDGE` ($300.0M principal): Applied Digital Floating-Rate Bridge Facility (SOFR benchmark, entered May 1, 2026, due Apr 30, 2027; refinanced June 16, 2026 into 7.00% fixed notes). (APLD 10-K, Note 8 & Note 19).
+21. `OBL-APLD-DEBT-BRIDGE` ($300.0M principal): Applied Digital Floating-Rate Bridge Facility (SOFR benchmark, entered May 1, 2026, due Apr 30, 2027; retired June 16, 2026, superseded by $1.59B 7.00% Senior Secured Notes). (APLD 10-K, Note 8 & Note 19).
 22. `OBL-APLD-DEBT-OTHER` ($56.68M principal): Applied Digital aggregate residual debt across equipment notes and promissory agreements. (APLD 10-K, Note 8).
-    *(Applied Digital 5 modeled debt components sum exactly to $5,306.68M gross principal payments vs $4,975.94M net carrying debt, exact 0.00% drift).*
+23. `OBL-APLD-DEBT-7PCT-2026` ($1.590B principal): Applied Digital 7.00% Senior Secured Notes due June 15, 2031, issued June 16, 2026 to refinance the $300M bridge facility and conserve post-refinancing debt in the temporal graph. (APLD 10-K, Note 19 Subsequent Events).
+    *(Applied Digital 6 modeled debt components in master ledger: 5 active at May 31, 2026 snapshot summing to $5,306.68M gross principal payments vs $4,975.94M net carrying debt, exact 0.00% drift; post-refinancing snapshot at September 28, 2026 conserves debt with 7.00% notes replacing bridge for $6,596.68M total gross debt).*
 
 ### 4. Shared Systemic Assumptions
 - `A001: GPU_RESIDUAL_VALUE`: H100/H200 hardware retains >=45% secondary market resale value, supporting borrowing base advance rates on $10.8B DDTLs.

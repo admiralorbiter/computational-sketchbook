@@ -57,10 +57,16 @@ This document defines the schema, types, constraints, and operational definition
 | `amount_known` | Boolean | No | True if contractual face value is explicitly stated; False if uncapped indemnity. | `True`, `False` |
 | `amount_type` | String | No | Taxonomy: `principal_outstanding`, `facility_capacity`, `lifetime_contract_value`, `remaining_commitment`, `recognized_revenue`, `equity_investment`, `contingent_obligations`. | `principal_outstanding` |
 | `as_of_date` | Date (str)| No | Baseline financial snapshot date (`YYYY-MM-DD`). | `2026-05-31` |
-| `observed_as_of` | Date (str)| No | As-of observation period end (`YYYY-MM-DD`). | `2026-05-31` |
-| `valid_from` | Date (str)| No | Inception / effective date of obligation (`YYYY-MM-DD`). | `2025-05-28` |
-| `valid_to` | Date (str)| Yes | Expiration, maturity, or supersession date; null if indefinite/unexpired. | `2040-05-31` |
-| `superseded_by` | String | Yes | Historical supersession event (e.g. refinancing); null if active. | `Refinanced on June 16, 2026...` |
+| `observed_as_of` | Date (str)| No | Financial observation period end date (`YYYY-MM-DD`). | `2026-05-31` |
+| `economic_valid_from` | Date (str)| No | Inception / effective date in economic reality (`YYYY-MM-DD`). | `2025-05-28` |
+| `economic_valid_to` | Date (str)| Yes | Expiration, maturity, or extinguishment date in economic reality; null if indefinite/unexpired. | `2040-05-31` |
+| `publicly_known_from` | Date (str)| No | SEC filing date or public disclosure date when outside observers learned of contract (Information Clock). | `2025-06-02` |
+| `valid_from` | Date (str)| No | Backwards-compatible alias for `economic_valid_from`. | `2025-05-28` |
+| `valid_to` | Date (str)| Yes | Backwards-compatible alias for `economic_valid_to`. | `2040-05-31` |
+| `rate_type` | String | No | Interest rate classification: `fixed`, `floating`, `none`. | `fixed`, `floating` |
+| `benchmark_rate` | String | Yes | Underlying floating benchmark index: `SOFR`, null if fixed/non-debt. | `SOFR` |
+| `supersedes` | String | Yes | Obligation ID of prior contract being extinguished/replaced; null if initial. | `OBL-APLD-DEBT-BRIDGE` |
+| `superseded_by` | String | Yes | Obligation ID of successor contract replacing this obligation; null if active. | `OBL-APLD-DEBT-7PCT-2026` |
 | `currency` | String | No | Currency denomination (`USD`). | `USD` |
 | `effective_date` | Date (str)| Yes | Execution date of master contract. | `2025-05-28` |
 | `maturity_date` | Date (str)| Yes | Contract expiration or debt maturity date. | `2040-05-31` |

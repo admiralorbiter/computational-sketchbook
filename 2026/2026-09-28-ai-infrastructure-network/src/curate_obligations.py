@@ -278,6 +278,20 @@ def build_evidence_claims():
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR 10-K direct audit",
             "verifier_notes": "Reveals Oracle's alternative financing mechanism: customers prepay for GPUs or furnish GPUs directly, shifting upfront capital requirements."
+        },
+        {
+            "claim_id": "CLM-APLD-007",
+            "entity_id": "APLD",
+            "filing_type": "10-K",
+            "accession_number": "0001144879-26-000048",
+            "filing_date": "2026-07-29",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000114487926000048/apld-20260531.htm",
+            "section_locator": "Note 19. Subsequent Events - 7.00% Senior Secured Notes Offering and Bridge Extinguishment",
+            "quote_type": "source_excerpt",
+            "exact_quote": "On June 16, 2026, the Company completed the issuance of $1,590.0 million aggregate principal amount of 7.00% Senior Secured Notes due 2031. Net proceeds were used to repay in full and terminate the $300.0 million Bridge Credit Facility, with remaining proceeds used to fund ongoing data center construction at the Polaris Forge 1 campus.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR 10-K Note 19 direct audit",
+            "verifier_notes": "Subsequent event audit verifying that on June 16, 2026, Applied Digital issued $1.59B 7.00% senior secured notes due 2031, which extinguished the $300M floating bridge credit facility and provided expansion liquidity."
         }
     ]
     df = pd.DataFrame(claims)
@@ -931,6 +945,9 @@ def build_obligations():
             "valid_from": "2026-05-01",
             "maturity_date": "2027-04-30",
             "valid_to": "2026-06-16",
+            "economic_valid_from": "2026-05-01",
+            "economic_valid_to": "2026-06-16",
+            "publicly_known_from": "2026-05-08",
             "term_years": 1.0,
             "capacity_mw": None,
             "committed_or_optional": "committed",
@@ -939,13 +956,53 @@ def build_obligations():
             "guarantee": "Parent direct obligation",
             "termination_rights": "Short-term credit agreement default covenants",
             "payment_conditions": "Floating-rate bridge facility subject to SOFR; entered May 1, 2026, refinanced on June 16, 2026 into $1.59B 7.00% Senior Secured Notes",
-            "superseded_by": "Refinanced on June 16, 2026 into $1.59B 7.00% Senior Secured Notes",
+            "rate_type": "floating",
+            "benchmark_rate": "SOFR",
+            "supersedes": None,
+            "superseded_by": "OBL-APLD-DEBT-7PCT-2026",
             "claim_ids": "CLM-APLD-003",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A002"
         },
-        # 21. Applied Digital Other Indebtedness & Equipment Financings (Aggregate Residual Debt)
+        # 21. Applied Digital 7.00% Senior Secured Notes due 2031 (Refinancing Successor)
+        {
+            "obligation_id": "OBL-APLD-DEBT-7PCT-2026",
+            "from_entity": "APLD",
+            "to_entity": "INSTITUTIONAL_BONDHOLDERS",
+            "project_id": "POLARIS_FORGE_1",
+            "obligation_type": "debt_facility",
+            "amount": 1590000000.0,
+            "amount_type": "principal_outstanding",
+            "amount_known": True,
+            "as_of_date": "2026-06-16",
+            "observed_as_of": "2026-07-29",
+            "currency": "USD",
+            "effective_date": "2026-06-16",
+            "valid_from": "2026-06-16",
+            "maturity_date": "2031-06-15",
+            "valid_to": "2031-06-15",
+            "economic_valid_from": "2026-06-16",
+            "economic_valid_to": "2031-06-15",
+            "publicly_known_from": "2026-06-18",
+            "term_years": 5.0,
+            "capacity_mw": None,
+            "committed_or_optional": "committed",
+            "recourse": "full_recourse",
+            "collateral": "First-priority liens on Ellendale campus infrastructure and subsidiary equity pledges",
+            "guarantee": "Parent direct obligation and subsidiary guarantees",
+            "termination_rights": "Senior secured note indenture default acceleration",
+            "payment_conditions": "Fixed 7.00% Senior Secured Notes due June 15, 2031; issued June 16, 2026 to refinance and extinguish the $300.0M floating bridge facility with remaining net proceeds funding campus construction; insulates APLD from floating SOFR rate hikes",
+            "rate_type": "fixed",
+            "benchmark_rate": None,
+            "supersedes": "OBL-APLD-DEBT-BRIDGE",
+            "superseded_by": None,
+            "claim_ids": "CLM-APLD-003,CLM-APLD-007",
+            "evidence_class": "A",
+            "confidence": 1.0,
+            "shared_assumptions": "A002,A004"
+        },
+        # 22. Applied Digital Other Indebtedness & Equipment Financings (Aggregate Residual Debt)
         {
             "obligation_id": "OBL-APLD-DEBT-OTHER",
             "from_entity": "APLD",
@@ -962,6 +1019,9 @@ def build_obligations():
             "valid_from": "2026-05-31",
             "maturity_date": None,
             "valid_to": None,
+            "economic_valid_from": "2026-05-31",
+            "economic_valid_to": None,
+            "publicly_known_from": "2026-07-29",
             "term_years": None,
             "capacity_mw": None,
             "committed_or_optional": "committed",
@@ -970,6 +1030,9 @@ def build_obligations():
             "guarantee": "Parent direct obligation",
             "termination_rights": "Equipment lease/financing default remedies",
             "payment_conditions": "Aggregate residual debt comprising Starion Ellendale facility, Cornerstone loans, and other notes/SAFEs, reconciling gross principal to $5,306.68M",
+            "rate_type": "fixed",
+            "benchmark_rate": None,
+            "supersedes": None,
             "superseded_by": None,
             "claim_ids": "CLM-APLD-003",
             "evidence_class": "A",
@@ -977,6 +1040,43 @@ def build_obligations():
             "shared_assumptions": "A002"
         }
     ]
+
+    # Explicit bitemporal metadata mapping
+    metadata_map = {
+        "OBL-CRWV-APLD-LEASE": {"economic_valid_from": "2025-05-28", "economic_valid_to": "2040-05-31", "publicly_known_from": "2025-06-02", "rate_type": "none", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
+        "OBL-CRWV-APLD-GUARANTY-ELN02": {"economic_valid_from": "2026-03-30", "economic_valid_to": "2040-05-31", "publicly_known_from": "2026-04-01", "rate_type": "none", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
+        "OBL-CRWV-APLD-GUARANTY-ELN03": {"economic_valid_from": "2026-03-30", "economic_valid_to": "2040-05-31", "publicly_known_from": "2026-04-01", "rate_type": "none", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
+        "OBL-CRWV-DEBT-DDTL1": {"economic_valid_from": "2023-08-01", "economic_valid_to": "2028-03-31", "publicly_known_from": "2024-03-15", "rate_type": "floating", "benchmark_rate": "SOFR", "supersedes": None, "superseded_by": None},
+        "OBL-CRWV-DEBT-DDTL2": {"economic_valid_from": "2024-02-01", "economic_valid_to": "2030-08-31", "publicly_known_from": "2024-05-15", "rate_type": "floating", "benchmark_rate": "SOFR", "supersedes": None, "superseded_by": None},
+        "OBL-CRWV-DEBT-DDTL2-1": {"economic_valid_from": "2024-05-01", "economic_valid_to": "2031-03-31", "publicly_known_from": "2024-08-15", "rate_type": "floating", "benchmark_rate": "SOFR", "supersedes": None, "superseded_by": None},
+        "OBL-CRWV-DEBT-DDTL3": {"economic_valid_from": "2024-08-01", "economic_valid_to": "2030-08-31", "publicly_known_from": "2024-11-15", "rate_type": "floating", "benchmark_rate": "SOFR", "supersedes": None, "superseded_by": None},
+        "OBL-CRWV-DEBT-DDTL4": {"economic_valid_from": "2024-09-01", "economic_valid_to": "2031-12-31", "publicly_known_from": "2026-08-12", "rate_type": "floating", "benchmark_rate": "SOFR", "supersedes": None, "superseded_by": None},
+        "OBL-CRWV-DEBT-DDTL5": {"economic_valid_from": "2024-11-01", "economic_valid_to": "2031-11-30", "publicly_known_from": "2025-05-15", "rate_type": "floating", "benchmark_rate": "SOFR", "supersedes": None, "superseded_by": None},
+        "OBL-CRWV-DEBT-NOTES": {"economic_valid_from": "2024-06-01", "economic_valid_to": "2032-07-31", "publicly_known_from": "2024-06-15", "rate_type": "fixed", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
+        "OBL-CRWV-DEBT-CONV": {"economic_valid_from": "2024-04-15", "economic_valid_to": "2032-06-30", "publicly_known_from": "2024-05-01", "rate_type": "fixed", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
+        "OBL-CRWV-DEBT-OEM": {"economic_valid_from": "2024-01-01", "economic_valid_to": "2030-07-31", "publicly_known_from": "2024-05-01", "rate_type": "fixed", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
+        "OBL-CRWV-DEBT-OEM-NR": {"economic_valid_from": "2024-06-01", "economic_valid_to": "2029-12-31", "publicly_known_from": "2026-08-12", "rate_type": "fixed", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
+        "OBL-CRWV-DEBT-MAGNETAR": {"economic_valid_from": "2024-01-15", "economic_valid_to": "2029-01-31", "publicly_known_from": "2024-03-15", "rate_type": "floating", "benchmark_rate": "SOFR", "supersedes": None, "superseded_by": None},
+        "REL-MSFT-CRWV-REVENUE-CONCENTRATION": {"economic_valid_from": "2025-01-01", "economic_valid_to": None, "publicly_known_from": "2026-03-31", "rate_type": "none", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
+        "OBL-SMCI-SUPPLIER-COMMIT": {"economic_valid_from": "2025-07-01", "economic_valid_to": "2027-06-30", "publicly_known_from": "2026-08-31", "rate_type": "none", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
+        "OBL-NVDA-CRWV-EQUITY": {"economic_valid_from": "2026-01-15", "economic_valid_to": "2099-12-31", "publicly_known_from": "2026-05-08", "rate_type": "none", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
+        "OBL-APLD-DEBT-PF1": {"economic_valid_from": "2024-06-01", "economic_valid_to": "2030-12-15", "publicly_known_from": "2024-06-15", "rate_type": "fixed", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
+        "OBL-APLD-DEBT-PF2": {"economic_valid_from": "2025-01-15", "economic_valid_to": "2031-03-15", "publicly_known_from": "2025-01-25", "rate_type": "fixed", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
+        "OBL-APLD-DEBT-CONV": {"economic_valid_from": "2024-11-15", "economic_valid_to": "2030-06-30", "publicly_known_from": "2024-11-20", "rate_type": "fixed", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
+        "OBL-APLD-DEBT-BRIDGE": {"economic_valid_from": "2026-05-01", "economic_valid_to": "2026-06-16", "publicly_known_from": "2026-05-08", "rate_type": "floating", "benchmark_rate": "SOFR", "supersedes": None, "superseded_by": "OBL-APLD-DEBT-7PCT-2026"},
+        "OBL-APLD-DEBT-7PCT-2026": {"economic_valid_from": "2026-06-16", "economic_valid_to": "2031-06-15", "publicly_known_from": "2026-06-18", "rate_type": "fixed", "benchmark_rate": None, "supersedes": "OBL-APLD-DEBT-BRIDGE", "superseded_by": None},
+        "OBL-APLD-DEBT-OTHER": {"economic_valid_from": "2026-05-31", "economic_valid_to": None, "publicly_known_from": "2026-07-29", "rate_type": "fixed", "benchmark_rate": None, "supersedes": None, "superseded_by": None}
+    }
+
+    for obl in obligations:
+        oid = obl["obligation_id"]
+        meta = metadata_map.get(oid, {})
+        for k, v in meta.items():
+            obl[k] = v
+        # Ensure backwards-compatible aliases
+        obl["valid_from"] = obl["economic_valid_from"]
+        obl["valid_to"] = obl["economic_valid_to"]
+
     df = pd.DataFrame(obligations)
     df.to_parquet(PROCESSED_DIR / "obligations.parquet", index=False)
     df.to_csv(PROCESSED_DIR / "obligations.csv", index=False)

@@ -157,5 +157,28 @@ This log records the durable architectural, methodological, and data design choi
 - **Consequences:**
   Eliminates structural fragility, guarantees 100% data contract certification, cleanly separates point-in-time historical reporting from forward refinancing events, and ensures the codebase is fully prepared for multi-company universe expansion in Phase 1.
 
+---
+
+### ADR-012: Bitemporal Graph Architecture, Information Clock vs Economic Clock, and Debt Conservation Supersession
+- **Status:** Accepted (2026-09-28, Phase 0 Freeze & Pre-Phase-1 Hardening)
+- **Context:**
+  Following review of commit `107c05c`, four temporal and architectural requirements were identified before scaling to Phase 1:
+  1. *Obligation Conservation through Transformations:* While `OBL-APLD-DEBT-BRIDGE` was marked as extinguished on June 16, 2026, the successor financing agreement ($1.59B 7.00% Senior Secured Notes due 2031) was not instantiated as an active edge. Consequently, `network.as_of("2026-09-28")` caused debt to simply vanish rather than modeling its transformation from floating bridge to fixed long-term notes.
+  2. *Information Time vs Economic Time (Look-Ahead Bias):* A single `as_of(date)` filtering on `valid_from` and `valid_to` models economic reality, but introduces look-ahead bias when evaluating what public market participants could have known at a given historical point in time. For instance, querying `as_of("2026-06-30")` would include 10-K disclosures published in late July or August 2026. Evaluating systemic risk and answering "Could an observer have detected the bubble at the time?" requires an explicit information clock.
+  3. *Stress Engine Temporal Coupling:* The stress engine previously hardcoded date conditionals (`apld_floating_debt = 300M if date < June 16 else 0`) rather than deriving active floating exposures dynamically from the active graph topology.
+  4. *Reachability Contingent Obligation Metric:* Reachability previously attempted to compute a dollar percentage for contingent obligations (which have no dollar denominator), rather than reporting edge reachability counts and percentages.
+- **Decision:**
+  1. Formally add `OBL-APLD-DEBT-7PCT-2026` ($1.59B principal, fixed 7.00%, due 2031-06-15, `supersedes = "OBL-APLD-DEBT-BRIDGE"`) and link `OBL-APLD-DEBT-BRIDGE` (`superseded_by = "OBL-APLD-DEBT-7PCT-2026"`), conserving obligations across transformations (22 active edges at May 31 $\to$ 22 active edges at Sep 28).
+  2. Implement bitemporal graph query semantics with two distinct clocks in `src/graph.py`:
+     - **Economic Clock (`network.economic_as_of(date)`):** Filters on `economic_valid_from <= date` and `(economic_valid_to is None or economic_valid_to >= date)`, reconstructing historical physical reality.
+     - **Information Clock (`network.known_as_of(date)`):** Filters on `publicly_known_from <= date` AND economic validity, reconstructing strictly what an outside observer could have known without look-ahead bias.
+     - `network.as_of(date, mode="economic"|"known")` acts as the unified dispatcher.
+  3. Couple `FinancialStressEngine` dynamically to the network by implementing `get_active_floating_debt(entity_id)` which inspects active graph edges for `rate_type == "floating"` or `benchmark_rate == "SOFR"`, completely removing hardcoded date conditionals inside stress functions.
+  4. In `src/reachability.py`, report contingent obligations by edge count and edge reachability percentage, and remove the obsolete `outgoing_contingent_guarantees_usd` dictionary key in `src/graph.py`.
+  5. Add `CLM-APLD-007` citing Form 10-K Note 19 Subsequent Events.
+- **Consequences:**
+  Eliminates look-ahead bias, establishes institutional-grade bitemporal graph querying, ensures conservation of obligations across debt rollovers, and decouples the stress simulation engine from hardcoded calendar dates.
+
+
 
 

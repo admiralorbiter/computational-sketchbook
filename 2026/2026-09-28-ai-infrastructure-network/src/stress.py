@@ -32,10 +32,45 @@ OUTPUTS_DIR = Path(__file__).resolve().parent.parent / "outputs"
 
 
 class FinancialStressEngine:
-    def __init__(self, network: Optional[ObligationNetwork] = None):
-        self.network = network or ObligationNetwork()
+    def __init__(
+        self,
+        network: Optional[ObligationNetwork] = None,
+        as_of_date: Optional[str] = None,
+        temporal_mode: str = "economic"
+    ):
+        if network is None:
+            base_net = ObligationNetwork()
+            self.as_of_date = as_of_date or "2026-05-31"
+            self.temporal_mode = temporal_mode
+            self.network = base_net.as_of(self.as_of_date, mode=self.temporal_mode)
+        else:
+            if as_of_date is not None:
+                self.as_of_date = as_of_date
+                self.temporal_mode = temporal_mode
+                self.network = network.as_of(self.as_of_date, mode=self.temporal_mode)
+            else:
+                self.network = network
+                self.as_of_date = getattr(network, "as_of_date", "2026-05-31")
+                self.temporal_mode = getattr(network, "temporal_mode", "economic")
         self.graph = self.network.graph
         self.financials = self._load_latest_financials()
+
+    def get_active_floating_debt(self, entity_id: str) -> float:
+        """
+        Derives total active floating debt for entity_id (or its SPV subsidiaries)
+        directly from the active network edges, avoiding hardcoded date conditionals.
+        """
+        total = 0.0
+        for u, v, k, d in self.network.graph.edges(keys=True, data=True):
+            root_u = self.network.get_root_parent(u)
+            if root_u == entity_id and d.get("obligation_type") == "debt_facility":
+                rate_type = d.get("rate_type")
+                benchmark = d.get("benchmark_rate")
+                cond = str(d.get("payment_conditions", "")).lower()
+                if rate_type == "floating" or benchmark == "SOFR" or "floating" in cond:
+                    amt = d.get("amount") or 0.0
+                    total += float(amt)
+        return total
 
     def _load_latest_financials(self) -> Dict[str, Dict[str, float]]:
         """Load latest audited balance sheet and flow metrics per entity from SEC XBRL facts."""
@@ -196,7 +231,7 @@ class FinancialStressEngine:
             )
         }
 
-    def simulate_sofr_base_rate_shock(self, sofr_increase_bps: float = 300.0, as_of_date: str = "2026-05-31") -> Dict[str, Any]:
+    def simulate_sofr_base_rate_shock(self, sofr_increase_bps: float = 300.0, as_of_date: Optional[str] = None) -> Dict[str, Any]:
         """
         Scenario 3A: SOFR Benchmark Base Rate Shock (+300 bps)
         Rigorously evaluates immediate cash interest impact across floating debt facilities:
@@ -208,10 +243,13 @@ class FinancialStressEngine:
         Unhedged floating debt at June 30, 2026: $12.206B - $4.661B = $7.545B.
         Provides a sensitivity band from hypothetical 95% full fleet coverage ($27.3M/yr) to reported swaps baseline ($235.4M/yr)
         to minimal covenanted coverage with others unhedged ($303.9M/yr).
-        Temporally parameterizes Applied Digital's $300M bridge facility: active as of May 31, 2026 snapshot ($9.0M/yr),
-        refinanced on June 16, 2026 into 7% fixed notes ($0.0M/yr post-refinancing).
+        Derives active floating debt dynamically from the active graph edges.
         """
         delta_r = sofr_increase_bps / 10000.0  # 0.03
+        target_date = as_of_date or self.as_of_date
+        eval_engine = self
+        if as_of_date is not None and as_of_date != self.as_of_date:
+            eval_engine = FinancialStressEngine(network=self.network, as_of_date=as_of_date, temporal_mode=self.temporal_mode)
 
         # Floating debt tranches
         crwv_ddtl_1_to_3_floating = 1300000000.0 + 3190000000.0 + 3000000000.0 + 2215000000.0  # $9.705B
@@ -223,9 +261,8 @@ class FinancialStressEngine:
         reported_swap_notional = 4661000000.0  # $4.661B active interest rate swaps
         unhedged_reported_baseline = max(0.0, total_crwv_floating - reported_swap_notional)  # $7.545B
 
-        # APLD floating bridge facility ($300.0M principal at May 31, 2026)
-        # On June 16, 2026 (subsequent event), APLD refinanced the bridge facility into $1.59B 7.00% fixed notes.
-        apld_floating_debt = 300000000.0 if as_of_date < "2026-06-16" else 0.0
+        # APLD floating debt derived dynamically from active network edges
+        apld_floating_debt = eval_engine.get_active_floating_debt("APLD")
 
         # 1. Reported Swaps Baseline Hit
         crwv_reported_hit = unhedged_reported_baseline * delta_r  # $226.35M/yr
@@ -249,7 +286,7 @@ class FinancialStressEngine:
         return {
             "scenario_name": "SOFR Base Rate Shock (Reported Swaps vs Covenanted Range)",
             "sofr_increase_bps": sofr_increase_bps,
-            "as_of_date": as_of_date,
+            "as_of_date": target_date,
             "total_crwv_floating_debt_usd": total_crwv_floating,
             "crwv_reported_swap_notional_usd": reported_swap_notional,
             "crwv_unhedged_floating_reported_usd": unhedged_reported_baseline,
