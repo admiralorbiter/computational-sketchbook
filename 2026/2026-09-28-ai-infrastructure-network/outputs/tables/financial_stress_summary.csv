@@ -1,0 +1,6 @@
+scenario_name,shock_parameter,direct_cash_or_collateral_hit_usd,target_entity,covenant_or_liquidity_impact,contagion_mechanism
+GPU Collateral Valuation Haircut,-40% GPU Resale Value,4322400000.0,CRWV,78.2% Cash Depletion,"Forces $4.32B debt prepayment, exhausting operational capex."
+Anchor Customer Demand Trim,-30% Microsoft Off-Take,517500000.0,CRWV,Activates Springing Guaranty,"Reduces annual cash flow by $518M, triggering $11B lease parent guarantee."
+Credit Refinancing Spread Spike,+300 bps Refinancing Spread,472965480.0,CRWV / APLD,Cash Squeeze,Adds $473M annual interest across CoreWeave and Applied Digital.
+Grid Substation Energization Delay,12-Month Grid Delay,396761280.0,APLD,24.9% Cash Drain,Defers $733M lease rent while carrying $397M debt carrying cost.
+Hardware OEM Purchase Commitment Markdown,15% Hardware Demand Pause,5130000000.0,SMCI,68.2% Cash Depletion,Triggers $5.13B write-down on $34.2B purchase commitments.

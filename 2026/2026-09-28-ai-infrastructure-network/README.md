@@ -31,7 +31,7 @@ In 2020s AI capital structures, companies do not need to commit fraud or conceal
 ```mermaid
 flowchart TD
     subgraph OP["THE 5 MODES OF OPACITY IN AI INFRASTRUCTURE"]
-        P["<b>1. Perimeter Opacity</b><br/><i>Risk isolated in SPVs, JV vehicles, or project-level subsidiaries<br/>(e.g., CoreWeave SPV VIII; APLD ELN-02/03 LLC).</i>"]
+        P["<b>1. Perimeter Opacity</b><br/><i>Risk isolated in SPVs or project subsidiaries<br/>(e.g., CoreWeave SPV VIII with an Unconditional Springing Guaranty).</i>"]
         N["<b>2. Network Opacity</b><br/><i>Independent participants unaware of common dependencies<br/>(e.g., 67% of CoreWeave revenue tied to Microsoft).</i>"]
         C["<b>3. Contract Opacity</b><br/><i>Headline $11B backlog masking cancellation clauses,<br/>MW delivery conditions, and liquidated damages.</i>"]
         V["<b>4. Valuation Opacity</b><br/><i>GPU collateral marked at cost or tight-market prices<br/>ignoring secondary liquidation discounts under distress.</i>"]
@@ -50,15 +50,17 @@ flowchart TD
     subgraph L1["<b>LAYER 1: ACCOUNTING BASELINES (SEC XBRL)</b>"]
         direction TB
         F1["Automated extraction from <code>data.sec.gov</code>"]
-        F2["Audited facts: Revenue, Capex, OCF, Debt, Leases, PP&E, Backlog"]
-        F3["Base financial capacity of isolated corporate nodes"]
+        F2["Instant Balance Sheets: Cash, Debt, ASC 842 Leases, PP&E"]
+        F3["Duration Flows: Quarterly & Annual Revenue, Capex, OCF"]
+        F4["Normalized Funded Debt: $35.55B CRWV, $125.3B ORCL, $8.72B SMCI, $4.98B APLD"]
     end
 
-    subgraph L2["<b>LAYER 2: THE CONTRACTUAL OBLIGATION GRAPH</b>"]
+    subgraph L2["<b>LAYER 2: CONTRACTUAL OBLIGATION MULTI-GRAPH</b>"]
         direction TB
-        O1["Primary unit of analysis: The Contractual Edge"]
-        O2["18 legal attributes: recourse, collateral, MW load, SPV perimeters"]
+        O1["MultiDiGraph preserving distinct debt facilities and contracts"]
+        O2["Categorization strictly by amount_type (no false netting)"]
         O3["Nodes: Corporates, Project SPVs, Syndicates, Campuses"]
+        O4["Perimeter modeling: Master leases coexisting with Springing Guarantees"]
     end
 
     subgraph L3["<b>LAYER 3: SHARED SYSTEMIC ASSUMPTIONS</b>"]
@@ -79,109 +81,125 @@ flowchart TD
 
 ---
 
-## 4. Phase 0: The Five-Company Pilot
+## 4. Phase 0.5: The Five-Company Pilot
 
-Phase 0 validates the ontology, data contracts, and shock propagation engine on a closed capital and hardware loop across five companies and their strategic counterparties:
+Phase 0.5 establishes an economically literal baseline across five core companies and their counterparties:
 * **NVIDIA Corporation (`NVDA`):** Dominant accelerated silicon supplier (CIK: `0001045810`).
 * **Super Micro Computer, Inc. (`SMCI`):** Accelerated server OEM & liquid cooling integrator (CIK: `0001375365`).
 * **CoreWeave, Inc. (`CRWV`):** Leveraged neocloud operator (CIK: `0001769628`) and its equipment vehicle `CRWV_SPV_VIII`.
 * **Applied Digital Corporation (`APLD`):** HPC data center developer (CIK: `0001144879`) and project vehicle `APLD_ELN_LLC`.
 * **Oracle Corporation (`ORCL`):** Hyperscaler cloud operator expanding OCI superclusters (CIK: `0001341439`).
-* **Strategic Counterparties:** Microsoft Corporation (`MSFT`, anchor offtaker), Blackstone/Magnetar Debt Syndicate (`BLACKSTONE_MAGNETAR_SYN`), and Polaris Forge 1 Campus (`POLARIS_FORGE_1`).
+* **Key Counterparties:** Microsoft Corporation (`MSFT`, anchor offtaker), Blackstone/Magnetar Debt Syndicate (`BLACKSTONE_MAGNETAR_SYN`), Institutional Bondholders, Hardware Suppliers, and Polaris Forge 1 Campus (`POLARIS_FORGE_1`).
 
-### Obligation Network Topology
+### Audited Balance Sheet Structure (Latest SEC Periodic Disclosures)
+| Entity | Category | Cash & Equiv | Total Funded Debt | Lease Liabilities | Net PP&E | Annualized Rev Flow |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **NVDA** | Hardware Supplier | $22.44B | $33.37B | $5.49B | $14.28B | $96.22B |
+| **SMCI** | Server OEM | $7.52B | $8.72B | $0.54B | $0.63B | $39.06B |
+| **CRWV** | Neocloud Operator | $5.52B | $35.55B | $16.32B | $46.74B | $2.58B |
+| **APLD** | Data Center Host | $1.59B | $4.98B | $0.07B | $4.24B | $0.13B |
+| **ORCL** | Cloud Hyperscaler | $36.37B | $125.34B | $34.62B | $127.84B | $19.35B |
+| **MSFT** | Cloud Hyperscaler | $20.94B | $46.14B | $21.92B | $313.08B | $76.44B |
+
+### Obligation Multi-Graph Topology
 ![Obligation Network](outputs/figures/obligation_network_topology.png)
 
 ---
 
-## 5. Key Empirical Findings from Phase 0
+## 5. Key Empirical Findings from Phase 0.5
 
 1. **The Bubble Lives in the Joins:**
-   * On consolidated statements, Applied Digital (`APLD`) reports modest quarterly revenues (~$126M) and capital expenditure burdens.
-   * However, querying the joins reveals that APLD executed a **15-year, ~$11.0B master lease agreement** for 400 MW at Polaris Forge 1 with CoreWeave. APLD's campus economics are almost entirely leveraged to CoreWeave's solvency.
-2. **Structural Perimeter Opacity:**
-   * In SEC Form 10-K disclosures (Note 14), CoreWeave executed an Assignment and Assumption agreement transferring lease liabilities to a bankruptcy-remote entity, `CoreWeave Compute Acquisition Co. VIII, LLC`, releasing parent corporate liability on Building ELN-03 while backing obligations with letters of credit drawn against its bank credit facilities.
-3. **Severe Network Concentration:**
-   * CoreWeave's Form 10-K disclosures reveal that **67% of its FY25 recognized revenue was derived from a single anchor customer: Microsoft**. What appears as independent cloud demand is heavily concentrated in one hyperscaler's external compute spillover.
-4. **The Critical Fragility Point (What Breaks the Most Value?):**
-   * Testing adversarial shocks reveals that **Hyperscaler Capex Deceleration (`SCEN_03`, -20% growth)** impairs **98.7% of the total network contractual value** ($117.8B of $119.3B total commitments).
-   * **Anchor Customer Retrenchment (`SCEN_04`, -30% Microsoft volume)** impairs **80.6% of network value**, cascading from CoreWeave's revenue through its debt service, lease commitments, and hardware orders.
-   * **GPU Secondary Market Crash (`SCEN_01`, -40% resale value)** triggers borrowing base deficiencies on CoreWeave's **$21.6B syndicated debt facility**, directly or indirectly destabilizing **65.8% of the network**.
+   * On consolidated statements, Applied Digital (`APLD`) reports $1.59B in cash and $4.98B in debt.
+   * Querying the joins reveals that APLD executed a **15-year, ~$11.0B master lease agreement** for 400 MW at Polaris Forge 1 with CoreWeave. APLD's campus development economics are leveraged to CoreWeave's solvency.
+2. **Perimeter Opacity & The Springing Guaranty:**
+   * In SEC Form 10-K disclosures (Note 14), CoreWeave assigned its lease liabilities to `CoreWeave Compute Acquisition Co. VIII, LLC`, releasing parent corporate liability on Building ELN-03.
+   * **However**, CoreWeave concurrently executed an **Unconditional Springing Guaranty of Payment and Performance**. Thus, bankruptcy-remoteness protects the parent under normal operations, but default activates a contingent liquidity cliff that springs directly back onto the parent balance sheet.
+3. **Decomposed Debt Realities:**
+   * CoreWeave's indebtedness is not a single generic loan, but **$35.551B in future principal** across Delayed Draw Term Loans ($10.8B drawn), Senior Secured Notes ($9.0B), Convertible Senior Notes ($6.6B), and OEM financing ($4.2B).
+4. **Topological Reachability vs. True Financial Stress:**
+   * We distinguish between **Topological Reachability** (which contracts touch an assumption) and **Quantitative Financial Stress** (actual cash flow deficits, collateral calls, and liquidity cures).
 
-### Systemic Vulnerability Hierarchy
-![Stress Scenarios Comparison](outputs/figures/stress_scenarios_comparison.png)
+### Quantitative Financial Stress Results (`src/stress.py`)
+![Financial Stress Waterfall](outputs/figures/financial_stress_waterfall.png)
+
+| Scenario Name | Shock Parameter | Target Entity | Direct Cash / Collateral Hit | Liquidity & Covenant Transmission |
+| :--- | :--- | :--- | :--- | :--- |
+| **GPU Collateral Haircut** | -40% secondary GPU resale | `CRWV` | **$4.32B mandatory cure** | Depletes **78.2% of CoreWeave's cash**, forcing operational capex and server integration freezes. |
+| **Hardware OEM Purchase Markdown** | 15% demand freeze on $34.2B | `SMCI` | **$5.13B write-down** | Wipes out **68.2% of Supermicro's cash reserves** ($7.52B starting cash). |
+| **Grid Substation Delay** | 12-month interconnect delay | `APLD` | **$397M debt carrying cost** | Defers $733M in rent while carrying costs drain **24.9% of APLD's cash**. |
+| **Anchor Customer Trim** | -30% Microsoft demand | `CRWV` | **$518M/yr cash flow loss** | Compresses debt coverage and **activates the $11.0B Springing Guaranty** on the lease. |
+| **Refinancing Spread Spike** | +300 bps borrowing spread | `CRWV / APLD` | **$473M/yr addl interest** | Consumes ongoing cash reserves across both leveraged operators. |
 
 ---
 
-## 6. Directory Structure
+## 6. Directory Structure & Reproduction
 
 ```text
 2026-09-28-ai-infrastructure-network/
-├── README.md                 # Master project guide and empirical synthesis
+├── README.md                      # Master synthesis, empirical findings, and architecture guide
+├── FEEDBACK_PACK.md               # Copy-paste briefing prompt for external review and LLMs
+├── RESUME_PROMPT.md               # Cold-start briefing prompt for fresh AI sessions
 ├── config/
-│   ├── entities.yml          # Entity registry metadata (CIKs, roles, classifications)
-│   ├── relationship_types.yml# Contract/obligation taxonomy and sensitivity ratings
-│   └── assumptions.yml       # Shared systemic assumptions (A001-A007) and proxies
+│   ├── entities.yml               # Entity registry (CIKs, parents, SPVs, roles)
+│   ├── relationship_types.yml     # Contract/obligation taxonomy & sensitivity ratings
+│   └── assumptions.yml            # Systemic assumptions (A001-A007), proxies, and stress parameters
 ├── docs/
-│   ├── methodology.md        # Mathematical and theoretical contagion framework
-│   ├── data_dictionary.md    # Complete schemas for Parquet/CSV data artifacts
-│   ├── decisions.md          # Architectural Decision Records (ADR-001 through 005)
-│   └── evidence_contract.md  # Epistemic trust hierarchy (Class A/B/C) and audit rules
+│   ├── methodology.md             # Theoretical framework, 5 opacities, and contagion math
+│   ├── data_dictionary.md         # Schema specifications for all Parquet and CSV tables
+│   ├── decisions.md               # Architectural Decision Records (ADR-001 through 006)
+│   └── evidence_contract.md       # Epistemic trust hierarchy (Class A/B/C) and audit rules
 ├── data/
-│   ├── raw/sec/              # Immutable SEC EDGAR XBRL company facts (JSON)
-│   └── processed/            # Harmonized Parquet & CSV analytical tables
+│   ├── raw/sec/                   # 17.9 MB of cached SEC EDGAR company facts JSON
+│   └── processed/                 # Standardized Parquet files and human-readable CSV mirrors
 │       ├── entities.parquet
-│       ├── financials.parquet
-│       ├── obligations.parquet
-│       ├── assumptions.parquet
-│       └── evidence_claims.parquet
+│       ├── financials.parquet     # 5,319 standardized accounting observations
+│       ├── obligations.parquet    # Decomposed obligations with amount_type & as_of_date
+│       ├── assumptions.parquet    # Assumption registry
+│       └── evidence_claims.parquet# Audited SEC citations with verbatim quotes and accession numbers
 ├── src/
-│   ├── sec_ingest.py         # Automated SEC EDGAR XBRL extraction pipeline
-│   ├── curate_obligations.py # Obligation and evidence claim curation
-│   ├── graph.py              # NetworkX obligation graph & SPV unwrapping engine
-│   ├── stress.py             # Multi-hop shock simulation and contagion engine
-│   └── build_notebook.py     # Programmatic execution harness for Jupyter notebook
+│   ├── sec_ingest.py              # Automated data.sec.gov XBRL ingestion pipeline (duration-aware)
+│   ├── curate_obligations.py      # Audited obligation and evidence claim builder
+│   ├── graph.py                   # MultiDiGraph obligation graph & SPV unwrapping engine
+│   ├── reachability.py            # Assumption reachability and dependency footprint engine
+│   ├── stress.py                  # Quantitative financial stress & transmission engine
+│   ├── validate.py                # Automated consistency validator (zero data drift)
+│   └── build_notebook.py          # Programmatic notebook builder and execution runner
 ├── notebooks/
-│   └── 01_five_company_pilot.ipynb # Executed interactive research notebook
+│   └── 01_five_company_pilot.ipynb# 22-cell executed research workbench with live tables and figures
 └── outputs/
-    ├── figures/              # High-resolution network graphs and stress waterfalls
-    └── tables/               # Stress test comparison tables and metrics
+    ├── figures/
+    │   ├── obligation_network_topology.png         # MultiDiGraph contractual topology
+    │   ├── financial_stress_waterfall.png          # Quantitative direct hit waterfall chart
+    │   ├── assumption_reachability_footprint.png   # Topological reachability bar chart
+    │   └── fin_bs_structure.png                    # Audited balance sheet structure
+    └── tables/
+        └── financial_stress_summary.csv            # Quantitative stress results table
+```
+
+### Run and Validate
+```powershell
+# 1. Ingest SEC EDGAR XBRL Data
+python 2026/2026-09-28-ai-infrastructure-network/src/sec_ingest.py
+
+# 2. Build the Obligation and Evidence Ledgers
+python 2026/2026-09-28-ai-infrastructure-network/src/curate_obligations.py
+
+# 3. Run Reachability and Financial Stress Simulation
+python 2026/2026-09-28-ai-infrastructure-network/src/reachability.py
+python 2026/2026-09-28-ai-infrastructure-network/src/stress.py
+
+# 4. Execute the Interactive Notebook
+python 2026/2026-09-28-ai-infrastructure-network/src/build_notebook.py
+
+# 5. Run Consistency Validator (Ensures Zero Data Drift)
+python 2026/2026-09-28-ai-infrastructure-network/src/validate.py
 ```
 
 ---
 
-## 7. How to Reproduce
+## 7. Epistemic Trust Hierarchy
 
-### 1. Ingest SEC EDGAR XBRL Data
-```bash
-python src/sec_ingest.py
-```
-*Queries `data.sec.gov` for NVDA, ORCL, CRWV, APLD, SMCI, and MSFT, caching raw JSON in `data/raw/sec/` and writing normalized facts to `data/processed/financials.parquet`.*
-
-### 2. Build the Obligation and Evidence Ledgers
-```bash
-python src/curate_obligations.py
-```
-*Compiles the entity metadata, shared assumptions, and audited contractual edges into `data/processed/`.*
-
-### 3. Run Graph Analysis and Systemic Stress Tests
-```bash
-python -m src.graph
-python -m src.stress
-```
-*Calculates network exposures, ranks shared assumptions by total value supported, and simulates multi-order contagion paths.*
-
-### 4. Execute the Interactive Notebook
-```bash
-python src/build_notebook.py
-```
-*Compiles and executes [`notebooks/01_five_company_pilot.ipynb`](notebooks/01_five_company_pilot.ipynb), rendering all live tables, NetworkX graph layouts, and Plotly visualizations.*
-
----
-
-## 8. Epistemic Trust Hierarchy
-
-Every relationship in this repository is certified according to the [`docs/evidence_contract.md`](docs/evidence_contract.md):
+Every relationship in this repository is certified according to [`docs/evidence_contract.md`](docs/evidence_contract.md):
 * **Class A (Contractual / Filed):** Primary SEC 10-K/10-Q/8-K exhibits, credit agreements, and audited footnote disclosures.
 * **Class B (Company Asserted):** Executive remarks, earnings calls, and investor presentations.
 * **Class C (Analytical / Inferred):** Research synthesis, channel check proxies, and synthetic stress parameters.

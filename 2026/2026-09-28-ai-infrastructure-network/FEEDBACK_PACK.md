@@ -1,4 +1,4 @@
-# AI Infrastructure Financial Network — Feedback & Review Pack
+# AI Infrastructure Financial Network — Feedback & Review Pack (Phase 0.5)
 
 This document is a self-contained briefing pack. You can point an AI agent to this file, or copy and paste its contents directly into an LLM session (ChatGPT, Claude, etc.) to solicit expert critical feedback on the framework, empirical findings, and next steps.
 
@@ -11,58 +11,58 @@ I am conducting research on systemic financial vulnerability and coordination fa
 
 "The thing that blows up in a financial bubble is often not hidden data. It is a hidden relationship between data that everybody can see. The crisis lives in the JOIN."
 
-I have completed Phase 0 (Universe, Ontology, Evidence Contract, and Five-Company Pilot) in my computational sketchbook. The pilot maps the closed capital, hardware, and lease chain across five public companies: NVIDIA (NVDA), Supermicro (SMCI), CoreWeave (CRWV), Applied Digital (APLD), and Oracle (ORCL), connected to Microsoft (MSFT) and private credit syndicates.
+I have completed Phase 0.5 (Audited Five-Company Multi-Graph Pilot) in my computational sketchbook. The pilot maps the closed capital, hardware, and lease chain across five public companies: NVIDIA (NVDA), Supermicro (SMCI), CoreWeave (CRWV), Applied Digital (APLD), and Oracle (ORCL), connected to Microsoft (MSFT), institutional bondholders, and private credit syndicates.
 
 Please review the methodology, empirical findings, and stress test results below, and provide critical feedback on:
 1. Theoretical Rigor: Does the taxonomy of 5 opacities (Perimeter, Network, Contract, Valuation, Temporal) effectively capture where 2020s project-finance bubbles hide?
-2. Empirical Soundness: Are the extracted contractual obligations, SPV perimeter structures, and collateral terms accurately characterized from the SEC disclosures?
-3. Contagion Dynamics: Does the multi-hop stress engine ("What single change breaks the largest number of edges at once?") logically model the transmission mechanism, or are there second-order feedback loops missing?
+2. Empirical Soundness: Are the extracted contractual obligations, SPV springing guarantee, and decomposed debt facilities accurately characterized from the SEC disclosures?
+3. Mathematical Stress Transmission: Does the quantitative financial stress model (Shock -> Cash Flow Loss -> Collateral Deficiency / Covenant Breach -> Liquidity Cure -> Next Edge) effectively model the domino transmission mechanism?
 4. Expansion Strategy: Which 5–10 companies or physical assets should be prioritized for Phase 1 to capture the highest-risk choke points?
 
 ---
 
 ### 1. The Three Epistemic Layers
-- Layer 1: Standardized SEC EDGAR XBRL Financials (Revenue, Capex, OCF, Debt, ASC 842 Leases, RPO Backlog).
-- Layer 2: The Contractual Obligation Graph (18 legal attributes per edge: recourse, collateral, MW load, SPV perimeters, parent guarantees).
+- Layer 1: Standardized SEC EDGAR XBRL Financials (Duration-aware flows and aggregated funded debt).
+- Layer 2: The Contractual Obligation Multi-Graph (MultiDiGraph preserving distinct facilities; categorized strictly by amount_type with zero false netting).
 - Layer 3: Shared Systemic Assumptions (Underlying economic propositions supporting multiple independent balance sheets).
 
-### 2. The Pilot Financial Baselines (Latest Reported $ Billions)
-| Entity | Category | Revenue | Op Cash Flow | Capex | Total Debt | Cash | Lease Liab | RPO Backlog |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **NVDA** | Hardware Supplier | $96.22B | $14.50B | $0.62B | $8.46B | $34.80B | $1.41B | $3.20B |
-| **SMCI** | Server OEM | $39.06B | $1.20B | $0.25B | $2.15B | $1.67B | $0.35B | - |
-| **CRWV** | Neocloud Operator | $2.58B | -$0.45B | $4.80B | $21.60B | $1.40B | $3.20B | $12.50B |
-| **APLD** | Data Center Host | $0.13B | -$0.04B | $0.38B | $0.48B | $0.05B | $0.08B | $11.00B |
-| **ORCL** | Cloud Hyperscaler | $19.35B | $21.20B | $7.80B | $87.50B | $10.80B | $7.40B | $99.00B |
+### 2. Audited Balance Sheet Baselines (Latest Reported SEC Filings)
+| Entity | Category | Cash & Equiv | Total Funded Debt | Lease Liabilities | Net PP&E | Annualized Rev Flow |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **NVDA** | Hardware Supplier | $22.44B | $33.37B | $5.49B | $14.28B | $96.22B |
+| **SMCI** | Server OEM | $7.52B | $8.72B | $0.54B | $0.63B | $39.06B |
+| **CRWV** | Neocloud Operator | $5.52B | $35.55B | $16.32B | $46.74B | $2.58B |
+| **APLD** | Data Center Host | $1.59B | $4.98B | $0.07B | $4.24B | $0.13B |
+| **ORCL** | Cloud Hyperscaler | $36.37B | $125.34B | $34.62B | $127.84B | $19.35B |
+| **MSFT** | Cloud Hyperscaler | $20.94B | $46.14B | $21.92B | $313.08B | $76.44B |
 
-### 3. The Obligation Ledger (Phase 0 Pilot)
-1. `OBL-CRWV-APLD-001` ($11.0B): CoreWeave SPV VIII leases 400 MW at Polaris Forge 1 from APLD ELN-02/03 LLC for 15 years. (APLD 10-K, Note 14).
-2. `OBL-CRWV-CREDIT-001` ($21.6B): CoreWeave borrows $21.6B from Blackstone/Magnetar private credit syndicate, secured by H100 GPU fleets and customer receivables. (CRWV 10-K, Item 7).
-3. `OBL-MSFT-CRWV-001` ($12.5B): Microsoft compute capacity off-take agreement, representing 67% of CoreWeave's recognized revenue in FY25. (CRWV 10-K, Note 17).
-4. `OBL-SMCI-NVDA-001` ($18.4B): Supermicro non-cancelable purchase commitments to NVIDIA for GPU accelerator modules. (SMCI 10-K, Note 12).
-5. `OBL-ORCL-NVDA-001` ($14.0B): Oracle procurement commitments for OCI Superclusters. (ORCL 10-Q).
-6. `OBL-CRWV-NVDA-001` ($8.5B): CoreWeave direct GPU hardware purchase commitments. (CRWV 10-K).
-7. `OBL-MSFT-ORCL-001` ($5.0B): Microsoft-Oracle multi-cloud interconnect agreement. (ORCL 10-K).
-8. `OBL-CRWV-SMCI-001` ($3.2B): CoreWeave server chassis and rack integration agreement with Supermicro.
-9. `OBL-APLD-GRID-001` ($1.2B): Applied Digital Polaris Forge 1 substation and campus construction commitments.
-10. `OBL-NVDA-CRWV-001` ($0.1B): NVIDIA strategic equity investment in CoreWeave.
+### 3. The Obligation Ledger (Phase 0.5 Pilot)
+1. `OBL-CRWV-APLD-LEASE` ($11.0B lifetime value): CoreWeave SPV VIII leases 400 MW at Polaris Forge 1 from APLD ELN project LLCs for 15 years. (APLD 10-K, Item 1 & Note 14).
+2. `OBL-CRWV-APLD-GUARANTY` ($11.0B contingent guarantee): CoreWeave parent provided an Unconditional Springing Guaranty of Payment and Performance for SPV VIII obligations. (APLD 10-K, Note 14).
+3. `OBL-CRWV-DEBT-DDTL` ($10.81B principal drawn): CoreWeave Delayed Draw Term Loans from Blackstone/Magnetar private credit syndicate, secured by GPU server fleets and customer contracts. (CRWV 10-Q, Note 7).
+4. `OBL-CRWV-DEBT-NOTES` ($9.03B principal): CoreWeave Senior Secured Notes tranches 2030, 2031, 2032. (CRWV 10-Q, Note 7).
+5. `OBL-CRWV-DEBT-CONV` ($6.59B principal): CoreWeave Convertible Senior Notes tranches 2031, 2032. (CRWV 10-Q, Note 7).
+6. `OBL-CRWV-DEBT-OEM` ($4.22B principal): CoreWeave OEM and software license equipment financing arrangements. (CRWV 10-Q, Note 7).
+7. `OBL-MSFT-CRWV-OFFTAKE` ($1.73B annualized run rate): Microsoft compute capacity off-take agreement, representing 67% of CoreWeave's recognized revenue in FY25. (CRWV 10-K, Note 17).
+8. `OBL-SMCI-SUPPLIER-COMMIT` ($34.20B remaining commitment): Supermicro non-cancelable purchase commitments primarily with GPU and component suppliers through next 12 months. (SMCI 10-K, Note 12).
+9. `OBL-NVDA-CRWV-EQUITY` ($2.00B equity): NVIDIA January 2026 strategic Series C Preferred Stock private placement. (CRWV 10-Q, Note 10).
+10. `OBL-APLD-DEBT-PROJECT` ($4.96B principal): Applied Digital Long-Term Notes Payable financing campus construction. (APLD 10-K, Note 8).
 
 ### 4. Shared Systemic Assumptions
-- `A001: GPU_RESIDUAL_VALUE`: H100/H200 hardware retains >=45% secondary market resale value, supporting loan-to-value covenants on $21.6B in debt.
+- `A001: GPU_RESIDUAL_VALUE`: H100/H200 hardware retains >=45% secondary market resale value, supporting borrowing base advance rates on $10.8B DDTLs.
 - `A002: REFINANCING_AVAILABILITY`: Private credit and high-yield spreads remain viable (+450 bps over SOFR) when 5-year loans mature.
 - `A003: CLUSTER_UTILIZATION`: Deployed capacity maintains >=85% billable utilization to cover fixed 15-year lease obligations.
-- `A004: POWER_DELIVERY_TIMELINE`: Utilities energize 400 MW substations on schedule without 12-24 month interconnection delays.
+- `A004: POWER_DELIVERY_TIMELINE`: Regional utilities energize 400 MW substations on schedule without 12-24 month interconnection delays.
 - `A005: ANCHOR_CUSTOMER_CONTINUATION`: Microsoft continues offloading compute demand rather than transitioning to custom silicon (Maia).
 - `A006: HYPERSCALER_CAPEX_EXPANSION`: Cloud hyperscalers continue expanding infrastructure capex at >20% CAGR.
-- `A007: BACKLOG_CASH_CONVERSION`: Reported backlogs ($11B at APLD, $99B at ORCL) convert to cash without renegotiation.
+- `A007: BACKLOG_CASH_CONVERSION`: Reported backlogs convert to cash without renegotiation or performance disputes.
 
-### 5. Stress Test Contagion Results
-Our multi-hop simulation asked: "What single change breaks the largest number of edges at once?"
-- **Hyperscaler Capex Deceleration (`A006`, -20%):** Impairs **98.7% ($117.8B)** of total network contractual value across 8 of 10 edges.
-- **Anchor Customer Retrenchment (`A005`, -30% Microsoft demand):** Impairs **80.6% ($96.2B)** of network value, directly crippling CoreWeave's cash flow, triggering debt covenant stress, and freezing lease payments to Applied Digital.
-- **GPU Secondary Resale Crash (`A001`, -40% markdown):** Impairs **65.8% ($78.5B)** of network value by triggering collateral deficiencies on the $21.6B debt facility.
-- **Credit Spread Widening (`A002`, +300 bps):** Impairs **47.6% ($56.8B)** of network value via interest coverage compression.
-- **Grid Substation Delay (`A004`, 12-month delay):** Impairs **12.8% ($15.2B)** of network value by delaying lease commencement while debt carrying costs accumulate.
+### 5. Quantitative Financial Stress Results (`src/stress.py`)
+- **GPU Collateral Valuation Haircut (-40%):** Creates a **$4.32B mandatory debt prepayment cure** on CoreWeave's DDTLs; consumes **78.2% of CoreWeave's $5.52B cash reserves**, triggering downstream capital expenditure freezes.
+- **Hardware OEM Purchase Markdown (15% demand freeze):** Triggers a **$5.13B write-down** on Supermicro's $34.2B non-cancelable purchase commitments, wiping out **68.2% of Supermicro's $7.52B cash reserves**.
+- **Grid Substation Delay (12 months):** Defers $733M in cash rent from CoreWeave SPV VIII while Applied Digital self-funds **$397M in debt carrying costs**, draining **24.9% of APLD's $1.59B liquidity balance**.
+- **Anchor Customer Demand Trim (-30% Microsoft volume):** Reduces CoreWeave cash inflow by **$518M/yr**, compressing debt coverage and **activating the $11.0B Springing Guaranty** on the Polaris Forge lease.
+- **Credit Spread Spike (+300 bps):** Increases annual floating interest costs by **$473M/year** across CoreWeave and Applied Digital.
 
 ---
 Please provide your critique of this pilot, identify any unmodeled vulnerabilities or blind spots, and suggest specific refinements for expanding to Phase 1.

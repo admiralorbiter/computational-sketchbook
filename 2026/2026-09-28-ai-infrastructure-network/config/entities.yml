@@ -1,4 +1,4 @@
-# Entities Registry for AI Infrastructure Financial Network (Phase 0 Pilot)
+# Entities Registry for AI Infrastructure Financial Network (Phase 0.5 Pilot)
 entities:
   NVDA:
     entity_id: NVDA
@@ -68,7 +68,7 @@ entities:
     reporting_standard: US-GAAP
     fiscal_year_end: "06-30"
     description: "Accelerated compute server integrator delivering plug-and-play liquid-cooled GPU clusters."
-    key_counterparties: [NVDA, CRWV]
+    key_counterparties: [NVDA, HARDWARE_SUPPLIERS]
 
   MSFT:
     entity_id: MSFT
@@ -139,3 +139,59 @@ entities:
     fiscal_year_end: null
     description: "Planned 400 MW ultra-dense computing campus in Ellendale, ND, contracted to CoreWeave under a 15-year, ~$11.0B revenue agreement."
     key_counterparties: [APLD_ELN_LLC, CRWV_SPV_VIII]
+
+  INSTITUTIONAL_BONDHOLDERS:
+    entity_id: INSTITUTIONAL_BONDHOLDERS
+    name: Public and 144A Institutional Bondholders
+    ticker: null
+    cik: null
+    category: capital_markets
+    subsector: high_yield_and_convertible_investors
+    jurisdiction: US
+    status: market_aggregate
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Institutional investors holding senior secured notes and convertible debt tranches."
+    key_counterparties: [CRWV]
+
+  OEM_FINANCING_PARTNERS:
+    entity_id: OEM_FINANCING_PARTNERS
+    name: Hardware OEM Financing Syndicates
+    ticker: null
+    cik: null
+    category: hardware_financing
+    subsector: server_equipment_leasing
+    jurisdiction: US
+    status: market_aggregate
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Hardware OEM and software license financing counterparties."
+    key_counterparties: [CRWV]
+
+  HARDWARE_SUPPLIERS:
+    entity_id: HARDWARE_SUPPLIERS
+    name: Upstream Accelerated Hardware Suppliers (NVIDIA / Broadcom / Memory)
+    ticker: null
+    cik: null
+    category: hardware_supplier
+    subsector: semiconductor_subsystems
+    jurisdiction: US
+    status: market_aggregate
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Upstream component vendors with non-cancelable purchase commitments."
+    key_counterparties: [SMCI]
+
+  PROJECT_LENDERS:
+    entity_id: PROJECT_LENDERS
+    name: Project Finance Lenders & Noteholders
+    ticker: null
+    cik: null
+    category: capital_markets
+    subsector: project_finance_debt
+    jurisdiction: US
+    status: market_aggregate
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Project finance noteholders and bank lenders funding data center construction."
+    key_counterparties: [APLD_ELN_LLC]
