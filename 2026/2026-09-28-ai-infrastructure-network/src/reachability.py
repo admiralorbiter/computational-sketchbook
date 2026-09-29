@@ -1,9 +1,9 @@
 """
-Contractual Reachability and Assumption Dependency Footprint Engine (Phase 0.6 Refactor)
+Contractual Reachability and Assumption Dependency Footprint Engine (Phase 0.7 Hardening)
 Measures the topological reachability of edges and entities within 1 and 2 hops of shared assumptions.
 Eliminates unweighted cross-category dollar aggregation; reports reachability strictly broken down
-by amount_type (principal debt %, purchase commitments %, lease value %, revenue %, guarantees %)
-alongside edge reachability percentages.
+by amount_type (principal debt %, purchase commitments %, lease value %, revenue %, contingent obligations)
+alongside edge reachability percentages, with dynamic SPV traversal and zero NaN poisoning.
 
 NOTE: This is an epistemic dependency footprint metric measuring network exposure, NOT a financial loss or impairment engine.
 """
@@ -32,7 +32,9 @@ class ContractualReachability:
         totals = {}
         for _, _, _, d in self.graph.edges(data=True, keys=True):
             atype = d.get("amount_type", "unspecified")
-            totals[atype] = totals.get(atype, 0.0) + d.get("amount", 0.0)
+            amt = d.get("amount")
+            if amt is not None:
+                totals[atype] = totals.get(atype, 0.0) + float(amt)
         return totals
 
     def analyze_assumption_footprint(self, scenario_id: str, assumptions: List[str], description: str) -> Dict[str, Any]:
@@ -41,7 +43,7 @@ class ContractualReachability:
         
         1st Order: Edges whose performance explicitly depends on the assumption(s).
         1st Order Nodes: Entities at either end of 1st-order edges.
-        2nd Order: Outgoing contractual edges originating from 1st-order nodes (including SPV perimeters).
+        2nd Order: Outgoing contractual edges originating from 1st-order nodes (including SPV perimeters via corporate hierarchy).
         """
         order_1_edges = []
         order_1_nodes = set()
@@ -51,7 +53,7 @@ class ContractualReachability:
             edge_assumptions = d.get("shared_assumptions", [])
             intersect = set(assumptions).intersection(set(edge_assumptions))
             if intersect:
-                amt = d.get("amount", 0.0)
+                amt = d.get("amount")
                 atype = d.get("amount_type", "unspecified")
                 order_1_edges.append({
                     "obligation_id": k,
@@ -69,17 +71,17 @@ class ContractualReachability:
 
         order_2_edges = []
         for u in order_1_nodes:
-            search_nodes = [u]
-            if u == "CRWV":
-                search_nodes.append("CRWV_SPV_VIII")
-            elif u == "APLD":
-                search_nodes.extend(["APLD_ELN_LLC", "APLD_COMPUTECO2"])
+            # Dynamically identify all corporate nodes sharing the root parent hierarchy
+            root_u = self.network.get_root_parent(u)
+            search_nodes = [n for n in self.graph.nodes() if self.network.get_root_parent(n) == root_u]
+            if u not in search_nodes:
+                search_nodes.append(u)
 
             for node in search_nodes:
                 if self.graph.has_node(node):
                     for _, to_node, k, d in self.graph.out_edges(node, data=True, keys=True):
                         if k not in seen_keys:
-                            amt = d.get("amount", 0.0)
+                            amt = d.get("amount")
                             atype = d.get("amount_type", "unspecified")
                             order_2_edges.append({
                                 "obligation_id": k,
@@ -97,11 +99,13 @@ class ContractualReachability:
         total_edges = self.graph.number_of_edges()
         total_reachable_edges = len(all_reachable_edges)
 
-        # Reachability broken down strictly by amount_type
+        # Reachability broken down strictly by amount_type (avoiding NaN addition)
         reachable_by_amount_type = {}
         for e in all_reachable_edges:
             atype = e.get("amount_type", "unspecified")
-            reachable_by_amount_type[atype] = reachable_by_amount_type.get(atype, 0.0) + e.get("amount_usd", 0.0)
+            amt = e.get("amount_usd")
+            if amt is not None:
+                reachable_by_amount_type[atype] = reachable_by_amount_type.get(atype, 0.0) + float(amt)
 
         reachability_pct_by_type = {}
         for atype, total_val in self.network_by_amount_type.items():
@@ -185,7 +189,7 @@ class ContractualReachability:
                 "purchase_commit_reach_pct": pcts.get("remaining_commitment", 0.0),
                 "lease_value_reach_pct": pcts.get("lifetime_contract_value", 0.0),
                 "revenue_reach_pct": pcts.get("recognized_revenue", 0.0),
-                "guarantee_reach_pct": pcts.get("contingent_guarantee", 0.0),
+                "guarantee_reach_pct": pcts.get("contingent_obligations", pcts.get("contingent_guarantee", 0.0)),
                 "reachable_entities_count": len(res["all_reachable_nodes"]),
                 "description": s["description"]
             })

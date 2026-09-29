@@ -173,7 +173,12 @@ This architecture preserves multiple distinct facilities between the same counte
   - Non-Recourse SPV DDTL 4.0: **$2.837B** outstanding principal under an $8.500B facility capacity.
   - Senior Notes ($10.029B), Convertibles ($6.588B), Recourse OEM ($4.220B), Non-Recourse OEM (**$0.882B**), Magnetar ($0.189B).
   - Total: $1.300 + $3.190 + $3.000 + $2.215 + $2.837 + $1.101 + $10.029 + $6.588 + $4.220 + $0.882 + $0.189 = **$35.551B**!
-* **Applied Digital Debt Decomposed:** Form 10-K balance sheet reports net carrying debt of **$4.976B** ($4,959.5M net long-term + $16.4M current portion), while Note 8 discloses gross contractual remaining principal payments of **$5.307B** ($5,306.7M), with $330.7M in unamortized discount and debt issuance costs. Modeled across 5 real contractual instruments: $2.35B 9.25% Senior Notes (Polaris Forge 1), $2.15B 6.75% Senior Notes (Polaris Forge 2), $450M 2.75% Convertible Notes, $300M Floating Bridge Facility (SOFR), and $56.7M other debt (summing to $5,306.68M; 0.00% drift). On June 16, 2026, the $300M bridge facility was refinanced into 7.00% fixed notes.
+* **Applied Digital Debt Decomposed:** Form 10-K balance sheet reports net carrying debt of **$4.976B** ($4,959.5M net long-term + $16.4M current portion), while Note 8 discloses gross contractual remaining principal payments of **$5.307B** ($5,306.7M), with $330.7M in unamortized discount and debt issuance costs. Modeled contract-literally across 5 real instruments:
+  - $2.35B 9.25% Senior Notes due **December 15, 2030** issued by APLD ComputeCo LLC (`APLD_COMPUTECO`), holding ELN-02 and ELN-03.
+  - $2.15B 6.75% Senior Notes due **March 15, 2031** issued by APLD ComputeCo 2 LLC (`APLD_COMPUTECO2`).
+  - $450M 2.75% Convertible Senior Notes due **June 30, 2030** issued by APLD parent.
+  - $300M Floating Bridge Facility entered May 1, 2026, due April 30, 2027; refinanced on June 16, 2026 into 7.00% fixed notes.
+  - $56.7M Aggregate Residual Debt (Starion Ellendale facility, Cornerstone loans, and other notes/SAFEs), summing exactly to **$5,306.68M** gross principal (exact 0.00% drift).
 * **Microsoft Relationship:** Characterized strictly as `REL-MSFT-CRWV-REVENUE-CONCENTRATION` ($3.438B recognized revenue, 67% concentration of FY25 revenue) with `amount_type = "recognized_revenue"` (strictly customer revenue concentration, not an unverified 5-year take-or-pay contract).
 
 Crucially, exposure is categorized strictly by **`amount_type`** with zero cross-category dollar mixing.
@@ -201,11 +206,11 @@ exposure_table = exposure_df.assign(
     facility_capacity_B=lambda df: (df["outgoing_facility_capacity_usd"] / 1e9).round(2),
     lease_lifetime_B=lambda df: (df["outgoing_lease_lifetime_usd"] / 1e9).round(2),
     purchase_commitments_B=lambda df: (df["outgoing_purchase_commitments_usd"] / 1e9).round(2),
-    contingent_guarantee_B=lambda df: (df["outgoing_contingent_guarantees_usd"] / 1e9).round(2),
+    contingent_obligations=lambda df: df["outgoing_contingent_obligations_count"],
     equity_investment_B=lambda df: (df["outgoing_equity_investments_usd"] / 1e9).round(2)
-)[["entity_id", "category", "principal_debt_B", "facility_capacity_B", "lease_lifetime_B", "purchase_commitments_B", "contingent_guarantee_B", "equity_investment_B"]]
+)[["entity_id", "category", "principal_debt_B", "facility_capacity_B", "lease_lifetime_B", "purchase_commitments_B", "contingent_obligations", "equity_investment_B"]]
 
-exposure_table[exposure_table[["principal_debt_B", "facility_capacity_B", "lease_lifetime_B", "purchase_commitments_B", "contingent_guarantee_B", "equity_investment_B"]].sum(axis=1) > 0]
+exposure_table[exposure_table[["principal_debt_B", "facility_capacity_B", "lease_lifetime_B", "purchase_commitments_B", "contingent_obligations", "equity_investment_B"]].sum(axis=1) > 0]
 """))
 
 # Cell 11: Code - MultiDiGraph Topology Plot
@@ -222,7 +227,7 @@ pos = {
     "INSTITUTIONAL_BONDHOLDERS": np.array([0.9, 0.0]),
     "OEM_FINANCING_PARTNERS": np.array([0.7, -0.4]),
     "CRWV_SPV_VIII": np.array([0.2, -0.5]),
-    "APLD_ELN_LLC": np.array([0.6, -0.7]),
+    "APLD_COMPUTECO": np.array([0.6, -0.7]),
     "APLD_ELN02_LLC": np.array([0.45, -0.85]),
     "APLD_ELN03_LLC": np.array([0.75, -0.85]),
     "APLD_ELN02C_LLC": np.array([0.95, -0.85]),
@@ -260,15 +265,18 @@ nx.draw_networkx_labels(G, pos, font_size=8, font_weight="bold", font_family="sa
 
 # Draw edges
 for u, v, k, d in G.edges(data=True, keys=True):
-    amt = d.get("amount", 1e9)
-    width = max(1.2, np.log10(amt) - 7.8) * 1.5
+    amt = d.get("amount")
+    if amt is not None and amt > 0:
+        width = max(1.2, np.log10(amt) - 7.8) * 1.5
+    else:
+        width = 2.0
     edge_color = "#e74c3c" if "DEBT" in k or "LEASE" in k else ("#9b59b6" if "GUARANTY" in k else "#3498db")
     nx.draw_networkx_edges(
         G, pos, edgelist=[(u, v)], width=width, edge_color=edge_color,
         arrowsize=18, arrowstyle="-|>", connectionstyle="arc3,rad=0.1"
     )
 
-edge_labels = {(u, v): f"${d.get('amount', 0)/1e9:.1f}B" for u, v, k, d in G.edges(data=True, keys=True) if d.get("amount", 0) >= 2.5e9}
+edge_labels = {(u, v): f"${d['amount']/1e9:.1f}B" for u, v, k, d in G.edges(data=True, keys=True) if d.get("amount") is not None and d["amount"] >= 2.5e9}
 nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, font_color="#2c3e50")
 
 plt.title("AI Infrastructure Multi-Graph Obligation Network (Phase 0.7.2)\\n(Edges Represent Distinct Legal Facilities, Leases, Guarantees, and Commitments)", fontsize=13, fontweight="bold")
@@ -297,22 +305,40 @@ Notice the literal contractual reality revealed in APLD's Form 10-K (Note 14, Ex
 * Thus, perimeter restructuring introduced a **contingent liquidity cliff** where a colocation reduction at the SPV level immediately reactivates parent balance sheet liability across master leases.
 """))
 
-# Cell 13: Code - Unwrap SPVs
+# Cell 13: Code - Dynamic SPV Unwrapping
 cells.append(nbf.v4.new_code_cell("""collapsed_graph = net.unwrap_spv_perimeter()
-print(f"Consolidated Economic Network: {collapsed_graph.number_of_nodes()} Nodes | {collapsed_graph.number_of_edges()} Edges")
+print(f"Consolidated Economic Network: {collapsed_graph.number_of_nodes()} Parent Nodes | {collapsed_graph.number_of_edges()} Consolidated Edges")
+print(f"SPVs Remaining in Collapsed Graph: {[n for n in collapsed_graph.nodes() if 'SPV' in n or 'LLC' in n]}")
 
 collapsed_records = []
 for u, v, k, d in collapsed_graph.edges(data=True, keys=True):
+    amt = d.get("amount")
     collapsed_records.append({
         "from_parent": u,
         "to_parent": v,
         "obligation_key": k,
-        "amount_B": round(d.get("amount", 0.0) / 1e9, 2),
+        "amount_B": round(amt / 1e9, 2) if amt is not None else None,
         "amount_type": d.get("amount_type"),
         "primary_type": d.get("primary_type"),
         "recourse": d.get("recourse")
     })
 pd.DataFrame(collapsed_records).sort_values(by="amount_B", ascending=False)
+"""))
+
+# Cell 13b: Markdown & Code - Temporal Modeling & Subsequent Refinancing
+cells.append(nbf.v4.new_markdown_cell("""### Temporal Dynamics: Balance Sheet Snapshot vs Subsequent Refinancing
+Our network supports point-in-time temporal queries via `network.as_of(date_str)`.
+* At **May 31, 2026** (APLD Form 10-K balance sheet date), Applied Digital held a **$300.0M floating-rate bridge credit facility**, creating an immediate $9.0M/yr SOFR shock ($235.4M/yr network total).
+* On **June 16, 2026**, Applied Digital refinanced the bridge facility into $1.59B 7.00% fixed notes, eliminating APLD's floating debt exposure and leaving the active network floating rate shock at $226.4M/yr (CoreWeave only).
+"""))
+
+cells.append(nbf.v4.new_code_cell("""net_may = net.as_of("2026-05-31")
+net_sep = net.as_of("2026-09-28")
+
+print(f"Active Edges as of 2026-05-31: {net_may.graph.number_of_edges()} (Bridge Facility Active)")
+print(f"Active Edges as of 2026-09-28: {net_sep.graph.number_of_edges()} (Bridge Facility Refinanced into Fixed Notes)")
+print(f"Bridge present at May 31: {'OBL-APLD-DEBT-BRIDGE' in [k for _, _, k in net_may.graph.edges(keys=True)]}")
+print(f"Bridge present at Sep 28: {'OBL-APLD-DEBT-BRIDGE' in [k for _, _, k in net_sep.graph.edges(keys=True)]}")
 """))
 
 # Cell 14: Markdown - Reachability vs Stress

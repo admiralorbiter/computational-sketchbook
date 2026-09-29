@@ -23,7 +23,7 @@ Please review the methodology, empirical findings, and contract-calibrated stres
 
 ### 1. The Three Epistemic Layers
 - Layer 1: Standardized SEC EDGAR XBRL Financials (Duration-aware flows, derived Q4 flows, and aggregated funded debt).
-- Layer 2: The Contractual Obligation Multi-Graph (MultiDiGraph preserving distinct facilities; categorized strictly by amount_type with zero false netting or non-fungible dollar mixing).
+- Layer 2: The Contractual Obligation Multi-Graph (MultiDiGraph preserving distinct facilities; dynamic SPV unwrapping via recursive parent entity traversal; temporal modeling with point-in-time supersession; categorized strictly by amount_type with zero false netting or non-fungible dollar mixing).
 - Layer 3: Shared Systemic Assumptions (Underlying economic propositions supporting multiple independent balance sheets).
 
 ### 2. Audited Balance Sheet Baselines (Latest Reported SEC Filings)
@@ -55,11 +55,11 @@ Please review the methodology, empirical findings, and contract-calibrated stres
 15. `REL-MSFT-CRWV-REVENUE-CONCENTRATION` ($3.44B recognized revenue): Microsoft customer concentration representing 67% of CoreWeave's recognized revenue in FY25 ($5.131B total); characterized as recognized revenue concentration, not an unverified 5-year take-or-pay contract. (CRWV 10-K, Note 17).
 16. `OBL-SMCI-SUPPLIER-COMMIT` ($34.20B remaining commitment): Supermicro non-cancelable purchase commitments primarily with GPU and component suppliers through next 12 months. (SMCI 10-K, Note 12).
 17. `OBL-NVDA-CRWV-EQUITY` ($2.00B equity): NVIDIA January 2026 strategic Series C Preferred Stock private placement. (CRWV 10-Q, Note 10).
-18. `OBL-APLD-DEBT-PF1` ($2.350B principal): Applied Digital Polaris Forge 1 9.25% Senior Secured Notes due 2029 (Fixed rate coupon). (APLD 10-K, Note 8).
-19. `OBL-APLD-DEBT-PF2` ($2.150B principal): Applied Digital ComputeCo 2 6.75% Senior Notes due 2030 (Fixed rate coupon). (APLD 10-K, Note 8).
-20. `OBL-APLD-DEBT-CONV` ($450.0M principal): Applied Digital 2.75% Convertible Senior Notes due 2030 (Fixed rate coupon). (APLD 10-K, Note 8).
-21. `OBL-APLD-DEBT-BRIDGE` ($300.0M principal): Applied Digital Floating-Rate Bridge Facility (SOFR benchmark; refinanced June 16, 2026 into 7.00% fixed notes). (APLD 10-K, Note 8 & Note 19).
-22. `OBL-APLD-DEBT-OTHER` ($56.68M principal): Applied Digital other promissory notes and equipment financing arrangements. (APLD 10-K, Note 8).
+18. `OBL-APLD-DEBT-PF1` ($2.350B principal): Applied Digital Polaris Forge 1 9.25% Senior Secured Notes issued by `APLD_COMPUTECO` due Dec 15, 2030 (Fixed rate coupon). (APLD 10-K, Note 8).
+19. `OBL-APLD-DEBT-PF2` ($2.150B principal): Applied Digital ComputeCo 2 6.75% Senior Notes issued by `APLD_COMPUTECO2` due Mar 15, 2031 (Fixed rate coupon). (APLD 10-K, Note 8).
+20. `OBL-APLD-DEBT-CONV` ($450.0M principal): Applied Digital 2.75% Convertible Senior Notes due Jun 30, 2030 (Fixed rate coupon). (APLD 10-K, Note 8).
+21. `OBL-APLD-DEBT-BRIDGE` ($300.0M principal): Applied Digital Floating-Rate Bridge Facility (SOFR benchmark, entered May 1, 2026, due Apr 30, 2027; refinanced June 16, 2026 into 7.00% fixed notes). (APLD 10-K, Note 8 & Note 19).
+22. `OBL-APLD-DEBT-OTHER` ($56.68M principal): Applied Digital aggregate residual debt across equipment notes and promissory agreements. (APLD 10-K, Note 8).
     *(Applied Digital 5 modeled debt components sum exactly to $5,306.68M gross principal payments vs $4,975.94M net carrying debt, exact 0.00% drift).*
 
 ### 4. Shared Systemic Assumptions

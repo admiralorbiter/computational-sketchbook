@@ -136,4 +136,26 @@ This log records the durable architectural, methodological, and data design choi
 - **Consequences:**
   Eliminates all narrative drift and contractual over-claims. The 5-company pilot is now epistemically certified with zero data drift, providing an unshakeable foundation for Phase 1 universe expansion.
 
+---
+
+### ADR-011: Pre-Phase-1 Engineering Hardening & Epistemic Contract Certification
+- **Status:** Accepted (2026-09-28, Pre-Phase-1 Hardening)
+- **Context:**
+  Following review of commit `e9b3169` (Phase 0.7.2), five engineering and data-contract hardening items were identified as prerequisites before expanding the universe to 25 companies:
+  1. *APLD Contract-Literal Debt Tranches:* OBL-APLD-DEBT-PF1 was listed under borrower `APLD_ELN_LLC` maturing 2029-06-30. Form 10-K Note 8 reveals the $2.35B 9.25% notes were issued by `APLD_COMPUTECO` (after a corporate reorganization placing ELN-02 and ELN-03 underneath it) maturing December 15, 2030. `OBL-APLD-DEBT-PF2` ($2.15B 6.75% notes) was issued by `APLD_COMPUTECO2` maturing March 15, 2031. `OBL-APLD-DEBT-OTHER` ($56.68M) required explicit typing as `aggregate_residual_debt`.
+  2. *Dynamic SPV Unwrapping:* Graph perimeter consolidation previously relied on static, hardcoded dictionary mappings (`{"CRWV_SPV_VIII": "CRWV", ...}`). For a 25-company universe, hardcoded maps create structural brittleness and drift risk.
+  3. *Uncapped Obligations & NaN Safety:* Legal indemnities without fixed principal (e.g. springing guarantees) carry `amount = None`, `amount_known = False`, and `amount_type = "contingent_obligations"`. Mathematical aggregations and graph plotting routines require first-class null-safety to prevent `np.nan` contamination.
+  4. *Temporal Modeling & Facility Supersession:* Debt and contract structures change across reporting dates. APLD entered into a $300M bridge facility on May 1, 2026 (active at the May 31, 2026 balance sheet date), and subsequently refinanced it on June 16, 2026 via $1.59B 7.00% senior notes. To prevent temporal distortions, obligations require explicit temporal attributes (`observed_as_of`, `valid_from`, `valid_to`, `superseded_by`), and the graph must support point-in-time queries via `network.as_of(date_str)`.
+  5. *Quote Categorization & Exact Substring Verification:* Evidence claims blend verbatim quotes, truncated excerpts, and analytical summaries. Explicit categorization (`quote_type = "exact_quote" | "source_excerpt" | "analyst_summary"`) enables the test harness to enforce 100% exact contiguous verbatim substring verification against cached raw SEC exhibits (`APLD_ex10_1.htm` and `APLD_ex10_2.htm`).
+- **Decision:**
+  1. Update `config/entities.yml` with parent entity relationships across corporate hierarchies (`parent_entity_id: CRWV` for `CRWV_SPV_VIII`; `parent_entity_id: APLD_COMPUTECO` for `APLD_ELN02_LLC` and `APLD_ELN03_LLC`; `parent_entity_id: APLD` for `APLD_COMPUTECO`, `APLD_COMPUTECO2`, and `APLD_ELN02C_LLC`).
+  2. Implement dynamic recursive parent traversal `get_root_parent(entity_id)` in `src/graph.py` and `unwrap_spv_perimeter()`, leaving 0 SPV nodes in the consolidated graph.
+  3. Implement `as_of(date_str)` temporal filtering in `src/graph.py` and parameterize `simulate_sofr_base_rate_shock(as_of_date=...)` in `src/stress.py`, reporting both the May 31 snapshot ($235.4M/yr) and post-refinancing ($226.4M/yr) metrics.
+  4. Enforce contract-literal legal entities, maturities, effective dates, and debt types for all 5 APLD debt tranches in `src/curate_obligations.py` and `src/validate.py`.
+  5. Categorize claims with `quote_type` in `src/curate_obligations.py` and add 100% exact contiguous verbatim substring validation for `APLD_ex10_2.htm` Section 1 in `src/validate.py`.
+  6. Harden all aggregation, reachability, and plotting routines against `amount = None` in `src/graph.py`, `src/reachability.py`, and `src/build_notebook.py`.
+- **Consequences:**
+  Eliminates structural fragility, guarantees 100% data contract certification, cleanly separates point-in-time historical reporting from forward refinancing events, and ensures the codebase is fully prepared for multi-company universe expansion in Phase 1.
+
+
 

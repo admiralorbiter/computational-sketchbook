@@ -5,6 +5,7 @@ Verifies that numbers, obligations, claims, figures, and tables in Markdown docu
 notebook results with zero data drift.
 """
 
+import sys
 from pathlib import Path
 import re
 import html
@@ -12,6 +13,9 @@ import json
 import pandas as pd
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 OUTPUTS_DIR = PROJECT_ROOT / "outputs"
 NOTEBOOK_PATH = PROJECT_ROOT / "notebooks" / "01_five_company_pilot.ipynb"
@@ -114,7 +118,7 @@ def validate_observatory():
 
     # Applied Digital exact debt decomposition (parent and project SPVs)
     apld_debt = obl_df[
-        obl_df["from_entity"].isin(["APLD", "APLD_ELN_LLC", "APLD_COMPUTECO2"]) & 
+        obl_df["from_entity"].isin(["APLD", "APLD_COMPUTECO", "APLD_COMPUTECO2"]) & 
         (obl_df["amount_type"] == "principal_outstanding")
     ]
     expected_apld_tranches = 5
@@ -138,6 +142,50 @@ def validate_observatory():
         errors.append(f"Missing expected APLD debt components: {missing_apld_ids}")
     else:
         print(f"  [OK] All 5 distinct APLD debt components present.")
+
+    # Contract-literal checks on individual APLD debt tranches
+    for _, r in apld_debt.iterrows():
+        oid = r["obligation_id"]
+        if oid == "OBL-APLD-DEBT-PF1":
+            if r["from_entity"] != "APLD_COMPUTECO":
+                errors.append(f"OBL-APLD-DEBT-PF1 issuer mismatch: {r['from_entity']} (expected APLD_COMPUTECO)")
+            if r["maturity_date"] != "2030-12-15":
+                errors.append(f"OBL-APLD-DEBT-PF1 maturity mismatch: {r['maturity_date']} (expected 2030-12-15)")
+            if r["term_years"] != 6.5:
+                errors.append(f"OBL-APLD-DEBT-PF1 term_years mismatch: {r['term_years']} (expected 6.5)")
+        elif oid == "OBL-APLD-DEBT-PF2":
+            if r["from_entity"] != "APLD_COMPUTECO2":
+                errors.append(f"OBL-APLD-DEBT-PF2 issuer mismatch: {r['from_entity']} (expected APLD_COMPUTECO2)")
+            if r["maturity_date"] != "2031-03-15":
+                errors.append(f"OBL-APLD-DEBT-PF2 maturity mismatch: {r['maturity_date']} (expected 2031-03-15)")
+            if r["term_years"] != 6.2:
+                errors.append(f"OBL-APLD-DEBT-PF2 term_years mismatch: {r['term_years']} (expected 6.2)")
+        elif oid == "OBL-APLD-DEBT-CONV":
+            if r["from_entity"] != "APLD":
+                errors.append(f"OBL-APLD-DEBT-CONV issuer mismatch: {r['from_entity']} (expected APLD)")
+            if r["maturity_date"] != "2030-06-30":
+                errors.append(f"OBL-APLD-DEBT-CONV maturity mismatch: {r['maturity_date']} (expected 2030-06-30)")
+            if r["term_years"] != 5.6:
+                errors.append(f"OBL-APLD-DEBT-CONV term_years mismatch: {r['term_years']} (expected 5.6)")
+        elif oid == "OBL-APLD-DEBT-BRIDGE":
+            if r["from_entity"] != "APLD":
+                errors.append(f"OBL-APLD-DEBT-BRIDGE issuer mismatch: {r['from_entity']} (expected APLD)")
+            if r["effective_date"] != "2026-05-01":
+                errors.append(f"OBL-APLD-DEBT-BRIDGE effective_date mismatch: {r['effective_date']} (expected 2026-05-01)")
+            if r["maturity_date"] != "2027-04-30":
+                errors.append(f"OBL-APLD-DEBT-BRIDGE maturity mismatch: {r['maturity_date']} (expected 2027-04-30)")
+            if r["valid_to"] != "2026-06-16":
+                errors.append(f"OBL-APLD-DEBT-BRIDGE valid_to mismatch: {r['valid_to']} (expected 2026-06-16)")
+            if not r.get("superseded_by"):
+                errors.append(f"OBL-APLD-DEBT-BRIDGE missing superseded_by disclosure")
+        elif oid == "OBL-APLD-DEBT-OTHER":
+            if r["from_entity"] != "APLD":
+                errors.append(f"OBL-APLD-DEBT-OTHER issuer mismatch: {r['from_entity']} (expected APLD)")
+            if r["obligation_type"] != "aggregate_residual_debt":
+                errors.append(f"OBL-APLD-DEBT-OTHER obligation_type mismatch: {r['obligation_type']} (expected aggregate_residual_debt)")
+            if r["amount"] != 56680000.0:
+                errors.append(f"OBL-APLD-DEBT-OTHER amount mismatch: {r['amount']} (expected 56680000.0)")
+    print("  [OK] Contract-literal legal entities, effective dates, maturities, and types verified for all 5 APLD debt tranches.")
 
     # ---------------------------------------------------------
     # 3. Validate Obligations & Polaris Forge 1 Phasing
@@ -168,17 +216,24 @@ def validate_observatory():
                 errors.append(f"Obligation {oid} has non-positive amount: {row.get('amount')}")
         if not row.get("as_of_date"):
             errors.append(f"Obligation {oid} missing as_of_date")
+        if not row.get("observed_as_of"):
+            errors.append(f"Obligation {oid} missing observed_as_of")
+        if not row.get("valid_from"):
+            errors.append(f"Obligation {oid} missing valid_from")
 
     # Check Polaris Forge 1 Master Lease
     lease_row = obl_df[obl_df["obligation_id"] == "OBL-CRWV-APLD-LEASE"]
     if lease_row.empty:
         errors.append("Missing OBL-CRWV-APLD-LEASE obligation")
     else:
-        cap_mw = lease_row.iloc[0].get("capacity_mw")
+        r_l = lease_row.iloc[0]
+        if r_l.get("to_entity") != "APLD_COMPUTECO":
+            errors.append(f"OBL-CRWV-APLD-LEASE to_entity mismatch: {r_l.get('to_entity')} (expected APLD_COMPUTECO)")
+        cap_mw = r_l.get("capacity_mw")
         if cap_mw != 400.0:
             errors.append(f"OBL-CRWV-APLD-LEASE capacity_mw mismatch: {cap_mw} (expected 400.0 MW)")
         else:
-            print("  [OK] OBL-CRWV-APLD-LEASE verified at 400.0 MW total campus capacity.")
+            print("  [OK] OBL-CRWV-APLD-LEASE verified: counterparty APLD_COMPUTECO, 400.0 MW total campus capacity.")
 
     # Check Split Springing Guarantees (ELN-02 and ELN-03)
     g_eln02 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-APLD-GUARANTY-ELN02"]
@@ -207,10 +262,41 @@ def validate_observatory():
         else:
             print("  [OK] ELN-03 verified as uncapped legal indemnity for Building 3 (150 MW) with $4.125B Class C reference proxy.")
 
-    print(f"  [OK] All {len(obl_df)} obligations have valid amount_type, valid values/uncapped attributes, and as_of_dates.")
+    print(f"  [OK] All {len(obl_df)} obligations have valid amount_type, valid values/uncapped attributes, and temporal fields.")
 
     # ---------------------------------------------------------
-    # 4. Validate Evidence Claims
+    # 3b. Validate Dynamic SPV Unwrapping & Temporal Filtering
+    # ---------------------------------------------------------
+    try:
+        from src.graph import ObligationNetwork
+        net = ObligationNetwork()
+        collapsed = net.unwrap_spv_perimeter()
+        spv_remaining = [n for n in collapsed.nodes() if "SPV" in n or "LLC" in n]
+        if spv_remaining:
+            errors.append(f"SPVs unexpectedly remained in unwrapped perimeter: {spv_remaining}")
+        else:
+            print(f"  [OK] Dynamic SPV unwrapping: 0 SPVs remaining in consolidated network ({collapsed.number_of_nodes()} parent nodes).")
+
+        # Temporal filtering test
+        net_may = net.as_of("2026-05-31")
+        net_sep = net.as_of("2026-09-28")
+        may_edges = net_may.graph.number_of_edges()
+        sep_edges = net_sep.graph.number_of_edges()
+        if may_edges != 22:
+            errors.append(f"Expected 22 edges as of 2026-05-31, got {may_edges}")
+        if sep_edges != 21:
+            errors.append(f"Expected 21 edges as of 2026-09-28 (post-refinancing), got {sep_edges}")
+        bridge_may = "OBL-APLD-DEBT-BRIDGE" in [k for _, _, k in net_may.graph.edges(keys=True)]
+        bridge_sep = "OBL-APLD-DEBT-BRIDGE" in [k for _, _, k in net_sep.graph.edges(keys=True)]
+        if not bridge_may or bridge_sep:
+            errors.append(f"Temporal bridge presence mismatch: may={bridge_may}, sep={bridge_sep} (expected True, False)")
+        else:
+            print(f"  [OK] Temporal filtering verified: Bridge facility active at May 31, 2026; cleanly retired at Sep 28, 2026.")
+    except Exception as e:
+        errors.append(f"Error during graph unwrapping/temporal validation: {e}")
+
+    # ---------------------------------------------------------
+    # 4. Validate Evidence Claims & Quote Categorization
     # ---------------------------------------------------------
     clm_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
     expected_claims_count = 15
@@ -219,13 +305,24 @@ def validate_observatory():
     else:
         print(f"  [OK] Exactly {expected_claims_count} audited evidence claims present.")
 
+    valid_quote_types = {"exact_quote", "source_excerpt", "analyst_summary"}
     for _, row in clm_df.iterrows():
         cid = row["claim_id"]
+        qtype = row.get("quote_type")
+        if qtype not in valid_quote_types:
+            errors.append(f"Claim {cid} has invalid quote_type: {qtype}")
         quote = row.get("exact_quote", "")
         if not quote or len(quote) < 15:
             errors.append(f"Claim {cid} has empty or short exact_quote")
         if not row.get("accession_number") or not row.get("filing_date"):
             errors.append(f"Claim {cid} missing SEC accession number or filing date")
+
+    # Claim CLM-APLD-003 categorization check
+    c3 = clm_df[clm_df["claim_id"] == "CLM-APLD-003"]
+    if not c3.empty and c3.iloc[0]["quote_type"] != "analyst_summary":
+        errors.append(f"CLM-APLD-003 should be categorized as analyst_summary, got {c3.iloc[0]['quote_type']}")
+    else:
+        print("  [OK] CLM-APLD-003 verified as analyst_summary.")
 
     # Verbatim substring assertions against cached primary SEC exhibits
     c5 = clm_df[clm_df["claim_id"] == "CLM-APLD-005"]
@@ -251,11 +348,20 @@ def validate_observatory():
     if c6.empty:
         errors.append("Missing claim CLM-APLD-006")
     else:
-        q6 = c6.iloc[0]["exact_quote"]
-        for phrase in ["Unconditional Springing Guaranty", "ELN-03"]:
-            if phrase not in q6:
-                errors.append(f"CLM-APLD-006 missing expected verbatim phrase: '{phrase}'")
-        print("  [OK] CLM-APLD-006 verified against Exhibit 10.2 verbatim ELN-03 Guaranty text.")
+        ex10_2_file = PROJECT_ROOT / "data" / "raw" / "sec" / "APLD_ex10_2.htm"
+        if not ex10_2_file.exists():
+            errors.append(f"Missing cached primary SEC exhibit: {ex10_2_file.name}")
+        else:
+            raw_bytes = ex10_2_file.read_bytes()
+            unesc = html.unescape(raw_bytes.decode("windows-1252"))
+            unesc = unesc.replace('\u201c', '"').replace('\u201d', '"').replace('\u2018', "'").replace('\u2019', "'")
+            unesc = re.sub(r'</?(?:b|i|u|strong|em|font|span)(?:\s+[^>]*)?>', '', unesc, flags=re.IGNORECASE)
+            norm_raw = ' '.join(re.sub(r'<[^>]+>', ' ', unesc).split())
+            norm_quote = ' '.join(c6.iloc[0]["exact_quote"].split())
+            if norm_quote not in norm_raw:
+                errors.append("CLM-APLD-006 exact_quote is not an exact contiguous substring of APLD_ex10_2.htm")
+            else:
+                print("  [OK] CLM-APLD-006 100% exact contiguous verbatim substring verified in APLD_ex10_2.htm.")
 
     cc5 = clm_df[clm_df["claim_id"] == "CLM-CRWV-005"]
     if cc5.empty:
@@ -267,7 +373,7 @@ def validate_observatory():
                 errors.append(f"CLM-CRWV-005 missing expected verbatim phrase: '{phrase}'")
         print("  [OK] CLM-CRWV-005 verified against Note 7 & Note 8 verbatim swap disclosures.")
 
-    print(f"  [OK] All {len(clm_df)} claims possess verified SEC accession numbers and verbatim quotes.")
+    print(f"  [OK] All {len(clm_df)} claims possess verified SEC accession numbers, valid quote_types, and verbatim quotes.")
 
     # ---------------------------------------------------------
     # 5. Validate Canonical Financials

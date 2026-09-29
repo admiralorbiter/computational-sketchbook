@@ -12,6 +12,7 @@ This document defines the schema, types, constraints, and operational definition
 | `name` | String | No | Legal entity corporate name. | `CoreWeave, Inc.` |
 | `ticker` | String | Yes | Stock ticker symbol for publicly traded entities; null otherwise. | `CRWV`, `NVDA` |
 | `cik` | String | Yes | SEC EDGAR 10-digit Central Index Key (CIK). | `0001769628` |
+| `parent_entity_id` | String | Yes | Parent corporate entity ID for dynamic SPV unwrapping; null for root parents. | `APLD`, `CRWV` |
 | `category` | String | No | Broad industry layer: `hardware_supplier`, `hyperscaler_cloud`, `neocloud_operator`, `datacenter_developer`, `server_oem`, `hyperscaler_anchor`, `private_credit_syndicate`, `project_spv`, `physical_asset_project`. | `neocloud_operator` |
 | `subsector` | String | Yes | Detailed operational classification. | `specialized_gpu_cloud` |
 | `jurisdiction` | String | Yes | State/Country of incorporation. | `US-DE`, `US-ND` |
@@ -47,24 +48,34 @@ This document defines the schema, types, constraints, and operational definition
 
 | Column Name | Data Type | Nullable | Description / Controlled Vocabulary | Example |
 | :--- | :--- | :--- | :--- | :--- |
-| `obligation_id` | String | No | Primary Key: `OBL-{FROM}-{TO}-{NUM}`. | `OBL-CRWV-APLD-001` |
+| `obligation_id` | String | No | Primary Key: `OBL-{FROM}-{TO}-{NUM}`. | `OBL-CRWV-APLD-LEASE` |
 | `from_entity` | String | No | Debtor, Lessee, Obligor, or Buyer entity ID. | `CRWV_SPV_VIII` |
-| `to_entity` | String | No | Creditor, Lessor, Obligee, or Seller entity ID. | `APLD_ELN_LLC` |
+| `to_entity` | String | No | Creditor, Lessor, Obligee, or Seller entity ID. | `APLD_COMPUTECO` |
 | `project_id` | String | Yes | Physical asset or campus slug if project-specific. | `POLARIS_FORGE_1` |
-| `obligation_type` | String | No | Taxonomy: `datacenter_lease`, `debt_facility`, `collateral_pledge`, `gpu_procurement`, `server_assembly`, `anchor_offtake`, `equity_investment`, `guarantee_parent`. | `datacenter_lease` |
-| `amount` | Float | No | Headline contract value or credit facility size in USD. | `11000000000.0` |
+| `obligation_type` | String | No | Taxonomy: `datacenter_lease`, `debt_facility`, `aggregate_residual_debt`, `gpu_procurement`, `customer_revenue_concentration`, `equity_investment`, `contingent_guarantee`. | `datacenter_lease` |
+| `amount` | Float | Yes | Headline contract value or credit facility principal in USD; null for uncapped contingent guarantees. | `11000000000.0` |
+| `amount_known` | Boolean | No | True if contractual face value is explicitly stated; False if uncapped indemnity. | `True`, `False` |
+| `amount_type` | String | No | Taxonomy: `principal_outstanding`, `facility_capacity`, `lifetime_contract_value`, `remaining_commitment`, `recognized_revenue`, `equity_investment`, `contingent_obligations`. | `principal_outstanding` |
+| `as_of_date` | Date (str)| No | Baseline financial snapshot date (`YYYY-MM-DD`). | `2026-05-31` |
+| `observed_as_of` | Date (str)| No | As-of observation period end (`YYYY-MM-DD`). | `2026-05-31` |
+| `valid_from` | Date (str)| No | Inception / effective date of obligation (`YYYY-MM-DD`). | `2025-05-28` |
+| `valid_to` | Date (str)| Yes | Expiration, maturity, or supersession date; null if indefinite/unexpired. | `2040-05-31` |
+| `superseded_by` | String | Yes | Historical supersession event (e.g. refinancing); null if active. | `Refinanced on June 16, 2026...` |
 | `currency` | String | No | Currency denomination (`USD`). | `USD` |
-| `effective_date` | Date (str)| No | Execution date of master contract. | `2025-05-28` |
+| `effective_date` | Date (str)| Yes | Execution date of master contract. | `2025-05-28` |
 | `maturity_date` | Date (str)| Yes | Contract expiration or debt maturity date. | `2040-05-31` |
 | `term_years` | Float | Yes | Stated initial contractual duration in years. | `15.0` |
 | `capacity_mw` | Float | Yes | Contracted critical IT electrical load in Megawatts (MW). | `400.0` |
+| `capacity_description` | String | Yes | Specific hall, building, or operational phasing details. | `Building 3 (150 MW)` |
+| `reference_exposure_estimate` | Float | Yes | Inferred Class C proxy value for uncapped obligations; null otherwise. | `4125000000.0` |
+| `reference_exposure_class` | String | Yes | Epistemic class of reference proxy: `Class C (Analytical Proxy)`. | `Class C (Analytical Proxy)` |
 | `committed_or_optional` | String | No | Legal commitment mode: `committed`, `optional`. | `committed` |
-| `recourse` | String | No | Recourse scope: `full_recourse`, `limited_recourse_spv`, `non_recourse`, `equity_risk`. | `limited_recourse_spv` |
+| `recourse` | String | No | Recourse scope: `full_recourse`, `limited_recourse_spv`, `non_recourse_spv`, `springing_parent_guaranty`, `equity_risk`. | `limited_recourse_spv` |
 | `collateral` | String | Yes | Assets pledged as first-priority security. | *Text* |
 | `guarantee` | String | Yes | Parent guarantee status and carve-outs. | *Text* |
 | `termination_rights` | String | Yes | Contractual cancellation triggers and penalties. | *Text* |
 | `payment_conditions` | String | Yes | Milestones, take-or-pay clauses, or rate structures. | *Text* |
-| `claim_id` | String | No | Foreign Key referencing `evidence_claims.claim_id`. | `CLM-APLD-001` |
+| `claim_ids` | String | No | Foreign Key referencing `evidence_claims.claim_id`. | `CLM-APLD-001,CLM-APLD-004` |
 | `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted), `C` (Inferred). | `A` |
 | `confidence` | Float | No | Subjective epistemic confidence score (0.0 to 1.0). | `1.0` |
 | `shared_assumptions` | String | No | Comma-separated list of assumption IDs supporting edge. | `A002,A003,A004,A005` |
@@ -97,7 +108,8 @@ This document defines the schema, types, constraints, and operational definition
 | `filing_date` | Date (str)| No | Date filed with the SEC. | `2026-07-29` |
 | `document_url` | String | No | Direct HTTPS hyperlink to SEC filing text. | `https://www.sec.gov/...` |
 | `section_locator` | String | No | Specific Footnote, Item number, or Agreement Title. | `Item 1. Business` |
-| `exact_quote` | String | No | Verbatim quotation transcribed from the primary source. | *Text* |
+| `quote_type` | String | No | Typology: `exact_quote` (verbatim substring), `source_excerpt` (abridged excerpt), `analyst_summary` (synthetic reconciliation). | `exact_quote` |
+| `exact_quote` | String | No | Verbatim quotation or audited excerpt transcribed from primary source. | *Text* |
 | `evidence_class` | String | No | Trust class: `A` (Filed), `B` (Asserted), `C` (Inferred). | `A` |
 | `extraction_method` | String | No | Protocol used to retrieve the disclosure. | `SEC EDGAR 10-K direct audit` |
 | `verifier_notes` | String | Yes | Analytical context on structural leverage. | *Text* |

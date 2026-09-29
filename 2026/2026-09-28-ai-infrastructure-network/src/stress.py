@@ -196,7 +196,7 @@ class FinancialStressEngine:
             )
         }
 
-    def simulate_sofr_base_rate_shock(self, sofr_increase_bps: float = 300.0) -> Dict[str, Any]:
+    def simulate_sofr_base_rate_shock(self, sofr_increase_bps: float = 300.0, as_of_date: str = "2026-05-31") -> Dict[str, Any]:
         """
         Scenario 3A: SOFR Benchmark Base Rate Shock (+300 bps)
         Rigorously evaluates immediate cash interest impact across floating debt facilities:
@@ -208,6 +208,8 @@ class FinancialStressEngine:
         Unhedged floating debt at June 30, 2026: $12.206B - $4.661B = $7.545B.
         Provides a sensitivity band from hypothetical 95% full fleet coverage ($27.3M/yr) to reported swaps baseline ($235.4M/yr)
         to minimal covenanted coverage with others unhedged ($303.9M/yr).
+        Temporally parameterizes Applied Digital's $300M bridge facility: active as of May 31, 2026 snapshot ($9.0M/yr),
+        refinanced on June 16, 2026 into 7% fixed notes ($0.0M/yr post-refinancing).
         """
         delta_r = sofr_increase_bps / 10000.0  # 0.03
 
@@ -222,13 +224,13 @@ class FinancialStressEngine:
         unhedged_reported_baseline = max(0.0, total_crwv_floating - reported_swap_notional)  # $7.545B
 
         # APLD floating bridge facility ($300.0M principal at May 31, 2026)
-        # Note: On June 16, 2026 (subsequent event), APLD refinanced the bridge facility into $1.59B 7.00% fixed notes.
-        apld_floating_debt = 300000000.0  # $300.0M
+        # On June 16, 2026 (subsequent event), APLD refinanced the bridge facility into $1.59B 7.00% fixed notes.
+        apld_floating_debt = 300000000.0 if as_of_date < "2026-06-16" else 0.0
 
         # 1. Reported Swaps Baseline Hit
         crwv_reported_hit = unhedged_reported_baseline * delta_r  # $226.35M/yr
-        apld_hit = apld_floating_debt * delta_r                   # $9.00M/yr
-        network_reported_hit = crwv_reported_hit + apld_hit       # $235.35M/yr
+        apld_hit = apld_floating_debt * delta_r                   # $9.00M/yr (May 31) or $0.0 (post June 16)
+        network_reported_hit = crwv_reported_hit + apld_hit       # $235.35M/yr (May 31) or $226.35M/yr (post June 16)
 
         # 2. Covenanted Minimum Only (DDTL 4 & 5 at 95%, DDTL 1-3 unhedged)
         covenanted_swaps_only = (crwv_ddtl_4_floating * 0.95) + (crwv_ddtl_5_floating * 0.95)  # $2.376B
@@ -247,24 +249,29 @@ class FinancialStressEngine:
         return {
             "scenario_name": "SOFR Base Rate Shock (Reported Swaps vs Covenanted Range)",
             "sofr_increase_bps": sofr_increase_bps,
+            "as_of_date": as_of_date,
             "total_crwv_floating_debt_usd": total_crwv_floating,
             "crwv_reported_swap_notional_usd": reported_swap_notional,
             "crwv_unhedged_floating_reported_usd": unhedged_reported_baseline,
             "crwv_cash_drain_reported_baseline_usd": crwv_reported_hit,
+            "apld_floating_debt_may31_snapshot_usd": 300000000.0,
+            "apld_floating_debt_post_refinancing_usd": 0.0,
             "apld_cash_drain_usd": apld_hit,
             "network_cash_drain_reported_baseline_usd": network_reported_hit,
+            "network_cash_drain_may31_snapshot_usd": crwv_reported_hit + 9000000.0,
+            "network_cash_drain_post_refinancing_usd": crwv_reported_hit,
             "network_cash_drain_full_95_hypothetical_usd": network_full_95_hit,
             "network_cash_drain_covenanted_only_usd": network_covenanted_only_hit,
             "crwv_cash_usd": crwv_cash,
             "apld_cash_usd": apld_cash,
             "transmission_narrative": (
                 f"A +{int(sofr_increase_bps)} bps SOFR increase adds ${apld_hit/1e6:.1f}M/yr to Applied Digital's $300.0M floating bridge facility "
-                f"(which was refinanced on June 16, 2026 into 7.00% fixed notes). "
+                f"under its May 31, 2026 balance sheet snapshot (which was refinanced on June 16, 2026 into 7.00% fixed notes, eliminating APLD floating rate exposure). "
                 f"For CoreWeave, contractual 95% hedge covenants apply specifically to DDTL 4.0 and DDTL 5.0 ($2.50B floating combined), "
                 f"while DDTLs 1.0-3.0 ($9.71B) carry no disclosed 95% hedge mandate. Anchored on CoreWeave's audited $4.66B interest rate swap notional (Note 8), "
                 f"$7.55B in floating debt remains unhedged, creating a ${crwv_reported_hit/1e6:.1f}M/yr cash drain at CoreWeave and ${network_reported_hit/1e6:.1f}M/yr "
-                f"across the network. Sensitivity analysis reveals a network impact range of ${network_full_95_hit/1e6:.1f}M/yr (if 95% hedged fleet-wide) "
-                f"to ${network_covenanted_only_hit/1e6:.1f}M/yr (if only DDTL 4/5 are hedged)."
+                f"across the network ({'$235.4M/yr at May 31, 2026 snapshot vs $226.4M/yr post-refinancing'}). Sensitivity analysis reveals a network impact range of "
+                f"${network_full_95_hit/1e6:.1f}M/yr (if 95% hedged fleet-wide) to ${network_covenanted_only_hit/1e6:.1f}M/yr (if only DDTL 4/5 are hedged)."
             )
         }
 

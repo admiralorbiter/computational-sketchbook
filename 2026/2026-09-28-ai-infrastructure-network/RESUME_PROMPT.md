@@ -21,13 +21,14 @@ Before proposing any changes or running new extractions, follow these strict pre
    - `data/processed/evidence_claims.parquet` (or `.csv`)
    - `outputs/tables/financial_stress_summary.csv`
 5. Inspect the executed research notebook: `notebooks/01_five_company_pilot.ipynb`. All cells have been pre-executed with live outputs and figures.
-6. Phase 0.7.2 Status: The Five-Company Pilot (Phase 0.7.2 Corrective Patch: NVDA, SMCI, CRWV, APLD, ORCL + MSFT, Blackstone/Magnetar, Polaris Forge 1) is FULLY VALIDATED and FROZEN (Zero Data Drift).
+6. Phase 0.7.2 Hardened Status: Pre-Phase-1 Engineering Hardening is complete (ADR-011). The Five-Company Pilot (NVDA, SMCI, CRWV, APLD, ORCL + MSFT, Blackstone/Magnetar, Polaris Forge 1) is FULLY CERTIFIED and FROZEN (Zero Data Drift). Dynamic SPV unwrapping, temporal supersession modeling (`network.as_of(date)`), contract-literal APLD debt tranches (`APLD_COMPUTECO`, `APLD_COMPUTECO2`), first-class uncapped obligations, and 100% exact contiguous verbatim substring verification on cached raw SEC exhibits are verified.
 
 Once you have reviewed the repository, provide a concise briefing that reports:
-- The current state of the pilot;
+- The current state of the hardened pilot;
 - The key takeaways from the Phase 0 stress tests (e.g. Hyperscaler capex trim impairing 98.7% of contract value, Microsoft 67% concentration on CoreWeave, SPV isolation);
 - The candidate entity universe for Phase 1 expansion (e.g., expanding from 5 to 25–30 companies across upstream silicon, electrical equipment, and private credit lenders);
 - Recommendations for the next immediate milestone.
 
 Do not write any new code or modify existing data until I review your briefing and give explicit direction.
 ```
+

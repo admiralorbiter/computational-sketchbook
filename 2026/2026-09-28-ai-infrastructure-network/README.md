@@ -87,7 +87,7 @@ Phase 0.7.2 establishes an economically literal baseline across five core compan
 * **NVIDIA Corporation (`NVDA`):** Dominant accelerated silicon supplier (CIK: `0001045810`).
 * **Super Micro Computer, Inc. (`SMCI`):** Accelerated server OEM & liquid cooling integrator (CIK: `0001375365`).
 * **CoreWeave, Inc. (`CRWV`):** Leveraged neocloud operator (CIK: `0001769628`) and its equipment vehicle `CRWV_SPV_VIII`.
-* **Applied Digital Corporation (`APLD`):** HPC data center developer (CIK: `0001144879`), Polaris Forge 1 Landlord SPVs (`APLD_ELN02_LLC`, `APLD_ELN03_LLC`, `APLD_ELN02C_LLC`), and Polaris Forge 2 SPV (`APLD_COMPUTECO2`).
+* **Applied Digital Corporation (`APLD`):** HPC data center developer (CIK: `0001144879`), intermediate financing issuers (`APLD_COMPUTECO`, `APLD_COMPUTECO2`), and Polaris Forge 1 Landlord SPVs (`APLD_ELN02_LLC`, `APLD_ELN03_LLC`, `APLD_ELN02C_LLC`).
 * **Oracle Corporation (`ORCL`):** Hyperscaler cloud operator expanding OCI superclusters (CIK: `0001341439`).
 * **Key Counterparties:** Microsoft Corporation (`MSFT`, anchor customer), Blackstone/Magnetar Debt Syndicate (`BLACKSTONE_MAGNETAR_SYN`), Institutional Bondholders, Hardware Suppliers, and Polaris Forge 1 Campus (`POLARIS_FORGE_1`).
 
@@ -121,10 +121,14 @@ Phase 0.7.2 establishes an economically literal baseline across five core compan
      - Under Exhibit 10.1 and Exhibit 10.2, the guarantees activate upon explicit Springing Events: (i) equipment-financing rating trigger [***], (ii) colocation agreement default, material modification, or payment reduction/cessation, (iii) insolvency/bankruptcy, (iv) equipment financing acceleration, etc.
 3. **Exact CoreWeave & Applied Digital Debt Reconciliations:**
    * **CoreWeave ($35.551B):** Indebtedness is reconciled across 11 modeled debt components/edges: DDTL 1.0 ($1.300B), DDTL 2.0 ($3.190B), DDTL 2.1 ($3.000B), DDTL 3.0 ($2.215B), Non-Recourse DDTL 4.0 ($2.837B drawn of $8.500B capacity), DDTL 5.0 ($1.101B), Senior Secured Notes ($10.029B), Convertible Senior Notes ($6.588B), Recourse OEM ($4.220B), Non-Recourse OEM ($0.882B), and Magnetar Loan ($0.189B), summing to **$35.551B** (exact 0.00% drift).
-   * **Applied Digital Duality ($5.307B Gross Principal vs $4.976B Carrying Debt):** Form 10-K balance sheet reports net carrying debt of **$4.976B** ($4,959.5M net long-term + $16.4M current portion), while Note 8 discloses gross contractual remaining principal payments of **$5.307B** ($5,306.7M), with $330.7M in unamortized discount and deferred financing costs. Decomposed into 5 real contractual instruments: $2.35B 9.25% PF1 notes, $2.15B 6.75% PF2 notes, $450M 2.75% convertible notes, $300M floating bridge facility (SOFR), and $56.7M other debt (summing to $5,306.68M; 0.00% drift). On June 16, 2026, the $300M bridge facility was refinanced into 7.00% fixed notes.
+   * **Applied Digital Duality ($5.307B Gross Principal vs $4.976B Carrying Debt):** Form 10-K balance sheet reports net carrying debt of **$4.976B** ($4,959.5M net long-term + $16.4M current portion), while Note 8 discloses gross contractual remaining principal payments of **$5.307B** ($5,306.7M), with $330.7M in unamortized discount and deferred financing costs. Decomposed into 5 contract-literal instruments: $2.35B 9.25% PF1 notes (issued by `APLD_COMPUTECO` due Dec 15, 2030), $2.15B 6.75% PF2 notes (issued by `APLD_COMPUTECO2` due Mar 15, 2031), $450M 2.75% convertible notes (due Jun 30, 2030), $300M floating bridge facility (SOFR, entered May 1, 2026, due Apr 30, 2027), and $56.68M aggregate residual debt (summing to $5,306.68M; 0.00% drift). On June 16, 2026, the $300M bridge facility was refinanced into $1.59B 7.00% senior secured notes.
 4. **Pure Amount-Type Reachability vs Parameterized Financial Stress Prototype:**
    * We eliminate non-fungible dollar mixing across different categories. Reachability reports the percentage of each `amount_type` reachable within 2 hops of an assumption alongside edge reachability percentages.
    * The stress engine is framed as a **parameterized financial stress prototype** with contract-calibrated transmission functions.
+5. **Dynamic SPV Unwrapping & Point-in-Time Temporal Modeling:**
+   * **Dynamic Entity Hierarchy:** Rather than static lookup maps, the network traverses `parent_entity_id` attributes dynamically (`APLD_ELN02_LLC` $\to$ `APLD_COMPUTECO` $\to$ `APLD`), leaving 0 SPV nodes in the consolidated corporate graph.
+   * **Temporal Supersession & Point-in-Time Snapshots:** Contracts record `valid_from`, `valid_to`, and `superseded_by`. Calling `network.as_of("2026-05-31")` captures the balance-sheet snapshot including the $300M bridge facility ($235.4M/yr network SOFR shock across 22 obligations), while `network.as_of("2026-09-28")` accurately models post-refinancing conditions ($226.4M/yr across 21 active obligations).
+   * **100% Verbatim Substring Certification:** All `"exact_quote"` claims are verified with 100% character-level contiguous substring fidelity against cached raw SEC EDGAR exhibits (`APLD_ex10_1.htm` and `APLD_ex10_2.htm`).
 
 ### Parameterized Financial Stress Prototype Results (`src/stress.py`)
 ![Financial Stress Waterfall](outputs/figures/financial_stress_waterfall.png)
@@ -154,7 +158,7 @@ Phase 0.7.2 establishes an economically literal baseline across five core compan
 ├── docs/
 │   ├── methodology.md             # Theoretical framework, 5 opacities, and contagion math
 │   ├── data_dictionary.md         # Schema specifications for all Parquet and CSV tables
-│   ├── decisions.md               # Architectural Decision Records (ADR-001 through 010)
+│   ├── decisions.md               # Architectural Decision Records (ADR-001 through 011)
 │   └── evidence_contract.md       # Epistemic trust hierarchy (Class A/B/C) and audit rules
 ├── data/
 │   ├── raw/sec/                   # Cached primary SEC EDGAR company facts JSON and exhibit HTMLs
@@ -167,13 +171,13 @@ Phase 0.7.2 establishes an economically literal baseline across five core compan
 ├── src/
 │   ├── sec_ingest.py              # Automated data.sec.gov XBRL ingestion pipeline (duration-aware)
 │   ├── curate_obligations.py      # Audited obligation and evidence claim builder
-│   ├── graph.py                   # MultiDiGraph obligation graph & SPV unwrapping engine
+│   ├── graph.py                   # MultiDiGraph obligation graph & dynamic SPV unwrapping engine
 │   ├── reachability.py            # Assumption reachability by amount_type engine
 │   ├── stress.py                  # Parameterized financial stress & contract transmission prototype
 │   ├── validate.py                # Automated consistency validator (markdown & data sync)
 │   └── build_notebook.py          # Programmatic notebook builder and execution runner
 ├── notebooks/
-│   └── 01_five_company_pilot.ipynb# 22-cell executed research workbench with live tables and figures
+│   └── 01_five_company_pilot.ipynb# 14-cell executed research workbench with live tables and figures
 └── outputs/
     ├── figures/
     │   ├── obligation_network_topology.png         # MultiDiGraph contractual topology

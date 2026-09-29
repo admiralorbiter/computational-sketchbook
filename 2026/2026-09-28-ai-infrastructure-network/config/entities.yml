@@ -103,6 +103,7 @@ entities:
     name: CoreWeave Compute Acquisition Co. VIII, LLC
     ticker: null
     cik: null
+    parent_entity_id: CRWV
     category: project_spv
     subsector: equipment_financing_bankruptcy_remote_spv
     jurisdiction: US-DE
@@ -110,27 +111,29 @@ entities:
     reporting_standard: US-GAAP_consolidated
     fiscal_year_end: "12-31"
     description: "Bankruptcy-remote Special Purpose Vehicle created by CoreWeave to hold compute equipment and lease obligations at Polaris Forge 1."
-    key_counterparties: [CRWV, APLD_ELN_LLC]
+    key_counterparties: [CRWV, APLD_COMPUTECO]
 
-  APLD_ELN_LLC:
-    entity_id: APLD_ELN_LLC
-    name: APLD ELN-02 LLC & ELN-03 LLC (HoldCo / Aggregate)
+  APLD_COMPUTECO:
+    entity_id: APLD_COMPUTECO
+    name: APLD ComputeCo LLC
     ticker: null
     cik: null
+    parent_entity_id: APLD
     category: project_spv
-    subsector: real_estate_facility_spv
+    subsector: project_financing_holdco
     jurisdiction: US-DE
     status: subsidiary_spv
     reporting_standard: US-GAAP_consolidated
     fiscal_year_end: "05-31"
-    description: "Applied Digital project financing subsidiaries owning the 400 MW Ellendale data center assets and executing master lease agreements."
-    key_counterparties: [APLD, CRWV_SPV_VIII, POLARIS_FORGE_1]
+    description: "Applied Digital financing subsidiary formed in corporate reorganization holding ELN-02 and ELN-03, issuer of $2.35B 9.25% Senior Notes due Dec 15, 2030."
+    key_counterparties: [APLD, PROJECT_LENDERS, CRWV_SPV_VIII, POLARIS_FORGE_1]
 
   APLD_ELN02_LLC:
     entity_id: APLD_ELN02_LLC
     name: APLD ELN-02 LLC
     ticker: null
     cik: null
+    parent_entity_id: APLD_COMPUTECO
     category: project_spv
     subsector: real_estate_facility_spv
     jurisdiction: US-DE
@@ -138,13 +141,14 @@ entities:
     reporting_standard: US-GAAP_consolidated
     fiscal_year_end: "05-31"
     description: "Applied Digital subsidiary and landlord for Building 2 (100 MW operational) at Polaris Forge 1; counterparty to CoreWeave ELN-02 lease and Unconditional Springing Guaranty."
-    key_counterparties: [APLD, CRWV_SPV_VIII, CRWV, POLARIS_FORGE_1]
+    key_counterparties: [APLD_COMPUTECO, CRWV_SPV_VIII, CRWV, POLARIS_FORGE_1]
 
   APLD_ELN03_LLC:
     entity_id: APLD_ELN03_LLC
     name: APLD ELN-03 LLC
     ticker: null
     cik: null
+    parent_entity_id: APLD_COMPUTECO
     category: project_spv
     subsector: real_estate_facility_spv
     jurisdiction: US-DE
@@ -152,13 +156,14 @@ entities:
     reporting_standard: US-GAAP_consolidated
     fiscal_year_end: "05-31"
     description: "Applied Digital subsidiary and landlord for Building 3 (150 MW partially operational) at Polaris Forge 1; counterparty to CoreWeave ELN-03 lease and Unconditional Springing Guaranty."
-    key_counterparties: [APLD, CRWV_SPV_VIII, CRWV, POLARIS_FORGE_1]
+    key_counterparties: [APLD_COMPUTECO, CRWV_SPV_VIII, CRWV, POLARIS_FORGE_1]
 
   APLD_ELN02C_LLC:
     entity_id: APLD_ELN02C_LLC
     name: APLD ELN-02 C LLC
     ticker: null
     cik: null
+    parent_entity_id: APLD
     category: project_spv
     subsector: real_estate_facility_spv
     jurisdiction: US-DE
@@ -173,6 +178,7 @@ entities:
     name: Applied Digital ComputeCo 2 LLC
     ticker: null
     cik: null
+    parent_entity_id: APLD
     category: project_spv
     subsector: real_estate_facility_spv
     jurisdiction: US-DE
@@ -194,7 +200,7 @@ entities:
     reporting_standard: null
     fiscal_year_end: null
     description: "Planned 400 MW ultra-dense computing campus in Ellendale, ND, contracted to CoreWeave under a 15-year, ~$11.0B revenue agreement."
-    key_counterparties: [APLD_ELN_LLC, CRWV_SPV_VIII]
+    key_counterparties: [APLD_COMPUTECO, CRWV_SPV_VIII]
 
   INSTITUTIONAL_BONDHOLDERS:
     entity_id: INSTITUTIONAL_BONDHOLDERS
@@ -208,7 +214,7 @@ entities:
     reporting_standard: null
     fiscal_year_end: null
     description: "Institutional investors holding senior secured notes and convertible debt tranches."
-    key_counterparties: [CRWV]
+    key_counterparties: [CRWV, APLD]
 
   OEM_FINANCING_PARTNERS:
     entity_id: OEM_FINANCING_PARTNERS
@@ -250,4 +256,4 @@ entities:
     reporting_standard: null
     fiscal_year_end: null
     description: "Project finance noteholders and bank lenders funding data center construction."
-    key_counterparties: [APLD_ELN_LLC]
+    key_counterparties: [APLD_COMPUTECO, APLD_COMPUTECO2, APLD]
