@@ -17,12 +17,13 @@ Before proposing any changes or running new extractions, follow these strict pre
    - `data/processed/entities.parquet` (or `.csv`)
    - `data/processed/financials.parquet` (or `.csv`)
    - `data/processed/obligations.parquet` (or `.csv`)
+   - `data/processed/obligation_events.parquet` (or `.csv`)
    - `data/processed/obligation_facts.parquet` (or `.csv`)
    - `data/processed/assumptions.parquet` (or `.csv`)
    - `data/processed/evidence_claims.parquet` (or `.csv`)
    - `outputs/tables/financial_stress_summary.csv`
 5. Inspect the executed research notebook: `notebooks/01_five_company_pilot.ipynb`. All cells have been pre-executed with live outputs and figures.
-6. Phase 0 Hardened Status: Pre-Phase-1 Engineering, Bitemporal, and Epistemic Hardening are complete (ADR-011, ADR-012, ADR-013). The Five-Company Pilot (NVDA, SMCI, CRWV, APLD, ORCL + MSFT, Blackstone/Magnetar, Polaris Forge 1) is FULLY CERTIFIED and FROZEN (Zero Data Drift across 20 entities, 23 obligations, 27 obligation facts, and 17 audited claims). Dynamic multi-tier SPV unwrapping (`APLD_COMPUTECO3` -> `APLD_HPC_HOLDINGS2` -> `APLD`), fact-level bitemporality separating invariant contract identities from time-varying measured attributes (`obligation_facts.parquet`), half-open validity intervals $[v\_from, v\_to)$ conserving exactly 22 edges across refinancing boundaries, dynamic epistemic stress engine coupling (reporting explicit uncertainty ranges when disclosures are unmeasured), contract-literal debt tranches, and 100% exact contiguous verbatim substring verification on cached raw SEC exhibits are verified.
+6. Phase 0 Hardened Status: Pre-Phase-1 Engineering, Bitemporal, and Epistemic Hardening are complete (ADR-011 through ADR-014). The Five-Company Pilot (NVDA, SMCI, CRWV, APLD, ORCL + MSFT, Blackstone/Magnetar, Polaris Forge 1) is FULLY CERTIFIED and FROZEN (Zero Data Drift across 20 entities, 23 obligations, 24 lifecycle events, 27 obligation facts, and 30 audited claims). Dynamic multi-tier SPV unwrapping (`APLD_COMPUTECO3` -> `APLD_HPC_HOLDINGS2` -> `APLD`), discrete obligation lifecycle events (`obligation_events.parquet`) eliminating extinction voids across filing boundaries (e.g. June 17 bridge persistence), fact-level bitemporality (`obligation_facts.parquet`) with dual truth vs knowledge claims (`truth_claim_id` vs `knowledge_claim_id`) strictly enforcing `publicly_known_from >= filing_date`, strict zero-lookahead stress simulation (reporting unknown floating debt as None rather than leaking future disclosures), half-open validity intervals $[v\_from, v\_to)$ conserving exactly 22 edges across refinancing boundaries, and 100% exact contiguous verbatim substring verification on cached raw SEC exhibits are verified.
 
 Once you have reviewed the repository, provide a concise briefing that reports:
 - The current state of the hardened pilot;

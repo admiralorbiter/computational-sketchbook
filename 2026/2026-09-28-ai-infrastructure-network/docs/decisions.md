@@ -199,6 +199,31 @@ This log records the durable architectural, methodological, and data design choi
 - **Consequences:**
   Guarantees 100% look-ahead-free backtesting capability, exact obligation conservation across debt rollovers, contract-literal SPV perimeter consolidation, and complete epistemic transparency across historical and public knowledge timelines.
 
+---
+
+### ADR-014: Obligation Lifecycle Events Ledger, Dual Truth vs. Knowledge Claims, Zero-Lookahead Stress Engine, and Audited Quote Taxonomy
+- **Status:** Accepted (2026-09-29, Phase 0 Epistemic Certification)
+- **Context:**
+  Following review of commit `3a6421b`, five critical temporal, epistemic, and evidence integrity requirements were identified to achieve complete epistemic observatory certification:
+  1. *Edge Lifecycle Extinction Void (June 16–18 Boundary):* In `known_as_of()`, applying `economic_valid_to` directly caused an outside observer on June 17 to mysteriously know that the $300M bridge had been extinguished on June 16, even though the refinancing Form 8-K was not filed until June 18. This created an unphysical 24-hour void where the bridge vanished from knowledge before the market knew about it, while the 7% notes were not yet known.
+  2. *Future-Known Fallback Leakage in Stress Simulation:* When simulating SOFR shocks on June 30 under knowledge mode, the engine used `if crwv_floating_debt == 0.0: crwv_floating_debt = 12206000000.0`. This fallback leaked the August 12 10-Q total into the June 30 epistemic range, calculating an artificial $18.3M - $366.2M cash drain. When floating debt amounts are unmeasured and unknown, zero-lookahead requires reporting `floating_principal_known = False`, `unknown_floating_edges`, `crwv_reported_floating_usd = None`, `max_cash_drain_usd = None`, and `network_cash_drain_reported_baseline_usd = None`.
+  3. *Historical Fact Isolation (No Back-Projection):* In `economic_as_of()` and `known_as_of()`, querying dates prior to any fact observation (e.g. `2025-01-01`) previously retained current amounts from base edges. Mutable fact fields (`amount`, `amount_known`, `floating_principal`, `facility_capacity`, `capacity_mw`, `reference_exposure_estimate`) must be explicitly reset to `None` / `False` prior to applying matching point-in-time facts.
+  4. *Evidence Claim Duality (Truth vs Knowledge Claims):* Every mutable fact in `obligation_facts.parquet` requires dual claim tracking:
+     - `truth_claim_id`: Audited document certifying factual accuracy (e.g. Form 10-K / 10-Q Note 7).
+     - `knowledge_claim_id`: Contemporaneous filing establishing earliest public awareness (e.g. Form 8-K on transaction date).
+     - Strict temporal invariant: `fact.publicly_known_from >= claims[fact.knowledge_claim_id].filing_date`.
+     - 13 contemporaneous claims added (`CLM-APLD-009` through `013`, `CLM-CRWV-007` through `014`), bringing audited evidence claims from 17 to 30.
+  5. *Quote Categorization Nuance:* Distinguish between exact character-level substring certification (for cached primary exhibits `APLD_ex10_1.htm` and `APLD_ex10_2.htm`) vs audited SEC source excerpts from full EDGAR filings.
+- **Decision:**
+  1. Create `obligation_events.parquet` (24 rows: 23 `created` + 1 `superseded`) tracking discrete lifecycle state changes with independent `economic_effective_at` and `publicly_known_at` dates. On June 17, an outside observer in knowledge mode observes the $300M bridge active, with 7% notes absent (18 edges). On June 18 (filing date), the bridge is retired and 7% notes appear.
+  2. In `src/graph.py`, filter edge active lifecycle strictly through `obligation_events` and reset mutable fields before overlaying point-in-time facts.
+  3. In `src/stress.py`, eliminate the $12.206B fallback in known mode. When floating debt is unknown, output `floating_principal_known = False`, `max_cash_drain_usd = None`, `crwv_reported_floating_usd = None`, and list `unknown_floating_edges`.
+  4. Extend `obligation_facts.parquet` with `truth_claim_id` and `knowledge_claim_id` and assert `publicly_known_from >= claims[knowledge_claim_id].filing_date`.
+  5. Enforce all constraints in `src/validate.py`.
+- **Consequences:**
+  Achieves 100% certified zero-lookahead backtesting invariance, complete lifecycle edge auditability, and mathematically unassailable epistemic integrity across all historical and public knowledge queries.
+
+
 
 
 

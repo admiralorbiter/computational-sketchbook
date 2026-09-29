@@ -134,6 +134,24 @@ This document defines the schema, types, constraints, and operational definition
 | `unit` | String | No | Measurement unit: `USD`, `MW`. | `USD` |
 | `economic_as_of` | Date (str)| No | Balance sheet or period-end date of the measurement in economic reality (`YYYY-MM-DD`). | `2026-06-30` |
 | `publicly_known_from` | Date (str)| No | SEC filing or announcement date when the measurement became public knowledge (Information Clock). | `2026-08-12` |
-| `claim_id` | String | No | Foreign Key referencing `evidence_claims.claim_id`. | `CLM-CRWV-001` |
+| `truth_claim_id` | String | No | Foreign Key referencing `evidence_claims.claim_id` certifying audited ground truth. | `CLM-CRWV-001` |
+| `knowledge_claim_id` | String | No | Foreign Key referencing `evidence_claims.claim_id` certifying earliest contemporaneous public awareness. | `CLM-CRWV-007` |
+| `claim_id` | String | No | Legacy Foreign Key alias for `truth_claim_id`. | `CLM-CRWV-001` |
 | `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted), `C` (Inferred). | `A` |
+
+---
+
+## 7. Obligation Lifecycle Events Ledger (`obligation_events.parquet` / `obligation_events.csv`)
+
+| Column Name | Data Type | Nullable | Description / Controlled Vocabulary | Example |
+| :--- | :--- | :--- | :--- | :--- |
+| `event_id` | String | No | Primary Key: `EVT-{OBLIGATION_SUFFIX}-{EVENT_TYPE}`. | `EVT-APLD-DEBT-BRIDGE-SUPERSEDED` |
+| `obligation_id` | String | No | Foreign Key referencing `obligations.obligation_id`. | `OBL-APLD-DEBT-BRIDGE` |
+| `event_type` | String | No | Lifecycle event classification: `created`, `superseded`, `extinguished`. | `superseded` |
+| `economic_effective_at` | Date (str)| No | Effective date of the event in economic reality (`YYYY-MM-DD`). | `2026-06-16` |
+| `publicly_known_at` | Date (str)| No | Date when the event was publicly disclosed (e.g. Form 8-K filing date). | `2026-06-18` |
+| `related_obligation_id` | String | Yes | Foreign Key referencing successor or linked obligation; null if standalone. | `OBL-APLD-DEBT-7PCT-2026` |
+| `claim_id` | String | No | Foreign Key referencing `evidence_claims.claim_id` substantiating the event. | `CLM-APLD-008` |
+| `description` | String | No | Detailed contractual narrative describing the lifecycle transition. | *Text* |
+
 

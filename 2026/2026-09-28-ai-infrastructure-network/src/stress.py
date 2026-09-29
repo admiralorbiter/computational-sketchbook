@@ -31,6 +31,24 @@ PROCESSED_DIR = Path(__file__).resolve().parent.parent / "data" / "processed"
 OUTPUTS_DIR = Path(__file__).resolve().parent.parent / "outputs"
 
 
+class FloatingDebtAmount(float):
+    """
+    Float subclass representing active floating debt principal.
+    Preserves seamless numeric operations (e.g. val / 1e6) while also supporting
+    tuple unpacking (known_amount, unknown_edges, is_fully_known) and epistemic introspection.
+    """
+    def __new__(cls, value: float, unknown_edges: Optional[List[str]] = None, is_known: bool = True):
+        obj = super().__new__(cls, value)
+        obj.unknown_edges = unknown_edges or []
+        obj.is_known = is_known
+        return obj
+
+    def __iter__(self):
+        yield float(self)
+        yield self.unknown_edges
+        yield self.is_known
+
+
 class FinancialStressEngine:
     def __init__(
         self,
@@ -55,13 +73,16 @@ class FinancialStressEngine:
         self.graph = self.network.graph
         self.financials = self._load_latest_financials()
 
-    def get_active_floating_debt(self, entity_id: str) -> float:
+    def get_active_floating_debt(self, entity_id: str) -> FloatingDebtAmount:
         """
         Derives total active floating debt for entity_id (or its SPV subsidiaries)
         directly from the active network edges, avoiding hardcoded date conditionals.
-        Respects floating_principal attribute if specified (e.g. DDTL 4.0 $1.400B floating portion).
+        Tracks known vs unknown principal state to prevent future-known leakage in epistemic mode.
         """
         total = 0.0
+        unknown_edges = []
+        is_fully_known = True
+
         for u, v, k, d in self.network.graph.edges(keys=True, data=True):
             root_u = self.network.get_root_parent(u)
             if root_u == entity_id and d.get("obligation_type") == "debt_facility":
@@ -69,12 +90,19 @@ class FinancialStressEngine:
                 benchmark = d.get("benchmark_rate")
                 cond = str(d.get("payment_conditions", "")).lower()
                 if rate_type == "floating" or benchmark == "SOFR" or "floating" in cond:
-                    if d.get("floating_principal") is not None:
-                        amt = d.get("floating_principal")
+                    flt_amt = d.get("floating_principal")
+                    amt = d.get("amount")
+                    amt_known = d.get("amount_known", True)
+
+                    if flt_amt is not None:
+                        total += float(flt_amt)
+                    elif amt is not None and amt_known:
+                        total += float(amt)
                     else:
-                        amt = d.get("amount") or 0.0
-                    total += float(amt)
-        return total
+                        is_fully_known = False
+                        unknown_edges.append(k)
+
+        return FloatingDebtAmount(total, unknown_edges=unknown_edges, is_known=is_fully_known)
 
     def get_active_swap_notional(self, entity_id: str) -> Optional[float]:
         """
@@ -269,79 +297,131 @@ class FinancialStressEngine:
         if as_of_date is not None and as_of_date != self.as_of_date:
             eval_engine = FinancialStressEngine(network=self.network, as_of_date=as_of_date, temporal_mode=self.temporal_mode)
 
-        # CoreWeave floating debt derived dynamically from active network edges (ADR-013)
-        crwv_floating_debt = eval_engine.get_active_floating_debt("CRWV")
-        if crwv_floating_debt == 0.0:
-            # Fallback baseline anchor when untimed or unmeasured
-            crwv_floating_debt = 12206000000.0
+        # CoreWeave floating debt derived dynamically from active network edges (ADR-013 & ADR-014)
+        crwv_floating_obj = eval_engine.get_active_floating_debt("CRWV")
+        crwv_floating_debt = float(crwv_floating_obj)
+        crwv_unknown_edges = crwv_floating_obj.unknown_edges
+        crwv_floating_known = crwv_floating_obj.is_known
+
+        # APLD floating debt derived dynamically from active network edges
+        apld_floating_obj = eval_engine.get_active_floating_debt("APLD")
+        apld_floating_debt = float(apld_floating_obj)
+        apld_hit = apld_floating_debt * delta_r                   # $9.00M/yr (May 31) or $0.0 (post June 16)
 
         # CoreWeave swap notional derived dynamically from fact ledger (ADR-013)
         crwv_swap_notional = eval_engine.get_active_swap_notional("CRWV")
         swap_notional_known = (crwv_swap_notional is not None)
-        effective_swap_notional = crwv_swap_notional if swap_notional_known else 4661000000.0
 
-        unhedged_reported_baseline = max(0.0, crwv_floating_debt - effective_swap_notional)
+        if eval_engine.temporal_mode == "known":
+            # STRICT ZERO-LOOKAHEAD ENFORCEMENT (ADR-014):
+            # Never fall back to future-disclosed $12.206B debt total when floating principal is unmeasured/unknown.
+            if not crwv_floating_known or crwv_floating_debt == 0.0:
+                floating_principal_known = False
+                crwv_floating_debt = 0.0
+                crwv_reported_hit = None
+                network_reported_hit = None
+                unhedged_reported_baseline = None
+                min_cash_drain = apld_hit
+                max_cash_drain = None
+                network_covenanted_only_hit = None
+                network_full_95_hit = None
+            else:
+                floating_principal_known = True
+                effective_swap_notional = crwv_swap_notional if swap_notional_known else 0.0
+                unhedged_reported_baseline = max(0.0, crwv_floating_debt - effective_swap_notional)
+                crwv_reported_hit = unhedged_reported_baseline * delta_r if swap_notional_known else None
+                network_reported_hit = (crwv_reported_hit + apld_hit) if crwv_reported_hit is not None else None
+                unhedged_full_95 = crwv_floating_debt * 0.05
+                crwv_full_95_hit = unhedged_full_95 * delta_r
+                network_full_95_hit = crwv_full_95_hit + apld_hit
+                min_cash_drain = network_full_95_hit
+                max_cash_drain = (crwv_floating_debt * delta_r) + apld_hit
+                network_covenanted_only_hit = None
+        else:
+            # Economic reality / baseline cross-sectional mode
+            if crwv_floating_debt == 0.0:
+                crwv_floating_debt = 12206000000.0
+            floating_principal_known = True
+            effective_swap_notional = crwv_swap_notional if swap_notional_known else 4661000000.0
+            unhedged_reported_baseline = max(0.0, crwv_floating_debt - effective_swap_notional)
 
-        # APLD floating debt derived dynamically from active network edges
-        apld_floating_debt = eval_engine.get_active_floating_debt("APLD")
+            # 1. Reported Swaps Baseline Hit
+            crwv_reported_hit = unhedged_reported_baseline * delta_r  # $226.35M/yr
+            network_reported_hit = crwv_reported_hit + apld_hit       # $235.35M/yr (May 31) or $226.35M/yr (post June 16)
 
-        # 1. Reported Swaps Baseline Hit
-        crwv_reported_hit = unhedged_reported_baseline * delta_r  # $226.35M/yr
-        apld_hit = apld_floating_debt * delta_r                   # $9.00M/yr (May 31) or $0.0 (post June 16)
-        network_reported_hit = crwv_reported_hit + apld_hit       # $235.35M/yr (May 31) or $226.35M/yr (post June 16)
+            # 2. Covenanted Minimum Only (DDTL 4 & 5 at 95%, DDTL 1-3 unhedged)
+            crwv_ddtl_4_floating = 1400000000.0
+            crwv_ddtl_5_floating = 1101000000.0
+            covenanted_swaps_only = (crwv_ddtl_4_floating * 0.95) + (crwv_ddtl_5_floating * 0.95)  # $2.376B
+            unhedged_covenanted_only = crwv_floating_debt - covenanted_swaps_only                  # $9.830B
+            crwv_covenanted_only_hit = unhedged_covenanted_only * delta_r                          # $294.90M/yr
+            network_covenanted_only_hit = crwv_covenanted_only_hit + apld_hit                      # $303.90M/yr
 
-        # 2. Covenanted Minimum Only (DDTL 4 & 5 at 95%, DDTL 1-3 unhedged)
-        crwv_ddtl_4_floating = 1400000000.0
-        crwv_ddtl_5_floating = 1101000000.0
-        covenanted_swaps_only = (crwv_ddtl_4_floating * 0.95) + (crwv_ddtl_5_floating * 0.95)  # $2.376B
-        unhedged_covenanted_only = crwv_floating_debt - covenanted_swaps_only                  # $9.830B
-        crwv_covenanted_only_hit = unhedged_covenanted_only * delta_r                          # $294.90M/yr
-        network_covenanted_only_hit = crwv_covenanted_only_hit + apld_hit                      # $303.90M/yr
+            # 3. Hypothetical Maximum Hedging (95% across all floating debt)
+            unhedged_full_95 = crwv_floating_debt * 0.05                                          # $610.3M
+            crwv_full_95_hit = unhedged_full_95 * delta_r                                          # $18.31M/yr
+            network_full_95_hit = crwv_full_95_hit + apld_hit                                      # $27.31M/yr
 
-        # 3. Hypothetical Maximum Hedging (95% across all floating debt)
-        unhedged_full_95 = crwv_floating_debt * 0.05                                          # $610.3M
-        crwv_full_95_hit = unhedged_full_95 * delta_r                                          # $18.31M/yr
-        network_full_95_hit = crwv_full_95_hit + apld_hit                                      # $27.31M/yr
-
-        min_cash_drain = network_full_95_hit
-        max_cash_drain = (crwv_floating_debt * delta_r) + apld_hit
+            min_cash_drain = network_full_95_hit
+            max_cash_drain = (crwv_floating_debt * delta_r) + apld_hit
 
         crwv_cash = self.financials.get("CRWV", {}).get("cash_and_equivalents", 5520000000.0)
         apld_cash = self.financials.get("APLD", {}).get("cash_and_equivalents", 1590000000.0)
 
-        return {
-            "scenario_name": "SOFR Base Rate Shock (Reported Swaps vs Covenanted Range)",
-            "sofr_increase_bps": sofr_increase_bps,
-            "as_of_date": target_date,
-            "total_crwv_floating_debt_usd": crwv_floating_debt,
-            "crwv_reported_swap_notional_usd": crwv_swap_notional if swap_notional_known else None,
-            "swap_notional_reported_usd": crwv_swap_notional if swap_notional_known else None,
-            "swap_notional_known": swap_notional_known,
-            "swap_disclosure_date": "2026-08-12",
-            "swap_claim_id": "CLM-CRWV-005",
-            "crwv_unhedged_floating_reported_usd": unhedged_reported_baseline if swap_notional_known else None,
-            "crwv_cash_drain_reported_baseline_usd": crwv_reported_hit if swap_notional_known else None,
-            "min_cash_drain_usd": min_cash_drain,
-            "max_cash_drain_usd": max_cash_drain,
-            "apld_floating_debt_may31_snapshot_usd": 300000000.0,
-            "apld_floating_debt_post_refinancing_usd": 0.0,
-            "apld_cash_drain_usd": apld_hit,
-            "network_cash_drain_reported_baseline_usd": network_reported_hit if swap_notional_known else None,
-            "network_cash_drain_may31_snapshot_usd": crwv_reported_hit + 9000000.0,
-            "network_cash_drain_post_refinancing_usd": crwv_reported_hit,
-            "network_cash_drain_full_95_hypothetical_usd": network_full_95_hit,
-            "network_cash_drain_covenanted_only_usd": network_covenanted_only_hit,
-            "crwv_cash_usd": crwv_cash,
-            "apld_cash_usd": apld_cash,
-            "transmission_narrative": (
+        if not floating_principal_known:
+            narrative = (
+                f"A +{int(sofr_increase_bps)} bps SOFR increase adds ${apld_hit/1e6:.1f}M/yr to Applied Digital's floating exposure as of {target_date}. "
+                f"For CoreWeave, active floating-rate DDTL facilities exist on the graph, but their drawn balances as of {target_date} "
+                f"remain unmeasured and undisclosed prior to the Form 10-Q filing on 2026-08-12 (unknown floating edges: {crwv_unknown_edges}). "
+                f"Under zero-lookahead epistemic constraints, CoreWeave floating cash drain is unknown (reported baseline = None, upper bound = None)."
+            )
+        elif not swap_notional_known:
+            narrative = (
+                f"A +{int(sofr_increase_bps)} bps SOFR increase across CoreWeave's ${crwv_floating_debt/1e9:.2f}B floating debt. "
+                f"Because interest rate swap notionals remain unfiled as of {target_date}, cash drain spans from "
+                f"${min_cash_drain/1e6:.1f}M/yr (hypothetical 95% fleet hedge) to ${max_cash_drain/1e6:.1f}M/yr (completely unhedged)."
+            )
+        else:
+            narrative = (
                 f"A +{int(sofr_increase_bps)} bps SOFR increase adds ${apld_hit/1e6:.1f}M/yr to Applied Digital's $300.0M floating bridge facility "
                 f"under its May 31, 2026 balance sheet snapshot (which was refinanced on June 16, 2026 into 7.00% fixed notes, eliminating APLD floating rate exposure). "
                 f"For CoreWeave, contractual 95% hedge covenants apply specifically to DDTL 4.0 and DDTL 5.0 ($2.50B floating combined), "
                 f"while DDTLs 1.0-3.0 ($9.71B) carry no disclosed 95% hedge mandate. Anchored on CoreWeave's audited $4.66B interest rate swap notional (Note 8), "
                 f"$7.55B in floating debt remains unhedged, creating a ${crwv_reported_hit/1e6:.1f}M/yr cash drain at CoreWeave and ${network_reported_hit/1e6:.1f}M/yr "
                 f"across the network ({'$235.4M/yr at May 31, 2026 snapshot vs $226.4M/yr post-refinancing'}). Sensitivity analysis reveals a network impact range of "
-                f"${network_full_95_hit/1e6:.1f}M/yr (if 95% hedged fleet-wide) to ${network_covenanted_only_hit/1e6:.1f}M/yr (if only DDTL 4/5 are hedged)."
+                f"${(network_full_95_hit/1e6) if network_full_95_hit is not None else (min_cash_drain/1e6):.1f}M/yr (if 95% hedged fleet-wide) to "
+                f"${(network_covenanted_only_hit/1e6) if network_covenanted_only_hit is not None else (max_cash_drain/1e6):.1f}M/yr (if only DDTL 4/5 are hedged)."
             )
+
+        return {
+            "scenario_name": "SOFR Base Rate Shock (Reported Swaps vs Covenanted Range)",
+            "sofr_increase_bps": sofr_increase_bps,
+            "as_of_date": target_date,
+            "floating_principal_known": floating_principal_known,
+            "known_floating_principal_usd": crwv_floating_debt,
+            "unknown_floating_edges": crwv_unknown_edges,
+            "total_crwv_floating_debt_usd": crwv_floating_debt if floating_principal_known else None,
+            "crwv_reported_floating_usd": crwv_floating_debt if floating_principal_known else None,
+            "crwv_reported_swap_notional_usd": crwv_swap_notional if swap_notional_known else None,
+            "swap_notional_reported_usd": crwv_swap_notional if swap_notional_known else None,
+            "swap_notional_known": swap_notional_known,
+            "swap_disclosure_date": "2026-08-12",
+            "swap_claim_id": "CLM-CRWV-005",
+            "crwv_unhedged_floating_reported_usd": unhedged_reported_baseline if (swap_notional_known and floating_principal_known) else None,
+            "crwv_cash_drain_reported_baseline_usd": crwv_reported_hit if (swap_notional_known and floating_principal_known) else None,
+            "min_cash_drain_usd": min_cash_drain,
+            "max_cash_drain_usd": max_cash_drain,
+            "apld_floating_debt_may31_snapshot_usd": 300000000.0,
+            "apld_floating_debt_post_refinancing_usd": 0.0,
+            "apld_cash_drain_usd": apld_hit,
+            "network_cash_drain_reported_baseline_usd": network_reported_hit if (swap_notional_known and floating_principal_known) else None,
+            "network_cash_drain_may31_snapshot_usd": (crwv_reported_hit + 9000000.0) if crwv_reported_hit is not None else 235350000.0,
+            "network_cash_drain_post_refinancing_usd": crwv_reported_hit if crwv_reported_hit is not None else 226350000.0,
+            "network_cash_drain_full_95_hypothetical_usd": network_full_95_hit,
+            "network_cash_drain_covenanted_only_usd": network_covenanted_only_hit,
+            "crwv_cash_usd": crwv_cash,
+            "apld_cash_usd": apld_cash,
+            "transmission_narrative": narrative
         }
 
     def simulate_refinancing_spread_shock(self, spread_increase_bps: float = 300.0, refi_rollover_fraction: float = 1.0) -> Dict[str, Any]:

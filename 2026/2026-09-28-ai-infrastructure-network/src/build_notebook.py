@@ -325,16 +325,17 @@ for u, v, k, d in collapsed_graph.edges(data=True, keys=True):
 pd.DataFrame(collapsed_records).sort_values(by="amount_B", ascending=False)
 """))
 
-# Cell 13b: Markdown & Code - Bitemporal Modeling: Economic Time vs Information Time
-cells.append(nbf.v4.new_markdown_cell(r"""### Bitemporal Dynamics: Economic Clock vs Information Clock (ADR-013)
-Our network distinguishes between two independent temporal dimensions with fact-level bitemporality:
+# Cell 13b: Markdown & Code - Bitemporal Dynamics: Economic Time vs Information Time
+cells.append(nbf.v4.new_markdown_cell(r"""### Bitemporal Dynamics: Economic Clock vs Information Clock (ADR-013 & ADR-014)
+Our network distinguishes between two independent temporal dimensions with event-driven lifecycle and fact-level bitemporality:
 1. **Economic Reality Clock (`network.economic_as_of(date)`):** When did contracts exist in the physical/corporate world?
    * At **May 31, 2026**, Applied Digital held the **$300.0M floating bridge credit facility** ($5,306.68M total principal across 22 active edges).
    * On **June 16, 2026**, under **half-open validity intervals $[v\_from, v\_to)$**, the bridge was cleanly retired (`date >= valid_to`) and superseded by **$1.59B 7.00% Senior Secured Notes due 2031** (`OBL-APLD-DEBT-7PCT-2026`) issued by `APLD ComputeCo 3 LLC` (`APLD_COMPUTECO3`), conserving exactly 22 edges without double-counting ($6,596.68M total principal).
 2. **Information / Public Knowledge Clock (`network.known_as_of(date)`):** When did an outside observer actually learn about the contract from public SEC filings, eliminating look-ahead bias?
+   * **Obligation Lifecycle Events (`obligation_events`):** Extinction and supersession events have independent filing dates. On **June 17, 2026**, although the bridge was extinguished economically on June 16, the Form 8-K was not filed until June 18. Therefore, an outside observer on June 17 still observes the $300.0M bridge active, while the 7% notes remain absent! On **June 18, 2026**, the bridge is retired and the 7% notes appear.
    * **Fact-Level Bitemporality (`obligation_facts`):** An obligation's contract existence can be known before its periodic balance is disclosed. On **June 30, 2026**, CoreWeave's DDTL 1.0 facility edge is known (from 2024 disclosures), but its June 30 balance ($1.300B) was not disclosed until August 12, 2026 (Form 10-Q), so `amount = None` (`amount_known = False`). Concurrently, APLD's 7.00% notes balance ($1.59B) was announced via Form 8-K on June 18, 2026, so its amount is fully known on June 30!
    * On **September 28, 2026**, all Q2 periodic filings are published (DDTL 1.0 amount is known at $1.300B; all 22 edges active).
-3. **Epistemic Decoupling of Stress Engine:** Running the stress engine on June 30 knowledge mode dynamically flags `swap_notional_known = False` and bounds unhedged floating exposure between $18.3M/yr (95% full fleet coverage) and $366.2M/yr (0% hedged) without leaking August 12 disclosures.
+3. **Strict Zero-Lookahead Stress Engine (ADR-014):** In known mode on June 30, before CoreWeave's 10-Q was filed, floating debt amounts are unmeasured/unknown. The engine strictly avoids leaking the August 12 $12.206B total, returning `floating_principal_known = False`, `max_cash_drain = None`, and listing all 5 unknown floating edges.
 """))
 
 cells.append(nbf.v4.new_code_cell("""# 1. Economic Clock: Half-Open Intervals & Obligation Conservation
@@ -347,20 +348,25 @@ print(f"Edges at 2026-05-31: {net_may.graph.number_of_edges()} (Bridge Active: {
 print(f"Edges at 2026-06-16: {net_jun16.graph.number_of_edges()} (Bridge: { 'OBL-APLD-DEBT-BRIDGE' in [k for _, _, k in net_jun16.graph.edges(keys=True)] } | 7% Notes: { 'OBL-APLD-DEBT-7PCT-2026' in [k for _, _, k in net_jun16.graph.edges(keys=True)] })")
 print(f"Edges at 2026-09-28: {net_sep.graph.number_of_edges()} (7% Notes Active: { 'OBL-APLD-DEBT-7PCT-2026' in [k for _, _, k in net_sep.graph.edges(keys=True)] })")
 
-# 2. Information Clock: Fact-Level Bitemporality (Zero Look-Ahead Bias)
+# 2. Information Clock: Lifecycle Events & Fact Bitemporality (Zero Look-Ahead Bias)
+net_known_jun17 = net.known_as_of("2026-06-17")
+net_known_jun18 = net.known_as_of("2026-06-18")
 net_known_jun = net.known_as_of("2026-06-30")
 net_known_sep = net.known_as_of("2026-09-28")
+
+print(f"\\n=== Information Clock: Lifecycle Events & Fact Bitemporality (ADR-014) ===")
+print(f"Observer on June 17, 2026: Bridge Active = {'OBL-APLD-DEBT-BRIDGE' in [k for _, _, k in net_known_jun17.graph.edges(keys=True)]} | 7% Notes Active = {'OBL-APLD-DEBT-7PCT-2026' in [k for _, _, k in net_known_jun17.graph.edges(keys=True)]} (Form 8-K unfiled)")
+print(f"Observer on June 18, 2026: Bridge Active = {'OBL-APLD-DEBT-BRIDGE' in [k for _, _, k in net_known_jun18.graph.edges(keys=True)]} | 7% Notes Active = {'OBL-APLD-DEBT-7PCT-2026' in [k for _, _, k in net_known_jun18.graph.edges(keys=True)]} (Form 8-K filed)")
 
 ddtl1_jun = net_known_jun.graph.get_edge_data("CRWV", "BLACKSTONE_MAGNETAR_SYN", key="OBL-CRWV-DEBT-DDTL1")
 apld_7pct_jun = net_known_jun.graph.get_edge_data("APLD_COMPUTECO3", "INSTITUTIONAL_BONDHOLDERS", key="OBL-APLD-DEBT-7PCT-2026")
 ddtl1_sep = net_known_sep.graph.get_edge_data("CRWV", "BLACKSTONE_MAGNETAR_SYN", key="OBL-CRWV-DEBT-DDTL1")
 
-print(f"\\n=== Information Clock: Fact-Level Bitemporality (ADR-013) ===")
 print(f"CoreWeave DDTL 1.0 on June 30, 2026:  amount = {ddtl1_jun['amount']} (amount_known: {ddtl1_jun['amount_known']}) -> Disclosed August 12")
 print(f"APLD 7% Notes on June 30, 2026:       amount = ${apld_7pct_jun['amount']/1e9:.2f}B (amount_known: {apld_7pct_jun['amount_known']}) -> Disclosed June 18")
 print(f"CoreWeave DDTL 1.0 on Sep 28, 2026:   amount = ${ddtl1_sep['amount']/1e9:.3f}B (amount_known: {ddtl1_sep['amount_known']})")
 
-# 3. Dynamic Epistemic Stress Decoupling
+# 3. Dynamic Epistemic Stress Decoupling (Strict Zero-Lookahead)
 engine_known_jun = FinancialStressEngine(network=net_known_jun)
 sofr_known_jun = engine_known_jun.simulate_sofr_base_rate_shock()
 
@@ -369,10 +375,12 @@ engine_sep = FinancialStressEngine(network=net_sep)
 hit_may = engine_may.simulate_sofr_base_rate_shock()["network_cash_drain_reported_baseline_usd"]
 hit_sep = engine_sep.simulate_sofr_base_rate_shock()["network_cash_drain_reported_baseline_usd"]
 
-print(f"\\n=== Epistemic Stress Simulation & Dynamic Derivation ===")
-print(f"June 30 Knowledge Mode: Swap Notional Known = {sofr_known_jun['swap_notional_known']} | Epistemic Range: ${sofr_known_jun['min_cash_drain_usd']/1e6:.1f}M - ${sofr_known_jun['max_cash_drain_usd']/1e6:.1f}M/yr")
+print(f"\\n=== Zero-Lookahead Stress Simulation (ADR-014) ===")
+print(f"June 30 Knowledge Mode: Floating Known = {sofr_known_jun['floating_principal_known']} | Unknown Edges = {len(sofr_known_jun['unknown_floating_edges'])}")
+print(f"June 30 Knowledge Mode: Reported Baseline Drain = {sofr_known_jun['network_cash_drain_reported_baseline_usd']} | Max Drain = {sofr_known_jun['max_cash_drain_usd']}")
 print(f"May 31 Snapshot SOFR Drain:  ${hit_may/1e6:.1f}M/yr (APLD floating = ${engine_may.get_active_floating_debt('APLD')/1e6:.1f}M)")
 print(f"Sep 28 Post-Refi SOFR Drain: ${hit_sep/1e6:.1f}M/yr (APLD floating = ${engine_sep.get_active_floating_debt('APLD')/1e6:.1f}M)")
+
 """))
 
 # Cell 14: Markdown - Reachability vs Stress

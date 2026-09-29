@@ -20,7 +20,8 @@ class ObligationNetwork:
         self,
         entities_df: Optional[pd.DataFrame] = None,
         obligations_df: Optional[pd.DataFrame] = None,
-        facts_df: Optional[pd.DataFrame] = None
+        facts_df: Optional[pd.DataFrame] = None,
+        events_df: Optional[pd.DataFrame] = None
     ):
         if entities_df is None:
             entities_df = pd.read_parquet(PROCESSED_DIR / "entities.parquet")
@@ -32,10 +33,17 @@ class ObligationNetwork:
                 facts_df = pd.read_parquet(facts_path)
             else:
                 facts_df = pd.DataFrame()
+        if events_df is None:
+            events_path = PROCESSED_DIR / "obligation_events.parquet"
+            if events_path.exists():
+                events_df = pd.read_parquet(events_path)
+            else:
+                events_df = pd.DataFrame()
 
         self.entities_df = entities_df.set_index("entity_id") if "entity_id" in entities_df.columns else entities_df
         self.obligations_df = obligations_df
         self.facts_df = facts_df
+        self.events_df = events_df
         self.as_of_date = None
         self.temporal_mode = None
         # Use MultiDiGraph so distinct facilities/contracts between the same (u, v) pair are preserved
@@ -140,35 +148,67 @@ class ObligationNetwork:
     def economic_as_of(self, date_str: str) -> "ObligationNetwork":
         """
         Economic Clock: Returns the contractual topology active in economic reality on date_str.
-        Filters obligations using half-open intervals [economic_valid_from, economic_valid_to):
-          economic_valid_from <= date_str AND (economic_valid_to is None or economic_valid_to > date_str).
-        Resolves time-varying financial attributes from obligation_facts where economic_as_of <= date_str.
+        Filters obligations using discrete lifecycle events from obligation_events when available:
+          - created.economic_effective_at <= date_str
+          - no terminated/superseded event with economic_effective_at <= date_str
+          - contractual half-open maturity [valid_from, valid_to): date_str < valid_to.
+        Clears mutable fact-managed fields to None ("no historical fact = unknown") before overlaying
+        eligible facts where economic_as_of <= date_str, sorting deterministically.
         """
         valid_rows = []
         for _, row in self.obligations_df.iterrows():
-            v_from = row.get("economic_valid_from") or row.get("valid_from")
-            v_to = row.get("economic_valid_to") or row.get("valid_to")
-            if pd.notna(v_from) and str(v_from) > date_str:
+            oid = row["obligation_id"]
+
+            # 1. Edge existence: Creation event check
+            eff_from = row.get("economic_valid_from") or row.get("valid_from")
+            if not self.events_df.empty:
+                c_evts = self.events_df[(self.events_df["obligation_id"] == oid) & (self.events_df["event_type"] == "created")]
+                if not c_evts.empty:
+                    eff_from = c_evts.iloc[0]["economic_effective_at"]
+            if pd.notna(eff_from) and str(eff_from) > date_str:
                 continue
+
+            # 2. Edge existence: Termination / supersession event check
+            retired = False
+            if not self.events_df.empty:
+                t_evts = self.events_df[(self.events_df["obligation_id"] == oid) & (self.events_df["event_type"].isin(["terminated", "superseded"]))]
+                if not t_evts.empty:
+                    t_date = t_evts.iloc[0]["economic_effective_at"]
+                    if pd.notna(t_date) and str(t_date) <= date_str:
+                        retired = True
+            if retired:
+                continue
+
             # Half-open interval [v_from, v_to): expired if date_str >= v_to
+            v_to = row.get("economic_valid_to") or row.get("valid_to")
             if pd.notna(v_to) and str(v_to) <= date_str:
                 continue
 
             r = row.copy()
-            oid = r["obligation_id"]
+            # Reset mutable fact fields to None before overlaying facts (ADR-014: no back-projection)
+            r["amount"] = None
+            r["amount_known"] = False
+            r["floating_principal"] = None
+            r["facility_capacity"] = None
+            r["capacity_mw"] = None
+            r["reference_exposure_estimate"] = None
+
             if not self.facts_df.empty:
                 matching_facts = self.facts_df[
                     (self.facts_df["obligation_id"] == oid) &
                     (self.facts_df["economic_as_of"] <= date_str)
                 ]
                 if not matching_facts.empty:
+                    sort_cols = [c for c in ["economic_as_of", "publicly_known_from", "fact_id"] if c in matching_facts.columns]
                     for attr, grp in matching_facts.groupby("attribute"):
-                        latest_fact = grp.sort_values(by="economic_as_of").iloc[-1]
+                        latest_fact = grp.sort_values(by=sort_cols).iloc[-1]
                         f_val = latest_fact["value"]
-                        if attr == "principal_outstanding":
+                        if attr in ["principal_outstanding", "lifetime_contract_value", "remaining_commitment", "recognized_revenue", "equity_investment"]:
                             r["amount"] = f_val
-                        elif attr in ["lifetime_contract_value", "remaining_commitment", "recognized_revenue", "equity_investment"]:
-                            r["amount"] = f_val
+                            r["amount_known"] = bool(pd.notna(f_val))
+                        elif attr == "contingent_obligations":
+                            r["amount"] = None
+                            r["amount_known"] = False
                         elif attr == "facility_capacity":
                             r["facility_capacity"] = f_val
                         elif attr == "floating_principal":
@@ -179,7 +219,7 @@ class ObligationNetwork:
                             r["capacity_mw"] = f_val
             valid_rows.append(r)
         filtered_df = pd.DataFrame(valid_rows) if valid_rows else pd.DataFrame(columns=self.obligations_df.columns)
-        net = ObligationNetwork(entities_df=self.entities_df.reset_index(), obligations_df=filtered_df, facts_df=self.facts_df)
+        net = ObligationNetwork(entities_df=self.entities_df.reset_index(), obligations_df=filtered_df, facts_df=self.facts_df, events_df=self.events_df)
         net.as_of_date = date_str
         net.temporal_mode = "economic"
         return net
@@ -188,66 +228,93 @@ class ObligationNetwork:
         """
         Information Clock (Public Knowledge / Epistemic Clock):
         Returns the contractual topology that a public observer could actually have known on date_str
-        without look-ahead bias (ADR-013).
+        without look-ahead bias (ADR-013 & ADR-014).
         Filters contract existence where:
-          publicly_known_from <= date_str
-          AND economic_valid_from <= date_str
-          AND (economic_valid_to is None or economic_valid_to > date_str).
+          - created.publicly_known_at <= date_str AND created.economic_effective_at <= date_str
+          - no terminated/superseded event with publicly_known_at <= date_str AND economic_effective_at <= date_str
+          - if no explicit early termination event exists, contractual maturity date > date_str.
         Fact-Level Bitemporality:
-          Attaches measurements ONLY from facts where publicly_known_from <= date_str.
-          If an obligation's current measurement was not yet publicly known on date_str,
-          its amount is set to None (amount_known = False) rather than leaking future filings.
+          Attaches measurements ONLY from facts where publicly_known_from <= date_str AND economic_as_of <= date_str.
+          Resets all mutable fields to None before overlaying facts, so if an obligation's current measurement
+          was not yet publicly known on date_str, its amount remains None (amount_known = False).
         """
         valid_rows = []
         for _, row in self.obligations_df.iterrows():
+            oid = row["obligation_id"]
+
+            # 1. Edge existence: Creation event knowledge check
             k_from = row.get("publicly_known_from") or row.get("observed_as_of")
-            v_from = row.get("economic_valid_from") or row.get("valid_from")
-            v_to = row.get("economic_valid_to") or row.get("valid_to")
+            eff_from = row.get("economic_valid_from") or row.get("valid_from")
+            if not self.events_df.empty:
+                c_evts = self.events_df[(self.events_df["obligation_id"] == oid) & (self.events_df["event_type"] == "created")]
+                if not c_evts.empty:
+                    k_from = c_evts.iloc[0]["publicly_known_at"]
+                    eff_from = c_evts.iloc[0]["economic_effective_at"]
+
             if pd.notna(k_from) and str(k_from) > date_str:
                 continue
-            if pd.notna(v_from) and str(v_from) > date_str:
-                continue
-            # Half-open interval [v_from, v_to): expired if date_str >= v_to
-            if pd.notna(v_to) and str(v_to) <= date_str:
+            if pd.notna(eff_from) and str(eff_from) > date_str:
                 continue
 
+            # 2. Edge existence: Termination / supersession event knowledge check
+            retired_known = False
+            has_term_event = False
+            if not self.events_df.empty:
+                t_evts = self.events_df[(self.events_df["obligation_id"] == oid) & (self.events_df["event_type"].isin(["terminated", "superseded"]))]
+                if not t_evts.empty:
+                    has_term_event = True
+                    k_term = t_evts.iloc[0]["publicly_known_at"]
+                    eff_term = t_evts.iloc[0]["economic_effective_at"]
+                    if pd.notna(k_term) and str(k_term) <= date_str and pd.notna(eff_term) and str(eff_term) <= date_str:
+                        retired_known = True
+
+            if retired_known:
+                continue
+
+            # If no explicit termination event exists, check scheduled contractual maturity
+            if not has_term_event:
+                v_to = row.get("economic_valid_to") or row.get("valid_to")
+                if pd.notna(v_to) and str(v_to) <= date_str:
+                    continue
+
             r = row.copy()
-            oid = r["obligation_id"]
+            # Reset mutable fact fields to None before overlaying facts (ADR-014: no back-projection)
+            r["amount"] = None
+            r["amount_known"] = False
+            r["floating_principal"] = None
+            r["facility_capacity"] = None
+            r["capacity_mw"] = None
+            r["reference_exposure_estimate"] = None
+
             if not self.facts_df.empty:
                 matching_facts = self.facts_df[
                     (self.facts_df["obligation_id"] == oid) &
                     (self.facts_df["publicly_known_from"] <= date_str) &
                     (self.facts_df["economic_as_of"] <= date_str)
                 ]
-                # Filter amount-bearing facts
-                amount_facts = matching_facts[matching_facts["attribute"].isin([
-                    "principal_outstanding", "lifetime_contract_value", "remaining_commitment",
-                    "recognized_revenue", "equity_investment", "contingent_obligations"
-                ])]
-                if amount_facts.empty and r.get("amount_type") != "contingent_obligations":
-                    # Contract was known, but measured balance was not yet disclosed as of date_str!
-                    r["amount"] = None
-                    r["amount_known"] = False
-                elif not amount_facts.empty:
-                    latest_fact = amount_facts.sort_values(by="economic_as_of").iloc[-1]
-                    r["amount"] = latest_fact["value"]
-                    r["amount_known"] = bool(pd.notna(latest_fact["value"]))
+                if not matching_facts.empty:
+                    sort_cols = [c for c in ["economic_as_of", "publicly_known_from", "fact_id"] if c in matching_facts.columns]
+                    for attr, grp in matching_facts.groupby("attribute"):
+                        latest_fact = grp.sort_values(by=sort_cols).iloc[-1]
+                        f_val = latest_fact["value"]
+                        if attr in ["principal_outstanding", "lifetime_contract_value", "remaining_commitment", "recognized_revenue", "equity_investment"]:
+                            r["amount"] = f_val
+                            r["amount_known"] = bool(pd.notna(f_val))
+                        elif attr == "contingent_obligations":
+                            r["amount"] = None
+                            r["amount_known"] = False
+                        elif attr == "facility_capacity":
+                            r["facility_capacity"] = f_val
+                        elif attr == "floating_principal":
+                            r["floating_principal"] = f_val
+                        elif attr == "reference_exposure_estimate":
+                            r["reference_exposure_estimate"] = f_val
+                        elif attr == "capacity_mw":
+                            r["capacity_mw"] = f_val
 
-                # Resolve other attributes if known
-                for attr, grp in matching_facts.groupby("attribute"):
-                    latest_fact = grp.sort_values(by="economic_as_of").iloc[-1]
-                    f_val = latest_fact["value"]
-                    if attr == "facility_capacity":
-                        r["facility_capacity"] = f_val
-                    elif attr == "floating_principal":
-                        r["floating_principal"] = f_val
-                    elif attr == "reference_exposure_estimate":
-                        r["reference_exposure_estimate"] = f_val
-                    elif attr == "capacity_mw":
-                        r["capacity_mw"] = f_val
             valid_rows.append(r)
         filtered_df = pd.DataFrame(valid_rows) if valid_rows else pd.DataFrame(columns=self.obligations_df.columns)
-        net = ObligationNetwork(entities_df=self.entities_df.reset_index(), obligations_df=filtered_df, facts_df=self.facts_df)
+        net = ObligationNetwork(entities_df=self.entities_df.reset_index(), obligations_df=filtered_df, facts_df=self.facts_df, events_df=self.events_df)
         net.as_of_date = date_str
         net.temporal_mode = "known"
         return net
@@ -276,7 +343,8 @@ class ObligationNetwork:
                 sub = sub[sub["economic_as_of"] <= self.as_of_date]
         if sub.empty:
             return None
-        latest = sub.sort_values(by="economic_as_of").iloc[-1]
+        sort_cols = [c for c in ["economic_as_of", "publicly_known_from", "fact_id"] if c in sub.columns]
+        latest = sub.sort_values(by=sort_cols).iloc[-1]
         return float(latest["value"]) if pd.notna(latest["value"]) else None
 
     def get_entity_fact(self, entity_id: str, attribute: str) -> Optional[float]:
@@ -293,7 +361,8 @@ class ObligationNetwork:
                 sub = sub[sub["economic_as_of"] <= self.as_of_date]
         if sub.empty:
             return None
-        latest = sub.sort_values(by="economic_as_of").iloc[-1]
+        sort_cols = [c for c in ["economic_as_of", "publicly_known_from", "fact_id"] if c in sub.columns]
+        latest = sub.sort_values(by=sort_cols).iloc[-1]
         return float(latest["value"]) if pd.notna(latest["value"]) else None
 
     def compute_exposure_by_amount_type(self) -> pd.DataFrame:

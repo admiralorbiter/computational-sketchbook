@@ -125,12 +125,13 @@ Phase 0.7.2 establishes an economically literal baseline across five core compan
 4. **Pure Amount-Type Reachability vs Parameterized Financial Stress Prototype:**
    * We eliminate non-fungible dollar mixing across different categories. Reachability reports the percentage of each `amount_type` reachable within 2 hops of an assumption alongside edge reachability percentages.
    * The stress engine is framed as a **parameterized financial stress prototype** with contract-calibrated transmission functions.
-5. **Dynamic SPV Unwrapping & Fact-Level Bitemporal Graph Architecture (Economic vs Knowledge Time, ADR-013):**
+5. **Dynamic SPV Unwrapping & Event-Driven Bitemporal Graph Architecture (ADR-013 & ADR-014):**
    * **Dynamic Entity Hierarchy:** Rather than static lookup maps, the network traverses `parent_entity_id` attributes dynamically (`APLD_COMPUTECO3` $\to$ `APLD_HPC_HOLDINGS2` $\to$ `APLD`), leaving 0 SPV nodes in the consolidated corporate graph.
-   * **Fact-Level Bitemporality (`obligation_facts`):** Invariant contract definitions in `obligations.parquet` are decoupled from time-varying point-in-time measurements in `obligation_facts.parquet` (27 audited facts). When querying `network.known_as_of("2026-06-30")`, contract facilities known in 2024 (e.g. CoreWeave DDTL 1.0) exist as edges, but their June 30 balances resolve to `None` (`amount_known = False`) because they were disclosed on August 12, 2026, completely eliminating edge-value look-ahead leakage. Concurrently, APLD 7.00% notes balance ($1.59B) is known on June 30 via its June 18 Form 8-K.
+   * **Obligation Lifecycle Events (`obligation_events`, 24 rows):** Contract lifecycle state changes (creation, supersession, termination) have independent economic and filing dates. On **June 17, 2026**, although the bridge was extinguished economically on June 16, the Form 8-K was not filed until June 18. Therefore, an outside observer on June 17 still observes the $300.0M bridge active, while the 7% notes remain absent, eliminating the unphysical extinction void.
+   * **Fact-Level Bitemporality (`obligation_facts`, 27 rows):** Invariant contract definitions in `obligations.parquet` are decoupled from time-varying point-in-time measurements in `obligation_facts.parquet`. Every fact carries a dual evidence claim: `truth_claim_id` (certifying audited ground truth) and `knowledge_claim_id` (certifying earliest public awareness), strictly enforcing `publicly_known_from >= claims[knowledge_claim_id].filing_date`.
+   * **Strict Zero-Lookahead Stress Engine:** In known mode on June 30, before CoreWeave's 10-Q was filed, floating debt amounts are unmeasured/unknown. The engine strictly avoids leaking the August 12 $12.206B total, returning `floating_principal_known = False`, `max_cash_drain = None`, `network_cash_drain_reported_baseline = None`, and enumerating all 5 unknown floating edges.
    * **Half-Open Validity Intervals $[v\_from, v\_to)$:** Supersession boundaries exclude `date >= valid_to`. On June 16, 2026, the $300M bridge is cleanly retired and the $1.59B notes are active, preserving exactly 22 edges without double-counting.
-   * **Dynamic Stress Engine & Epistemic Decoupling:** `FinancialStressEngine(network=net)` dynamically derives floating debt and swap notional from active edges/facts. Under June 30 knowledge mode, `swap_notional_known = False`, bounding unhedged floating exposure across an epistemic sensitivity band ($18.3M min to $366.2M max) without leaking future disclosures.
-   * **100% Verbatim Substring Certification:** All `"exact_quote"` claims are verified with 100% character-level contiguous substring fidelity against cached raw SEC EDGAR exhibits (`APLD_ex10_1.htm` and `APLD_ex10_2.htm`).
+   * **100% Verbatim Substring Certification & Evidence Taxonomy:** All `"exact_quote"` claims are verified with 100% character-level contiguous substring fidelity against cached raw SEC EDGAR exhibits (`APLD_ex10_1.htm` and `APLD_ex10_2.htm`), alongside 30 audited evidence claims tracking contemporaneous 8-K and periodic filings.
 
 ### Parameterized Financial Stress Prototype Results (`src/stress.py`)
 ![Financial Stress Waterfall](outputs/figures/financial_stress_waterfall.png)
@@ -160,7 +161,7 @@ Phase 0.7.2 establishes an economically literal baseline across five core compan
 ├── docs/
 │   ├── methodology.md             # Theoretical framework, 5 opacities, and contagion math
 │   ├── data_dictionary.md         # Schema specifications for all Parquet and CSV tables
-│   ├── decisions.md               # Architectural Decision Records (ADR-001 through 013)
+│   ├── decisions.md               # Architectural Decision Records (ADR-001 through 014)
 │   └── evidence_contract.md       # Epistemic trust hierarchy (Class A/B/C) and audit rules
 ├── data/
 │   ├── raw/sec/                   # Cached primary SEC EDGAR company facts JSON and exhibit HTMLs
@@ -168,12 +169,13 @@ Phase 0.7.2 establishes an economically literal baseline across five core compan
 │       ├── entities.parquet       # 20 entities (corporates, landlord SPVs, holding SPVs, syndicates)
 │       ├── financials.parquet     # 5,440 standardized accounting observations (quarterly & annual)
 │       ├── obligations.parquet    # 23 decomposed obligations exactly reconciling debt
+│       ├── obligation_events.parquet# 24 discrete lifecycle events (creation, supersession, extinction)
 │       ├── obligation_facts.parquet# 27 fact-level bitemporal measurements (balances, capacities, swaps)
 │       ├── assumptions.parquet    # 7 assumption registries
-│       └── evidence_claims.parquet# 17 audited SEC citations with verbatim quotes and accession numbers
+│       └── evidence_claims.parquet# 30 audited SEC citations with verbatim quotes and accession numbers
 ├── src/
 │   ├── sec_ingest.py              # Automated data.sec.gov XBRL ingestion pipeline (duration-aware)
-│   ├── curate_obligations.py      # Audited obligation and evidence claim builder
+│   ├── curate_obligations.py      # Audited obligation, events, and evidence claim builder
 │   ├── graph.py                   # MultiDiGraph obligation graph & dynamic SPV unwrapping engine
 │   ├── reachability.py            # Assumption reachability by amount_type engine
 │   ├── stress.py                  # Parameterized financial stress & contract transmission prototype

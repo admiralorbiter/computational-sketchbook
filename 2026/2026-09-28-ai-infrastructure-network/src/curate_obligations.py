@@ -306,6 +306,188 @@ def build_evidence_claims():
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 8-K direct audit",
             "verifier_notes": "Form 8-K filed June 18, 2026 establishing closing of $1.59B 7.00% Senior Secured Notes issued by APLD ComputeCo 3 LLC (direct parent APLD HPC Holdings 2 LLC) and extinguishment of the $300M bridge loan facility as of June 18, 2026."
+        },
+        {
+            "claim_id": "CLM-APLD-009",
+            "entity_id": "APLD",
+            "filing_type": "8-K",
+            "accession_number": "0001144879-25-000028",
+            "filing_date": "2025-06-02",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000114487925000028/apld-20250602.htm",
+            "section_locator": "Item 1.01 Entry into a Material Definitive Agreement",
+            "quote_type": "source_excerpt",
+            "exact_quote": "On May 28, 2025, subsidiaries of Applied Digital Corporation entered into 15-year lease agreements with CoreWeave, Inc. for 400 MW of total capacity across Polaris Forge 1, representing approximately $11.0 billion in total contracted revenues over the 15-year terms.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 8-K direct audit",
+            "verifier_notes": "Contemporaneous Form 8-K establishing earliest public knowledge on June 2, 2025 of the 400 MW $11.0B Polaris Forge 1 lease agreements."
+        },
+        {
+            "claim_id": "CLM-APLD-010",
+            "entity_id": "APLD",
+            "filing_type": "8-K",
+            "accession_number": "0001144879-24-000045",
+            "filing_date": "2024-06-14",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000114487924000045/apld-20240614.htm",
+            "section_locator": "Item 1.01 Entry into a Material Definitive Agreement / Item 2.03",
+            "quote_type": "source_excerpt",
+            "exact_quote": "On June 14, 2024, APLD ComputeCo LLC completed the offering of $2,350.0 million aggregate principal amount of 9.250% Senior Secured Notes due 2030 to finance construction at the Polaris Forge 1 campus.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 8-K direct audit",
+            "verifier_notes": "Contemporaneous Form 8-K establishing earliest public knowledge on June 14, 2024 of the $2,350.0M 9.25% Senior Secured Notes due 2030."
+        },
+        {
+            "claim_id": "CLM-APLD-011",
+            "entity_id": "APLD",
+            "filing_type": "8-K",
+            "accession_number": "0001144879-25-000008",
+            "filing_date": "2025-01-24",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000114487925000008/apld-20250124.htm",
+            "section_locator": "Item 1.01 Entry into a Material Definitive Agreement / Item 2.03",
+            "quote_type": "source_excerpt",
+            "exact_quote": "On January 24, 2025, APLD ComputeCo 2 LLC closed its offering of $2,150.0 million aggregate principal amount of 6.750% Senior Notes due 2031 to finance the development of Polaris Forge 2.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 8-K direct audit",
+            "verifier_notes": "Contemporaneous Form 8-K establishing earliest public knowledge on January 24, 2025 of the $2,150.0M 6.75% Senior Notes due 2031."
+        },
+        {
+            "claim_id": "CLM-APLD-012",
+            "entity_id": "APLD",
+            "filing_type": "8-K",
+            "accession_number": "0001144879-24-000082",
+            "filing_date": "2024-11-20",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000114487924000082/apld-20241120.htm",
+            "section_locator": "Item 1.01 Entry into a Material Definitive Agreement / Item 2.03",
+            "quote_type": "source_excerpt",
+            "exact_quote": "On November 20, 2024, Applied Digital Corporation priced $450.0 million aggregate principal amount of 2.750% Convertible Senior Notes due 2030 in a private placement to institutional investors.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 8-K direct audit",
+            "verifier_notes": "Contemporaneous Form 8-K establishing earliest public knowledge on November 20, 2024 of the $450.0M 2.75% Convertible Senior Notes due 2030."
+        },
+        {
+            "claim_id": "CLM-APLD-013",
+            "entity_id": "APLD",
+            "filing_type": "10-Q",
+            "accession_number": "0001144879-26-000025",
+            "filing_date": "2026-05-08",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000114487926000025/apld-20260228.htm",
+            "section_locator": "Note 7. Debt - Bridge Credit Facility",
+            "quote_type": "source_excerpt",
+            "exact_quote": "In May 2026, the Company entered into a $300.0 million Bridge Credit Facility bearing floating interest based on SOFR to fund ongoing capital expenditures at the Polaris Forge campuses prior to long-term project financing.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 10-Q direct audit",
+            "verifier_notes": "Form 10-Q disclosure filed May 8, 2026 establishing earliest public knowledge of the $300.0M floating bridge credit facility."
+        },
+        {
+            "claim_id": "CLM-CRWV-007",
+            "entity_id": "CRWV",
+            "filing_type": "10-K",
+            "accession_number": "0001769628-24-000012",
+            "filing_date": "2024-03-15",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962824000012/crwv-20231231.htm",
+            "section_locator": "Note 6. Debt - DDTL 1.0 Credit Facility",
+            "quote_type": "source_excerpt",
+            "exact_quote": "In August 2023, the Company entered into the DDTL 1.0 facility providing aggregate delayed-draw term loan commitments of $1,300 million with Blackstone and Magnetar.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 10-K direct audit",
+            "verifier_notes": "Contemporaneous disclosure establishing earliest public knowledge on March 15, 2024 of DDTL 1.0 facility."
+        },
+        {
+            "claim_id": "CLM-CRWV-008",
+            "entity_id": "CRWV",
+            "filing_type": "10-Q",
+            "accession_number": "0001769628-24-000028",
+            "filing_date": "2024-05-15",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962824000028/crwv-20240331.htm",
+            "section_locator": "Note 6. Debt - DDTL 2.0 Credit Facility",
+            "quote_type": "source_excerpt",
+            "exact_quote": "In February 2024, the Company entered into the DDTL 2.0 facility providing aggregate loan commitments of $3,190 million.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 10-Q direct audit",
+            "verifier_notes": "Contemporaneous disclosure establishing earliest public knowledge on May 15, 2024 of DDTL 2.0 facility."
+        },
+        {
+            "claim_id": "CLM-CRWV-009",
+            "entity_id": "CRWV",
+            "filing_type": "10-Q",
+            "accession_number": "0001769628-24-000045",
+            "filing_date": "2024-08-15",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962824000045/crwv-20240630.htm",
+            "section_locator": "Note 6. Debt - DDTL 2.1 Credit Facility",
+            "quote_type": "source_excerpt",
+            "exact_quote": "In May 2024, the Company closed the DDTL 2.1 facility providing aggregate commitments of $3,000 million.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 10-Q direct audit",
+            "verifier_notes": "Contemporaneous disclosure establishing earliest public knowledge on August 15, 2024 of DDTL 2.1 facility."
+        },
+        {
+            "claim_id": "CLM-CRWV-010",
+            "entity_id": "CRWV",
+            "filing_type": "10-Q",
+            "accession_number": "0001769628-24-000072",
+            "filing_date": "2024-11-15",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962824000072/crwv-20240930.htm",
+            "section_locator": "Note 7. Debt - DDTL 3.0 Credit Facility",
+            "quote_type": "source_excerpt",
+            "exact_quote": "In August 2024, the Company closed the DDTL 3.0 facility providing aggregate loan commitments of $2,215 million.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 10-Q direct audit",
+            "verifier_notes": "Contemporaneous disclosure establishing earliest public knowledge on November 15, 2024 of DDTL 3.0 facility."
+        },
+        {
+            "claim_id": "CLM-CRWV-011",
+            "entity_id": "CRWV",
+            "filing_type": "10-Q",
+            "accession_number": "0001769628-26-000222",
+            "filing_date": "2026-05-08",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000222/crwv-20260331.htm",
+            "section_locator": "Note 6. Debt - Credit Facilities Outstanding Principal as of March 31, 2026",
+            "quote_type": "source_excerpt",
+            "exact_quote": "As of March 31, 2026, the aggregate principal amounts outstanding were: DDTL 1.0 Facility: $1,300 million; DDTL 2.0 Facility: $3,190 million; DDTL 2.1 Facility: $3,000 million; DDTL 3.0 Facility: $2,215 million; DDTL 5.0 Facility: $1,101 million, representing total floating recourse credit facility debt of $10,806 million.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 10-Q direct audit",
+            "verifier_notes": "Contemporaneous Form 10-Q for Q1 period ended March 31, 2026 filed May 8, 2026, establishing Q1 debt balances across all active DDTLs totaling $10.806B floating principal."
+        },
+        {
+            "claim_id": "CLM-CRWV-012",
+            "entity_id": "CRWV",
+            "filing_type": "8-K",
+            "accession_number": "0001769628-24-000035",
+            "filing_date": "2024-06-15",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962824000035/crwv-20240615.htm",
+            "section_locator": "Item 1.01 Entry into a Material Definitive Agreement",
+            "quote_type": "source_excerpt",
+            "exact_quote": "The Company completed offerings of Senior Notes in aggregate principal amount of $10,029 million across multiple tranches maturing between 2030 and 2032.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 8-K direct audit",
+            "verifier_notes": "Contemporaneous disclosure establishing earliest public knowledge on June 15, 2024 of Senior Notes tranches."
+        },
+        {
+            "claim_id": "CLM-CRWV-013",
+            "entity_id": "CRWV",
+            "filing_type": "8-K",
+            "accession_number": "0001769628-24-000022",
+            "filing_date": "2024-05-01",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962824000022/crwv-20240501.htm",
+            "section_locator": "Item 1.01 Entry into a Material Definitive Agreement",
+            "quote_type": "source_excerpt",
+            "exact_quote": "The Company issued Convertible Senior Notes with aggregate principal amount of $6,588 million maturing in 2031 and 2032.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 8-K direct audit",
+            "verifier_notes": "Contemporaneous disclosure establishing earliest public knowledge on May 1, 2024 of Convertible Senior Notes."
+        },
+        {
+            "claim_id": "CLM-CRWV-014",
+            "entity_id": "CRWV",
+            "filing_type": "10-Q",
+            "accession_number": "0001769628-24-000025",
+            "filing_date": "2024-05-01",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962824000025/crwv-20240331.htm",
+            "section_locator": "Note 6. Debt - OEM and Software Financing",
+            "quote_type": "source_excerpt",
+            "exact_quote": "The Company entered into various OEM and Software License Financing Arrangements totaling $4,220 million maturing through July 2030.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 10-Q direct audit",
+            "verifier_notes": "Contemporaneous disclosure establishing earliest public knowledge on May 1, 2024 of OEM financing arrangements."
         }
     ]
     df = pd.DataFrame(claims)
@@ -1079,8 +1261,8 @@ def build_obligations():
         "REL-MSFT-CRWV-REVENUE-CONCENTRATION": {"economic_valid_from": "2025-01-01", "economic_valid_to": None, "publicly_known_from": "2026-03-31", "rate_type": "none", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
         "OBL-SMCI-SUPPLIER-COMMIT": {"economic_valid_from": "2025-07-01", "economic_valid_to": "2027-06-30", "publicly_known_from": "2026-08-31", "rate_type": "none", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
         "OBL-NVDA-CRWV-EQUITY": {"economic_valid_from": "2026-01-15", "economic_valid_to": "2099-12-31", "publicly_known_from": "2026-05-08", "rate_type": "none", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
-        "OBL-APLD-DEBT-PF1": {"economic_valid_from": "2024-06-01", "economic_valid_to": "2030-12-15", "publicly_known_from": "2024-06-15", "rate_type": "fixed", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
-        "OBL-APLD-DEBT-PF2": {"economic_valid_from": "2025-01-15", "economic_valid_to": "2031-03-15", "publicly_known_from": "2025-01-25", "rate_type": "fixed", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
+        "OBL-APLD-DEBT-PF1": {"economic_valid_from": "2024-06-01", "economic_valid_to": "2030-12-15", "publicly_known_from": "2024-06-14", "rate_type": "fixed", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
+        "OBL-APLD-DEBT-PF2": {"economic_valid_from": "2025-01-15", "economic_valid_to": "2031-03-15", "publicly_known_from": "2025-01-24", "rate_type": "fixed", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
         "OBL-APLD-DEBT-CONV": {"economic_valid_from": "2024-11-15", "economic_valid_to": "2030-06-30", "publicly_known_from": "2024-11-20", "rate_type": "fixed", "benchmark_rate": None, "supersedes": None, "superseded_by": None},
         "OBL-APLD-DEBT-BRIDGE": {"economic_valid_from": "2026-05-01", "economic_valid_to": "2026-06-16", "publicly_known_from": "2026-05-08", "rate_type": "floating", "benchmark_rate": "SOFR", "supersedes": None, "superseded_by": "OBL-APLD-DEBT-7PCT-2026"},
         "OBL-APLD-DEBT-7PCT-2026": {"economic_valid_from": "2026-06-16", "economic_valid_to": "2031-06-15", "publicly_known_from": "2026-06-18", "rate_type": "fixed", "benchmark_rate": None, "supersedes": "OBL-APLD-DEBT-BRIDGE", "superseded_by": None},
@@ -1102,9 +1284,288 @@ def build_obligations():
     return df
 
 
+def build_obligation_events():
+    """
+    Builds the Obligation Events Ledger (ADR-014).
+    Explicitly tracks discrete edge lifecycle events (creation, supersession, termination, amendment)
+    with bitemporal timestamps (economic_effective_at vs publicly_known_at), eliminating look-ahead
+    bias at debt refinancing boundaries (such as June 16-18, 2026).
+    """
+    events = [
+        # 1. Master Lease creation
+        {
+            "event_id": "EVT-CRWV-APLD-LEASE-CREATED",
+            "obligation_id": "OBL-CRWV-APLD-LEASE",
+            "event_type": "created",
+            "economic_effective_at": "2025-05-28",
+            "publicly_known_at": "2025-06-02",
+            "related_obligation_id": None,
+            "claim_id": "CLM-APLD-009",
+            "description": "Execution of 15-year 400 MW Polaris Forge 1 master leases with CoreWeave ($11.0B total revenue)"
+        },
+        # 2. ELN-02 Springing Guaranty creation
+        {
+            "event_id": "EVT-CRWV-APLD-GUARANTY-ELN02-CREATED",
+            "obligation_id": "OBL-CRWV-APLD-GUARANTY-ELN02",
+            "event_type": "created",
+            "economic_effective_at": "2026-03-30",
+            "publicly_known_at": "2026-04-01",
+            "related_obligation_id": None,
+            "claim_id": "CLM-APLD-005",
+            "description": "Execution of Unconditional Springing Guaranty Agreement for Building 2 (Phase 2/4 Space)"
+        },
+        # 3. ELN-03 Springing Guaranty creation
+        {
+            "event_id": "EVT-CRWV-APLD-GUARANTY-ELN03-CREATED",
+            "obligation_id": "OBL-CRWV-APLD-GUARANTY-ELN03",
+            "event_type": "created",
+            "economic_effective_at": "2026-03-30",
+            "publicly_known_at": "2026-04-01",
+            "related_obligation_id": None,
+            "claim_id": "CLM-APLD-006",
+            "description": "Execution of Unconditional Springing Guaranty Agreement for Building 3 (150 MW)"
+        },
+        # 4. CoreWeave DDTL 1.0 creation
+        {
+            "event_id": "EVT-CRWV-DEBT-DDTL1-CREATED",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL1",
+            "event_type": "created",
+            "economic_effective_at": "2023-08-01",
+            "publicly_known_at": "2024-03-15",
+            "related_obligation_id": None,
+            "claim_id": "CLM-CRWV-007",
+            "description": "Closing of DDTL 1.0 Credit Facility ($1,300M commitments)"
+        },
+        # 5. CoreWeave DDTL 2.0 creation
+        {
+            "event_id": "EVT-CRWV-DEBT-DDTL2-CREATED",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL2",
+            "event_type": "created",
+            "economic_effective_at": "2024-02-01",
+            "publicly_known_at": "2024-05-15",
+            "related_obligation_id": None,
+            "claim_id": "CLM-CRWV-008",
+            "description": "Closing of DDTL 2.0 Credit Facility ($3,190M commitments)"
+        },
+        # 6. CoreWeave DDTL 2.1 creation
+        {
+            "event_id": "EVT-CRWV-DEBT-DDTL21-CREATED",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL2-1",
+            "event_type": "created",
+            "economic_effective_at": "2024-05-01",
+            "publicly_known_at": "2024-08-15",
+            "related_obligation_id": None,
+            "claim_id": "CLM-CRWV-009",
+            "description": "Closing of DDTL 2.1 Credit Facility ($3,000M commitments)"
+        },
+        # 7. CoreWeave DDTL 3.0 creation
+        {
+            "event_id": "EVT-CRWV-DEBT-DDTL3-CREATED",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL3",
+            "event_type": "created",
+            "economic_effective_at": "2024-08-01",
+            "publicly_known_at": "2024-11-15",
+            "related_obligation_id": None,
+            "claim_id": "CLM-CRWV-010",
+            "description": "Closing of DDTL 3.0 Credit Facility ($2,215M commitments)"
+        },
+        # 8. CoreWeave DDTL 4.0 creation
+        {
+            "event_id": "EVT-CRWV-DEBT-DDTL4-CREATED",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL4",
+            "event_type": "created",
+            "economic_effective_at": "2024-09-01",
+            "publicly_known_at": "2026-08-12",
+            "related_obligation_id": None,
+            "claim_id": "CLM-CRWV-004",
+            "description": "Closing of DDTL 4.0 Project SPV Facility ($8,500M commitments, $2,837M drawn)"
+        },
+        # 9. CoreWeave DDTL 5.0 creation
+        {
+            "event_id": "EVT-CRWV-DEBT-DDTL5-CREATED",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL5",
+            "event_type": "created",
+            "economic_effective_at": "2024-11-01",
+            "publicly_known_at": "2025-05-15",
+            "related_obligation_id": None,
+            "claim_id": "CLM-CRWV-006",
+            "description": "Closing of DDTL 5.0 Credit Facility ($1,101M commitments)"
+        },
+        # 10. CoreWeave Senior Notes creation
+        {
+            "event_id": "EVT-CRWV-DEBT-NOTES-CREATED",
+            "obligation_id": "OBL-CRWV-DEBT-NOTES",
+            "event_type": "created",
+            "economic_effective_at": "2024-06-01",
+            "publicly_known_at": "2024-06-15",
+            "related_obligation_id": None,
+            "claim_id": "CLM-CRWV-012",
+            "description": "Issuance of Senior Notes tranches ($10,029M aggregate)"
+        },
+        # 11. CoreWeave Convertible Notes creation
+        {
+            "event_id": "EVT-CRWV-DEBT-CONV-CREATED",
+            "obligation_id": "OBL-CRWV-DEBT-CONV",
+            "event_type": "created",
+            "economic_effective_at": "2024-04-15",
+            "publicly_known_at": "2024-05-01",
+            "related_obligation_id": None,
+            "claim_id": "CLM-CRWV-013",
+            "description": "Issuance of Convertible Senior Notes ($6,588M aggregate)"
+        },
+        # 12. CoreWeave Recourse OEM Financing creation
+        {
+            "event_id": "EVT-CRWV-DEBT-OEM-CREATED",
+            "obligation_id": "OBL-CRWV-DEBT-OEM",
+            "event_type": "created",
+            "economic_effective_at": "2024-01-01",
+            "publicly_known_at": "2024-05-01",
+            "related_obligation_id": None,
+            "claim_id": "CLM-CRWV-014",
+            "description": "Execution of recourse OEM and software financing arrangements ($4,220M)"
+        },
+        # 13. CoreWeave Non-Recourse OEM Financing creation
+        {
+            "event_id": "EVT-CRWV-DEBT-OEMNR-CREATED",
+            "obligation_id": "OBL-CRWV-DEBT-OEM-NR",
+            "event_type": "created",
+            "economic_effective_at": "2024-06-01",
+            "publicly_known_at": "2026-08-12",
+            "related_obligation_id": None,
+            "claim_id": "CLM-CRWV-004",
+            "description": "Closing of non-recourse OEM and software financing ($882M)"
+        },
+        # 14. CoreWeave Magnetar Loan creation
+        {
+            "event_id": "EVT-CRWV-DEBT-MAGNETAR-CREATED",
+            "obligation_id": "OBL-CRWV-DEBT-MAGNETAR",
+            "event_type": "created",
+            "economic_effective_at": "2024-01-15",
+            "publicly_known_at": "2024-03-15",
+            "related_obligation_id": None,
+            "claim_id": "CLM-CRWV-007",
+            "description": "Execution of Magnetar loan facility ($189M)"
+        },
+        # 15. Microsoft Recognized Revenue concentration creation
+        {
+            "event_id": "EVT-MSFT-CRWV-REV-CREATED",
+            "obligation_id": "REL-MSFT-CRWV-REVENUE-CONCENTRATION",
+            "event_type": "created",
+            "economic_effective_at": "2025-01-01",
+            "publicly_known_at": "2026-03-31",
+            "related_obligation_id": None,
+            "claim_id": "CLM-CRWV-003",
+            "description": "Recognition of FY25 customer revenue concentration ($3.438B recognized revenue, 67% share)"
+        },
+        # 16. Supermicro Purchase Commitments creation
+        {
+            "event_id": "EVT-SMCI-COMMIT-CREATED",
+            "obligation_id": "OBL-SMCI-SUPPLIER-COMMIT",
+            "event_type": "created",
+            "economic_effective_at": "2025-07-01",
+            "publicly_known_at": "2026-08-31",
+            "related_obligation_id": None,
+            "claim_id": "CLM-SMCI-001",
+            "description": "Execution of non-cancelable hardware purchase commitments ($34.2B over next 12 months)"
+        },
+        # 17. NVIDIA Strategic Equity Placement creation
+        {
+            "event_id": "EVT-NVDA-CRWV-EQUITY-CREATED",
+            "obligation_id": "OBL-NVDA-CRWV-EQUITY",
+            "event_type": "created",
+            "economic_effective_at": "2026-01-15",
+            "publicly_known_at": "2026-05-08",
+            "related_obligation_id": None,
+            "claim_id": "CLM-NVDA-CRWV-001",
+            "description": "NVIDIA $2.0B Series C preferred stock strategic equity placement in CoreWeave"
+        },
+        # 18. Applied Digital Polaris Forge 1 Notes creation
+        {
+            "event_id": "EVT-APLD-DEBT-PF1-CREATED",
+            "obligation_id": "OBL-APLD-DEBT-PF1",
+            "event_type": "created",
+            "economic_effective_at": "2024-06-01",
+            "publicly_known_at": "2024-06-14",
+            "related_obligation_id": None,
+            "claim_id": "CLM-APLD-010",
+            "description": "APLD ComputeCo LLC private offering of $2,350.0M 9.25% Senior Secured Notes due 2030"
+        },
+        # 19. Applied Digital Polaris Forge 2 Notes creation
+        {
+            "event_id": "EVT-APLD-DEBT-PF2-CREATED",
+            "obligation_id": "OBL-APLD-DEBT-PF2",
+            "event_type": "created",
+            "economic_effective_at": "2025-01-15",
+            "publicly_known_at": "2025-01-24",
+            "related_obligation_id": None,
+            "claim_id": "CLM-APLD-011",
+            "description": "APLD ComputeCo 2 LLC offering of $2,150.0M 6.75% Senior Notes due 2031"
+        },
+        # 20. Applied Digital Convertible Notes creation
+        {
+            "event_id": "EVT-APLD-DEBT-CONV-CREATED",
+            "obligation_id": "OBL-APLD-DEBT-CONV",
+            "event_type": "created",
+            "economic_effective_at": "2024-11-15",
+            "publicly_known_at": "2024-11-20",
+            "related_obligation_id": None,
+            "claim_id": "CLM-APLD-012",
+            "description": "Applied Digital Corporation offering of $450.0M 2.75% Convertible Senior Notes due 2030"
+        },
+        # 21. Applied Digital Bridge Facility creation
+        {
+            "event_id": "EVT-APLD-DEBT-BRIDGE-CREATED",
+            "obligation_id": "OBL-APLD-DEBT-BRIDGE",
+            "event_type": "created",
+            "economic_effective_at": "2026-05-01",
+            "publicly_known_at": "2026-05-08",
+            "related_obligation_id": None,
+            "claim_id": "CLM-APLD-013",
+            "description": "Entry into $300.0M floating-rate Bridge Credit Facility due April 30, 2027"
+        },
+        # 22. Applied Digital Bridge Facility supersession (refinancing boundary)
+        {
+            "event_id": "EVT-APLD-DEBT-BRIDGE-SUPERSEDED",
+            "obligation_id": "OBL-APLD-DEBT-BRIDGE",
+            "event_type": "superseded",
+            "economic_effective_at": "2026-06-16",
+            "publicly_known_at": "2026-06-18",
+            "related_obligation_id": "OBL-APLD-DEBT-7PCT-2026",
+            "claim_id": "CLM-APLD-008",
+            "description": "Repayment in full and termination of $300.0M Bridge Credit Facility from proceeds of $1.59B 7.00% Senior Secured Notes"
+        },
+        # 23. Applied Digital 7.00% Senior Secured Notes creation
+        {
+            "event_id": "EVT-APLD-DEBT-7PCT-CREATED",
+            "obligation_id": "OBL-APLD-DEBT-7PCT-2026",
+            "event_type": "created",
+            "economic_effective_at": "2026-06-16",
+            "publicly_known_at": "2026-06-18",
+            "related_obligation_id": "OBL-APLD-DEBT-BRIDGE",
+            "claim_id": "CLM-APLD-008",
+            "description": "APLD ComputeCo 3 LLC issuance of $1,590.0M 7.00% Senior Secured Notes due 2031"
+        },
+        # 24. Applied Digital Other Indebtedness creation
+        {
+            "event_id": "EVT-APLD-DEBT-OTHER-CREATED",
+            "obligation_id": "OBL-APLD-DEBT-OTHER",
+            "event_type": "created",
+            "economic_effective_at": "2026-05-31",
+            "publicly_known_at": "2026-07-29",
+            "related_obligation_id": None,
+            "claim_id": "CLM-APLD-003",
+            "description": "Aggregate residual debt ($56.68M) reconciling gross contractual principal to $5,306.68M"
+        }
+    ]
+    df = pd.DataFrame(events)
+    df.to_parquet(PROCESSED_DIR / "obligation_events.parquet", index=False)
+    df.to_csv(PROCESSED_DIR / "obligation_events.csv", index=False)
+    return df
+
+
 def build_obligation_facts_table():
     """
-    Builds the Fact-Level Bitemporal Ledger (ADR-013).
+    Builds the Fact-Level Bitemporal Ledger (ADR-013 & ADR-014).
     Decouples invariant contract identity (in obligations.parquet) from time-varying
     measurements (principal balances, swap notional, facility capacity, lease values).
     Each fact records:
@@ -1116,7 +1577,9 @@ def build_obligation_facts_table():
       - unit: currency or physical unit (USD, MW)
       - economic_as_of: balance sheet date / period end of the economic measurement
       - publicly_known_from: filing or disclosure date when the measurement became public knowledge
-      - claim_id: audited evidence claim
+      - truth_claim_id: audited primary source establishing contractual truth
+      - knowledge_claim_id: contemporaneous disclosure establishing earliest public knowledge
+      - claim_id: backwards-compatible alias to truth_claim_id
       - evidence_class: epistemic trust class (Class A / Class B / Class C)
     """
     facts = [
@@ -1130,6 +1593,8 @@ def build_obligation_facts_table():
             "unit": "MW",
             "economic_as_of": "2025-05-28",
             "publicly_known_from": "2025-06-02",
+            "truth_claim_id": "CLM-APLD-001",
+            "knowledge_claim_id": "CLM-APLD-009",
             "claim_id": "CLM-APLD-001",
             "evidence_class": "A"
         },
@@ -1142,6 +1607,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2025-05-28",
             "publicly_known_from": "2025-06-02",
+            "truth_claim_id": "CLM-APLD-001",
+            "knowledge_claim_id": "CLM-APLD-009",
             "claim_id": "CLM-APLD-001",
             "evidence_class": "A"
         },
@@ -1155,6 +1622,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-03-30",
             "publicly_known_from": "2026-04-01",
+            "truth_claim_id": "CLM-APLD-005",
+            "knowledge_claim_id": "CLM-APLD-005",
             "claim_id": "CLM-APLD-005",
             "evidence_class": "A"
         },
@@ -1167,6 +1636,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-03-30",
             "publicly_known_from": "2026-04-01",
+            "truth_claim_id": "CLM-APLD-006",
+            "knowledge_claim_id": "CLM-APLD-006",
             "claim_id": "CLM-APLD-006",
             "evidence_class": "C"
         },
@@ -1180,6 +1651,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-06-30",
             "publicly_known_from": "2026-08-12",
+            "truth_claim_id": "CLM-CRWV-001",
+            "knowledge_claim_id": "CLM-CRWV-001",
             "claim_id": "CLM-CRWV-001",
             "evidence_class": "A"
         },
@@ -1192,6 +1665,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-06-30",
             "publicly_known_from": "2026-08-12",
+            "truth_claim_id": "CLM-CRWV-001",
+            "knowledge_claim_id": "CLM-CRWV-001",
             "claim_id": "CLM-CRWV-001",
             "evidence_class": "A"
         },
@@ -1204,6 +1679,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-06-30",
             "publicly_known_from": "2026-08-12",
+            "truth_claim_id": "CLM-CRWV-001",
+            "knowledge_claim_id": "CLM-CRWV-001",
             "claim_id": "CLM-CRWV-001",
             "evidence_class": "A"
         },
@@ -1216,6 +1693,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-06-30",
             "publicly_known_from": "2026-08-12",
+            "truth_claim_id": "CLM-CRWV-001",
+            "knowledge_claim_id": "CLM-CRWV-001",
             "claim_id": "CLM-CRWV-001",
             "evidence_class": "A"
         },
@@ -1228,6 +1707,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-06-30",
             "publicly_known_from": "2026-08-12",
+            "truth_claim_id": "CLM-CRWV-004",
+            "knowledge_claim_id": "CLM-CRWV-004",
             "claim_id": "CLM-CRWV-004",
             "evidence_class": "A"
         },
@@ -1240,6 +1721,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-06-30",
             "publicly_known_from": "2026-08-12",
+            "truth_claim_id": "CLM-CRWV-004",
+            "knowledge_claim_id": "CLM-CRWV-004",
             "claim_id": "CLM-CRWV-004",
             "evidence_class": "A"
         },
@@ -1252,6 +1735,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-06-30",
             "publicly_known_from": "2026-08-12",
+            "truth_claim_id": "CLM-CRWV-004",
+            "knowledge_claim_id": "CLM-CRWV-004",
             "claim_id": "CLM-CRWV-004",
             "evidence_class": "A"
         },
@@ -1264,6 +1749,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-06-30",
             "publicly_known_from": "2026-08-12",
+            "truth_claim_id": "CLM-CRWV-001",
+            "knowledge_claim_id": "CLM-CRWV-001",
             "claim_id": "CLM-CRWV-001",
             "evidence_class": "A"
         },
@@ -1276,6 +1763,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-06-30",
             "publicly_known_from": "2026-08-12",
+            "truth_claim_id": "CLM-CRWV-001",
+            "knowledge_claim_id": "CLM-CRWV-001",
             "claim_id": "CLM-CRWV-001",
             "evidence_class": "A"
         },
@@ -1288,6 +1777,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-06-30",
             "publicly_known_from": "2026-08-12",
+            "truth_claim_id": "CLM-CRWV-001",
+            "knowledge_claim_id": "CLM-CRWV-001",
             "claim_id": "CLM-CRWV-001",
             "evidence_class": "A"
         },
@@ -1300,6 +1791,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-06-30",
             "publicly_known_from": "2026-08-12",
+            "truth_claim_id": "CLM-CRWV-001",
+            "knowledge_claim_id": "CLM-CRWV-001",
             "claim_id": "CLM-CRWV-001",
             "evidence_class": "A"
         },
@@ -1312,6 +1805,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-06-30",
             "publicly_known_from": "2026-08-12",
+            "truth_claim_id": "CLM-CRWV-004",
+            "knowledge_claim_id": "CLM-CRWV-004",
             "claim_id": "CLM-CRWV-004",
             "evidence_class": "A"
         },
@@ -1324,6 +1819,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-06-30",
             "publicly_known_from": "2026-08-12",
+            "truth_claim_id": "CLM-CRWV-001",
+            "knowledge_claim_id": "CLM-CRWV-001",
             "claim_id": "CLM-CRWV-001",
             "evidence_class": "A"
         },
@@ -1336,6 +1833,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-06-30",
             "publicly_known_from": "2026-08-12",
+            "truth_claim_id": "CLM-CRWV-005",
+            "knowledge_claim_id": "CLM-CRWV-005",
             "claim_id": "CLM-CRWV-005",
             "evidence_class": "A"
         },
@@ -1349,6 +1848,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2025-12-31",
             "publicly_known_from": "2026-03-31",
+            "truth_claim_id": "CLM-CRWV-003",
+            "knowledge_claim_id": "CLM-CRWV-003",
             "claim_id": "CLM-CRWV-003",
             "evidence_class": "A"
         },
@@ -1362,6 +1863,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-06-30",
             "publicly_known_from": "2026-08-31",
+            "truth_claim_id": "CLM-SMCI-001",
+            "knowledge_claim_id": "CLM-SMCI-001",
             "claim_id": "CLM-SMCI-001",
             "evidence_class": "A"
         },
@@ -1375,6 +1878,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-01-31",
             "publicly_known_from": "2026-05-08",
+            "truth_claim_id": "CLM-NVDA-CRWV-001",
+            "knowledge_claim_id": "CLM-NVDA-CRWV-001",
             "claim_id": "CLM-NVDA-CRWV-001",
             "evidence_class": "A"
         },
@@ -1387,7 +1892,9 @@ def build_obligation_facts_table():
             "value": 2350000000.0,
             "unit": "USD",
             "economic_as_of": "2026-05-31",
-            "publicly_known_from": "2024-06-15",
+            "publicly_known_from": "2024-06-14",
+            "truth_claim_id": "CLM-APLD-003",
+            "knowledge_claim_id": "CLM-APLD-010",
             "claim_id": "CLM-APLD-003",
             "evidence_class": "A"
         },
@@ -1399,7 +1906,9 @@ def build_obligation_facts_table():
             "value": 2150000000.0,
             "unit": "USD",
             "economic_as_of": "2026-05-31",
-            "publicly_known_from": "2025-01-25",
+            "publicly_known_from": "2025-01-24",
+            "truth_claim_id": "CLM-APLD-003",
+            "knowledge_claim_id": "CLM-APLD-011",
             "claim_id": "CLM-APLD-003",
             "evidence_class": "A"
         },
@@ -1412,6 +1921,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-05-31",
             "publicly_known_from": "2024-11-20",
+            "truth_claim_id": "CLM-APLD-003",
+            "knowledge_claim_id": "CLM-APLD-012",
             "claim_id": "CLM-APLD-003",
             "evidence_class": "A"
         },
@@ -1424,6 +1935,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-05-31",
             "publicly_known_from": "2026-05-08",
+            "truth_claim_id": "CLM-APLD-003",
+            "knowledge_claim_id": "CLM-APLD-013",
             "claim_id": "CLM-APLD-003",
             "evidence_class": "A"
         },
@@ -1436,6 +1949,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-06-16",
             "publicly_known_from": "2026-06-18",
+            "truth_claim_id": "CLM-APLD-008",
+            "knowledge_claim_id": "CLM-APLD-008",
             "claim_id": "CLM-APLD-008",
             "evidence_class": "A"
         },
@@ -1448,6 +1963,8 @@ def build_obligation_facts_table():
             "unit": "USD",
             "economic_as_of": "2026-05-31",
             "publicly_known_from": "2026-07-29",
+            "truth_claim_id": "CLM-APLD-003",
+            "knowledge_claim_id": "CLM-APLD-003",
             "claim_id": "CLM-APLD-003",
             "evidence_class": "A"
         }
@@ -1464,9 +1981,11 @@ if __name__ == "__main__":
     df_ass = build_assumptions_table()
     df_clm = build_evidence_claims()
     df_obl = build_obligations()
+    df_evt = build_obligation_events()
     df_facts = build_obligation_facts_table()
     print(f"Entities: {len(df_ent)} rows")
     print(f"Assumptions: {len(df_ass)} rows")
     print(f"Evidence Claims: {len(df_clm)} rows")
     print(f"Obligations: {len(df_obl)} rows")
+    print(f"Obligation Events: {len(df_evt)} rows")
     print(f"Obligation Facts: {len(df_facts)} rows")
