@@ -168,11 +168,14 @@ cells.append(nbf.v4.new_markdown_cell("""## 3. Layer 2: The Contractual Obligati
 
 We model obligations using `nx.MultiDiGraph` with `obligation_id` as the edge key.
 This architecture preserves multiple distinct facilities between the same counterparty pair:
-* **CoreWeave Indebtedness Exactly Reconciled:** 11 modeled debt components/edges reconciling to the dollar with the **$35.551B** future principal total in Form 10-Q Note 7 (Table 36):
-  - Recourse DDTLs: DDTL 1.0 ($1.300B), DDTL 2.0 ($3.190B), DDTL 2.1 ($3.000B), DDTL 3.0 ($2.215B), DDTL 5.0 ($1.101B) = $10.806B.
-  - Non-Recourse SPV DDTL 4.0: **$2.837B** outstanding principal under an $8.500B facility capacity.
-  - Senior Notes ($10.029B), Convertibles ($6.588B), Recourse OEM ($4.220B), Non-Recourse OEM (**$0.882B**), Magnetar ($0.189B).
-  - Total: $1.300 + $3.190 + $3.000 + $2.215 + $2.837 + $1.101 + $10.029 + $6.588 + $4.220 + $0.882 + $0.189 = **$35.551B**!
+* **CoreWeave Indebtedness Exactly Reconciled:** 16 modeled debt components/edges reconciling to the dollar with the **$35.551B** future principal total in Form 10-Q Note 7 (Table 36):
+  - Recourse DDTLs (5 facilities from distinct borrower SPVs): DDTL 1.0 ($1.300B, `CRWV_CCAC_II`), DDTL 2.0 ($3.190B, `CRWV_CCAC_IV`), DDTL 2.1 ($3.000B, `CRWV_CCAC_IV`), DDTL 3.0 ($2.215B, `CRWV_CCAC_VII`), DDTL 5.0 ($1.101B, `CRWV_FINANCING_DDTL_V`) = $10.806B.
+  - Non-Recourse SPV DDTL 4.0: **$2.837B** outstanding principal under an $8.500B facility capacity (`CRWV_SPV_VIII` -> `MUFG_BANK_SYN`).
+  - Senior Notes (5 discrete tranches): 2030 ($2.000B), 2031 9.00% ($1.750B), 2031 9.75% ($2.750B), 2032 9.625% ($1.250B), 2032 EUR ($2.279B) = $10.029B.
+  - Convertibles (2 discrete tranches): 2031 ($2.588B), 2032 ($4.000B) = $6.588B.
+  - OEM Equipment Facilities & Magnetar: Recourse OEM ($4.220B), Non-Recourse OEM (**$0.882B**), Magnetar ($0.189B) = $5.291B.
+  - Total: $10.806 + $2.837 + $10.029 + $6.588 + $5.291 = **$35.551B** exact (0.00% drift).
+  - Recourse Parent Guarantees: 5 discrete parent guarantee edges from `CRWV` to syndicates (`amount_type = "contingent_guarantee"`) covering CCAC II, IV, VII, and Financing V; DDTL 4.0 is strictly non-recourse (0 parent guarantee edge).
 * **Applied Digital Debt Decomposed:** Form 10-K balance sheet reports net carrying debt of **$4.976B** ($4,959.5M net long-term + $16.4M current portion), while Note 8 discloses gross contractual remaining principal payments of **$5.307B** ($5,306.7M), with $330.7M in unamortized discount and debt issuance costs. Modeled contract-literally across 5 real instruments:
   - $2.35B 9.25% Senior Notes due **December 15, 2030** issued by APLD ComputeCo LLC (`APLD_COMPUTECO`), holding ELN-02 and ELN-03.
   - $2.15B 6.75% Senior Notes due **March 15, 2031** issued by APLD ComputeCo 2 LLC (`APLD_COMPUTECO2`).
@@ -188,11 +191,14 @@ Crucially, exposure is categorized strictly by **`amount_type`** with zero cross
 cells.append(nbf.v4.new_code_cell("""net = ObligationNetwork()
 obl_df = pd.read_parquet(project_root / "data/processed/obligations.parquet")
 
-crwv_debt_edges = obl_df[(obl_df["from_entity"] == "CRWV") & (obl_df["amount_type"] == "principal_outstanding")].copy()
+crwv_borrowers = [
+    "CRWV", "CRWV_CCAC_II", "CRWV_CCAC_IV", "CRWV_CCAC_VII", "CRWV_SPV_VIII", "CRWV_FINANCING_DDTL_V"
+]
+crwv_debt_edges = obl_df[(obl_df["from_entity"].isin(crwv_borrowers)) & (obl_df["amount_type"] == "principal_outstanding")].copy()
 crwv_debt_edges["amount_B"] = (crwv_debt_edges["amount"] / 1e9).round(3)
-reconciliation_table = crwv_debt_edges[["obligation_id", "to_entity", "amount_B", "recourse", "maturity_date", "payment_conditions"]]
+reconciliation_table = crwv_debt_edges[["obligation_id", "from_entity", "to_entity", "amount_B", "recourse", "maturity_date", "payment_conditions"]]
 print(f"=== CoreWeave Funded Debt Principal Reconciliation ===")
-print(f"Sum of Decomposed Edges: ${crwv_debt_edges['amount'].sum() / 1e9:.3f}B")
+print(f"Sum of 16 Decomposed Edges: ${crwv_debt_edges['amount'].sum() / 1e9:.3f}B")
 print(f"Audited 10-Q Note 7 Principal Total: $35.551B")
 print(f"Discrepancy: ${abs(crwv_debt_edges['amount'].sum() - 35551000000.0) / 1e6:.2f}M (0.00% Drift)")
 reconciliation_table
@@ -235,7 +241,13 @@ pos = {
     "PROJECT_LENDERS": np.array([1.1, -0.95]),
     "POLARIS_FORGE_1": np.array([0.2, -1.0]),
     "APLD": np.array([0.5, -1.15]),
-    "ORCL": np.array([-0.4, 0.8])
+    "ORCL": np.array([-0.4, 0.8]),
+    "CRWV_CCAC_II": np.array([0.15, 0.45]),
+    "CRWV_CCAC_IV": np.array([0.35, 0.40]),
+    "CRWV_CCAC_VII": np.array([0.25, 0.25]),
+    "CRWV_FINANCING_DDTL_V": np.array([-0.15, 0.35]),
+    "MUFG_BANK_SYN": np.array([0.5, -0.3]),
+    "MORGAN_STANLEY_SYN": np.array([-0.3, 0.5])
 }
 
 # Add default positions for any missing nodes
@@ -279,7 +291,7 @@ for u, v, k, d in G.edges(data=True, keys=True):
 edge_labels = {(u, v): f"${d['amount']/1e9:.1f}B" for u, v, k, d in G.edges(data=True, keys=True) if d.get("amount") is not None and d["amount"] >= 2.5e9}
 nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_size=8, font_color="#2c3e50")
 
-plt.title("AI Infrastructure Multi-Graph Obligation Network (Phase 0.7.2)\\n(Edges Represent Distinct Legal Facilities, Leases, Guarantees, and Commitments)", fontsize=13, fontweight="bold")
+plt.title("AI Infrastructure Multi-Graph Obligation Network (Phase 0 Epistemic Certification)\\n(Edges Represent Distinct Legal Facilities, Leases, Guarantees, and Commitments)", fontsize=13, fontweight="bold")
 plt.axis("off")
 plt.tight_layout()
 plt.savefig(project_root / "outputs/figures/obligation_network_topology.png", dpi=300)
@@ -308,7 +320,7 @@ Notice the literal contractual reality revealed in APLD's Form 10-K (Note 14, Ex
 # Cell 13: Code - Dynamic SPV Unwrapping
 cells.append(nbf.v4.new_code_cell("""collapsed_graph = net.unwrap_spv_perimeter()
 print(f"Consolidated Economic Network: {collapsed_graph.number_of_nodes()} Parent Nodes | {collapsed_graph.number_of_edges()} Consolidated Edges")
-print(f"SPVs Remaining in Collapsed Graph: {[n for n in collapsed_graph.nodes() if 'SPV' in n or 'LLC' in n]}")
+print(f"SPVs Remaining in Collapsed Graph: {[n for n in collapsed_graph.nodes() if net.entities_df.loc[n, 'category'] == 'project_spv']}")
 
 collapsed_records = []
 for u, v, k, d in collapsed_graph.edges(data=True, keys=True):
@@ -326,16 +338,16 @@ pd.DataFrame(collapsed_records).sort_values(by="amount_B", ascending=False)
 """))
 
 # Cell 13b: Markdown & Code - Bitemporal Dynamics: Economic Time vs Information Time
-cells.append(nbf.v4.new_markdown_cell(r"""### Bitemporal Dynamics: Economic Clock vs Information Clock (ADR-013 & ADR-014)
+cells.append(nbf.v4.new_markdown_cell(r"""### Bitemporal Dynamics: Economic Clock vs Information Clock (ADR-013, ADR-014, ADR-015)
 Our network distinguishes between two independent temporal dimensions with event-driven lifecycle and fact-level bitemporality:
 1. **Economic Reality Clock (`network.economic_as_of(date)`):** When did contracts exist in the physical/corporate world?
-   * At **May 31, 2026**, Applied Digital held the **$300.0M floating bridge credit facility** ($5,306.68M total principal across 22 active edges).
-   * On **June 16, 2026**, under **half-open validity intervals $[v\_from, v\_to)$**, the bridge was cleanly retired (`date >= valid_to`) and superseded by **$1.59B 7.00% Senior Secured Notes due 2031** (`OBL-APLD-DEBT-7PCT-2026`) issued by `APLD ComputeCo 3 LLC` (`APLD_COMPUTECO3`), conserving exactly 22 edges without double-counting ($6,596.68M total principal).
+   * At **May 31, 2026**, Applied Digital held the **$300.0M floating bridge credit facility** ($5,306.68M total principal across 30 active edges).
+   * On **June 16, 2026**, under **half-open validity intervals $[v\_from, v\_to)$**, the bridge was cleanly retired (`date >= valid_to`) and superseded by **$1.59B 7.00% Senior Secured Notes due 2031** (`OBL-APLD-DEBT-7PCT-2026`) issued by `APLD ComputeCo 3 LLC` (`APLD_COMPUTECO3`), conserving exactly 32 edges without double-counting ($6,596.68M total principal).
 2. **Information / Public Knowledge Clock (`network.known_as_of(date)`):** When did an outside observer actually learn about the contract from public SEC filings, eliminating look-ahead bias?
-   * **Obligation Lifecycle Events (`obligation_events`):** Extinction and supersession events have independent filing dates. On **June 17, 2026**, although the bridge was extinguished economically on June 16, the Form 8-K was not filed until June 18. Therefore, an outside observer on June 17 still observes the $300.0M bridge active, while the 7% notes remain absent! On **June 18, 2026**, the bridge is retired and the 7% notes appear.
-   * **Fact-Level Bitemporality (`obligation_facts`):** An obligation's contract existence can be known before its periodic balance is disclosed. On **June 30, 2026**, CoreWeave's DDTL 1.0 facility edge is known (from 2024 disclosures), but its June 30 balance ($1.300B) was not disclosed until August 12, 2026 (Form 10-Q), so `amount = None` (`amount_known = False`). Concurrently, APLD's 7.00% notes balance ($1.59B) was announced via Form 8-K on June 18, 2026, so its amount is fully known on June 30!
-   * On **September 28, 2026**, all Q2 periodic filings are published (DDTL 1.0 amount is known at $1.300B; all 22 edges active).
-3. **Strict Zero-Lookahead Stress Engine (ADR-014):** In known mode on June 30, before CoreWeave's 10-Q was filed, floating debt amounts are unmeasured/unknown. The engine strictly avoids leaking the August 12 $12.206B total, returning `floating_principal_known = False`, `max_cash_drain = None`, and listing all 5 unknown floating edges.
+   * **Obligation Lifecycle Events (`obligation_events`):** Extinction, supersession, and issuance events have independent filing dates. On **June 17, 2026**, although CoreWeave's 2032 Senior Notes ($1.250B + $2.279B EUR) were issued June 11, the Form 8-K was not filed until June 18. Therefore, an outside observer on June 17 sees 26 active edges. On **June 18, 2026**, the Form 8-K is filed and the knowledge graph expands to 28 edges.
+   * **Fact-Level Bitemporality (`obligation_facts`):** An obligation's contract existence can be known before its periodic balance is disclosed. On **June 30, 2026**, CoreWeave's DDTL 1.0 facility edge is known (from historical credit agreements), but its June 30 balance ($1.300B) was not disclosed until August 12, 2026 (Form 10-Q), so `amount = None` (`amount_known = False`). Concurrently, APLD's 7.00% notes balance ($1.59B) was announced via Form 8-K on June 16, 2026, so its amount is fully known on June 30!
+   * On **September 28, 2026**, all Q2 periodic filings are published (DDTL 1.0 amount is known at $1.300B; all 32 edges active).
+3. **Strict Zero-Lookahead Stress Engine (ADR-014 & ADR-015):** In known mode on June 30, before CoreWeave's 10-Q was filed, floating debt amounts are unmeasured/unknown. The engine strictly avoids leaking the August 12 $12.206B total, returning `floating_principal_known = False`, `max_cash_drain = None`, and listing all unknown floating edges.
 """))
 
 cells.append(nbf.v4.new_code_cell("""# 1. Economic Clock: Half-Open Intervals & Obligation Conservation
@@ -344,9 +356,9 @@ net_jun16 = net.economic_as_of("2026-06-16")
 net_sep = net.economic_as_of("2026-09-28")
 
 print(f"=== Economic Clock (Half-Open Interval [valid_from, valid_to)) ===")
-print(f"Edges at 2026-05-31: {net_may.graph.number_of_edges()} (Bridge Active: { 'OBL-APLD-DEBT-BRIDGE' in [k for _, _, k in net_may.graph.edges(keys=True)] })")
-print(f"Edges at 2026-06-16: {net_jun16.graph.number_of_edges()} (Bridge: { 'OBL-APLD-DEBT-BRIDGE' in [k for _, _, k in net_jun16.graph.edges(keys=True)] } | 7% Notes: { 'OBL-APLD-DEBT-7PCT-2026' in [k for _, _, k in net_jun16.graph.edges(keys=True)] })")
-print(f"Edges at 2026-09-28: {net_sep.graph.number_of_edges()} (7% Notes Active: { 'OBL-APLD-DEBT-7PCT-2026' in [k for _, _, k in net_sep.graph.edges(keys=True)] })")
+print(f"Edges at 2026-05-31: {net_may.graph.number_of_edges()} (Bridge Active: {'OBL-APLD-DEBT-BRIDGE' in [k for _, _, k in net_may.graph.edges(keys=True)]})")
+print(f"Edges at 2026-06-16: {net_jun16.graph.number_of_edges()} (Bridge: {'OBL-APLD-DEBT-BRIDGE' in [k for _, _, k in net_jun16.graph.edges(keys=True)]} | 7% Notes: {'OBL-APLD-DEBT-7PCT-2026' in [k for _, _, k in net_jun16.graph.edges(keys=True)]})")
+print(f"Edges at 2026-09-28: {net_sep.graph.number_of_edges()} (7% Notes Active: {'OBL-APLD-DEBT-7PCT-2026' in [k for _, _, k in net_sep.graph.edges(keys=True)]})")
 
 # 2. Information Clock: Lifecycle Events & Fact Bitemporality (Zero Look-Ahead Bias)
 net_known_jun17 = net.known_as_of("2026-06-17")
@@ -354,16 +366,16 @@ net_known_jun18 = net.known_as_of("2026-06-18")
 net_known_jun = net.known_as_of("2026-06-30")
 net_known_sep = net.known_as_of("2026-09-28")
 
-print(f"\\n=== Information Clock: Lifecycle Events & Fact Bitemporality (ADR-014) ===")
-print(f"Observer on June 17, 2026: Bridge Active = {'OBL-APLD-DEBT-BRIDGE' in [k for _, _, k in net_known_jun17.graph.edges(keys=True)]} | 7% Notes Active = {'OBL-APLD-DEBT-7PCT-2026' in [k for _, _, k in net_known_jun17.graph.edges(keys=True)]} (Form 8-K unfiled)")
-print(f"Observer on June 18, 2026: Bridge Active = {'OBL-APLD-DEBT-BRIDGE' in [k for _, _, k in net_known_jun18.graph.edges(keys=True)]} | 7% Notes Active = {'OBL-APLD-DEBT-7PCT-2026' in [k for _, _, k in net_known_jun18.graph.edges(keys=True)]} (Form 8-K filed)")
+print(f"\\n=== Information Clock: Lifecycle Events & Fact Bitemporality (ADR-014/015) ===")
+print(f"Observer on June 17, 2026: Edges = {net_known_jun17.graph.number_of_edges()} | 2032 Notes Active = {'OBL-CRWV-DEBT-NOTES-2032-9625' in [k for _, _, k in net_known_jun17.graph.edges(keys=True)]} (Form 8-K unfiled)")
+print(f"Observer on June 18, 2026: Edges = {net_known_jun18.graph.number_of_edges()} | 2032 Notes Active = {'OBL-CRWV-DEBT-NOTES-2032-9625' in [k for _, _, k in net_known_jun18.graph.edges(keys=True)]} (Form 8-K filed)")
 
-ddtl1_jun = net_known_jun.graph.get_edge_data("CRWV", "BLACKSTONE_MAGNETAR_SYN", key="OBL-CRWV-DEBT-DDTL1")
+ddtl1_jun = net_known_jun.graph.get_edge_data("CRWV_CCAC_II", "BLACKSTONE_MAGNETAR_SYN", key="OBL-CRWV-DEBT-DDTL1")
 apld_7pct_jun = net_known_jun.graph.get_edge_data("APLD_COMPUTECO3", "INSTITUTIONAL_BONDHOLDERS", key="OBL-APLD-DEBT-7PCT-2026")
-ddtl1_sep = net_known_sep.graph.get_edge_data("CRWV", "BLACKSTONE_MAGNETAR_SYN", key="OBL-CRWV-DEBT-DDTL1")
+ddtl1_sep = net_known_sep.graph.get_edge_data("CRWV_CCAC_II", "BLACKSTONE_MAGNETAR_SYN", key="OBL-CRWV-DEBT-DDTL1")
 
 print(f"CoreWeave DDTL 1.0 on June 30, 2026:  amount = {ddtl1_jun['amount']} (amount_known: {ddtl1_jun['amount_known']}) -> Disclosed August 12")
-print(f"APLD 7% Notes on June 30, 2026:       amount = ${apld_7pct_jun['amount']/1e9:.2f}B (amount_known: {apld_7pct_jun['amount_known']}) -> Disclosed June 18")
+print(f"APLD 7% Notes on June 30, 2026:       amount = ${apld_7pct_jun['amount']/1e9:.2f}B (amount_known: {apld_7pct_jun['amount_known']}) -> Disclosed June 16")
 print(f"CoreWeave DDTL 1.0 on Sep 28, 2026:   amount = ${ddtl1_sep['amount']/1e9:.3f}B (amount_known: {ddtl1_sep['amount_known']})")
 
 # 3. Dynamic Epistemic Stress Decoupling (Strict Zero-Lookahead)
@@ -375,12 +387,11 @@ engine_sep = FinancialStressEngine(network=net_sep)
 hit_may = engine_may.simulate_sofr_base_rate_shock()["network_cash_drain_reported_baseline_usd"]
 hit_sep = engine_sep.simulate_sofr_base_rate_shock()["network_cash_drain_reported_baseline_usd"]
 
-print(f"\\n=== Zero-Lookahead Stress Simulation (ADR-014) ===")
+print(f"\\n=== Zero-Lookahead Stress Simulation (ADR-014/015) ===")
 print(f"June 30 Knowledge Mode: Floating Known = {sofr_known_jun['floating_principal_known']} | Unknown Edges = {len(sofr_known_jun['unknown_floating_edges'])}")
 print(f"June 30 Knowledge Mode: Reported Baseline Drain = {sofr_known_jun['network_cash_drain_reported_baseline_usd']} | Max Drain = {sofr_known_jun['max_cash_drain_usd']}")
-print(f"May 31 Snapshot SOFR Drain:  ${hit_may/1e6:.1f}M/yr (APLD floating = ${engine_may.get_active_floating_debt('APLD')/1e6:.1f}M)")
-print(f"Sep 28 Post-Refi SOFR Drain: ${hit_sep/1e6:.1f}M/yr (APLD floating = ${engine_sep.get_active_floating_debt('APLD')/1e6:.1f}M)")
-
+print(f"May 31 Snapshot SOFR Drain:  ${float(hit_may)/1e6:.1f}M/yr (APLD floating = ${float(engine_may.get_active_floating_debt('APLD'))/1e6:.1f}M)")
+print(f"Sep 28 Post-Refi SOFR Drain: ${float(hit_sep)/1e6:.1f}M/yr (APLD floating = ${float(engine_sep.get_active_floating_debt('APLD'))/1e6:.1f}M)")
 """))
 
 # Cell 14: Markdown - Reachability vs Stress
@@ -478,10 +489,10 @@ claims_df[["claim_id", "entity_id", "filing_type", "filing_date", "section_locat
 # Cell 22: Markdown - Synthesis
 cells.append(nbf.v4.new_markdown_cell("""## 8. Synthesis & Computational Sketchbook Findings
 
-### What Phase 0.7.2 Established
+### What Phase 0 Epistemic Certification Established
 1. **The Bubble Lives in the Joins:** On consolidated statements, Applied Digital appears as a standalone host with $1.59B in cash and $4.98B carrying debt. But through the join at Polaris Forge 1 ($11.0B 15-year lease with CoreWeave), APLD's cash flows are tied to CoreWeave's solvency.
 2. **Perimeter Opacity & Uncapped Springing Guarantees:** CoreWeave executed separate Unconditional Springing Guarantees under Exhibit 10.1 (Building 2 Phase 2/4 Space, 2 of 4 halls; uncapped face value) and Exhibit 10.2 (Building 3, 150 MW; uncapped indemnity with $4.13B Class C reference proxy). If the Colocation Customer defaults or reduces payments, Springing Event (ii) activates parent liability. Building 4 ($4.13B, 150 MW) is guaranteed by APLD, not CoreWeave parent.
-3. **Debt Decomposition & Duality:** Reconciled CoreWeave's indebtedness to $35.551B across 11 modeled debt components/edges. Reconciled Applied Digital's debt duality: $4.976B net carrying balance sheet debt vs $5.307B gross contractual principal across 5 real instruments ($2.35B PF1, $2.15B PF2, $450M convertible, $300M floating bridge, $56.7M other).
+3. **Debt Decomposition & Duality:** Reconciled CoreWeave's indebtedness to $35.551B across 16 discrete modeled debt tranches/edges with 0.00% drift. Reconciled Applied Digital's debt duality: $4.976B net carrying balance sheet debt vs $5.307B gross contractual principal across 5 real instruments ($2.35B PF1, $2.15B PF2, $450M convertible, $300M floating bridge, $56.7M other) superseded by $1.59B 7.00% Senior Notes.
 4. **Rate Transmission Grounded in Swaps:** Anchored on CoreWeave's audited $4.66B interest rate swap notional, revealing that $7.55B in floating debt is unhedged, plus APLD's $300M floating bridge facility, generating an immediate $235.4M/yr network cash drain (sensitivity band: $27.3M to $303.9M/yr). Maturing debt faces a $317.9M/yr refinancing penalty by 2027.
 5. **Modeled Refinancing Gap vs Cash Calls:** A -40% GPU collateral haircut models a $4.32B refinancing capacity contraction (Class C proxy) rather than an automatic cash call; CoreWeave's cash remains $5.52B intact under DDTL 5.0 §2.05.
 6. **Building-Level Operational Phasing:** Modeled Polaris Forge 1 building phasing (~150 MW operational producing $275M base rent vs ~250 MW pending expansion), with carrying costs evaluated across a sensitivity band of 6.8% to 9.4% of cash.

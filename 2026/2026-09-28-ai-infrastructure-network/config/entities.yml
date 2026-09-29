@@ -110,8 +110,96 @@ entities:
     status: subsidiary_spv
     reporting_standard: US-GAAP_consolidated
     fiscal_year_end: "12-31"
-    description: "Bankruptcy-remote Special Purpose Vehicle created by CoreWeave to hold compute equipment and lease obligations at Polaris Forge 1."
-    key_counterparties: [CRWV, APLD_COMPUTECO]
+    description: "Bankruptcy-remote Special Purpose Vehicle created by CoreWeave to hold compute equipment, tenant under Polaris Forge 1 lease, and borrower under $8.5B non-recourse DDTL 4.0 Facility."
+    key_counterparties: [CRWV, APLD_COMPUTECO, MUFG_BANK_SYN]
+
+  CRWV_CCAC_II:
+    entity_id: CRWV_CCAC_II
+    name: CoreWeave Compute Acquisition Co. II, LLC
+    ticker: null
+    cik: null
+    parent_entity_id: CRWV
+    category: project_spv
+    subsector: equipment_financing_bankruptcy_remote_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "12-31"
+    description: "Direct wholly owned subsidiary and bankruptcy-remote borrowing SPV for CoreWeave DDTL 1.0 Facility (entered July 30, 2023)."
+    key_counterparties: [CRWV, BLACKSTONE_MAGNETAR_SYN]
+
+  CRWV_CCAC_IV:
+    entity_id: CRWV_CCAC_IV
+    name: CoreWeave Compute Acquisition Co. IV, LLC
+    ticker: null
+    cik: null
+    parent_entity_id: CRWV
+    category: project_spv
+    subsector: equipment_financing_bankruptcy_remote_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "12-31"
+    description: "Direct wholly owned subsidiary and bankruptcy-remote borrowing SPV for CoreWeave DDTL 2.0 (May 16, 2024) and DDTL 2.1 (September 2025) Facilities."
+    key_counterparties: [CRWV, BLACKSTONE_MAGNETAR_SYN]
+
+  CRWV_CCAC_VII:
+    entity_id: CRWV_CCAC_VII
+    name: CoreWeave Compute Acquisition Co. VII, LLC
+    ticker: null
+    cik: null
+    parent_entity_id: CRWV
+    category: project_spv
+    subsector: equipment_financing_bankruptcy_remote_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "12-31"
+    description: "Indirect subsidiary and bankruptcy-remote borrowing SPV for CoreWeave DDTL 3.0 Facility (July 2025)."
+    key_counterparties: [CRWV, BLACKSTONE_MAGNETAR_SYN]
+
+  CRWV_FINANCING_DDTL_V:
+    entity_id: CRWV_FINANCING_DDTL_V
+    name: CoreWeave Financing DDTL V, LLC
+    ticker: null
+    cik: null
+    parent_entity_id: CRWV
+    category: project_spv
+    subsector: equipment_financing_bankruptcy_remote_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "12-31"
+    description: "Indirect subsidiary and bankruptcy-remote borrowing SPV for CoreWeave DDTL 5.0 Facility (May 15, 2026)."
+    key_counterparties: [CRWV, MORGAN_STANLEY_SYN]
+
+  MUFG_BANK_SYN:
+    entity_id: MUFG_BANK_SYN
+    name: MUFG Bank Syndicate
+    ticker: null
+    cik: null
+    category: private_credit_syndicate
+    subsector: bank_credit_syndicate
+    jurisdiction: US
+    status: private_syndicate
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Syndicate of bank lenders led by MUFG Bank, LTD. providing the $8.5B non-recourse DDTL 4.0 credit facility to CCAC VIII."
+    key_counterparties: [CRWV_SPV_VIII]
+
+  MORGAN_STANLEY_SYN:
+    entity_id: MORGAN_STANLEY_SYN
+    name: Morgan Stanley Senior Funding Syndicate
+    ticker: null
+    cik: null
+    category: private_credit_syndicate
+    subsector: bank_credit_syndicate
+    jurisdiction: US
+    status: private_syndicate
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Syndicate of lenders led by Morgan Stanley Senior Funding, Inc. providing the $3.1B DDTL 5.0 facility guaranteed by CoreWeave, Inc."
+    key_counterparties: [CRWV_FINANCING_DDTL_V, CRWV]
 
   APLD_COMPUTECO:
     entity_id: APLD_COMPUTECO

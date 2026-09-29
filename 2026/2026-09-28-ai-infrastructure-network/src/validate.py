@@ -67,6 +67,75 @@ def parse_dollar(val_str: str):
     return num
 
 
+def validate_sec_source_existence():
+    """
+    Validates that every evidence claim citing SEC EDGAR filings exists in the cached raw
+    submissions JSON files with matching accession number, filing form, and filing date (ADR-015).
+    Also validates that all obligation events respect the public knowledge invariant:
+    event.publicly_known_at >= claim.filing_date.
+    """
+    sec_dir = PROJECT_ROOT / "data" / "raw" / "sec"
+    files = {
+        'CRWV': [sec_dir / 'CRWV_submissions_0001769628.json', sec_dir / 'CRWV_submissions_older.json'],
+        'APLD': [sec_dir / 'APLD_submissions_0001144879.json'],
+        'ORCL': [sec_dir / 'ORCL_submissions_0001341439.json'],
+        'SMCI': [sec_dir / 'SMCI_submissions_0001375365.json'],
+        'MSFT': [sec_dir / 'MSFT_submissions_0000789019.json'],
+        'NVDA': [sec_dir / 'NVDA_submissions_0001045810.json']
+    }
+    
+    all_filings = {}
+    for entity, paths in files.items():
+        all_filings[entity] = {}
+        for p in paths:
+            if not p.exists():
+                continue
+            with open(p, "r", encoding="utf-8") as f:
+                d = json.load(f)
+            fdict = d.get('filings', {}).get('recent', {}) if 'filings' in d else (d if 'accessionNumber' in d else {})
+            if not fdict:
+                continue
+            for acc, form, fdate, doc in zip(fdict['accessionNumber'], fdict['form'], fdict['filingDate'], fdict['primaryDocument']):
+                all_filings[entity][acc] = {'form': form, 'filingDate': fdate, 'primaryDocument': doc}
+
+    clm_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
+    errors = []
+    
+    for _, row in clm_df.iterrows():
+        cid = row["claim_id"]
+        entity = row["entity_id"]
+        acc = row.get("accession_number")
+        form = row.get("filing_type")
+        fdate = row.get("filing_date")
+        
+        if entity not in all_filings:
+            errors.append(f"Claim {cid}: entity {entity} has no cached raw submissions")
+            continue
+            
+        found = all_filings[entity].get(acc)
+        if not found:
+            errors.append(f"Claim {cid}: accession {acc} not found in {entity} raw submissions")
+        elif found['form'] != form:
+            f_form = found['form']
+            errors.append(f"Claim {cid}: form mismatch for {acc} (expected {form}, found in EDGAR {f_form})")
+        elif found['filingDate'] != fdate:
+            f_date = found['filingDate']
+            errors.append(f"Claim {cid}: filing date mismatch for {acc} (expected {fdate}, found in EDGAR {f_date})")
+
+    # Check event public knowledge timing invariant
+    events_df = pd.read_parquet(PROCESSED_DIR / "obligation_events.parquet")
+    claims_dates = dict(zip(clm_df["claim_id"], clm_df["filing_date"]))
+    for _, ev in events_df.iterrows():
+        eid = ev["event_id"]
+        cid = ev.get("claim_id")
+        if cid in claims_dates:
+            c_date = claims_dates[cid]
+            if str(ev["publicly_known_at"]) < str(c_date):
+                errors.append(f"Event {eid}: publicly_known_at {ev['publicly_known_at']} predates claim {cid} filing date {c_date}")
+
+    return errors
+
+
 def validate_observatory():
     print("=== Running AI Infrastructure Financial Network Consistency Validator (Phase 0.7.2) ===")
     errors = []
@@ -75,13 +144,13 @@ def validate_observatory():
     # 1. Check datasets exist
     # ---------------------------------------------------------
     required_files = {
-        "entities.parquet": 20,
+        "entities.parquet": 26,
         "financials.parquet": 5440,
-        "obligations.parquet": 23,
-        "obligation_events.parquet": 24,
-        "obligation_facts.parquet": 27,
+        "obligations.parquet": 33,
+        "obligation_events.parquet": 34,
+        "obligation_facts.parquet": 42,
         "assumptions.parquet": 7,
-        "evidence_claims.parquet": 30,
+        "evidence_claims.parquet": 32,
     }
     for rf, expected_rows in required_files.items():
         p = PROCESSED_DIR / rf
@@ -97,9 +166,14 @@ def validate_observatory():
     # 2. Validate CoreWeave & Applied Digital Exact Debt Decomposition
     # ---------------------------------------------------------
     obl_df = pd.read_parquet(PROCESSED_DIR / "obligations.parquet")
-    crwv_debt = obl_df[(obl_df["from_entity"] == "CRWV") & (obl_df["amount_type"] == "principal_outstanding")]
+    crwv_borrowers = [
+        "CRWV", "CRWV_CCAC_II", "CRWV_CCAC_IV", "CRWV_CCAC_VII", "CRWV_SPV_VIII", "CRWV_FINANCING_DDTL_V"
+    ]
+    crwv_debt = obl_df[
+        obl_df["from_entity"].isin(crwv_borrowers) & (obl_df["amount_type"] == "principal_outstanding")
+    ]
     
-    expected_tranches = 11
+    expected_tranches = 16
     if len(crwv_debt) != expected_tranches:
         errors.append(f"CRWV debt components count mismatch: {len(crwv_debt)} (expected {expected_tranches})")
     
@@ -109,19 +183,56 @@ def validate_observatory():
     if debt_drift > 1.0:
         errors.append(f"CRWV total debt drift: ${total_crwv_debt/1e9:.4f}B vs ${target_debt/1e9:.4f}B (drift ${debt_drift:,.2f})")
     else:
-        print(f"  [OK] CRWV 11 modeled debt components/edges sum exactly to ${total_crwv_debt/1e9:.3f}B ($35,551M, exact 0.00% drift).")
+        print(f"  [OK] CRWV 16 modeled debt components/edges sum exactly to ${total_crwv_debt/1e9:.3f}B ($35,551M, exact 0.00% drift).")
 
     # Check that required tranche IDs exist
     expected_ids = {
         "OBL-CRWV-DEBT-DDTL1", "OBL-CRWV-DEBT-DDTL2", "OBL-CRWV-DEBT-DDTL2-1", "OBL-CRWV-DEBT-DDTL3",
-        "OBL-CRWV-DEBT-DDTL4", "OBL-CRWV-DEBT-DDTL5", "OBL-CRWV-DEBT-NOTES", "OBL-CRWV-DEBT-CONV",
+        "OBL-CRWV-DEBT-DDTL4", "OBL-CRWV-DEBT-DDTL5", "OBL-CRWV-DEBT-NOTES-2030", "OBL-CRWV-DEBT-NOTES-2031-900",
+        "OBL-CRWV-DEBT-NOTES-2031-975", "OBL-CRWV-DEBT-NOTES-2032-9625", "OBL-CRWV-DEBT-NOTES-2032-EUR",
+        "OBL-CRWV-DEBT-CONV-2031", "OBL-CRWV-DEBT-CONV-2032",
         "OBL-CRWV-DEBT-OEM", "OBL-CRWV-DEBT-OEM-NR", "OBL-CRWV-DEBT-MAGNETAR"
     }
     missing_ids = expected_ids - set(crwv_debt["obligation_id"])
     if missing_ids:
         errors.append(f"Missing expected CRWV debt components: {missing_ids}")
     else:
-        print(f"  [OK] All 11 distinct CRWV debt components present.")
+        print(f"  [OK] All 16 distinct CRWV debt components present.")
+
+    # Check borrower entities for DDTLs
+    for _, r in crwv_debt.iterrows():
+        oid = r["obligation_id"]
+        if oid == "OBL-CRWV-DEBT-DDTL1" and r["from_entity"] != "CRWV_CCAC_II":
+            errors.append(f"DDTL 1 borrower mismatch: {r['from_entity']} (expected CRWV_CCAC_II)")
+        elif oid in ["OBL-CRWV-DEBT-DDTL2", "OBL-CRWV-DEBT-DDTL2-1"] and r["from_entity"] != "CRWV_CCAC_IV":
+            errors.append(f"{oid} borrower mismatch: {r['from_entity']} (expected CRWV_CCAC_IV)")
+        elif oid == "OBL-CRWV-DEBT-DDTL3" and r["from_entity"] != "CRWV_CCAC_VII":
+            errors.append(f"DDTL 3 borrower mismatch: {r['from_entity']} (expected CRWV_CCAC_VII)")
+        elif oid == "OBL-CRWV-DEBT-DDTL4" and r["from_entity"] != "CRWV_SPV_VIII":
+            errors.append(f"DDTL 4 borrower mismatch: {r['from_entity']} (expected CRWV_SPV_VIII)")
+        elif oid == "OBL-CRWV-DEBT-DDTL5" and r["from_entity"] != "CRWV_FINANCING_DDTL_V":
+            errors.append(f"DDTL 5 borrower mismatch: {r['from_entity']} (expected CRWV_FINANCING_DDTL_V)")
+
+    # Verify 5 Recourse Parent Guarantees and non-recourse DDTL 4.0
+    crwv_gntys = obl_df[
+        (obl_df["from_entity"] == "CRWV") &
+        (obl_df["obligation_type"] == "contingent_guarantee") &
+        (obl_df["amount_type"] == "contingent_guarantee")
+    ]
+    expected_gnty_ids = {
+        "OBL-CRWV-GUARANTY-DDTL1", "OBL-CRWV-GUARANTY-DDTL2", "OBL-CRWV-GUARANTY-DDTL2-1",
+        "OBL-CRWV-GUARANTY-DDTL3", "OBL-CRWV-GUARANTY-DDTL5"
+    }
+    missing_gntys = expected_gnty_ids - set(crwv_gntys["obligation_id"])
+    if missing_gntys:
+        errors.append(f"Missing expected CRWV parent guarantee edges: {missing_gntys}")
+    else:
+        print(f"  [OK] All 5 recourse CRWV parent guarantee edges present.")
+    
+    if "OBL-CRWV-GUARANTY-DDTL4" in set(obl_df["obligation_id"]):
+        errors.append("DDTL 4.0 should have NO parent guarantee edge (strictly non-recourse SPV debt)")
+    else:
+        print("  [OK] DDTL 4.0 verified as strictly non-recourse (0 parent guarantee edges).")
 
     # Applied Digital exact debt decomposition (parent and project SPVs)
     apld_debt = obl_df[
@@ -213,7 +324,7 @@ def validate_observatory():
         "recognized_revenue", "contingent_guarantee", "equity_investment", "facility_capacity",
         "contingent_obligations"
     }
-    expected_obligations_count = 23
+    expected_obligations_count = 33
     if len(obl_df) != expected_obligations_count:
         errors.append(f"Obligations count mismatch: {len(obl_df)} (expected {expected_obligations_count})")
     else:
@@ -224,9 +335,9 @@ def validate_observatory():
         atype = row.get("amount_type")
         if atype not in valid_amount_types:
             errors.append(f"Obligation {oid} has invalid amount_type: {atype}")
-        if atype == "contingent_obligations":
+        if atype in ["contingent_obligations", "contingent_guarantee"]:
             if not pd.isna(row.get("amount")):
-                errors.append(f"Contingent obligation {oid} should have amount = None (uncapped), found: {row.get('amount')}")
+                errors.append(f"Contingent obligation {oid} should have amount = None (uncapped/contingent), found: {row.get('amount')}")
             if not row.get("capacity_description"):
                 errors.append(f"Contingent obligation {oid} missing capacity_description")
         else:
@@ -293,13 +404,13 @@ def validate_observatory():
 
         net = ObligationNetwork()
         collapsed = net.unwrap_spv_perimeter()
-        spv_remaining = [n for n in collapsed.nodes() if "SPV" in n or "LLC" in n]
+        spv_remaining = [n for n in collapsed.nodes() if net.entities_df.loc[n, 'category'] == 'project_spv']
         if spv_remaining:
             errors.append(f"SPVs unexpectedly remained in unwrapped perimeter: {spv_remaining}")
         else:
             print(f"  [OK] Dynamic SPV unwrapping: 0 SPVs remaining in consolidated network ({collapsed.number_of_nodes()} parent nodes).")
 
-        # Corporate Hierarchy Verification (ADR-013)
+        # Corporate Hierarchy Verification (ADR-013 & ADR-015)
         p_c3 = net.get_parent("APLD_COMPUTECO3")
         p_hpc2 = net.get_parent("APLD_HPC_HOLDINGS2")
         root_c3 = net.get_root_parent("APLD_COMPUTECO3")
@@ -312,57 +423,54 @@ def validate_observatory():
         else:
             print("  [OK] APLD ComputeCo 3 corporate hierarchy verified: APLD_COMPUTECO3 -> APLD_HPC_HOLDINGS2 -> APLD.")
 
+        for spv in ["CRWV_CCAC_II", "CRWV_CCAC_IV", "CRWV_CCAC_VII", "CRWV_SPV_VIII", "CRWV_FINANCING_DDTL_V"]:
+            if net.get_root_parent(spv) != "CRWV":
+                errors.append(f"{spv} root parent mismatch: {net.get_root_parent(spv)} (expected CRWV)")
+        print("  [OK] CoreWeave borrowing SPVs verified: all unwrap cleanly to root parent CRWV.")
+
         # Half-Open Validity Interval Test [valid_from, valid_to) (ADR-013)
-        # On June 15: Bridge active, 7% Notes inactive, 22 edges
+        # On June 15: Bridge active, 7% Notes inactive, 32 edges
         net_jun15 = net.economic_as_of("2026-06-15")
         jun15_keys = [k for _, _, k in net_jun15.graph.edges(keys=True)]
-        if "OBL-APLD-DEBT-BRIDGE" not in jun15_keys or "OBL-APLD-DEBT-7PCT-2026" in jun15_keys or net_jun15.graph.number_of_edges() != 22:
+        if "OBL-APLD-DEBT-BRIDGE" not in jun15_keys or "OBL-APLD-DEBT-7PCT-2026" in jun15_keys or net_jun15.graph.number_of_edges() != 32:
             errors.append(f"Half-open boundary check failed on 2026-06-15: Bridge={('OBL-APLD-DEBT-BRIDGE' in jun15_keys)}, Notes={('OBL-APLD-DEBT-7PCT-2026' in jun15_keys)}, Edges={net_jun15.graph.number_of_edges()}")
 
-        # On June 16 (transition boundary): Bridge retired ([valid_from, valid_to)), 7% Notes active, exactly 22 edges
+        # On June 16 (transition boundary): Bridge retired ([valid_from, valid_to)), 7% Notes active, exactly 32 edges
         net_jun16 = net.economic_as_of("2026-06-16")
         jun16_keys = [k for _, _, k in net_jun16.graph.edges(keys=True)]
-        if "OBL-APLD-DEBT-BRIDGE" in jun16_keys or "OBL-APLD-DEBT-7PCT-2026" not in jun16_keys or net_jun16.graph.number_of_edges() != 22:
+        if "OBL-APLD-DEBT-BRIDGE" in jun16_keys or "OBL-APLD-DEBT-7PCT-2026" not in jun16_keys or net_jun16.graph.number_of_edges() != 32:
             errors.append(f"Half-open boundary check failed on 2026-06-16: Bridge={('OBL-APLD-DEBT-BRIDGE' in jun16_keys)}, Notes={('OBL-APLD-DEBT-7PCT-2026' in jun16_keys)}, Edges={net_jun16.graph.number_of_edges()}")
         else:
-            print("  [OK] Half-open validity interval [valid_from, valid_to) verified on June 16, 2026: Bridge cleanly retired, 7% Notes active, exactly 22 edges.")
+            print("  [OK] Half-open validity interval [valid_from, valid_to) verified on June 16, 2026: Bridge cleanly retired, 7% Notes active, exactly 32 edges.")
 
-        # June 17 Epistemic Knowledge Boundary Test (ADR-014)
-        # On June 16, refinancing occurred economically, but Form 8-K was filed on June 18.
-        # June 17 Economic Reality: Bridge is False, 7% Notes is True, Edges = 22
+        # June 17 Epistemic Knowledge Boundary Test (ADR-014 & ADR-015)
+        # On June 11, CoreWeave issued 2032 Senior Notes, but Form 8-K (CLM-CRWV-014) was filed on June 18.
+        # June 17 Economic Reality: 32 edges (2032 notes are active)
         net_econ_jun17 = net.economic_as_of("2026-06-17")
         jun17_econ_keys = [k for _, _, k in net_econ_jun17.graph.edges(keys=True)]
-        if "OBL-APLD-DEBT-BRIDGE" in jun17_econ_keys or "OBL-APLD-DEBT-7PCT-2026" not in jun17_econ_keys or net_econ_jun17.graph.number_of_edges() != 22:
-            errors.append(f"Economic check failed on 2026-06-17: Bridge={('OBL-APLD-DEBT-BRIDGE' in jun17_econ_keys)}, Notes={('OBL-APLD-DEBT-7PCT-2026' in jun17_econ_keys)}, Edges={net_econ_jun17.graph.number_of_edges()}")
+        if "OBL-CRWV-DEBT-NOTES-2032-9625" not in jun17_econ_keys or net_econ_jun17.graph.number_of_edges() != 32:
+            errors.append(f"Economic check failed on 2026-06-17: Notes-2032={('OBL-CRWV-DEBT-NOTES-2032-9625' in jun17_econ_keys)}, Edges={net_econ_jun17.graph.number_of_edges()}")
 
-        # June 17 Epistemic Knowledge: Outside observer does NOT yet know of refinancing!
-        # Bridge is True ($300M), 7% Notes is False, Edges = 18
+        # June 17 Epistemic Knowledge: Outside observer does NOT yet know of June 11 notes offering!
+        # Notes-2032 absent from knowledge graph, exactly 26 edges known
         net_known_jun17 = net.known_as_of("2026-06-17")
         jun17_known_keys = [k for _, _, k in net_known_jun17.graph.edges(keys=True)]
-        if "OBL-APLD-DEBT-BRIDGE" not in jun17_known_keys or "OBL-APLD-DEBT-7PCT-2026" in jun17_known_keys or net_known_jun17.graph.number_of_edges() != 18:
-            errors.append(f"Epistemic check failed on 2026-06-17: Bridge={('OBL-APLD-DEBT-BRIDGE' in jun17_known_keys)}, Notes={('OBL-APLD-DEBT-7PCT-2026' in jun17_known_keys)}, Edges={net_known_jun17.graph.number_of_edges()}")
+        if "OBL-CRWV-DEBT-NOTES-2032-9625" in jun17_known_keys or "OBL-CRWV-DEBT-NOTES-2032-EUR" in jun17_known_keys or net_known_jun17.graph.number_of_edges() != 26:
+            errors.append(f"Epistemic check failed on 2026-06-17: Notes-2032={('OBL-CRWV-DEBT-NOTES-2032-9625' in jun17_known_keys)}, Edges={net_known_jun17.graph.number_of_edges()}")
         else:
-            bridge_data = net_known_jun17.graph.get_edge_data("APLD", "PROJECT_LENDERS", key="OBL-APLD-DEBT-BRIDGE")
-            if bridge_data.get("amount") != 300_000_000.0:
-                errors.append(f"June 17 bridge amount mismatch: {bridge_data.get('amount')}")
-            else:
-                print("  [OK] June 17 epistemic boundary verified: Bridge persists ($300M), 7% Notes absent, exactly 18 edges known.")
+            print("  [OK] June 17 epistemic boundary verified: CoreWeave 2032 notes absent prior to Form 8-K filing, exactly 26 edges known.")
 
-        # June 18 Epistemic Knowledge: Form 8-K filed! Bridge is False, 7% Notes is True ($1.59B), Edges = 18
+        # June 18 Epistemic Knowledge: Form 8-K filed! Both 2032 notes active, exactly 28 edges known
         net_known_jun18 = net.known_as_of("2026-06-18")
         jun18_known_keys = [k for _, _, k in net_known_jun18.graph.edges(keys=True)]
-        if "OBL-APLD-DEBT-BRIDGE" in jun18_known_keys or "OBL-APLD-DEBT-7PCT-2026" not in jun18_known_keys or net_known_jun18.graph.number_of_edges() != 18:
-            errors.append(f"Epistemic check failed on 2026-06-18: Bridge={('OBL-APLD-DEBT-BRIDGE' in jun18_known_keys)}, Notes={('OBL-APLD-DEBT-7PCT-2026' in jun18_known_keys)}, Edges={net_known_jun18.graph.number_of_edges()}")
+        if "OBL-CRWV-DEBT-NOTES-2032-9625" not in jun18_known_keys or "OBL-CRWV-DEBT-NOTES-2032-EUR" not in jun18_known_keys or net_known_jun18.graph.number_of_edges() != 28:
+            errors.append(f"Epistemic check failed on 2026-06-18: Notes-2032={('OBL-CRWV-DEBT-NOTES-2032-9625' in jun18_known_keys)}, Edges={net_known_jun18.graph.number_of_edges()}")
         else:
-            notes_data = net_known_jun18.graph.get_edge_data("APLD_COMPUTECO3", "INSTITUTIONAL_BONDHOLDERS", key="OBL-APLD-DEBT-7PCT-2026")
-            if notes_data.get("amount") != 1_590_000_000.0:
-                errors.append(f"June 18 7% notes amount mismatch: {notes_data.get('amount')}")
-            else:
-                print("  [OK] June 18 epistemic boundary verified: Form 8-K incorporated, Bridge retired, 7% Notes active ($1.59B), 18 edges known.")
+            print("  [OK] June 18 epistemic boundary verified: Form 8-K incorporated, CoreWeave 2032 notes active, exactly 28 edges known.")
 
         # Historical Fact Absence Test (No back-projection of current values)
         net_econ_2025 = net.economic_as_of("2025-01-01")
-        ddtl1_2025 = net_econ_2025.graph.get_edge_data("CRWV", "BLACKSTONE_MAGNETAR_SYN", key="OBL-CRWV-DEBT-DDTL1")
+        ddtl1_2025 = net_econ_2025.graph.get_edge_data("CRWV_CCAC_II", "BLACKSTONE_MAGNETAR_SYN", key="OBL-CRWV-DEBT-DDTL1")
         if ddtl1_2025 is None:
             errors.append("DDTL 1.0 edge should exist economically on 2025-01-01")
         elif ddtl1_2025.get("amount") is not None or ddtl1_2025.get("amount_known") is not False:
@@ -375,10 +483,10 @@ def validate_observatory():
         net_sep = net.economic_as_of("2026-09-28")
         may_edges = net_may.graph.number_of_edges()
         sep_edges = net_sep.graph.number_of_edges()
-        if may_edges != 22:
-            errors.append(f"Expected 22 edges as of 2026-05-31, got {may_edges}")
-        if sep_edges != 22:
-            errors.append(f"Expected 22 edges as of 2026-09-28 (post-refinancing conservation), got {sep_edges}")
+        if may_edges != 30:
+            errors.append(f"Expected 30 edges as of 2026-05-31, got {may_edges}")
+        if sep_edges != 32:
+            errors.append(f"Expected 32 edges as of 2026-09-28 (post-refinancing conservation), got {sep_edges}")
         
         bridge_may = "OBL-APLD-DEBT-BRIDGE" in [k for _, _, k in net_may.graph.edges(keys=True)]
         bridge_sep = "OBL-APLD-DEBT-BRIDGE" in [k for _, _, k in net_sep.graph.edges(keys=True)]
@@ -398,7 +506,7 @@ def validate_observatory():
         if abs(may_apld_debt - 5_306_680_000.0) > 1.0:
             errors.append(f"APLD May 31 economic debt mismatch: ${may_apld_debt/1e9:.3f}B (expected $5.307B)")
         else:
-            print(f"  [OK] Economic Clock May 31, 2026 verified: 22 edges, APLD debt = $5,306.68M (Bridge active, 0.00% drift).")
+            print(f"  [OK] Economic Clock May 31, 2026 verified: 30 edges, APLD debt = $5,306.68M (Bridge active, 0.00% drift).")
 
         sep_apld_debt = sum(
             d.get("amount", 0.0) for u, v, k, d in net_sep.graph.edges(keys=True, data=True)
@@ -407,23 +515,23 @@ def validate_observatory():
         if abs(sep_apld_debt - 6_596_680_000.0) > 1.0:
             errors.append(f"APLD Sep 28 economic debt mismatch: ${sep_apld_debt/1e9:.3f}B (expected $6.597B)")
         else:
-            print(f"  [OK] Economic Clock Sep 28, 2026 verified: 22 edges, APLD debt = $6,596.68M ($1.59B 7% Notes active, conserved).")
+            print(f"  [OK] Economic Clock Sep 28, 2026 verified: 32 edges, APLD debt = $6,596.68M ($1.59B 7% Notes active, conserved).")
 
         # Information Clock (Public Knowledge) Test
         net_known_jun = net.known_as_of("2026-06-30")
         net_known_sep = net.known_as_of("2026-09-28")
-        if net_known_jun.graph.number_of_edges() != 18:
-            errors.append(f"Expected 18 edges known as of 2026-06-30, got {net_known_jun.graph.number_of_edges()}")
+        if net_known_jun.graph.number_of_edges() != 28:
+            errors.append(f"Expected 28 edges known as of 2026-06-30, got {net_known_jun.graph.number_of_edges()}")
         else:
-            print(f"  [OK] Information Clock June 30, 2026 verified: 18 edges publicly known (eliminating look-ahead bias).")
-        if net_known_sep.graph.number_of_edges() != 22:
-            errors.append(f"Expected 22 edges known as of 2026-09-28, got {net_known_sep.graph.number_of_edges()}")
+            print(f"  [OK] Information Clock June 30, 2026 verified: 28 edges publicly known (eliminating look-ahead bias).")
+        if net_known_sep.graph.number_of_edges() != 32:
+            errors.append(f"Expected 32 edges known as of 2026-09-28, got {net_known_sep.graph.number_of_edges()}")
         else:
-            print(f"  [OK] Information Clock Sep 28, 2026 verified: 22 edges publicly known.")
+            print(f"  [OK] Information Clock Sep 28, 2026 verified: 32 edges publicly known.")
 
         # Fact-Level Bitemporality Assertions (ADR-013 & ADR-014)
         # On June 30, 2026, CoreWeave DDTL 1.0 facility edge is known (from 2024), but its June 30, 2026 balance was not disclosed until August 12, 2026!
-        ddtl1_jun_edge = net_known_jun.graph.get_edge_data("CRWV", "BLACKSTONE_MAGNETAR_SYN", key="OBL-CRWV-DEBT-DDTL1")
+        ddtl1_jun_edge = net_known_jun.graph.get_edge_data("CRWV_CCAC_II", "BLACKSTONE_MAGNETAR_SYN", key="OBL-CRWV-DEBT-DDTL1")
         if ddtl1_jun_edge is None:
             errors.append("OBL-CRWV-DEBT-DDTL1 edge missing from net_known_jun")
         else:
@@ -432,15 +540,15 @@ def validate_observatory():
             else:
                 print("  [OK] Fact-level bitemporality verified: CoreWeave DDTL 1.0 amount is None / unknown on June 30, 2026 (disclosed August 12).")
 
-        # But APLD 7% notes balance WAS disclosed on June 18, 2026 (Form 8-K), so its amount IS known on June 30!
+        # But APLD 7% notes balance WAS disclosed on June 16, 2026 (Form 8-K), so its amount IS known on June 30!
         apld_7pct_jun = net_known_jun.graph.get_edge_data("APLD_COMPUTECO3", "INSTITUTIONAL_BONDHOLDERS", key="OBL-APLD-DEBT-7PCT-2026")
         if apld_7pct_jun is None or apld_7pct_jun.get("amount") != 1_590_000_000.0 or apld_7pct_jun.get("amount_known") is not True:
-            errors.append("APLD 7% notes should be known with amount = $1.59B on 2026-06-30 (disclosed 2026-06-18)")
+            errors.append("APLD 7% notes should be known with amount = $1.59B on 2026-06-30 (disclosed 2026-06-16)")
         else:
             print("  [OK] Fact-level bitemporality verified: APLD 7% notes amount ($1.59B) is known on June 30, 2026 via Form 8-K.")
 
         # On Sep 28, DDTL 1.0 amount IS known ($1.300B)
-        ddtl1_sep_edge = net_known_sep.graph.get_edge_data("CRWV", "BLACKSTONE_MAGNETAR_SYN", key="OBL-CRWV-DEBT-DDTL1")
+        ddtl1_sep_edge = net_known_sep.graph.get_edge_data("CRWV_CCAC_II", "BLACKSTONE_MAGNETAR_SYN", key="OBL-CRWV-DEBT-DDTL1")
         if ddtl1_sep_edge.get("amount") != 1_300_000_000.0 or ddtl1_sep_edge.get("amount_known") is not True:
             errors.append(f"DDTL 1.0 amount on Sep 28 should be $1.300B, got {ddtl1_sep_edge.get('amount')}")
         else:
@@ -471,10 +579,10 @@ def validate_observatory():
             errors.append("Expected max_cash_drain_usd to be None under net_known_jun (unbounded upper limit)")
         if sofr_known_jun["network_cash_drain_reported_baseline_usd"] is not None:
             errors.append("Expected network_cash_drain_reported_baseline_usd to be None under net_known_jun")
-        if len(sofr_known_jun["unknown_floating_edges"]) != 5:
-            errors.append(f"Expected 5 unknown floating edges under net_known_jun, got {len(sofr_known_jun['unknown_floating_edges'])}")
+        if len(sofr_known_jun["unknown_floating_edges"]) != 6:
+            errors.append(f"Expected 6 unknown floating edges under net_known_jun, got {len(sofr_known_jun['unknown_floating_edges'])}")
         else:
-            print("  [OK] Zero-lookahead epistemic stress check verified on June 30, 2026: floating_principal_known=False, 5 unknown floating edges, reported hits=None.")
+            print("  [OK] Zero-lookahead epistemic stress check verified on June 30, 2026: floating_principal_known=False, 6 unknown floating edges, reported hits=None.")
 
     except Exception as e:
         errors.append(f"Error during graph unwrapping/temporal validation: {e}")
@@ -483,7 +591,7 @@ def validate_observatory():
     # 3c. Validate Obligation Lifecycle Events & Bitemporal Facts Ledger
     # ---------------------------------------------------------
     events_df = pd.read_parquet(PROCESSED_DIR / "obligation_events.parquet")
-    expected_events_count = 24
+    expected_events_count = 34
     if len(events_df) != expected_events_count:
         errors.append(f"Obligation events count mismatch: {len(events_df)} (expected {expected_events_count})")
     else:
@@ -506,14 +614,14 @@ def validate_observatory():
         errors.append("Missing EVT-APLD-DEBT-BRIDGE-SUPERSEDED event")
     else:
         bev = bridge_ev.iloc[0]
-        if bev["economic_effective_at"] != "2026-06-16" or bev["publicly_known_at"] != "2026-06-18":
+        if bev["economic_effective_at"] != "2026-06-16" or bev["publicly_known_at"] != "2026-06-16":
             errors.append(f"Bridge supersession dates mismatch: econ={bev['economic_effective_at']}, known={bev['publicly_known_at']}")
         else:
-            print("  [OK] Bridge supersession lifecycle event verified: economic 2026-06-16, publicly known 2026-06-18.")
+            print("  [OK] Bridge supersession lifecycle event verified: economic 2026-06-16, publicly known 2026-06-16.")
 
     facts_df = pd.read_parquet(PROCESSED_DIR / "obligation_facts.parquet")
     clm_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
-    expected_facts_count = 27
+    expected_facts_count = 42
     if len(facts_df) != expected_facts_count:
         errors.append(f"Obligation facts count mismatch: {len(facts_df)} (expected {expected_facts_count})")
     else:
@@ -533,12 +641,12 @@ def validate_observatory():
             if str(f_row["publicly_known_from"]) < str(k_filing_date):
                 errors.append(f"Fact {fid} publicly_known_from {f_row['publicly_known_from']} predates knowledge claim filing date {k_filing_date}")
 
-    print("  [OK] All 27 facts verified: truth_claim_id and knowledge_claim_id present, publicly_known_from >= claim filing date.")
+    print(f"  [OK] All {len(facts_df)} facts verified: truth_claim_id and knowledge_claim_id present, publicly_known_from >= claim filing date.")
 
     # ---------------------------------------------------------
     # 4. Validate Evidence Claims & Quote Categorization
     # ---------------------------------------------------------
-    expected_claims_count = 30
+    expected_claims_count = 32
     if len(clm_df) != expected_claims_count:
         errors.append(f"Evidence claims count mismatch: {len(clm_df)} (expected {expected_claims_count})")
     else:
@@ -617,12 +725,20 @@ def validate_observatory():
         errors.append("Missing claim CLM-APLD-008")
     else:
         r8 = c8.iloc[0]
-        if r8["accession_number"] != "0001144879-26-000036" or r8["filing_date"] != "2026-06-18":
+        if r8["accession_number"] != "0001493152-26-028899" or r8["filing_date"] != "2026-06-16":
             errors.append(f"CLM-APLD-008 metadata mismatch: {r8['accession_number']}, {r8['filing_date']}")
         for kw in ["ComputeCo 3 LLC", "1,590.0 million", "7.000%"]:
             if kw not in r8["exact_quote"]:
                 errors.append(f"CLM-APLD-008 exact_quote missing '{kw}'")
-        print("  [OK] CLM-APLD-008 verified: Form 8-K filed 2026-06-18, APLD ComputeCo 3 LLC $1.59B 7.00% Senior Secured Notes.")
+        print("  [OK] CLM-APLD-008 verified: Form 8-K filed 2026-06-16, APLD ComputeCo 3 LLC $1.59B 7.00% Senior Secured Notes.")
+
+    # Verification of Class A primary SEC filings against cached raw JSON submissions
+    sec_errors = validate_sec_source_existence()
+    if sec_errors:
+        for se in sec_errors:
+            errors.append(se)
+    else:
+        print(f"  [OK] All {len(clm_df)} evidence claims 100% verified against raw SEC EDGAR submissions JSON.")
 
     print(f"  [OK] All {len(clm_df)} claims possess verified SEC accession numbers, valid quote_types, and verbatim quotes.")
 

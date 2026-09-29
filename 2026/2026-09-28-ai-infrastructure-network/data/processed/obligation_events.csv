@@ -2,24 +2,34 @@ event_id,obligation_id,event_type,economic_effective_at,publicly_known_at,relate
 EVT-CRWV-APLD-LEASE-CREATED,OBL-CRWV-APLD-LEASE,created,2025-05-28,2025-06-02,,CLM-APLD-009,Execution of 15-year 400 MW Polaris Forge 1 master leases with CoreWeave ($11.0B total revenue)
 EVT-CRWV-APLD-GUARANTY-ELN02-CREATED,OBL-CRWV-APLD-GUARANTY-ELN02,created,2026-03-30,2026-04-01,,CLM-APLD-005,Execution of Unconditional Springing Guaranty Agreement for Building 2 (Phase 2/4 Space)
 EVT-CRWV-APLD-GUARANTY-ELN03-CREATED,OBL-CRWV-APLD-GUARANTY-ELN03,created,2026-03-30,2026-04-01,,CLM-APLD-006,Execution of Unconditional Springing Guaranty Agreement for Building 3 (150 MW)
-EVT-CRWV-DEBT-DDTL1-CREATED,OBL-CRWV-DEBT-DDTL1,created,2023-08-01,2024-03-15,,CLM-CRWV-007,"Closing of DDTL 1.0 Credit Facility ($1,300M commitments)"
-EVT-CRWV-DEBT-DDTL2-CREATED,OBL-CRWV-DEBT-DDTL2,created,2024-02-01,2024-05-15,,CLM-CRWV-008,"Closing of DDTL 2.0 Credit Facility ($3,190M commitments)"
-EVT-CRWV-DEBT-DDTL21-CREATED,OBL-CRWV-DEBT-DDTL2-1,created,2024-05-01,2024-08-15,,CLM-CRWV-009,"Closing of DDTL 2.1 Credit Facility ($3,000M commitments)"
-EVT-CRWV-DEBT-DDTL3-CREATED,OBL-CRWV-DEBT-DDTL3,created,2024-08-01,2024-11-15,,CLM-CRWV-010,"Closing of DDTL 3.0 Credit Facility ($2,215M commitments)"
-EVT-CRWV-DEBT-DDTL4-CREATED,OBL-CRWV-DEBT-DDTL4,created,2024-09-01,2026-08-12,,CLM-CRWV-004,"Closing of DDTL 4.0 Project SPV Facility ($8,500M commitments, $2,837M drawn)"
-EVT-CRWV-DEBT-DDTL5-CREATED,OBL-CRWV-DEBT-DDTL5,created,2024-11-01,2025-05-15,,CLM-CRWV-006,"Closing of DDTL 5.0 Credit Facility ($1,101M commitments)"
-EVT-CRWV-DEBT-NOTES-CREATED,OBL-CRWV-DEBT-NOTES,created,2024-06-01,2024-06-15,,CLM-CRWV-012,"Issuance of Senior Notes tranches ($10,029M aggregate)"
-EVT-CRWV-DEBT-CONV-CREATED,OBL-CRWV-DEBT-CONV,created,2024-04-15,2024-05-01,,CLM-CRWV-013,"Issuance of Convertible Senior Notes ($6,588M aggregate)"
-EVT-CRWV-DEBT-OEM-CREATED,OBL-CRWV-DEBT-OEM,created,2024-01-01,2024-05-01,,CLM-CRWV-014,"Execution of recourse OEM and software financing arrangements ($4,220M)"
-EVT-CRWV-DEBT-OEMNR-CREATED,OBL-CRWV-DEBT-OEM-NR,created,2024-06-01,2026-08-12,,CLM-CRWV-004,Closing of non-recourse OEM and software financing ($882M)
-EVT-CRWV-DEBT-MAGNETAR-CREATED,OBL-CRWV-DEBT-MAGNETAR,created,2024-01-15,2024-03-15,,CLM-CRWV-007,Execution of Magnetar loan facility ($189M)
-EVT-MSFT-CRWV-REV-CREATED,REL-MSFT-CRWV-REVENUE-CONCENTRATION,created,2025-01-01,2026-03-31,,CLM-CRWV-003,"Recognition of FY25 customer revenue concentration ($3.438B recognized revenue, 67% share)"
+EVT-CRWV-DEBT-DDTL1-CREATED,OBL-CRWV-DEBT-DDTL1,created,2023-07-30,2025-03-20,,CLM-CRWV-007,"Closing of DDTL 1.0 Credit Agreement by CCAC II (capacity up to $2,300M)"
+EVT-CRWV-DEBT-DDTL2-CREATED,OBL-CRWV-DEBT-DDTL2,created,2024-05-16,2025-03-20,,CLM-CRWV-007,"Closing of DDTL 2.0 Credit Agreement by CCAC IV (commitments up to $7,600M)"
+EVT-CRWV-DEBT-DDTL21-CREATED,OBL-CRWV-DEBT-DDTL2-1,created,2025-09-25,2025-09-30,,CLM-CRWV-010,"Closing of DDTL 2.1 Credit Facility by CCAC IV ($3,000M commitments)"
+EVT-CRWV-DEBT-DDTL3-CREATED,OBL-CRWV-DEBT-DDTL3,created,2025-07-28,2025-07-31,,CLM-CRWV-009,"Closing of DDTL 3.0 Credit Facility by CCAC VII ($2,215M drawn, $2,600M commitments)"
+EVT-CRWV-DEBT-DDTL4-CREATED,OBL-CRWV-DEBT-DDTL4,created,2026-03-30,2026-03-31,,CLM-CRWV-012,"Closing of DDTL 4.0 Non-Recourse Facility by CCAC VIII ($8,500M commitments, MUFG Bank syndicate)"
+EVT-CRWV-DEBT-DDTL5-CREATED,OBL-CRWV-DEBT-DDTL5,created,2026-05-15,2026-05-18,,CLM-CRWV-006,"Closing of DDTL 5.0 Credit Agreement by CoreWeave Financing DDTL V, LLC ($3,100M commitments)"
+EVT-CRWV-DEBT-NOTES-2030-CREATED,OBL-CRWV-DEBT-NOTES-2030,created,2025-05-19,2025-05-21,,CLM-CRWV-008,"Issuance of $2,000.0M Senior Notes due June 15, 2030"
+EVT-CRWV-DEBT-NOTES-2031-900-CREATED,OBL-CRWV-DEBT-NOTES-2031-900,created,2025-07-28,2025-07-31,,CLM-CRWV-009,"Issuance of $1,750.0M 9.000% Senior Notes due February 15, 2031"
+EVT-CRWV-DEBT-NOTES-2031-975-CREATED,OBL-CRWV-DEBT-NOTES-2031-975,created,2026-04-09,2026-04-14,,CLM-CRWV-013,"Issuance of $2,750.0M 9.750% Senior Notes due October 1, 2031"
+EVT-CRWV-DEBT-NOTES-2032-9625-CREATED,OBL-CRWV-DEBT-NOTES-2032-9625,created,2026-06-11,2026-06-18,,CLM-CRWV-014,"Issuance of $1,250.0M 9.625% Senior Notes due July 15, 2032"
+EVT-CRWV-DEBT-NOTES-2032-EUR-CREATED,OBL-CRWV-DEBT-NOTES-2032-EUR,created,2026-06-11,2026-06-18,,CLM-CRWV-014,"Issuance of €2,000.0M ($2,279.0M USD equiv) 8.875% Senior Notes due July 15, 2032"
+EVT-CRWV-DEBT-CONV-2031-CREATED,OBL-CRWV-DEBT-CONV-2031,created,2025-12-08,2025-12-11,,CLM-CRWV-011,"Issuance of $2,588.0M Convertible Senior Notes due December 15, 2031"
+EVT-CRWV-DEBT-CONV-2032-CREATED,OBL-CRWV-DEBT-CONV-2032,created,2026-04-09,2026-04-14,,CLM-CRWV-013,"Issuance of $4,000.0M Convertible Senior Notes due October 1, 2032"
+EVT-CRWV-DEBT-OEM-CREATED,OBL-CRWV-DEBT-OEM,created,2025-01-01,2026-08-12,,CLM-CRWV-001,"Recourse OEM and software financing arrangements ($4,220M)"
+EVT-CRWV-DEBT-OEMNR-CREATED,OBL-CRWV-DEBT-OEM-NR,created,2025-06-01,2026-08-12,,CLM-CRWV-004,Non-recourse OEM and software financing arrangements ($882M)
+EVT-CRWV-DEBT-MAGNETAR-CREATED,OBL-CRWV-DEBT-MAGNETAR,created,2024-01-15,2025-03-20,,CLM-CRWV-007,Execution of Magnetar term loan facility ($189M)
+EVT-CRWV-GUARANTY-DDTL1-CREATED,OBL-CRWV-GUARANTY-DDTL1,created,2023-07-30,2025-03-20,OBL-CRWV-DEBT-DDTL1,CLM-CRWV-007,Parent recourse guarantee of CCAC II obligations under DDTL 1.0 facility
+EVT-CRWV-GUARANTY-DDTL2-CREATED,OBL-CRWV-GUARANTY-DDTL2,created,2024-05-16,2025-03-20,OBL-CRWV-DEBT-DDTL2,CLM-CRWV-007,Parent recourse guarantee of CCAC IV obligations under DDTL 2.0 facility
+EVT-CRWV-GUARANTY-DDTL21-CREATED,OBL-CRWV-GUARANTY-DDTL2-1,created,2025-09-25,2025-09-30,OBL-CRWV-DEBT-DDTL2-1,CLM-CRWV-010,Parent recourse guarantee of CCAC IV obligations under DDTL 2.1 facility
+EVT-CRWV-GUARANTY-DDTL3-CREATED,OBL-CRWV-GUARANTY-DDTL3,created,2025-07-28,2025-07-31,OBL-CRWV-DEBT-DDTL3,CLM-CRWV-009,Parent recourse guarantee of CCAC VII obligations under DDTL 3.0 facility
+EVT-CRWV-GUARANTY-DDTL5-CREATED,OBL-CRWV-GUARANTY-DDTL5,created,2026-05-15,2026-05-18,OBL-CRWV-DEBT-DDTL5,CLM-CRWV-006,"Parent recourse guarantee of CoreWeave Financing DDTL V, LLC obligations under DDTL 5.0 facility"
+EVT-MSFT-CRWV-REV-CREATED,REL-MSFT-CRWV-REVENUE-CONCENTRATION,created,2025-01-01,2026-03-02,,CLM-CRWV-003,"Recognition of FY25 customer revenue concentration ($3.438B recognized revenue, 67% share)"
 EVT-SMCI-COMMIT-CREATED,OBL-SMCI-SUPPLIER-COMMIT,created,2025-07-01,2026-08-31,,CLM-SMCI-001,Execution of non-cancelable hardware purchase commitments ($34.2B over next 12 months)
 EVT-NVDA-CRWV-EQUITY-CREATED,OBL-NVDA-CRWV-EQUITY,created,2026-01-15,2026-05-08,,CLM-NVDA-CRWV-001,NVIDIA $2.0B Series C preferred stock strategic equity placement in CoreWeave
-EVT-APLD-DEBT-PF1-CREATED,OBL-APLD-DEBT-PF1,created,2024-06-01,2024-06-14,,CLM-APLD-010,"APLD ComputeCo LLC private offering of $2,350.0M 9.25% Senior Secured Notes due 2030"
-EVT-APLD-DEBT-PF2-CREATED,OBL-APLD-DEBT-PF2,created,2025-01-15,2025-01-24,,CLM-APLD-011,"APLD ComputeCo 2 LLC offering of $2,150.0M 6.75% Senior Notes due 2031"
-EVT-APLD-DEBT-CONV-CREATED,OBL-APLD-DEBT-CONV,created,2024-11-15,2024-11-20,,CLM-APLD-012,Applied Digital Corporation offering of $450.0M 2.75% Convertible Senior Notes due 2030
-EVT-APLD-DEBT-BRIDGE-CREATED,OBL-APLD-DEBT-BRIDGE,created,2026-05-01,2026-05-08,,CLM-APLD-013,"Entry into $300.0M floating-rate Bridge Credit Facility due April 30, 2027"
-EVT-APLD-DEBT-BRIDGE-SUPERSEDED,OBL-APLD-DEBT-BRIDGE,superseded,2026-06-16,2026-06-18,OBL-APLD-DEBT-7PCT-2026,CLM-APLD-008,Repayment in full and termination of $300.0M Bridge Credit Facility from proceeds of $1.59B 7.00% Senior Secured Notes
-EVT-APLD-DEBT-7PCT-CREATED,OBL-APLD-DEBT-7PCT-2026,created,2026-06-16,2026-06-18,OBL-APLD-DEBT-BRIDGE,CLM-APLD-008,"APLD ComputeCo 3 LLC issuance of $1,590.0M 7.00% Senior Secured Notes due 2031"
+EVT-APLD-DEBT-PF1-CREATED,OBL-APLD-DEBT-PF1,created,2024-06-14,2024-06-17,,CLM-APLD-010,"APLD ComputeCo LLC private offering of $2,350.0M 9.25% Senior Secured Notes due 2030"
+EVT-APLD-DEBT-PF2-CREATED,OBL-APLD-DEBT-PF2,created,2025-01-24,2025-02-12,,CLM-APLD-011,"APLD ComputeCo 2 LLC offering of $2,150.0M 6.75% Senior Notes due 2031"
+EVT-APLD-DEBT-CONV-CREATED,OBL-APLD-DEBT-CONV,created,2024-11-20,2024-12-02,,CLM-APLD-012,Applied Digital Corporation offering of $450.0M 2.75% Convertible Senior Notes due 2030
+EVT-APLD-DEBT-BRIDGE-CREATED,OBL-APLD-DEBT-BRIDGE,created,2026-05-01,2026-05-05,,CLM-APLD-013,"Entry into $300.0M floating-rate Bridge Credit Facility due April 30, 2027"
+EVT-APLD-DEBT-BRIDGE-SUPERSEDED,OBL-APLD-DEBT-BRIDGE,superseded,2026-06-16,2026-06-16,OBL-APLD-DEBT-7PCT-2026,CLM-APLD-008,Repayment in full and termination of $300.0M Bridge Credit Facility from proceeds of $1.59B 7.00% Senior Secured Notes
+EVT-APLD-DEBT-7PCT-CREATED,OBL-APLD-DEBT-7PCT-2026,created,2026-06-16,2026-06-16,OBL-APLD-DEBT-BRIDGE,CLM-APLD-008,"APLD ComputeCo 3 LLC issuance of $1,590.0M 7.00% Senior Secured Notes due 2031"
 EVT-APLD-DEBT-OTHER-CREATED,OBL-APLD-DEBT-OTHER,created,2026-05-31,2026-07-29,,CLM-APLD-003,"Aggregate residual debt ($56.68M) reconciling gross contractual principal to $5,306.68M"

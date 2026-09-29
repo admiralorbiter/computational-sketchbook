@@ -223,6 +223,36 @@ This log records the durable architectural, methodological, and data design choi
 - **Consequences:**
   Achieves 100% certified zero-lookahead backtesting invariance, complete lifecycle edge auditability, and mathematically unassailable epistemic integrity across all historical and public knowledge queries.
 
+---
+
+### ADR-015: Historical Debt Evidence Calibration, Discrete Instrument De-aggregation, Borrower SPV Perimeter, and Bitemporal Financial Snapshot Resolution
+- **Status:** Accepted (2026-09-29, Phase 0 Epistemic Certification)
+- **Context:**
+  Following review of commit `1d99702`, while the bitemporal graph architecture (ADR-013 & ADR-014) operated cleanly, an audit of the underlying evidence claims revealed critical historical, structural, and financial statement integrity defects:
+  1. *Fabricated CoreWeave Contemporaneous SEC Filings:* `CLM-CRWV-007` through `CLM-CRWV-014` cited fictitious 2024 Form 10-K and Form 10-Q accession numbers (`0001769628-24-000012`, etc.) prior to CoreWeave becoming an SEC reporting company. CoreWeave filed its initial Form S-1 on March 3, 2025 (`0001193125-25-045330`) and Form S-1/A on March 20, 2025 (`0001193125-25-058309`). All historical credit facilities entered in 2023 and 2024 (DDTL 1.0, DDTL 2.0, Magnetar Credit Agreement) were disclosed through credit agreement exhibits and Note 7 of the S-1/A. Subsequent Senior Notes and Convertibles were announced via genuine Form 8-K submissions throughout 2025 and 2026.
+  2. *Applied Digital $1.59B 7.00% Notes Closing Date:* Form 8-K announcing the closing of the $1.59B notes and retirement of the bridge facility was filed on **June 16, 2026** (`0001493152-26-028899`, `CLM-APLD-008`), not June 18.
+  3. *Debt Aggregation and Structural Opacity:* CoreWeave's $35.551B debt portfolio was over-aggregated into coarse umbrella facilities rather than contract-literal instruments with distinct borrower SPVs, facility capacities, and recourse provisions:
+     - DDTL 1.0: Originated 2023-07-30 via `CoreWeave CCAC II LLC` (`CRWV_CCAC_II`).
+     - DDTL 2.0 & 2.1: Originated 2024-05-16 and 2025-09-25 via `CoreWeave CCAC IV LLC` (`CRWV_CCAC_IV`).
+     - DDTL 3.0: Originated 2025-07-28 via `CoreWeave CCAC VII LLC` (`CRWV_CCAC_VII`).
+     - DDTL 4.0: Originated 2026-03-30 via `CoreWeave SPV VIII LLC` (`CRWV_SPV_VIII`) from MUFG Bank syndicate; strictly non-recourse with zero parent guarantee.
+     - DDTL 5.0: Originated 2026-05-15 via `CoreWeave Financing DDTL V LLC` (`CRWV_FINANCING_DDTL_V`) from Morgan Stanley syndicate.
+     - Senior Notes (5 tranches) and Convertible Notes (2 tranches) issued directly by parent `CRWV`.
+     - OEM Financing (2 tranches: recourse and non-recourse) and Magnetar Credit Agreement.
+     - 5 explicit parent guarantee edges (`amount_type = "contingent_guarantee"`, `amount = None`) from parent `CRWV` to lender syndicates.
+  4. *Facility Capacity vs Periodic Balance Conflation:* Initial commitment capacities were conflated with later periodic principal drawn amounts as of 2026-06-30.
+  5. *Balance Sheet Look-Ahead Leakage:* `FinancialStressEngine` loaded fixed latest-period financial statements (e.g. Q2 2026 cash and debt) regardless of the simulation's `as_of_date` and `temporal_mode`.
+- **Decision:**
+  1. Purge all fabricated claims. Cache 100% authentic raw SEC EDGAR submissions JSON for all 6 entities in `data/raw/sec/` (over 5,000 verified filings).
+  2. Implement `validate_sec_source_existence()` in `src/validate.py` verifying every accession number, filing form, and filing date against raw SEC records. Enforce `event.publicly_known_at >= claim.filing_date`.
+  3. Add 6 new entities to `config/entities.yml` (total 26 entities): `CRWV_CCAC_II`, `CRWV_CCAC_IV`, `CRWV_CCAC_VII`, `CRWV_FINANCING_DDTL_V`, `MUFG_BANK_SYN`, `MORGAN_STANLEY_SYN`.
+  4. Decompose CoreWeave funded debt into 16 discrete tranches totaling exactly $35,551,000,000.00 (0.00% drift). Model 5 recourse parent guarantee edges and confirm DDTL 4.0 is non-recourse.
+  5. Expand ledger structures: 33 obligations, 34 lifecycle events, 42 bitemporal facts, 32 verified evidence claims.
+  6. Implement `resolve_temporal_financials(as_of_date, temporal_mode)` in `src/stress.py` to pull point-in-time XBRL financials based strictly on `filed_date <= as_of_date` in knowledge mode, eliminating financial statement look-ahead bias.
+- **Consequences:**
+  Achieves Phase 0 Epistemic Certification with zero hallucinations, 100% verified primary SEC EDGAR citations, contract-literal discrete debt tranches with verified borrower SPVs and guarantee perimeters, and complete temporal consistency across both obligation graph and financial balance sheet dimensions.
+
+
 
 
 

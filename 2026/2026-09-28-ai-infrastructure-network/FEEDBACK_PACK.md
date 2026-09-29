@@ -1,4 +1,4 @@
-# AI Infrastructure Financial Network — Feedback & Review Pack (Phase 0.7.2)
+# AI Infrastructure Financial Network — Feedback & Review Pack (Phase 0 Epistemic Certification)
 
 This document is a self-contained briefing pack. You can point an AI agent to this file, or copy and paste its contents directly into an LLM session (ChatGPT, Claude, etc.) to solicit expert critical feedback on the framework, empirical findings, and next steps.
 
@@ -11,19 +11,19 @@ I am conducting research on systemic financial vulnerability and coordination fa
 
 "The thing that blows up in a financial bubble is often not hidden data. It is a hidden relationship between data that everybody can see. The crisis lives in the JOIN."
 
-I have completed Phase 0.7.2 (Corrective Patch & Pilot Freeze) in my computational sketchbook. The pilot maps the closed capital, hardware, and lease chain across five public companies: NVIDIA (NVDA), Supermicro (SMCI), CoreWeave (CRWV), Applied Digital (APLD), and Oracle (ORCL), connected to Microsoft (MSFT), institutional bondholders, and private credit syndicates.
+I have completed Phase 0 Epistemic Certification (ADR-015) in my computational sketchbook. The pilot maps the closed capital, hardware, and lease chain across five public companies: NVIDIA (NVDA), Supermicro (SMCI), CoreWeave (CRWV), Applied Digital (APLD), and Oracle (ORCL), connected to Microsoft (MSFT), institutional bondholders, and private credit syndicates.
 
 Please review the methodology, empirical findings, and contract-calibrated stress test results below, and provide critical feedback on:
 1. Theoretical Rigor: Does the taxonomy of 5 opacities (Perimeter, Network, Contract, Valuation, Temporal) effectively capture where 2020s project-finance bubbles hide?
-2. Empirical Soundness: Are the extracted contractual obligations, SPV springing guarantee, decomposed debt facilities, and customer revenue concentration accurately characterized from the SEC disclosures?
+2. Empirical Soundness: Are the extracted contractual obligations, SPV springing guarantee, decomposed debt facilities, and customer revenue concentration accurately characterized from verified primary SEC EDGAR disclosures?
 3. Contract-Calibrated Transmission: Does the parameterized financial stress model (evaluating borrowing base formulas, springing guaranty predicates, floating vs fixed rate insulation, phased grid delays, and NRV loss provisions) effectively model the domino transmission mechanism?
 4. Epistemic Discipline: Does the separation of pure amount-type reachability footprints from financial stress simulation maintain mathematical rigor?
 
 ---
 
 ### 1. The Three Epistemic Layers
-- Layer 1: Standardized SEC EDGAR XBRL Financials (Duration-aware flows, derived Q4 flows, and aggregated funded debt).
-- Layer 2: The Contractual Obligation Multi-Graph (MultiDiGraph preserving distinct facilities; dynamic SPV unwrapping via recursive parent entity traversal; bitemporal architecture separating economic time `economic_as_of` from knowledge time `known_as_of` to eliminate look-ahead bias; obligation lifecycle events via `obligation_events` tracking discrete creation and supersession events with independent filing dates; fact-level bitemporality via `obligation_facts` with dual `truth_claim_id` and `knowledge_claim_id` asserting `publicly_known_from >= filing_date` across 30 audited claims; strict zero-lookahead stress simulation reporting unknown floating debt as None rather than falling back to future disclosures; obligation conservation via refinancing supersession with half-open validity intervals $[v\_from, v\_to)$; categorized strictly by amount_type with zero false netting or non-fungible dollar mixing).
+- Layer 1: Standardized SEC EDGAR XBRL Financials (Point-in-time snapshot resolution via `resolve_temporal_financials` strictly enforcing `filed_date <= as_of_date` in knowledge mode, eliminating financial statement look-ahead bias).
+- Layer 2: The Contractual Obligation Multi-Graph (MultiDiGraph preserving distinct legal facilities; dynamic SPV unwrapping via recursive parent traversal across 26 entities; bitemporal architecture separating economic time `economic_as_of` from knowledge time `known_as_of` to eliminate look-ahead bias; obligation lifecycle events via `obligation_events` [34 rows] tracking discrete creation and supersession events with independent filing dates; fact-level bitemporality via `obligation_facts` [42 rows] with dual `truth_claim_id` and `knowledge_claim_id` asserting `publicly_known_from >= filing_date` across 32 audited primary SEC claims; 100% verified against raw SEC EDGAR submissions JSON; strict zero-lookahead stress simulation reporting unmeasured floating debt as None; obligation conservation via refinancing supersession with half-open validity intervals $[v\_from, v\_to)$; categorized strictly by amount_type with zero false netting or non-fungible dollar mixing).
 - Layer 3: Shared Systemic Assumptions (Underlying economic propositions supporting multiple independent balance sheets).
 
 ### 2. Audited Balance Sheet Baselines (Latest Reported SEC Filings)
@@ -36,32 +36,39 @@ Please review the methodology, empirical findings, and contract-calibrated stres
 | **ORCL** | Cloud Hyperscaler | $36.37B | $125.34B | $34.62B | $127.84B | $67.36B (FY26) | $19.34B (Q1 FY27) |
 | **MSFT** | Cloud Hyperscaler | $20.94B | $46.14B | $21.92B | $313.08B | $331.84B (FY26) | $90.01B (Q4 FY26) |
 
-### 3. The Obligation Ledger (Phase 0.7.2 Pilot: 23 Modeled Obligations in Master Ledger)
-1. `OBL-CRWV-APLD-LEASE` ($11.0B lifetime value): CoreWeave SPV VIII leases 400 MW at Polaris Forge 1 from APLD ELN project LLCs for 15 years. Phased across Buildings 2, 3, and 4: ~150 MW operational (Building 2 100 MW + Building 3 partial 50 MW proxy, generating $275.0M/yr base rent), ~250 MW pending expansion (Building 3 remaining 100 MW + Building 4 150 MW, deferring $458.3M/yr). (APLD 10-K, Item 1 & Note 14).
+### 3. The Obligation Ledger (Phase 0 Epistemic Certification: 33 Modeled Obligations in Master Ledger)
+1. `OBL-CRWV-APLD-LEASE` ($11.0B lifetime value): CoreWeave SPV VIII leases 400 MW at Polaris Forge 1 from APLD ELN project LLCs for 15 years. Phased across Buildings 2, 3, and 4: ~150 MW operational (Building 2 100 MW + Building 3 partial 50 MW proxy, generating $275.0M/yr base rent), ~250 MW pending expansion (deferring $458.3M/yr). (APLD 10-K, Item 1 & Note 14).
 2. `OBL-CRWV-APLD-GUARANTY-ELN02` (uncapped contingent obligation): CoreWeave parent Unconditional Springing Guaranty specifically covering Phase 2/4 Space (2 of 4 data halls in Building 2; capacity_mw = None, unstated face value). Springs into active parent liability upon explicit Exhibit 10.1 predicates. (APLD 10-K, Note 14 & Exhibit 10.1).
 3. `OBL-CRWV-APLD-GUARANTY-ELN03` (uncapped contingent obligation with $4.125B Class C reference proxy): CoreWeave parent Unconditional Springing Guaranty for Building 3 (150 MW campus expansion lease assigned to SPV). Springs under Exhibit 10.2. Building 4 (150 MW, ~$4.13B) carries no CoreWeave parent springing guarantee (APLD guarantees the landlord).
-4. `OBL-CRWV-DEBT-DDTL1` ($1.300B principal drawn): CoreWeave DDTL 1.0 from Blackstone/Magnetar syndicate (Maturity Mar 2028, floating SOFR + 2.75%). (CRWV 10-Q, Note 7).
-5. `OBL-CRWV-DEBT-DDTL2` ($3.190B principal drawn): CoreWeave DDTL 2.0 (Maturity Aug 2030, floating SOFR + 3.25%). (CRWV 10-Q, Note 7).
-6. `OBL-CRWV-DEBT-DDTL2-1` ($3.000B principal drawn): CoreWeave DDTL 2.1 (Maturity Mar 2031, floating SOFR + 3.25%). (CRWV 10-Q, Note 7).
-7. `OBL-CRWV-DEBT-DDTL3` ($2.215B principal drawn): CoreWeave DDTL 3.0 (Maturity Aug 2030, floating SOFR + 3.50%). (CRWV 10-Q, Note 7).
-8. `OBL-CRWV-DEBT-DDTL4` ($2.837B principal drawn, $8.500B capacity): CoreWeave DDTL 4.0 Non-Recourse SPV credit commitment ($2.837B drawn as of Q2 2026). (CRWV 10-Q, Note 7).
-9. `OBL-CRWV-DEBT-DDTL5` ($1.101B principal drawn): CoreWeave DDTL 5.0 (Maturity Nov 2031, floating SOFR + 3.50%, governed by 71.42% funding-ratio formula). (CRWV 10-Q, Note 7 & Exhibit 10.1).
-10. `OBL-CRWV-DEBT-NOTES` ($10.029B principal): CoreWeave Senior Secured Notes across USD and EUR tranches (Fixed coupons 9.00% to 9.75%). (CRWV 10-Q, Note 7).
-11. `OBL-CRWV-DEBT-CONV` ($6.588B principal): CoreWeave Convertible Senior Notes 2031 and 2032 (Cash coupon 1.75% to 2.00%). (CRWV 10-Q, Note 7).
-12. `OBL-CRWV-DEBT-OEM` ($4.220B principal): CoreWeave Recourse OEM and software license financing arrangements (~11% installment rate). (CRWV 10-Q, Note 7).
-13. `OBL-CRWV-DEBT-OEM-NR` ($882M principal drawn): CoreWeave Non-Recourse OEM equipment financing facility. (CRWV 10-Q, Note 7).
-14. `OBL-CRWV-DEBT-MAGNETAR` ($189M principal): CoreWeave Magnetar subordinated loan (Maturity Jan 2029). (CRWV 10-Q, Note 7).
-    *(CoreWeave 11 modeled debt components sum exactly to $35.551B future principal: $1.300B + $3.190B + $3.000B + $2.215B + $2.837B + $1.101B + $10.029B + $6.588B + $4.220B + $0.882B + $0.189B = $35.551B, exact 0.00% drift).*
-15. `REL-MSFT-CRWV-REVENUE-CONCENTRATION` ($3.44B recognized revenue): Microsoft customer concentration representing 67% of CoreWeave's recognized revenue in FY25 ($5.131B total); characterized as recognized revenue concentration, not an unverified 5-year take-or-pay contract. (CRWV 10-K, Note 17).
-16. `OBL-SMCI-SUPPLIER-COMMIT` ($34.20B remaining commitment): Supermicro non-cancelable purchase commitments primarily with GPU and component suppliers through next 12 months. (SMCI 10-K, Note 12).
-17. `OBL-NVDA-CRWV-EQUITY` ($2.00B equity): NVIDIA January 2026 strategic Series C Preferred Stock private placement. (CRWV 10-Q, Note 10).
-18. `OBL-APLD-DEBT-PF1` ($2.350B principal): Applied Digital Polaris Forge 1 9.25% Senior Secured Notes issued by `APLD_COMPUTECO` due Dec 15, 2030 (Fixed rate coupon). (APLD 10-K, Note 8).
-19. `OBL-APLD-DEBT-PF2` ($2.150B principal): Applied Digital ComputeCo 2 6.75% Senior Notes issued by `APLD_COMPUTECO2` due Mar 15, 2031 (Fixed rate coupon). (APLD 10-K, Note 8).
-20. `OBL-APLD-DEBT-CONV` ($450.0M principal): Applied Digital 2.75% Convertible Senior Notes due Jun 30, 2030 (Fixed rate coupon). (APLD 10-K, Note 8).
-21. `OBL-APLD-DEBT-BRIDGE` ($300.0M principal): Applied Digital Floating-Rate Bridge Facility (SOFR benchmark, entered May 1, 2026, due Apr 30, 2027; retired June 16, 2026, superseded by $1.59B 7.00% Senior Secured Notes). (APLD 10-K, Note 8 & Note 19).
-22. `OBL-APLD-DEBT-OTHER` ($56.68M principal): Applied Digital aggregate residual debt across equipment notes and promissory agreements. (APLD 10-K, Note 8).
-23. `OBL-APLD-DEBT-7PCT-2026` ($1.590B principal): Applied Digital 7.00% Senior Secured Notes due June 15, 2031, issued June 16, 2026 by APLD ComputeCo 3 LLC (`APLD_COMPUTECO3`, direct parent `APLD_HPC_HOLDINGS2`) to refinance the $300M bridge facility and fund ELN-04, conserving post-refinancing debt in the temporal graph. (APLD Form 8-K filed 2026-06-18, `CLM-APLD-008` & 10-K Note 19 Subsequent Events).
-    *(Applied Digital 6 modeled debt components in master ledger: 5 active at May 31, 2026 snapshot summing to $5,306.68M gross principal payments vs $4,975.94M net carrying debt, exact 0.00% drift; post-refinancing snapshot at September 28, 2026 conserves debt with 7.00% notes replacing bridge for $6,596.68M total gross debt).*
+4. **CoreWeave Discrete Funded Debt (16 Tranches Reconciling to Exactly $35.551B, 0.00% Drift):**
+   - `OBL-CRWV-DEBT-DDTL1`: $1.300B (`CRWV_CCAC_II` $\to$ `BLACKSTONE_MAGNETAR_SYN`, entered 2023-07-30, matures 2028-03-31, SOFR + 2.75%, S-1/A `CLM-CRWV-007`)
+   - `OBL-CRWV-DEBT-DDTL2`: $3.190B (`CRWV_CCAC_IV` $\to$ `BLACKSTONE_MAGNETAR_SYN`, entered 2024-05-16, matures 2030-08-31, SOFR + 3.25%, S-1/A `CLM-CRWV-007`)
+   - `OBL-CRWV-DEBT-DDTL2-1`: $3.000B (`CRWV_CCAC_IV` $\to$ `BLACKSTONE_MAGNETAR_SYN`, entered 2025-09-25, matures 2031-03-31, SOFR + 3.25%, Form 8-K `CLM-CRWV-010`)
+   - `OBL-CRWV-DEBT-DDTL3`: $2.215B (`CRWV_CCAC_VII` $\to$ `BLACKSTONE_MAGNETAR_SYN`, entered 2025-07-28, matures 2030-08-31, SOFR + 3.50%, Form 8-K `CLM-CRWV-009`)
+   - `OBL-CRWV-DEBT-DDTL4`: $2.837B drawn of $8.500B capacity (`CRWV_SPV_VIII` $\to$ `MUFG_BANK_SYN`, entered 2026-03-30, matures 2031-12-31, strictly non-recourse, zero parent guarantee, Form 8-K `CLM-CRWV-012`)
+   - `OBL-CRWV-DEBT-DDTL5`: $1.101B (`CRWV_FINANCING_DDTL_V` $\to$ `MORGAN_STANLEY_SYN`, entered 2026-05-15, matures 2031-11-30, SOFR + 3.50%, 71.42% funding ratio, Form 8-K `CLM-CRWV-006`)
+   - `OBL-CRWV-DEBT-NOTES-2030`: $2.000B (`CRWV` $\to$ `INSTITUTIONAL_BONDHOLDERS`, entered 2025-05-19, matures 2030-06-15, 9.125%, Form 8-K `CLM-CRWV-008`)
+   - `OBL-CRWV-DEBT-NOTES-2031-900`: $1.750B (`CRWV` $\to$ `INSTITUTIONAL_BONDHOLDERS`, entered 2025-07-28, matures 2031-02-15, 9.00%, Form 8-K `CLM-CRWV-009`)
+   - `OBL-CRWV-DEBT-NOTES-2031-975`: $2.750B (`CRWV` $\to$ `INSTITUTIONAL_BONDHOLDERS`, entered 2026-04-09, matures 2031-10-01, 9.75%, Form 8-K `CLM-CRWV-013`)
+   - `OBL-CRWV-DEBT-NOTES-2032-9625`: $1.250B (`CRWV` $\to$ `INSTITUTIONAL_BONDHOLDERS`, entered 2026-06-11, matures 2032-07-15, 9.625%, Form 8-K `CLM-CRWV-014`)
+   - `OBL-CRWV-DEBT-NOTES-2032-EUR`: $2.279B (`CRWV` $\to$ `INSTITUTIONAL_BONDHOLDERS`, entered 2026-06-11, matures 2032-07-15, 8.875% EUR, Form 8-K `CLM-CRWV-014`)
+   - `OBL-CRWV-DEBT-CONV-2031`: $2.588B (`CRWV` $\to$ `INSTITUTIONAL_BONDHOLDERS`, entered 2025-12-08, matures 2031-12-15, 1.75%, Form 8-K `CLM-CRWV-011`)
+   - `OBL-CRWV-DEBT-CONV-2032`: $4.000B (`CRWV` $\to$ `INSTITUTIONAL_BONDHOLDERS`, entered 2026-04-09, matures 2032-10-01, 2.00%, Form 8-K `CLM-CRWV-013`)
+   - `OBL-CRWV-DEBT-OEM`: $4.220B (`CRWV` $\to$ `OEM_FINANCING_PARTNERS`, entered 2025-01-01, matures 2030-07-31, Form 10-Q `CLM-CRWV-001`)
+   - `OBL-CRWV-DEBT-OEM-NR`: $0.882B (`CRWV` $\to$ `OEM_FINANCING_PARTNERS`, entered 2025-06-01, matures 2029-12-31, non-recourse OEM, Form 10-Q `CLM-CRWV-004`)
+   - `OBL-CRWV-DEBT-MAGNETAR`: $0.189B (`CRWV` $\to$ `BLACKSTONE_MAGNETAR_SYN`, entered 2024-01-15, matures 2029-01-31, S-1/A `CLM-CRWV-007`)
+   - *(Sum of 16 discrete tranches = $35,551,000,000.00 exact; 5 recourse parent guarantee edges modeled from `CRWV` to syndicates with `amount = None`).*
+5. `REL-MSFT-CRWV-REVENUE-CONCENTRATION` ($3.44B recognized revenue): Microsoft customer concentration representing 67% of CoreWeave's recognized revenue in FY25 ($5.131B total); characterized as recognized revenue concentration, not an unverified 5-year take-or-pay contract. (CRWV 10-K, Note 17).
+6. `OBL-SMCI-SUPPLIER-COMMIT` ($34.20B remaining commitment): Supermicro non-cancelable purchase commitments primarily with GPU and component suppliers through next 12 months. (SMCI 10-K, Note 12).
+7. `OBL-NVDA-CRWV-EQUITY` ($2.00B equity): NVIDIA January 2026 strategic Series C Preferred Stock private placement. (CRWV 10-Q, Note 10).
+8. **Applied Digital Discrete Debt (6 Tranches Reconciling to $5,306.68M Gross Principal at May 31, Conserved Across Refinancing):**
+   - `OBL-APLD-DEBT-PF1`: $2.350B principal (issued by `APLD_COMPUTECO` due Dec 15, 2030, fixed 9.25%, Form 10-K Note 8)
+   - `OBL-APLD-DEBT-PF2`: $2.150B principal (issued by `APLD_COMPUTECO2` due Mar 15, 2031, fixed 6.75%, Form 10-K Note 8)
+   - `OBL-APLD-DEBT-CONV`: $450.0M principal (issued by `APLD` due Jun 30, 2030, fixed 2.75%, Form 10-K Note 8)
+   - `OBL-APLD-DEBT-BRIDGE`: $300.0M principal (floating SOFR, entered May 1, 2026, due Apr 30, 2027; retired June 16, 2026, superseded by $1.59B 7.00% Senior Secured Notes, Form 10-K Note 8 & Note 19)
+   - `OBL-APLD-DEBT-OTHER`: $56.68M principal (promissory notes and equipment debt, Form 10-K Note 8)
+   - `OBL-APLD-DEBT-7PCT-2026`: $1.590B principal (issued June 16, 2026 by `APLD_COMPUTECO3` due June 15, 2031, fixed 7.00%, refinancing bridge and funding ELN-04, Form 8-K filed 2026-06-16 `CLM-APLD-008` & Form 10-K Note 19)
+   - *(Active gross principal at May 31 = $5,306.68M vs $4,975.94M net carrying debt; post-refinancing at Sep 28 = $6,596.68M; exact 0.00% drift).*
 
 ### 4. Shared Systemic Assumptions
 - `A001: GPU_RESIDUAL_VALUE`: H100/H200 hardware retains >=45% secondary market resale value, supporting borrowing base advance rates on $10.8B DDTLs.

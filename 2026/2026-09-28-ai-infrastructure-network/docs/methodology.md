@@ -41,6 +41,16 @@ flowchart TD
     L2 -->|Cash Flow Transmission| L1
 ```
 
+### Layer 0: Primary SEC Proof & Epistemic Invariance
+A network model of credit contagion is only as reliable as its primary evidence. Modeling complex corporate and project-finance relationships cannot rely on joins over unverified or fabricated metadata. Epistemic integrity requires:
+1. **Verified Primary Sources:** Every claim cited must exist in genuine primary SEC EDGAR submissions (`data/raw/sec/*.json`), verified against accession number, form type, and filing date (`validate_sec_source_existence()`).
+2. **Claim Duality (Truth vs Knowledge):** Every point-in-time attribute in `obligation_facts` tracks:
+   - `truth_claim_id`: Audited document certifying structural parameters (e.g. Form 10-K / 10-Q Note 7).
+   - `knowledge_claim_id`: Contemporaneous public announcement establishing earliest public market awareness (e.g. Form 8-K on closing date).
+   - Strict temporal invariant: `fact.publicly_known_from >= claims[knowledge_claim_id].filing_date`.
+3. **Discrete Instrument De-aggregation:** Avoid umbrella credit facility approximations. Facilities are broken down into contract-literal tranches with distinct borrowing SPVs, facility capacities, draw amounts, and explicit recourse/guarantee perimeters (e.g. CoreWeave's 16 discrete debt tranches totaling $35.551B and 5 parent guarantee edges).
+4. **Bitemporal Financial Snapshot Resolution:** Financial statement metrics (cash, debt, leases, OCF) are resolved dynamically via `resolve_temporal_financials(as_of_date, temporal_mode)` from point-in-time XBRL facts, strictly enforcing `filed_date <= as_of_date` in knowledge mode to eliminate look-ahead bias across both network topology and balance sheet layers.
+
 ### Layer 1: Standardized Accounting Financials
 Extracts standardized historical facts directly from the SEC EDGAR XBRL Application Programming Interface (`data.sec.gov`). Provides audited baseline metrics:
 - Revenue, Cost of Goods Sold, Gross Margin

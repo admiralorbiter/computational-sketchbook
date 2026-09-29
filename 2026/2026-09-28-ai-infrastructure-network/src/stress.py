@@ -49,6 +49,66 @@ class FloatingDebtAmount(float):
         yield self.is_known
 
 
+def resolve_temporal_financials(
+    as_of_date: Optional[str] = None,
+    temporal_mode: Optional[str] = "economic"
+) -> Dict[str, Dict[str, float]]:
+    """
+    Load audited balance sheet and flow metrics per entity from SEC XBRL facts
+    with strict temporal filtering (ADR-015).
+    - If temporal_mode in ['known', 'knowledge']: filters facts where filed_date <= as_of_date.
+      Eliminates look-ahead bias (e.g. on June 30, 2026, CRWV cash resolves to Q1 10-Q $2.244B,
+      not the future August 12 10-Q cash of $5.524B).
+    - If temporal_mode == 'economic': filters facts where period_end <= as_of_date.
+    - If temporal_mode is None: loads latest facts in entire dataset without temporal restriction.
+    """
+    df = pd.read_parquet(PROCESSED_DIR / "financials.parquet")
+    df_inst = df[df["duration_type"] == "instant"].copy()
+    df_flow = df[df["duration_type"].isin(["annual", "quarterly"])].copy()
+
+    if temporal_mode in ["known", "knowledge"]:
+        if as_of_date:
+            df_inst = df_inst[df_inst["filed_date"] <= as_of_date]
+            df_flow = df_flow[df_flow["filed_date"] <= as_of_date]
+    elif temporal_mode == "economic":
+        if as_of_date:
+            df_inst = df_inst[df_inst["period_end"] <= as_of_date]
+            df_flow = df_flow[df_flow["period_end"] <= as_of_date]
+
+    instant = (
+        df_inst.sort_values(by=["entity_id", "metric", "period_end", "filed_date"])
+        .groupby(["entity_id", "metric"])
+        .last()
+        .reset_index()
+    )
+    p_inst = instant.pivot(index="entity_id", columns="metric", values="value")
+
+    flows = (
+        df_flow.sort_values(by=["entity_id", "metric", "period_end", "filed_date"])
+        .groupby(["entity_id", "metric"])
+        .last()
+        .reset_index()
+    )
+    p_flow = flows.pivot(index="entity_id", columns="metric", values="value")
+
+    fin_dict = {}
+    for entity in ["CRWV", "APLD", "SMCI", "NVDA", "ORCL", "MSFT"]:
+        cash = p_inst.loc[entity, "cash_and_equivalents"] if entity in p_inst.index and "cash_and_equivalents" in p_inst.columns and pd.notna(p_inst.loc[entity, "cash_and_equivalents"]) else 0.0
+        debt = p_inst.loc[entity, "total_debt"] if entity in p_inst.index and "total_debt" in p_inst.columns and pd.notna(p_inst.loc[entity, "total_debt"]) else 0.0
+        leases = p_inst.loc[entity, "operating_lease_liabilities"] if entity in p_inst.index and "operating_lease_liabilities" in p_inst.columns and pd.notna(p_inst.loc[entity, "operating_lease_liabilities"]) else 0.0
+        ocf = p_flow.loc[entity, "operating_cash_flow"] if entity in p_flow.index and "operating_cash_flow" in p_flow.columns and pd.notna(p_flow.loc[entity, "operating_cash_flow"]) else 0.0
+        rev = p_flow.loc[entity, "revenue"] if entity in p_flow.index and "revenue" in p_flow.columns and pd.notna(p_flow.loc[entity, "revenue"]) else 0.0
+
+        fin_dict[entity] = {
+            "cash_and_equivalents": float(cash),
+            "total_debt": float(debt),
+            "operating_lease_liabilities": float(leases),
+            "operating_cash_flow": float(ocf),
+            "revenue": float(rev)
+        }
+    return fin_dict
+
+
 class FinancialStressEngine:
     def __init__(
         self,
@@ -58,7 +118,7 @@ class FinancialStressEngine:
     ):
         if network is None:
             base_net = ObligationNetwork()
-            self.as_of_date = as_of_date or "2026-05-31"
+            self.as_of_date = as_of_date or "2026-09-28"
             self.temporal_mode = temporal_mode
             self.network = base_net.as_of(self.as_of_date, mode=self.temporal_mode)
         else:
@@ -68,10 +128,14 @@ class FinancialStressEngine:
                 self.network = network.as_of(self.as_of_date, mode=self.temporal_mode)
             else:
                 self.network = network
-                self.as_of_date = getattr(network, "as_of_date", "2026-05-31")
-                self.temporal_mode = getattr(network, "temporal_mode", "economic")
+                self.as_of_date = getattr(network, "as_of_date", None) or "2026-09-28"
+                self.temporal_mode = getattr(network, "temporal_mode", None) or "economic"
         self.graph = self.network.graph
-        self.financials = self._load_latest_financials()
+        self.financials = resolve_temporal_financials(as_of_date=self.as_of_date, temporal_mode=self.temporal_mode)
+
+    def _load_latest_financials(self) -> Dict[str, Dict[str, float]]:
+        """Backwards-compatible delegation to resolve_temporal_financials."""
+        return resolve_temporal_financials(as_of_date=self.as_of_date, temporal_mode=self.temporal_mode)
 
     def get_active_floating_debt(self, entity_id: str) -> FloatingDebtAmount:
         """
@@ -118,44 +182,6 @@ class FinancialStressEngine:
             return 4661000000.0 if entity_id == "CRWV" else 0.0
         return None
 
-    def _load_latest_financials(self) -> Dict[str, Dict[str, float]]:
-        """Load latest audited balance sheet and flow metrics per entity from SEC XBRL facts."""
-        df = pd.read_parquet(PROCESSED_DIR / "financials.parquet")
-        instant = (
-            df[df["duration_type"] == "instant"]
-            .sort_values(by=["entity_id", "metric", "period_end", "filed_date"])
-            .groupby(["entity_id", "metric"])
-            .last()
-            .reset_index()
-        )
-        p_inst = instant.pivot(index="entity_id", columns="metric", values="value")
-
-        flows = (
-            df[df["duration_type"].isin(["annual", "quarterly"])]
-            .sort_values(by=["entity_id", "metric", "period_end", "filed_date"])
-            .groupby(["entity_id", "metric"])
-            .last()
-            .reset_index()
-        )
-        p_flow = flows.pivot(index="entity_id", columns="metric", values="value")
-
-        fin_dict = {}
-        for entity in ["CRWV", "APLD", "SMCI", "NVDA", "ORCL", "MSFT"]:
-            cash = p_inst.loc[entity, "cash_and_equivalents"] if entity in p_inst.index and "cash_and_equivalents" in p_inst.columns else 0.0
-            debt = p_inst.loc[entity, "total_debt"] if entity in p_inst.index and "total_debt" in p_inst.columns else 0.0
-            leases = p_inst.loc[entity, "operating_lease_liabilities"] if entity in p_inst.index and "operating_lease_liabilities" in p_inst.columns else 0.0
-            ocf = p_flow.loc[entity, "operating_cash_flow"] if entity in p_flow.index and "operating_cash_flow" in p_flow.columns else 0.0
-            rev = p_flow.loc[entity, "revenue"] if entity in p_flow.index and "revenue" in p_flow.columns else 0.0
-
-            fin_dict[entity] = {
-                "cash_and_equivalents": float(cash),
-                "total_debt": float(debt),
-                "operating_lease_liabilities": float(leases),
-                "operating_cash_flow": float(ocf),
-                "revenue": float(rev)
-            }
-        return fin_dict
-
     def simulate_gpu_collateral_haircut(self, haircut_pct: float = 0.40, funding_ratio_proxy: float = 0.7142) -> Dict[str, Any]:
         """
         Scenario 1: Hypothetical MTM Financing Sensitivity (71.42% Funding-Ratio Proxy)
@@ -169,9 +195,11 @@ class FinancialStressEngine:
             "OBL-CRWV-DEBT-DDTL3", "OBL-CRWV-DEBT-DDTL5"
         ]
         drawn_debt = 0.0
-        for k in drawn_ddtl_keys:
-            if self.graph.has_edge("CRWV", "BLACKSTONE_MAGNETAR_SYN", key=k):
-                drawn_debt += self.graph.get_edge_data("CRWV", "BLACKSTONE_MAGNETAR_SYN", key=k).get("amount", 0.0)
+        for u, v, k, d in self.graph.edges(keys=True, data=True):
+            if k in drawn_ddtl_keys:
+                amt = d.get("amount")
+                if amt is not None and d.get("amount_known", True):
+                    drawn_debt += float(amt)
 
         if drawn_debt == 0.0:
             drawn_debt = 10806000000.0
@@ -365,8 +393,8 @@ class FinancialStressEngine:
             min_cash_drain = network_full_95_hit
             max_cash_drain = (crwv_floating_debt * delta_r) + apld_hit
 
-        crwv_cash = self.financials.get("CRWV", {}).get("cash_and_equivalents", 5520000000.0)
-        apld_cash = self.financials.get("APLD", {}).get("cash_and_equivalents", 1590000000.0)
+        crwv_cash = eval_engine.financials.get("CRWV", {}).get("cash_and_equivalents", 5520000000.0)
+        apld_cash = eval_engine.financials.get("APLD", {}).get("cash_and_equivalents", 1590000000.0)
 
         if not floating_principal_known:
             narrative = (
@@ -415,8 +443,8 @@ class FinancialStressEngine:
             "apld_floating_debt_post_refinancing_usd": 0.0,
             "apld_cash_drain_usd": apld_hit,
             "network_cash_drain_reported_baseline_usd": network_reported_hit if (swap_notional_known and floating_principal_known) else None,
-            "network_cash_drain_may31_snapshot_usd": (crwv_reported_hit + 9000000.0) if crwv_reported_hit is not None else 235350000.0,
-            "network_cash_drain_post_refinancing_usd": crwv_reported_hit if crwv_reported_hit is not None else 226350000.0,
+            "network_cash_drain_may31_snapshot_usd": (crwv_reported_hit + 9000000.0) if crwv_reported_hit is not None else None,
+            "network_cash_drain_post_refinancing_usd": crwv_reported_hit if crwv_reported_hit is not None else None,
             "network_cash_drain_full_95_hypothetical_usd": network_full_95_hit,
             "network_cash_drain_covenanted_only_usd": network_covenanted_only_hit,
             "crwv_cash_usd": crwv_cash,
