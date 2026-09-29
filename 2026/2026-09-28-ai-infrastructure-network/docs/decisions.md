@@ -117,3 +117,23 @@ This log records the durable architectural, methodological, and data design choi
   6. Update `src/validate.py` to enforce zero data drift, assert 20 obligations, verify split springing guarantees, perform verbatim claim substring checks, and output `ALL INTERNAL CONSISTENCY CHECKS PASSED: ZERO DATA DRIFT`.
 - **Consequences:** Eliminates all remaining contractual over-claims and parameter mischaracterizations, grounds rate shocks in empirical SEC swap disclosures, and establishes full evidentiary precision before universe expansion.
 
+## ADR-010: Phase 0.7.2 Corrective Patch & Pilot Freeze
+- **Status:** Accepted (Phase 0.7.2 Pilot Freeze)
+- **Context:**
+  Following Phase 0.7.1, a final pre-expansion pressure test identified two material economic misclassifications and two epistemic precision issues:
+  1. *Springing Guarantee Amounts & Scope:* Legal guarantee contracts (Exhibit 10.1 & 10.2) are uncapped performance and rent indemnities without fixed dollar amounts. Stating fixed amounts ($2.75B and $4.125B) conflated legal indemnity with nominal lease value. Furthermore, Exhibit 10.1 specifically covers "Phase 2/4 Space (2 of 4 data halls in Building 2)", not the entire 100 MW. Exhibit 10.2 covers Building 3 (150 MW assigned to SPV), carrying a Class C reference exposure proxy of $4.125B ($150/400 \text{ MW} \times \$11.0\text{B}$).
+  2. *Applied Digital Debt Duality & Floating Exposure:* Form 10-K balance sheet reports net carrying debt of $4.976B ($4,959.5M net long-term + $16.4M current debt), while Note 8 reports gross contractual principal payments of $5.307B ($5,306.7M), with $330.7M in unamortized discount and debt issuance costs. The debt was artificially lumped into a $475.9M corporate residual rather than reflecting actual contractual instruments: $2.35B PF1 notes (fixed), $2.15B PF2 notes (fixed), $450M convertible notes (fixed), $300M floating bridge facility (SOFR), and $56.68M other debt. Only the $300M bridge facility was floating (adding $9.0M/yr interest shock at +300 bps), establishing a network SOFR baseline of $235.4M/yr ($226.4M CRWV + $9.0M APLD). Note: APLD refinanced the bridge facility on June 16, 2026 into 7.00% fixed notes.
+  3. *Verbatim Quoting Fidelity & Exhibit Caching:* The springing event quote in `CLM-APLD-005` contained bracketed omissions. We cached primary SEC exhibit HTML files (`APLD_ex10_1.htm` and `APLD_ex10_2.htm`) and enforced 100% exact contiguous verbatim substring verification in the automated validator.
+  4. *GPU MTM Reframing:* Under DDTL 5.0 Section 2.05, secondary price declines do not trigger automatic cash prepayment margin calls. The $4.32B impact was reframed as a Modeled Refinancing-Capacity Gap (Class C proxy) eliminating undrawn availability, while CoreWeave cash remains $5.52B intact.
+  5. *Validator Latest-Period Check:* Replaced `.max()` with `.sort_values("period_end").iloc[-1]["value"]` to validate latest reported period rather than historical maximums (fixing Oracle $134.60B -> $125.34B and SMCI $8.77B -> $8.72B).
+- **Decision:**
+  1. Updated `FINANCIAL_METRIC_OVERRIDES` in `src/sec_ingest.py` to record APLD contractual principal ($5.306680B).
+  2. In `src/curate_obligations.py`, expanded obligations to 22: set springing guarantees to `amount = None`, `amount_type = "contingent_obligations"`, ELN-02 scope to "Phase 2/4 Space (2 of 4 data halls in Building 2)", ELN-03 to $4.125B Class C reference proxy, and decomposed APLD debt into 5 real contractual instruments summing to $5,306.68M (0.00% drift).
+  3. In `src/stress.py`, updated Scenario 1 to modeled refinancing gap ($4.32B Class C proxy, cash intact), Scenario 2 to uncapped springing guaranty activation, and Scenario 3A to $235.4M/yr baseline cash drain ($226.4M CRWV + $9.0M APLD; sensitivity band $27.3M to $303.9M/yr).
+  4. In `src/validate.py`, added APLD debt decomposition assertion, uncapped springing guaranty assertion, exact contiguous verbatim substring check against `data/raw/sec/APLD_ex10_1.htm`, latest-period debt verification, and updated documentation checks.
+  5. Rebuilt and executed `notebooks/01_five_company_pilot.ipynb` (13/13 cells executed cleanly).
+  6. Froze the 5-company pilot in Phase 0.7.2.
+- **Consequences:**
+  Eliminates all narrative drift and contractual over-claims. The 5-company pilot is now epistemically certified with zero data drift, providing an unshakeable foundation for Phase 1 universe expansion.
+
+

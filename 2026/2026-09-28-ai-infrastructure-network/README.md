@@ -81,9 +81,9 @@ flowchart TD
 
 ---
 
-## 4. Phase 0.7.1: The Five-Company Pilot (Evidence-Calibrated)
+## 4. Phase 0.7.2: The Five-Company Pilot (Corrective Patch & Pilot Freeze)
 
-Phase 0.7.1 establishes an economically literal baseline across five core companies and their counterparties:
+Phase 0.7.2 establishes an economically literal baseline across five core companies and their counterparties:
 * **NVIDIA Corporation (`NVDA`):** Dominant accelerated silicon supplier (CIK: `0001045810`).
 * **Super Micro Computer, Inc. (`SMCI`):** Accelerated server OEM & liquid cooling integrator (CIK: `0001375365`).
 * **CoreWeave, Inc. (`CRWV`):** Leveraged neocloud operator (CIK: `0001769628`) and its equipment vehicle `CRWV_SPV_VIII`.
@@ -106,19 +106,22 @@ Phase 0.7.1 establishes an economically literal baseline across five core compan
 
 ---
 
-## 5. Key Empirical Findings from Phase 0.7.1
+## 5. Key Empirical Findings from Phase 0.7.2
 
 1. **The Bubble Lives in the Joins:**
    * On consolidated statements, Applied Digital (`APLD`) reports $1.59B in cash and $4.98B in debt.
    * Querying the joins reveals that APLD executed a **15-year, ~$11.0B master lease agreement** for 400 MW at Polaris Forge 1 with CoreWeave across Buildings 2, 3, and 4. APLD's campus development economics are leveraged to CoreWeave's solvency.
-2. **Perimeter Opacity & The Unconditional Springing Guarantees ($6.88B Total across 250 MW):**
+2. **Perimeter Opacity & Uncapped Springing Guarantees (Phase 2/4 Space & Building 3 Class C Reference Proxy):**
    * In SEC Form 10-K disclosures (Note 14, Exhibit 10.1, Exhibit 10.2), CoreWeave assigned its lease liabilities to `CoreWeave Compute Acquisition Co. VIII, LLC`, formally releasing parent corporate liability on Building ELN-03.
-   * **However**, CoreWeave concurrently executed separate **Unconditional Springing Guarantees of Payment and Performance** for Building 2 (ELN-02, 100 MW, **$2.750B contracted value**, Exhibit 10.1) and Building 3 (ELN-03, 150 MW, **$4.125B contracted value**, Exhibit 10.2), totaling **$6.875B** covering 250 MW. Building 4 (150 MW, $4.125B) carries no CoreWeave parent springing guarantee (APLD guarantees the landlord).
-   * Under Exhibit 10.1 and Exhibit 10.2, the guarantees activate upon explicit Springing Events: (i) equipment-financing rating trigger [***], (ii) colocation agreement default, material modification, or payment reduction/cessation, (iii) insolvency/bankruptcy, (iv) equipment financing acceleration, etc.
-3. **Exact CoreWeave Debt Reconciliation ($35.551B):**
-   * CoreWeave's indebtedness is not a single generic loan, but **$35.551B in future principal** across 11 modeled debt components/edges:
-     DDTL 1.0 ($1.300B), DDTL 2.0 ($3.190B), DDTL 2.1 ($3.000B), DDTL 3.0 ($2.215B), Non-Recourse DDTL 4.0 ($2.837B drawn of $8.500B capacity), DDTL 5.0 ($1.101B), Senior Secured Notes ($10.029B), Convertible Senior Notes ($6.588B), Recourse OEM ($4.220B), Non-Recourse OEM ($0.882B), and Magnetar Loan ($0.189B).
-     Sum of edges: $1.300B + $3.190B + $3.000B + $2.215B + $2.837B + $1.101B + $10.029B + $6.588B + $4.220B + $0.882B + $0.189B = **$35.551B** (exact 0.00% drift).
+   * **However**, CoreWeave concurrently executed separate **Unconditional Springing Guarantees of Payment and Performance**:
+     - **Exhibit 10.1:** Guarantees the Building 2 SPV lease, specifically covering **Phase 2/4 Space (2 of 4 data halls in Building 2)**, not all 100 MW (`capacity_mw = None`, unstated face value).
+     - **Exhibit 10.2:** Guarantees the Building 3 SPV lease (**150 MW** assigned to SPV, carrying an inferred Class C reference proxy of **$4.13B** based on 150/400 MW).
+     - **Building 4 (150 MW, ~$4.13B):** Carries no CoreWeave parent springing guarantee (APLD guarantees the landlord).
+     - **Contractual Face Value Reality:** Both agreements are uncapped performance and rent indemnities without a fixed face value (`amount = None`, `amount_type = "contingent_obligations"`).
+     - Under Exhibit 10.1 and Exhibit 10.2, the guarantees activate upon explicit Springing Events: (i) equipment-financing rating trigger [***], (ii) colocation agreement default, material modification, or payment reduction/cessation, (iii) insolvency/bankruptcy, (iv) equipment financing acceleration, etc.
+3. **Exact CoreWeave & Applied Digital Debt Reconciliations:**
+   * **CoreWeave ($35.551B):** Indebtedness is reconciled across 11 modeled debt components/edges: DDTL 1.0 ($1.300B), DDTL 2.0 ($3.190B), DDTL 2.1 ($3.000B), DDTL 3.0 ($2.215B), Non-Recourse DDTL 4.0 ($2.837B drawn of $8.500B capacity), DDTL 5.0 ($1.101B), Senior Secured Notes ($10.029B), Convertible Senior Notes ($6.588B), Recourse OEM ($4.220B), Non-Recourse OEM ($0.882B), and Magnetar Loan ($0.189B), summing to **$35.551B** (exact 0.00% drift).
+   * **Applied Digital Duality ($5.307B Gross Principal vs $4.976B Carrying Debt):** Form 10-K balance sheet reports net carrying debt of **$4.976B** ($4,959.5M net long-term + $16.4M current portion), while Note 8 discloses gross contractual remaining principal payments of **$5.307B** ($5,306.7M), with $330.7M in unamortized discount and deferred financing costs. Decomposed into 5 real contractual instruments: $2.35B 9.25% PF1 notes, $2.15B 6.75% PF2 notes, $450M 2.75% convertible notes, $300M floating bridge facility (SOFR), and $56.7M other debt (summing to $5,306.68M; 0.00% drift). On June 16, 2026, the $300M bridge facility was refinanced into 7.00% fixed notes.
 4. **Pure Amount-Type Reachability vs Parameterized Financial Stress Prototype:**
    * We eliminate non-fungible dollar mixing across different categories. Reachability reports the percentage of each `amount_type` reachable within 2 hops of an assumption alongside edge reachability percentages.
    * The stress engine is framed as a **parameterized financial stress prototype** with contract-calibrated transmission functions.
@@ -128,9 +131,9 @@ Phase 0.7.1 establishes an economically literal baseline across five core compan
 
 | Scenario Name | Shock Parameter | Target Entity | Direct Cash / Collateral Hit | Liquidity & Covenant Transmission |
 | :--- | :--- | :--- | :--- | :--- |
-| **Hypothetical MTM Financing Sensitivity** | -40% secondary GPU collateral value | `CRWV` | **$4.32B funding deficit** | Evaluates drawn DDTLs against a 71.42% advance rate proxy, consuming **78.2% of CoreWeave's cash** and freezing capex. (Class C analytical sensitivity; contractually DDTL 5.0 defines 71.42% of capex cost with 6-yr depreciation). |
-| **Anchor Customer Demand Trim** | -30% Microsoft volume ($3.44B base) | `CRWV` | **$1.03B/yr cash flow loss** | Reductions in colocation payments conditionally trigger **Springing Event (ii)** under Exhibit 10.2, activating the **$4.13B parent ELN-03 guaranty** (or **$6.88B total** including ELN-02; Building 4 excluded) if Microsoft is the tenant. |
-| **SOFR Base Rate Shock** | +300 bps SOFR benchmark | `CRWV / APLD` | **$240.6M/yr hedged cash drain** | Note 8 reports **$4,661M** active swap notional against $12.206B floating debt, leaving **$7.545B unhedged**. Direct cash drain is **$226.4M CRWV + $14.3M APLD = $240.6M/yr** (Sensitivity band: $32.6M/yr at 95% full coverage to $309.2M/yr if DDTL 1.0–3.0 unhedged). |
+| **Hypothetical MTM Financing Sensitivity** | -40% secondary GPU collateral value | `CRWV` | **$4.32B modeled refi gap** | Evaluates drawn DDTLs against a 71.42% advance rate proxy, modeling a **$4.32B refinancing gap** (Class C proxy). Section 2.05 of DDTL 5.0 does NOT trigger mandatory cash prepayment on secondary price declines (cash remains $5.52B intact), but eliminates undrawn capacity. |
+| **Anchor Customer Demand Trim** | -30% Microsoft volume ($3.44B base) | `CRWV` | **$1.03B/yr cash flow loss** | Reductions in colocation payments conditionally trigger **Springing Event (ii)** under Exhibit 10.2, activating the uncapped parent ELN-03 guaranty (**$4.13B Class C reference proxy**) and Exhibit 10.1 on Building 2 Phase 2/4 Space (2 of 4 halls; uncapped face value). Building 4 excluded. |
+| **SOFR Base Rate Shock** | +300 bps SOFR benchmark | `CRWV / APLD` | **$235.4M/yr hedged cash drain** | Note 8 reports **$4,661M** active swap notional against $12.206B floating debt, leaving **$7.545B unhedged** at CRWV, plus APLD's **$300.0M floating bridge facility**. Direct cash drain is **$226.4M CRWV + $9.0M APLD = $235.4M/yr** (Sensitivity band: $27.3M/yr at 95% full coverage to $303.9M/yr if DDTL 1.0–3.0 unhedged). |
 | **Credit Spread / Refinancing Shock** | +300 bps credit spread at maturity | `CRWV` | **$317.9M/yr added refi interest** | Existing contractual spreads unaffected; shock hits $10.60B scheduled principal maturing over 2026–2027 ($4.41B in 2026, $6.18B in 2027). Parameterized at 100% rollover ($317.9M/yr; sensitivity range: $159.0M at 50% to $317.9M at 100%). |
 | **Phased Grid Energization Delay** | 12-month delay at Polaris Forge 1 | `APLD` | **$135.9M debt carrying cost** | Defers $458M expansion rent on 250 MW pending, while ~150 MW operational (Building 2 100 MW + Building 3 parameterized at 50 MW live, Class C proxy) generates $275M base rent; carrying cost consumes **8.5% of APLD cash** (sensitivity range: 6.8% [$108.7M] to 9.4% [$149.4M] across 25–100 MW live). |
 | **OEM Purchase Commitment Expected Loss** | 15% demand pause on $34.2B | `SMCI` | **$2.05B NRV loss provision** | Accounting: $2.05B NRV write-down provision reducing equity. Cash: negotiated cancellation fee (parameterized at 15%) consumes **$769.5M cash (10.2%)**, while inventory delivery would consume **$5.13B cash (68.2%)**. |
@@ -151,14 +154,14 @@ Phase 0.7.1 establishes an economically literal baseline across five core compan
 ├── docs/
 │   ├── methodology.md             # Theoretical framework, 5 opacities, and contagion math
 │   ├── data_dictionary.md         # Schema specifications for all Parquet and CSV tables
-│   ├── decisions.md               # Architectural Decision Records (ADR-001 through 009)
+│   ├── decisions.md               # Architectural Decision Records (ADR-001 through 010)
 │   └── evidence_contract.md       # Epistemic trust hierarchy (Class A/B/C) and audit rules
 ├── data/
-│   ├── raw/sec/                   # 17.9 MB of cached SEC EDGAR company facts JSON
+│   ├── raw/sec/                   # Cached primary SEC EDGAR company facts JSON and exhibit HTMLs
 │   └── processed/                 # Standardized Parquet files and human-readable CSV mirrors
 │       ├── entities.parquet       # 18 entities (corporates, landlord SPVs, syndicates)
-│       ├── financials.parquet     # 5,438 standardized accounting observations (quarterly & annual)
-│       ├── obligations.parquet    # 20 decomposed obligations exactly reconciling debt
+│       ├── financials.parquet     # 5,440 standardized accounting observations (quarterly & annual)
+│       ├── obligations.parquet    # 22 decomposed obligations exactly reconciling debt
 │       ├── assumptions.parquet    # 7 assumption registries
 │       └── evidence_claims.parquet# 15 audited SEC citations with verbatim quotes and accession numbers
 ├── src/

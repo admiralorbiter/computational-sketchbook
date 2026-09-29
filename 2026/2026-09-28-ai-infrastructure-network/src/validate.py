@@ -1,5 +1,5 @@
 """
-Observatory Consistency Validator (Phase 0.7.1)
+Observatory Consistency Validator (Phase 0.7.2)
 Verifies that numbers, obligations, claims, figures, and tables in Markdown documentation
 (README.md and FEEDBACK_PACK.md) match canonical data artifacts, outputs, and executed
 notebook results with zero data drift.
@@ -7,6 +7,7 @@ notebook results with zero data drift.
 
 from pathlib import Path
 import re
+import html
 import json
 import pandas as pd
 
@@ -63,7 +64,7 @@ def parse_dollar(val_str: str):
 
 
 def validate_observatory():
-    print("=== Running AI Infrastructure Financial Network Consistency Validator (Phase 0.7.1) ===")
+    print("=== Running AI Infrastructure Financial Network Consistency Validator (Phase 0.7.2) ===")
     errors = []
 
     # ---------------------------------------------------------
@@ -82,7 +83,7 @@ def validate_observatory():
             print(f"  [OK] {rf:25} : {len(df)} rows")
 
     # ---------------------------------------------------------
-    # 2. Validate CoreWeave Exact Debt Decomposition ($35.551B)
+    # 2. Validate CoreWeave & Applied Digital Exact Debt Decomposition
     # ---------------------------------------------------------
     obl_df = pd.read_parquet(PROCESSED_DIR / "obligations.parquet")
     crwv_debt = obl_df[(obl_df["from_entity"] == "CRWV") & (obl_df["amount_type"] == "principal_outstanding")]
@@ -111,14 +112,42 @@ def validate_observatory():
     else:
         print(f"  [OK] All 11 distinct CRWV debt components present.")
 
+    # Applied Digital exact debt decomposition (parent and project SPVs)
+    apld_debt = obl_df[
+        obl_df["from_entity"].isin(["APLD", "APLD_ELN_LLC", "APLD_COMPUTECO2"]) & 
+        (obl_df["amount_type"] == "principal_outstanding")
+    ]
+    expected_apld_tranches = 5
+    if len(apld_debt) != expected_apld_tranches:
+        errors.append(f"APLD debt components count mismatch: {len(apld_debt)} (expected {expected_apld_tranches})")
+    
+    total_apld_debt = apld_debt["amount"].sum()
+    target_apld_debt = 5_306_680_000.0  # $5,306.680M from Form 10-K Note 8
+    apld_debt_drift = abs(total_apld_debt - target_apld_debt)
+    if apld_debt_drift > 1.0:
+        errors.append(f"APLD total debt drift: ${total_apld_debt/1e9:.4f}B vs ${target_apld_debt/1e9:.4f}B (drift ${apld_debt_drift:,.2f})")
+    else:
+        print(f"  [OK] APLD 5 modeled debt components sum exactly to ${total_apld_debt/1e9:.3f}B ($5,306.68M gross principal, exact 0.00% drift).")
+
+    expected_apld_ids = {
+        "OBL-APLD-DEBT-PF1", "OBL-APLD-DEBT-PF2", "OBL-APLD-DEBT-CONV",
+        "OBL-APLD-DEBT-BRIDGE", "OBL-APLD-DEBT-OTHER"
+    }
+    missing_apld_ids = expected_apld_ids - set(apld_debt["obligation_id"])
+    if missing_apld_ids:
+        errors.append(f"Missing expected APLD debt components: {missing_apld_ids}")
+    else:
+        print(f"  [OK] All 5 distinct APLD debt components present.")
+
     # ---------------------------------------------------------
     # 3. Validate Obligations & Polaris Forge 1 Phasing
     # ---------------------------------------------------------
     valid_amount_types = {
         "principal_outstanding", "lifetime_contract_value", "remaining_commitment",
-        "recognized_revenue", "contingent_guarantee", "equity_investment", "facility_capacity"
+        "recognized_revenue", "contingent_guarantee", "equity_investment", "facility_capacity",
+        "contingent_obligations"
     }
-    expected_obligations_count = 20
+    expected_obligations_count = 22
     if len(obl_df) != expected_obligations_count:
         errors.append(f"Obligations count mismatch: {len(obl_df)} (expected {expected_obligations_count})")
     else:
@@ -129,8 +158,14 @@ def validate_observatory():
         atype = row.get("amount_type")
         if atype not in valid_amount_types:
             errors.append(f"Obligation {oid} has invalid amount_type: {atype}")
-        if pd.isna(row.get("amount")) or row.get("amount") <= 0:
-            errors.append(f"Obligation {oid} has non-positive amount: {row.get('amount')}")
+        if atype == "contingent_obligations":
+            if not pd.isna(row.get("amount")):
+                errors.append(f"Contingent obligation {oid} should have amount = None (uncapped), found: {row.get('amount')}")
+            if not row.get("capacity_description"):
+                errors.append(f"Contingent obligation {oid} missing capacity_description")
+        else:
+            if pd.isna(row.get("amount")) or row.get("amount") <= 0:
+                errors.append(f"Obligation {oid} has non-positive amount: {row.get('amount')}")
         if not row.get("as_of_date"):
             errors.append(f"Obligation {oid} missing as_of_date")
 
@@ -150,21 +185,29 @@ def validate_observatory():
     g_eln03 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-APLD-GUARANTY-ELN03"]
     if g_eln02.empty:
         errors.append("Missing OBL-CRWV-APLD-GUARANTY-ELN02 obligation")
-    elif g_eln02.iloc[0]["amount"] != 2_750_000_000.0:
-        errors.append(f"OBL-CRWV-APLD-GUARANTY-ELN02 amount mismatch: ${g_eln02.iloc[0]['amount']/1e9:.3f}B")
+    else:
+        row2 = g_eln02.iloc[0]
+        if row2["amount_type"] != "contingent_obligations" or not pd.isna(row2["amount"]):
+            errors.append(f"OBL-CRWV-APLD-GUARANTY-ELN02 should be uncapped contingent_obligations, found {row2['amount_type']} / {row2['amount']}")
+        if "Phase 2/4 Space" not in str(row2.get("capacity_description")):
+            errors.append(f"OBL-CRWV-APLD-GUARANTY-ELN02 capacity_description mismatch: {row2.get('capacity_description')}")
+        else:
+            print("  [OK] ELN-02 verified as uncapped legal indemnity for Phase 2/4 Space (2 of 4 data halls in Building 2).")
+
     if g_eln03.empty:
         errors.append("Missing OBL-CRWV-APLD-GUARANTY-ELN03 obligation")
-    elif g_eln03.iloc[0]["amount"] != 4_125_000_000.0:
-        errors.append(f"OBL-CRWV-APLD-GUARANTY-ELN03 amount mismatch: ${g_eln03.iloc[0]['amount']/1e9:.3f}B")
-    
-    if not g_eln02.empty and not g_eln03.empty:
-        tot_g = g_eln02.iloc[0]["amount"] + g_eln03.iloc[0]["amount"]
-        if tot_g != 6_875_000_000.0:
-            errors.append(f"Split springing guarantees sum mismatch: ${tot_g/1e9:.3f}B (expected $6.875B)")
+    else:
+        row3 = g_eln03.iloc[0]
+        if row3["amount_type"] != "contingent_obligations" or not pd.isna(row3["amount"]):
+            errors.append(f"OBL-CRWV-APLD-GUARANTY-ELN03 should be uncapped contingent_obligations, found {row3['amount_type']} / {row3['amount']}")
+        if row3.get("capacity_mw") != 150.0:
+            errors.append(f"OBL-CRWV-APLD-GUARANTY-ELN03 capacity_mw mismatch: {row3.get('capacity_mw')} (expected 150.0)")
+        if row3.get("reference_exposure_estimate") != 4_125_000_000.0:
+            errors.append(f"OBL-CRWV-APLD-GUARANTY-ELN03 reference_exposure_estimate mismatch: {row3.get('reference_exposure_estimate')}")
         else:
-            print(f"  [OK] Split springing guarantees verified: ELN-02 ($2.750B) + ELN-03 ($4.125B) = ${tot_g/1e9:.3f}B across 250 MW.")
+            print("  [OK] ELN-03 verified as uncapped legal indemnity for Building 3 (150 MW) with $4.125B Class C reference proxy.")
 
-    print(f"  [OK] All {len(obl_df)} obligations have valid amount_type, positive values, and as_of_dates.")
+    print(f"  [OK] All {len(obl_df)} obligations have valid amount_type, valid values/uncapped attributes, and as_of_dates.")
 
     # ---------------------------------------------------------
     # 4. Validate Evidence Claims
@@ -184,16 +227,25 @@ def validate_observatory():
         if not row.get("accession_number") or not row.get("filing_date"):
             errors.append(f"Claim {cid} missing SEC accession number or filing date")
 
-    # Verbatim substring assertions
+    # Verbatim substring assertions against cached primary SEC exhibits
     c5 = clm_df[clm_df["claim_id"] == "CLM-APLD-005"]
     if c5.empty:
         errors.append("Missing claim CLM-APLD-005")
     else:
-        q5 = c5.iloc[0]["exact_quote"]
-        for phrase in ["Springing Events", "Colocation Agreement", "Equipment Financing"]:
-            if phrase not in q5:
-                errors.append(f"CLM-APLD-005 missing expected verbatim phrase: '{phrase}'")
-        print("  [OK] CLM-APLD-005 verified against Exhibit 10.1 verbatim Springing Events text.")
+        ex10_1_file = PROJECT_ROOT / "data" / "raw" / "sec" / "APLD_ex10_1.htm"
+        if not ex10_1_file.exists():
+            errors.append(f"Missing cached primary SEC exhibit: {ex10_1_file.name}")
+        else:
+            raw_bytes = ex10_1_file.read_bytes()
+            unesc = html.unescape(raw_bytes.decode("windows-1252"))
+            unesc = unesc.replace('\u201c', '"').replace('\u201d', '"').replace('\u2018', "'").replace('\u2019', "'")
+            unesc = re.sub(r'</?(?:b|i|u|strong|em|font|span)(?:\s+[^>]*)?>', '', unesc, flags=re.IGNORECASE)
+            norm_raw = ' '.join(re.sub(r'<[^>]+>', ' ', unesc).split())
+            norm_quote = ' '.join(c5.iloc[0]["exact_quote"].split())
+            if norm_quote not in norm_raw:
+                errors.append("CLM-APLD-005 exact_quote is not an exact contiguous substring of APLD_ex10_1.htm")
+            else:
+                print("  [OK] CLM-APLD-005 100% exact contiguous verbatim substring verified in APLD_ex10_1.htm.")
 
     c6 = clm_df[clm_df["claim_id"] == "CLM-APLD-006"]
     if c6.empty:
@@ -222,7 +274,7 @@ def validate_observatory():
     # ---------------------------------------------------------
     fin_df = pd.read_parquet(PROCESSED_DIR / "financials.parquet")
     
-    # Check key funded debt
+    # Check key funded debt (latest reported period)
     for ticker, expected_val, min_val in [
         ("APLD", 4.98e9, 4.9e9),
         ("CRWV", 35.55e9, 3.5e10),
@@ -230,7 +282,7 @@ def validate_observatory():
         ("ORCL", 125.34e9, 1.2e11),
         ("NVDA", 33.37e9, 3.3e10)
     ]:
-        v = fin_df[(fin_df["entity_id"] == ticker) & (fin_df["metric"] == "total_debt")]["value"].max()
+        v = fin_df[(fin_df["entity_id"] == ticker) & (fin_df["metric"] == "total_debt")].sort_values("period_end").iloc[-1]["value"]
         if v < min_val:
             errors.append(f"{ticker} total debt unexpectedly low: ${v/1e9:.2f}B (expected ~${expected_val/1e9:.2f}B)")
         else:
@@ -356,7 +408,7 @@ def validate_observatory():
         expected_hits = {
             "Hypothetical MTM Financing Sensitivity": 4.32e9,
             "Anchor Customer Demand Trim": 1.03e9,
-            "SOFR Base Rate Shock": 240.6e6,
+            "SOFR Base Rate Shock": 235.4e6,
             "Credit Spread / Refinancing Shock": 317.9e6,
             "Phased Grid Energization Delay": 135.9e6,
             "OEM Purchase Commitment Expected Loss": 2.05e9,

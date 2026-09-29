@@ -100,36 +100,36 @@ class FinancialStressEngine:
         stressed_asset_value = base_asset_value * (1.0 - haircut_pct)  # ~$9.078B
         allowable_capacity = stressed_asset_value * funding_ratio_proxy  # ~$6.484B
 
-        modeled_funding_deficit = max(0.0, drawn_debt - allowable_capacity)  # ~$4.322B
+        modeled_refinancing_gap = max(0.0, drawn_debt - allowable_capacity)  # ~$4.322B
         crwv_cash = self.financials.get("CRWV", {}).get("cash_and_equivalents", 5520000000.0)
-        cash_after_deficit = crwv_cash - modeled_funding_deficit
-        liquidity_burn_pct = (modeled_funding_deficit / crwv_cash) * 100.0 if crwv_cash else 100.0
-
-        downstream_freeze = liquidity_burn_pct > 60.0
+        # Note: Under DDTL 5.0 Credit Agreement Section 2.05, secondary market price declines do NOT trigger
+        # an automated mandatory cash margin call or prepayment. Cash remains intact at $5.52B.
+        gap_to_cash_pct = (modeled_refinancing_gap / crwv_cash) * 100.0 if crwv_cash else 0.0
 
         return {
-            "scenario_name": "Hypothetical MTM Financing Sensitivity (71.42% Proxy)",
+            "scenario_name": "Hypothetical MTM Financing Sensitivity (Class C Proxy)",
             "haircut_pct": haircut_pct,
             "funding_ratio_proxy": funding_ratio_proxy,
             "drawn_ddtl_debt_usd": drawn_debt,
             "base_asset_value_usd": base_asset_value,
             "stressed_asset_value_usd": stressed_asset_value,
             "allowable_capacity_usd": allowable_capacity,
-            "modeled_funding_deficit_usd": modeled_funding_deficit,
+            "modeled_refinancing_gap_usd": modeled_refinancing_gap,
+            "direct_cash_hit_usd": 0.0,  # Zero contractual mandatory cash prepayment
             "crwv_starting_cash_usd": crwv_cash,
-            "crwv_cash_after_deficit_usd": cash_after_deficit,
-            "crwv_liquidity_burn_pct": round(liquidity_burn_pct, 1),
-            "downstream_capex_freeze": downstream_freeze,
+            "crwv_cash_after_scenario_usd": crwv_cash,  # Cash intact
+            "modeled_gap_to_cash_pct": round(gap_to_cash_pct, 1),
             "contractual_caveat": (
-                "Under Exhibit 10.1 of DDTL 5.0, 71.42% is the initial Funding Date GPU Amount formula based on acquisition capex "
-                "with straight-line 6-year depreciation, not an automatic ongoing secondary market appraisal cure. "
-                "This scenario is an analytical sensitivity proxy (Class C)."
+                "Under Exhibit 10.1 and Section 2.05 of the DDTL 5.0 Credit Agreement, debt sizing is tied to Funding Date Capex (cost) "
+                "with straight-line 6-year depreciation, and mandatory prepayments govern asset sales, debt issuances, and defaults—not an automatic "
+                "secondary market mark-to-market appraisal margin call. This $4.32B gap is an analytical sensitivity proxy (Class C) measuring "
+                "refinancing capacity contraction rather than a contractual cash call."
             ),
             "transmission_narrative": (
-                f"Applying a {int(haircut_pct*100)}% secondary market haircut against the 71.42% funding-ratio proxy generates a "
-                f"${modeled_funding_deficit/1e9:.2f}B borrowing base deficit across CoreWeave's ${drawn_debt/1e9:.2f}B in recourse DDTLs. "
-                f"While CoreWeave's ${crwv_cash/1e9:.2f}B cash balance can absorb the prepayment, the mandatory repayment consumes "
-                f"{liquidity_burn_pct:.1f}% of unrestricted liquidity, leaving ${cash_after_deficit/1e9:.2f}B and triggering a downstream capex freeze."
+                f"Applying a {int(haircut_pct*100)}% secondary market haircut against the 71.42% funding-ratio proxy models a "
+                f"${modeled_refinancing_gap/1e9:.2f}B refinancing-capacity contraction across CoreWeave's ${drawn_debt/1e9:.2f}B in recourse DDTLs. "
+                f"Under the Credit Agreement, this decline does NOT trigger an automatic contractual cash margin call or prepayment (cash remains ${crwv_cash/1e9:.2f}B), "
+                f"but it eliminates borrowing availability on undrawn commitments and represents severe rollover friction upon loan maturity."
             )
         }
 
@@ -142,8 +142,9 @@ class FinancialStressEngine:
         Predicate Engine:
         - Predicate A (Customer Identity): Conditioned on Microsoft being the Colocation Customer at SPV VIII (Building ELN-03).
         - Predicate B (Contractual Default): Conditioned on the trim giving rise to a payment cessation, reduction, or termination (Springing Event ii).
-        - Scope: Springing guarantees specifically cover ELN-02 (Building 2, 100 MW, ~$2.75B) and ELN-03 (Building 3, 150 MW, ~$4.13B).
-          Total springing guarantee is $6.88B covering 250 MW; Building 4 (150 MW, ~$4.13B) carries no CoreWeave parent springing guarantee.
+        - Scope: Springing guarantees specifically cover Building 3 (150 MW assigned to SPV, carrying an inferred Class C reference proxy of $4.13B)
+          and Building 2 SPV lease (Phase 2/4 Space, 2 of 4 data halls; unstated face value in Exhibit 10.1).
+          Building 4 (150 MW, ~$4.13B) carries no CoreWeave parent springing guarantee (guaranteed by APLD parent).
         """
         base_revenue = 3437770000.0
         if self.graph.has_edge("MSFT", "CRWV", key="REL-MSFT-CRWV-REVENUE-CONCENTRATION"):
@@ -164,12 +165,9 @@ class FinancialStressEngine:
         crwv_cash = self.financials.get("CRWV", {}).get("cash_and_equivalents", 5520000000.0)
 
         # Springing Guarantees Scope:
-        # Building 2 (ELN-02, 100 MW): ~$2.750B
-        # Building 3 (ELN-03, 150 MW): ~$4.125B
-        # Total Springing Guarantee Liability: $6.875B (250 MW)
-        eln02_guaranty_usd = 2750000000.0
-        eln03_guaranty_usd = 4125000000.0
-        total_springing_guaranty_usd = eln02_guaranty_usd + eln03_guaranty_usd
+        # Legal terms cover Base Rent, Additional Rent, charges, and performance obligations under SPV leases (uncapped fixed face value).
+        # Class C reference exposure proxy for Building 3 (150 MW / 400 MW * $11.0B): ~$4.125B.
+        eln03_reference_proxy_usd = 4125000000.0
 
         coverage_ratio = crwv_cash / total_annual_commitments
 
@@ -185,17 +183,15 @@ class FinancialStressEngine:
             "total_fixed_commitments_usd": total_annual_commitments,
             "crwv_cash_buffer_usd": crwv_cash,
             "coverage_years": round(coverage_ratio, 2),
-            "eln02_springing_guaranty_usd": eln02_guaranty_usd,
-            "eln03_springing_guaranty_usd": eln03_guaranty_usd,
-            "total_springing_guaranty_usd": total_springing_guaranty_usd,
+            "eln03_reference_proxy_usd": eln03_reference_proxy_usd,
             "springing_event_analyzed": "Springing Event (ii) - Colocation Agreement Payment Cessation or Material Reduction",
             "conditional_join_status": "Conditional: requires Microsoft to be the specific Colocation Customer at Building ELN-03",
             "transmission_narrative": (
                 f"A {int(trim_pct*100)}% demand trim on Microsoft's recognized revenue reduces CoreWeave's cash inflow by ${annual_rev_loss/1e9:.2f}B/yr. "
                 f"Against ${total_annual_commitments/1e9:.2f}B in annual debt service and facility commitments, if Microsoft is the Colocation Customer "
                 f"at SPV VIII (Building ELN-03) and reduces colocation payments, this fulfills the literal predicate of Springing Event (ii) under Exhibit 10.2, "
-                f"activating CoreWeave parent's Unconditional Springing Guaranty on Building ELN-03 (${eln03_guaranty_usd/1e9:.2f}B) "
-                f"and potentially ELN-02 (${eln02_guaranty_usd/1e9:.2f}B, totaling ${total_springing_guaranty_usd/1e9:.2f}B across 250 MW). "
+                f"conditionally activating CoreWeave parent's Unconditional Springing Guaranty on Building ELN-03 (carrying a Class C reference proxy of ${eln03_reference_proxy_usd/1e9:.2f}B) "
+                f"and potentially Exhibit 10.1 for the Building 2 SPV lease (Phase 2/4 Space, 2 of 4 data halls; unstated face value). "
                 f"Building 4 ($4.13B, 150 MW) is excluded as it carries no CoreWeave parent guarantee."
             )
         }
@@ -210,8 +206,8 @@ class FinancialStressEngine:
         Total Floating Debt = $12.206B.
         Reported active interest rate swap notional (Note 8): $4.661B.
         Unhedged floating debt at June 30, 2026: $12.206B - $4.661B = $7.545B.
-        Provides a sensitivity band from hypothetical 95% full fleet coverage ($32.6M/yr) to reported swaps baseline ($240.6M/yr)
-        to minimal covenanted coverage with others unhedged ($309.2M/yr).
+        Provides a sensitivity band from hypothetical 95% full fleet coverage ($27.3M/yr) to reported swaps baseline ($235.4M/yr)
+        to minimal covenanted coverage with others unhedged ($303.9M/yr).
         """
         delta_r = sofr_increase_bps / 10000.0  # 0.03
 
@@ -225,24 +221,25 @@ class FinancialStressEngine:
         reported_swap_notional = 4661000000.0  # $4.661B active interest rate swaps
         unhedged_reported_baseline = max(0.0, total_crwv_floating - reported_swap_notional)  # $7.545B
 
-        # APLD corporate floating debt
-        apld_floating_debt = 475938000.0  # $475.9M
+        # APLD floating bridge facility ($300.0M principal at May 31, 2026)
+        # Note: On June 16, 2026 (subsequent event), APLD refinanced the bridge facility into $1.59B 7.00% fixed notes.
+        apld_floating_debt = 300000000.0  # $300.0M
 
         # 1. Reported Swaps Baseline Hit
         crwv_reported_hit = unhedged_reported_baseline * delta_r  # $226.35M/yr
-        apld_hit = apld_floating_debt * delta_r                   # $14.28M/yr
-        network_reported_hit = crwv_reported_hit + apld_hit       # $240.63M/yr
+        apld_hit = apld_floating_debt * delta_r                   # $9.00M/yr
+        network_reported_hit = crwv_reported_hit + apld_hit       # $235.35M/yr
 
         # 2. Covenanted Minimum Only (DDTL 4 & 5 at 95%, DDTL 1-3 unhedged)
         covenanted_swaps_only = (crwv_ddtl_4_floating * 0.95) + (crwv_ddtl_5_floating * 0.95)  # $2.376B
         unhedged_covenanted_only = total_crwv_floating - covenanted_swaps_only                  # $9.830B
         crwv_covenanted_only_hit = unhedged_covenanted_only * delta_r                          # $294.90M/yr
-        network_covenanted_only_hit = crwv_covenanted_only_hit + apld_hit                      # $309.18M/yr
+        network_covenanted_only_hit = crwv_covenanted_only_hit + apld_hit                      # $303.90M/yr
 
         # 3. Hypothetical Maximum Hedging (95% across all floating debt)
         unhedged_full_95 = total_crwv_floating * 0.05                                          # $610.3M
         crwv_full_95_hit = unhedged_full_95 * delta_r                                          # $18.31M/yr
-        network_full_95_hit = crwv_full_95_hit + apld_hit                                      # $32.59M/yr
+        network_full_95_hit = crwv_full_95_hit + apld_hit                                      # $27.31M/yr
 
         crwv_cash = self.financials.get("CRWV", {}).get("cash_and_equivalents", 5520000000.0)
         apld_cash = self.financials.get("APLD", {}).get("cash_and_equivalents", 1590000000.0)
@@ -261,7 +258,8 @@ class FinancialStressEngine:
             "crwv_cash_usd": crwv_cash,
             "apld_cash_usd": apld_cash,
             "transmission_narrative": (
-                f"A +{int(sofr_increase_bps)} bps SOFR increase adds ${apld_hit/1e6:.1f}M/yr to Applied Digital's floating corporate debt. "
+                f"A +{int(sofr_increase_bps)} bps SOFR increase adds ${apld_hit/1e6:.1f}M/yr to Applied Digital's $300.0M floating bridge facility "
+                f"(which was refinanced on June 16, 2026 into 7.00% fixed notes). "
                 f"For CoreWeave, contractual 95% hedge covenants apply specifically to DDTL 4.0 and DDTL 5.0 ($2.50B floating combined), "
                 f"while DDTLs 1.0-3.0 ($9.71B) carry no disclosed 95% hedge mandate. Anchored on CoreWeave's audited $4.66B interest rate swap notional (Note 8), "
                 f"$7.55B in floating debt remains unhedged, creating a ${crwv_reported_hit/1e6:.1f}M/yr cash drain at CoreWeave and ${network_reported_hit/1e6:.1f}M/yr "
@@ -452,26 +450,26 @@ class FinancialStressEngine:
             {
                 "scenario_name": res_gpu["scenario_name"],
                 "shock_parameter": "-40% GPU Collateral Value",
-                "direct_cash_or_collateral_hit_usd": res_gpu["modeled_funding_deficit_usd"],
+                "direct_cash_or_collateral_hit_usd": res_gpu["modeled_refinancing_gap_usd"],
                 "target_entity": "CRWV",
-                "covenant_or_liquidity_impact": f"{res_gpu['crwv_liquidity_burn_pct']}% Cash Depletion",
-                "contagion_mechanism": "Forces $4.32B funding deficit on drawn DDTLs under 71.42% proxy, freezing operational capex."
+                "covenant_or_liquidity_impact": f"Cash Intact ($5.52B) / ${res_gpu['modeled_refinancing_gap_usd']/1e9:.2f}B Refinancing Capacity Gap",
+                "contagion_mechanism": "Does not trigger automatic cash prepayment under DDTL 5.0 §2.05; creates a $4.32B modeled refinancing gap (Class C proxy) eliminating undrawn capacity."
             },
             {
                 "scenario_name": res_cust["scenario_name"],
                 "shock_parameter": "-30% Microsoft Off-Take",
                 "direct_cash_or_collateral_hit_usd": res_cust["annual_revenue_loss_usd"],
                 "target_entity": "CRWV",
-                "covenant_or_liquidity_impact": "Springing Guaranty Conditional Activation ($4.13B ELN-03 / $6.88B Total)",
-                "contagion_mechanism": "Reduces revenue by $1.03B; conditionally activates parent $4.13B ELN-03 guaranty under Exhibit 10.2 (or $6.88B total; Building 4 excluded)."
+                "covenant_or_liquidity_impact": "Springing Guaranty Conditional Activation ($4.13B ELN-03 Class C Proxy / Uncapped Legal Guaranty)",
+                "contagion_mechanism": "Reduces revenue by $1.03B; conditionally activates parent Unconditional Springing Guaranty for Building ELN-03 ($4.13B Class C reference proxy) and Building 2 SPV lease (Phase 2/4 Space, 2 of 4 halls; uncapped face value under Exhibit 10.1). Building 4 excluded."
             },
             {
                 "scenario_name": res_sofr["scenario_name"],
                 "shock_parameter": "+300 bps SOFR Benchmark",
                 "direct_cash_or_collateral_hit_usd": res_sofr["network_cash_drain_reported_baseline_usd"],
                 "target_entity": "CRWV / APLD",
-                "covenant_or_liquidity_impact": "Reported Swaps Cash Drain: $240.6M/yr (Range: $32.6M - $309.2M/yr)",
-                "contagion_mechanism": "Audited $4.66B swap notional leaves $7.55B floating unhedged ($226.4M CRWV + $14.3M APLD). Range: $32.6M (95% full) to $309.2M (covenanted only)."
+                "covenant_or_liquidity_impact": "Reported Swaps Cash Drain: $235.4M/yr (Range: $27.3M - $303.9M/yr)",
+                "contagion_mechanism": "Audited $4.66B swap notional leaves $7.55B floating unhedged ($226.4M CRWV + $9.0M APLD bridge facility). Sensitivity band: $27.3M (95% full) to $303.9M (covenanted only)."
             },
             {
                 "scenario_name": res_refi["scenario_name"],
@@ -509,5 +507,5 @@ class FinancialStressEngine:
 if __name__ == "__main__":
     engine = FinancialStressEngine()
     df = engine.run_all_stress_scenarios()
-    print("=== Parameterized Financial Stress Prototype Results (Phase 0.7.1) ===")
+    print("=== Parameterized Financial Stress Prototype Results (Phase 0.7.2) ===")
     print(df[["scenario_name", "shock_parameter", "direct_cash_or_collateral_hit_usd", "target_entity", "covenant_or_liquidity_impact"]])

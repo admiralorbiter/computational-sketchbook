@@ -74,6 +74,9 @@ FINANCIAL_METRIC_OVERRIDES = {
             "method": "preferred_concept",
             "concept_order": ["DebtLongtermAndShorttermCombinedAmount", "DebtInstrumentCarryingAmount"],
             "min_threshold": 1e10
+        },
+        "contractual_principal": {
+            "2026-06-30": 35551000000.0  # Form 10-Q Note 7 Table 36 future debt principal across 11 components
         }
     },
     "SMCI": {
@@ -83,6 +86,18 @@ FINANCIAL_METRIC_OVERRIDES = {
                 ["DebtLongtermAndShorttermCombinedAmount", "DebtInstrumentCarryingAmount"],
                 ["ConvertibleLongTermNotesPayable", "ConvertibleDebtNoncurrent"]
             ]
+        }
+    },
+    "APLD": {
+        "total_debt": {
+            "method": "sum_components",
+            "components": [
+                ["LongTermNotesPayable"],
+                ["NotesPayableCurrent"]
+            ]
+        },
+        "contractual_principal": {
+            "2026-05-31": 5306680000.0  # Form 10-K Note 8 contractual remaining principal payments
         }
     }
 }
@@ -350,6 +365,29 @@ class SECIngestPipeline:
                     "fiscal_period": fp,
                     "form": form,
                     "value": float(total_debt),
+                    "unit": "USD",
+                    "filed_date": filed,
+                    "accession_number": accn
+                })
+
+            # Record gross contractual principal if configured
+            contractual_principal_cfg = FINANCIAL_METRIC_OVERRIDES.get(ticker, {}).get("contractual_principal", {})
+            if end_date in contractual_principal_cfg:
+                p_val = contractual_principal_cfg[end_date]
+                extracted.append({
+                    "entity_id": entity_id,
+                    "ticker": ticker,
+                    "cik": cik,
+                    "metric": "principal_outstanding",
+                    "concept_name": "ContractualRemainingPrincipalPayments (Note Disclosure)",
+                    "period_end": end_date,
+                    "start_date": None,
+                    "duration_type": "instant",
+                    "duration_days": 0,
+                    "fiscal_year": fy,
+                    "fiscal_period": fp,
+                    "form": form,
+                    "value": float(p_val),
                     "unit": "USD",
                     "filed_date": filed,
                     "accession_number": accn
