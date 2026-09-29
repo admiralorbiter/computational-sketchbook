@@ -5109,8 +5109,8 @@ SMCI,SMCI,0001375365,operating_lease_liabilities,OperatingLeaseLiability,2023-06
 SMCI,SMCI,0001375365,operating_lease_liabilities,OperatingLeaseLiability,2023-09-30,,instant,0,2025,Q1,10-Q,26069000.0,USD,2025-02-25,0001375365-25-000005
 SMCI,SMCI,0001375365,operating_lease_liabilities,OperatingLeaseLiability,2023-12-31,,instant,0,2025,Q2,10-Q,25025000.0,USD,2025-02-25,0001375365-25-000006
 SMCI,SMCI,0001375365,operating_lease_liabilities,OperatingLeaseLiability,2024-03-31,,instant,0,2025,Q3,10-Q,36423000.0,USD,2025-05-12,0001375365-25-000014
-SMCI,SMCI,0001375365,operating_lease_liabilities,OperatingLeaseLiabilityCurrent,2024-06-30,,instant,0,2025,Q1,10-Q,9248000.0,USD,2025-02-25,0001375365-25-000005
 SMCI,SMCI,0001375365,operating_lease_liabilities,OperatingLeaseLiabilityCurrent,2024-06-30,,instant,0,2025,Q2,10-Q,9248000.0,USD,2025-02-25,0001375365-25-000006
+SMCI,SMCI,0001375365,operating_lease_liabilities,OperatingLeaseLiabilityCurrent,2024-06-30,,instant,0,2025,Q1,10-Q,9248000.0,USD,2025-02-25,0001375365-25-000005
 SMCI,SMCI,0001375365,operating_lease_liabilities,OperatingLeaseLiabilityCurrent,2024-06-30,,instant,0,2025,Q3,10-Q,9248000.0,USD,2025-05-12,0001375365-25-000014
 SMCI,SMCI,0001375365,operating_lease_liabilities,OperatingLeaseLiability,2024-06-30,,instant,0,2026,FY,10-K,35382000.0,USD,2026-08-31,0001375365-26-000022
 SMCI,SMCI,0001375365,operating_lease_liabilities,OperatingLeaseLiability,2024-09-30,,instant,0,2026,Q1,10-Q,51499000.0,USD,2025-11-07,0001375365-25-000030
@@ -5404,8 +5404,8 @@ SMCI,SMCI,0001375365,total_debt,DebtLongtermAndShorttermCombinedAmount+Convertib
 SMCI,SMCI,0001375365,total_debt,DebtLongtermAndShorttermCombinedAmount,2023-09-30,,instant,0,2025,Q1,10-Q,146232000.0,USD,2025-02-25,0001375365-25-000005
 SMCI,SMCI,0001375365,total_debt,DebtLongtermAndShorttermCombinedAmount,2023-12-31,,instant,0,2025,Q2,10-Q,375629000.0,USD,2025-02-25,0001375365-25-000006
 SMCI,SMCI,0001375365,total_debt,DebtLongtermAndShorttermCombinedAmount,2024-03-31,,instant,0,2025,Q3,10-Q,167212000.0,USD,2025-05-12,0001375365-25-000014
-SMCI,SMCI,0001375365,total_debt,DebtLongtermAndShorttermCombinedAmount+ConvertibleLongTermNotesPayable,2024-06-30,,instant,0,2025,Q1,10-Q,2174145000.0,USD,2025-02-25,0001375365-25-000005
 SMCI,SMCI,0001375365,total_debt,DebtLongtermAndShorttermCombinedAmount+ConvertibleLongTermNotesPayable,2024-06-30,,instant,0,2025,Q2,10-Q,2174145000.0,USD,2025-02-25,0001375365-25-000006
+SMCI,SMCI,0001375365,total_debt,DebtLongtermAndShorttermCombinedAmount+ConvertibleLongTermNotesPayable,2024-06-30,,instant,0,2025,Q1,10-Q,2174145000.0,USD,2025-02-25,0001375365-25-000005
 SMCI,SMCI,0001375365,total_debt,DebtLongtermAndShorttermCombinedAmount+ConvertibleLongTermNotesPayable,2024-06-30,,instant,0,2025,Q3,10-Q,2174145000.0,USD,2025-05-12,0001375365-25-000014
 SMCI,SMCI,0001375365,total_debt,DebtLongtermAndShorttermCombinedAmount+ConvertibleLongTermNotesPayable,2024-06-30,,instant,0,2026,FY,10-K,2174145000.0,USD,2026-08-31,0001375365-26-000022
 SMCI,SMCI,0001375365,total_debt,DebtLongtermAndShorttermCombinedAmount+ConvertibleLongTermNotesPayable,2024-09-30,,instant,0,2026,Q1,10-Q,2258718000.0,USD,2025-11-07,0001375365-25-000030

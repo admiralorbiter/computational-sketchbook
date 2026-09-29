@@ -19,9 +19,9 @@ Before proposing any changes or running new extractions, follow these strict pre
    - `data/processed/obligations.parquet` (or `.csv`)
    - `data/processed/assumptions.parquet` (or `.csv`)
    - `data/processed/evidence_claims.parquet` (or `.csv`)
-   - `outputs/tables/stress_scenarios_summary.csv`
+   - `outputs/tables/financial_stress_summary.csv`
 5. Inspect the executed research notebook: `notebooks/01_five_company_pilot.ipynb`. All cells have been pre-executed with live outputs and figures.
-6. Phase 0 Status: The Five-Company Pilot (NVDA, SMCI, CRWV, APLD, ORCL + MSFT, Blackstone/Magnetar, Polaris Forge 1) is FULLY VALIDATED and FROZEN.
+6. Phase 0.7 Status: The Five-Company Pilot (NVDA, SMCI, CRWV, APLD, ORCL + MSFT, Blackstone/Magnetar, Polaris Forge 1) is FULLY VALIDATED and FROZEN.
 
 Once you have reviewed the repository, provide a concise briefing that reports:
 - The current state of the pilot;

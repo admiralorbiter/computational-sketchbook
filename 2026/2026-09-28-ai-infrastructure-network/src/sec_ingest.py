@@ -167,7 +167,15 @@ class SECIngestPipeline:
                 derived_q4_records = []
                 for _, a_row in annual_rows.iterrows():
                     a_end = a_row["period_end"]
-                    matched_9m = nine_rows[nine_rows["period_end"] < a_end].sort_values(by="period_end", ascending=False)
+                    a_start = a_row.get("start_date")
+                    # Match nine_months row that starts on the identical start_date (first day of fiscal year)
+                    # and ends 60-125 days prior to the annual period end
+                    matched_9m = nine_rows[
+                        (nine_rows["period_end"] < a_end) & 
+                        (nine_rows["start_date"] == a_start) &
+                        (nine_rows["concept_name"].isin(FLOW_METRIC_CONCEPTS[metric]))
+                    ].sort_values(by="period_end", ascending=False)
+                    
                     if not matched_9m.empty:
                         m_row = matched_9m.iloc[0]
                         try:

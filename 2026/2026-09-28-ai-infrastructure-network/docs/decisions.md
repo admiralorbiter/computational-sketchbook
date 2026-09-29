@@ -73,3 +73,27 @@ This log records the durable architectural, methodological, and data design choi
      - Grid Delay: Accounts for phased reality of Polaris Forge 1 (~100 MW operational generating $183.3M/yr base rent ongoing; ~300 MW unenergized expansion deferred, with carrying cost on construction debt).
      - OEM Purchase Commitments: Modeled via US-GAAP NRV expected-loss write-down provision (40% loss severity on 15% excess allocation = $2.05B pre-tax charge vs SMCI cash/equity).
 - **Consequences:** Elevates the mathematical and legal fidelity of the research observatory to institutional standards, ensuring full contractual calibration and zero data drift.
+
+---
+
+### ADR-008: Exact Debt Reconciliation, Rate Shock Splitting, Springing Events Predicate Engine, and Multi-Channel Commitments
+- **Status:** Accepted (2026-09-28, Phase 0.7)
+- **Context:** Following external code review of Phase 0.6 (commit `845f8c1`), several areas required elevated contractual and numerical precision:
+  1. *CoreWeave Debt Reconciliation:* Note 7 Table 36 reports $35,551M in total future principal across 11 tranches. The pilot previously accounted for $31.832B across 9 tranches, omitting DDTL 4.0 ($2.837B drawn out of $8.500B capacity) and Non-Recourse OEM financing ($882M).
+  2. *Polaris Forge 1 Building-Level Phasing:* APLD Form 10-K Item 1 details 3 distinct buildings: Building 2 (100 MW operational), Building 3 (150 MW: ~50 MW operational, ~100 MW pending), and Building 4 (150 MW under construction). This totals ~150 MW operational producing $275.0M/yr base rent ongoing, and ~250 MW pending expansion deferring $458.3M/yr.
+  3. *Rate Transmission Bifurcation:* A single generic rate shock improperly blended floating benchmark increases with credit spread blowout. Furthermore, CoreWeave's Credit Agreement (DDTL 5.0 Section 5.14) covenants that CoreWeave maintain interest rate hedges on $\ge 95\%$ of floating debt, insulating near-term recourse cash from SOFR spikes. Conversely, credit spread widening has zero immediate effect on fixed coupons or active credit margins, but hits maturing debt upon refinancing.
+  4. *Springing Guaranty Legal Predicates:* The springing guaranty does not trigger on an arbitrary synthetic coverage threshold, but rather on discrete contractual conditions defined in Exhibit 10.1: (i) SPV bankruptcy, (ii) material adverse amendment, default, or termination of the Colocation Agreement, or circumstances permitting the customer to cease or materially reduce monthly payments, (iii) separateness covenant breach, or (iv) debt acceleration.
+  5. *Dual-Channel Transmission on Purchase Commitments:* Supermicro's $34.2B purchase commitments propagate across two distinct channels: an ASC 330 non-cash NRV loss provision reducing equity versus a negotiated cash settlement or inventory delivery liquidity drain.
+  6. *Clarification of GPU Advance Rate / MTM:* DDTL 5.0 Exhibit 10.1 defines the borrowing base advance rate as 71.42% of Funding Date Capex (cost) with 6-year straight-line depreciation, rather than an automated secondary market mark-to-market appraisal cure covenant. A -40% secondary GPU price shock is a Class C analytical stress proxy, not a contractually automated margin call.
+- **Decision:**
+  1. Decompose CoreWeave indebtedness across all 11 tranches from Form 10-Q Note 7 Table 36, adding non-recourse DDTL 4.0 ($2.837B drawn) and non-recourse OEM financing ($0.882B) to achieve exact reconciliation to $35.551B (0.00% drift).
+  2. Implement Building 2, 3, and 4 operational phasing at Polaris Forge 1 (150 MW operational, 250 MW pending).
+  3. Split rate transmission into two distinct scenarios:
+     - **Scenario 3A (SOFR Benchmark Shock):** Accounts for the 95% swap hedging covenant, limiting recourse floating cash hit to $16.2M/yr ($72.5M/yr total hedged drain including DDTL 4.0 and APLD floating).
+     - **Scenario 3B (Credit Spread Rollover Shock at Maturity):** Affects refinancing of maturing debt ($4.41B in 2026, $6.18B in 2027), adding $317.9M/yr in refinancing interest by 2027 ($450.4M/yr through 2028).
+  4. Implement an explicit Springing Events predicate engine in `src/stress.py` mapping Exhibit 10.1 triggers and formulating the conditional join: *if* Microsoft is the Building ELN-03 tenant and trims payments, Event (ii) springs the $11.0B parent guarantee.
+  5. Split Supermicro purchase commitment stress into dual channels: a non-cash US-GAAP ASC 330 NRV write-down provision ($2.05B pre-tax charge reducing equity) vs a negotiated cash settlement ($769.5M cash, 10.2%) or inventory delivery ($5.13B cash, 68.2%).
+  6. Explicitly tag the GPU MTM collateral shock as a *Hypothetical MTM Financing Sensitivity (71.42% Funding-Ratio Proxy)* (Class C analytical sensitivity).
+  7. In `sec_ingest.py`, enforce strict same-concept-family and identical `start_date` matching for derived Q4 flow calculations, and present both Full Year (FY) and Latest Quarter revenue columns in documentation to prevent time-horizon ambiguity.
+- **Consequences:** Eliminates all contractual over-claiming, reconciles debt to the penny ($35.551B), isolates accounting equity write-downs from cash drains, and establishes an institutional-grade foundation for the five-company pilot.
+
