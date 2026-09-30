@@ -43,9 +43,10 @@ EVT-NBIS-META-OFFTAKE-CREATED,OBL-NBIS-META-OFFTAKE-2026,created,2026-03-13,2026
 EVT-IREN-DEBT-MFSA-CREATED,OBL-IREN-DEBT-MFSA-2026,created,2026-08-25,2026-08-27,,CLM-IREN-001,IE Mackenzie Compute Ltd. enters into Master Financing and Security Agreement (MFSA) up to $1.2B with Blue Owl Capital Corporation
 EVT-IREN-DEBT-NOTES-CREATED,OBL-IREN-DEBT-NOTES-2026,created,2026-08-25,2026-08-27,,CLM-IREN-001,IE Mackenzie Compute Ltd. enters into Note Purchase Agreement for up to $1.2B senior notes advised by PIMCO and Blue Owl as note agent
 EVT-IREN-GUARANTY-CREATED,OBL-IREN-GUARANTY-2026,created,2026-08-25,2026-08-27,OBL-IREN-DEBT-MFSA-2026,CLM-IREN-001,IREN Limited executes unconditional parent payment guaranty for August 2026 financing agreements
-EVT-CRWV-CORZ-COLOCATION-CREATED,OBL-CRWV-CORZ-COLOCATION-2024,created,2024-06-03,2026-07-28,,CLM-CORZ-001,Core Scientific contracts 590 MW high-density colocation with CoreWeave across five sites
-EVT-HUT-DEBT-COATUE-CONV-CREATED,OBL-HUT-DEBT-COATUE-CONV-2024,created,2024-06-24,2026-08-04,,CLM-HUT-001,Hut 8 Corp. issues $150.0M 8.0% convertible note to Coatue Tactical Solutions
+EVT-CRWV-CORZ-COLOCATION-CREATED,OBL-CRWV-CORZ-COLOCATION-2024,created,2024-06-03,2024-06-04,,CLM-CORZ-002,Core Scientific executes initial 12-year colocation agreement with CoreWeave for ~200 MW
+EVT-CRWV-CORZ-COLOCATION-EXPANDED,OBL-CRWV-CORZ-COLOCATION-2024,amended,2026-06-30,2026-07-28,,CLM-CORZ-001,Core Scientific and CoreWeave expand colocation contract to ~590 MW across 5 sites (~77% of revenue)
+EVT-HUT-DEBT-COATUE-CONV-CREATED,OBL-HUT-DEBT-COATUE-CONV-2024,created,2024-06-28,2024-06-24,,CLM-HUT-002,Hut 8 Corp. issues $150.0M 8.0% convertible senior note to Coatue Tactical Solutions
 EVT-HUT-DEBT-COATUE-CONV-CONVERTED,OBL-HUT-DEBT-COATUE-CONV-2024,extinguished,2026-05-11,2026-08-04,,CLM-HUT-001,"Coatue converts full $159.3M accreted note principal into 9,715,476 common shares, extinguishing the debt"
-EVT-WULF-DEBT-CONV-2030-CREATED,OBL-WULF-DEBT-CONV-2030,created,2025-01-28,2026-08-05,,CLM-WULF-001,TeraWulf Inc. issuance of $500.0M 2.75% Convertible Senior Notes due 2030
-EVT-WULF-DEBT-CONV-2031-CREATED,OBL-WULF-DEBT-CONV-2031,created,2025-08-15,2026-08-05,,CLM-WULF-001,"TeraWulf Inc. issuance of $1,000.0M 3.00% Convertible Senior Notes due 2031"
-EVT-WULF-DEBT-CONV-2032-CREATED,OBL-WULF-DEBT-CONV-2032,created,2026-02-15,2026-08-05,,CLM-WULF-001,"TeraWulf Inc. issuance of $1,025.0M 3.25% Convertible Senior Notes due 2032"
+EVT-WULF-DEBT-CONV-2030-CREATED,OBL-WULF-DEBT-CONV-2030,created,2024-10-25,2024-10-25,,CLM-WULF-002,TeraWulf Inc. completes offering of $500.0M 2.75% Convertible Senior Notes due 2030
+EVT-WULF-DEBT-CONV-2031-CREATED,OBL-WULF-DEBT-CONV-2031,created,2025-08-20,2025-08-20,,CLM-WULF-003,"TeraWulf Inc. completes offering of $850.0M initial + $150.0M greenshoe ($1,000.0M total) 1.00% Convertible Senior Notes due 2031"
+EVT-WULF-DEBT-CONV-2032-CREATED,OBL-WULF-DEBT-CONV-2032,created,2025-10-31,2025-10-31,,CLM-WULF-004,"TeraWulf Inc. completes offering of $1,025.0M 0.00% Convertible Senior Notes due 2032"

@@ -19,11 +19,12 @@ Before proposing any changes or running new extractions, follow these strict pre
    - `data/processed/obligations.parquet` (or `.csv`)
    - `data/processed/obligation_events.parquet` (or `.csv`)
    - `data/processed/obligation_facts.parquet` (or `.csv`)
+   - `data/processed/obligation_terms.parquet` (or `.csv`)
    - `data/processed/assumptions.parquet` (or `.csv`)
    - `data/processed/evidence_claims.parquet` (or `.csv`)
    - `outputs/tables/financial_stress_summary.csv`
-25. Inspect the executed research notebook: `notebooks/01_five_company_pilot.ipynb`. All cells have been pre-executed with live outputs and figures.
-26. Phase 0 Freeze & Phase 1 Wave 1 Completion Status: Phase 0 pilot network remains 100% frozen with zero data drift. Phase 1 Wave 1 (ADR-017, ADR-018) is fully ingested across 12 high-join-density entities (NBIS, IREN, CORZ, WULF, HUT, DELL, HPE, AMD, META, AMZN, GOOGL, BLUE_OWL). The repository now models 46 entities (21 parent nodes after dynamic SPV unwrapping), 13,983 standardized financial facts across 19 SEC filers, 47 decomposed obligations, 50 lifecycle events, 55 bitemporal facts, 2 discrete rate legs, and 43 audited primary SEC claims with 35 certified as 100% contiguous verbatim substrings in cached primary SEC HTML filings. Dual-layer network topology validation (`src/validate.py`) confirms 0.00% drift on Phase 0 and complete verification of the expanded Phase 1 multi-layer graph.
+5. Inspect the executed research notebook: `notebooks/01_five_company_pilot.ipynb`. All cells have been pre-executed with live outputs and figures.
+6. Phase 0 Freeze & Phase 1 Wave 1 Hardening Status (ADR-017, ADR-018, ADR-019): Phase 0 pilot network remains 100% frozen with zero data drift. Phase 1 Wave 1 is hardened with attribute-level contract provenance (`obligation_terms.parquet`), BDC legal identity disambiguation (`BLUE_OWL_OBDC` CIK `0001655888`), and multi-era knowledge reconciliation (5 contemporaneous Form 8-K exhibits eliminating historical knowledge censoring). The repository now models 46 entities (21 parent nodes after dynamic SPV unwrapping), 13,754 standardized financial facts across 19 SEC filers, 47 decomposed obligations, 51 lifecycle events, 59 bitemporal facts, 38 attribute terms, 2 discrete rate legs, and 48 audited primary SEC claims with 40 certified as 100% contiguous verbatim substrings in cached primary SEC HTML filings. Zero CIK collisions and zero data drift confirmed via `src/validate.py`.
 
 Once you have reviewed the repository, provide a concise briefing that reports:
 - The current state of the hardened observatory (Phase 0 baseline + Phase 1 Wave 1 expansion);

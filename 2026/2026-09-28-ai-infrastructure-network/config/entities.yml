@@ -501,7 +501,7 @@ entities:
     entity_id: BLUE_OWL_OBDC
     name: Blue Owl Capital Corporation (OBDC)
     ticker: OBDC
-    cik: "0001823945"
+    cik: "0001655888"
     parent_entity_id: BLUE_OWL
     category: capital_provider_vehicle
     subsector: direct_lending_bdc

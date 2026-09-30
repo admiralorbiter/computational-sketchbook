@@ -372,6 +372,45 @@ This log records the durable architectural, methodological, and data design choi
 - **Consequences:**
   Validates the full vertical integration of Phase 1 Wave 1. The infrastructure network model now interconnects hyperscalers, GPU cloud specialists, HPC colocation providers, and private credit syndicates under rigorous contract-literal and bitemporal rules.
 
+---
+
+### ADR-019: Attribute-Level Contract Provenance, BDC Legal Identity Disambiguation, and Multi-Era Knowledge Reconciliation
+- **Status:** Accepted (2026-09-29, Post-Wave-1 Hardening)
+- **Context:**
+  Following post-ingestion audit of Phase 1 Wave 1 (commit `bbf335f`), several critical epistemic vulnerabilities were discovered:
+  1. *Row-Level Citation Fallacy:* A single claim citing an omnibus balance sheet debt table (e.g. Note 7 in a Form 10-Q) verified principal amounts but allowed unverified or hallucinated attributes (interest rates, maturities, legal recourse) into contract rows. For example, TeraWulf's convertibles had incorrect coupons (0.00% across all tranches) and maturities.
+  2. *Lender Entity CIK Collision:* `BLUE_OWL_OBDC` (Blue Owl Capital Corporation, CIK `0001655888`, ticker `OBDC`) was improperly mapped to parent asset manager `BLUE_OWL` (Blue Owl Capital Inc., CIK `0001823945`, ticker `OWL`), violating ADR-017's lender-identity rule and duplicating parent corporate facts.
+  3. *Temporal Censorship from Pre-Filing Inception:* Pegging contract public knowledge strictly to subsequent Form 10-Q filings (e.g. August 2026) avoided lookahead but created historical information blindspots ("temporal censorship") for contracts entered into via Form 8-K in 2024 or 2025.
+  4. *Rigid vs Rule-Based Facility Maturities:* In multi-draw GPU financing facilities (e.g. IREN's Blue Owl/PIMCO MFSA and Notes), assigning arbitrary fixed maturities misrepresented the contract when individual tranches mature 30 months from each respective draw.
+  5. *Foreign Private Issuer Disclosure Separation:* Nebius Group N.V. utilizes Form 20-F for annual financials and Form 6-K for material contracts, requiring explicit pipeline separation.
+- **Decision:**
+  1. **Field-Level Contract Provenance (`obligation_terms.parquet` / `.csv`):**
+     - Decompose contract terms into discrete attribute-level facts with dedicated provenance links:
+       `term_id`, `obligation_id`, `attribute`, `value`, `claim_id`, `source_locator`, `evidence_class`.
+     - Explicitly verify and certify 38 attribute-level terms across principal amounts, interest rates, effective dates, maturities, recourse ranks, and contracted capacities.
+  2. **BDC Legal Identity Disambiguation:**
+     - Disambiguated `BLUE_OWL_OBDC` to SEC CIK `0001655888`, ingesting 62 distinct BDC accounting facts and purging duplicated parent submissions.
+     - Added an automated CIK uniqueness assertion in `src/validate.py` ensuring zero CIK collisions across all reporting entities.
+  3. **Contemporaneous Primary SEC Exhibits & Multi-Era Knowledge Reconciliation:**
+     - Ingested and cached 5 contemporaneous Form 8-K primary HTML exhibits in `data/raw/sec/`:
+       - `WULF_8K_20241025_conv2030.htm` ($500M 2.75% notes due 2030, filed 2024-10-25)
+       - `WULF_8K_20250822_conv2031.htm` ($1,000M 1.00% notes due 2031, filed 2025-08-20)
+       - `WULF_8K_20251031_conv2032.htm` ($1,025M 0.00% notes due 2032, filed 2025-10-31)
+       - `HUT_8K_20240624_coatue.htm` ($150M Coatue note agreement executed 2024-06-21, filed 2024-06-24)
+       - `CORZ_8K_20240604_crwv.htm` (CoreWeave ~200 MW 12-yr contract, filed 2024-06-04)
+     - Verified all quotes as 100% exact normalized contiguous substrings in local HTML filings (total certified primary HTML claims: 40).
+     - Separated `truth_claim_id` (verifying reported balance) from `knowledge_claim_id` (verifying earliest public disclosure).
+  4. **Rule-Based Facility Maturity Modeling:**
+     - For IREN GPU facilities, set `maturity_date = None`, `maturity_rule = "funding_date + 30 months"`, and `reported_final_possible_maturity = "2029-06-30"`, maintaining strict parity with the CoreWeave DDTL 2.0 convention.
+  5. **Subsidiary Operational Clarity:**
+     - Reclassified `NBIS_INC` as an operating subsidiary contracting with Meta, distinct from the parent guarantor `NBIS`.
+  6. **Observatory Invariant Baseline:**
+     - Master datasets: 46 entities, 13,754 standardized financials, 47 obligations, 51 lifecycle events, 59 bitemporal facts, 38 attribute terms, 7 assumptions, and 48 audited evidence claims.
+     - Phase 0 pilot network remains 100% invariant with zero data drift.
+- **Consequences:**
+  Prevents attribute hallucination, enforces legal identity boundaries for private credit BDCs, restores historical public information sets without lookahead bias, and establishes institutional-grade evidentiary rigor across all network layers.
+
+
 
 
 

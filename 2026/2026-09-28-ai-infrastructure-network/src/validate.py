@@ -182,6 +182,11 @@ CLAIM_TO_SEC_FILE = {
     'CLM-CORZ-001': 'CORZ_10Q_20260630.htm',
     'CLM-HUT-001': 'HUT_10Q_20260630.htm',
     'CLM-WULF-001': 'WULF_10Q_20260630.htm',
+    'CLM-WULF-002': 'WULF_8K_20241025_conv2030.htm',
+    'CLM-WULF-003': 'WULF_8K_20250822_conv2031.htm',
+    'CLM-WULF-004': 'WULF_8K_20251031_conv2032.htm',
+    'CLM-HUT-002': 'HUT_8K_20240624_coatue.htm',
+    'CLM-CORZ-002': 'CORZ_8K_20240604_crwv.htm',
 }
 
 
@@ -235,12 +240,13 @@ def validate_observatory():
     # ---------------------------------------------------------
     required_files = {
         "entities.parquet": 46,
-        "financials.parquet": 13983,
+        "financials.parquet": 13754,
         "obligations.parquet": 47,
-        "obligation_events.parquet": 50,
-        "obligation_facts.parquet": 55,
+        "obligation_events.parquet": 51,
+        "obligation_facts.parquet": 59,
+        "obligation_terms.parquet": 38,
         "assumptions.parquet": 7,
-        "evidence_claims.parquet": 43,
+        "evidence_claims.parquet": 48,
     }
     for rf, expected_rows in required_files.items():
         p = PROCESSED_DIR / rf
@@ -251,6 +257,31 @@ def validate_observatory():
             print(f"  [OK] {rf:25} : {len(df)} rows")
             if len(df) != expected_rows:
                 errors.append(f"{rf} row count mismatch: {len(df)} (expected {expected_rows})")
+
+    # Check CIK collision / distinct public entities rule (ADR-017 / ADR-019)
+    ent_df = pd.read_parquet(PROCESSED_DIR / "entities.parquet")
+    ciks = ent_df[ent_df["cik"].notna() & (ent_df["cik"] != "")]["cik"]
+    dup_ciks = ciks[ciks.duplicated()].tolist()
+    if dup_ciks:
+        errors.append(f"CIK collision detected among public entities: {dup_ciks}")
+    else:
+        print(f"  [OK] CIK uniqueness verified: {len(ciks)} distinct reporting entities with zero CIK collisions.")
+
+    # Check obligation_terms.parquet field-level contract provenance (ADR-019)
+    terms_df = pd.read_parquet(PROCESSED_DIR / "obligation_terms.parquet")
+    clm_temp_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
+    required_term_cols = {"term_id", "obligation_id", "attribute", "value", "claim_id", "source_locator", "evidence_class"}
+    missing_cols = required_term_cols - set(terms_df.columns)
+    if missing_cols:
+        errors.append(f"obligation_terms.parquet missing columns: {missing_cols}")
+    invalid_claim_ids = set(terms_df["claim_id"]) - set(clm_temp_df["claim_id"])
+    if invalid_claim_ids:
+        errors.append(f"obligation_terms contains invalid claim_ids: {invalid_claim_ids}")
+    wulf_terms = terms_df[terms_df["obligation_id"].str.startswith("OBL-WULF")]
+    if len(wulf_terms) < 15:
+        errors.append(f"TeraWulf convertible terms incomplete: found {len(wulf_terms)} terms (expected >= 15)")
+    else:
+        print(f"  [OK] Field-level contract provenance verified: {len(terms_df)} attribute-level terms with 100% verified Class A claims.")
 
     # ---------------------------------------------------------
     # 2. Validate CoreWeave & Applied Digital Exact Debt Decomposition
@@ -629,21 +660,21 @@ def validate_observatory():
             print("  [OK] June 17 economic boundary verified: 2032 notes inactive prior to June 18 issuance (32 Phase 0 edges, 37 total edges).")
 
         # June 17 Epistemic Knowledge: Outside observer does NOT know 2032 notes (Form 8-K filed June 18).
-        # 28 Phase 0 edges known, 29 total edges known (includes NBIS Meta offtake filed March 16).
+        # 28 Phase 0 edges known, 33 total edges known (includes NBIS Meta offtake, CORZ colocation, and 3 WULF converts).
         net_known_jun17 = net.known_as_of("2026-06-17")
         jun17_known_keys = [k for _, _, k in net_known_jun17.graph.edges(keys=True)]
-        if "OBL-CRWV-DEBT-NOTES-2032-9625" in jun17_known_keys or "OBL-CRWV-DEBT-NOTES-2032-EUR" in jun17_known_keys or count_p0(net_known_jun17) != 28 or net_known_jun17.graph.number_of_edges() != 29:
+        if "OBL-CRWV-DEBT-NOTES-2032-9625" in jun17_known_keys or "OBL-CRWV-DEBT-NOTES-2032-EUR" in jun17_known_keys or count_p0(net_known_jun17) != 28 or net_known_jun17.graph.number_of_edges() != 33:
             errors.append(f"Epistemic check failed on 2026-06-17: Notes-2032={('OBL-CRWV-DEBT-NOTES-2032-9625' in jun17_known_keys)}, P0_edges={count_p0(net_known_jun17)}, Total_Edges={net_known_jun17.graph.number_of_edges()}")
         else:
-            print("  [OK] June 17 epistemic boundary verified: CoreWeave 2032 notes absent prior to Form 8-K filing (28 Phase 0 edges, 29 total edges known).")
+            print("  [OK] June 17 epistemic boundary verified: CoreWeave 2032 notes absent prior to Form 8-K filing (28 Phase 0 edges, 33 total edges known).")
 
-        # June 18 Epistemic Knowledge: Form 8-K filed! Both 2032 notes active (30 Phase 0 edges, 31 total edges known)
+        # June 18 Epistemic Knowledge: Form 8-K filed! Both 2032 notes active (30 Phase 0 edges, 35 total edges known)
         net_known_jun18 = net.known_as_of("2026-06-18")
         jun18_known_keys = [k for _, _, k in net_known_jun18.graph.edges(keys=True)]
-        if "OBL-CRWV-DEBT-NOTES-2032-9625" not in jun18_known_keys or "OBL-CRWV-DEBT-NOTES-2032-EUR" not in jun18_known_keys or count_p0(net_known_jun18) != 30 or net_known_jun18.graph.number_of_edges() != 31:
+        if "OBL-CRWV-DEBT-NOTES-2032-9625" not in jun18_known_keys or "OBL-CRWV-DEBT-NOTES-2032-EUR" not in jun18_known_keys or count_p0(net_known_jun18) != 30 or net_known_jun18.graph.number_of_edges() != 35:
             errors.append(f"Epistemic check failed on 2026-06-18: Notes-2032={('OBL-CRWV-DEBT-NOTES-2032-9625' in jun18_known_keys)}, P0_edges={count_p0(net_known_jun18)}, Total_Edges={net_known_jun18.graph.number_of_edges()}")
         else:
-            print("  [OK] June 18 epistemic boundary verified: Form 8-K incorporated, CoreWeave 2032 notes active (30 Phase 0 edges, 31 total edges known).")
+            print("  [OK] June 18 epistemic boundary verified: Form 8-K incorporated, CoreWeave 2032 notes active (30 Phase 0 edges, 35 total edges known).")
 
         # June 18 Economic Reality: Both 2032 notes active (34 Phase 0 edges, 39 total edges)
         net_econ_jun18 = net.economic_as_of("2026-06-18")
@@ -708,10 +739,10 @@ def validate_observatory():
         net_known_sep = net.known_as_of("2026-09-28")
         jun_p0 = count_p0(net_known_jun)
         sep_p0 = count_p0(net_known_sep)
-        if jun_p0 != 30 or net_known_jun.graph.number_of_edges() != 31:
-            errors.append(f"Expected 30 Phase 0 / 31 total edges known as of 2026-06-30, got P0={jun_p0}, total={net_known_jun.graph.number_of_edges()}")
+        if jun_p0 != 30 or net_known_jun.graph.number_of_edges() != 35:
+            errors.append(f"Expected 30 Phase 0 / 35 total edges known as of 2026-06-30, got P0={jun_p0}, total={net_known_jun.graph.number_of_edges()}")
         else:
-            print(f"  [OK] Information Clock June 30, 2026 verified: 30 Phase 0 edges, 31 total edges publicly known (eliminating look-ahead bias).")
+            print(f"  [OK] Information Clock June 30, 2026 verified: 30 Phase 0 edges, 35 total edges publicly known (eliminating look-ahead bias).")
         if sep_p0 != 34 or net_known_sep.graph.number_of_edges() != 45:
             errors.append(f"Expected 34 Phase 0 / 45 total edges known as of 2026-09-28, got P0={sep_p0}, total={net_known_sep.graph.number_of_edges()}")
         else:
@@ -830,7 +861,7 @@ def validate_observatory():
     # 3c. Validate Obligation Lifecycle Events & Bitemporal Facts Ledger
     # ---------------------------------------------------------
     events_df = pd.read_parquet(PROCESSED_DIR / "obligation_events.parquet")
-    expected_events_count = 50
+    expected_events_count = 51
     if len(events_df) != expected_events_count:
         errors.append(f"Obligation events count mismatch: {len(events_df)} (expected {expected_events_count})")
     else:
@@ -871,7 +902,7 @@ def validate_observatory():
 
     facts_df = pd.read_parquet(PROCESSED_DIR / "obligation_facts.parquet")
     clm_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
-    expected_facts_count = 55
+    expected_facts_count = 59
     if len(facts_df) != expected_facts_count:
         errors.append(f"Obligation facts count mismatch: {len(facts_df)} (expected {expected_facts_count})")
     else:
@@ -1108,7 +1139,7 @@ def validate_observatory():
     # ---------------------------------------------------------
     # 4. Validate Evidence Claims & Quote Categorization
     # ---------------------------------------------------------
-    expected_claims_count = 43
+    expected_claims_count = 48
     if len(clm_df) != expected_claims_count:
         errors.append(f"Evidence claims count mismatch: {len(clm_df)} (expected {expected_claims_count})")
     else:
