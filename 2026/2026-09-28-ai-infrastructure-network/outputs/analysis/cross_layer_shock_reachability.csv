@@ -1,0 +1,13 @@
+case_id,case_name,layer_id,layer_name,origin_present,reachable_nodes_total,reachable_corporates,reachable_spvs,reachable_facilities,reachable_utilities_grids,direct_debt_reachable_b,direct_mw_reachable,component_debt_reachable_b,component_mw_reachable,falsification_gain_pct
+CASE_A,Hyperscaler Demand Shock (MSFT),L1_FIN,Corporate Balance Sheet (G_fin),True,14,14,0,0,0,3.94,0.0,45.448,0.0,0.0
+CASE_A,Hyperscaler Demand Shock (MSFT),L2_CONT,Contractual / Legal Decomposed (G_cont),True,30,15,15,0,0,3.94,0.0,45.448,0.0,0.0
+CASE_A,Hyperscaler Demand Shock (MSFT),L3_PHYS,Physical Facility & Power (G_phys),False,0,0,0,0,0,0.0,0.0,0.0,0.0,0.0
+CASE_A,Hyperscaler Demand Shock (MSFT),L4_JOIN,Multi-Layer Joined Network (G_join),True,63,18,16,14,15,3.94,1176.0,45.448,4401.0,0.0
+CASE_B,GPU Collateral Value Depletion (DDTLs),L1_FIN,Corporate Balance Sheet (G_fin),True,14,14,0,0,0,3.94,0.0,45.448,0.0,0.0
+CASE_B,GPU Collateral Value Depletion (DDTLs),L2_CONT,Contractual / Legal Decomposed (G_cont),True,30,15,15,0,0,3.94,0.0,45.448,0.0,0.0
+CASE_B,GPU Collateral Value Depletion (DDTLs),L3_PHYS,Physical Facility & Power (G_phys),False,0,0,0,0,0,0.0,0.0,0.0,0.0,0.0
+CASE_B,GPU Collateral Value Depletion (DDTLs),L4_JOIN,Multi-Layer Joined Network (G_join),True,63,18,16,14,15,3.94,1176.0,45.448,4401.0,0.0
+CASE_C,Transmission Substation Delay (MDU),L1_FIN,Corporate Balance Sheet (G_fin),False,0,0,0,0,0,0.0,0.0,0.0,0.0,0.0
+CASE_C,Transmission Substation Delay (MDU),L2_CONT,Contractual / Legal Decomposed (G_cont),False,0,0,0,0,0,0.0,0.0,0.0,0.0,0.0
+CASE_C,Transmission Substation Delay (MDU),L3_PHYS,Physical Facility & Power (G_phys),True,3,0,0,1,2,0.0,350.0,0.0,350.0,0.0
+CASE_C,Transmission Substation Delay (MDU),L4_JOIN,Multi-Layer Joined Network (G_join),True,63,18,16,14,15,3.94,350.0,45.448,4401.0,0.0

@@ -1,0 +1,106 @@
+{
+  "task_id": "TASK-024",
+  "title": "Cross-Layer JOIN Gain & Structural Reconvergence Analysis",
+  "data_freeze_commit": "42f9a74",
+  "as_of_date": "2026-09-28",
+  "pre_registered_falsification_rule": ">= 50% gain in reachable financial liabilities, terminal dependencies, or articulation points across all 3 shock cases",
+  "falsification_verdict": "NOT FALSIFIED (PASSED)",
+  "layers": {
+    "L1_FIN": {
+      "name": "Corporate Balance Sheet (G_fin)",
+      "nodes": 19,
+      "edges_simple": 17,
+      "edges_multigraph": 45,
+      "funded_debt_b": 45.44768,
+      "committed_leases_b": 38.0,
+      "physical_mw": 0.0,
+      "facility_count": 0,
+      "utility_count": 0
+    },
+    "L2_CONT": {
+      "name": "Contractual / Legal Decomposed (G_cont)",
+      "nodes": 36,
+      "edges_simple": 48,
+      "edges_multigraph": 62,
+      "funded_debt_b": 45.44768,
+      "committed_leases_b": 38.0,
+      "physical_mw": 0.0,
+      "facility_count": 0,
+      "utility_count": 0
+    },
+    "L3_PHYS": {
+      "name": "Physical Facility & Power (G_phys)",
+      "nodes": 26,
+      "edges_simple": 19,
+      "edges_multigraph": 20,
+      "funded_debt_b": 0.0,
+      "committed_leases_b": 0.0,
+      "physical_mw": 4401.0,
+      "facility_count": 11,
+      "utility_count": 10
+    },
+    "L4_JOIN": {
+      "name": "Multi-Layer Joined Network (G_join)",
+      "nodes": 65,
+      "edges_simple": 99,
+      "edges_multigraph": 133,
+      "funded_debt_b": 45.44768,
+      "committed_leases_b": 38.0,
+      "physical_mw": 4401.0,
+      "facility_count": 14,
+      "utility_count": 10
+    }
+  },
+  "articulation_points_comparison": {
+    "L1_FIN": 6,
+    "L2_CONT": 7,
+    "L3_PHYS": 9,
+    "L4_JOIN": 19,
+    "articulation_points_gain_pct": 216.7
+  },
+  "falsification_tests": {
+    "CASE_A": {
+      "gain_metric": "Physical Capacity Visible (MW) & Network Perimeter",
+      "single_best_value": 0.0,
+      "joined_value": 1176.0,
+      "pct_gain": 100.0,
+      "node_pct_gain": 110.00000000000001,
+      "passes_50pct_threshold": true
+    },
+    "CASE_B": {
+      "gain_metric": "Physical Capacity Visible (MW) & Network Perimeter",
+      "single_best_value": 0.0,
+      "joined_value": 1176.0,
+      "pct_gain": 100.0,
+      "node_pct_gain": 110.00000000000001,
+      "passes_50pct_threshold": true
+    },
+    "CASE_C": {
+      "gain_metric": "Attributable Debt ($B) & Counterparty Perimeter",
+      "single_best_value": 0.0,
+      "joined_value": 3.94,
+      "pct_gain": 100.0,
+      "node_pct_gain": 2000.0,
+      "passes_50pct_threshold": true
+    }
+  },
+  "reconvergence": {
+    "crwv_tenant_reconvergence_mw": 1226.0,
+    "ercot_grid_reconvergence_mw": 3164.0,
+    "crwv_reconverged_facilities": [
+      "FAC-APLD-POLARIS-FORGE-1",
+      "FAC-CORZ-DENTON",
+      "FAC-CORZ-DALTON",
+      "FAC-CORZ-MUSKOGEE",
+      "FAC-CORZ-MARBLE",
+      "FAC-CORZ-AUSTIN"
+    ],
+    "ercot_reconverged_facilities": [
+      "FAC-CORZ-AUSTIN",
+      "FAC-CORZ-DENTON",
+      "FAC-IREN-CHILDRESS",
+      "FAC-IREN-SWEETWATER-1",
+      "FAC-IREN-SWEETWATER-2"
+    ]
+  }
+}

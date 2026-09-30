@@ -2053,6 +2053,80 @@ def validate_observatory():
     else:
         print("  [OK] Task 023.1: Missing-data semantics regression test passed (March 2025 incomplete coverage declines aggregation; July 2026 complete coverage certifies $44.616B / $18.934B / 42.44%).")
 
+    # -------------------------------------------------------------------------
+    # 11. TASK 024: CROSS-LAYER JOIN GAIN & STRUCTURAL RECONVERGENCE INVARIANTS
+    # -------------------------------------------------------------------------
+    print("\n--- 11. Validating Task 024 Cross-Layer JOIN Gain & Reconvergence Invariants ---")
+    sub_err = []
+
+    # 11.1: Artifact Existence
+    t24_artifacts = [
+        OUTPUTS_DIR / "analysis" / "cross_layer_network_comparison.csv",
+        OUTPUTS_DIR / "analysis" / "cross_layer_shock_reachability.csv",
+        OUTPUTS_DIR / "analysis" / "cross_layer_join_gain_summary.json",
+        OUTPUTS_DIR / "figures" / "cross_layer_join_gain.png",
+        PROJECT_ROOT / "docs" / "phase1_task024_cross_layer_join_gain.md"
+    ]
+    for art_path in t24_artifacts:
+        if not art_path.exists():
+            sub_err.append(f"Task 024: Missing required artifact at {art_path}")
+
+    # 11.2: Summary JSON & Layer Topology Invariants
+    summary_path = OUTPUTS_DIR / "analysis" / "cross_layer_join_gain_summary.json"
+    if summary_path.exists():
+        with open(summary_path, "r", encoding="utf-8") as f:
+            t24_sum = json.load(f)
+
+        if t24_sum.get("data_freeze_commit") != "42f9a74":
+            sub_err.append(f"Task 024: Data freeze commit drift: {t24_sum.get('data_freeze_commit')} vs expected 42f9a74")
+        if t24_sum.get("falsification_verdict") != "NOT FALSIFIED (PASSED)":
+            sub_err.append(f"Task 024: Falsification verdict failed: {t24_sum.get('falsification_verdict')}")
+
+        layers_meta = t24_sum.get("layers", {})
+        expected_layer_counts = {
+            "L1_FIN": {"nodes": 19, "edges_simple": 17, "edges_multigraph": 45},
+            "L2_CONT": {"nodes": 36, "edges_simple": 48, "edges_multigraph": 62},
+            "L3_PHYS": {"nodes": 26, "edges_simple": 19, "edges_multigraph": 20},
+            "L4_JOIN": {"nodes": 65, "edges_simple": 99, "edges_multigraph": 133}
+        }
+        for lid, exp in expected_layer_counts.items():
+            act = layers_meta.get(lid, {})
+            for metric in ["nodes", "edges_simple", "edges_multigraph"]:
+                if act.get(metric) != exp[metric]:
+                    sub_err.append(f"Task 024: {lid} {metric} drift: {act.get(metric)} vs expected {exp[metric]}")
+
+        # 11.3: Articulation Points & Giant Component Invariants
+        art_comp = t24_sum.get("articulation_points_comparison", {})
+        if art_comp.get("L1_FIN") != 6 or art_comp.get("L2_CONT") != 7 or art_comp.get("L3_PHYS") != 9 or art_comp.get("L4_JOIN") != 19:
+            sub_err.append(f"Task 024: Articulation points count mismatch: L1={art_comp.get('L1_FIN')}, L2={art_comp.get('L2_CONT')}, L3={art_comp.get('L3_PHYS')}, L4={art_comp.get('L4_JOIN')}")
+        if abs(art_comp.get("articulation_points_gain_pct", 0.0) - 216.7) > 0.1:
+            sub_err.append(f"Task 024: Articulation points gain % drift: {art_comp.get('articulation_points_gain_pct')} vs expected 216.7%")
+
+        # 11.4: Pre-Registered Falsification Test Invariants
+        fals_tests = t24_sum.get("falsification_tests", {})
+        for cid in ["CASE_A", "CASE_B", "CASE_C"]:
+            ctest = fals_tests.get(cid, {})
+            if not ctest.get("passes_50pct_threshold"):
+                sub_err.append(f"Task 024: Falsification test {cid} did not pass 50% threshold: {ctest}")
+            if cid in ["CASE_A", "CASE_B"]:
+                if ctest.get("single_best_value") != 0.0 or ctest.get("joined_value") != 1176.0:
+                    sub_err.append(f"Task 024: {cid} MW values drift: single={ctest.get('single_best_value')}, joined={ctest.get('joined_value')}")
+            else:
+                if ctest.get("single_best_value") != 0.0 or abs(ctest.get("joined_value", 0.0) - 3.94) > 0.01:
+                    sub_err.append(f"Task 024: {cid} debt values drift: single={ctest.get('single_best_value')}, joined={ctest.get('joined_value')}")
+
+        # 11.5: Reconvergence Invariants
+        reconv = t24_sum.get("reconvergence", {})
+        if reconv.get("crwv_tenant_reconvergence_mw") != 1226.0:
+            sub_err.append(f"Task 024: CoreWeave tenant reconvergence MW drift: {reconv.get('crwv_tenant_reconvergence_mw')} vs expected 1226.0")
+        if reconv.get("ercot_grid_reconvergence_mw") != 3164.0:
+            sub_err.append(f"Task 024: ERCOT grid reconvergence MW drift: {reconv.get('ercot_grid_reconvergence_mw')} vs expected 3164.0")
+
+    if sub_err:
+        errors.extend(sub_err)
+    else:
+        print("  [OK] Task 024: Cross-Layer JOIN Gain invariants verified (65 nodes, 99 edges, 19 articulation points [+216.7%], falsification test PASSED across all 3 shock cases).")
+
     if errors:
         print("\n[VALIDATION FAILED]")
         for err in errors:

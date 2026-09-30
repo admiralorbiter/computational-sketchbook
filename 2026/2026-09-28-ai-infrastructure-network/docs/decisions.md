@@ -707,6 +707,35 @@ erc_regional_entity.
   - Eliminates look-ahead bias and fact-ledger coverage artifacts.
   - Formulates the calibrated two-clock baseline for Phase 2 dynamic contagion and liquidity cascade modeling without data drift.
 
+---
 
+## ADR-024: Cross-Layer JOIN Gain, Multi-Layer Network Topology, and Structural Reconvergence
 
-
+- **Status:** Accepted (2026-09-30, Task 024 Certification)
+- **Context:**
+  1. *The Disclosure Silo Fallacy:* Traditional financial regulation and risk assessment examine corporate entities via isolated disclosure silos: corporate 10-K/10-Q balance sheets, exhibit-level credit agreements, or utility regulatory filings. In each silo, risk appears legally contained, bankruptcy-remote, or over-collateralized.
+  2. *Empirical Verification of "The Risk Lives in the JOIN":* A core thesis of this observatory is that systemic fragility is not visible on isolated balance sheets but emerges from the cross-layer topological join bridging corporate parents, SPVs, debt facilities, leases, physical data center facilities, electric utilities, and regional balancing authorities.
+  3. *Pre-Registered Falsification Criterion:* Before running the analysis, a pre-registered falsification rule was enacted: *If the joined multi-layer network ($G_{\text{join}}$) does not increase reachable financial liabilities, expose common terminal dependencies, or alter network articulation points by at least 50% relative to single-layer views across all three empirical shock cases, the "risk lives in the JOIN" thesis is falsified.*
+- **Decision:**
+  1. **Four-Layer Structural Graph Formulation:**
+     - Evaluated four distinct topological views from the identical frozen dataset at commit `42f9a74`:
+       * **Layer 1: Corporate Balance Sheet Graph ($G_{\text{fin}}$):** 19 corporate nodes, 17 simple edges (45 multigraph edges), 3 components ($N_{\max}=14$), 6 articulation points, \$45.448B funded debt, \$38.0B leases, **0 MW physical capacity**.
+       * **Layer 2: Contractual / Legal Obligation Graph ($G_{\text{cont}}$):** 36 nodes (16 project SPVs, 20 corporate parents/syndicates), 48 simple edges (62 multigraph edges), 3 components ($N_{\max}=30$), 7 articulation points, \$45.448B funded debt, \$38.0B leases, **0 MW physical capacity**.
+       * **Layer 3: Physical Facility & Power Graph ($G_{\text{phys}}$):** 26 active physical nodes (11 facilities, 10 utilities, 5 grid operators), 19 simple edges, 7 disconnected components ($N_{\max}=9$, ERCOT cluster), 9 articulation points, 4,401 MW capacity, **\$0.0B debt**.
+       * **Layer 4: Multi-Layer Joined Network ($G_{\text{join}}$):** 65 active nodes, 99 simple edges (133 multigraph edges), 2 components (giant component contains 63 nodes / 96.9% share), **19 articulation points**, 4,401 MW capacity, \$45.448B funded debt.
+  2. **Pre-Registered Falsification Verdict: NOT FALSIFIED (PASSED):**
+     - **Case A (Hyperscaler Demand Shock - MSFT):** In single-layer views ($G_{\text{fin}}$, $G_{\text{cont}}$), MSFT reaches \$3.940B debt / \$45.448B component debt, but **0 MW physical capacity** across 0 facilities. In $G_{\text{join}}$, MSFT connects directly to 6 data center sites totaling **1,176 MW** (capacity basis) / 1,226 MW (critical IT) and 4,401 MW component capacity. **Gain: +$\infty$ (>1000% $\ge 50\%$)**. Reachable network perimeter expands from 30 to 63 nodes (**+110.0% $\ge 50\%$**).
+     - **Case B (GPU Collateral Value Depletion - Blackstone/Magnetar & GPU SPVs):** In single-layer views, collateral haircuts hit corporate debt but reveal **0 MW physical capacity** and 0 facilities. In $G_{\text{join}}$, GPU collateral depreciation cascades through the SPV borrowing bases, tenant lease cash flows, and threatens **1,176 MW** of operational data center capacity across 6 facilities. **Gain: +$\infty$ (>1000% $\ge 50\%$)**.
+     - **Case C (Transmission Substation Delay - MDU Substation / Polaris Forge 1):** In single-layer views ($G_{\text{phys}}$), an energization delay at MDU affects only 3 nodes (MDU, Polaris Forge 1, MISO) and **\$0.0B financial debt**. In $G_{\text{join}}$, the substation delay propagates through the project links to capture **\$3.940B in direct project debt** (\$2.35B PF1 + \$1.59B 7% Notes), \$11.0B in master lease commitments, APLD parent shortfall completion obligations, and \$45.448B in component liabilities. **Gain: +$\infty$ (>1000% $\ge 50\%$)**. Reachable nodes jump from 3 to 63 (**+2,000% $\ge 50\%$**).
+  3. **Emergence of Physical Facilities as Network Cut-Vertices (Articulation Points):**
+     - Articulation points jump from 6 in $G_{\text{fin}}$ and 9 in $G_{\text{phys}}$ to **19 in $G_{\text{join}}$ (+216.7% vs $G_{\text{fin}}$, +111.1% vs $G_{\text{phys}}$)**.
+     - Six physical data center facilities emerge as network articulation points: `FAC-APLD-POLARIS-FORGE-1`, `FAC-NBIS-MANTSALA`, `FAC-WULF-LAKE-MARINER`, `FAC-CORZ-DALTON`, `FAC-CORZ-MARBLE`, and `FAC-CORZ-MUSKOGEE`.
+     - CoreWeave betweenness centrality increases from 0.4510 ($G_{\text{fin}}$) to **0.6955 ($G_{\text{join}}$) (+54.2%)**, cementing its structural role as the central bipartite router linking debt syndicates to physical colocation sites.
+  4. **Empirical Certification of Triple Reconvergence:**
+     - *Tenant Reconvergence:* 6 distinct physical sites (Ellendale, Denton, Dalton, Muskogee, Marble, Austin) totaling 1,226 MW and supporting \$17.583B in corporate/project debt reconverge entirely onto CoreWeave (`CRWV`) and Microsoft (`MSFT`).
+     - *Grid Backplane Reconvergence:* 5 facilities totaling 3,164 MW (65.9% of portfolio capacity) reconverge onto ERCOT, coupling Core Scientific (`CORZ`) and Iris Energy (`IREN`) through shared grid reliability regimes despite having zero direct financial contracts.
+     - *Protection Compression:* 4 distinct legal protections on PF1 (DSRA, sponsor guarantee, springing indemnity, master lease) collapse onto only 2 underlying terminal support nodes (`APLD_PARENT_LIQUIDITY` and `CRWV_BALANCE_SHEET`).
+- **Consequences:**
+  - Definitively confirms that systemic exposure cannot be diagnosed from single-issuer financial statements or isolated grid filings.
+  - Replaces qualitative "shadow risk" narratives with mathematically exact, reproducible graph metrics ($\Delta N$, $\Delta E$, $\Delta \text{Debt}$, $\Delta \text{MW}$, $\Delta \text{Art}$).
+  - Seals Task 024 and establishes the certified multi-layer graph topology required for Phase 2 dynamic contagion simulation.
