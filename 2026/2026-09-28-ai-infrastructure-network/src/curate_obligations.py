@@ -1969,6 +1969,32 @@ def build_obligations():
         }
     ]
 
+    # Typed Contractual Rate Metadata (ADR-017 Engine Refinement)
+    RATE_METADATA = {
+        "OBL-CRWV-DEBT-DDTL1": {"rate_type": "floating", "benchmark": "SOFR", "margin_bps": 961.96, "floor_bps": 0.0, "fixed_coupon": None, "spread_grid_id": None},
+        "OBL-CRWV-DEBT-DDTL2": {"rate_type": "spread_grid", "benchmark": "SOFR", "margin_bps": 600.0, "floor_bps": 0.0, "fixed_coupon": None, "spread_grid_id": "GRID-CRWV-DDTL2"},
+        "OBL-CRWV-DEBT-DDTL2-1": {"rate_type": "floating", "benchmark": "SOFR", "margin_bps": 425.0, "floor_bps": 0.0, "fixed_coupon": None, "spread_grid_id": None},
+        "OBL-CRWV-DEBT-DDTL3": {"rate_type": "floating", "benchmark": "SOFR", "margin_bps": 400.0, "floor_bps": 0.0, "fixed_coupon": None, "spread_grid_id": None},
+        "OBL-CRWV-DEBT-DDTL4": {"rate_type": "floating", "benchmark": "SOFR", "margin_bps": 350.0, "floor_bps": 0.0, "fixed_coupon": None, "spread_grid_id": None},
+        "OBL-CRWV-DEBT-DDTL5": {"rate_type": "floating", "benchmark": "SOFR", "margin_bps": 450.0, "floor_bps": 0.0, "fixed_coupon": None, "spread_grid_id": None},
+        "OBL-CRWV-DEBT-NOTES-2030": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0925, "spread_grid_id": None},
+        "OBL-CRWV-DEBT-NOTES-2031-900": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0900, "spread_grid_id": None},
+        "OBL-CRWV-DEBT-NOTES-2031-975": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0975, "spread_grid_id": None},
+        "OBL-CRWV-DEBT-NOTES-2032-9625": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.09625, "spread_grid_id": None},
+        "OBL-CRWV-DEBT-NOTES-2032-EUR": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0850, "spread_grid_id": None},
+        "OBL-CRWV-DEBT-CONV-2031": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0175, "spread_grid_id": None},
+        "OBL-CRWV-DEBT-CONV-2032": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0175, "spread_grid_id": None},
+        "OBL-CRWV-DEBT-OEM": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.1100, "spread_grid_id": None},
+        "OBL-CRWV-DEBT-OEM-NR": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.1000, "spread_grid_id": None},
+        "OBL-CRWV-DEBT-MAGNETAR": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0850, "spread_grid_id": None},
+        "OBL-APLD-DEBT-PF1": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0925, "spread_grid_id": None},
+        "OBL-APLD-DEBT-PF2": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0675, "spread_grid_id": None},
+        "OBL-APLD-DEBT-CONV": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0275, "spread_grid_id": None},
+        "OBL-APLD-DEBT-BRIDGE": {"rate_type": "floating", "benchmark": "SOFR", "margin_bps": 300.0, "floor_bps": 0.0, "fixed_coupon": None, "spread_grid_id": None},
+        "OBL-APLD-DEBT-7PCT-2026": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0700, "spread_grid_id": None},
+        "OBL-APLD-DEBT-OTHER": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0800, "spread_grid_id": None},
+    }
+
     for obl in obligations:
         if "valid_from" not in obl:
             obl["valid_from"] = obl["economic_valid_from"]
@@ -1978,6 +2004,23 @@ def build_obligations():
             obl["maturity_rule"] = None
         if "reported_final_maturity" not in obl:
             obl["reported_final_maturity"] = None
+
+        oid = obl["obligation_id"]
+        rate_info = RATE_METADATA.get(oid, {
+            "rate_type": obl.get("rate_type", "none"),
+            "benchmark": obl.get("benchmark_rate"),
+            "margin_bps": None,
+            "floor_bps": None,
+            "fixed_coupon": None,
+            "spread_grid_id": None
+        })
+        obl["rate_type"] = rate_info["rate_type"]
+        obl["benchmark"] = rate_info["benchmark"]
+        obl["benchmark_rate"] = rate_info["benchmark"]
+        obl["margin_bps"] = rate_info["margin_bps"]
+        obl["floor_bps"] = rate_info["floor_bps"]
+        obl["fixed_coupon"] = rate_info["fixed_coupon"]
+        obl["spread_grid_id"] = rate_info["spread_grid_id"]
 
     df = pd.DataFrame(obligations)
     df.to_parquet(PROCESSED_DIR / "obligations.parquet", index=False)

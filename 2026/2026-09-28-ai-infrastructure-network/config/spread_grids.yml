@@ -1,0 +1,24 @@
+# Contractual Credit Spread Grids for AI Infrastructure Financial Network
+spread_grids:
+  GRID-CRWV-DDTL2:
+    grid_id: GRID-CRWV-DDTL2
+    name: "CoreWeave DDTL 2.0 Customer Credit Rating Spread Grid"
+    facility_id: OBL-CRWV-DEBT-DDTL2
+    benchmark: SOFR
+    source_claim_id: CLM-CRWV-016
+    description: "Spread grid governed by customer credit quality: 6.00% for specified investment-grade customers, 6.50% for standard investment-grade, and 13.00% for non-investment-grade."
+    tiers:
+      specified_investment_grade:
+        margin_bps: 600.0
+        spread_pct: 0.0600
+        description: "Specified Investment Grade Off-taker (e.g. Microsoft)"
+      investment_grade:
+        margin_bps: 650.0
+        spread_pct: 0.0650
+        description: "Standard Investment Grade Off-taker"
+      non_investment_grade:
+        margin_bps: 1300.0
+        spread_pct: 0.1300
+        description: "Non-Investment Grade Off-taker"
+    default_margin_bps: 800.0
+    default_spread_pct: 0.0800

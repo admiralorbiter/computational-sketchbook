@@ -24,8 +24,10 @@ import numpy as np
 
 try:
     from .graph import ObligationNetwork
+    from .epistemic import EpistemicResolver, KnowledgeState, ContractualRate
 except ImportError:
     from graph import ObligationNetwork
+    from epistemic import EpistemicResolver, KnowledgeState, ContractualRate
 
 PROCESSED_DIR = Path(__file__).resolve().parent.parent / "data" / "processed"
 OUTPUTS_DIR = Path(__file__).resolve().parent.parent / "outputs"
@@ -131,6 +133,13 @@ class FinancialStressEngine:
                 self.as_of_date = getattr(network, "as_of_date", None) or "2026-09-28"
                 self.temporal_mode = getattr(network, "temporal_mode", None) or "economic"
         self.graph = self.network.graph
+        self.resolver = getattr(self.network, "resolver", None)
+        if self.resolver is None or self.resolver.as_of_date != self.as_of_date or self.resolver.temporal_mode != self.temporal_mode:
+            self.resolver = EpistemicResolver(
+                as_of_date=self.as_of_date,
+                temporal_mode=self.temporal_mode,
+                network=self.network
+            )
         self.financials = resolve_temporal_financials(as_of_date=self.as_of_date, temporal_mode=self.temporal_mode)
 
     def _load_latest_financials(self) -> Dict[str, Dict[str, float]]:
@@ -151,9 +160,9 @@ class FinancialStressEngine:
             root_u = self.network.get_root_parent(u)
             if root_u == entity_id and d.get("obligation_type") == "debt_facility":
                 rate_type = d.get("rate_type")
-                benchmark = d.get("benchmark_rate")
+                benchmark = d.get("benchmark_rate") or d.get("benchmark")
                 cond = str(d.get("payment_conditions", "")).lower()
-                if rate_type == "floating" or benchmark == "SOFR" or "floating" in cond:
+                if rate_type in ["floating", "spread_grid"] or benchmark == "SOFR" or "floating" in cond:
                     flt_amt = d.get("floating_principal")
                     amt = d.get("amount")
                     amt_known = d.get("amount_known", True)
@@ -173,12 +182,10 @@ class FinancialStressEngine:
         Derives active interest rate swap notional for entity_id based on network temporal state (ADR-013).
         Returns float notional in USD if disclosed/known on as_of_date, or None if unmeasured/unknown.
         """
-        if hasattr(self.network, "get_entity_fact"):
-            val = self.network.get_entity_fact(entity_id, "swap_notional")
-            if val is not None:
-                return val
-        # If network has no temporal filter or in economic mode
-        if self.temporal_mode is None or self.temporal_mode == "economic":
+        ks = self.resolver.resolve_fact(entity_id=entity_id, attribute="swap_notional")
+        if ks.is_known:
+            return float(ks.value)
+        if self.temporal_mode in [None, "economic"]:
             return 4661000000.0 if entity_id == "CRWV" else 0.0
         return None
 
@@ -198,9 +205,9 @@ class FinancialStressEngine:
         all_known = True
         for u, v, k, d in self.graph.edges(keys=True, data=True):
             if k in drawn_ddtl_keys:
-                amt = d.get("amount")
-                if amt is not None and d.get("amount_known", True):
-                    drawn_debt += float(amt)
+                ks = self.resolver.resolve_fact(obligation_id=k, attribute="principal_outstanding")
+                if ks.is_known:
+                    drawn_debt += float(ks.value)
                 else:
                     all_known = False
 
@@ -240,6 +247,8 @@ class FinancialStressEngine:
                 f"Under the Credit Agreement, this decline does NOT trigger an automatic contractual cash margin call or prepayment (cash remains ${crwv_cash/1e9:.2f}B), "
                 f"but it eliminates borrowing availability on undrawn commitments and represents severe rollover friction upon loan maturity."
             )
+
+        self.resolver.assert_zero_lookahead()
 
         return {
             "scenario_name": "Hypothetical MTM Financing Sensitivity (Class C Proxy)",
@@ -285,10 +294,8 @@ class FinancialStressEngine:
           and Building 2 SPV lease (Phase 2/4 Space, 2 of 4 data halls; unstated face value in Exhibit 10.1).
           Building 4 (150 MW, ~$4.13B) carries no CoreWeave parent springing guarantee (guaranteed by APLD parent).
         """
-        base_revenue = 3437770000.0
-        if self.graph.has_edge("MSFT", "CRWV", key="REL-MSFT-CRWV-REVENUE-CONCENTRATION"):
-            base_revenue = self.graph.get_edge_data("MSFT", "CRWV", key="REL-MSFT-CRWV-REVENUE-CONCENTRATION").get("amount", 3437770000.0)
-
+        ks_rev = self.resolver.resolve_fact(obligation_id="REL-MSFT-CRWV-REVENUE-CONCENTRATION", attribute="recognized_revenue")
+        base_revenue = float(ks_rev.value) if ks_rev.is_known else 3437770000.0
         annual_rev_loss = base_revenue * trim_pct  # $1.031B/yr at 30%
 
         # Derive CoreWeave annual debt service dynamically across active funded debt tranches:
@@ -298,35 +305,15 @@ class FinancialStressEngine:
         for u, v, k, d in self.graph.edges(keys=True, data=True):
             root_u = self.network.get_root_parent(u)
             if root_u == "CRWV" and d.get("obligation_type") in ["debt_facility", "senior_unsecured", "senior_unsecured_convertible"]:
-                amt = d.get("amount")
-                amt_known = d.get("amount_known", True)
-                if amt is None or not amt_known:
+                ks = self.resolver.resolve_fact(obligation_id=k, attribute="principal_outstanding")
+                if not ks.is_known:
                     all_debt_known = False
                 else:
-                    cond = str(d.get("payment_conditions", ""))
-                    rec = str(d.get("recourse", ""))
-                    rate_type = d.get("rate_type")
-                    if "convertible" in rec or "convertible" in cond.lower():
-                        rate = 0.0175
-                    elif "9.75" in cond:
-                        rate = 0.0975
-                    elif "9.625" in cond:
-                        rate = 0.09625
-                    elif "9.25" in cond:
-                        rate = 0.0925
-                    elif "9.00" in cond:
-                        rate = 0.0900
-                    elif "8.50" in cond:
-                        rate = 0.0850
-                    elif "11%" in cond:
-                        rate = 0.11
-                    elif "10%" in cond:
-                        rate = 0.10
-                    elif rate_type == "floating":
+                    crate = ContractualRate.from_edge(d)
+                    rate = crate.compute_rate(sofr_rate=0.053)
+                    if rate == 0.0:
                         rate = 0.085
-                    else:
-                        rate = 0.085
-                    annual_debt_service += float(amt) * rate
+                    annual_debt_service += float(ks.value) * rate
 
         if self.temporal_mode in ["known", "knowledge"]:
             if not all_debt_known or annual_debt_service == 0.0:
@@ -370,6 +357,8 @@ class FinancialStressEngine:
                 f"and potentially Exhibit 10.1 for the Building 2 SPV lease (Phase 2/4 Space, 2 of 4 data halls; unstated face value). "
                 f"Building 4 ($4.13B, 150 MW) is excluded as it carries no CoreWeave parent guarantee."
             )
+
+        self.resolver.assert_zero_lookahead()
 
         return {
             "scenario_name": "Anchor Customer Demand Trim & Conditional Springing Guaranty",
@@ -552,13 +541,11 @@ class FinancialStressEngine:
         delta_spread = spread_increase_bps / 10000.0  # 0.03
         crwv_cash = self.financials.get("CRWV", {}).get("cash_and_equivalents", 5520000000.0)
 
-        # Note 10 debt maturities were disclosed on 2026-08-12 in Form 10-Q (CLM-CRWV-001)
-        maturities_known = True
-        if self.temporal_mode in ["known", "knowledge"]:
-            if str(self.as_of_date) < "2026-08-12":
-                maturities_known = False
+        ks_mat = self.resolver.resolve_fact(entity_id="CRWV", attribute="debt_maturities")
+        maturities_known = ks_mat.is_known
 
         if not maturities_known:
+            self.resolver.assert_zero_lookahead()
             return {
                 "scenario_name": "Credit Spread / Refinancing Shock at Maturity",
                 "spread_increase_bps": spread_increase_bps,
@@ -583,9 +570,9 @@ class FinancialStressEngine:
                 )
             }
 
-        maturing_2026 = 4413000000.0
-        maturing_2027 = 6184000000.0
-        maturing_2028 = 4416000000.0
+        maturing_2026 = float(ks_mat.value["2026"])
+        maturing_2027 = float(ks_mat.value["2027"])
+        maturing_2028 = float(ks_mat.value["2028"])
 
         refi_cost_2026_yr = maturing_2026 * refi_rollover_fraction * delta_spread  # $132.39M/yr at 1.0
         refi_cost_2027_yr = maturing_2027 * refi_rollover_fraction * delta_spread  # $185.52M/yr at 1.0
@@ -600,6 +587,8 @@ class FinancialStressEngine:
             "75pct_rollover_usd": cumulative_refi_cost_2yr * 0.75,
             "100pct_rollover_usd": cumulative_refi_cost_2yr * 1.00,
         }
+
+        self.resolver.assert_zero_lookahead()
 
         return {
             "scenario_name": "Credit Spread / Refinancing Shock at Maturity",
@@ -634,16 +623,13 @@ class FinancialStressEngine:
         Carrying cost on construction debt uses modeled Class C MW-allocation ($2.35B notes * delayed_mw / 400).
         Evaluates a sensitivity band across building3_operational_mw in [25, 50, 75, 100] MW.
         """
-        # Operational phasing of campus buildings (Building 2 100MW, Building 3 150MW, Building 4 150MW)
-        # was disclosed in APLD Form 10-K (Item 1) filed on 2026-07-29.
-        phasing_known = True
-        if self.temporal_mode in ["known", "knowledge"]:
-            if str(self.as_of_date) < "2026-07-29":
-                phasing_known = False
+        ks_phase = self.resolver.resolve_fact(entity_id="APLD", attribute="campus_construction_phasing")
+        phasing_known = ks_phase.is_known
 
         apld_cash = self.financials.get("APLD", {}).get("cash_and_equivalents", 1590000000.0)
 
         if not phasing_known:
+            self.resolver.assert_zero_lookahead()
             return {
                 "scenario_name": "Phased Grid Energization Delay (Polaris Forge 1)",
                 "delay_months": delay_months,
@@ -691,6 +677,8 @@ class FinancialStressEngine:
                 "cash_drain_pct": round(cand_drain, 1)
             }
 
+        self.resolver.assert_zero_lookahead()
+
         return {
             "scenario_name": "Phased Grid Energization Delay (Polaris Forge 1)",
             "delay_months": delay_months,
@@ -729,14 +717,13 @@ class FinancialStressEngine:
         1. Accounting Channel (P&L / Equity): Non-cash Net Realizable Value (NRV) write-down provision under ASC 330.
         2. Cash Liquidity Channel: Working capital cash drain if taking delivery of unabsorbed inventory vs cancellation penalty.
         """
-        commitments_known = True
-        if self.temporal_mode in ["known", "knowledge"]:
-            if str(self.as_of_date) < "2026-08-31":
-                commitments_known = False
+        ks_commit = self.resolver.resolve_fact(entity_id="SMCI", attribute="purchase_commitments")
+        commitments_known = ks_commit.is_known
 
         smci_cash = self.financials.get("SMCI", {}).get("cash_and_equivalents", 7520000000.0)
 
         if not commitments_known:
+            self.resolver.assert_zero_lookahead()
             return {
                 "scenario_name": "OEM Purchase Commitment Expected Loss (SMCI)",
                 "excess_allocation_pct": excess_allocation_pct,
@@ -758,7 +745,7 @@ class FinancialStressEngine:
                 )
             }
 
-        total_commitments = 34200000000.0
+        total_commitments = float(ks_commit.value) if ks_commit.value is not None else 34200000000.0
         excess_commitments = total_commitments * excess_allocation_pct  # $5.13B excess hardware allocation
         
         # 1. Accounting Channel: Non-cash P&L write-down reducing stockholders' equity ($9.34B equity as of June 30, 2026)
@@ -772,6 +759,8 @@ class FinancialStressEngine:
 
         cancellation_cash_drain_pct = (modeled_cancellation_cash_drain / smci_cash) * 100.0 if smci_cash else 100.0
         gross_delivery_cash_drain_pct = (gross_inventory_cash_drain / smci_cash) * 100.0 if smci_cash else 100.0
+
+        self.resolver.assert_zero_lookahead()
 
         return {
             "scenario_name": "OEM Purchase Commitment Expected Loss (SMCI)",
@@ -891,6 +880,8 @@ class FinancialStressEngine:
                 "contagion_mechanism": "Accounting: $2.05B NRV loss provision on equity. Cash: $769M cancellation fee at 15% (10% cash) or $5.13B delivery (68% cash)."
             }
         ]
+
+        self.resolver.assert_zero_lookahead()
 
         df = pd.DataFrame(summary_rows)
         tables_dir = OUTPUTS_DIR / "tables"

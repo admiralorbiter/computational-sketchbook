@@ -12,6 +12,11 @@ from typing import Dict, List, Optional, Set, Tuple, Any
 import networkx as nx
 import pandas as pd
 
+try:
+    from .epistemic import EpistemicResolver, KnowledgeState, ContractualRate
+except ImportError:
+    from epistemic import EpistemicResolver, KnowledgeState, ContractualRate
+
 PROCESSED_DIR = Path(__file__).resolve().parent.parent / "data" / "processed"
 
 
@@ -46,6 +51,13 @@ class ObligationNetwork:
         self.events_df = events_df
         self.as_of_date = None
         self.temporal_mode = None
+        self.resolver = EpistemicResolver(
+            as_of_date=self.as_of_date,
+            temporal_mode=self.temporal_mode or "economic",
+            network=self,
+            facts_df=self.facts_df,
+            events_df=self.events_df
+        )
         # Use MultiDiGraph so distinct facilities/contracts between the same (u, v) pair are preserved
         self.graph = nx.MultiDiGraph()
         self._build_graph()
@@ -80,6 +92,9 @@ class ObligationNetwork:
             cap_mw = float(row["capacity_mw"]) if pd.notna(row.get("capacity_mw")) else None
             flt_amt = float(row["floating_principal"]) if pd.notna(row.get("floating_principal")) else None
             fac_cap = float(row["facility_capacity"]) if pd.notna(row.get("facility_capacity")) else None
+            m_bps = float(row["margin_bps"]) if pd.notna(row.get("margin_bps")) else None
+            f_bps = float(row["floor_bps"]) if pd.notna(row.get("floor_bps")) else None
+            fc = float(row["fixed_coupon"]) if pd.notna(row.get("fixed_coupon")) else None
 
             self.graph.add_edge(
                 u,
@@ -98,7 +113,12 @@ class ObligationNetwork:
                 economic_valid_to=row.get("economic_valid_to", row.get("valid_to")),
                 publicly_known_from=row.get("publicly_known_from", row.get("observed_as_of")),
                 rate_type=row.get("rate_type", "fixed" if row.get("obligation_type") == "debt_facility" else "none"),
-                benchmark_rate=row.get("benchmark_rate"),
+                benchmark=row.get("benchmark", row.get("benchmark_rate")),
+                benchmark_rate=row.get("benchmark_rate", row.get("benchmark")),
+                margin_bps=m_bps,
+                floor_bps=f_bps,
+                fixed_coupon=fc,
+                spread_grid_id=row.get("spread_grid_id"),
                 floating_principal=flt_amt,
                 facility_capacity=fac_cap,
                 supersedes=row.get("supersedes"),
@@ -222,6 +242,7 @@ class ObligationNetwork:
         net = ObligationNetwork(entities_df=self.entities_df.reset_index(), obligations_df=filtered_df, facts_df=self.facts_df, events_df=self.events_df)
         net.as_of_date = date_str
         net.temporal_mode = "economic"
+        net.resolver = EpistemicResolver(as_of_date=date_str, temporal_mode="economic", network=net, facts_df=self.facts_df, events_df=self.events_df)
         return net
 
     def known_as_of(self, date_str: str) -> "ObligationNetwork":
@@ -317,7 +338,12 @@ class ObligationNetwork:
         net = ObligationNetwork(entities_df=self.entities_df.reset_index(), obligations_df=filtered_df, facts_df=self.facts_df, events_df=self.events_df)
         net.as_of_date = date_str
         net.temporal_mode = "known"
+        net.resolver = EpistemicResolver(as_of_date=date_str, temporal_mode="known", network=net, facts_df=self.facts_df, events_df=self.events_df)
         return net
+
+    def resolve_fact(self, obligation_id: Optional[str] = None, entity_id: Optional[str] = None, attribute: str = "") -> KnowledgeState:
+        """Resolve fact or contract attribute via the generic epistemic resolver."""
+        return self.resolver.resolve_fact(obligation_id=obligation_id, entity_id=entity_id, attribute=attribute)
 
     def as_of(self, date_str: str, mode: str = "economic") -> "ObligationNetwork":
         """

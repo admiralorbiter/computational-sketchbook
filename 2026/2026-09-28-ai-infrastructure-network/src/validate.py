@@ -866,6 +866,118 @@ def validate_observatory():
     print(f"  [OK] All {len(facts_df)} facts verified: truth_claim_id and knowledge_claim_id present, publicly_known_from >= claim filing date.")
 
     # ---------------------------------------------------------
+    # 3d. Validate Step 2 Generic Engine Layer (ADR-017)
+    # ---------------------------------------------------------
+    try:
+        from src.epistemic import EpistemicResolver, KnowledgeState, ContractualRate
+
+        # 1. Validate Typed Rate Schema on obligations.parquet
+        required_rate_cols = ["rate_type", "benchmark", "margin_bps", "floor_bps", "fixed_coupon", "spread_grid_id"]
+        for col in required_rate_cols:
+            if col not in obl_df.columns:
+                errors.append(f"obligations.parquet missing typed rate column: {col}")
+
+        # Check specific obligation rate parameters
+        ddtl1 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-DEBT-DDTL1"].iloc[0]
+        if ddtl1["rate_type"] != "floating" or ddtl1["benchmark"] != "SOFR" or abs(ddtl1["margin_bps"] - 961.96) > 0.01:
+            errors.append(f"DDTL 1.0 typed rate mismatch: {ddtl1['rate_type']}, {ddtl1['benchmark']}, {ddtl1['margin_bps']} bps")
+
+        ddtl2 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-DEBT-DDTL2"].iloc[0]
+        if ddtl2["rate_type"] != "spread_grid" or ddtl2["spread_grid_id"] != "GRID-CRWV-DDTL2":
+            errors.append(f"DDTL 2.0 typed rate mismatch: {ddtl2['rate_type']}, grid={ddtl2['spread_grid_id']}")
+
+        ddtl3 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-DEBT-DDTL3"].iloc[0]
+        if ddtl3["rate_type"] != "floating" or ddtl3["benchmark"] != "SOFR" or abs(ddtl3["margin_bps"] - 400.0) > 0.01:
+            errors.append(f"DDTL 3.0 typed rate mismatch: {ddtl3['rate_type']}, margin={ddtl3['margin_bps']} bps")
+
+        ddtl5 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-DEBT-DDTL5"].iloc[0]
+        if ddtl5["rate_type"] != "floating" or ddtl5["benchmark"] != "SOFR" or abs(ddtl5["margin_bps"] - 450.0) > 0.01:
+            errors.append(f"DDTL 5.0 typed rate mismatch: {ddtl5['rate_type']}, margin={ddtl5['margin_bps']} bps")
+
+        notes975 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-DEBT-NOTES-2031-975"].iloc[0]
+        if notes975["rate_type"] != "fixed" or abs(notes975["fixed_coupon"] - 0.0975) > 0.0001:
+            errors.append(f"9.75% Notes typed rate mismatch: {notes975['rate_type']}, coupon={notes975['fixed_coupon']}")
+
+        conv32 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-DEBT-CONV-2032"].iloc[0]
+        if conv32["rate_type"] != "fixed" or abs(conv32["fixed_coupon"] - 0.0175) > 0.0001:
+            errors.append(f"2032 Convertibles typed rate mismatch: {conv32['rate_type']}, coupon={conv32['fixed_coupon']}")
+
+        print("  [OK] Typed contractual rate schema verified across obligations (floating, fixed, spread grids).")
+
+        # 2. Validate ContractualRate computation & spread grid tiers
+        c_fixed = ContractualRate(rate_type="fixed", fixed_coupon=0.0975)
+        if abs(c_fixed.compute_rate() - 0.0975) > 1e-6:
+            errors.append(f"ContractualRate fixed calculation failed: {c_fixed.compute_rate()}")
+
+        c_flt = ContractualRate(rate_type="floating", benchmark="SOFR", margin_bps=450.0)
+        if abs(c_flt.compute_rate(sofr_rate=0.053) - 0.098) > 1e-6:
+            errors.append(f"ContractualRate floating calculation failed: {c_flt.compute_rate(sofr_rate=0.053)}")
+
+        c_grid = ContractualRate(rate_type="spread_grid", benchmark="SOFR", spread_grid_id="GRID-CRWV-DDTL2")
+        grid_tier_checks = [
+            ("specified_investment_grade", 0.053 + 0.0600),
+            ("investment_grade", 0.053 + 0.0650),
+            ("non_investment_grade", 0.053 + 0.1300),
+            (None, 0.053 + 0.0800),
+        ]
+        for tier, expected_r in grid_tier_checks:
+            computed_r = c_grid.compute_rate(sofr_rate=0.053, customer_tier=tier)
+            if abs(computed_r - expected_r) > 1e-6:
+                errors.append(f"GRID-CRWV-DDTL2 tier {tier} mismatch: {computed_r} (expected {expected_r})")
+
+        print("  [OK] ContractualRate calculation verified: fixed coupons, benchmark margins, and GRID-CRWV-DDTL2 tiers (6.0%-13.0%).")
+
+        # 3. Validate EpistemicResolver KnowledgeState and Universal Zero-Lookahead Invariant
+        resolver_jun = EpistemicResolver(as_of_date="2026-06-30", temporal_mode="known")
+        
+        # Unfiled periodic disclosures must resolve to unknown with None value
+        ks_mat = resolver_jun.resolve_fact(entity_id="CRWV", attribute="debt_maturities")
+        if ks_mat.status != "unknown" or ks_mat.value is not None or ks_mat.is_known:
+            errors.append(f"Resolver failed to isolate unfiled CRWV debt_maturities on 2026-06-30: status={ks_mat.status}, val={ks_mat.value}")
+
+        ks_phasing = resolver_jun.resolve_fact(entity_id="APLD", attribute="campus_construction_phasing")
+        if ks_phasing.status != "unknown" or ks_phasing.value is not None or ks_phasing.is_known:
+            errors.append(f"Resolver failed to isolate unfiled APLD campus_construction_phasing on 2026-06-30: status={ks_phasing.status}, val={ks_phasing.value}")
+
+        ks_oem = resolver_jun.resolve_fact(entity_id="SMCI", attribute="purchase_commitments")
+        if ks_oem.status != "unknown" or ks_oem.value is not None or ks_oem.is_known:
+            errors.append(f"Resolver failed to isolate unfiled SMCI purchase_commitments on 2026-06-30: status={ks_oem.status}, val={ks_oem.value}")
+
+        # Certify that assert_zero_lookahead succeeds on clean audit trail
+        resolver_jun.assert_zero_lookahead()
+
+        # Certify that assert_zero_lookahead actively catches injected lookahead leakage
+        leaked_resolver = EpistemicResolver(as_of_date="2026-06-30", temporal_mode="known")
+        leaked_resolver.audit_trail.append(
+            KnowledgeState(status="known", value=999999.0, public_date="2026-08-12", attribute="synthetic_future_leak")
+        )
+        caught_leak = False
+        try:
+            leaked_resolver.assert_zero_lookahead()
+        except AssertionError:
+            caught_leak = True
+        if not caught_leak:
+            errors.append("Universal Zero-Lookahead Invariant failed to detect injected future disclosure leak!")
+
+        # Certify that assert_zero_lookahead actively catches non-null unknown values (strict non-zero/non-null rule)
+        poisoned_resolver = EpistemicResolver(as_of_date="2026-06-30", temporal_mode="known")
+        poisoned_resolver.audit_trail.append(
+            KnowledgeState(status="unknown", value=0.0, public_date="2026-08-12", attribute="synthetic_non_null_unknown")
+        )
+        caught_poison = False
+        try:
+            poisoned_resolver.assert_zero_lookahead()
+        except AssertionError:
+            caught_poison = True
+        if not caught_poison:
+            errors.append("Universal Zero-Lookahead Invariant failed to detect non-null value in unknown state!")
+
+        print("  [OK] EpistemicResolver verified: audit trail, strict unknown=None rule, and Universal Zero-Lookahead Invariant enforcement.")
+
+    except Exception as e:
+        errors.append(f"Error during Step 2 generic engine layer validation: {e}")
+
+    # ---------------------------------------------------------
     # 4. Validate Evidence Claims & Quote Categorization
     # ---------------------------------------------------------
     expected_claims_count = 37
