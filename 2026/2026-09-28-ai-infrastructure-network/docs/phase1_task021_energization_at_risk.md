@@ -186,7 +186,7 @@ Rather than leaving capital exposed to naked energization delays, market partici
   [ Escrow Account at Goldman Sachs ] ---> Gross proceeds held until execution of Electric Service Agreement
         |                                 (Condition Satisfied June 18, 2026; Form 10-K Note 8)
         v
-  Prevents Negative Arbitrage & Idle Interest Accumulation
+  Conditions Deployment of Proceeds on Grid Interconnect (Debt Bears 6.75% Interest from Issuance; Escrow Gates Drawdowns, Not Coupon Accrual)
 
 [ LAYER 3: STAGED EQUIPMENT ACCEPTANCE DRAWDOWN ]
   IREN Mackenzie Financing ($2.40B MFSA & Notes)
@@ -195,7 +195,7 @@ Rather than leaving capital exposed to naked energization delays, market partici
   [ Pro Rata Funding on Delivery & Acceptance ] ---> Borrows ONLY as GPU chips arrive & pass testing
         |                                             (Funding Availability Cliff: Dec 31, 2026)
         v
-  Protects Borrower from Paying Debt Service on Idle Silicon
+  Mitigates Capital Exposure Before Hardware Acceptance (Undrawn Capacity Incurs No 9% Note Coupon)
 
 [ LAYER 4: TENANT SPRINGING LEASE GUARANTIES ]
   CoreWeave ELN-02 & ELN-03 Springing Indemnities
@@ -209,43 +209,124 @@ Rather than leaving capital exposed to naked energization delays, market partici
 
 ---
 
-## 6. Comparative Risk-Transfer Experiment: Tracing a 12-Month Delay Shock Across PF1, PF2, and Mackenzie
+## 6. Comparative Risk-Transfer Analysis: Tracing a 12-Month Delay Shock Across PF1, PF2, and Mackenzie
 
-When physical delivery lags capital formation, which contractual protections actually absorb the timing mismatch—and where does the residual risk land after those protections are applied?
+When physical delivery or energization lags capital formation, which contractual protections actually absorb the timing mismatch—and where does residual risk land after those protections are applied?
 
-Tracing a hypothetical 12-month physical energization or hardware delivery shock across the observatory's three primary project structures reveals a striking institutional divergence:
+To maintain strict epistemic integrity, we divide this analysis into **Contractually Established Mechanics** (facts verified by Class A SEC filings) and **Modeled Residual-Loss Hypotheses** (analytical projections of post-protection default propagation).
 
-### 1. Who writes the first check?
-* **PF1 (Building 3/4 construction or commissioning slippage):** Applied Digital, Inc. (the sponsor parent) writes the first check under its direct parent completion guarantee (`CLM-APLD-017`). The guarantee mandates that Applied Digital inject sponsor equity to fund cost overruns, cure mechanic liens, and replenish debt service reserve accounts (DSRA) during construction delay.
-* **PF2 (Polaris Forge 2 civil/substation delay):** Applied Digital, Inc. writes the coupon service check (\$145.125M/year) and construction shortfall payments. Prior to June 18, 2026, escrow gating insulated the borrower from idle carrying costs; once released, the parent carries the obligation.
-* **Mackenzie (GPU server delivery or acceptance bottleneck):** *Nobody writes a debt service check on unaccepted chips.* Under the MFSA and Notes agreements, IREN draws capital strictly pro rata upon physical delivery and acceptance. If delivery lags, debt remains undrawn and carrying costs remain zero.
+---
 
-### 2. Who can stop funding?
-* **PF1 / PF2:** Noteholders *cannot* stop funding—the \$2.35B and \$2.15B senior secured notes were fully funded and issued up front. The capital is locked into project trust accounts.
-* **Mackenzie:** Blue Owl (MFSA administrative agent) and PIMCO note purchasers *can stop funding*. If hardware fails acceptance testing, or if the December 31, 2026 availability window lapses without delivery, lenders are legally excused from funding the remaining commitments.
+### 6.1 Contractually Established Mechanics (What Filings Prove)
 
-### 3. Who continues receiving interest?
-* **PF1 / PF2:** ComputeCo noteholders continue receiving coupon interest on schedule (9.25% on \$2.35B = \$217.375M/yr; 6.75% on \$2.15B = \$145.125M/yr; 7.00% on \$1.59B = \$111.300M/yr). Their yield is contractually shielded by capitalized interest reserves and the sponsor parent completion covenant.
-* **Mackenzie:** Lenders receive yield *only* on drawn capital. On undrawn capacity, lenders receive at most an undrawn commitment fee; they bear the reinvestment risk of committed capital sitting idle without earning the 9.00% note yield.
+The audited primary filings establish three distinct structural archetypes:
 
-### 4. Who has a contractual cure?
-* **PF1 / PF2:** Applied Digital has contractual cure rights under the indentures to replace contractors, inject supplemental equity, or restructure completion milestones prior to indenture event-of-default acceleration.
-* **Mackenzie:** IREN has until the December 31, 2026 availability cliff to cure vendor supply chain delays. After that date, the credit commitment simply terminates without triggering cross-defaults across IREN's operating corporate facilities.
+| Structure & Facility | Instrument, Pricing & Status | Contractual Capital Commitment | Debt Service & Carrying Reality | Contractually Established Protection & Recourse | Primary Claims |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **PF1**<br>*(Polaris Forge 1, ND)* | **\$2.350B Senior Notes @ 9.250%** due Dec 15, 2030.<br>Operating & expanding (Bldg 2 100 MW online; Bldg 3 150 MW partial; Bldg 4 under constr.). | **100% funded up front** on Nov 20, 2025; held in project trust accounts. | **\$217.375M/year cash carry** accrues continuously from issuance. | Note proceeds funded a Debt Service Reserve Account (DSRA); Applied Digital parent has mandatory obligation to fund shortfalls if project funds are insufficient to achieve commencement milestone. | `CLM-APLD-010`, `CLM-APLD-017` |
+| **PF2**<br>*(Polaris Forge 2, ND)* | **\$2.150B Senior Notes @ 6.750%** due 2031.<br>Under construction (200 MW critical IT). | **100% funded up front** on March 10, 2026. Proceeds were escrow-gated at Goldman Sachs until ESA execution (satisfied June 18, 2026). | **\$145.125M/year cash carry** accrues from March 10, 2026 issuance date. *(Escrow gated proceeds deployment, not coupon accrual).* | Project accounts include a DSRA; Applied Digital parent provides completion support ensuring completion of Construction Period and first Service Commencement Date. | `CLM-APLD-011`, `CLM-APLD-016`, `CLM-APLD-018` |
+| **Mackenzie**<br>*(Mackenzie, BC)* | **Up to \$2.400B Committed Credit** (\$1.2B MFSA + \$1.2B Notes @ 9.000%).<br>Operating facility (80 MW IT online). | **Staged milestone draw:** funds borrow pro rata as GPU hardware is delivered and accepted through Dec 31, 2026. *(Amount drawn at observation date is unknown).* | **9.000% coupon applies strictly to drawn debt.** Undrawn commitments incur commitment fees, not 9% interest carry. *(Total dollar carry cannot be assumed zero without drawn amount).* | IREN parent company guarantees payment obligations; lenders retain contractual recourse against the company and equipment collateral if cash flows are insufficient. | `CLM-IREN-001`, `CLM-IREN-002`, `0001878848-26-000052` |
 
-### 5. What protection expires?
-* **PF1 / PF2:** Capitalized interest reserves and debt service reserve funds (typically 6 months of interest) deplete first. The parent completion guarantee does *not* expire until physical facility completion and initial commercial operation.
-* **Mackenzie:** The **December 31, 2026 availability window expires**, causing undrawn financing capacity to evaporate.
+#### The Primary Comparative Finding:
+$$\textbf{PF1 and PF2 mitigate physical-delivery risk primarily after capital is committed (via reserves, escrow conditions, and sponsor completion support), whereas Mackenzie mitigates it partly before capital is drawn (via acceptance-conditioned funding windows).}$$
 
-### 6. Where does the residual economic loss land after all contractual protections are exercised?
-* **PF1 / PF2:** Residual economic loss terminates squarely on the **sponsor parent balance sheet (Applied Digital, Inc.)** and its equity holders. Because CoreWeave's springing lease guaranties only backstop lease payments *after* data hall delivery, CoreWeave bears zero construction-delay carrying costs. If delay exceeds parent liquidity, residual loss threatens noteholders via project debt restructuring.
-* **Mackenzie:** Residual loss lands on the **hardware manufacturer / server integrator (holding unmonetized chip inventory)** and **IREN's equity opportunity cost**, but project debt lenders (Blue Owl / PIMCO) avoid balance sheet impairment via condition-precedent drawdown gating.
+---
 
-### 7. The Structural Finding: The Hidden Common Nexus
-This comparative experiment demonstrates that contractual risk mitigation in AI infrastructure is highly asymmetric:
-- **Equipment financing (Mackenzie)** successfully externalizes delivery delay risk back to the supply chain via staged drawdown gating.
-- **Data center project debt (PF1, PF2)** concentrates construction and energization delay risk back onto the **sponsor parent balance sheet**, while shielding both noteholders (via direct parent shortfall covenants) and anchor tenants (whose springing guaranties remain dormant until physical energization).
+### 6.2 Four-Tier Contractual Protection Taxonomy
 
-Thus, supposedly independent multi-billion dollar project debt issuances ultimately converge at a single, common vulnerability: the **sponsor parent equity buffer** and the **regional grid interconnect milestone**.
+Across these project and equipment facilities, market participants construct four functional protection layers:
+
+1. **Preventive Protections (Pre-Deployment Gating):**
+   - *Mechanic:* Contractually prevents capital from deploying into physical assets until milestone prerequisites are certified.
+   - *Evidence:*
+     - **Mackenzie Staged Acceptance:** Lenders fund only upon delivery and acceptance testing of operational GPU servers through Dec 31, 2026 (`CLM-IREN-001`).
+     - **PF2 Escrow Gating:** Gross note proceeds withheld from construction accounts until electric service agreement was formally executed (`CLM-APLD-016`).
+2. **Buffering Protections (Liquidity Reserves):**
+   - *Mechanic:* Pre-funded cash accounts absorb temporary mismatches between debt service and revenue generation.
+   - *Evidence:*
+     - **PF1 DSRA:** Form 8-K confirms proceeds funded a dedicated debt service reserve account.
+     - **PF2 Project Accounts:** Indenture covenants maintain project-level DSRAs and capitalized interest reserves.
+3. **Transfer Protections (Third-Party Balance Sheet Backstops):**
+   - *Mechanic:* Reallocates financial shortfalls to a distinct corporate balance sheet.
+   - *Evidence:*
+     - **Applied Digital Completion Guarantees:** Sponsor parent guarantees completion funding if project accounts run dry (`CLM-APLD-017`, `CLM-APLD-018`).
+     - **CoreWeave Springing Lease Guaranties:** Uncapped indemnities (`CLM-APLD-005`, `CLM-APLD-006`) backstopping tenant SPV lease obligations *after* data hall delivery.
+4. **Recovery Protections (Post-Default Lender Remedies):**
+   - *Mechanic:* Legal entitlements granting credit providers rights to seize assets or pursue parent entities following an un-cured default.
+   - *Evidence:*
+     - **IREN Parent Payment Guarantee & Collateral:** Lenders possess recourse against IREN corporate and security interests in the underlying server hardware (`0001878848-26-000052`).
+     - **APLD ComputeCo Indenture Liens:** Noteholders hold senior secured mortgages on project land, electrical substation assets, and colocation contracts.
+
+---
+
+### 6.3 Modeled Residual-Loss Hypotheses: Tracing a 12-Month Delay Shock
+
+To evaluate the resilience of these structures under stress, we trace a hypothetical 12-month physical energization or hardware supply shock. These conclusions represent **modeled hypotheses**, not guaranteed contractual outcomes:
+
+1. **Who writes the first check?**
+   - **PF1 / PF2:** The **Applied Digital parent balance sheet** writes the first check under its completion covenants if project accounts run short of construction funds, while capitalized interest reserves and DSRAs absorb immediate coupon requirements.
+   - **Mackenzie:** **Nobody writes a debt check on unaccepted chips.** Undrawn capacity incurs no note coupon. However, for any capital already drawn (amount unknown), IREN parent cash flows must service the 9% coupon.
+2. **Can lenders stop funding?**
+   - **PF1 / PF2:** **No.** Proceeds were 100% funded up front; noteholders have no mechanism to withhold committed cash.
+   - **Mackenzie:** **Yes.** Blue Owl and PIMCO are contractually excused from advancing funds if hardware fails acceptance testing, or if the December 31, 2026 window lapses.
+3. **Do lenders continue receiving interest?**
+   - **PF1 / PF2:** **Yes.** Noteholders receive coupon yield on schedule (\$217.4M/yr on PF1; \$145.1M/yr on PF2; \$111.3M/yr on PF1 Bldg 4), shielded by project reserves and parent completion support.
+   - **Mackenzie:** Lenders earn 9.00% yield only on drawn principal. On undrawn commitments, lenders earn commitment fees but face reinvestment yield drag.
+4. **Contractual cure rights vs. systemic limits:**
+   - **PF1 / PF2:** Applied Digital possesses indenture cure rights and equity injection mechanisms. *However, the public filings do not establish that APLD has an unbounded right to cure mechanics liens, replace EPC contractors, or extend long-stop dates indefinitely without noteholder consent.*
+   - **Mackenzie:** IREN has until Dec 31, 2026 to resolve supply chain delivery bottlenecks. If unaccepted, the facility commitment lapses; *whether cross-default provisions propagate to other corporate debt depends on confidential credit terms not disclosed in SEC summaries.*
+5. **Protection expiration sequence:**
+   - **PF1 / PF2:** Project-level DSRAs and capitalized interest reserves (typically 6–12 months of debt service) deplete first, shifting 100% of carrying costs to the sponsor parent balance sheet.
+   - **Mackenzie:** The staged drawdown availability window expires (December 31, 2026).
+6. **Where does residual economic loss pool?**
+   - **PF1 / PF2 (Modeled Hypothesis):** Residual risk pools heavily on the **Applied Digital sponsor parent balance sheet**. Because CoreWeave's springing lease guaranties only backstop lease obligations *after* data hall delivery, CoreWeave bears zero direct construction-delay carrying costs on unenergized space. If delay exhausts sponsor parent liquidity, residual losses shift to noteholders via debt restructuring.
+   - **Mackenzie (Modeled Hypothesis):** Residual loss does *not* land solely on hardware vendors. Because IREN parent guarantees payment obligations and pledges equipment collateral, credit lenders retain legal claims against IREN corporate if drawn cash flows fail. On undrawn capacity, loss is shared between vendor inventory carrying costs and IREN's lost equity opportunity cost.
+
+---
+
+### 6.4 Core Research Synthesis: Do Contractual Protections Eliminate Risk, or Merely Move It?
+
+The central research finding of Task 021 is that **contractual protections do not eliminate temporal mismatch risk; they convert one large physical delivery risk into a sequence of conditional exposures distributed across counterparties:**
+
+```
+[ PHYSICAL DELAY SHOCK (12 Months) ]
+                │
+                ▼
+      [ PREVENTIVE GATING ] ---------> Stops capital draw (Mackenzie staged draw; PF2 escrow)
+                │ (if capital committed)
+                ▼
+       [ BUFFERING RESERVES ] -------> Absorbs early carry (PF1/PF2 capitalized interest & DSRA)
+                │ (when reserves deplete)
+                ▼
+      [ SPONSOR TRANSFER ] ----------> Absorbs overruns & debt service (APLD Parent Completion Guarantee)
+                │ (if delay outlasts sponsor liquidity)
+                ▼
+       [ LENDER RECOVERY ] ----------> Foreclosure & restructuring (Indenture liens, Equipment collateral)
+```
+
+#### The Hidden Common Nexus (The Systemic JOIN):
+When evaluated in isolation, each contract appears insulated:
+- The noteholder sees a parent completion guarantee and a DSRA.
+- The tenant sees an uncommenced lease with no rent obligation until handover.
+- The sponsor sees long-term tenant revenue commitments and executed utility capacity.
+- The equipment lender sees staged acceptance gating and parent repayment guarantees.
+
+However, these protections are structurally coupled. In a systemic shock, multiple independent instruments converge onto the **same underlying risk nodes**:
+1. **The Shared Anchor Customer:** CoreWeave represents the ultimate source of operating cash flow for both Ellendale (APLD) and Denton/Dalton/Muskogee (CORZ).
+2. **The Regional Power Milestone:** Commercial operation across all buildings depends on a common utility energization schedule (e.g. MDU 350 MW transmission expansion).
+3. **The Common Sponsor Liquidity Pool:** Applied Digital's parent balance sheet simultaneously backstops PF1 completion shortfalls, PF2 construction covenants, and corporate convertibles.
+
+If a shared power or tenant milestone experiences systemic delay, the sequence of conditional transfers collapses back into a concentrated exposure on the sponsor's equity buffer.
+
+---
+
+### 6.5 Technical Limitations & Bitemporal Query Invariant
+
+> [!NOTE]
+> **Technical Architecture Limitation (`facility_completion_facts.parquet`):**
+> `facility_completion_facts.parquet` is structured as a **current-state canonical snapshot** with field-level claim IDs, not a fully normalized historical bitemporal fact table.
+> Different attributes in a single facility row became public at different times (e.g., APLD 10-K filed July 29, 2026 vs. MDU 10-Q filed August 6, 2026), while the row possesses a single `publicly_known_from` timestamp set to the latest constituent filing (`2026-08-06`).
+> For current-state analysis and cross-sectional attribution, this design is rigorous and look-ahead-free. However, researchers conducting historical point-in-time queries (e.g., *"What could an investor know about PF1 completion on February 1, 2026?"*) must query the underlying bitemporal claims (`evidence_claims.parquet`) and obligation facts (`obligation_facts.parquet`) directly, rather than assuming the facility completion snapshot row is historically bitemporal.
 
 ---
 
@@ -256,4 +337,5 @@ By enforcing ADR-021.1a:
 2. **Re-segmented Funded Project Debt:** Certified at **\$3.740B pre-service funded debt** and **\$2.350B mixed operational exposure**, ending the over-simplified 100% "before service" characterization.
 3. **Building 3 Partial-Operation Uncertainty Explicit:** Contract-value delay exposure is formally bounded between a **\$275.0M/year floor scenario** (Building 4) and a **\$550.0M/year ceiling scenario** (Buildings 3 & 4), across an uncommissioned capacity range of 150 MW to 300 MW.
 4. **Canonical Evidence Table:** `facility_completion_facts.parquet` provides field-level claim provenance and eliminates hardcoded Python dictionaries from the analysis engine, creating a single, fully-tested source of truth.
-5. **Comparative Risk-Transfer Framework Certified:** Established a rigorous waterfall analysis demonstrating how delivery delays land asymmetrically across sponsor balance sheets, noteholders, tenants, and equipment credit lines.
+5. **Contractual Protection Taxonomy Certified:** Replaced speculative assertions with an evidence-grounded four-tier framework (Preventive, Buffering, Transfer, Recovery) and explicitly delineated contractually proven mechanics from modeled residual-loss hypotheses.
+6. **Permanent Ontology Freeze:** The data model, schema definitions, and company scope are permanently frozen at commit `42f9a74`. All subsequent research tasks evaluate substantive economic questions against this verified observatory.
