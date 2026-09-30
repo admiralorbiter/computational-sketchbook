@@ -41,7 +41,8 @@
     ],
     "annualized_contract_value_floor_m": 275.0,
     "annualized_contract_value_ceiling_m": 550.0,
-    "description": "Building 4 definitive floor ($275M/yr) to Building 3+4 maximum ceiling ($550M/yr)"
+    "nature_of_estimate": "Proportional annualized contract-value scenario based on campus lease capacity ($1.833M/MW/yr), not a contract-literal building-level floor/ceiling",
+    "description": "Building 4 proportional scenario ($275M/yr) to Building 3+4 proportional scenario ($550M/yr)"
   },
   "layered_synchronization_devices": {
     "apld_parent_completion_guarantees": {
@@ -66,10 +67,12 @@
       "iren_full_capacity_coupon_equivalent_m": 108.0,
       "contract_value_exposure_floor_m": 137.5,
       "contract_value_exposure_ceiling_m": 275.0,
+      "proportional_contract_value_scenario_floor_m": 137.5,
+      "proportional_contract_value_scenario_ceiling_m": 275.0,
       "uncommissioned_capacity_range_mw": "150 MW (floor) to 300 MW (ceiling)",
       "uncommissioned_fraction_range_pct": "37.5% (floor) to 75.0% (ceiling)",
       "qualitative_risk_tier": "Modeled Hypothesis: Moderate (Reserves & Escrow Cushion Active)",
-      "layered_synchronization_resilience": "PF1 completion guarantee requires APLD to fund shortfalls; PF2 escrow ($2.15B) was released June 18, 2026; CoreWeave springing lease guaranties (ELN-02/03) provide colocation tenant credit backing."
+      "layered_synchronization_resilience": "Applied Digital direct parent completion guarantee requires sponsor shortfall funding; PF2 escrow ($2.15B) was released June 18, 2026 upon ESA execution; CoreWeave springing lease guaranties backstop tenant/SPV lease obligations after data hall delivery."
     },
     "12_month_delay": {
       "apld_total_debt_carrying_cost_m": 473.8,
@@ -77,10 +80,12 @@
       "iren_full_capacity_coupon_equivalent_m": 216.0,
       "contract_value_exposure_floor_m": 275.0,
       "contract_value_exposure_ceiling_m": 550.0,
+      "proportional_contract_value_scenario_floor_m": 275.0,
+      "proportional_contract_value_scenario_ceiling_m": 550.0,
       "uncommissioned_capacity_range_mw": "150 MW (floor) to 300 MW (ceiling)",
       "uncommissioned_fraction_range_pct": "37.5% (floor) to 75.0% (ceiling)",
       "qualitative_risk_tier": "Modeled Hypothesis: High (Carrying Costs Consume Liquidity Buffers)",
-      "layered_synchronization_resilience": "Carrying costs exceed standard debt service reserves. Building 4 floor ($275M) definitive delay requires parent equity support; IREN 30-month note maturity begins amortizing if drawn without productive ARR."
+      "layered_synchronization_resilience": "Carrying costs exceed standard debt service reserves. Building 4 proportional delay scenario ($275M) requires parent equity support; Applied Digital parent completion guarantee covers construction cost overruns; IREN staged equipment availability window expires Dec 31, 2026."
     },
     "18_month_delay": {
       "apld_total_debt_carrying_cost_m": 710.7,
@@ -88,10 +93,12 @@
       "iren_full_capacity_coupon_equivalent_m": 324.0,
       "contract_value_exposure_floor_m": 412.5,
       "contract_value_exposure_ceiling_m": 825.0,
+      "proportional_contract_value_scenario_floor_m": 412.5,
+      "proportional_contract_value_scenario_ceiling_m": 825.0,
       "uncommissioned_capacity_range_mw": "150 MW (floor) to 300 MW (ceiling)",
       "uncommissioned_fraction_range_pct": "37.5% (floor) to 75.0% (ceiling)",
       "qualitative_risk_tier": "Modeled Hypothesis: Critical (Restructuring or Refinancing Required)",
-      "layered_synchronization_resilience": "Project SPV default acceleration risk. Direct completion guarantee exposes parent balance sheet ($39.36B corporate debt environment)."
+      "layered_synchronization_resilience": "Project SPV default acceleration risk. Direct completion guarantee exposes parent balance sheet ($39.36B corporate debt environment); CoreWeave springing lease guaranties remain un-triggered for un-delivered data halls."
     }
   },
   "facility_metrics": [
@@ -113,8 +120,8 @@
       "next_milestone": "Building 2 full tenant occupancy & Building 3 commissioning (2026-2027)",
       "evidence_class": "A",
       "truth_claim_id": "CLM-APLD-004",
-      "knowledge_claim_id": "CLM-APLD-004",
-      "verifier_notes": "100 MW Building 2 operational; 150 MW Building 3 partially operational; 150 MW Building 4 under construction. MDU reports 60 MW initial service ramp toward 350 MW approved agreement."
+      "knowledge_claim_id": "CLM-PWR-MDU-001",
+      "verifier_notes": "100 MW Building 2 operational (CLM-APLD-004); 150 MW Building 3 partially operational; 150 MW Building 4 under construction. MDU reports 60 MW initial service ramp toward 350 MW approved agreement (CLM-PWR-MDU-001)."
     },
     {
       "facility_id": "FAC-CORZ-DENTON",
@@ -135,7 +142,7 @@
       "evidence_class": "A",
       "truth_claim_id": "CLM-CORZ-001",
       "knowledge_claim_id": "CLM-CORZ-001",
-      "verifier_notes": "394 MW total DME utility agreement; 100 MW initial colocation data hall energized and leased to CoreWeave out of 270 MW contracted."
+      "verifier_notes": "394 MW total DME utility agreement (CLM-PWR-CORZ-001); 100 MW initial colocation data hall energized and leased to CoreWeave out of 270 MW contracted (CLM-CORZ-001)."
     },
     {
       "facility_id": "FAC-CORZ-DALTON",
@@ -238,8 +245,8 @@
       "completion_status": "operational_and_expanding",
       "next_milestone": "500 MW planned expansion engineering",
       "evidence_class": "A",
-      "truth_claim_id": "CLM-WULF-001",
-      "knowledge_claim_id": "CLM-WULF-001",
+      "truth_claim_id": "CLM-PWR-WULF-001",
+      "knowledge_claim_id": "CLM-PWR-WULF-001",
       "verifier_notes": "226 MW operational energization from NYPA / National Grid. Expansion engineering underway toward 500 MW target."
     },
     {
@@ -360,13 +367,13 @@
       "service_ready_it_mw": 80.0,
       "gpu_equipment_deployment_state": "Staged GPU server delivery & acceptance through Dec 31, 2026",
       "gpu_compute_operational_mw": NaN,
-      "equipment_accepted_fraction": 0.0,
+      "equipment_accepted_fraction": NaN,
       "completion_status": "operational_and_expanding",
       "next_milestone": "GPU server staged delivery & acceptance through Dec 31, 2026",
       "evidence_class": "A",
       "truth_claim_id": "CLM-IREN-001",
       "knowledge_claim_id": "CLM-IREN-001",
-      "verifier_notes": "Facility infrastructure fully energized at 80 MW under BC Hydro connection agreement. $2.4B financing staged to delivery and acceptance conditions."
+      "verifier_notes": "Facility infrastructure fully energized at 80 MW (CLM-IREN-002 table). $2.4B financing staged to delivery and acceptance conditions through Dec 31, 2026 (CLM-IREN-001). Equipment accepted fraction is unknown/unreported."
     },
     {
       "facility_id": "FAC-APLD-POLARIS-FORGE-2",

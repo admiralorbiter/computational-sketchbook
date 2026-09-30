@@ -1,22 +1,21 @@
 """
-Curate Facility Completion Facts (ADR-021.1a)
+Curate Facility Completion Facts (ADR-021.1a Hardened)
 Moves typed facility dimensions from hardcoded Python structures into a canonical evidence table.
 Produces data/processed/facility_completion_facts.parquet and .csv.
 
-Dimensions captured:
-- utility_service_capacity_mw: Total utility agreement service capacity (MW)
-- utility_load_online_mw: Utility load energized and online as of observation horizon (MW)
-- critical_it_contracted_mw: Contracted critical IT capacity under lease/colocation (MW)
-- service_ready_it_mw: Critical IT capacity certified ready-for-service / operating (MW)
-- gpu_equipment_deployment_state: Textual description of GPU / cluster deployment status
-- gpu_compute_operational_mw: IT load with operational GPUs actively executing compute (MW)
-- equipment_accepted_fraction: Fraction of IT equipment delivered, accepted, and funded (0.0 to 1.0)
-- completion_status: Categorical status of facility buildout
-- next_milestone: Next development or energization milestone
-- Bitemporal provenance: economic_as_of, publicly_known_from, truth_claim_id, knowledge_claim_id, evidence_class
+Provides attribute-level source provenance via:
+- attribute_claim_map (JSON-encoded attribute -> claim_id mapping)
+- Typed field-level claim columns:
+  * utility_service_capacity_claim_id
+  * utility_load_online_claim_id
+  * critical_it_contracted_claim_id
+  * service_ready_it_claim_id
+  * completion_status_claim_id
+  * equipment_accepted_claim_id
 """
 
 from pathlib import Path
+import json
 import pandas as pd
 import numpy as np
 
@@ -46,11 +45,24 @@ def curate_facility_completion_facts():
             "completion_status": "operational_and_expanding",
             "next_milestone": "Building 2 full tenant occupancy & Building 3 commissioning (2026-2027)",
             "economic_as_of": "2026-05-31",
-            "publicly_known_from": "2026-07-29",
+            "publicly_known_from": "2026-08-06",
             "truth_claim_id": "CLM-APLD-004",
-            "knowledge_claim_id": "CLM-APLD-004",
+            "knowledge_claim_id": "CLM-PWR-MDU-001",
+            "utility_service_capacity_claim_id": "CLM-PWR-MDU-001",
+            "utility_load_online_claim_id": "CLM-PWR-MDU-001",
+            "critical_it_contracted_claim_id": "CLM-PWR-APLD-001",
+            "service_ready_it_claim_id": "CLM-APLD-004",
+            "completion_status_claim_id": "CLM-APLD-004",
+            "equipment_accepted_claim_id": None,
+            "attribute_claim_map": json.dumps({
+                "utility_service_capacity_mw": "CLM-PWR-MDU-001",
+                "utility_load_online_mw": "CLM-PWR-MDU-001",
+                "critical_it_contracted_mw": "CLM-PWR-APLD-001",
+                "service_ready_it_mw": "CLM-APLD-004",
+                "completion_status": "CLM-APLD-004"
+            }),
             "evidence_class": "A",
-            "verifier_notes": "100 MW Building 2 operational; 150 MW Building 3 partially operational; 150 MW Building 4 under construction. MDU reports 60 MW initial service ramp toward 350 MW approved agreement."
+            "verifier_notes": "100 MW Building 2 operational (CLM-APLD-004); 150 MW Building 3 partially operational; 150 MW Building 4 under construction. MDU reports 60 MW initial service ramp toward 350 MW approved agreement (CLM-PWR-MDU-001)."
         },
         {
             "facility_id": "FAC-APLD-POLARIS-FORGE-2",
@@ -69,6 +81,18 @@ def curate_facility_completion_facts():
             "publicly_known_from": "2026-07-29",
             "truth_claim_id": "CLM-APLD-003",
             "knowledge_claim_id": "CLM-APLD-011",
+            "utility_service_capacity_claim_id": None,
+            "utility_load_online_claim_id": None,
+            "critical_it_contracted_claim_id": "CLM-APLD-003",
+            "service_ready_it_claim_id": "CLM-APLD-003",
+            "completion_status_claim_id": "CLM-APLD-003",
+            "equipment_accepted_claim_id": "CLM-APLD-003",
+            "attribute_claim_map": json.dumps({
+                "critical_it_contracted_mw": "CLM-APLD-003",
+                "service_ready_it_mw": "CLM-APLD-003",
+                "completion_status": "CLM-APLD-003",
+                "equipment_accepted_fraction": "CLM-APLD-003"
+            }),
             "evidence_class": "A",
             "verifier_notes": "Under active construction. $2.15B gross proceeds held in escrow until electric service agreement satisfied on June 18, 2026."
         },
@@ -82,15 +106,28 @@ def curate_facility_completion_facts():
             "service_ready_it_mw": 80.0,
             "gpu_equipment_deployment_state": "Staged GPU server delivery & acceptance through Dec 31, 2026",
             "gpu_compute_operational_mw": None,
-            "equipment_accepted_fraction": 0.0,
+            "equipment_accepted_fraction": None,  # Unknown != 0 rule: disclosure does not establish fraction accepted as of date
             "completion_status": "operational_and_expanding",
             "next_milestone": "GPU server staged delivery & acceptance through Dec 31, 2026",
             "economic_as_of": "2026-06-30",
             "publicly_known_from": "2026-08-27",
             "truth_claim_id": "CLM-IREN-001",
             "knowledge_claim_id": "CLM-IREN-001",
+            "utility_service_capacity_claim_id": "CLM-IREN-002",
+            "utility_load_online_claim_id": "CLM-IREN-002",
+            "critical_it_contracted_claim_id": "CLM-IREN-002",
+            "service_ready_it_claim_id": "CLM-IREN-002",
+            "completion_status_claim_id": "CLM-IREN-001",
+            "equipment_accepted_claim_id": None,
+            "attribute_claim_map": json.dumps({
+                "utility_service_capacity_mw": "CLM-IREN-002",
+                "utility_load_online_mw": "CLM-IREN-002",
+                "critical_it_contracted_mw": "CLM-IREN-002",
+                "service_ready_it_mw": "CLM-IREN-002",
+                "completion_status": "CLM-IREN-001"
+            }),
             "evidence_class": "A",
-            "verifier_notes": "Facility infrastructure fully energized at 80 MW under BC Hydro connection agreement. $2.4B financing staged to delivery and acceptance conditions."
+            "verifier_notes": "Facility infrastructure fully energized at 80 MW (CLM-IREN-002 table). $2.4B financing staged to delivery and acceptance conditions through Dec 31, 2026 (CLM-IREN-001). Equipment accepted fraction is unknown/unreported."
         },
         {
             "facility_id": "FAC-CORZ-DENTON",
@@ -109,8 +146,21 @@ def curate_facility_completion_facts():
             "publicly_known_from": "2026-07-28",
             "truth_claim_id": "CLM-CORZ-001",
             "knowledge_claim_id": "CLM-CORZ-001",
+            "utility_service_capacity_claim_id": "CLM-PWR-CORZ-001",
+            "utility_load_online_claim_id": "CLM-CORZ-001",
+            "critical_it_contracted_claim_id": "CLM-CORZ-001",
+            "service_ready_it_claim_id": "CLM-CORZ-001",
+            "completion_status_claim_id": "CLM-CORZ-001",
+            "equipment_accepted_claim_id": None,
+            "attribute_claim_map": json.dumps({
+                "utility_service_capacity_mw": "CLM-PWR-CORZ-001",
+                "utility_load_online_mw": "CLM-CORZ-001",
+                "critical_it_contracted_mw": "CLM-CORZ-001",
+                "service_ready_it_mw": "CLM-CORZ-001",
+                "completion_status": "CLM-CORZ-001"
+            }),
             "evidence_class": "A",
-            "verifier_notes": "394 MW total DME utility agreement; 100 MW initial colocation data hall energized and leased to CoreWeave out of 270 MW contracted."
+            "verifier_notes": "394 MW total DME utility agreement (CLM-PWR-CORZ-001); 100 MW initial colocation data hall energized and leased to CoreWeave out of 270 MW contracted (CLM-CORZ-001)."
         },
         {
             "facility_id": "FAC-CORZ-DALTON",
@@ -129,6 +179,16 @@ def curate_facility_completion_facts():
             "publicly_known_from": "2026-03-02",
             "truth_claim_id": "CLM-PWR-CORZ-001",
             "knowledge_claim_id": "CLM-PWR-CORZ-001",
+            "utility_service_capacity_claim_id": "CLM-PWR-CORZ-001",
+            "utility_load_online_claim_id": None,
+            "critical_it_contracted_claim_id": None,
+            "service_ready_it_claim_id": None,
+            "completion_status_claim_id": "CLM-PWR-CORZ-001",
+            "equipment_accepted_claim_id": None,
+            "attribute_claim_map": json.dumps({
+                "utility_service_capacity_mw": "CLM-PWR-CORZ-001",
+                "completion_status": "CLM-PWR-CORZ-001"
+            }),
             "evidence_class": "A",
             "verifier_notes": "195 MW Dalton Utilities agreement. Operational bitcoin mining infrastructure undergoing staged HPC retrofit."
         },
@@ -149,6 +209,16 @@ def curate_facility_completion_facts():
             "publicly_known_from": "2026-03-02",
             "truth_claim_id": "CLM-PWR-CORZ-001",
             "knowledge_claim_id": "CLM-PWR-CORZ-001",
+            "utility_service_capacity_claim_id": "CLM-PWR-CORZ-001",
+            "utility_load_online_claim_id": None,
+            "critical_it_contracted_claim_id": None,
+            "service_ready_it_claim_id": None,
+            "completion_status_claim_id": "CLM-PWR-CORZ-001",
+            "equipment_accepted_claim_id": None,
+            "attribute_claim_map": json.dumps({
+                "utility_service_capacity_mw": "CLM-PWR-CORZ-001",
+                "completion_status": "CLM-PWR-CORZ-001"
+            }),
             "evidence_class": "A",
             "verifier_notes": "100 MW OG&E agreement. Operational bitcoin mining site undergoing staged HPC retrofit."
         },
@@ -169,6 +239,16 @@ def curate_facility_completion_facts():
             "publicly_known_from": "2026-03-02",
             "truth_claim_id": "CLM-PWR-CORZ-001",
             "knowledge_claim_id": "CLM-PWR-CORZ-001",
+            "utility_service_capacity_claim_id": "CLM-PWR-CORZ-001",
+            "utility_load_online_claim_id": None,
+            "critical_it_contracted_claim_id": None,
+            "service_ready_it_claim_id": None,
+            "completion_status_claim_id": "CLM-PWR-CORZ-001",
+            "equipment_accepted_claim_id": None,
+            "attribute_claim_map": json.dumps({
+                "utility_service_capacity_mw": "CLM-PWR-CORZ-001",
+                "completion_status": "CLM-PWR-CORZ-001"
+            }),
             "evidence_class": "A",
             "verifier_notes": "117 MW dual utility supply (82 MW Duke Energy, 35 MW Murphy EPB). Operational bitcoin mining site undergoing staged HPC retrofit."
         },
@@ -189,6 +269,16 @@ def curate_facility_completion_facts():
             "publicly_known_from": "2026-03-02",
             "truth_claim_id": "CLM-PWR-CORZ-001",
             "knowledge_claim_id": "CLM-PWR-CORZ-001",
+            "utility_service_capacity_claim_id": "CLM-PWR-CORZ-001",
+            "utility_load_online_claim_id": None,
+            "critical_it_contracted_claim_id": None,
+            "service_ready_it_claim_id": None,
+            "completion_status_claim_id": "CLM-PWR-CORZ-001",
+            "equipment_accepted_claim_id": None,
+            "attribute_claim_map": json.dumps({
+                "utility_service_capacity_mw": "CLM-PWR-CORZ-001",
+                "completion_status": "CLM-PWR-CORZ-001"
+            }),
             "evidence_class": "A",
             "verifier_notes": "20 MW Austin Energy municipal service. Small operational testbed / retrofit facility."
         },
@@ -207,8 +297,20 @@ def curate_facility_completion_facts():
             "next_milestone": "500 MW planned expansion engineering",
             "economic_as_of": "2026-06-30",
             "publicly_known_from": "2026-08-05",
-            "truth_claim_id": "CLM-WULF-001",
-            "knowledge_claim_id": "CLM-WULF-001",
+            "truth_claim_id": "CLM-PWR-WULF-001",
+            "knowledge_claim_id": "CLM-PWR-WULF-001",
+            "utility_service_capacity_claim_id": "CLM-PWR-WULF-001",
+            "utility_load_online_claim_id": "CLM-PWR-WULF-001",
+            "critical_it_contracted_claim_id": None,
+            "service_ready_it_claim_id": "CLM-PWR-WULF-001",
+            "completion_status_claim_id": "CLM-PWR-WULF-001",
+            "equipment_accepted_claim_id": None,
+            "attribute_claim_map": json.dumps({
+                "utility_service_capacity_mw": "CLM-PWR-WULF-001",
+                "utility_load_online_mw": "CLM-PWR-WULF-001",
+                "service_ready_it_mw": "CLM-PWR-WULF-001",
+                "completion_status": "CLM-PWR-WULF-001"
+            }),
             "evidence_class": "A",
             "verifier_notes": "226 MW operational energization from NYPA / National Grid. Expansion engineering underway toward 500 MW target."
         },
@@ -229,6 +331,18 @@ def curate_facility_completion_facts():
             "publicly_known_from": "2025-08-28",
             "truth_claim_id": "CLM-PWR-IREN-001",
             "knowledge_claim_id": "CLM-PWR-IREN-001",
+            "utility_service_capacity_claim_id": "CLM-PWR-IREN-001",
+            "utility_load_online_claim_id": "CLM-PWR-IREN-001",
+            "critical_it_contracted_claim_id": None,
+            "service_ready_it_claim_id": "CLM-PWR-IREN-001",
+            "completion_status_claim_id": "CLM-PWR-IREN-001",
+            "equipment_accepted_claim_id": None,
+            "attribute_claim_map": json.dumps({
+                "utility_service_capacity_mw": "CLM-PWR-IREN-001",
+                "utility_load_online_mw": "CLM-PWR-IREN-001",
+                "service_ready_it_mw": "CLM-PWR-IREN-001",
+                "completion_status": "CLM-PWR-IREN-001"
+            }),
             "evidence_class": "A",
             "verifier_notes": "750 MW executed connection agreement with AEP Texas in ERCOT. 650 MW substation energized and operational."
         },
@@ -249,6 +363,18 @@ def curate_facility_completion_facts():
             "publicly_known_from": "2025-08-28",
             "truth_claim_id": "CLM-PWR-IREN-001",
             "knowledge_claim_id": "CLM-PWR-IREN-001",
+            "utility_service_capacity_claim_id": "CLM-PWR-IREN-001",
+            "utility_load_online_claim_id": None,
+            "critical_it_contracted_claim_id": None,
+            "service_ready_it_claim_id": "CLM-PWR-IREN-001",
+            "completion_status_claim_id": "CLM-PWR-IREN-001",
+            "equipment_accepted_claim_id": "CLM-PWR-IREN-001",
+            "attribute_claim_map": json.dumps({
+                "utility_service_capacity_mw": "CLM-PWR-IREN-001",
+                "service_ready_it_mw": "CLM-PWR-IREN-001",
+                "completion_status": "CLM-PWR-IREN-001",
+                "equipment_accepted_fraction": "CLM-PWR-IREN-001"
+            }),
             "evidence_class": "A",
             "verifier_notes": "1,400 MW connection agreement executed with Oncor in ERCOT. Not energized; under substation procurement and construction."
         },
@@ -269,6 +395,18 @@ def curate_facility_completion_facts():
             "publicly_known_from": "2025-08-28",
             "truth_claim_id": "CLM-PWR-IREN-001",
             "knowledge_claim_id": "CLM-PWR-IREN-001",
+            "utility_service_capacity_claim_id": "CLM-PWR-IREN-001",
+            "utility_load_online_claim_id": None,
+            "critical_it_contracted_claim_id": None,
+            "service_ready_it_claim_id": "CLM-PWR-IREN-001",
+            "completion_status_claim_id": "CLM-PWR-IREN-001",
+            "equipment_accepted_claim_id": "CLM-PWR-IREN-001",
+            "attribute_claim_map": json.dumps({
+                "utility_service_capacity_mw": "CLM-PWR-IREN-001",
+                "service_ready_it_mw": "CLM-PWR-IREN-001",
+                "completion_status": "CLM-PWR-IREN-001",
+                "equipment_accepted_fraction": "CLM-PWR-IREN-001"
+            }),
             "evidence_class": "A",
             "verifier_notes": "600 MW connection agreement executed with AEP Texas in ERCOT. Not energized; preliminary substation engineering."
         },
@@ -289,6 +427,20 @@ def curate_facility_completion_facts():
             "publicly_known_from": "2026-03-31",
             "truth_claim_id": "CLM-PWR-NBIS-002",
             "knowledge_claim_id": "CLM-PWR-NBIS-002",
+            "utility_service_capacity_claim_id": "CLM-PWR-NBIS-002",
+            "utility_load_online_claim_id": "CLM-PWR-NBIS-002",
+            "critical_it_contracted_claim_id": "CLM-PWR-NBIS-002",
+            "service_ready_it_claim_id": "CLM-PWR-NBIS-002",
+            "completion_status_claim_id": "CLM-PWR-NBIS-002",
+            "equipment_accepted_claim_id": "CLM-PWR-NBIS-002",
+            "attribute_claim_map": json.dumps({
+                "utility_service_capacity_mw": "CLM-PWR-NBIS-002",
+                "utility_load_online_mw": "CLM-PWR-NBIS-002",
+                "critical_it_contracted_mw": "CLM-PWR-NBIS-002",
+                "service_ready_it_mw": "CLM-PWR-NBIS-002",
+                "completion_status": "CLM-PWR-NBIS-002",
+                "equipment_accepted_fraction": "CLM-PWR-NBIS-002"
+            }),
             "evidence_class": "A",
             "verifier_notes": "75 MW connection with Nivos in Fingrid zone. Fully energized and hosting commercial GPU clusters."
         },
@@ -309,6 +461,18 @@ def curate_facility_completion_facts():
             "publicly_known_from": "2026-04-30",
             "truth_claim_id": "CLM-PWR-NBIS-001",
             "knowledge_claim_id": "CLM-PWR-NBIS-001",
+            "utility_service_capacity_claim_id": "CLM-PWR-NBIS-001",
+            "utility_load_online_claim_id": None,
+            "critical_it_contracted_claim_id": None,
+            "service_ready_it_claim_id": "CLM-PWR-NBIS-001",
+            "completion_status_claim_id": "CLM-PWR-NBIS-001",
+            "equipment_accepted_claim_id": "CLM-PWR-NBIS-001",
+            "attribute_claim_map": json.dumps({
+                "utility_service_capacity_mw": "CLM-PWR-NBIS-001",
+                "service_ready_it_mw": "CLM-PWR-NBIS-001",
+                "completion_status": "CLM-PWR-NBIS-001",
+                "equipment_accepted_fraction": "CLM-PWR-NBIS-001"
+            }),
             "evidence_class": "B",
             "verifier_notes": "310 MW planned development in Finland. Grid connection study and pre-construction engineering underway."
         },
@@ -320,7 +484,7 @@ def curate_facility_completion_facts():
     fac_ids = set(fac_df["facility_id"])
     assert set(facts_df["facility_id"]) == fac_ids, f"Facility mismatch: {set(facts_df['facility_id']) ^ fac_ids}"
 
-    # Validate bitemporal timing
+    # Validate bitemporal timing and attribute claims
     for _, r in facts_df.iterrows():
         fid = r["facility_id"]
         k_cid = r["knowledge_claim_id"]
@@ -330,10 +494,15 @@ def curate_facility_completion_facts():
                 f"Facility {fid}: publicly_known_from {r['publicly_known_from']} predates knowledge claim {k_cid} filing date {k_fdate}"
             )
 
+        # Validate that all claims in attribute_claim_map exist in claims_dict
+        attr_map = json.loads(r["attribute_claim_map"])
+        for attr, cid in attr_map.items():
+            assert cid in claims_dict, f"Facility {fid} attribute {attr} references unknown claim {cid}"
+
     # Save to parquet and csv
     facts_df.to_parquet(PROCESSED_DIR / "facility_completion_facts.parquet", index=False)
     facts_df.to_csv(PROCESSED_DIR / "facility_completion_facts.csv", index=False)
-    print(f"Curated {len(facts_df)} facility completion facts to facility_completion_facts.parquet and .csv")
+    print(f"Curated {len(facts_df)} facility completion facts with field-level provenance to facility_completion_facts.parquet and .csv")
 
 
 if __name__ == "__main__":

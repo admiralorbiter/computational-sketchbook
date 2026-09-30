@@ -531,7 +531,8 @@
     "sha256": "717694b994874afdedce23f0c98ace2616e050c2583a49b4cae93fa247e3f543",
     "file_size": 3199009,
     "claims": [
-      "CLM-IREN-001"
+      "CLM-IREN-001",
+      "CLM-IREN-002"
     ]
   }
 }

@@ -321,13 +321,20 @@ Tracks 14 canonical facility completion records capturing typed physical, energi
 | `service_ready_it_mw` | Float | Yes | Certified Ready-for-Service or operating critical IT capacity (MW); 0.0 if under construction. | `100.0` |
 | `gpu_equipment_deployment_state` | String | No | Descriptive status of tenant/operator GPU cluster deployment. | `Tenant (CoreWeave) cluster commissioning & fit-out` |
 | `gpu_compute_operational_mw` | Float | Yes | IT load actively executing commercial GPU compute (MW); null if tenant-managed/undisclosed. | `75.0` |
-| `equipment_accepted_fraction` | Float | Yes | Fraction of cluster IT equipment delivered, accepted, and funded (0.0 to 1.0); null if tenant-owned. | `0.0`, `1.0` |
+| `equipment_accepted_fraction` | Float | Yes | Fraction of cluster IT equipment delivered, accepted, and funded (0.0 to 1.0); null if tenant-owned or unknown (enforcing Unknown != Zero invariant). | `0.0`, `1.0`, `None` |
 | `completion_status` | String | No | Status taxonomy: `operational`, `operational_and_expanding`, `under_construction`, `announced`. | `operational_and_expanding` |
 | `next_milestone` | String | No | Next development, energization, or cluster acceptance milestone. | `Building 2 full tenant occupancy & Building 3 commissioning (2026-2027)` |
 | `economic_as_of` | Date (str)| No | Period-end date of the measurement in economic reality (`YYYY-MM-DD`). | `2026-05-31` |
-| `publicly_known_from` | Date (str)| No | Earliest date publicly disclosed (`YYYY-MM-DD`). | `2026-07-29` |
-| `truth_claim_id` | String | No | Foreign Key referencing `evidence_claims.claim_id` or `power_claims.claim_id`. | `CLM-APLD-004` |
-| `knowledge_claim_id` | String | No | Foreign Key referencing disclosure establishing public awareness. | `CLM-APLD-004` |
+| `publicly_known_from` | Date (str)| No | Earliest date publicly disclosed (`YYYY-MM-DD`). | `2026-08-06` |
+| `truth_claim_id` | String | No | Primary anchor Foreign Key referencing `evidence_claims.claim_id` or `power_claims.claim_id`. | `CLM-APLD-004` |
+| `knowledge_claim_id` | String | No | Primary anchor Foreign Key referencing disclosure establishing public awareness. | `CLM-PWR-MDU-001` |
+| `utility_service_capacity_claim_id` | String | Yes | Field-level claim ID supporting utility agreement service capacity (MW). | `CLM-PWR-MDU-001` |
+| `utility_load_online_claim_id` | String | Yes | Field-level claim ID supporting online energized load (MW). | `CLM-PWR-MDU-001` |
+| `critical_it_contracted_claim_id` | String | Yes | Field-level claim ID supporting contracted critical IT load (MW). | `CLM-PWR-APLD-001` |
+| `service_ready_it_claim_id` | String | Yes | Field-level claim ID supporting certified service-ready IT capacity (MW). | `CLM-APLD-004` |
+| `completion_status_claim_id` | String | Yes | Field-level claim ID supporting categorical completion status. | `CLM-APLD-004` |
+| `equipment_accepted_claim_id` | String | Yes | Field-level claim ID supporting equipment accepted fraction. | `CLM-APLD-003` |
+| `attribute_claim_map` | String (JSON) | No | Serialized JSON dictionary mapping typed attributes to their specific supporting claim IDs. | `{"utility_service_capacity_mw": "CLM-PWR-MDU-001", ...}` |
 | `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted). | `A` |
 | `verifier_notes` | String | Yes | Analytical context on physical phasing, substation readiness, and escrow conditions. | *Text* |
 

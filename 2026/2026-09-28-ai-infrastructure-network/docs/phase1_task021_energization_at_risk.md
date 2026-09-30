@@ -2,8 +2,8 @@
 
 **Date:** September 30, 2026  
 **Decision References:** ADR-021, ADR-021.1, and ADR-021.1a (`docs/decisions.md`)  
-**Dataset State:** 62 registered entities, 47 decomposed financial obligations, 57 lifecycle events, 64 financial facts, 44 financial terms, 59 evidence claims, 14 physical facilities, 13 power relationships, 29 typed MW power facts, 27 power terms, 9 primary power claims, 51 obligation-facility attribution links, 14 canonical facility completion facts (`facility_completion_facts.parquet`).  
-**Baseline Certification:** 100% exact verbatim substring verification across all 67 Class A SEC claims auto-bound via `data/raw/sec/source_registry.json`; **0.00% data drift** across balance sheet, power, and attribution layers.
+**Dataset State:** 62 registered entities, 47 decomposed financial obligations, 57 lifecycle events, 64 financial facts, 44 financial terms, 60 evidence claims, 14 physical facilities, 13 power relationships, 29 typed MW power facts, 27 power terms, 9 primary power claims, 51 obligation-facility attribution links, 14 canonical facility completion facts (`facility_completion_facts.parquet`).  
+**Baseline Certification:** 100% exact verbatim substring verification across all 68 Class A SEC claims auto-bound via `data/raw/sec/source_registry.json` plus 1 primary utility disclosure; **0.00% data drift** across balance sheet, power, and attribution layers.
 
 ---
 
@@ -54,38 +54,33 @@ Funded project debt is strictly separated into two distinct risk tranches rather
 - **\$2.350B Mixed Completion/Operational Exposure:** Comprises the original Polaris Forge 1 notes (ComputeCo 9.250% notes due 2030). Building 2 (100 MW) is already certified Ready-for-Service and operational, while Building 3 (150 MW) is partially operational.
 
 ### 3. Modeled Debt Architecture vs Committed Capacity
-- **Total Modeled Obligations:** **\$47,847.68M (\$47.848B)**
+Funded debt and undrawn equipment credit commitments are economically distinct and are not treated as additive equivalents:
 - **Active Funded Debt:** **\$45,447.68M (\$45.448B)**
   * Corporate Balance Sheet Debt: **\$39,357.68M (\$39.358B)** (CoreWeave, TeraWulf, Nebius, APLD corporate)
   * Facility-Attributable Project Debt: **\$6,090.00M (\$6.090B)** (APLD SPVs only)
-- **Committed Equipment Financing Capacity:** **\$2,400.00M (\$2.400B)** (IREN Mackenzie credit facility, drawn pro rata upon GPU delivery/acceptance).
+- **Committed Equipment Financing Capacity:** **\$2,400.00M (\$2.400B)** (IREN Mackenzie credit facility: \$1.2B MFSA + \$1.2B Senior Notes). This represents an undrawn commitment drawn only upon hardware delivery and acceptance through December 31, 2026.
 
-### 4. Exact Coupon Carrying Costs: \$473.800M/Year
-Based strictly on canonical contractual rate terms:
+### 4. Annual Carrying Cost Accounting
 - **APLD ComputeCo 9.250% Notes due 2030 (\$2.350B):** \$217.375M/year (mixed operational/construction)
 - **APLD ComputeCo 3 7.000% Notes due 2031 (\$1.590B):** \$111.300M/year (pre-service Bldg 4)
 - **APLD ComputeCo 2 6.750% Notes due 2031 (\$2.150B):** \$145.125M/year (pre-service PF2)
 - **Total APLD Project Debt Carrying Cost:** **\$473.800M/year** (of which **\$256.425M/year** is pre-service carry)
-- **IREN Mackenzie Full-Capacity Coupon Equivalent:** **\$216.000M/year** (9.00% on \$2.4B committed capacity; full-draw equivalent, not current carry).
+- **IREN Mackenzie Full-Capacity Coupon Equivalent:** **\$216.000M/year** (9.00% on \$2.4B committed capacity; full-draw equivalent scenario, not current carry).
 
-### 5. Building 3 Partial-Operation Uncertainty & Contract-Value Exposure Range
+### 5. Building 3 Partial-Operation Uncertainty & Proportional Contract-Value Scenario
 Applied Digital's Form 10-K specifies that Building 2 (100 MW) is operational, Building 3 (150 MW) is *partially operational*, and Building 4 (150 MW) is under construction. Across the 400 MW campus (\$11.0B 15-year lease = \$733.33M/year total, or ~\$1.833M/MW/year):
 - **Uncommissioned Capacity Range:** **150 MW to 300 MW** (37.5% to 75.0% of campus).
-- **Annualized Contract-Value Delay Exposure Range:**
-  * **Definitive Floor (Building 4 only, 150 MW):** **\$275.0M/year** (\$137.5M per 6 months).
-  * **Maximum Ceiling (Buildings 3 & 4, 300 MW):** **\$550.0M/year** (\$275.0M per 6 months).
+- **Proportional Annualized Contract-Value Scenario:**
+  * **Building 4 Proportional Scenario (150 MW):** **\$275.0M/year** (\$137.5M per 6 months).
+  * **Buildings 3 & 4 Proportional Scenario (300 MW):** **\$550.0M/year** (\$275.0M per 6 months).
+  *(Note: This represents a proportional annualized scenario based on overall campus capacity, rather than a contract-literal building-level revenue floor/ceiling, preserving precise legal characterization.)*
 
 ### 6. Layered Synchronization Resilience Architecture
-Financing structures in the observatory deploy multi-layered synchronization devices to insulate borrowers and projects against energization delays:
-1. **Applied Digital Parent Completion Guarantees:**
-   - *PF1 (Nov 20, 2025 Form 8-K):* Parent guarantee requiring Applied Digital to inject funds necessary to achieve Commencement Date if note proceeds and available funds are insufficient.
-   - *PF2 (March 10, 2026 Form 8-K):* Parent completion guarantee ensuring completion of the Construction Period and occurrence of the first Service Commencement Date.
-2. **Escrow Gating:**
-   - *PF2 Escrow Account:* Gross proceeds of \$2.15B were deposited into escrow with Goldman Sachs Bank USA on March 10, 2026, and released on June 18, 2026 only upon satisfaction of the electric service agreement condition precedent.
-3. **CoreWeave Springing Performance Guaranties:**
-   - *ELN-02 & ELN-03:* Springing uncapped legal indemnities executed March 30, 2026, protecting landlord cash flows if colocation agreements expire, terminate, or breach.
-4. **Staged Equipment Funding Windows:**
-   - *IREN Mackenzie:* Draws occur strictly upon delivery and acceptance of GPU clusters through December 31, 2026, protecting the borrower from paying debt service on un-delivered chips.
+Financing structures deploy four distinct synchronization mechanisms to insulate borrowers against timing mismatches:
+1. **Applied Digital Direct Parent Completion Guarantees:** Sponsor covenants providing direct protection against construction shortfalls, cost overruns, and mechanic liens (`CLM-APLD-017`).
+2. **Escrow Gating:** Condition-precedent escrow accounts releasing funds only upon utility service agreement satisfaction (e.g. Goldman Sachs PF2 escrow released June 18, 2026).
+3. **CoreWeave Springing Performance Guaranties:** Uncapped legal indemnities (`CLM-APLD-005`, `CLM-APLD-006`) backstopping tenant/SPV lease payment obligations *after* specified springing events (e.g. data hall delivery and lease commencement).
+4. **Staged Equipment Funding Windows:** Availability periods expiring sequentially against equipment delivery milestones (e.g. IREN Mackenzie staged window through December 31, 2026).
 
 ---
 
@@ -109,83 +104,63 @@ flowchart TD
         M1["OBL-CRWV-CORZ-COLOCATION-2024 (590 MW Leased across 5 Sites)<br>Topological Links: Denton, Dalton, Muskogee, Marble, Austin<br>Allocated Dollars: NULL (No Synthetic Pro-Ration)"]
     end
 
-    subgraph DirectProjectTier["Tier 3: Direct Facility-Attributable Funded Debt ($6.090B)"]
+    subgraph DirectProjectTier["Tier 3: Single-Facility Project Financing ($6.090B Active Funded)"]
         direction TB
-        D1["Pre-Service Funded Debt ($3,740.0M):<br>- PF1 Bldg 4 7% Notes ($1.59B)<br>- PF2 6.75% Notes ($2.15B)"]
-        D2["Mixed Completion / Operational Exposure ($2,350.0M):<br>- PF1 9.25% Notes ($2.35B)"]
+        P1["APLD ComputeCo 9.25% Notes ($2.35B) -> Polaris Forge 1 (Bldgs 2-3)"]
+        P2["APLD ComputeCo 2 6.75% Notes ($2.15B) -> Polaris Forge 2"]
+        P3["APLD ComputeCo 3 7.00% Notes ($1.59B) -> Polaris Forge 1 (Bldg 4)"]
     end
 
-    subgraph EquipmentCapTier["Tier 4: Committed Equipment Financing Capacity ($2.400B)"]
+    subgraph EquipmentCapTier["Tier 4: Single-Facility Equipment Financing ($2.400B Committed)"]
         direction TB
-        E1["FAC-IREN-MACKENZIE: $2,400.0M Equipment Financing Capacity<br>(Blue Owl MFSA $1.2B + PIMCO Notes $1.2B)"]
+        E1["IREN Mackenzie MFSA ($1.20B) -> Mackenzie Campus"]
+        E2["IREN Mackenzie Notes ($1.20B) -> Mackenzie Campus"]
     end
-
-    CorporateTier -.->|Strictly Excluded from Facility Ratios| DirectProjectTier
-    MultiFacilityTier -.->|Discrete Campus Mapping| DirectProjectTier
 ```
 
-### Attribution Invariants Enforced
-1. `direct_project_financing`: Debt issued by bankruptcy-remote SPVs to construct a single facility (APLD ComputeCo tranches). Enforced with `allocation_scope = "single_facility"`, `amount_type = "funded_principal"`, and `allocation_fraction = 1.0`.
-2. `direct_equipment_financing`: Committed equipment financing capacity allocated to a single facility (IREN Mackenzie). Enforced with `amount_type = "facility_capacity"`.
-3. `direct_lease`: Long-term real property/data hall leases (`OBL-CRWV-APLD-LEASE` at Polaris Forge 1).
-4. `completion_support`: Springing tenant completion indemnities (`OBL-CRWV-APLD-GUARANTY-ELN02`, `ELN03`).
-5. `portfolio_or_corporate`: General corporate obligations where proceeds are not ring-fenced to a single campus (`facility_id = None`, `allocated_amount = None`).
-6. `bitemporal_lineage`: Every link records discrete `truth_claim_id` and `knowledge_claim_id` satisfying `publicly_known_from >= knowledge_claim.filing_date`.
+---
+
+## 2. Stage B: Physical Energization Alignment & Canonical Facts
+
+Physical completion dimensions are curated into `data/processed/facility_completion_facts.parquet` with field-level claim provenance, eliminating synthetic defaults:
+
+| Facility ID | Facility Name | Operator | Utility ESA (MW) | Utility Online (MW) | Critical IT (MW) | Service-Ready (MW) | Equipment Accepted | Status | Supporting Claims |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| `FAC-APLD-POLARIS-FORGE-1` | Polaris Forge 1 | APLD | 350.0 | 60.0 | 400.0 | 100.0 | *Unknown* | `operational_and_expanding` | `CLM-PWR-MDU-001`, `CLM-PWR-APLD-001`, `CLM-APLD-004` |
+| `FAC-APLD-POLARIS-FORGE-2` | Polaris Forge 2 | APLD | *Under review* | — | 200.0 | 0.0 | 0.0 | `under_construction` | `CLM-APLD-003`, `CLM-APLD-011`, `CLM-APLD-016` |
+| `FAC-IREN-MACKENZIE` | Mackenzie Campus | IREN | 80.0 | 80.0 | 80.0 | 80.0 | *Unknown* | `operational_and_expanding` | `CLM-IREN-001`, `CLM-IREN-002` |
+| `FAC-CORZ-DENTON` | Denton Campus | CORZ | 394.0 | 100.0 | 270.0 | 100.0 | — | `operational_and_expanding` | `CLM-PWR-CORZ-001`, `CLM-CORZ-001` |
+| `FAC-CORZ-DALTON` | Dalton Facility | CORZ | 195.0 | — | — | — | — | `operational` | `CLM-PWR-CORZ-001` |
+| `FAC-CORZ-MUSKOGEE` | Muskogee Facility | CORZ | 100.0 | — | — | — | — | `operational` | `CLM-PWR-CORZ-001` |
+| `FAC-CORZ-MARBLE` | Marble Facility | CORZ | 117.0 | — | — | — | — | `operational` | `CLM-PWR-CORZ-001` |
+| `FAC-CORZ-AUSTIN` | Austin Facility | CORZ | 20.0 | — | — | — | — | `operational` | `CLM-PWR-CORZ-001` |
+| `FAC-WULF-LAKE-MARINER` | Lake Mariner | WULF | 226.0 | 226.0 | — | 226.0 | — | `operational_and_expanding` | `CLM-PWR-WULF-001` |
+| `FAC-IREN-CHILDRESS` | Childress Facility | IREN | 750.0 | 650.0 | — | 650.0 | — | `operational_and_expanding` | `CLM-PWR-IREN-001` |
+| `FAC-IREN-SWEETWATER-1` | Sweetwater 1 | IREN | 1400.0 | — | — | 0.0 | 0.0 | `under_construction` | `CLM-PWR-IREN-001` |
+| `FAC-IREN-SWEETWATER-2` | Sweetwater 2 | IREN | 600.0 | — | — | 0.0 | 0.0 | `under_construction` | `CLM-PWR-IREN-001` |
+| `FAC-NBIS-MANTSALA` | Mäntsälä DC | NBIS | 75.0 | 75.0 | 75.0 | 75.0 | 1.0 | `operational` | `CLM-PWR-NBIS-002` |
+| `FAC-NBIS-LAPPEENRANTA` | Lappeenranta AI Factory | NBIS | 310.0 | — | — | 0.0 | 0.0 | `announced` | `CLM-PWR-NBIS-001` |
 
 ---
 
-## 2. Canonical Facility Attribution & Completion Table
-
-The table below is generated from `facility_completion_facts.parquet` across all 14 physical campuses:
-
-| Facility ID | Campus Name | Operator | Attributable Funded Debt (\$M) | Committed Financing Cap (\$M) | Customer Lease (\$M) | Utility Service Cap (MW) | Utility Load Online (MW) | Critical IT Contracted (MW) | Service-Ready IT (MW) | GPU Deployment State | Next Major Milestone | Evidence Class |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- | :--- | :---: |
-| `FAC-APLD-POLARIS-FORGE-1` | Polaris Forge 1 (Ellendale) | `APLD` | **\$3,940.0** | \$0.0 | **\$11,000.0** | 350.0 | 60.0 | 400.0 | 100.0 | Tenant (CoreWeave) cluster commissioning & fit-out | Bldg 2 full occupancy & Bldg 3 commissioning (2026–2027) | Class A |
-| `FAC-APLD-POLARIS-FORGE-2` | Polaris Forge 2 | `APLD` | **\$2,150.0** | \$0.0 | *Hyperscaler* | *Pending* | *Pre-energized* | 200.0 | 0.0 | Civil / electrical shell construction | Initial capacity H2 2026; full 200 MW early 2027 | Class A |
-| `FAC-IREN-MACKENZIE` | Mackenzie Data Center | `IREN` | **\$0.0** | **\$2,400.0** | *Cloud ARR* | 80.0 | 80.0 | 80.0 | 80.0 | Staged GPU server delivery & acceptance through Dec 31, 2026 | GPU server staged delivery & acceptance through Dec 31, 2026 | Class A |
-| `FAC-CORZ-DENTON` | Denton Data Center Campus | `CORZ` | **\$0.0** | \$0.0 | *CRWV Colo* | 394.0 | 100.0 | 270.0 | 100.0 | Tenant fit-out / ongoing colocation conversion | Colocation fit-out across multi-building campus | Class A |
-| `FAC-CORZ-DALTON` | Dalton Facility | `CORZ` | **\$0.0** | \$0.0 | *CRWV Colo* | 195.0 | *Undisclosed* | *Multi-site* | *Undisclosed* | HPC infrastructure retrofit from mining | HPC infrastructure retrofit from mining | Class A |
-| `FAC-CORZ-MUSKOGEE` | Muskogee Facility | `CORZ` | **\$0.0** | \$0.0 | *CRWV Colo* | 100.0 | *Undisclosed* | *Multi-site* | *Undisclosed* | HPC infrastructure retrofit from mining | HPC infrastructure retrofit from mining | Class A |
-| `FAC-CORZ-MARBLE` | Marble Facility | `CORZ` | **\$0.0** | \$0.0 | *CRWV Colo* | 117.0 | *Undisclosed* | *Multi-site* | *Undisclosed* | HPC infrastructure retrofit from mining | HPC infrastructure retrofit from mining | Class A |
-| `FAC-CORZ-AUSTIN` | Austin Facility | `CORZ` | **\$0.0** | \$0.0 | *CRWV Colo* | 20.0 | *Undisclosed* | *Multi-site* | *Undisclosed* | HPC infrastructure retrofit from mining | HPC infrastructure retrofit from mining | Class A |
-| `FAC-WULF-LAKE-MARINER` | Lake Mariner Facility | `WULF` | **\$0.0** | \$0.0 | *Self-operated* | 226.0 | 226.0 | *Self-operated* | 226.0 | Operational mining / 500 MW expansion engineering | 500 MW planned expansion engineering | Class A |
-| `FAC-IREN-CHILDRESS` | Childress Facility | `IREN` | **\$0.0** | \$0.0 | *Mining / Cloud* | 750.0 | 650.0 | *Mining / Cloud* | 650.0 | Operating mining & cloud pilot | Final 100 MW substation expansion to 750 MW | Class A |
-| `FAC-IREN-SWEETWATER-1` | Sweetwater 1 | `IREN` | **\$0.0** | \$0.0 | *Development* | 1,400.0 | *Pre-energized* | *Development* | 0.0 | Substation procurement & interconnection construction | Interconnection substation construction (1,400 MW) | Class A |
-| `FAC-IREN-SWEETWATER-2` | Sweetwater 2 | `IREN` | **\$0.0** | \$0.0 | *Development* | 600.0 | *Pre-energized* | *Development* | 0.0 | AEP Texas substation engineering | AEP Texas 600 MW substation engineering | Class A |
-| `FAC-NBIS-MANTSALA` | Mantsala Data Center | `NBIS` | **\$0.0** | \$0.0 | *Meta Offtake* | 75.0 | 75.0 | 75.0 | 75.0 | Fully operational GPU cluster operations | Commercial operational service / heat recovery | Class A |
-| `FAC-NBIS-LAPPEENRANTA` | Lappeenranta Project | `NBIS` | **\$0.0** | \$0.0 | *Development* | 310.0 | *Pre-energized* | *Development* | 0.0 | Engineering design / pre-construction | Pending grid interconnection & engineering review | Class B |
-| **Total / Summary** | **14 Campuses** | — | **\$6,090.0M** | **\$2,400.0M** | **\$11,000.0M+** | **4,617.0 MW** | **1,191.0 MW** | **1,025.0 MW+** | **1,381.0 MW** | — | — | **13 Class A, 1 Class B** |
-
----
-
-## 3. Physical Phasing & Capital Allocation Architecture
-
-The publication visualization below illustrates the fundamental structural separation between pre-service debt, mixed operational project debt, committed equipment capacity, and general corporate debt, alongside the building phasing at Polaris Forge 1:
+## 3. Publication Visualization: Capital Architecture & Campus Phasing
 
 ![Capital Allocation Architecture & Phasing](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-28-ai-infrastructure-network/outputs/figures/capital_energization_gap.png)
 
-### Key Insights from Panel A & Panel B
-1. **Capital Architecture (Panel A):** Out of \$47.848B total modeled debt obligations:
-   - **\$39.358B (82.3%)** resides on corporate balance sheets.
-   - **\$3.740B (7.8%)** is pre-service funded project debt (Bldg 4 + PF2).
-   - **\$2.350B (4.9%)** is mixed completion/operational project debt (PF1 Bldgs 2-3).
-   - **\$2.400B (5.0%)** is committed equipment financing capacity (IREN Mackenzie).
-2. **Polaris Forge 1 Phasing & Uncertainty (Panel B):** Rather than an unenergized shell, Polaris Forge 1 has **100 MW (Building 2) certified service-ready** since late 2025. Building 3 (150 MW) is partially operational, creating an uncommissioned uncertainty range between 150 MW (floor) and 300 MW (ceiling).
+Panel A demonstrates that active corporate debt (\$39.36B) dominates the capitalization profile, while project debt is bounded to \$6.090B at Applied Digital and committed equipment credit stands at \$2.400B at IREN Mackenzie. Panel B depicts Polaris Forge 1 phasing, displaying Building 3 (150 MW) as a hatched uncertainty band reflecting its partially operational status.
 
 ---
 
-## 4. Slippage Sensitivity & Carrying Stress (Modeled Hypotheses)
-
-The timeline below models contractual carrying stress across 6-, 12-, and 18-month delay scenarios against the structural resilience mechanisms:
+## 4. Stage C: Temporal Mismatch & Carrying Stress Scenarios
 
 ![Slippage Sensitivity & Resilience](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-28-ai-infrastructure-network/outputs/figures/temporal_mismatch_timeline.png)
 
 ### Contractual Slippage Dynamics (Modeled Hypotheses)
 
-| Slippage Window | APLD Total Debt Carry (\$M) | APLD Pre-Service Carry (\$M) | IREN Full-Capacity Coupon Eq. (\$M) | Contract-Value Exposure Floor (\$M) | Contract-Value Exposure Ceiling (\$M) | Modeled Qualitative Risk Tier | Layered Synchronization Resilience |
+| Slippage Window | APLD Total Debt Carry (\$M) | APLD Pre-Service Carry (\$M) | IREN Full-Capacity Coupon Eq. (\$M) | Proportional Delay Scenario Floor (\$M) | Proportional Delay Scenario Ceiling (\$M) | Modeled Qualitative Risk Tier | Layered Synchronization Resilience |
 | :---: | :---: | :---: | :---: | :---: | :---: | :--- | :--- |
-| **6 Months Delay** | **\$236.9M** | **\$128.2M** | \$108.0M | **\$137.5M** | **\$275.0M** | *Modeled Hypothesis: Moderate* | PF1 completion guarantee shortfall funding active; PF2 escrow released Jun 18, 2026; CoreWeave springing indemnities protect tenant revenue. |
-| **12 Months Delay** | **\$473.8M** | **\$256.4M** | \$216.0M | **\$275.0M** | **\$550.0M** | *Modeled Hypothesis: High* | Carrying costs consume debt service reserves; Bldg 4 floor delay (\$275M) requires equity support; IREN Dec 31, 2026 staged window expires. |
+| **6 Months Delay** | **\$236.9M** | **\$128.2M** | \$108.0M | **\$137.5M** | **\$275.0M** | *Modeled Hypothesis: Moderate* | PF1 completion guarantee shortfall funding active; PF2 escrow released Jun 18, 2026; CoreWeave springing lease guaranties backstop tenant obligations after delivery. |
+| **12 Months Delay** | **\$473.8M** | **\$256.4M** | \$216.0M | **\$275.0M** | **\$550.0M** | *Modeled Hypothesis: High* | Carrying costs consume debt service reserves; Bldg 4 proportional scenario (\$275M) requires equity support; IREN Dec 31, 2026 staged window expires. |
 | **18 Months Delay** | **\$710.7M** | **\$384.6M** | \$324.0M | **\$412.5M** | **\$825.0M** | *Modeled Hypothesis: Critical* | SPV debt default acceleration probability escalates without parent equity recapitalization or credit agreement waiver. |
 
 ---
@@ -199,7 +174,7 @@ Rather than leaving capital exposed to naked energization delays, market partici
   Applied Digital Parent Completion Guarantees
         |
         +---> PF1 (Nov 20, 2025 Form 8-K): Mandatory obligation to fund construction shortfalls
-        |     to ensure achievement of Commencement Date.
+        |     and remove liens to ensure achievement of Commencement Date.
         |
         +---> PF2 (March 10, 2026 Form 8-K): Direct completion guarantee ensuring completion
               of Construction Period and first Service Commencement Date.
@@ -222,23 +197,63 @@ Rather than leaving capital exposed to naked energization delays, market partici
         v
   Protects Borrower from Paying Debt Service on Idle Silicon
 
-[ LAYER 4: TENANT SPRINGING PERFORMANCE GUARANTIES ]
+[ LAYER 4: TENANT SPRINGING LEASE GUARANTIES ]
   CoreWeave ELN-02 & ELN-03 Springing Indemnities
         |
         v
-  [ Uncapped Tenant Legal Backstop ] ---> CoreWeave assumes construction delay costs & lease debt service
+  [ Uncapped Tenant Legal Backstop ] ---> Springs to backstop tenant/SPV lease obligations AFTER data hall delivery
         |                                (Class C Reference Proxy: $4.125B on Building 3)
         v
-  Insulates Project SPV Equity from Tenant Revenue Default
+  Insulates Project SPV Equity from Post-Delivery Tenant Default (Does NOT assume pre-delivery construction overruns)
 ```
 
 ---
 
-## Conclusion & Methodological Certification
+## 6. Comparative Risk-Transfer Experiment: Tracing a 12-Month Delay Shock Across PF1, PF2, and Mackenzie
+
+When physical delivery lags capital formation, which contractual protections actually absorb the timing mismatch—and where does the residual risk land after those protections are applied?
+
+Tracing a hypothetical 12-month physical energization or hardware delivery shock across the observatory's three primary project structures reveals a striking institutional divergence:
+
+### 1. Who writes the first check?
+* **PF1 (Building 3/4 construction or commissioning slippage):** Applied Digital, Inc. (the sponsor parent) writes the first check under its direct parent completion guarantee (`CLM-APLD-017`). The guarantee mandates that Applied Digital inject sponsor equity to fund cost overruns, cure mechanic liens, and replenish debt service reserve accounts (DSRA) during construction delay.
+* **PF2 (Polaris Forge 2 civil/substation delay):** Applied Digital, Inc. writes the coupon service check (\$145.125M/year) and construction shortfall payments. Prior to June 18, 2026, escrow gating insulated the borrower from idle carrying costs; once released, the parent carries the obligation.
+* **Mackenzie (GPU server delivery or acceptance bottleneck):** *Nobody writes a debt service check on unaccepted chips.* Under the MFSA and Notes agreements, IREN draws capital strictly pro rata upon physical delivery and acceptance. If delivery lags, debt remains undrawn and carrying costs remain zero.
+
+### 2. Who can stop funding?
+* **PF1 / PF2:** Noteholders *cannot* stop funding—the \$2.35B and \$2.15B senior secured notes were fully funded and issued up front. The capital is locked into project trust accounts.
+* **Mackenzie:** Blue Owl (MFSA administrative agent) and PIMCO note purchasers *can stop funding*. If hardware fails acceptance testing, or if the December 31, 2026 availability window lapses without delivery, lenders are legally excused from funding the remaining commitments.
+
+### 3. Who continues receiving interest?
+* **PF1 / PF2:** ComputeCo noteholders continue receiving coupon interest on schedule (9.25% on \$2.35B = \$217.375M/yr; 6.75% on \$2.15B = \$145.125M/yr; 7.00% on \$1.59B = \$111.300M/yr). Their yield is contractually shielded by capitalized interest reserves and the sponsor parent completion covenant.
+* **Mackenzie:** Lenders receive yield *only* on drawn capital. On undrawn capacity, lenders receive at most an undrawn commitment fee; they bear the reinvestment risk of committed capital sitting idle without earning the 9.00% note yield.
+
+### 4. Who has a contractual cure?
+* **PF1 / PF2:** Applied Digital has contractual cure rights under the indentures to replace contractors, inject supplemental equity, or restructure completion milestones prior to indenture event-of-default acceleration.
+* **Mackenzie:** IREN has until the December 31, 2026 availability cliff to cure vendor supply chain delays. After that date, the credit commitment simply terminates without triggering cross-defaults across IREN's operating corporate facilities.
+
+### 5. What protection expires?
+* **PF1 / PF2:** Capitalized interest reserves and debt service reserve funds (typically 6 months of interest) deplete first. The parent completion guarantee does *not* expire until physical facility completion and initial commercial operation.
+* **Mackenzie:** The **December 31, 2026 availability window expires**, causing undrawn financing capacity to evaporate.
+
+### 6. Where does the residual economic loss land after all contractual protections are exercised?
+* **PF1 / PF2:** Residual economic loss terminates squarely on the **sponsor parent balance sheet (Applied Digital, Inc.)** and its equity holders. Because CoreWeave's springing lease guaranties only backstop lease payments *after* data hall delivery, CoreWeave bears zero construction-delay carrying costs. If delay exceeds parent liquidity, residual loss threatens noteholders via project debt restructuring.
+* **Mackenzie:** Residual loss lands on the **hardware manufacturer / server integrator (holding unmonetized chip inventory)** and **IREN's equity opportunity cost**, but project debt lenders (Blue Owl / PIMCO) avoid balance sheet impairment via condition-precedent drawdown gating.
+
+### 7. The Structural Finding: The Hidden Common Nexus
+This comparative experiment demonstrates that contractual risk mitigation in AI infrastructure is highly asymmetric:
+- **Equipment financing (Mackenzie)** successfully externalizes delivery delay risk back to the supply chain via staged drawdown gating.
+- **Data center project debt (PF1, PF2)** concentrates construction and energization delay risk back onto the **sponsor parent balance sheet**, while shielding both noteholders (via direct parent shortfall covenants) and anchor tenants (whose springing guaranties remain dormant until physical energization).
+
+Thus, supposedly independent multi-billion dollar project debt issuances ultimately converge at a single, common vulnerability: the **sponsor parent equity buffer** and the **regional grid interconnect milestone**.
+
+---
+
+## 7. Conclusion & Methodological Certification
 
 By enforcing ADR-021.1a:
-1. **Source-Registry Auto-Binding Certified:** All 67 Class A SEC claims bind strictly to their registered source document in `data/raw/sec/source_registry.json`. Global searches and cross-filing false positives are completely eliminated.
+1. **Source-Registry Auto-Binding Certified:** All 68 Class A SEC claims bind strictly to their registered source document in `data/raw/sec/source_registry.json`. Global searches and cross-filing false positives are completely eliminated.
 2. **Re-segmented Funded Project Debt:** Certified at **\$3.740B pre-service funded debt** and **\$2.350B mixed operational exposure**, ending the over-simplified 100% "before service" characterization.
-3. **Building 3 Partial-Operation Uncertainty Explicit:** Contract-value delay exposure is formally bounded between a **\$275.0M/year definitive floor** (Building 4) and a **\$550.0M/year maximum ceiling** (Buildings 3 & 4), across an uncommissioned capacity range of 150 MW to 300 MW.
-4. **Canonical Evidence Table:** The creation of `facility_completion_facts.parquet` eliminates hardcoded Python dictionaries from the analysis engine, creating a single, fully-tested source of truth.
-5. **Layered Synchronization Resilience Formally Modeled:** Distinguishes between direct parent completion guarantees, escrow gating, tenant springing lease guaranties, and staged equipment acceptance drawdowns.
+3. **Building 3 Partial-Operation Uncertainty Explicit:** Contract-value delay exposure is formally bounded between a **\$275.0M/year floor scenario** (Building 4) and a **\$550.0M/year ceiling scenario** (Buildings 3 & 4), across an uncommissioned capacity range of 150 MW to 300 MW.
+4. **Canonical Evidence Table:** `facility_completion_facts.parquet` provides field-level claim provenance and eliminates hardcoded Python dictionaries from the analysis engine, creating a single, fully-tested source of truth.
+5. **Comparative Risk-Transfer Framework Certified:** Established a rigorous waterfall analysis demonstrating how delivery delays land asymmetrically across sponsor balance sheets, noteholders, tenants, and equipment credit lines.

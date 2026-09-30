@@ -189,8 +189,8 @@ def run_energization_analysis():
     #   - Definitive floor: Building 4 only = 150 MW (37.5% of campus)
     #   - Maximum delay ceiling: Building 3 + Building 4 = 300 MW (75.0% of campus)
     annual_lease_rate_per_mw = (11000.0 / 15.0) / 400.0  # ~$1.8333M/MW/yr
-    lease_delay_floor_annual = 150.0 * annual_lease_rate_per_mw    # $275.0M/yr (definitive floor)
-    lease_delay_ceiling_annual = 300.0 * annual_lease_rate_per_mw  # $550.0M/yr (maximum ceiling)
+    lease_delay_floor_annual = 150.0 * annual_lease_rate_per_mw    # $275.0M/yr (proportional scenario floor: Building 4)
+    lease_delay_ceiling_annual = 300.0 * annual_lease_rate_per_mw  # $550.0M/yr (proportional scenario ceiling: Buildings 3+4)
 
     slippage_scenarios = {
         "6_month_delay": {
@@ -199,12 +199,15 @@ def run_energization_analysis():
             "iren_full_capacity_coupon_equivalent_m": round(iren_coupon_equivalent * 0.5, 3),    # $108.000M
             "contract_value_exposure_floor_m": round(lease_delay_floor_annual * 0.5, 3),          # $137.500M
             "contract_value_exposure_ceiling_m": round(lease_delay_ceiling_annual * 0.5, 3),      # $275.000M
+            "proportional_contract_value_scenario_floor_m": round(lease_delay_floor_annual * 0.5, 3),
+            "proportional_contract_value_scenario_ceiling_m": round(lease_delay_ceiling_annual * 0.5, 3),
             "uncommissioned_capacity_range_mw": "150 MW (floor) to 300 MW (ceiling)",
             "uncommissioned_fraction_range_pct": "37.5% (floor) to 75.0% (ceiling)",
             "qualitative_risk_tier": "Modeled Hypothesis: Moderate (Reserves & Escrow Cushion Active)",
             "layered_synchronization_resilience": (
-                "PF1 completion guarantee requires APLD to fund shortfalls; PF2 escrow ($2.15B) was released June 18, 2026; "
-                "CoreWeave springing lease guaranties (ELN-02/03) provide colocation tenant credit backing."
+                "Applied Digital direct parent completion guarantee requires sponsor shortfall funding; "
+                "PF2 escrow ($2.15B) was released June 18, 2026 upon ESA execution; "
+                "CoreWeave springing lease guaranties backstop tenant/SPV lease obligations after data hall delivery."
             )
         },
         "12_month_delay": {
@@ -213,12 +216,15 @@ def run_energization_analysis():
             "iren_full_capacity_coupon_equivalent_m": round(iren_coupon_equivalent * 1.0, 3),    # $216.000M
             "contract_value_exposure_floor_m": round(lease_delay_floor_annual * 1.0, 3),          # $275.000M
             "contract_value_exposure_ceiling_m": round(lease_delay_ceiling_annual * 1.0, 3),      # $550.000M
+            "proportional_contract_value_scenario_floor_m": round(lease_delay_floor_annual * 1.0, 3),
+            "proportional_contract_value_scenario_ceiling_m": round(lease_delay_ceiling_annual * 1.0, 3),
             "uncommissioned_capacity_range_mw": "150 MW (floor) to 300 MW (ceiling)",
             "uncommissioned_fraction_range_pct": "37.5% (floor) to 75.0% (ceiling)",
             "qualitative_risk_tier": "Modeled Hypothesis: High (Carrying Costs Consume Liquidity Buffers)",
             "layered_synchronization_resilience": (
-                "Carrying costs exceed standard debt service reserves. Building 4 floor ($275M) definitive delay requires parent equity support; "
-                "IREN 30-month note maturity begins amortizing if drawn without productive ARR."
+                "Carrying costs exceed standard debt service reserves. Building 4 proportional delay scenario ($275M) requires parent equity support; "
+                "Applied Digital parent completion guarantee covers construction cost overruns; "
+                "IREN staged equipment availability window expires Dec 31, 2026."
             )
         },
         "18_month_delay": {
@@ -227,11 +233,14 @@ def run_energization_analysis():
             "iren_full_capacity_coupon_equivalent_m": round(iren_coupon_equivalent * 1.5, 3),    # $324.000M
             "contract_value_exposure_floor_m": round(lease_delay_floor_annual * 1.5, 3),          # $412.500M
             "contract_value_exposure_ceiling_m": round(lease_delay_ceiling_annual * 1.5, 3),      # $825.000M
+            "proportional_contract_value_scenario_floor_m": round(lease_delay_floor_annual * 1.5, 3),
+            "proportional_contract_value_scenario_ceiling_m": round(lease_delay_ceiling_annual * 1.5, 3),
             "uncommissioned_capacity_range_mw": "150 MW (floor) to 300 MW (ceiling)",
             "uncommissioned_fraction_range_pct": "37.5% (floor) to 75.0% (ceiling)",
             "qualitative_risk_tier": "Modeled Hypothesis: Critical (Restructuring or Refinancing Required)",
             "layered_synchronization_resilience": (
-                "Project SPV default acceleration risk. Direct completion guarantee exposes parent balance sheet ($39.36B corporate debt environment)."
+                "Project SPV default acceleration risk. Direct completion guarantee exposes parent balance sheet ($39.36B corporate debt environment); "
+                "CoreWeave springing lease guaranties remain un-triggered for un-delivered data halls."
             )
         }
     }
@@ -276,7 +285,8 @@ def run_energization_analysis():
             "uncommissioned_fraction_range_pct": [37.5, 75.0],
             "annualized_contract_value_floor_m": round(lease_delay_floor_annual, 3),
             "annualized_contract_value_ceiling_m": round(lease_delay_ceiling_annual, 3),
-            "description": "Building 4 definitive floor ($275M/yr) to Building 3+4 maximum ceiling ($550M/yr)"
+            "nature_of_estimate": "Proportional annualized contract-value scenario based on campus lease capacity ($1.833M/MW/yr), not a contract-literal building-level floor/ceiling",
+            "description": "Building 4 proportional scenario ($275M/yr) to Building 3+4 proportional scenario ($550M/yr)"
         },
         "layered_synchronization_devices": {
             "apld_parent_completion_guarantees": {
@@ -324,7 +334,7 @@ def run_energization_analysis():
 
     bars = ax1.bar(categories, amounts, color=colors, width=0.55, edgecolor="#333333", alpha=0.9)
     ax1.set_ylabel("Capital Amount ($ Billions)", fontsize=11, fontweight="bold")
-    ax1.set_title("A. Capital Architecture: Funded Debt vs Committed Capacity ($47.85B Total)", fontsize=12, fontweight="bold", pad=12)
+    ax1.set_title("A. Capital Architecture: Funded Debt vs Committed Financing Capacity", fontsize=12, fontweight="bold", pad=12)
     ax1.grid(axis="y", linestyle="--", alpha=0.5)
 
     for bar in bars:
@@ -334,30 +344,33 @@ def run_energization_analysis():
     ax1.text(0, amounts[0]/2, "Pre-Service\n($3.74B)", ha="center", va="center", color="white", fontweight="bold", fontsize=9.5)
     ax1.text(1, amounts[1]/2, "Mixed / Partial\n($2.35B)", ha="center", va="center", color="white", fontweight="bold", fontsize=9.5)
     ax1.text(2, amounts[2]/2, "Committed Cap\n($2.40B)", ha="center", va="center", color="white", fontweight="bold", fontsize=9.5)
-    ax1.text(3, amounts[3]/2, "Corporate Balance Sheet\n($39.36B)", ha="center", va="center", color="white", fontweight="bold", fontsize=10)
+    ax1.text(3, amounts[3]/2, "Corporate\nBalance Sheet\n($39.36B)", ha="center", va="center", color="white", fontweight="bold", fontsize=9.5)
 
     # Panel B: APLD Polaris Forge 1 Campus Phasing (400 MW Critical IT)
     bldg_names = ["Building 2\n(100 MW)", "Building 3\n(150 MW)", "Building 4\n(150 MW)"]
-    service_ready_mw = [100.0, 50.0, 0.0]  # Illustrative 50 MW ready / 100 MW commissioning split for Bldg 3
-    under_construction_mw = [0.0, 100.0, 150.0]
-
     b_idx = np.arange(len(bldg_names))
-    b_width = 0.5
+    b_width = 0.55
 
-    ax2.bar(b_idx, service_ready_mw, b_width, label="Service-Ready / Operational IT MW", color="#2ca02c", alpha=0.9, edgecolor="#333333")
-    ax2.bar(b_idx, under_construction_mw, b_width, bottom=service_ready_mw, label="Uncommissioned / Construction (150-300 MW Range)", color="#ff7f0e", alpha=0.85, edgecolor="#333333")
+    # Building 2: 100 MW Service-Ready / Fully Commissioned
+    ax2.bar(0, 100.0, b_width, color="#2ca02c", alpha=0.9, edgecolor="#333333", label="Service-Ready / Commissioned (100 MW)")
+    ax2.text(0, 50, "100 MW Ready\n(Commissioned)", ha="center", va="center", color="white", fontweight="bold", fontsize=9)
+
+    # Building 3: 150 MW Partial-Operation Uncertainty Band (0 to 150 MW online)
+    ax2.bar(1, 150.0, b_width, color="#fdbf6f", hatch="//", alpha=0.95, edgecolor="#d95f02", linewidth=1.5, label="Partially Operational (150 MW Uncertainty Band)")
+    ax2.text(1, 75, "150 MW\nUncertainty Band\n(Partially Operational\n[0 to 150 MW])", ha="center", va="center", color="#7f2704", fontweight="bold", fontsize=8.5)
+
+    # Building 4: 150 MW Pre-Service / Under Construction
+    ax2.bar(2, 150.0, b_width, color="#ff7f0e", alpha=0.9, edgecolor="#333333", label="Pre-Service / Under Construction (150 MW)")
+    ax2.text(2, 75, "150 MW\nPre-Service\n(Mid-2027 Target)", ha="center", va="center", color="white", fontweight="bold", fontsize=9)
 
     ax2.set_xticks(b_idx)
     ax2.set_xticklabels(bldg_names, fontsize=10, fontweight="bold")
     ax2.set_ylabel("Critical IT Capacity (MW)", fontsize=11, fontweight="bold")
-    ax2.set_title("B. Polaris Forge 1 Phasing: Building 3 Partial-Operation Uncertainty", fontsize=12, fontweight="bold", pad=12)
-    ax2.legend(frameon=True, facecolor="white", edgecolor="#cccccc", loc="upper left")
+    ax2.set_xlim(-0.6, 2.6)
+    ax2.set_ylim(0, 185)
+    ax2.set_title("B. Polaris Forge 1 Phasing: Full 150 MW Building 3 Uncertainty Band", fontsize=12, fontweight="bold", pad=12)
+    ax2.legend(frameon=True, facecolor="white", edgecolor="#cccccc", loc="upper left", fontsize=8.5)
     ax2.grid(axis="y", linestyle="--", alpha=0.5)
-
-    ax2.text(0, 50, "100 MW Ready\n(Oct 2025)", ha="center", va="center", color="white", fontweight="bold", fontsize=9)
-    ax2.text(1, 25, "Partial Ready", ha="center", va="center", color="white", fontweight="bold", fontsize=8.5)
-    ax2.text(1, 100, "Uncommissioned\nUncertainty Split", ha="center", va="center", color="white", fontweight="bold", fontsize=8.5)
-    ax2.text(2, 75, "150 MW Under\nConstruction", ha="center", va="center", color="white", fontweight="bold", fontsize=9)
 
     plt.tight_layout()
     fig1_path = FIGURES_DIR / "capital_energization_gap.png"
@@ -394,9 +407,9 @@ def run_energization_analysis():
     # Grouped bars
     rects1 = ax.bar(idx - 1.5*w, tot_carrying_costs, w, label="APLD Total Project Debt Carry ($M)", color="#d95f02", alpha=0.9, edgecolor="#333333")
     rects2 = ax.bar(idx - 0.5*w, pre_serv_carrying, w, label="APLD Pre-Service Carry ($3.74B Debt, $M)", color="#e6ab02", alpha=0.9, edgecolor="#333333")
-    rects3 = ax.bar(idx + 0.5*w, lease_ceiling, w, label="Contract-Value Exposure Ceiling ($550M/yr max)", color="#377eb8", alpha=0.9, edgecolor="#333333")
+    rects3 = ax.bar(idx + 0.5*w, lease_ceiling, w, label="Proportional Contract-Value Scenario (Bldgs 3+4, $550M/yr)", color="#377eb8", alpha=0.9, edgecolor="#333333")
     # Overlay floor on ceiling bar
-    rects3_floor = ax.bar(idx + 0.5*w, lease_floor, w, label="Definitive Exposure Floor (Bldg 4, $275M/yr)", color="#1b4f72", alpha=0.9, edgecolor="#333333", hatch="//")
+    rects3_floor = ax.bar(idx + 0.5*w, lease_floor, w, label="Proportional Contract-Value Scenario (Bldg 4, $275M/yr)", color="#1b4f72", alpha=0.9, edgecolor="#333333", hatch="//")
     rects4 = ax.bar(idx + 1.5*w, iren_coupon_eq, w, label="IREN Mackenzie Full-Capacity Coupon Eq. ($M)", color="#7570b3", alpha=0.7, edgecolor="#333333", linestyle="--")
 
     for i in range(len(scenarios)):
@@ -408,12 +421,12 @@ def run_energization_analysis():
     ax.set_xticks(idx)
     ax.set_xticklabels(scenarios, fontsize=11, fontweight="bold")
     ax.set_ylabel("Financial Carrying Stress ($ Millions)", fontsize=11, fontweight="bold")
-    ax.set_title("Substation & Equipment Delivery Slippage: Cash Flow Carrying Stress\n(Pre-Service Debt vs Contract Value Uncertainty Range vs Layered Resilience)", fontsize=12, fontweight="bold", pad=14)
+    ax.set_title("Substation & Equipment Delivery Slippage: Cash Flow Carrying Stress\n(Pre-Service Debt vs Proportional Contract Value Scenario vs Layered Resilience)", fontsize=12, fontweight="bold", pad=14)
     ax.legend(frameon=True, facecolor="white", edgecolor="#cccccc", loc="upper left", fontsize=8.5)
     ax.grid(axis="y", linestyle="--", alpha=0.5)
 
     # Footnote highlighting synchronization mechanisms
-    fig.text(0.5, 0.01, "Layered Resilience: APLD completion guarantee (mandatory shortfall funding), PF2 escrow ($2.15B released Jun 18, 2026), CoreWeave springing indemnities (ELN-02/03).",
+    fig.text(0.5, 0.01, "Layered Resilience: APLD direct completion guarantee (construction shortfall & lien protection), PF2 escrow ($2.15B released Jun 18, 2026), CoreWeave springing lease guaranties (ELN-02/03).",
              ha="center", fontsize=8.5, style="italic", color="#444444")
 
     plt.tight_layout(rect=[0, 0.03, 1, 0.97])
@@ -426,16 +439,15 @@ def run_energization_analysis():
         shutil.copy(fig2_path, BRAIN_DIR / "temporal_mismatch_timeline.png")
 
     print("=== Energization-at-Risk Analysis Completed (ADR-021.1a) ===")
-    print(f"Total Modeled Obligations: ${total_modeled_obligations:,.2f}M ($47.848B)")
-    print(f"  - Active Funded Debt: ${total_active_funded_debt:,.2f}M ($45.448B)")
-    print(f"    * Corporate Debt: ${total_active_corp_debt:,.2f}M ($39.358B)")
-    print(f"    * Project Debt: ${total_funded_debt:,.2f}M ($6.090B)")
-    print(f"      - Pre-Service Funded Debt: ${pre_service_funded_debt:,.1f}M ($3.740B)")
-    print(f"      - Mixed Operational Exposure: ${mixed_operational_funded_debt:,.1f}M ($2.350B)")
-    print(f"  - Committed Equipment Financing Capacity: ${total_committed_cap:,.1f}M ($2.400B)")
+    print(f"Active Funded Debt: ${total_active_funded_debt:,.2f}M ($45.448B)")
+    print(f"  * Corporate Debt: ${total_active_corp_debt:,.2f}M ($39.358B)")
+    print(f"  * Project Debt: ${total_funded_debt:,.2f}M ($6.090B)")
+    print(f"    - Pre-Service Funded Debt: ${pre_service_funded_debt:,.1f}M ($3.740B)")
+    print(f"    - Mixed Operational Exposure: ${mixed_operational_funded_debt:,.1f}M ($2.350B)")
+    print(f"Committed Equipment Financing Capacity: ${total_committed_cap:,.1f}M ($2.400B IREN Mackenzie)")
     print(f"APLD Annual Project Carrying Cost: ${apld_annual_carrying_cost:,.3f}M/yr (Pre-Service: ${pre_service_carrying_cost:,.3f}M/yr)")
     print(f"IREN Full-Capacity Coupon Equivalent: ${iren_coupon_equivalent:,.3f}M/yr")
-    print(f"Contract Value Exposure Range: ${lease_delay_floor_annual:,.1f}M/yr (floor) to ${lease_delay_ceiling_annual:,.1f}M/yr (ceiling)")
+    print(f"Proportional Contract Value Scenario Range: ${lease_delay_floor_annual:,.1f}M/yr (Bldg 4) to ${lease_delay_ceiling_annual:,.1f}M/yr (Bldgs 3+4)")
 
 
 if __name__ == "__main__":

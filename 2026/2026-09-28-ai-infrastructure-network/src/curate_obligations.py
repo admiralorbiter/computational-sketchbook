@@ -717,6 +717,20 @@ def build_evidence_claims():
             "verifier_notes": "Proves IREN $2.4B GPU financing agreements via IE Mackenzie Compute Ltd. with Blue Owl (administrative agent and lender under $1.2B MFSA) and PIMCO (adviser to note purchasers for $1.2B senior notes), fixed 9.0%, with unconditional parent payment guaranty from IREN Limited."
         },
         {
+            "claim_id": "CLM-IREN-002",
+            "entity_id": "IREN",
+            "filing_type": "10-K",
+            "accession_number": "0001878848-26-000052",
+            "filing_date": "2026-08-27",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1878848/000187884826000052/iren-20260630.htm",
+            "section_locator": "Item 1. Business - Data Center Capacity Table",
+            "quote_type": "source_excerpt",
+            "exact_quote": "Mackenzie (British Columbia, Canada) 80 Childress (Texas, USA) 750 Sweetwater 1 (Texas, USA) 1,400",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 10-K direct audit",
+            "verifier_notes": "Audited primary source table establishing 80 MW data center capacity for Mackenzie, British Columbia, Canada alongside Texas facilities."
+        },
+        {
             "claim_id": "CLM-CORZ-001",
             "entity_id": "CORZ",
             "filing_type": "10-Q",

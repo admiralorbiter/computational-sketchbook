@@ -238,7 +238,7 @@ def validate_sec_html_content():
     sec_dir = PROJECT_ROOT / "data" / "raw" / "sec"
     registry_path = sec_dir / "source_registry.json"
     if not registry_path.exists():
-        return ["SEC source registry not found: data/raw/sec/source_registry.json"]
+        return ["SEC source registry not found: data/raw/sec/source_registry.json"], 0
 
     with open(registry_path, "r", encoding="utf-8") as f:
         source_registry = json.load(f)
@@ -297,7 +297,7 @@ def validate_sec_html_content():
         if quote not in file_content_cache[fname]:
             errors.append(f"Claim {cid} exact quote is not a normalized contiguous verbatim substring in registered source {fname} ({acc})")
 
-    return errors
+    return errors, len(sec_claims)
 
 
 def validate_observatory():
@@ -315,7 +315,7 @@ def validate_observatory():
         "obligation_facts.parquet": 64,
         "obligation_terms.parquet": 44,
         "assumptions.parquet": 7,
-        "evidence_claims.parquet": 59,
+        "evidence_claims.parquet": 60,
         "facilities.parquet": 14,
         "power_relationships.parquet": 13,
         "power_facts.parquet": 29,
@@ -645,6 +645,16 @@ def validate_observatory():
             errors.append(f"facility_completion_facts.parquet row count mismatch: {len(fcf_df)} (expected 14)")
         if set(fcf_df["facility_id"]) != valid_fac_ids:
             errors.append(f"facility_completion_facts facility_id mismatch: {set(fcf_df['facility_id']) ^ valid_fac_ids}")
+        
+        field_claim_cols = [
+            "utility_service_capacity_claim_id",
+            "utility_load_online_claim_id",
+            "critical_it_contracted_claim_id",
+            "service_ready_it_claim_id",
+            "completion_status_claim_id",
+            "equipment_accepted_claim_id",
+        ]
+
         for _, fr in fcf_df.iterrows():
             fid = fr["facility_id"]
             if fr["truth_claim_id"] not in all_claims_map:
@@ -658,10 +668,38 @@ def validate_observatory():
                     errors.append(f"Facility {fid} completion fact: publicly_known_from {fr['publicly_known_from']} predates knowledge claim {k_cid} filing date {k_date}")
             if fr["completion_status"] not in {"operational", "operational_and_expanding", "under_construction", "announced"}:
                 errors.append(f"Facility {fid} invalid completion_status: {fr['completion_status']}")
+            
+            # Check attribute_claim_map
+            if "attribute_claim_map" in fr and pd.notna(fr["attribute_claim_map"]):
+                try:
+                    attr_map = json.loads(fr["attribute_claim_map"])
+                    for attr, cid in attr_map.items():
+                        if cid not in all_claims_map:
+                            errors.append(f"Facility {fid} attribute_claim_map[{attr}] references unknown claim: {cid}")
+                        else:
+                            c_fdate = str(all_claims_map[cid])
+                            if str(fr["publicly_known_from"]) < c_fdate:
+                                errors.append(f"Facility {fid} attribute {attr} claim {cid} ({c_fdate}) postdates publicly_known_from {fr['publicly_known_from']}")
+                except Exception as e:
+                    errors.append(f"Facility {fid} attribute_claim_map invalid JSON: {e}")
+
+            # Check typed field claim columns
+            for col in field_claim_cols:
+                if col in fr and pd.notna(fr[col]) and fr[col]:
+                    cid = fr[col]
+                    if cid not in all_claims_map:
+                        errors.append(f"Facility {fid} {col} references unknown claim: {cid}")
+
+            # Unknown != Zero validation: Mackenzie equipment accepted must be null/unknown
+            if fid == "FAC-IREN-MACKENZIE":
+                if pd.notna(fr["equipment_accepted_fraction"]):
+                    errors.append(f"Facility {fid} equipment_accepted_fraction must be None/unknown (not synthetic 0.0)")
+
             if pd.notna(fr["equipment_accepted_fraction"]):
                 if not (0.0 <= fr["equipment_accepted_fraction"] <= 1.0):
                     errors.append(f"Facility {fid} equipment_accepted_fraction out of bounds: {fr['equipment_accepted_fraction']}")
-        print(f"  [OK] Facility Completion Facts verified: {len(fcf_df)} facilities with typed MW dimensions and bitemporal claim lineage.")
+
+        print(f"  [OK] Facility Completion Facts verified: {len(fcf_df)} facilities with field-level attribute claims and zero synthetic defaults.")
 
     # ---------------------------------------------------------
     # 2. Validate CoreWeave & Applied Digital Exact Debt Decomposition
@@ -1568,7 +1606,7 @@ def validate_observatory():
     # ---------------------------------------------------------
     # 4. Validate Evidence Claims & Quote Categorization
     # ---------------------------------------------------------
-    expected_claims_count = 59
+    expected_claims_count = 60
     if len(clm_df) != expected_claims_count:
         errors.append(f"Evidence claims count mismatch: {len(clm_df)} (expected {expected_claims_count})")
     else:
@@ -1663,12 +1701,12 @@ def validate_observatory():
         print(f"  [OK] All {len(clm_df)} evidence claims 100% verified against raw SEC EDGAR submissions JSON.")
 
     # Verification of verbatim substrings against cached HTML exhibits (SEC filings)
-    html_errors = validate_sec_html_content()
+    html_errors, sec_count = validate_sec_html_content()
     if html_errors:
         for he in html_errors:
             errors.append(he)
     else:
-        print("  [OK] All 64 primary SEC claims auto-bound and verified as 100% exact contiguous verbatim substrings in cached primary HTML filings.")
+        print(f"  [OK] All {sec_count} primary SEC claims auto-bound and verified as 100% exact contiguous verbatim substrings in cached primary HTML filings.")
 
     # Verification of non-SEC primary sources against cached utility files and cryptographic hashes
     util_errors = validate_utility_primary_sources()
