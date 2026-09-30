@@ -13,3 +13,16 @@ PTERM-IREN-CHIL-OPERATING,PWR-IREN-CHIL-ERCOT,operating_datacenter_capacity_mw,6
 PTERM-IREN-SW1-TOTAL,PWR-IREN-SW1-ERCOT,planned_development_capacity_mw,1400.0,CLM-PWR-IREN-001,Item 1. Business,A
 PTERM-IREN-SW2-AEP,PWR-IREN-SW2-AEP-TX,grid_connection_capacity_mw,600.0,CLM-PWR-IREN-001,Item 1. Business,A
 PTERM-NBIS-MANTSALA-NIVOS,PWR-NBIS-MANTSALA-NIVOS,contracted_electricity_connection_mw,75.0,CLM-PWR-NBIS-002,Press Release,A
+PTERM-APLD-PF1-REGIME,PWR-APLD-PF1-MDU-ESA,reliability_regime,firm_service,CLM-PWR-MDU-001,Item 2. MD&A,A
+PTERM-CORZ-DENTON-REGIME,PWR-CORZ-DENTON-DME,reliability_regime,mandatory_grid_emergency_curtailment,CLM-PWR-CORZ-002,Item 8.01 Form 8-K,A
+PTERM-CORZ-DALTON-REGIME,PWR-CORZ-DALTON-DALTON,reliability_regime,firm_service,CLM-PWR-CORZ-001,Item 2. Properties Table,A
+PTERM-CORZ-MUSKOGEE-REGIME,PWR-CORZ-MUSKOGEE-OGE,reliability_regime,firm_service,CLM-PWR-CORZ-001,Item 2. Properties Table,A
+PTERM-CORZ-MURPHY-REGIME,PWR-CORZ-MARBLE-MURPHY,reliability_regime,firm_service,CLM-PWR-CORZ-001,Item 2. Properties Table,A
+PTERM-CORZ-DUKE-REGIME,PWR-CORZ-MARBLE-DUKE,reliability_regime,firm_service,CLM-PWR-CORZ-001,Item 2. Properties Table,A
+PTERM-CORZ-AUSTIN-REGIME,PWR-CORZ-AUSTIN-AUSTIN,reliability_regime,mandatory_grid_emergency_curtailment,CLM-PWR-CORZ-002,Item 8.01 Form 8-K,A
+PTERM-WULF-LM-REGIME,PWR-WULF-LM-NYPA,reliability_regime,firm_service,CLM-PWR-WULF-001,Note 11,A
+PTERM-IREN-CHIL-REGIME,PWR-IREN-CHIL-ERCOT,reliability_regime,voluntary_price_response,CLM-PWR-IREN-002,Note 7 & Item 1,A
+PTERM-IREN-SW1-REGIME,PWR-IREN-SW1-ERCOT,reliability_regime,interconnection_not_energized,CLM-PWR-IREN-001,Item 1. Business,A
+PTERM-IREN-SW2-REGIME,PWR-IREN-SW2-AEP-TX,reliability_regime,interconnection_not_energized,CLM-PWR-IREN-001,Item 1. Business,A
+PTERM-NBIS-MANTSALA-REGIME,PWR-NBIS-MANTSALA-NIVOS,reliability_regime,firm_service,CLM-PWR-NBIS-002,Press Release,A
+PTERM-NBIS-LAPPEENRANTA-REGIME,PWR-NBIS-LAPPEENRANTA-PENDING,reliability_regime,interconnection_not_energized,CLM-PWR-NBIS-001,Item 4,B

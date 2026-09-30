@@ -518,3 +518,39 @@ erc_regional_entity.
   - Non-overlapping Grid Exposure Concentration Index (HHI-form) is certified at **5,443.8** on capacity basis (4,401.0 MW) and **5,045.7** on energized capacity (1,111.0 MW).
   - 100% certified consistency: 62 entities, 12 facilities, 13 power relationships, 29 power facts, 14 power terms (100% Class A), 8 power claims, and zero drift on the Phase 0/Wave 1 financial baseline.
 
+---
+
+### ADR-020.1a: Power Certification Cleanup, Reliability Field-Level Provenance & Unenergized Capital Exposure
+- **Status:** Accepted (2026-09-30, Task 020.1a / Physical Layer Freezing & Certification)
+- **Context:**
+  1. *Audit of ADR-020.1 Implementation:* A spot-check of commit `77450c3` verified that the literal multi-layer topology, empirical MW corrections, and ERCOT bridge findings are sound. Rerunning the network using only currently operational/served power relationships (excluding all `interconnection_not_energized` projects such as Sweetwater 1/2 and Lappeenranta) confirms a 41-node giant component plus the 2-node SMCI island; after excising CoreWeave, a 19-node `CORZ–ERCOT–IREN` cluster survives intact. The ERCOT finding is not manufactured by future development projects.
+  2. *Machine Output vs. Prose Arithmetic Alignment:* The machine JSON/CSV outputs correctly aggregate measured energized MW to 1,111.0 MW (ERCOT = 750.0 MW / 67.51%; `firm_service` = 361.0 MW; `mandatory_grid_emergency_curtailment` = 100.0 MW; `voluntary_price_response` = 650.0 MW). The prose report contained stale sums (770 MW, 456 MW, 120 MW) because Austin's 20.0 MW gross utility capacity had been informally treated as energized. Because there is no separate audited `energized_mw` fact for Austin, Austin must remain unasserted (unobserved/unmeasured, not zero).
+  3. *Primary Evidence Certification Accuracy:* Previously, `validate.py` stated that all power claims were verified against EDGAR submissions and HTML quotes. In fact, 7 claims were SEC filings and 1 (`CLM-PWR-NBIS-002`) was a primary utility press release by Nivos Oy. Non-SEC primary sources require their own dedicated validation path with local document caching, SHA-256 cryptographic verification, and exact verbatim substring checking.
+  4. *Field-Level Provenance for Reliability Classifications:* Reliability regimes (`firm_service`, `mandatory_grid_emergency_curtailment`, `voluntary_price_response`, `interconnection_not_energized`) were previously stored on `power_relationships` without dedicated field-level claims. For Denton, `CLM-PWR-CORZ-002` (Form 8-K) proves large-load emergency curtailment, whereas `CLM-PWR-CORZ-001` proves utility nameplate capacity. For Childress, voluntary price response and ERCOT demand response participation are disclosed in IREN's Form 10-K Note 7 / Item 1 (`CLM-PWR-IREN-002`).
+  5. *Concentration Metric Precision:* HHI across measured energized MW (5,045.7) must be explicitly designated as **Grid Exposure Concentration Index (Measured Energized MW Basis, HHI-form)** across 1,111.0 MW of observed operational capacity, not total operating power. Unobserved operating capacity (e.g. Austin 20 MW, Dalton) is unmeasured, not zero. The capacity basis index (5,443.8) reflects heterogeneous legal bases (utility capacity, connection agreements, hydro allocations, development envelopes).
+  6. *Physical Common-Dependency Backplane Framing:* The path `CORZ → Denton facility → DME → ERCOT ← AEP Texas ← Childress ← IREN` is a shared regulatory, operational, and nodal market exposure backplane, not an electrical transmission line or power flow pathway.
+  7. *The 52.5% Unenergized Capacity Finding:* Crucially, 52.49% of the modeled capacity basis (2,310.0 MW out of 4,401.0 MW) is currently unenergized (`interconnection_not_energized`). This surfaces the central question bridging Phase 1 to Task 021: How much debt and commercial obligation is written against physical capacity that does not yet exist operationally?
+- **Decision:**
+  1. **Strict Metric and Arithmetic Alignment:**
+     - Harmonize all documentation with machine facts: measured energized MW = 1,111.0 MW; ERCOT energized = 750.0 MW (67.51%); `firm_service` energized = 361.0 MW; `mandatory_grid_emergency_curtailment` energized = 100.0 MW; `voluntary_price_response` = 650.0 MW.
+     - Document that Austin (20 MW) has no primary `energized_mw` disclosure and is appropriately excluded from energized load aggregation.
+  2. **Dedicated Non-SEC Primary Source Validation Path:**
+     - Cache Nivos Oy primary disclosure in `data/raw/utility/NIVOS_PR_20260331.htm`.
+     - In `src/validate.py`, implement `validate_utility_primary_sources()` asserting file existence, exact SHA-256 hash (`86355307b3952738465b1813e6d5ea612a8e11d037b0daf3f97315fbf0e1204d`), and 100% normalized contiguous verbatim substring matching.
+     - Certify 8 primary SEC EDGAR claims + 1 primary utility disclosure.
+  3. **Field-Level Provenance for Reliability Regimes:**
+     - Add `reliability_claim_id` and `reliability_evidence_class` to `power_relationships.parquet`.
+     - Ingest `CLM-PWR-IREN-002` (IREN Form 10-K Note 7 & Item 1 verbatim disclosure on ERCOT demand response and curtailment).
+     - Expand `power_terms.parquet` to 27 rows by adding 13 contractual `reliability_regime` attribute terms (12 Class A, 1 Class B) cross-certified against `power_relationships`.
+  4. **Epistemic Naming Precision:**
+     - Designate concentration indices as `Grid Exposure Concentration Index (Capacity Basis, HHI-form): 5,443.8` and `Grid Exposure Concentration Index (Measured Energized MW Basis, HHI-form): 5,045.7`.
+     - Reframe ERCOT from an electrical flow network to a `physical common-dependency backplane`.
+  5. **Freeze Power Layer & Bridge to Task 021:**
+     - Officially declare the power layer frozen under ADR-020.1a.
+     - Formulate Task 021: **Energization-at-Risk / Obligation-to-MW Join**, mapping dollars of debt and customer commitments per energized MW, unenergized pipeline exposure, and quarterly slippage vulnerability.
+- **Consequences:**
+  - Complete, end-to-end field-level auditability across all physical power attributes.
+  - Zero financial data drift ($35.551B CRWV, $6.597B APLD, 47 obligations conserved).
+  - Eliminates all textual arithmetic discrepancies.
+  - Solidifies the structural ERCOT invariant as an empirical foundation for Task 021.
+

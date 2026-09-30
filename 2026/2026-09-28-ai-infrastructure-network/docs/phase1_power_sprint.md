@@ -245,20 +245,24 @@ To prevent double counting across overlapping engineering and regulatory filings
 
 | Grid Region | Capacity Basis (MW) | Share (%) | Energized Operating (MW) | Energized Share (%) | Planned Expansion (MW) | Key Facilities Included |
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **ERCOT** (Texas) | 3,164.0 | 71.89% | 770.0 | 67.51% | 2,000.0 | Denton (394 MW), Austin (20 MW), Childress (750 MW), Sweetwater 1 & 2 (2,000 MW) |
+| **ERCOT** (Texas) | 3,164.0 | 71.89% | 750.0 | 67.51% | 2,000.0 | Denton (394 MW gross / 100 MW energized), Austin (20 MW gross)*, Childress (750 MW total / 650 MW operating), Sweetwater 1 & 2 (2,000 MW dev) |
 | **Non-RTO / Municipal** | 622.0 | 14.13% | 0.0 | 0.00% | 310.0 | Dalton (195 MW), Marble (117 MW), Lappeenranta pending (310 MW) |
-| **MISO** (North Dakota) | 350.0 | 7.95% | 60.0 | 5.40% | 290.0 | Polaris Forge 1 incremental ESA (350 MW) |
+| **MISO** (North Dakota) | 350.0 | 7.95% | 60.0 | 5.40% | 290.0 | Polaris Forge 1 incremental ESA (350 MW / 60 MW online) |
 | **SPP** (Oklahoma) | 100.0 | 2.27% | 0.0 | 0.00% | 0.0 | Muskogee colocation campus (100 MW) |
 | **NYISO** (New York) | 90.0 | 2.04% | 226.0 | 20.34% | 500.0 | Lake Mariner NYPA allocation (90 MW) / Operating (226 MW) |
 | **Fingrid** (Finland) | 75.0 | 1.70% | 75.0 | 6.75% | 0.0 | Mäntsälä supercomputer connection (75 MW) |
 | **Total Modeled** | **4,401.0 MW** | **100.00%** | **1,111.0 MW** | **100.00%** | **2,500.0 MW** | **12 campuses across 6 jurisdictions** |
 
+*\* Epistemic Note on Austin (20 MW):* Austin Data Center has audited gross utility capacity (20 MW) and customer lease disclosures (`CLM-PWR-CORZ-001`), but lacks a separate contemporaneous primary observation of live operating energized load. Following the universal epistemic rule, Austin is left unasserted in energized totals (unobserved/unmeasured, not zero).
+
 ### Concentration Metrics
 
-- **Grid Exposure Concentration Index (HHI-form, Capacity Basis):** **5,443.8**
-- **Grid Exposure Concentration Index (HHI-form, Energized Load):** **5,045.7**
+- **Grid Exposure Concentration Index (Capacity Basis, HHI-form):** **5,443.8** (across 4,401.0 MW of heterogeneous contractual/development capacity bases)
+- **Grid Exposure Concentration Index (Measured Energized MW Basis, HHI-form):** **5,045.7** (across 1,111.0 MW of observed, audited operating load)
 
-*Note on Interpretation:* This high concentration index (5,443.8) is an empirical feature of our sample—reflecting that major AI infrastructure participants deliberately clustered in Texas for rapid interconnection queue access—not an antitrust determination regarding the broader United States electric grid.
+*Note on Interpretation:*
+1. **1,111.0 MW represents known/measured energized MW**, not total energized load across all sites. Missing live-load observations for operating facilities without specific primary meter disclosures (e.g. Austin 20 MW, Dalton) are unmeasured, not zero.
+2. The capacity-basis index (5,443.8) reflects heterogeneous legal bases—utility service agreements, connection agreements, hydro allocations, and development envelopes. It measures sample exposure to common grid jurisdictions rather than a single commodity flow.
 
 ---
 
@@ -280,20 +284,22 @@ Instead of treating power as a binary switch, the network models the contractual
                       +---------------------------------+---------------------------+
 ```
 
-### Breakdown of Contractual Regimes
+### Breakdown of Contractual Regimes & Field-Level Provenance
 
 1. **Unenergized Interconnection Queue Development (2,310.0 MW, 52.5%):**
    - **Campuses:** `FAC-IREN-SWEETWATER-1` (1,400 MW), `FAC-IREN-SWEETWATER-2` (600 MW), `FAC-NBIS-LAPPEENRANTA` (310 MW).
-   - **Legal State:** Executed connection agreements or formal interconnection requests undergoing engineering review; 0 MW currently energized.
+   - **Legal State:** Executed connection agreements or formal interconnection requests undergoing engineering review; 0 MW currently energized. Provenance certified via `CLM-PWR-IREN-001` and `CLM-PWR-NBIS-001`.
 2. **Firm Industrial Service Tariffs (927.0 MW, 21.1%):**
    - **Campuses:** `FAC-APLD-POLARIS-FORGE-1` (350 MW via MDU), `FAC-CORZ-DALTON` (195 MW via Dalton Utilities), `FAC-CORZ-MUSKOGEE` (100 MW via OG&E), `FAC-CORZ-MARBLE` (117 MW via Murphy & Duke), `FAC-WULF-LAKE-MARINER` (90 MW via NYPA hydro allocation), `FAC-NBIS-MANTSALA` (75 MW via Nivos).
-   - **Legal State:** Cost-of-service or bilateral industrial tariffs with standard utility force majeure; 456 MW currently energized.
+   - **Legal State:** Cost-of-service or bilateral industrial tariffs with standard utility force majeure; **361.0 MW currently measured energized** (Lake Mariner 226 MW + Mäntsälä 75 MW + Polaris Forge 1 60 MW). Provenance certified across 6 Class A terms.
 3. **Voluntary Price Response & Ancillary Services (750.0 MW, 17.0%):**
    - **Campus:** `FAC-IREN-CHILDRESS` (750 MW total connection / 650 MW operating data center).
-   - **Legal State:** Real-time wholesale nodal pricing pass-through; economic curtailment during price spikes and automated participation in ERCOT Responsive Reserve Service (RRS) and Contingency Reserve Service (ECRS).
+   - **Legal State:** Real-time wholesale nodal pricing pass-through; economic curtailment during price spikes and automated participation in ERCOT Responsive Reserve Service (RRS) and Contingency Reserve Service (ECRS); **650.0 MW currently measured energized**. Provenance certified via Form 10-K Note 7 & Item 1 (`CLM-PWR-IREN-002`).
 4. **Mandatory Grid Emergency Curtailment (414.0 MW, 9.4%):**
    - **Campuses:** `FAC-CORZ-DENTON` (394 MW) and `FAC-CORZ-AUSTIN` (20 MW).
-   - **Legal State:** ERCOT Large Flexible Load interconnection protocols; mandatory physical curtailment under Energy Emergency Alerts (EEA) and voluntary 4CP peak shaving; 120 MW currently energized.
+   - **Legal State:** ERCOT Large Flexible Load interconnection protocols; mandatory physical curtailment under Energy Emergency Alerts (EEA) and voluntary 4CP peak shaving; **100.0 MW currently measured energized** at Denton (Austin 20 MW has no separate energized observation). Provenance certified via Form 8-K (`CLM-PWR-CORZ-002`).
+
+*Audit Summary:* All 13 relationships carry explicit `reliability_claim_id` and `reliability_evidence_class` attributes, cross-certified against 13 corresponding regime terms in `power_terms.parquet` (12 Class A, 1 Class B).
 
 ---
 
@@ -302,9 +308,9 @@ Instead of treating power as a binary switch, the network models the contractual
 Three publication-quality visual artifacts are stored in `outputs/figures/`:
 
 1. **Literal Multi-Layer Network Topology (`power_joint_network_topology.png`):**
-   Renders all 46 nodes with explicit physical facility campuses (gold), corporate operators (blue), utilities (terracotta), grid operators (purple), and CoreWeave (red), illustrating the ERCOT bridge.
+   Renders all 46 nodes with explicit physical facility campuses (gold), corporate operators (blue), utilities (terracotta), grid operators (purple), and CoreWeave (red), illustrating the ERCOT common-dependency backplane.
 2. **Regional Grid MW Distribution (`regional_grid_mw_distribution.png`):**
-   Grouped bar chart displaying the non-overlapping Capacity Basis (MW), Energized Load (MW), and Planned Envelope (MW) across all six grid jurisdictions.
+   Grouped bar chart displaying the non-overlapping Capacity Basis (MW), Energized Operating Load (MW), and Planned Expansion Envelope (MW) across all six grid jurisdictions.
 3. **Mechanism-Specific Reliability Architecture (`power_curtailment_structure.png`):**
    Dual-pie analysis of contract counts and megawatt exposure across the five reliability regimes.
 
@@ -313,7 +319,7 @@ Three publication-quality visual artifacts are stored in `outputs/figures/`:
 ## 7. Zero Data Drift Verification
 
 ```
-=== AI Infrastructure Observatory Consistency Validator (Phase 0.7.2 / ADR-020.1) ===
+=== AI Infrastructure Observatory Consistency Validator (Phase 0.7.2 / ADR-020.1a) ===
   [OK] entities.parquet             : 62 rows
   [OK] financials.parquet           : 13754 rows
   [OK] obligations.parquet          : 47 rows
@@ -325,11 +331,12 @@ Three publication-quality visual artifacts are stored in `outputs/figures/`:
   [OK] facilities.parquet           : 12 rows
   [OK] power_relationships.parquet  : 13 rows
   [OK] power_facts.parquet          : 29 rows
-  [OK] power_terms.parquet          : 14 rows (100% Class A)
-  [OK] power_claims.parquet         : 8 rows
+  [OK] power_terms.parquet          : 27 rows (26 Class A, 1 Class B)
+  [OK] power_claims.parquet         : 9 rows (8 SEC + 1 Primary Utility Disclosure)
   [OK] CIK uniqueness verified: 23 distinct reporting entities with zero CIK collisions.
-  [OK] Power Backplane verified: 12 facilities, 13 power contracts, 29 typed MW facts, 14 terms, 8 primary claims.
-  [OK] All 54 financial claims & 8 power claims verified against raw SEC EDGAR submissions & exact HTML quotes.
+  [OK] Field-level power contract provenance verified: 27 attribute terms cross-certified.
+  [OK] All 54 primary SEC financial claims & 8 SEC power claims verified against raw SEC EDGAR submissions & exact HTML quotes.
+  [OK] Primary utility disclosure (Nivos Oy 75 MW connection) verified against cached source with SHA-256 and exact quote match.
   [OK] CoreWeave funded debt conserved: $35.551B across 16 tranches (exact 0.00% drift).
   [OK] Applied Digital debt conserved: $6.597B across 6 tranches (exact 0.00% drift).
 
@@ -338,13 +345,38 @@ ALL INTERNAL CONSISTENCY CHECKS PASSED: ZERO DATA DRIFT
 
 ---
 
-## 8. Final Research Answers
+## 8. Final Research Answers & Roadmap to Task 021
 
-1. **Does a non-CoreWeave physical power backbone emerge from the JOIN?**  
-   **Yes.** When facilities are modeled literally without synthetic shortcuts, ERCOT bridges Core Scientific and Iris Energy into a robust 21-node cluster that survives the complete excision of CoreWeave.
-2. **Does the graph stay connected through ERCOT when CoreWeave is removed?**  
-   **Yes.** ERCOT serves as a cut-vertex whose presence maintains topological continuity between public miners/HPC operators, municipal utilities, and private credit syndicates (`BLUE_OWL_OBDC`, `PIMCO`).
-3. **What is the true concentration of power delivery?**  
-   **Extreme concentration in ERCOT (HHI-form = 5,443.8 on basis, 5,045.7 on energized).** Texas accounts for 71.89% of modeled capacity basis and 67.51% of energized operating capacity.
-4. **How much power is exposed to curtailment?**  
-   **52.5% is unenergized development queue capacity, 17.0% is voluntary price response, and 9.4% is subject to mandatory grid emergency curtailment.** Only 21.1% (927 MW) is served under traditional firm industrial tariffs.
+### 1. Does a non-CoreWeave physical power backbone emerge from the JOIN?
+**Yes, as a physical common-dependency backplane.**  
+When facilities are modeled literally (`operator → facility → utility → grid`), ERCOT connects Core Scientific and Iris Energy into a robust 21-node cluster that survives the complete excision of CoreWeave.  
+*Key Clarification:* The path `CORZ → Denton facility → DME → ERCOT ← AEP Texas ← Childress ← IREN` is a **shared systemic dependency topology**, not an electrical transmission line or power flow pathway. CORZ and IREN are jointly exposed to the operating rules, emergency procedures, reserve margins (4CP), and wholesale nodal price dynamics of ERCOT.  
+*Operational Subnetwork Test:* Even when excluding all unenergized development projects (`interconnection_not_energized`: Sweetwater 1/2, Lappeenranta), the network maintains a 41-node giant component, and the 19-node `CORZ–ERCOT–IREN` cluster survives excision of CoreWeave. The ERCOT finding is an empirical physical invariant, not a modeling artifact of speculative projects.
+
+### 2. What is the true concentration of power delivery?
+**Extreme geographic clustering in ERCOT.**  
+- Capacity Basis Exposure Index (HHI-form): **5,443.8** (ERCOT accounts for 71.89% of modeled basis).
+- Measured Energized Load Exposure Index (HHI-form): **5,045.7** (ERCOT accounts for 67.51% of observed operating load).
+
+### 3. How much power is exposed to curtailment?
+**52.5% is unenergized development queue capacity, 17.0% is voluntary price response, and 9.4% is subject to mandatory grid emergency curtailment.**  
+Only 21.1% (927 MW) is served under traditional firm industrial service tariffs.
+
+### 4. The Pivotal Finding: 52.5% of Capacity Basis is Unenergized
+The most critical empirical revelation of ADR-020.1a is that **52.49% of the modeled capacity basis (2.31 GW out of 4.40 GW) is not yet energized** (Sweetwater 1, Sweetwater 2, Lappeenranta). Across all facilities, total planned expansion load is **2,500.0 MW**.  
+This exposes the primary structural question of the AI infrastructure boom:  
+*How much capital and commercial obligation is being written against physical capacity that does not yet exist operationally?*
+
+---
+
+## 9. Next Sprint: Task 021 — Energization-at-Risk / Obligation-to-MW Join
+
+Rather than expanding outward to equipment manufacturers (Vertiv, Eaton, GE Vernova), the next sprint will execute a multi-layer join:
+$$\text{Capital Obligations} \iff \text{Customer Contracts / Leases} \iff \text{Physical Energization State}$$
+
+### Task 021 Research Agenda:
+1. **Dollars of Debt per Energized MW:** Compare total corporate/project funded debt against currently operational MW (e.g. APLD debt vs. 60 MW online at Ellendale; IREN debt vs. 650 MW at Childress).
+2. **Customer Commitments Attached to Unenergized Capacity:** Map hyperscaler and neocloud lease liabilities (e.g. CoreWeave leases on APLD Buildings 3 & 4) to physical commissioning and energization schedules.
+3. **Energization Milestone Timeline:** Construct quarterly timeline of scheduled energization vs. contractual debt service requirements through 2026–2028.
+4. **Interconnection Slippage Sensitivity:** Model stress scenarios where utility substation delivery slips 6, 12, or 18 months, identifying which debt covenants or lease penalty clauses trigger first.
+5. **Temporal Mismatch Index:** Quantify the latency between capital expenditure/debt inception and revenue-generating physical energization across operators.

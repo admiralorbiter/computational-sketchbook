@@ -221,8 +221,10 @@ This document defines the schema, types, constraints, and operational definition
 | `effective_date` | Date (str)| Yes | Execution date of power contract (`YYYY-MM-DD`). | `2024-06-04` |
 | `term_years` | Float | Yes | Stated initial agreement term duration in years. | `12.0` |
 | `capacity_basis_mw` | Float | No | Non-overlapping electrical capacity basis in Megawatts (MW) for regional concentration analysis. | `350.0` |
-| `claim_id` | String | No | Foreign Key referencing `power_claims.claim_id`. | `CLM-PWR-MDU-001` |
+| `claim_id` | String | No | Foreign Key referencing `power_claims.claim_id` (capacity/contract basis claim). | `CLM-PWR-MDU-001` |
 | `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted), `C` (Inferred). | `A` |
+| `reliability_claim_id` | String | No | Foreign Key referencing `power_claims.claim_id` for specific reliability regime provenance. | `CLM-PWR-CORZ-002` |
+| `reliability_evidence_class` | String | No | Trust classification for reliability regime: `A` (Filed), `B` (Asserted). | `A` |
 
 ---
 
@@ -245,19 +247,23 @@ This document defines the schema, types, constraints, and operational definition
 
 ## 13. Power Contract Terms Ledger (`power_terms.parquet` / `power_terms.csv`)
 
+Tracks 27 attribute-level contract terms (14 numeric capacity/MW terms, 100% Class A; 13 contractual reliability regime terms, 12 Class A, 1 Class B).
+
 | Column Name | Data Type | Nullable | Description / Controlled Vocabulary | Example |
 | :--- | :--- | :--- | :--- | :--- |
 | `term_id` | String | No | Primary Key: `PTERM-{OPERATOR}-{CAMPUS}-{ATTR}`. | `PTERM-APLD-PF1-ESA-INC` |
 | `power_rel_id` | String | No | Foreign Key referencing `power_relationships.power_rel_id`. | `PWR-APLD-PF1-MDU-ESA` |
-| `attribute` | String | No | Contractual attribute: `approved_service_capacity_mw`, `gross_utility_capacity_mw`, `allocated_hydro_power_mw`, `total_energized_capacity_mw`, `operating_datacenter_capacity_mw`, `planned_development_capacity_mw`, `grid_connection_capacity_mw`, `contracted_electricity_connection_mw`. | `approved_service_capacity_mw` |
-| `value` | String | No | String-encoded contractual value or regulatory parameter. | `350.0` |
-| `claim_id` | String | No | Foreign Key referencing `power_claims.claim_id`. | `CLM-PWR-MDU-001` |
-| `source_locator` | String | Yes | Specific Note, Item, or Exhibit locator in cited filing. | `Item 2. MD&A` |
-| `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted), `C` (Inferred). All current terms certified 100% Class A. | `A` |
+| `attribute` | String | No | Contractual attribute: `approved_service_capacity_mw`, `gross_utility_capacity_mw`, `allocated_hydro_power_mw`, `total_energized_capacity_mw`, `operating_datacenter_capacity_mw`, `planned_development_capacity_mw`, `grid_connection_capacity_mw`, `contracted_electricity_connection_mw`, `reliability_regime`. | `reliability_regime` |
+| `value` | String | No | String-encoded contractual value or regulatory parameter (`350.0`, `firm_service`, `mandatory_grid_emergency_curtailment`, `voluntary_price_response`). | `mandatory_grid_emergency_curtailment` |
+| `claim_id` | String | No | Foreign Key referencing `power_claims.claim_id`. | `CLM-PWR-CORZ-002` |
+| `source_locator` | String | Yes | Specific Note, Item, or Exhibit locator in cited filing. | `Item 8.01 Form 8-K` |
+| `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted). | `A` |
 
 ---
 
 ## 14. Power Evidence Ledger (`power_claims.parquet` / `power_claims.csv`)
+
+Tracks 9 primary evidence claims: 8 primary SEC EDGAR submissions validated via HTML verbatim quotes + 1 primary utility disclosure (`CLM-PWR-NBIS-002`) verified against cached raw source via cryptographic SHA-256 hash.
 
 | Column Name | Data Type | Nullable | Description | Example |
 | :--- | :--- | :--- | :--- | :--- |
@@ -271,5 +277,5 @@ This document defines the schema, types, constraints, and operational definition
 | `quote_type` | String | No | Typology: `source_excerpt`. | `source_excerpt` |
 | `exact_quote` | String | No | 100% normalized contiguous verbatim substring transcribed from primary disclosure. | *Text* |
 | `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted), `C` (Inferred). | `A` |
-| `extraction_method` | String | No | Audit protocol used to extract disclosure. | `SEC Form 10-Q direct audit` |
+| `extraction_method` | String | No | Audit protocol used to extract disclosure (`SEC Form 10-Q direct audit`, `Utility Press Disclosure direct audit`). | `SEC Form 10-Q direct audit` |
 | `verifier_notes` | String | Yes | Analytical context on physical power connectivity and grid boundary. | *Text* |

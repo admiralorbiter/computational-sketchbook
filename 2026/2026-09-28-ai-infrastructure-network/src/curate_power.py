@@ -102,6 +102,20 @@ def build_power_claims() -> pd.DataFrame:
             "verifier_notes": "Establishes 750 MW total / 650 MW operating capacity at Childress; 1,400 MW Sweetwater 1 development; 600 MW Sweetwater 2 development with executed grid connection agreements in ERCOT."
         },
         {
+            "claim_id": "CLM-PWR-IREN-002",
+            "entity_id": "IREN",
+            "filing_type": "10-K",
+            "accession_number": "0001878848-25-000063",
+            "filing_date": "2025-08-28",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1878848/000187884825000063/iren-20250630.htm",
+            "section_locator": "Note 7. Other Operating Income & Item 1. Business",
+            "quote_type": "source_excerpt",
+            "exact_quote": "Other operating income relates to income generated from a demand response program in Texas, insurance proceeds from the theft of miners in transit, and gain on disposal of coupons. The demand response program is designed to help ERCOT mitigate rolling blackouts. The Group receives recurring capacity payments for agreeing to curtail electricity consumption in response to abnormally high electricity demand or other grid emergencies.",
+            "evidence_class": "A",
+            "extraction_method": "SEC Form 10-K direct audit",
+            "verifier_notes": "Establishes voluntary price response and participation in ERCOT demand response and load curtailment programs in Texas."
+        },
+        {
             "claim_id": "CLM-PWR-NBIS-001",
             "entity_id": "NBIS",
             "filing_type": "20-F",
@@ -124,7 +138,7 @@ def build_power_claims() -> pd.DataFrame:
             "document_url": "https://nivos.fi/ajankohtaista/nebiuksen-datakeskus-laajeni-vauhdilla-nivos-vastasi-ketterasti-sahkonsiirron-tarpeisiin/",
             "section_locator": "Nivos Uutiset - Nebiuksen datakeskus laajeni vauhdilla",
             "quote_type": "source_excerpt",
-            "exact_quote": "Laajennushankkeen alkajaiseksi datakeskukselle oli varmistettava isompi, peräti 75 megawatin sähköliittymä. Koska olemme kehittäneet sähköverkkoamme ennakoivasti ja pitkäjänteisesti, onnistui näinkin suuren sähköliittymän sopiminen ripeästi... Suunnittelimme yhdessä Nebiuksen kanssa datakeskuksen siirtokaapeleille uudet reitit laajennuksen tieltä, jotta saimme sähkönjakelun toimimaan sujuvasti, kertoo toimitusjohtajamme Marko Ahl.",
+            "exact_quote": "Laajennushankkeen alkajaiseksi datakeskukselle oli varmistettava isompi, peräti 75 megawatin sähköliittymä. Koska olemme kehittäneet sähköverkkoamme ennakoivasti ja pitkäjänteisesti, onnistui näinkin suuren sähköliittymän sopiminen ripeästi.",
             "evidence_class": "A",
             "extraction_method": "Utility Press Disclosure direct audit",
             "verifier_notes": "Establishes Nivos Oy as local electric distribution utility delivering 75 MW connection to Nebius DC Oy in Mäntsälä."
@@ -318,7 +332,9 @@ def build_power_relationships() -> pd.DataFrame:
             "term_years": 10.0,
             "capacity_basis_mw": 350.0,
             "claim_id": "CLM-PWR-MDU-001",
-            "evidence_class": "A"
+            "evidence_class": "A",
+            "reliability_claim_id": "CLM-PWR-MDU-001",
+            "reliability_evidence_class": "A"
         },
         # Core Scientific Denton
         {
@@ -335,7 +351,9 @@ def build_power_relationships() -> pd.DataFrame:
             "term_years": 12.0,
             "capacity_basis_mw": 394.0,
             "claim_id": "CLM-PWR-CORZ-001",
-            "evidence_class": "A"
+            "evidence_class": "A",
+            "reliability_claim_id": "CLM-PWR-CORZ-002",
+            "reliability_evidence_class": "A"
         },
         # Core Scientific Dalton
         {
@@ -352,7 +370,9 @@ def build_power_relationships() -> pd.DataFrame:
             "term_years": 12.0,
             "capacity_basis_mw": 195.0,
             "claim_id": "CLM-PWR-CORZ-001",
-            "evidence_class": "A"
+            "evidence_class": "A",
+            "reliability_claim_id": "CLM-PWR-CORZ-001",
+            "reliability_evidence_class": "A"
         },
         # Core Scientific Muskogee
         {
@@ -369,7 +389,9 @@ def build_power_relationships() -> pd.DataFrame:
             "term_years": 12.0,
             "capacity_basis_mw": 100.0,
             "claim_id": "CLM-PWR-CORZ-001",
-            "evidence_class": "A"
+            "evidence_class": "A",
+            "reliability_claim_id": "CLM-PWR-CORZ-001",
+            "reliability_evidence_class": "A"
         },
         # Core Scientific Marble - Murphy Electric Power Board (35 MW)
         {
@@ -386,7 +408,9 @@ def build_power_relationships() -> pd.DataFrame:
             "term_years": 12.0,
             "capacity_basis_mw": 35.0,
             "claim_id": "CLM-PWR-CORZ-001",
-            "evidence_class": "A"
+            "evidence_class": "A",
+            "reliability_claim_id": "CLM-PWR-CORZ-001",
+            "reliability_evidence_class": "A"
         },
         # Core Scientific Marble - Duke Energy (82 MW)
         {
@@ -403,7 +427,9 @@ def build_power_relationships() -> pd.DataFrame:
             "term_years": 12.0,
             "capacity_basis_mw": 82.0,
             "claim_id": "CLM-PWR-CORZ-001",
-            "evidence_class": "A"
+            "evidence_class": "A",
+            "reliability_claim_id": "CLM-PWR-CORZ-001",
+            "reliability_evidence_class": "A"
         },
         # Core Scientific Austin
         {
@@ -420,7 +446,9 @@ def build_power_relationships() -> pd.DataFrame:
             "term_years": 12.0,
             "capacity_basis_mw": 20.0,
             "claim_id": "CLM-PWR-CORZ-001",
-            "evidence_class": "A"
+            "evidence_class": "A",
+            "reliability_claim_id": "CLM-PWR-CORZ-002",
+            "reliability_evidence_class": "A"
         },
         # TeraWulf Lake Mariner (90 MW NYPA allocation)
         {
@@ -437,7 +465,9 @@ def build_power_relationships() -> pd.DataFrame:
             "term_years": 10.0,
             "capacity_basis_mw": 90.0,
             "claim_id": "CLM-PWR-WULF-001",
-            "evidence_class": "A"
+            "evidence_class": "A",
+            "reliability_claim_id": "CLM-PWR-WULF-001",
+            "reliability_evidence_class": "A"
         },
         # IREN Childress
         {
@@ -454,7 +484,9 @@ def build_power_relationships() -> pd.DataFrame:
             "term_years": 15.0,
             "capacity_basis_mw": 750.0,
             "claim_id": "CLM-PWR-IREN-001",
-            "evidence_class": "A"
+            "evidence_class": "A",
+            "reliability_claim_id": "CLM-PWR-IREN-002",
+            "reliability_evidence_class": "A"
         },
         # IREN Sweetwater 1
         {
@@ -471,7 +503,9 @@ def build_power_relationships() -> pd.DataFrame:
             "term_years": None,
             "capacity_basis_mw": 1400.0,
             "claim_id": "CLM-PWR-IREN-001",
-            "evidence_class": "A"
+            "evidence_class": "A",
+            "reliability_claim_id": "CLM-PWR-IREN-001",
+            "reliability_evidence_class": "A"
         },
         # IREN Sweetwater 2
         {
@@ -488,7 +522,9 @@ def build_power_relationships() -> pd.DataFrame:
             "term_years": 15.0,
             "capacity_basis_mw": 600.0,
             "claim_id": "CLM-PWR-IREN-001",
-            "evidence_class": "A"
+            "evidence_class": "A",
+            "reliability_claim_id": "CLM-PWR-IREN-001",
+            "reliability_evidence_class": "A"
         },
         # Nebius Mäntsälä
         {
@@ -505,7 +541,9 @@ def build_power_relationships() -> pd.DataFrame:
             "term_years": 10.0,
             "capacity_basis_mw": 75.0,
             "claim_id": "CLM-PWR-NBIS-002",
-            "evidence_class": "A"
+            "evidence_class": "A",
+            "reliability_claim_id": "CLM-PWR-NBIS-002",
+            "reliability_evidence_class": "A"
         },
         # Nebius Lappeenranta
         {
@@ -522,7 +560,9 @@ def build_power_relationships() -> pd.DataFrame:
             "term_years": None,
             "capacity_basis_mw": 310.0,
             "claim_id": "CLM-PWR-NBIS-001",
-            "evidence_class": "B"
+            "evidence_class": "B",
+            "reliability_claim_id": "CLM-PWR-NBIS-001",
+            "reliability_evidence_class": "B"
         }
     ]
     df = pd.DataFrame(rels)
@@ -594,6 +634,7 @@ def build_power_facts() -> pd.DataFrame:
 
 def build_power_terms() -> pd.DataFrame:
     terms = [
+        # Numeric Capacity and Allocation Terms (14 terms, 100% Class A)
         {"term_id": "PTERM-APLD-PF1-ESA-INC", "power_rel_id": "PWR-APLD-PF1-MDU-ESA", "attribute": "approved_service_capacity_mw", "value": "350.0", "claim_id": "CLM-PWR-MDU-001", "source_locator": "Item 2. MD&A", "evidence_class": "A"},
         {"term_id": "PTERM-CORZ-DME-CAP", "power_rel_id": "PWR-CORZ-DENTON-DME", "attribute": "gross_utility_capacity_mw", "value": "394.0", "claim_id": "CLM-PWR-CORZ-001", "source_locator": "Item 2. Properties Table", "evidence_class": "A"},
         {"term_id": "PTERM-CORZ-DALTON-CAP", "power_rel_id": "PWR-CORZ-DALTON-DALTON", "attribute": "gross_utility_capacity_mw", "value": "195.0", "claim_id": "CLM-PWR-CORZ-001", "source_locator": "Item 2. Properties Table", "evidence_class": "A"},
@@ -607,7 +648,22 @@ def build_power_terms() -> pd.DataFrame:
         {"term_id": "PTERM-IREN-CHIL-OPERATING", "power_rel_id": "PWR-IREN-CHIL-ERCOT", "attribute": "operating_datacenter_capacity_mw", "value": "650.0", "claim_id": "CLM-PWR-IREN-001", "source_locator": "Item 1. Business", "evidence_class": "A"},
         {"term_id": "PTERM-IREN-SW1-TOTAL", "power_rel_id": "PWR-IREN-SW1-ERCOT", "attribute": "planned_development_capacity_mw", "value": "1400.0", "claim_id": "CLM-PWR-IREN-001", "source_locator": "Item 1. Business", "evidence_class": "A"},
         {"term_id": "PTERM-IREN-SW2-AEP", "power_rel_id": "PWR-IREN-SW2-AEP-TX", "attribute": "grid_connection_capacity_mw", "value": "600.0", "claim_id": "CLM-PWR-IREN-001", "source_locator": "Item 1. Business", "evidence_class": "A"},
-        {"term_id": "PTERM-NBIS-MANTSALA-NIVOS", "power_rel_id": "PWR-NBIS-MANTSALA-NIVOS", "attribute": "contracted_electricity_connection_mw", "value": "75.0", "claim_id": "CLM-PWR-NBIS-002", "source_locator": "Press Release", "evidence_class": "A"}
+        {"term_id": "PTERM-NBIS-MANTSALA-NIVOS", "power_rel_id": "PWR-NBIS-MANTSALA-NIVOS", "attribute": "contracted_electricity_connection_mw", "value": "75.0", "claim_id": "CLM-PWR-NBIS-002", "source_locator": "Press Release", "evidence_class": "A"},
+
+        # Contractual Reliability Regime Provenance Terms (13 terms: 12 Class A, 1 Class B)
+        {"term_id": "PTERM-APLD-PF1-REGIME", "power_rel_id": "PWR-APLD-PF1-MDU-ESA", "attribute": "reliability_regime", "value": "firm_service", "claim_id": "CLM-PWR-MDU-001", "source_locator": "Item 2. MD&A", "evidence_class": "A"},
+        {"term_id": "PTERM-CORZ-DENTON-REGIME", "power_rel_id": "PWR-CORZ-DENTON-DME", "attribute": "reliability_regime", "value": "mandatory_grid_emergency_curtailment", "claim_id": "CLM-PWR-CORZ-002", "source_locator": "Item 8.01 Form 8-K", "evidence_class": "A"},
+        {"term_id": "PTERM-CORZ-DALTON-REGIME", "power_rel_id": "PWR-CORZ-DALTON-DALTON", "attribute": "reliability_regime", "value": "firm_service", "claim_id": "CLM-PWR-CORZ-001", "source_locator": "Item 2. Properties Table", "evidence_class": "A"},
+        {"term_id": "PTERM-CORZ-MUSKOGEE-REGIME", "power_rel_id": "PWR-CORZ-MUSKOGEE-OGE", "attribute": "reliability_regime", "value": "firm_service", "claim_id": "CLM-PWR-CORZ-001", "source_locator": "Item 2. Properties Table", "evidence_class": "A"},
+        {"term_id": "PTERM-CORZ-MURPHY-REGIME", "power_rel_id": "PWR-CORZ-MARBLE-MURPHY", "attribute": "reliability_regime", "value": "firm_service", "claim_id": "CLM-PWR-CORZ-001", "source_locator": "Item 2. Properties Table", "evidence_class": "A"},
+        {"term_id": "PTERM-CORZ-DUKE-REGIME", "power_rel_id": "PWR-CORZ-MARBLE-DUKE", "attribute": "reliability_regime", "value": "firm_service", "claim_id": "CLM-PWR-CORZ-001", "source_locator": "Item 2. Properties Table", "evidence_class": "A"},
+        {"term_id": "PTERM-CORZ-AUSTIN-REGIME", "power_rel_id": "PWR-CORZ-AUSTIN-AUSTIN", "attribute": "reliability_regime", "value": "mandatory_grid_emergency_curtailment", "claim_id": "CLM-PWR-CORZ-002", "source_locator": "Item 8.01 Form 8-K", "evidence_class": "A"},
+        {"term_id": "PTERM-WULF-LM-REGIME", "power_rel_id": "PWR-WULF-LM-NYPA", "attribute": "reliability_regime", "value": "firm_service", "claim_id": "CLM-PWR-WULF-001", "source_locator": "Note 11", "evidence_class": "A"},
+        {"term_id": "PTERM-IREN-CHIL-REGIME", "power_rel_id": "PWR-IREN-CHIL-ERCOT", "attribute": "reliability_regime", "value": "voluntary_price_response", "claim_id": "CLM-PWR-IREN-002", "source_locator": "Note 7 & Item 1", "evidence_class": "A"},
+        {"term_id": "PTERM-IREN-SW1-REGIME", "power_rel_id": "PWR-IREN-SW1-ERCOT", "attribute": "reliability_regime", "value": "interconnection_not_energized", "claim_id": "CLM-PWR-IREN-001", "source_locator": "Item 1. Business", "evidence_class": "A"},
+        {"term_id": "PTERM-IREN-SW2-REGIME", "power_rel_id": "PWR-IREN-SW2-AEP-TX", "attribute": "reliability_regime", "value": "interconnection_not_energized", "claim_id": "CLM-PWR-IREN-001", "source_locator": "Item 1. Business", "evidence_class": "A"},
+        {"term_id": "PTERM-NBIS-MANTSALA-REGIME", "power_rel_id": "PWR-NBIS-MANTSALA-NIVOS", "attribute": "reliability_regime", "value": "firm_service", "claim_id": "CLM-PWR-NBIS-002", "source_locator": "Press Release", "evidence_class": "A"},
+        {"term_id": "PTERM-NBIS-LAPPEENRANTA-REGIME", "power_rel_id": "PWR-NBIS-LAPPEENRANTA-PENDING", "attribute": "reliability_regime", "value": "interconnection_not_energized", "claim_id": "CLM-PWR-NBIS-001", "source_locator": "Item 4", "evidence_class": "B"}
     ]
     df = pd.DataFrame(terms)
     df.to_parquet(PROCESSED_DIR / "power_terms.parquet", index=False)

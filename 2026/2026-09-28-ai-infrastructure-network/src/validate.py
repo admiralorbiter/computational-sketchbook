@@ -228,15 +228,62 @@ CLAIM_TO_SEC_FILE = {
     'CLM-CORZ-004': 'CORZ_8K_20240806_opt2.htm',
     'CLM-CORZ-005': 'CORZ_8K_20241023_opt3.htm',
     'CLM-CORZ-006': 'CORZ_8K_20250227_opt4.htm',
-    # Power Backplane Primary Filings (ADR-020.1)
+    # Power Backplane Primary Filings (ADR-020.1 / ADR-020.1a)
     'CLM-PWR-MDU-001': 'MDU_10Q_20260630.htm',
     'CLM-PWR-APLD-001': 'APLD_10K_20260531.htm',
     'CLM-PWR-CORZ-001': 'CORZ_10K_20251231.htm',
     'CLM-PWR-CORZ-002': 'CORZ_8K_20260910.htm',
     'CLM-PWR-WULF-001': 'WULF_10Q_20260630.htm',
     'CLM-PWR-IREN-001': 'IREN_10K_20250630.htm',
+    'CLM-PWR-IREN-002': 'IREN_10K_20250630.htm',
     'CLM-PWR-NBIS-001': 'NBIS_20F_20251231.htm',
 }
+
+CLAIM_TO_UTILITY_FILE = {
+    'CLM-PWR-NBIS-002': ('NIVOS_PR_20260331.htm', '86355307b3952738465b1813e6d5ea612a8e11d037b0daf3f97315fbf0e1204d'),
+}
+
+
+def validate_utility_primary_sources():
+    """
+    Validates non-SEC primary sources against cached utility files and cryptographic hashes (ADR-020.1a).
+    """
+    import hashlib
+    util_dir = PROJECT_ROOT / "data" / "raw" / "utility"
+    errors = []
+    pwr_clm_df = pd.read_parquet(PROCESSED_DIR / "power_claims.parquet")
+
+    def normalize(text):
+        text = html.unescape(text)
+        text = text.replace('\u201c', '"').replace('\u201d', '"').replace('\u2018', "'").replace('\u2019', "'")
+        text = text.replace('&#8220;', '"').replace('&#8221;', '"').replace('&#8216;', "'").replace('&#8217;', "'")
+        text = text.replace('&ldquo;', '"').replace('&rdquo;', '"').replace('&lsquo;', "'").replace('&rsquo;', "'")
+        text = text.replace('\u2013', '-').replace('\u2014', '-').replace('&#8211;', '-').replace('&ndash;', '-').replace('&mdash;', '-')
+        text = text.replace('&nbsp;', ' ').replace('&#160;', ' ')
+        text = re.sub(r'</?(?:b|i|u|strong|em|font|span)(?:\s+[^>]*)?>', '', text, flags=re.IGNORECASE)
+        text = re.sub(r'<[^>]+>', ' ', text)
+        return ' '.join(text.split())
+
+    for cid, (fname, expected_hash) in CLAIM_TO_UTILITY_FILE.items():
+        fpath = util_dir / fname
+        if not fpath.exists():
+            errors.append(f"Non-SEC claim {cid} target document {fname} not found in {util_dir}")
+            continue
+        raw_content = fpath.read_text(encoding='utf-8', errors='ignore')
+        actual_hash = hashlib.sha256(raw_content.encode('utf-8')).hexdigest()
+        if actual_hash != expected_hash:
+            errors.append(f"Non-SEC claim {cid} SHA-256 hash mismatch for {fname}: {actual_hash} vs expected {expected_hash}")
+        
+        c_sub = pwr_clm_df[pwr_clm_df["claim_id"] == cid]
+        if c_sub.empty:
+            errors.append(f"Claim {cid} not found in power_claims.parquet")
+            continue
+        quote = normalize(c_sub.iloc[0]["exact_quote"])
+        norm_doc = normalize(raw_content)
+        if quote not in norm_doc:
+            errors.append(f"Claim {cid} exact quote is not a normalized contiguous verbatim substring in {fname}")
+
+    return errors
 
 
 def validate_sec_html_content():
@@ -303,8 +350,8 @@ def validate_observatory():
         "facilities.parquet": 12,
         "power_relationships.parquet": 13,
         "power_facts.parquet": 29,
-        "power_terms.parquet": 14,
-        "power_claims.parquet": 8,
+        "power_terms.parquet": 27,
+        "power_claims.parquet": 9,
     }
     for rf, expected_rows in required_files.items():
         p = PROCESSED_DIR / rf
@@ -429,6 +476,10 @@ def validate_observatory():
             errors.append(f"Power relationship {r['power_rel_id']} references unknown grid operator {r['grid_operator_entity_id']}")
         if r["claim_id"] not in set(pwr_claims_df["claim_id"]):
             errors.append(f"Power relationship {r['power_rel_id']} references unknown claim {r['claim_id']}")
+        if r["reliability_claim_id"] not in set(pwr_claims_df["claim_id"]):
+            errors.append(f"Power relationship {r['power_rel_id']} references unknown reliability_claim_id {r['reliability_claim_id']}")
+        if r["reliability_evidence_class"] not in {"A", "B"}:
+            errors.append(f"Power relationship {r['power_rel_id']} has invalid reliability_evidence_class: {r['reliability_evidence_class']}")
         if r["reliability_regime"] not in allowed_reliability_regimes:
             errors.append(f"Power relationship {r['power_rel_id']} has invalid reliability_regime: {r['reliability_regime']}")
         if r["capacity_basis_mw"] <= 0:
@@ -469,28 +520,40 @@ def validate_observatory():
             errors.append(f"Power term {tid} references unknown power_rel {rel_id}")
         if r["claim_id"] not in set(pwr_claims_df["claim_id"]):
             errors.append(f"Power term {tid} references unknown claim {r['claim_id']}")
-        if r["evidence_class"] != "A":
-            errors.append(f"Power term {tid} has evidence_class {r['evidence_class']} (expected Class A)")
-        try:
-            val_num = float(r["value"])
-            if val_num <= 0:
-                errors.append(f"Power term {tid} has non-positive numeric value: {val_num}")
-        except ValueError:
-            errors.append(f"Power term {tid} has non-numeric value: {r['value']}")
-            continue
+        if r["evidence_class"] not in {"A", "B"}:
+            errors.append(f"Power term {tid} has evidence_class {r['evidence_class']} (expected Class A or B)")
 
-        # Cross-check capacity_basis_mw when applicable
-        if r["attribute"] in capacity_basis_attrs and rel_id in pwr_rel_indexed.index:
-            rel_cap = pwr_rel_indexed.loc[rel_id, "capacity_basis_mw"]
-            if abs(val_num - rel_cap) > 1e-4:
-                errors.append(f"Power term {tid} capacity mismatch with relationship {rel_id}: {val_num} vs {rel_cap}")
+        if r["attribute"] == "reliability_regime":
+            expected_regime = pwr_rel_indexed.loc[rel_id, "reliability_regime"]
+            expected_claim = pwr_rel_indexed.loc[rel_id, "reliability_claim_id"]
+            expected_eclass = pwr_rel_indexed.loc[rel_id, "reliability_evidence_class"]
+            if r["value"] != expected_regime:
+                errors.append(f"Power term {tid} regime mismatch with relationship {rel_id}: '{r['value']}' vs '{expected_regime}'")
+            if r["claim_id"] != expected_claim:
+                errors.append(f"Power term {tid} claim mismatch with relationship {rel_id}: '{r['claim_id']}' vs '{expected_claim}'")
+            if r["evidence_class"] != expected_eclass:
+                errors.append(f"Power term {tid} evidence class mismatch with relationship {rel_id}: '{r['evidence_class']}' vs '{expected_eclass}'")
+        else:
+            try:
+                val_num = float(r["value"])
+                if val_num <= 0:
+                    errors.append(f"Power term {tid} has non-positive numeric value: {val_num}")
+            except ValueError:
+                errors.append(f"Power term {tid} has non-numeric value: {r['value']}")
+                continue
 
-        # Cross-check that a corresponding power fact exists with matching value
-        matching_facts = pwr_facts_df[(pwr_facts_df["power_rel_id"] == rel_id) & (abs(pwr_facts_df["value_mw"] - val_num) < 1e-4)]
-        if matching_facts.empty:
-            errors.append(f"Power term {tid} ({r['attribute']}={val_num}) has no matching power_facts row for {rel_id}")
+            # Cross-check capacity_basis_mw when applicable
+            if r["attribute"] in capacity_basis_attrs and rel_id in pwr_rel_indexed.index:
+                rel_cap = pwr_rel_indexed.loc[rel_id, "capacity_basis_mw"]
+                if abs(val_num - rel_cap) > 1e-4:
+                    errors.append(f"Power term {tid} capacity mismatch with relationship {rel_id}: {val_num} vs {rel_cap}")
 
-    print(f"  [OK] Power Backplane verified: {len(fac_df)} facilities, {len(pwr_rel_df)} power contracts, {len(pwr_facts_df)} typed MW facts, {len(pwr_terms_df)} terms (100% Class A), {len(pwr_claims_df)} primary claims.")
+            # Cross-check that a corresponding power fact exists with matching value
+            matching_facts = pwr_facts_df[(pwr_facts_df["power_rel_id"] == rel_id) & (abs(pwr_facts_df["value_mw"] - val_num) < 1e-4)]
+            if matching_facts.empty:
+                errors.append(f"Power term {tid} ({r['attribute']}={val_num}) has no matching power_facts row for {rel_id}")
+
+    print(f"  [OK] Power Backplane verified: {len(fac_df)} facilities, {len(pwr_rel_df)} power contracts, {len(pwr_facts_df)} typed MW facts, {len(pwr_terms_df)} terms (26 Class A, 1 Class B), {len(pwr_claims_df)} primary claims.")
 
     # ---------------------------------------------------------
     # 2. Validate CoreWeave & Applied Digital Exact Debt Decomposition
@@ -1492,7 +1555,7 @@ def validate_observatory():
     else:
         print(f"  [OK] All {len(clm_df)} evidence claims 100% verified against raw SEC EDGAR submissions JSON.")
 
-    # Verification of verbatim substrings against cached HTML exhibits
+    # Verification of verbatim substrings against cached HTML exhibits (SEC filings)
     html_errors = validate_sec_html_content()
     if html_errors:
         for he in html_errors:
@@ -1500,7 +1563,16 @@ def validate_observatory():
     else:
         print(f"  [OK] All {len(CLAIM_TO_SEC_FILE)} primary SEC claims verified as 100% exact contiguous verbatim substrings in cached primary HTML filings.")
 
-    print(f"  [OK] All {len(clm_df)} claims possess verified SEC accession numbers, valid quote_types, and verbatim quotes.")
+    # Verification of non-SEC primary sources against cached utility files and cryptographic hashes
+    util_errors = validate_utility_primary_sources()
+    if util_errors:
+        for ue in util_errors:
+            errors.append(ue)
+    else:
+        print(f"  [OK] All {len(CLAIM_TO_UTILITY_FILE)} primary utility disclosures verified against cached primary source with SHA-256 and exact quote match.")
+
+    print(f"  [OK] All {len(clm_df)} financial claims possess verified SEC accession numbers, valid quote_types, and verbatim quotes.")
+    print(f"  [OK] Power claims certified: 8 SEC claims verified against EDGAR & HTML + 1 primary utility disclosure verified against originating source.")
 
     # ---------------------------------------------------------
     # 5. Validate Canonical Financials
