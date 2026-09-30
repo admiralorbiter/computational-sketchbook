@@ -1,189 +1,160 @@
-# Analysis Sprint 2: Hidden Dependency & Protection Independence
+# Analysis Sprint 2.1: Exploratory Analysis of Contractual Protection Compression and Paired-Shock Scenarios
 
 **Date:** September 30, 2026  
-**Status:** Certified Research Finding  
-**Analytical Scope:** Frozen Dataset (Commit `42f9a74`) — Zero Schema or Dataset Expansion  
+**Status:** Certified Exploratory Research Report (Downgraded from Empirical Proof)  
+**Dataset Reference:** Frozen Dataset at Commit `42f9a74` (Zero Schema or Data Expansion)  
 **Artifacts Generated:**  
 - Summary Matrix: `outputs/analysis/protection_independence_summary.json`
-- Protection Mapping: `outputs/analysis/protection_mapping_table.csv`
-- Minimum Failure Sets: `outputs/analysis/minimum_failure_sets.csv`
-- Lender Diversity Profile: `outputs/analysis/lender_diversity_profile.csv`
+- Protection Mapping Table: `outputs/analysis/protection_mapping_table.csv`
+- Selected Paired Scenarios: `outputs/analysis/selected_paired_scenarios.csv`
+- Role-Aware Capital Profile: `outputs/analysis/lender_role_profile.csv`
 - Figure 1: `outputs/figures/protection_independence_matrix.png`
 - Figure 2: `outputs/figures/minimum_failure_sets_stress.png`
 
 ---
 
-## Executive Summary & Core Research Question
+## Executive Summary & Methodological Framing
 
-Prior research into AI infrastructure capital formation often reduced the sector's financial leverage to a monolithic narrative: *"AI developers have borrowed tens of billions in private credit."*
+In this sprint, we explore the structural mechanisms governing AI infrastructure financing. Specifically, we investigate whether sophisticated multi-layered credit safeguards (reserves, parent guarantees, SPVs, escrow accounts, borrowing bases) draw on genuinely independent economic resources or whether they reconverge onto a smaller set of shared operational dependencies.
 
-However, closer inspection of primary loan indentures, delayed-draw term loans (DDTLs), and project finance covenants reveals an opposite institutional reality: **the financing contracts are individually engineered with extraordinary sophistication to look resilient.** Borrowers, sponsors, and lenders erect multi-layered defenses—including debt service reserve accounts (DSRAs), bankruptcy-remote special purpose vehicles (SPVs), condition-precedent escrow accounts, parent completion covenants, and staged milestone drawdowns.
-
-This raises the foundational empirical question:
-
-$$\textbf{Research Question: Do apparently independent contractual protections ultimately rely on independent economic resources, or do they reconverge on the same underlying risk nodes?}$$
-
-### The Pre-Declared Falsification Boundary
-Before executing this analysis sprint, we formally defined what empirical observations would falsify or support our competing hypotheses:
-
-1. **Supports Concentration Thesis ($PIR < 0.50$ or Severe Reconvergence):**  
-   If multiple distinct contractual protections within a facility repeatedly terminate at the same sponsor liquidity pool, same anchor customer, same power milestone, or same refinancing channel, the structure creates an **illusion of diversification**.
-2. **Supports Resilience Thesis ($PIR \ge 0.75$ or High Structural Orthogonality):**  
-   If contractual protections terminate across genuinely independent balance sheets, liquid secondary collateral, and non-correlated operational mechanisms, the financing structure possesses **genuine multi-barrier resilience**.
-3. **Unresolved / Indeterminate:**  
-   If public filings fail to disclose the terminal support mechanism or counterparty depth.
-
-```
-========================================================================================================
-             THE PROTECTION INDEPENDENCE FRAMEWORK: MEASURING STRUCTURAL RECONVERGENCE
-========================================================================================================
-
-   [ CONTRACTUAL SAFELAYERS ]                                  [ TERMINAL SUPPORT NODES ]
-   Multiple Covenants, Reserves, Guarantees                     Ultimate Source of Economic Value
-   
-   * DSRA Reserve Accounts ------------+
-   * Parent Completion Covenants ------+---------------------> (1) SPONSOR PARENT LIQUIDITY (APLD/CRWV)
-   * Corporate Bad-Acts Guarantees ----+
-   
-   * Anchor 15-Year Take-or-Pay Lease -+---------------------> (2) ANCHOR CUSTOMER DEMAND (MSFT Maia Risk)
-   * Dedicated Cluster Offtake --------+
-   
-   * Goldman Sachs Escrow Gating ------+
-   * Substation & Facility Mortgages --+---------------------> (3) REGIONAL POWER ENERGIZATION (MDU / ERCOT)
-   * Operating Grid Interconnects -----+
-   
-   * Borrowing Base Advance Rates -----+---------------------> (4) GPU SECONDARY COLLATERAL (H100 Obsolescence)
-   * Equipment Security Interests -----+
-   
-   * Staged Delivery Drawdowns --------+---------------------> (5) VENDOR HARDWARE SUPPLY CHAIN
-   * Availability Window Cliffs -------+---------------------> (6) CAPITAL MARKETS REFINANCING
-========================================================================================================
-```
+### Epistemic Classification: Index vs. Empirical Statistic
+Following internal review, we establish an essential methodological clarification:
+> [!IMPORTANT]
+> **Analytical Index Classification:**
+> The **Support-Node Compression Ratio (SNCR)** is a **coded analytical index**, not an automated empirical measurement or pre-registered falsification statistic.
+> The ratio reflects an analyst's structured mapping of legal covenants to underlying economic resources.
+> To prevent over-formalizing qualitative judgment, this report:
+> 1. Renames the metric to the **Support-Node Compression Ratio (SNCR)**.
+> 2. Implements a multi-model sensitivity analysis across three plausible mapping frameworks.
+> 3. Categorizes every protection with explicit epistemic metadata (`mapping_basis`, `terminal_node_confidence`, `protection_status`).
+> 4. Downgrades "minimum failure sets" to **Selected Paired-Shock Scenarios** (exploratory stress cases).
+> 5. Refines the lender-diversification finding from "cartel refuted" to **"lender concentration across private-credit institutions is not demonstrated in the current modeled sample."**
 
 ---
 
-## 1. Quantitative Protection Independence Audit
+## 1. The Support-Node Compression Framework
 
-We evaluated five representative structural archetypes across the observatory:
-1. **PF1 (Applied Digital - Polaris Forge 1):** \$3.940B total capital (\$2.35B 9.25% Notes due 2030 + \$1.59B 7.00% Notes due 2031 + 400 MW Master Lease).
-2. **PF2 (Applied Digital - Polaris Forge 2):** \$2.150B 6.75% Notes due 2031 (Pre-service 200 MW campus).
-3. **Mackenzie (IREN - Mackenzie Campus):** \$2.400B committed equipment credit line (\$1.2B MFSA + \$1.2B Notes @ 9.00%).
-4. **CoreWeave DDTLs (CoreWeave Equipment Debt):** \$10.643B across 5 delayed-draw term loans (DDTL 1.0–5.0).
-5. **Nebius Term Loan (Nebius / MUFG Facility):** \$775M syndicated term loan on Mäntsälä datacenter & GPUs.
+The Support-Node Compression Ratio measures the extent to which $N_{\text{prot}}$ distinct contractual safeguards depend on $N_{\text{nodes}}$ underlying economic support nodes:
 
-### Empirical Audit Summary
+$$\text{SNCR} = \frac{N_{\text{nodes}}}{N_{\text{prot}}}$$
 
-| Structure ID | Structure Name & Category | Capital Volume (\$B) | Protection Count ($N_{\text{prot}}$) | Unique Terminal Nodes ($N_{\text{term}}$) | Protection Independence Ratio ($PIR$) | Convergence Index ($1 - PIR$) | Empirical Falsification Verdict |
+A ratio of $1.00$ indicates that every stated protection draws on a distinct legal or economic mechanism under that mapping. A ratio $< 0.50$ indicates substantial compression, where multiple protections share a single point of failure.
+
+### Multi-Model Sensitivity Design
+Because assigning a contractual covenant to an underlying economic resource involves interpretation, we evaluate three sensitivity models:
+- **Model 1: Economic Convergence (Systemic Baseline):** Groups protections by their ultimate systemic macroeconomic or physical driver (e.g. treating DSRA replenishment and parent guarantees as shared sponsor parent liquidity).
+- **Model 2: Legal Partitioning (Strict Contractual Form):** Honors formal legal separations (e.g. treating SPV estate partitioning as distinct from parent corporate liquidity, and prefunded escrow accounts as independent from general corporate credit).
+- **Model 3: Active-Only Covenants (Lifecycle Filtered):** Prunes expired protections (such as the PF2 Goldman Sachs escrow account, which was satisfied upon ESA execution on June 18, 2026) and dormant springing guaranties.
+
+### Multi-Model Sensitivity Table across 5 Benchmark Structures
+
+| Structure ID | Structure Name & Category | Capital Volume (\$B) | Total Protections ($N_{\text{prot}}$) | Model 1: Economic Convergence | Model 2: Legal Partitioning | Model 3: Active-Only Covenants | Baseline Model 1 Classification |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **PF1** | APLD Polaris Forge 1 *(Project Debt)* | \$3.940B | 6 | 4 | **0.6667** | 0.3333 | **Concentration Supported** *(Moderate Reconvergence)* |
-| **PF2** | APLD Polaris Forge 2 *(Project Debt)* | \$2.150B | 4 | 2 | **0.5000** | 0.5000 | **Concentration Supported** *(Severe Reconvergence)* |
-| **CRWV_DDTL** | CoreWeave DDTLs 1-5 *(Equipment Credit)* | \$10.643B | 6 | 3 | **0.5000** | 0.5000 | **Concentration Supported** *(Severe Reconvergence)* |
-| **MACKENZIE** | IREN Mackenzie *(Staged Equipment Credit)* | \$2.400B | 4 | 4 | **1.0000** | 0.0000 | **Resilience Supported** *(Complete Orthogonality)* |
-| **NBIS_MUFG** | Nebius Mäntsälä *(DC & GPU Term Loan)* | \$0.775B | 3 | 3 | **1.0000** | 0.0000 | **Resilience Supported** *(Complete Orthogonality)* |
+| **PF1** | APLD Polaris Forge 1 *(Project Debt)* | \$3.940B | 6 | **0.6667** | **0.6667** | **0.7500** | Moderate Compression / Mixed *(0.50 $\le$ SNCR < 0.75)* |
+| **PF2** | APLD Polaris Forge 2 *(Project Debt)* | \$2.150B | 4 | **0.5000** | **1.0000** | **0.6667** | Moderate Compression / Mixed *(0.50 $\le$ SNCR < 0.75)* |
+| **CRWV_DDTL**| CoreWeave DDTLs 1-5 *(Equipment Credit)* | \$13.643B | 7 | **0.5714** | **1.0000** | **0.5714** | Moderate Compression / Mixed *(0.50 $\le$ SNCR < 0.75)* |
+| **MACKENZIE** | IREN Mackenzie *(Staged Equipment Credit)*| \$2.400B | 4 | **1.0000** | **1.0000** | **1.0000** | High Independence *(SNCR $\ge$ 0.75)* |
+| **NBIS_MUFG** | Nebius Mäntsälä *(DC & GPU Term Loan)* | \$0.775B | 2 | **1.0000** | **1.0000** | **1.0000** | High Independence *(SNCR $\ge$ 0.75)* |
 
-$$\textbf{Key Finding: PF2 and CoreWeave DDTLs collapse into half their stated protections (PIR = 0.50).}$$
-$$\textbf{Mackenzie and Nebius achieve complete structural independence (PIR = 1.00) via pre-draw milestone gating and unencumbered treasury reserves.}$$
+> [!NOTE]
+> **Sensitivity Insight:**
+> Notice that PF2's score moves from **0.5000** (under economic convergence) to **1.0000** (under strict legal form) and **0.6667** (under active-only covenants). CoreWeave DDTLs move from **0.5714** to **1.0000**.
+> This directly proves that compression scores are highly sensitive to legal vs. economic definitions of independence, and should be interpreted as exploratory indices rather than definitive empirical truths.
 
 ---
 
 ## 2. Publication Visualizations
 
-![Protection Independence Matrix](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-28-ai-infrastructure-network/outputs/figures/protection_independence_matrix.png)
+![Support-Node Compression & Sensitivity](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-28-ai-infrastructure-network/outputs/figures/protection_independence_matrix.png)
 
 ### Analysis of Figure 1:
-- **Panel A (Contractual Protections vs. Terminal Nodes):** Demonstrates that nominal protection counts ($N_{\text{prot}} \in [4, 6]$) overstate economic resilience in project debt and neocloud equipment lines. PF2 boasts 4 distinct legal protections, yet they collapse into just 2 terminal economic nodes. CoreWeave DDTLs feature 6 separate layers (borrowing base advance rates, cash covenants, SPV ring-fencing, parent guarantees, co-borrower cross-liability, customer contracts) that collapse into 3 terminal points of failure.
-- **Panel B (Protection Independence Ratio):** Color-codes structures against pre-declared thresholds. PF2 and CoreWeave DDTLs hit the severe reconvergence boundary ($PIR = 0.50$), while Mackenzie and Nebius clear the high independence bar ($PIR = 1.00$).
+- **Panel A (Multi-Model Sensitivity):** Contrasts how the compression ratio shifts when legal distinctions are respected vs. when economic convergence is assumed. While project debt and neocloud borrowing bases exhibit compression under economic convergence, their legal covenants remain partitioned under strict contractual modeling.
+- **Panel B (Contractual Protections vs. Underlying Nodes):** Compares total covenants against Model 1 economic nodes, illustrating the degree to which legal structuring multiplies nominal protections on top of shared core dependencies.
 
 ---
 
-## 3. Case Studies: Reconvergence vs. Orthogonality
+## 3. Epistemic Audit of the Five Benchmark Structures
 
-### Case 1: The Severe Reconvergence Archetype (APLD Polaris Forge 2)
-Polaris Forge 2 is protected by four distinct contractual layers:
-1. *Goldman Sachs Escrow Gating:* Gross proceeds withheld until Electric Service Agreement execution.
-2. *Project DSRA:* Prefunded cash reserve account.
-3. *APLD Parent Construction Completion Support:* Mandatory sponsor shortfall funding.
-4. *Senior Secured Project Liens:* First-priority mortgage on project substation and land.
+### 1. Applied Digital Polaris Forge 1 & 2 (Project Debt)
+- **PF1 (\$3.940B Total Capital):** Comprises \$2.350B 9.25% notes, \$1.590B 7.00% notes, and 400 MW master lease.
+  - *DSRA (`contract_explicit`, Conf A):* Prefunded from note proceeds. Buffers interest temporarily; in a prolonged delay, replenishment falls back on sponsor equity.
+  - *Sponsor Parent Completion Guarantee (`contract_explicit`, Conf A):* Uncapped shortfall funding covenant legally pointing to Applied Digital, Inc.
+  - *First-Priority Mortgage Lien (`economic_inference`, Conf B):* Land and substation assets. Its ultimate recovery value is economically linked to regional grid energization.
+  - *CoreWeave Master Lease & Springing Guaranties (`contract_explicit`, Conf A):* ELN-02 and ELN-03 springing indemnities remain **dormant until data hall delivery**; they do not fund pre-delivery construction delays.
+- **PF2 (\$2.150B Notes due 2031):**
+  - *Goldman Sachs Escrow Gating (`contract_explicit`, Conf A):* Gross proceeds were withheld until Electric Service Agreement execution. **Note:** This protection is **expired / satisfied** (condition met June 18, 2026; Form 10-K Note 8). Once released, escrow cash converts into active construction spending.
 
-**Where do they terminate?**
-- Protections 2 & 3 terminate at **Applied Digital Parent Liquidity** (`APLD_PARENT_LIQUIDITY`). If the sponsor's equity or convertible access is impaired, both the DSRA replenishment and the completion guarantee fail simultaneously.
-- Protections 1 & 4 terminate at **Regional Power Energization** (`POWER_GRID_ENERGIZATION`). The escrow condition was gated on the utility ESA, and the liquidation value of an unenergized 200 MW civil shell in North Dakota approaches scrap value without utility power.
-- **Result:** Four contractual barriers collapse into **two underlying variables**.
+### 2. CoreWeave DDTL Portfolio (\$13.643B Active Stack)
+The active delayed-draw term loan portfolio sums to **\$13.643B across 6 facilities** (including the \$3.000B DDTL 2.1 omitted in preliminary drafts):
+- DDTL 1.0: \$1.300B (Blackstone / Magnetar)
+- DDTL 2.0: \$3.190B (Blackstone / Magnetar)
+- DDTL 2.1: \$3.000B (Blackstone / Magnetar)
+- DDTL 3.0: \$2.215B (MUFG Bank Syndicate)
+- DDTL 4.0: \$2.837B (MUFG Bank Syndicate)
+- DDTL 5.0: \$1.101B (Morgan Stanley Syndicate)
 
-### Case 2: The CoreWeave DDTL Reconvergence Stack
-CoreWeave's \$10.643B delayed-draw term loan portfolio is framed around borrowing base formulas and SPV isolation:
-1. Borrowing Base Advance Rates $\to$ `GPU_SECONDARY_COLLATERAL`
-2. Debt Service Reserve Accounts $\to$ `CRWV_ENTERPRISE_LIQUIDITY`
-3. SPV Bankruptcy-Remote Ring-Fencing $\to$ `CRWV_ENTERPRISE_LIQUIDITY`
-4. Full Recourse Parent Guarantees $\to$ `CRWV_ENTERPRISE_LIQUIDITY`
-5. Joint Co-Borrower Liability $\to$ `CRWV_ENTERPRISE_LIQUIDITY`
-6. Anchor Hyperscaler Contract Assignment $\to$ `ANCHOR_CUSTOMER_DEMAND`
+#### Critical Legal Distinctions within the DDTL Stack:
+1. **Recourse Disparity:** DDTLs 1, 2, 2.1, 3, and 5 feature broad parent debt-service guarantees. In contrast, **DDTL 4.0 is explicitly limited to specified bad acts and carve-out covenants**. Treating the entire stack as a homogeneous parent guarantee overstates recourse on \$2.837B of debt.
+2. **SPV Ring-Fencing:** The borrowing SPVs (CCAC II, IV, VII, etc.) provide **bankruptcy-remote asset partitioning**. This protects lenders from claims of the parent's general unsecured creditors, representing a distinct legal protection rather than mere enterprise liquidity.
+3. **Anchor Customer Assignment:** Cluster revenues depend heavily on Microsoft offload contracts (~67% of CoreWeave FY25 revenue).
 
-**Result:** Of six contractual safeguards, **four terminate directly at CoreWeave's consolidated enterprise balance sheet**. The SPV ring-fencing provides legal partition for lenders in bankruptcy, but operational debt service is 100% dependent on CoreWeave's ability to maintain cluster rental margins and refinance maturing paper.
-
-### Case 3: The Genuine Orthogonality Archetype (IREN Mackenzie)
-In contrast, IREN's \$2.40B equipment facility achieves $PIR = 1.00$:
-1. *Staged Milestone Drawdown:* Terminates at **Vendor Supply Chain** (`VENDOR_SUPPLY_CHAIN`). Capital is never disbursed if servers fail testing.
-2. *First-Priority Equipment Security:* Terminates at **GPU Secondary Collateral** (`GPU_SECONDARY_COLLATERAL`). Lenders have repossession rights over physical silicon.
-3. *IREN Limited Parent Guarantee:* Terminates at **IREN Corporate Liquidity** (`IREN_PARENT_LIQUIDITY`). Backstopped by independent Bitcoin mining revenue and equity markets.
-4. *Hard Availability Cliff (Dec 31, 2026):* Terminates at **Private Credit Refinancing** (`PRIVATE_CREDIT_REFINANCING`). Prevents permanent credit overhang.
-
-**Result:** Each protection relies on a fundamentally distinct institutional mechanism: supply chain delivery, secondary hardware clearing, corporate parent cash flow, and capital market availability.
+### 3. Recalibrating Mackenzie and Nebius (Why "Complete Orthogonality" is Inaccurate)
+Preliminary drafts characterized Mackenzie and Nebius as exhibiting "complete structural orthogonality" ($PIR = 1.00$). A rigorous review demonstrates that **this claim was overstated**:
+- **Mackenzie (IREN):**
+  - Staged acceptance funding stops capital from deploying prior to server delivery. However, **vendor delivery and secondary GPU prices are not fully independent**—they correlate through the broader semiconductor supply/demand cycle.
+  - IREN parent liquidity is itself sensitive to AI compute margins, Bitcoin mining economics, and equity market conditions.
+  - The December 31, 2026 deadline is the **expiration of a lender funding commitment**, not an external financial backstop.
+- **Nebius Mäntsälä:**
+  - The MUFG credit agreement disclosure documents a **non-recourse guaranty for specified bad acts and certain performance covenants** (`0001104659-26-084452`). It is **not** a broad parent debt-service guarantee backed by Nebius's treasury cash.
+  - The fact that the 75 MW site is already operational is an **operating site condition**, not a credit enhancement comparable to a debt service reserve or lien.
+  - Therefore, Nebius is audited with 2 credit protections ($N_{\text{prot}} = 2$), not 3.
 
 ---
 
-## 4. Minimum Failure Sets: Multi-Layer Shock Propagation
+## 4. Selected Paired-Shock Scenarios (Exploratory Stress Matrix)
 
-![Minimum Failure Sets & Lender Diversity](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-28-ai-infrastructure-network/outputs/figures/minimum_failure_sets_stress.png)
+![Figure 2: Paired Scenarios & Capital Profile](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-09-28-ai-infrastructure-network/outputs/figures/minimum_failure_sets_stress.png)
 
-Rather than testing single-node failures ("what if CoreWeave disappears?"), we tested pairwise assumption failures across the joint network:
+Rather than claiming to have solved for mathematical "minimum failure sets," we evaluate **five exploratory paired-shock scenarios** to observe multi-layer transmission:
 
-| Failure Set ID | Paired Assumption Breakdown | Category | Touched Debt Volume (\$B) | Touched MW Capacity | Critical Compromised Protections | Systemic Fragility Finding |
+| Scenario ID | Paired Assumption Breakdown | Category | Attributable Debt (\$B) | Attributable MW | Affected Contractual Safeguards | Exploratory Stress Observation |
 | :--- | :--- | :--- | :---: | :---: | :--- | :--- |
-| **MFS-01** | **Anchor Customer Contraction (A005) + Power Energization Delay (A004)** | Commercial & Physical | **\$16.733B** | 1,190.0 MW | PF1 Master Lease, PF1 Springing Guaranties (ELN02/03), PF2 Escrow Gating, CRWV Offtake Assignment | **Catastrophic sponsor liquidity drain.** Tenant springing guaranties remain dormant; CoreWeave pays no rent on unenergized halls; APLD parent absorbs \$473.8M/yr debt carry. |
-| **MFS-02** | **GPU Collateral Haircut (A001) + Refinancing Freeze (A002)** | Capital Markets & Tech | **\$13.818B** | 745.0 MW | CRWV Borrowing Base Advance, MAC Equipment Collateral Lien, NBIS Security Lien, MAC Availability Cliff | **Immediate borrowing base breach.** 40% secondary GPU price drop triggers mandatory prepayments while syndicated credit markets are frozen. |
-| **MFS-03** | **Sponsor Parent Liquidity Shock (A002) + Construction Delay (A004)** | Sponsor Credit & Execution | **\$6.090B** | 600.0 MW | PF1 DSRA, PF1 Completion Guarantee, PF2 Project DSRA, PF2 Completion Support | **Indenture default acceleration.** DSRAs deplete after 6-12 months; parent cannot fund shortfalls; noteholders forced to foreclose on uncompleted shells. |
-| **MFS-04** | **ERCOT Grid Disruption (A004) + Refinancing Freeze (A002)** | Regional Infrastructure | **\$8.490B** | 2,750.0 MW | PF1 Substation Mortgage, PF2 Project Liens, MAC Staged Drawdown | **Pipeline stranding.** Multi-gigawatt development in Texas (Sweetwater 1 & 2: 2,000 MW) freezes as power delays intersect debt rollover halts. |
-| **MFS-05** | **Hyperscaler Capex Digestion (A006) + GPU Secondary Haircut (A001)** | Macro Capex & Tech | **\$13.043B** | 670.0 MW | CRWV Borrowing Base Advance, MAC Staged Drawdown, MAC Collateral Lien | **Equipment financing freeze.** Hyperscaler hardware dumping collapses secondary values; uncalled credit commitments evaporate. |
-
-### The Systemic Resilience Threshold:
-- **Any single assumption failure is absorbed:** DSRAs buffer interim interest, floating rate caps protect against interest surges, and initial LTV haircuts absorb minor hardware depreciation.
-- **A 2-assumption failure set breaches all defenses:** When an operational shock (e.g. power delay or customer contraction) coincides with a capital markets shock (refinancing freeze or collateral haircut), the transfer and recovery layers fail simultaneously, forcing immediate debt restructuring.
+| **PAIR-01** | **Anchor Contraction (A005) + Power Delay (A004)** | Commercial & Physical | **\$19.733B** | 600.0 MW | PF1 Master Lease, PF1 Springing Guaranties, CRWV Offtake Cash Flows | Unenergized halls at Ellendale keep tenant springing guaranties dormant; CoreWeave pays no rent; APLD absorbs debt carry. |
+| **PAIR-02** | **GPU Haircut (A001) + Refinancing Freeze (A002)** | Capital Markets & Tech | **\$16.818B** | 745.0 MW | CRWV Borrowing Base Advance, MAC Equipment Collateral Lien, NBIS Security Lien | A 40% secondary GPU price drop compresses borrowing bases while credit rollover freezes, forcing equity cures. |
+| **PAIR-03** | **Sponsor Constraint (A002) + Construction Delay (A004)** | Sponsor Credit & Execution | **\$6.090B** | 600.0 MW | PF1 DSRA, PF1 Completion Guarantee, PF2 Project DSRA, PF2 Completion Support | Civil/substation delays outlast DSRA reserves; constrained parent liquidity threatens construction completion covenants. |
+| **PAIR-04** | **ERCOT Grid Disruption (A004) + Refinancing Freeze (A002)** | Regional Grid & Capital | **\$0.000B** *(Project Debt)* | 2,750.0 MW | CORZ Colocation (590 MW across sites), IREN Childress Cash Flow, Sweetwater 1/2 Pipeline | **Corrected Attribution:** Strictly tied to Texas physical and contractual assets (Denton, Childress, Sweetwater). Excludes non-ERCOT North Dakota debt. |
+| **PAIR-05** | **Hyperscaler Capex Deceleration (A006) + GPU Haircut (A001)** | Macro Capex & Tech | **\$16.043B** | 670.0 MW | CRWV Borrowing Base Advance, MAC Staged Drawdown, MAC Collateral Lien | Hyperscaler capex digestion dumps older silicon onto secondary markets, freezing equipment debt availability. |
 
 ---
 
-## 5. The Negative Finding: Lender Diversification vs. Operational Concentration
+## 5. Role-Aware Capital Provider Profile (The Negative Finding)
 
-A prevalent hypothesis in financial commentary is that a small cartel of private credit mega-funds has monopolized AI infrastructure debt, creating an interconnected "shadow banking" systemic risk.
+Our empirical sample does **not** demonstrate that a small private-credit cartel monopolizes AI infrastructure financing.
 
-**Our empirical observatory firmly refutes this cartel hypothesis:**
+However, the capital provider profile must be categorized by **institutional economic role** rather than treating placement intermediaries or thousands of anonymous bondholders as single lenders:
 
-| Capital Provider / Syndicate | Institution Type | Key Facilities Financed | Capital Committed / Held (\$B) | Structural Role |
+| Capital Role Category | Institutional Entity / Group | Primary Modeled Facilities | Capital Modeled (\$B) | Structural Economic Role |
 | :--- | :--- | :--- | :---: | :--- |
-| **Institutional High-Yield Bondholders** | Broad Public / 144A Bond Market | CRWV Notes (2030-2032), APLD PF1/PF2/7% Notes, WULF Converts | **\$28.530B** | Widely dispersed public high-yield credit funds, insurance accounts, and mutual funds. |
-| **Blackstone & Magnetar Syndicate** | Asset-Backed Private Credit | CRWV DDTL 1.0, 2.0, 2.1 | **\$7.490B** | Senior secured equipment borrowing base syndicate. |
-| **MUFG Bank Syndicate** | Commercial & Investment Bank Syndicate | CRWV DDTL 3.0, 4.0, NBIS Term Loan | **\$5.827B** | Japanese and international commercial bank syndicate. |
-| **Goldman Sachs** | Investment Bank & Placement Agent | APLD PF2 Placement & Escrow | **\$2.150B** | Placement agent and condition-precedent escrow agent. |
-| **Blue Owl (including OBDC)** | Direct Lending BDC / Credit Fund | IREN Mackenzie MFSA | **\$1.200B** | Direct equipment lessor. |
-| **PIMCO** | Institutional Asset Manager | IREN Mackenzie Senior Notes | **\$1.200B** | Senior secured equipment note purchaser. |
-| **Morgan Stanley Syndicate** | Investment Bank Syndicate | CRWV DDTL 5.0 | **\$1.101B** | Syndicated delayed-draw credit provider. |
-| **Coatue Management** | Crossover / Growth Tech Fund | HUT Convertible Note | **\$0.150B** | Subordinated convertible capital. |
+| **Direct Lenders & Lessors** | Blue Owl Capital / OBDC | IREN Mackenzie MFSA | **\$1.200B** | Direct equipment lessor providing milestone-based drawdowns. |
+| **Institutional Note Purchasers** | PIMCO | IREN Mackenzie Senior Notes | **\$1.200B** | Direct purchaser of privately placed senior equipment notes. |
+| **Institutional Note Purchasers** | Coatue Management | Hut 8 Convertible Note | **\$0.150B** | Specialized technology growth investor holding convertible debt. |
+| **Syndicate Administrative Agents** | Blackstone & Magnetar (Lead / Agent) | CoreWeave DDTL 1.0, 2.0, 2.1 | **\$7.490B** | Administrative and collateral agent for syndicated private credit lenders. *(Beneficial syndicate composition is undisclosed).* |
+| **Syndicate Administrative Agents** | MUFG Bank Syndicate (Lead / Agent) | CoreWeave DDTL 3.0, 4.0; Nebius Term Loan | **\$5.827B** | Lead arranger and agent for syndicated commercial bank lending groups. |
+| **Syndicate Administrative Agents** | Morgan Stanley Syndicate (Lead / Agent) | CoreWeave DDTL 5.0 | **\$1.101B** | Administrative agent for delayed-draw bank credit facility. |
+| **Placement & Escrow Intermediaries** | Goldman Sachs & Co. LLC | Applied Digital PF2 Notes Placement & Escrow | **\$2.150B** | Initial purchaser representative and escrow holder. *(Not a permanent balance sheet holder; notes were placed with 144A investors).* |
+| **Distributed Public / 144A Bondholders** | Institutional High-Yield & Convertible Market | CRWV Notes & Converts (\$16.617B); APLD Notes/Converts (\$6.540B); WULF Converts (\$2.525B) | **\$25.682B** | Broadly distributed market of mutual funds, insurance accounts, and high-yield credit funds across 14 discrete tranches. |
 
-$$\textbf{Empirical Verdict: Capital providers are highly diversified across 8+ distinct commercial banks, private debt syndicates, and public bond markets.}$$
-$$\textbf{The systemic risk in AI infrastructure does NOT live in lender concentration. It lives in the operational JOIN: shared power grids, common anchor tenants, and sponsor parent balance sheets.}$$
+### The Defensible Negative Finding:
+$$\textbf{Private-credit concentration across a single identified lending institution is not demonstrated in the current modeled sample.}$$
+The capital structure is institutionalized across commercial banks, specialized private credit lessors, placement agents, and over \$25B in broadly distributed 144A bond markets. However, because beneficial ownership within private syndicated facilities and 144A note issues is undisclosed in SEC filings, ultimate investor-level concentration cannot be formally ruled out.
 
 ---
 
-## 6. The Cross-Stack JOIN: How Legally Separate Stacks Reconverge
+## 6. The Cross-Stack JOIN: The Core Insight That Survives
 
-When an investor evaluates Applied Digital's 10-K, they see a landlord with an \$11.0B lease backed by CoreWeave springing performance guarantees.  
-When an investor evaluates CoreWeave's 10-K, they see a neocloud with \$10.6B in equipment debt ring-fenced inside bankruptcy-remote SPVs backed by Microsoft compute demand.  
-When an investor evaluates Core Scientific's 10-K, they see a colocation provider with 590 MW of contracts backed by CoreWeave.  
-When an investor evaluates IREN's 10-K, they see an operating 80 MW campus and 650 MW of Texas grid power.
+Even after stripping away over-formalized ratios and speculative assertions, the core substantive insight of Sprint 2 remains fully intact:
 
-**Each filing appears self-contained, ring-fenced, and individually secured.**
-
-However, once the observatory maps the cross-sectional attribution graph, the hidden JOIN emerges:
+**The financing contracts are individually engineered around specific risks, but multiple legally separate protections repeatedly converge onto the same operational and commercial nodes:**
 
 ```
                               [ MICROSOFT / HYPERSCALERS ]
@@ -210,17 +181,15 @@ However, once the observatory maps the cross-sectional attribution graph, the hi
                                 [ SPONSOR PARENT BALANCE SHEETS ]
 ```
 
-1. **The CoreWeave Revenue Transmission Belt:** CoreWeave's enterprise cash flow simultaneously services \$10.6B of its own DDTLs, services \$4.75B of its own senior notes, and provides the lease revenue required to service Applied Digital's \$3.94B PF1 notes. If Microsoft trims compute offload, stress propagates across all three capital structures simultaneously.
-2. **The Regional Power Transmission Belt:** A delay in MDU's transmission line expansion does not merely delay Building 4 at PF1; it freezes commercial energization across Polaris Forge 2, trapping \$6.090B of funded debt in pre-service status.
-3. **The Sponsor Balance Sheet Pooling:** When tenant springing guaranties remain dormant on unenergized data halls, the financial burden does not dissipate into financial markets; it bounces across contracts and pools directly onto **Applied Digital's corporate equity balance sheet**.
+1. **The CoreWeave Revenue Hub:** CoreWeave’s enterprise cash flow is the operational linchpin that simultaneously services \$13.6B in DDTLs, services its senior notes, and provides the lease payments necessary to service Applied Digital's \$3.94B PF1 debt.
+2. **The Shared Regional Grid Milestone:** Civil construction progress at Ellendale cannot monetize until MDU's transmission expansion is energized, linking PF1 and PF2 to the same regional utility clock.
+3. **The Sponsor Parent Absorption Buffer:** Because tenant springing guaranties remain dormant until data hall delivery, construction delays do not disperse into external credit markets—they pool directly onto **Applied Digital's corporate equity balance sheet**.
 
 ---
 
-## 7. Methodological Certification & Summary
+## 7. Methodological Synthesis & Transition to Task 023
 
-1. **Data Model Frozen:** Executed on commit `42f9a74` without introducing any new entities, schemas, or synthetic data.
-2. **Quantitative Falsification Achieved:**
-   - Supported the **Concentration Thesis** for data center project finance (PF1: $PIR = 0.67$, PF2: $PIR = 0.50$) and neocloud equipment borrowing bases (CRWV DDTL: $PIR = 0.50$).
-   - Supported the **Resilience Thesis** for staged milestone equipment financing (Mackenzie: $PIR = 1.00$) and sovereign-backed infrastructure (Nebius: $PIR = 1.00$).
-3. **Lender Concentration Disproven:** Certified that private credit syndicates are institutionalized and diverse; fragility arises strictly from shared physical and commercial dependencies.
-4. **Minimum Failure Set Identified:** Demonstrated that a 2-assumption shock (`Anchor Customer Contraction` + `Power Delay` OR `GPU Collateral Haircut` + `Refinancing Freeze`) is the minimum failure set that completely bridges the gap from buffering reserves to lender collateral recovery.
+Sprint 2.1 establishes a clean baseline:
+- Coded indices like the Support-Node Compression Ratio illustrate potential reconvergence, but should be presented as qualitative frameworks with sensitivity bounds.
+- Systemic risk in AI infrastructure is not proven to be lender-concentrated, but rather **operationally concentrated** around anchor tenants, regional utility queues, and sponsor liquidity.
+- With the data model certified and frozen at `42f9a74`, the most promising next step is **Task 023: Bitemporal Visibility Analysis**—evaluating when these interdependencies became economically real versus when they became legible to public observers through SEC disclosures.

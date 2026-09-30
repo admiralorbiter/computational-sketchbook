@@ -1,0 +1,9 @@
+capital_category,institution_name,role_description,facilities,modeled_amount_b,notes
+Direct Lenders & Lessors,Blue Owl Capital / OBDC,Direct Equipment Financing Provider & Lessor,IREN Mackenzie MFSA,1.2,Committed direct lease financing drawn upon equipment acceptance.
+Institutional Note Purchasers,PIMCO,Senior Secured Equipment Note Purchaser,IREN Mackenzie Senior Secured Notes,1.2,Privately placed equipment notes drawn alongside MFSA.
+Institutional Note Purchasers,Coatue Management,Convertible Note Investor,Hut 8 Senior Unsecured Convertible Note,0.15,Dedicated private convertible placement.
+Syndicate Administrative Agents,Blackstone & Magnetar (Agent / Lead),Administrative & Collateral Agent for Private Credit Syndicate,"CoreWeave DDTL 1.0, 2.0, 2.1",7.49,Represents syndicated private credit lenders; beneficial holder distribution undisclosed.
+Syndicate Administrative Agents,MUFG Bank Syndicate (Agent / Lead),Administrative Agent for Commercial Bank Syndicate,"CoreWeave DDTL 3.0, 4.0; Nebius Term Loan",5.827,Syndicated international commercial bank facilities ($2.215B + $2.837B + $0.775B).
+Syndicate Administrative Agents,Morgan Stanley Syndicate (Agent / Lead),Administrative Agent for Bank Syndicate,CoreWeave DDTL 5.0,1.101,Syndicated delayed-draw credit agreement.
+Placement & Escrow Intermediaries,Goldman Sachs & Co. LLC,Initial Purchaser Representative & Escrow Agent,Applied Digital PF2 Notes Placement & Escrow,2.15,"Underwriter / placement representative; economic holders are distributed 144A investors, not Goldman balance sheet."
+Distributed Public / 144A Bondholders,Institutional High-Yield & Convertible Market,"Broadly Distributed Institutional Bondholders (Mutual Funds, Insurance, Credit Funds)",CRWV Senior Notes & Converts ($16.617B); APLD Notes/Converts ($6.540B); WULF Converts ($2.525B),25.682,Reconciled total across 14 distinct note/convertible tranches in frozen ledger.

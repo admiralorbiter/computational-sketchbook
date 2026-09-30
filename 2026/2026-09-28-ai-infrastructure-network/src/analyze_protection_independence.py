@@ -1,18 +1,26 @@
 """
-Analysis Sprint 2: Hidden Dependency & Protection Independence
-Part of Task 021 Post-Freeze Research Program
+Analysis Sprint 2.1: Exploratory Analysis of Contractual Protection Compression
+and Paired-Shock Scenarios (Task 021 Research Program)
 
-This script evaluates:
-1. Protection Independence: Does multi-layered contractual structuring create genuine
-   economic diversification, or does it reconverge onto a small set of shared terminal risk nodes?
-2. Empirical Comparison across 5 Benchmark Structures:
-   - PF1 (APLD Polaris Forge 1: $2.35B 9.25% Notes + $1.59B 7% Notes + Lease)
-   - PF2 (APLD Polaris Forge 2: $2.15B 6.75% Notes)
-   - Mackenzie (IREN: $2.40B Staged Equipment Facility)
-   - CoreWeave DDTLs (CRWV: $10.643B across DDTL 1-5)
-   - Nebius Term Loan (NBIS: $775M MUFG Facility)
-3. Minimum Failure Sets: Pairwise joint assumption stress testing (topology & exposure).
-4. Lender Diversity Profile: Assessing the Lender Concentration Hypothesis vs Operational Concentration.
+This script performs:
+1. Support-Node Compression Analysis:
+   Evaluates how many distinct economic support nodes underlie N contractual safeguards
+   across 5 benchmark AI infrastructure financing structures.
+   Includes sensitivity analysis across three plausible mapping models:
+   - Model 1: Economic Convergence (Systemic Baseline)
+   - Model 2: Legal Partitioning (Strict Contractual Form)
+   - Model 3: Active-Only Covenants (Lifecycle Pruned)
+2. Epistemic Metadata Tagging:
+   Every protection is explicitly tagged with:
+   - protection_status (active, expired, dormant_springing, operating_baseline)
+   - mapping_basis (contract_explicit, economic_inference, scenario_assumption)
+   - terminal_node_confidence (A, B, C)
+3. Selected Paired-Shock Scenarios:
+   Traces 5 exploratory stress pairs through the network with strict
+   capital-to-physical attribution consistency.
+4. Role-Aware Capital Provider Profile:
+   Distinguishes direct lenders, syndicate administrative agents, placement
+   representatives, and broadly distributed 144A bondholders ($25.682B).
 """
 
 import json
@@ -20,13 +28,11 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 import numpy as np
 import pandas as pd
 
 # Paths
 REPO_ROOT = Path(__file__).resolve().parent.parent
-PROCESSED_DIR = REPO_ROOT / "data" / "processed"
 ANALYSIS_DIR = REPO_ROOT / "outputs" / "analysis"
 FIGURES_DIR = REPO_ROOT / "outputs" / "figures"
 
@@ -34,555 +40,793 @@ ANALYSIS_DIR.mkdir(parents=True, exist_ok=True)
 FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
 # -----------------------------------------------------------------------------
-# 1. Protection Independence Mapping Data Definition
+# 1. Structural Protection Definitions with Epistemic Metadata
 # -----------------------------------------------------------------------------
-# Falsification Standard:
-# - Supports Concentration Thesis: PIR < 0.50 (multiple protections collapse into <= 2-3 shared terminal nodes)
-# - Supports Resilience Thesis: PIR >= 0.75 (protections terminate across genuinely independent balance sheets/mechanisms)
-# - Unresolved: 0.50 <= PIR < 0.75 or indeterminate terminal support
+# Structures audited:
+# - PF1: Applied Digital Polaris Forge 1 ($2.35B 9.25% + $1.59B 7.00% + Lease)
+# - PF2: Applied Digital Polaris Forge 2 ($2.15B 6.75% Notes)
+# - Mackenzie: IREN Mackenzie ($1.2B MFSA + $1.2B Notes = $2.4B Committed)
+# - CoreWeave DDTLs: DDTL 1.0-5.0 ($13.643B across 6 facilities including 2.1)
+# - Nebius Term Loan: MUFG Facility ($775M on Mäntsälä DC & GPUs)
 
-STRUCTURES = [
+PROTECTIONS_DATA = [
+    # ------------------ PF1 ------------------
     {
         "structure_id": "PF1",
-        "name": "Applied Digital PF1 (Ellendale Bldgs 2-4)",
+        "structure_name": "Applied Digital PF1 (Ellendale Bldgs 2-4)",
         "facility_id": "FAC-APLD-POLARIS-FORGE-1",
         "category": "Data Center Project Debt",
-        "capital_volume_b": 3.940,  # $2.35B 9.25% + $1.59B 7.00%
-        "active_carry_m_yr": 328.675,
-        "mw_capacity": 400.0,
-        "protections": [
-            {
-                "protection_id": "PF1-P1",
-                "name": "Debt Service Reserve Account (DSRA)",
-                "functional_tier": "Buffering",
-                "immediate_holder": "APLD ComputeCo Project Trust",
-                "terminal_support_node": "APLD_PARENT_LIQUIDITY",
-                "supporting_assumption": "A002",
-                "description": "Pre-funded cash reserve from note proceeds; replenishment falls on sponsor parent equity."
-            },
-            {
-                "protection_id": "PF1-P2",
-                "name": "APLD Sponsor Parent Completion Guarantee",
-                "functional_tier": "Transfer",
-                "immediate_holder": "Applied Digital, Inc. (Parent)",
-                "terminal_support_node": "APLD_PARENT_LIQUIDITY",
-                "supporting_assumption": "A002",
-                "description": "Mandatory sponsor shortfall funding to achieve Commencement Date; uncapped sponsor obligation."
-            },
-            {
-                "protection_id": "PF1-P3",
-                "name": "Substation & Facility First-Priority Mortgage Lien",
-                "functional_tier": "Recovery",
-                "immediate_holder": "Noteholder Collateral Agent",
-                "terminal_support_node": "POWER_GRID_ENERGIZATION",
-                "supporting_assumption": "A004",
-                "description": "Senior mortgage on land, substation, and shells; collateral value depends on utility energization."
-            },
-            {
-                "protection_id": "PF1-P4",
-                "name": "CoreWeave 15-Year Take-or-Pay Master Lease",
-                "functional_tier": "Transfer",
-                "immediate_holder": "CRWV SPV VIII (Tenant)",
-                "terminal_support_node": "ANCHOR_CUSTOMER_DEMAND",
-                "supporting_assumption": "A005",
-                "description": "$11.0B contracted lease revenue; tenant rent service depends on hyperscaler cloud contracts."
-            },
-            {
-                "protection_id": "PF1-P5",
-                "name": "CoreWeave Springing Performance Guaranty (ELN-02)",
-                "functional_tier": "Transfer",
-                "immediate_holder": "CoreWeave, Inc. (Parent)",
-                "terminal_support_node": "CRWV_ENTERPRISE_LIQUIDITY",
-                "supporting_assumption": "A002",
-                "description": "Uncapped parent indemnity backstopping tenant lease obligations for Building 2 post-handover."
-            },
-            {
-                "protection_id": "PF1-P6",
-                "name": "CoreWeave Springing Performance Guaranty (ELN-03)",
-                "functional_tier": "Transfer",
-                "immediate_holder": "CoreWeave, Inc. (Parent)",
-                "terminal_support_node": "CRWV_ENTERPRISE_LIQUIDITY",
-                "supporting_assumption": "A002",
-                "description": "Uncapped parent indemnity ($4.125B Class C proxy) for Building 3 post-handover."
-            },
-        ]
+        "capital_volume_b": 3.940,
+        "protection_id": "PF1-P1",
+        "name": "Debt Service Reserve Account (DSRA)",
+        "functional_tier": "Buffering",
+        "protection_status": "active",
+        "immediate_holder": "APLD ComputeCo Project Trust",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
+        # Three model mappings:
+        "node_model_1": "APLD_PARENT_LIQUIDITY",      # Economic Convergence (replenishment falls on parent)
+        "node_model_2": "PREFUNDED_PROJECT_CASH",     # Legal Form (cash sitting in SPV trust account)
+        "node_model_3": "APLD_PARENT_LIQUIDITY",      # Active-only
+        "description": "Pre-funded cash reserve from note proceeds; replenishment falls on sponsor parent equity."
+    },
+    {
+        "structure_id": "PF1",
+        "structure_name": "Applied Digital PF1 (Ellendale Bldgs 2-4)",
+        "facility_id": "FAC-APLD-POLARIS-FORGE-1",
+        "category": "Data Center Project Debt",
+        "capital_volume_b": 3.940,
+        "protection_id": "PF1-P2",
+        "name": "APLD Sponsor Parent Completion Guarantee",
+        "functional_tier": "Transfer",
+        "protection_status": "active",
+        "immediate_holder": "Applied Digital, Inc. (Parent)",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
+        "node_model_1": "APLD_PARENT_LIQUIDITY",
+        "node_model_2": "APLD_PARENT_LIQUIDITY",
+        "node_model_3": "APLD_PARENT_LIQUIDITY",
+        "description": "Mandatory sponsor shortfall funding to achieve Commencement Date; uncapped sponsor obligation."
+    },
+    {
+        "structure_id": "PF1",
+        "structure_name": "Applied Digital PF1 (Ellendale Bldgs 2-4)",
+        "facility_id": "FAC-APLD-POLARIS-FORGE-1",
+        "category": "Data Center Project Debt",
+        "capital_volume_b": 3.940,
+        "protection_id": "PF1-P3",
+        "name": "Substation & Facility First-Priority Mortgage Lien",
+        "functional_tier": "Recovery",
+        "protection_status": "active",
+        "immediate_holder": "Noteholder Collateral Agent",
+        "mapping_basis": "economic_inference",
+        "terminal_node_confidence": "B",
+        "node_model_1": "POWER_GRID_ENERGIZATION",    # Economic Convergence (salvage value tied to energization)
+        "node_model_2": "PHYSICAL_ASSET_SALVAGE",     # Legal Form (land and physical electrical equipment)
+        "node_model_3": "POWER_GRID_ENERGIZATION",
+        "description": "Senior mortgage on land, substation, and shells; recovery value is highly dependent on utility power delivery."
+    },
+    {
+        "structure_id": "PF1",
+        "structure_name": "Applied Digital PF1 (Ellendale Bldgs 2-4)",
+        "facility_id": "FAC-APLD-POLARIS-FORGE-1",
+        "category": "Data Center Project Debt",
+        "capital_volume_b": 3.940,
+        "protection_id": "PF1-P4",
+        "name": "CoreWeave 15-Year Take-or-Pay Master Lease",
+        "functional_tier": "Transfer",
+        "protection_status": "active",
+        "immediate_holder": "CRWV SPV VIII (Tenant)",
+        "mapping_basis": "economic_inference",
+        "terminal_node_confidence": "B",
+        "node_model_1": "HYPERSCALER_ANCHOR_DEMAND",  # Economic Convergence (CoreWeave rent requires MSFT compute revenue)
+        "node_model_2": "CRWV_ENTERPRISE_LIQUIDITY",  # Legal Form (tenant creditworthiness)
+        "node_model_3": "HYPERSCALER_ANCHOR_DEMAND",
+        "description": "$11.0B contracted lease revenue; tenant rent service depends on neocloud operating cash flows."
+    },
+    {
+        "structure_id": "PF1",
+        "structure_name": "Applied Digital PF1 (Ellendale Bldgs 2-4)",
+        "facility_id": "FAC-APLD-POLARIS-FORGE-1",
+        "category": "Data Center Project Debt",
+        "capital_volume_b": 3.940,
+        "protection_id": "PF1-P5",
+        "name": "CoreWeave Springing Performance Guaranty (ELN-02)",
+        "functional_tier": "Transfer",
+        "protection_status": "dormant_springing",
+        "immediate_holder": "CoreWeave, Inc. (Parent)",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
+        "node_model_1": "CRWV_ENTERPRISE_LIQUIDITY",
+        "node_model_2": "CRWV_ENTERPRISE_LIQUIDITY",
+        "node_model_3": None,                         # Pruned in active-only model (dormant until delivery)
+        "description": "Uncapped parent indemnity backstopping tenant lease obligations for Building 2 post-handover."
+    },
+    {
+        "structure_id": "PF1",
+        "structure_name": "Applied Digital PF1 (Ellendale Bldgs 2-4)",
+        "facility_id": "FAC-APLD-POLARIS-FORGE-1",
+        "category": "Data Center Project Debt",
+        "capital_volume_b": 3.940,
+        "protection_id": "PF1-P6",
+        "name": "CoreWeave Springing Performance Guaranty (ELN-03)",
+        "functional_tier": "Transfer",
+        "protection_status": "dormant_springing",
+        "immediate_holder": "CoreWeave, Inc. (Parent)",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
+        "node_model_1": "CRWV_ENTERPRISE_LIQUIDITY",
+        "node_model_2": "CRWV_ENTERPRISE_LIQUIDITY",
+        "node_model_3": None,                         # Pruned in active-only model (dormant until delivery)
+        "description": "Uncapped parent indemnity ($4.125B Class C proxy) for Building 3 post-handover."
+    },
+
+    # ------------------ PF2 ------------------
+    {
+        "structure_id": "PF2",
+        "structure_name": "Applied Digital PF2 (Polaris Forge 2)",
+        "facility_id": "FAC-APLD-POLARIS-FORGE-2",
+        "category": "Data Center Project Debt",
+        "capital_volume_b": 2.150,
+        "protection_id": "PF2-P1",
+        "name": "Goldman Sachs Escrow Condition Precedent Gating",
+        "functional_tier": "Preventive",
+        "protection_status": "expired",              # Satisfied June 18, 2026
+        "immediate_holder": "Goldman Sachs Escrow Agent",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
+        "node_model_1": "POWER_GRID_ENERGIZATION",    # Gated specifically on ESA execution
+        "node_model_2": "ESCROW_CASH_HELD",          # Legal form (proceeds in bank escrow)
+        "node_model_3": None,                         # Pruned in active-only model (already released)
+        "description": "Gross proceeds locked until ESA execution (satisfied June 18, 2026); gated capital release."
     },
     {
         "structure_id": "PF2",
-        "name": "Applied Digital PF2 (Polaris Forge 2)",
+        "structure_name": "Applied Digital PF2 (Polaris Forge 2)",
         "facility_id": "FAC-APLD-POLARIS-FORGE-2",
         "category": "Data Center Project Debt",
-        "capital_volume_b": 2.150,  # $2.15B 6.75% Notes
-        "active_carry_m_yr": 145.125,
-        "mw_capacity": 200.0,
-        "protections": [
-            {
-                "protection_id": "PF2-P1",
-                "name": "Goldman Sachs Escrow Condition Precedent Gating",
-                "functional_tier": "Preventive",
-                "immediate_holder": "Goldman Sachs Escrow Agent",
-                "terminal_support_node": "POWER_GRID_ENERGIZATION",
-                "supporting_assumption": "A004",
-                "description": "Gross proceeds locked until ESA execution (satisfied June 18, 2026); gated capital release."
-            },
-            {
-                "protection_id": "PF2-P2",
-                "name": "Project Debt Service Reserve Account (DSRA)",
-                "functional_tier": "Buffering",
-                "immediate_holder": "APLD ComputeCo 2 Trust",
-                "terminal_support_node": "APLD_PARENT_LIQUIDITY",
-                "supporting_assumption": "A002",
-                "description": "Project account reserve funding interim coupon service prior to commercial energization."
-            },
-            {
-                "protection_id": "PF2-P3",
-                "name": "APLD Parent Construction Completion Support",
-                "functional_tier": "Transfer",
-                "immediate_holder": "Applied Digital, Inc. (Parent)",
-                "terminal_support_node": "APLD_PARENT_LIQUIDITY",
-                "supporting_assumption": "A002",
-                "description": "Sponsor parent covenants to fund completion of construction period and first commencement date."
-            },
-            {
-                "protection_id": "PF2-P4",
-                "name": "First-Priority Senior Secured Project Liens",
-                "functional_tier": "Recovery",
-                "immediate_holder": "Noteholder Collateral Agent",
-                "terminal_support_node": "POWER_GRID_ENERGIZATION",
-                "supporting_assumption": "A004",
-                "description": "Liens on project parcels, civil works, and utility rights; value contingent on substation completion."
-            }
-        ]
+        "capital_volume_b": 2.150,
+        "protection_id": "PF2-P2",
+        "name": "Project Debt Service Reserve Account (DSRA)",
+        "functional_tier": "Buffering",
+        "protection_status": "active",
+        "immediate_holder": "APLD ComputeCo 2 Trust",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
+        "node_model_1": "APLD_PARENT_LIQUIDITY",
+        "node_model_2": "PREFUNDED_PROJECT_CASH",
+        "node_model_3": "APLD_PARENT_LIQUIDITY",
+        "description": "Project account reserve funding interim coupon service prior to commercial energization."
+    },
+    {
+        "structure_id": "PF2",
+        "structure_name": "Applied Digital PF2 (Polaris Forge 2)",
+        "facility_id": "FAC-APLD-POLARIS-FORGE-2",
+        "category": "Data Center Project Debt",
+        "capital_volume_b": 2.150,
+        "protection_id": "PF2-P3",
+        "name": "APLD Parent Construction Completion Support",
+        "functional_tier": "Transfer",
+        "protection_status": "active",
+        "immediate_holder": "Applied Digital, Inc. (Parent)",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
+        "node_model_1": "APLD_PARENT_LIQUIDITY",
+        "node_model_2": "APLD_PARENT_LIQUIDITY",
+        "node_model_3": "APLD_PARENT_LIQUIDITY",
+        "description": "Sponsor parent covenants to fund completion of construction period and first commencement date."
+    },
+    {
+        "structure_id": "PF2",
+        "structure_name": "Applied Digital PF2 (Polaris Forge 2)",
+        "facility_id": "FAC-APLD-POLARIS-FORGE-2",
+        "category": "Data Center Project Debt",
+        "capital_volume_b": 2.150,
+        "protection_id": "PF2-P4",
+        "name": "First-Priority Senior Secured Project Liens",
+        "functional_tier": "Recovery",
+        "protection_status": "active",
+        "immediate_holder": "Noteholder Collateral Agent",
+        "mapping_basis": "economic_inference",
+        "terminal_node_confidence": "B",
+        "node_model_1": "POWER_GRID_ENERGIZATION",
+        "node_model_2": "PHYSICAL_ASSET_SALVAGE",
+        "node_model_3": "POWER_GRID_ENERGIZATION",
+        "description": "Liens on project parcels, civil works, and utility rights; value contingent on substation completion."
+    },
+
+    # ------------------ MACKENZIE ------------------
+    {
+        "structure_id": "MACKENZIE",
+        "structure_name": "IREN Mackenzie (GPU Equipment Financing)",
+        "facility_id": "FAC-IREN-MACKENZIE",
+        "category": "Equipment Facility",
+        "capital_volume_b": 2.400,
+        "protection_id": "MAC-P1",
+        "name": "Staged Milestone Drawdown Condition",
+        "functional_tier": "Preventive",
+        "protection_status": "active",
+        "immediate_holder": "IE Mackenzie Compute Ltd.",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
+        "node_model_1": "VENDOR_SUPPLY_CHAIN",
+        "node_model_2": "VENDOR_SUPPLY_CHAIN",
+        "node_model_3": "VENDOR_SUPPLY_CHAIN",
+        "description": "Capital funded strictly pro rata upon physical delivery and acceptance testing of operational servers."
     },
     {
         "structure_id": "MACKENZIE",
-        "name": "IREN Mackenzie (GPU Equipment Financing)",
+        "structure_name": "IREN Mackenzie (GPU Equipment Financing)",
         "facility_id": "FAC-IREN-MACKENZIE",
         "category": "Equipment Facility",
-        "capital_volume_b": 2.400,  # $1.2B MFSA + $1.2B Notes
-        "active_carry_m_yr": 216.000,  # Full-draw equivalent scenario
-        "mw_capacity": 80.0,
-        "protections": [
-            {
-                "protection_id": "MAC-P1",
-                "name": "Staged Milestone Drawdown Condition",
-                "functional_tier": "Preventive",
-                "immediate_holder": "IE Mackenzie Compute Ltd.",
-                "terminal_support_node": "VENDOR_SUPPLY_CHAIN",
-                "supporting_assumption": "A006",
-                "description": "Capital funded strictly pro rata upon physical delivery and acceptance testing of operational servers."
-            },
-            {
-                "protection_id": "MAC-P2",
-                "name": "First-Priority Equipment Collateral Security Interest",
-                "functional_tier": "Recovery",
-                "immediate_holder": "Blue Owl / PIMCO Collateral Agents",
-                "terminal_support_node": "GPU_SECONDARY_COLLATERAL",
-                "supporting_assumption": "A001",
-                "description": "Direct security interest in GPU servers; recovery dependent on secondary market resale clearing values."
-            },
-            {
-                "protection_id": "MAC-P3",
-                "name": "IREN Limited Unconditional Parent Payment Guaranty",
-                "functional_tier": "Transfer",
-                "immediate_holder": "IREN Limited (Parent)",
-                "terminal_support_node": "IREN_PARENT_LIQUIDITY",
-                "supporting_assumption": "A002",
-                "description": "Full parent recourse allowing lenders to pursue company cash flows if equipment revenue falls short."
-            },
-            {
-                "protection_id": "MAC-P4",
-                "name": "Hard Availability Window Cliff (Dec 31, 2026)",
-                "functional_tier": "Preventive",
-                "immediate_holder": "Lender Credit Facility",
-                "terminal_support_node": "PRIVATE_CREDIT_REFINANCING",
-                "supporting_assumption": "A002",
-                "description": "Uncalled commitments terminate automatically, preventing multi-year overhang of undrawn credit."
-            }
-        ]
+        "capital_volume_b": 2.400,
+        "protection_id": "MAC-P2",
+        "name": "First-Priority Equipment Collateral Security Interest",
+        "functional_tier": "Recovery",
+        "protection_status": "active",
+        "immediate_holder": "Blue Owl / PIMCO Collateral Agents",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
+        "node_model_1": "GPU_SECONDARY_COLLATERAL",
+        "node_model_2": "GPU_SECONDARY_COLLATERAL",
+        "node_model_3": "GPU_SECONDARY_COLLATERAL",
+        "description": "Direct security interest in GPU servers; recovery dependent on secondary market resale clearing values."
+    },
+    {
+        "structure_id": "MACKENZIE",
+        "structure_name": "IREN Mackenzie (GPU Equipment Financing)",
+        "facility_id": "FAC-IREN-MACKENZIE",
+        "category": "Equipment Facility",
+        "capital_volume_b": 2.400,
+        "protection_id": "MAC-P3",
+        "name": "IREN Limited Unconditional Parent Payment Guaranty",
+        "functional_tier": "Transfer",
+        "protection_status": "active",
+        "immediate_holder": "IREN Limited (Parent)",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
+        "node_model_1": "IREN_PARENT_LIQUIDITY",
+        "node_model_2": "IREN_PARENT_LIQUIDITY",
+        "node_model_3": "IREN_PARENT_LIQUIDITY",
+        "description": "Full parent recourse allowing lenders to pursue company cash flows if equipment revenue falls short."
+    },
+    {
+        "structure_id": "MACKENZIE",
+        "structure_name": "IREN Mackenzie (GPU Equipment Financing)",
+        "facility_id": "FAC-IREN-MACKENZIE",
+        "category": "Equipment Facility",
+        "capital_volume_b": 2.400,
+        "protection_id": "MAC-P4",
+        "name": "Hard Availability Window Cliff (Dec 31, 2026)",
+        "functional_tier": "Preventive",
+        "protection_status": "active",
+        "immediate_holder": "Lender Credit Facility",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
+        "node_model_1": "LENDER_COMMITMENT_LIFECYCLE", # Expiration of lender obligation
+        "node_model_2": "LENDER_COMMITMENT_LIFECYCLE",
+        "node_model_3": "LENDER_COMMITMENT_LIFECYCLE",
+        "description": "Uncalled commitments terminate automatically, ending lender funding obligation."
+    },
+
+    # ------------------ COREWEAVE DDTLS ------------------
+    {
+        "structure_id": "CRWV_DDTL",
+        "structure_name": "CoreWeave DDTLs (Tranches 1.0 - 5.0, including 2.1)",
+        "facility_id": "PORTFOLIO_COREWEAVE",
+        "category": "Equipment Facility",
+        "capital_volume_b": 13.643,                   # $1.3B + $3.19B + $3.0B + $2.215B + $2.837B + $1.101B
+        "protection_id": "DDTL-P1",
+        "name": "GPU Hardware Borrowing Base Advance Rate",
+        "functional_tier": "Preventive",
+        "protection_status": "active",
+        "immediate_holder": "Borrowing SPVs (CCAC II, IV, VII, etc.)",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
+        "node_model_1": "GPU_SECONDARY_COLLATERAL",
+        "node_model_2": "GPU_SECONDARY_COLLATERAL",
+        "node_model_3": "GPU_SECONDARY_COLLATERAL",
+        "description": "Loan draws bounded by third-party appraised liquidation value of H100/H200/B200 GPU clusters."
     },
     {
         "structure_id": "CRWV_DDTL",
-        "name": "CoreWeave DDTLs (DDTL 1.0 - 5.0)",
+        "structure_name": "CoreWeave DDTLs (Tranches 1.0 - 5.0, including 2.1)",
         "facility_id": "PORTFOLIO_COREWEAVE",
         "category": "Equipment Facility",
-        "capital_volume_b": 10.643,  # $1.3B + $3.19B + $2.215B + $2.837B + $1.101B
-        "active_carry_m_yr": 957.870,  # ~9.0% blended
-        "mw_capacity": 590.0,
-        "protections": [
-            {
-                "protection_id": "DDTL-P1",
-                "name": "GPU Hardware Borrowing Base Advance Rate",
-                "functional_tier": "Preventive",
-                "immediate_holder": "Borrowing SPVs (CCAC II, IV, VII, etc.)",
-                "terminal_support_node": "GPU_SECONDARY_COLLATERAL",
-                "supporting_assumption": "A001",
-                "description": "Loan draws bounded by third-party appraised liquidation value of H100/H200/B200 GPU clusters."
-            },
-            {
-                "protection_id": "DDTL-P2",
-                "name": "Debt Service Reserve & Minimum Liquidity Covenants",
-                "functional_tier": "Buffering",
-                "immediate_holder": "SPV Project Accounts",
-                "terminal_support_node": "CRWV_ENTERPRISE_LIQUIDITY",
-                "supporting_assumption": "A002",
-                "description": "Cash liquidity covenants mandated across borrowing SPVs and consolidated enterprise."
-            },
-            {
-                "protection_id": "DDTL-P3",
-                "name": "Bankruptcy-Remote SPV Ring-Fencing",
-                "functional_tier": "Recovery",
-                "immediate_holder": "Special Purpose Vehicles",
-                "terminal_support_node": "CRWV_ENTERPRISE_LIQUIDITY",
-                "supporting_assumption": "A002",
-                "description": "Legal isolation of GPU assets; debt service nonetheless relies on consolidated cluster utilization."
-            },
-            {
-                "protection_id": "DDTL-P4",
-                "name": "Full-Recourse & Limited Carve-Out Parent Guarantees",
-                "functional_tier": "Transfer",
-                "immediate_holder": "CoreWeave, Inc. (Parent)",
-                "terminal_support_node": "CRWV_ENTERPRISE_LIQUIDITY",
-                "supporting_assumption": "A002",
-                "description": "Parent guarantees debt on DDTL 1-3 & 5 (recourse) and DDTL 4.0 ($2.837B limited bad-acts carveout)."
-            },
-            {
-                "protection_id": "DDTL-P5",
-                "name": "Joint Co-Borrower Liability Structure (CCAC V on DDTL 3.0)",
-                "functional_tier": "Transfer",
-                "immediate_holder": "CRWV_CCAC_V (Co-Borrower)",
-                "terminal_support_node": "CRWV_ENTERPRISE_LIQUIDITY",
-                "supporting_assumption": "A002",
-                "description": "Cross-subsidiary co-borrower liability joining multiple cluster entities under single credit agreement."
-            },
-            {
-                "protection_id": "DDTL-P6",
-                "name": "Anchor Hyperscaler Customer Offtake Assignment",
-                "functional_tier": "Transfer",
-                "immediate_holder": "CoreWeave Commercial Contracts",
-                "terminal_support_node": "ANCHOR_CUSTOMER_DEMAND",
-                "supporting_assumption": "A005",
-                "description": "Dedicated cluster cash flows assigned to lenders; customer concentration (MSFT ~67% FY25)."
-            }
-        ]
+        "capital_volume_b": 13.643,
+        "protection_id": "DDTL-P2",
+        "name": "Debt Service Reserve & Minimum Liquidity Covenants",
+        "functional_tier": "Buffering",
+        "protection_status": "active",
+        "immediate_holder": "SPV Project Accounts",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
+        "node_model_1": "CRWV_ENTERPRISE_LIQUIDITY",
+        "node_model_2": "SPV_PREFUNDED_CASH",        # Legal partition (cash inside SPV account)
+        "node_model_3": "CRWV_ENTERPRISE_LIQUIDITY",
+        "description": "Cash liquidity covenants mandated across borrowing SPVs and consolidated enterprise."
+    },
+    {
+        "structure_id": "CRWV_DDTL",
+        "structure_name": "CoreWeave DDTLs (Tranches 1.0 - 5.0, including 2.1)",
+        "facility_id": "PORTFOLIO_COREWEAVE",
+        "category": "Equipment Facility",
+        "capital_volume_b": 13.643,
+        "protection_id": "DDTL-P3",
+        "name": "Bankruptcy-Remote SPV Ring-Fencing",
+        "functional_tier": "Recovery",
+        "protection_status": "active",
+        "immediate_holder": "Special Purpose Vehicles",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
+        "node_model_1": "SPV_ASSET_PARTITION",        # Legal estate partitioning (not mere parent liquidity)
+        "node_model_2": "SPV_ASSET_PARTITION",
+        "node_model_3": "SPV_ASSET_PARTITION",
+        "description": "Legal isolation of GPU assets protecting secured lenders from general unsecured creditors of parent."
+    },
+    {
+        "structure_id": "CRWV_DDTL",
+        "structure_name": "CoreWeave DDTLs (Tranches 1.0 - 5.0, including 2.1)",
+        "facility_id": "PORTFOLIO_COREWEAVE",
+        "category": "Equipment Facility",
+        "capital_volume_b": 13.643,
+        "protection_id": "DDTL-P4a",
+        "name": "Full-Recourse Parent Guarantees (DDTL 1, 2, 2.1, 3, 5)",
+        "functional_tier": "Transfer",
+        "protection_status": "active",
+        "immediate_holder": "CoreWeave, Inc. (Parent)",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
+        "node_model_1": "CRWV_ENTERPRISE_LIQUIDITY",
+        "node_model_2": "CRWV_ENTERPRISE_LIQUIDITY",
+        "node_model_3": "CRWV_ENTERPRISE_LIQUIDITY",
+        "description": "Unconditional full-recourse parent debt service guarantee covering $10.806B of facilities."
+    },
+    {
+        "structure_id": "CRWV_DDTL",
+        "structure_name": "CoreWeave DDTLs (Tranches 1.0 - 5.0, including 2.1)",
+        "facility_id": "PORTFOLIO_COREWEAVE",
+        "category": "Equipment Facility",
+        "capital_volume_b": 13.643,
+        "protection_id": "DDTL-P4b",
+        "name": "Limited Bad-Acts Carve-Out Guaranty (DDTL 4.0)",
+        "functional_tier": "Transfer",
+        "protection_status": "active",
+        "immediate_holder": "CoreWeave, Inc. (Parent)",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
+        "node_model_1": "CRWV_ENTERPRISE_LIQUIDITY",
+        "node_model_2": "CRWV_BAD_ACTS_RECOURSE",     # Distinct legal recourse standard
+        "node_model_3": "CRWV_ENTERPRISE_LIQUIDITY",
+        "description": "Non-recourse carve-out guaranty on $2.837B facility; parent liable only for specified bad acts."
+    },
+    {
+        "structure_id": "CRWV_DDTL",
+        "structure_name": "CoreWeave DDTLs (Tranches 1.0 - 5.0, including 2.1)",
+        "facility_id": "PORTFOLIO_COREWEAVE",
+        "category": "Equipment Facility",
+        "capital_volume_b": 13.643,
+        "protection_id": "DDTL-P5",
+        "name": "Joint Co-Borrower Liability Structure (CCAC V on DDTL 3.0)",
+        "functional_tier": "Transfer",
+        "protection_status": "active",
+        "immediate_holder": "CRWV_CCAC_V (Co-Borrower)",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
+        "node_model_1": "CRWV_ENTERPRISE_LIQUIDITY",
+        "node_model_2": "AFFILIATE_CROSS_COLLATERAL",
+        "node_model_3": "CRWV_ENTERPRISE_LIQUIDITY",
+        "description": "Cross-subsidiary co-borrower liability joining multiple cluster entities under single agreement."
+    },
+    {
+        "structure_id": "CRWV_DDTL",
+        "structure_name": "CoreWeave DDTLs (Tranches 1.0 - 5.0, including 2.1)",
+        "facility_id": "PORTFOLIO_COREWEAVE",
+        "category": "Equipment Facility",
+        "capital_volume_b": 13.643,
+        "protection_id": "DDTL-P6",
+        "name": "Anchor Hyperscaler Customer Offtake Cash Flows",
+        "functional_tier": "Transfer",
+        "protection_status": "active",
+        "immediate_holder": "CoreWeave Commercial Contracts",
+        "mapping_basis": "economic_inference",
+        "terminal_node_confidence": "B",
+        "node_model_1": "HYPERSCALER_ANCHOR_DEMAND",
+        "node_model_2": "HYPERSCALER_ANCHOR_DEMAND",
+        "node_model_3": "HYPERSCALER_ANCHOR_DEMAND",
+        "description": "Underlying cluster debt service relies on collections from primary offtaker (Microsoft ~67% FY25)."
+    },
+
+    # ------------------ NEBIUS ------------------
+    {
+        "structure_id": "NBIS_MUFG",
+        "structure_name": "Nebius Term Loan (Mäntsälä DC & GPUs)",
+        "facility_id": "FAC-NBIS-MANTSALA",
+        "category": "Datacenter / GPU Term Loan",
+        "capital_volume_b": 0.775,
+        "protection_id": "NBIS-P1",
+        "name": "First-Priority Security on Mäntsälä DC & Compute Assets",
+        "functional_tier": "Recovery",
+        "protection_status": "active",
+        "immediate_holder": "MUFG Syndicate Collateral Agent",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
+        "node_model_1": "DC_AND_GPU_COLLATERAL",
+        "node_model_2": "DC_AND_GPU_COLLATERAL",
+        "node_model_3": "DC_AND_GPU_COLLATERAL",
+        "description": "Security interest in physical datacenter infrastructure and GPU clusters at operating Finnish facility."
     },
     {
         "structure_id": "NBIS_MUFG",
-        "name": "Nebius Term Loan (Mäntsälä DC & GPUs)",
+        "structure_name": "Nebius Term Loan (Mäntsälä DC & GPUs)",
         "facility_id": "FAC-NBIS-MANTSALA",
         "category": "Datacenter / GPU Term Loan",
-        "capital_volume_b": 0.775,  # $775M Term Facility
-        "active_carry_m_yr": 65.875,  # ~8.5% blended
-        "mw_capacity": 75.0,
-        "protections": [
-            {
-                "protection_id": "NBIS-P1",
-                "name": "First-Priority Security on Mäntsälä DC & Compute Assets",
-                "functional_tier": "Recovery",
-                "immediate_holder": "MUFG Syndicate Collateral Agent",
-                "terminal_support_node": "GPU_SECONDARY_COLLATERAL",
-                "supporting_assumption": "A001",
-                "description": "Security interest in physical datacenter infrastructure and GPU clusters at operating Finnish facility."
-            },
-            {
-                "protection_id": "NBIS-P2",
-                "name": "Nebius Group N.V. Parent Treasury Cash Buffer",
-                "functional_tier": "Transfer",
-                "immediate_holder": "Nebius Group N.V. (Parent)",
-                "terminal_support_node": "NEBIUS_TREASURY_CASH",
-                "supporting_assumption": "A002",
-                "description": "Parent bad-acts guarantee backed by multi-billion dollar treasury cash from Yandex Russian divestment."
-            },
-            {
-                "protection_id": "NBIS-P3",
-                "name": "Operational 75 MW Grid Power Interconnect",
-                "functional_tier": "Preventive",
-                "immediate_holder": "Mäntsälä Facility Operator",
-                "terminal_support_node": "POWER_GRID_ENERGIZATION",
-                "supporting_assumption": "A004",
-                "description": "Facility is fully energized and online since 2023 with Fingrid, eliminating energization lag risk."
-            }
-        ]
+        "capital_volume_b": 0.775,
+        "protection_id": "NBIS-P2",
+        "name": "Non-Recourse Parent Carve-Out Guaranty (Bad Acts & Performance)",
+        "functional_tier": "Transfer",
+        "protection_status": "active",
+        "immediate_holder": "Nebius Group N.V. (Parent)",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
+        "node_model_1": "NEBIUS_BAD_ACTS_RECOURSE",    # Limited carve-out, not broad debt-service guaranty
+        "node_model_2": "NEBIUS_BAD_ACTS_RECOURSE",
+        "node_model_3": "NEBIUS_BAD_ACTS_RECOURSE",
+        "description": "Parent guarantee limited to specified bad acts and performance covenants; not a blanket debt-service guarantee."
     }
 ]
 
 # -----------------------------------------------------------------------------
-# 2. Pairwise Minimum Failure Sets Definition
+# 2. Selected Paired-Shock Scenarios (Exploratory Stress Matrix)
 # -----------------------------------------------------------------------------
-FAILURE_SETS = [
+PAIRED_SCENARIOS = [
     {
-        "set_id": "MFS-01",
+        "scenario_id": "PAIR-01",
         "name": "Anchor Customer Contraction + Power Energization Delay",
         "assumptions": ["A005", "A004"],
         "category": "Commercial & Physical Shock",
         "mechanism": (
-            "Hyperscaler offload slows (A005) while regional substation construction slips (A004). "
-            "Data halls sit idle while CoreWeave springing lease guarantees remain dormant. "
-            "APLD parent must service project debt carry ($473.8M/yr) without receiving tenant lease cash flows."
+            "Hyperscaler offload decelerates or trims optional tiers (A005) while regional substation construction "
+            "slips in North Dakota (A004). Unenergized halls at Ellendale prevent lease commencement, leaving "
+            "springing lease guaranties dormant. APLD parent must absorb debt service on PF1/PF2 without tenant lease rent."
         ),
         "touched_structures": ["PF1", "PF2", "CRWV_DDTL"],
-        "touched_debt_volume_b": 16.733,  # $3.94B PF1 + $2.15B PF2 + $10.643B DDTL
-        "touched_mw_capacity": 1190.0,
-        "affected_protections_compromised": [
+        "touched_debt_b": 19.733,  # $3.94B PF1 + $2.15B PF2 + $13.643B DDTL
+        "touched_mw": 600.0,       # 400 MW Ellendale PF1 + 200 MW PF2
+        "affected_protections": [
             "PF1-P4 (Take-or-Pay Lease)",
             "PF1-P5 (Springing Guaranty ELN02)",
             "PF1-P6 (Springing Guaranty ELN03)",
-            "PF2-P1 (Escrow Grid Gating)",
-            "CRWV-P6 (Customer Offtake Assignment)"
+            "DDTL-P6 (Hyperscaler Offtake Cash Flows)"
         ],
-        "systemic_outcome": "Catastrophic sponsor liquidity drain; tenant springing guaranties cannot be triggered; SPV default risk escalates."
+        "analytical_observation": "Tests vulnerability when tenant rental cash generation fails to synchronize with physical data hall delivery."
     },
     {
-        "set_id": "MFS-02",
+        "scenario_id": "PAIR-02",
         "name": "GPU Collateral Haircut + Refinancing Freeze",
         "assumptions": ["A001", "A002"],
         "category": "Capital Markets & Technology Shock",
         "mechanism": (
-            "Technological obsolescence (B200 ramp / demand pause) drops secondary GPU clearing prices 40% (A001), "
-            "breaching advance rates across borrowing bases. Simultaneously, credit spreads widen +300 bps (A002), "
-            "preventing neoclouds from refinancing maturing DDTLs or funding margin calls."
+            "Accelerated architectural obsolescence or secondary hardware flooding drives a 40% drop in GPU clearing prices (A001). "
+            "Borrowing base advance rates are breached. Simultaneously, credit spreads widen +300 bps (A002), "
+            "impeding DDTL rollover and forcing cash equity cure contributions."
         ),
         "touched_structures": ["CRWV_DDTL", "MACKENZIE", "NBIS_MUFG"],
-        "touched_debt_volume_b": 13.818,  # $10.643B DDTL + $2.4B MAC + $0.775B NBIS
-        "touched_mw_capacity": 745.0,
-        "affected_protections_compromised": [
+        "touched_debt_b": 16.818,  # $13.643B DDTL + $2.4B MAC + $0.775B NBIS
+        "touched_mw": 745.0,
+        "affected_protections": [
             "DDTL-P1 (Borrowing Base Advance)",
             "MAC-P2 (Equipment Collateral Lien)",
             "NBIS-P1 (DC & Compute Security)",
             "MAC-P4 (Availability Window Cliff)"
         ],
-        "systemic_outcome": "Equipment lenders face immediate collateral under-recovery; mandatory prepayments triggered without market exit."
+        "analytical_observation": "Tests the vulnerability of asset-backed debt structures when secondary silicon liquidation values compress."
     },
     {
-        "set_id": "MFS-03",
+        "scenario_id": "PAIR-03",
         "name": "Sponsor Parent Liquidity Shock + Construction Delay",
         "assumptions": ["A002", "A004"],
         "category": "Sponsor Credit & Execution Shock",
         "mechanism": (
-            "Civil and electrical energization delays exceed 12 months (A004), exhausting project DSRAs. "
-            "APLD parent balance sheet faces equity dilution or debt market exclusion (A002), "
-            "preventing parent from fulfilling mandatory construction shortfall funding."
+            "Energization delay extends beyond prefunded interest reserve horizons (A004). "
+            "Concurrently, sponsor parent equity/convertible market access tightens (A002), "
+            "constraining APLD's capacity to fulfill mandatory construction shortfall contributions."
         ),
         "touched_structures": ["PF1", "PF2"],
-        "touched_debt_volume_b": 6.090,  # $3.94B PF1 + $2.15B PF2
-        "touched_mw_capacity": 600.0,
-        "affected_protections_compromised": [
+        "touched_debt_b": 6.090,   # $3.94B PF1 + $2.15B PF2
+        "touched_mw": 600.0,
+        "affected_protections": [
             "PF1-P1 (DSRA Reserve)",
             "PF1-P2 (APLD Completion Guarantee)",
             "PF2-P2 (Project DSRA)",
             "PF2-P3 (APLD Completion Support)"
         ],
-        "systemic_outcome": "Indenture default acceleration; noteholders forced to foreclose on uncompleted substation/datacenter shells."
+        "analytical_observation": "Tests whether prefunded DSRAs provide sufficient runway when sponsor parent liquidity is constrained."
     },
     {
-        "set_id": "MFS-04",
+        "scenario_id": "PAIR-04",
         "name": "ERCOT Grid Disruption + Refinancing Freeze",
         "assumptions": ["A004", "A002"],
-        "category": "Regional Infrastructure & Liquidity Shock",
+        "category": "Regional Infrastructure & Capital Shock",
         "mechanism": (
-            "Transmission interconnection delays or extreme weather curtailment freeze capacity expansion in Texas (A004). "
-            "Simultaneous private credit rollover freeze (A002) blocks capital access for multi-gigawatt pipeline."
+            "Severe transmission curtailment or interconnect delays hit ERCOT Texas operations (A004). "
+            "Simultaneously, high-yield private credit spreads widen (A002), restricting capital access for pipeline buildout. "
+            "Touches Core Scientific Denton colocation (100 MW live / 394 MW utility), IREN Childress (650 MW live / 750 MW utility), "
+            "and IREN Sweetwater development pipeline (2,000 MW)."
         ),
-        "touched_structures": ["PF1", "PF2", "MACKENZIE"],
-        "touched_debt_volume_b": 8.490,  # $6.09B APLD + $2.40B IREN
-        "touched_mw_capacity": 2750.0,  # Denton, Childress, Sweetwater 1/2
-        "affected_protections_compromised": [
-            "PF1-P3 (Substation Mortgage)",
-            "PF2-P4 (Project Liens)",
-            "MAC-P4 (Availability Window Cliff)"
+        "touched_structures": ["CORZ_COLOCATION", "IREN_CHILDRESS", "IREN_SWEETWATER"],
+        "touched_debt_b": 0.000,   # Excludes non-ERCOT project debt (0.00% misattribution); corporate credit only
+        "touched_mw": 2750.0,      # 750 MW live ERCOT + 2,000 MW Sweetwater pipeline
+        "affected_protections": [
+            "CORZ CoreWeave Colocation Agreement (590 MW total across sites)",
+            "IREN Operating Cash Flow Generation from Childress",
+            "Sweetwater Phase 1 & 2 Interconnection Progression"
         ],
-        "systemic_outcome": "Massive pipeline stranding; unenergized sites fail to generate EBITDA to cover corporate overhead."
+        "analytical_observation": "Evaluates pure regional grid common dependency strictly aligned to Texas physical and contractual assets."
     },
     {
-        "set_id": "MFS-05",
-        "name": "Hyperscaler Capex Digestion + GPU Secondary Haircut",
+        "scenario_id": "PAIR-05",
+        "name": "Hyperscaler Capex Deceleration + GPU Secondary Haircut",
         "assumptions": ["A006", "A001"],
         "category": "Macro Capex & Technology Shock",
         "mechanism": (
-            "Big 4 hyperscalers decelerate external hosting capex growth to 0-5% (A006), "
-            "dumping older clusters onto the secondary market and precipitating a collateral crash (A001)."
+            "Top 4 hyperscalers transition to an infrastructure digestion phase, slowing capex growth (A006). "
+            "Excess server inventory depresses secondary GPU prices (A001), impacting borrowing bases across equipment facilities."
         ),
         "touched_structures": ["CRWV_DDTL", "MACKENZIE"],
-        "touched_debt_volume_b": 13.043,  # $10.643B DDTL + $2.4B MAC
-        "touched_mw_capacity": 670.0,
-        "affected_protections_compromised": [
+        "touched_debt_b": 16.043,  # $13.643B DDTL + $2.4B MAC
+        "touched_mw": 670.0,
+        "affected_protections": [
             "DDTL-P1 (Borrowing Base Advance)",
             "MAC-P1 (Staged Drawdown Condition)",
             "MAC-P2 (Equipment Collateral Lien)"
         ],
-        "systemic_outcome": "Staged hardware financing freezes; uncalled capital evaporates; existing debt suffers immediate coverage deficit."
+        "analytical_observation": "Tests the direct transmission belt between hyperscaler capex cycles and neocloud equipment debt."
     }
 ]
 
 # -----------------------------------------------------------------------------
-# 3. Lender Diversity Data Definition
+# 3. Role-Aware Capital Provider / Lender Profile
 # -----------------------------------------------------------------------------
-LENDERS = [
-    {"lender_name": "Blackstone & Magnetar Syndicate", "role": "Private Credit Syndicate", "facilities": ["CRWV DDTL 1.0", "CRWV DDTL 2.0", "CRWV DDTL 2.1"], "exposure_b": 7.490, "type": "Asset-Backed Private Credit"},
-    {"lender_name": "MUFG Bank Syndicate", "role": "Commercial & Investment Bank Syndicate", "facilities": ["CRWV DDTL 3.0", "CRWV DDTL 4.0", "NBIS Term Loan"], "exposure_b": 5.827, "type": "Syndicated Bank Facility"},
-    {"lender_name": "Morgan Stanley Syndicate", "role": "Investment Bank Syndicate", "facilities": ["CRWV DDTL 5.0"], "exposure_b": 1.101, "type": "Syndicated Bank Facility"},
-    {"lender_name": "Blue Owl (including OBDC)", "role": "Direct Lending BDC / Fund", "facilities": ["IREN Mackenzie MFSA"], "exposure_b": 1.200, "type": "Direct Equipment Financing"},
-    {"lender_name": "PIMCO", "role": "Institutional Credit Fund", "facilities": ["IREN Mackenzie Senior Notes"], "exposure_b": 1.200, "type": "Equipment Secured Notes"},
-    {"lender_name": "Goldman Sachs", "role": "Escrow Agent / Placement Agent", "facilities": ["APLD PF2 Escrow"], "exposure_b": 2.150, "type": "Escrow & Placement"},
-    {"lender_name": "Institutional High-Yield Bondholders", "role": "Public / 144A Bond Market", "facilities": ["CRWV 2030-2032 Notes", "CRWV Convertibles", "APLD PF1 Notes", "APLD PF2 Notes", "APLD 7% Notes", "WULF Convertibles"], "exposure_b": 28.530, "type": "Broad Capital Markets"},
-    {"lender_name": "Coatue Management", "role": "Growth / Crossover Investor", "facilities": ["HUT Convertible Note"], "exposure_b": 0.150, "type": "Convertible Credit"}
+LENDER_ROLES = [
+    {
+        "capital_category": "Direct Lenders & Lessors",
+        "institution_name": "Blue Owl Capital / OBDC",
+        "role_description": "Direct Equipment Financing Provider & Lessor",
+        "facilities": "IREN Mackenzie MFSA",
+        "modeled_amount_b": 1.200,
+        "notes": "Committed direct lease financing drawn upon equipment acceptance."
+    },
+    {
+        "capital_category": "Institutional Note Purchasers",
+        "institution_name": "PIMCO",
+        "role_description": "Senior Secured Equipment Note Purchaser",
+        "facilities": "IREN Mackenzie Senior Secured Notes",
+        "modeled_amount_b": 1.200,
+        "notes": "Privately placed equipment notes drawn alongside MFSA."
+    },
+    {
+        "capital_category": "Institutional Note Purchasers",
+        "institution_name": "Coatue Management",
+        "role_description": "Convertible Note Investor",
+        "facilities": "Hut 8 Senior Unsecured Convertible Note",
+        "modeled_amount_b": 0.150,
+        "notes": "Dedicated private convertible placement."
+    },
+    {
+        "capital_category": "Syndicate Administrative Agents",
+        "institution_name": "Blackstone & Magnetar (Agent / Lead)",
+        "role_description": "Administrative & Collateral Agent for Private Credit Syndicate",
+        "facilities": "CoreWeave DDTL 1.0, 2.0, 2.1",
+        "modeled_amount_b": 7.490,
+        "notes": "Represents syndicated private credit lenders; beneficial holder distribution undisclosed."
+    },
+    {
+        "capital_category": "Syndicate Administrative Agents",
+        "institution_name": "MUFG Bank Syndicate (Agent / Lead)",
+        "role_description": "Administrative Agent for Commercial Bank Syndicate",
+        "facilities": "CoreWeave DDTL 3.0, 4.0; Nebius Term Loan",
+        "modeled_amount_b": 5.827,
+        "notes": "Syndicated international commercial bank facilities ($2.215B + $2.837B + $0.775B)."
+    },
+    {
+        "capital_category": "Syndicate Administrative Agents",
+        "institution_name": "Morgan Stanley Syndicate (Agent / Lead)",
+        "role_description": "Administrative Agent for Bank Syndicate",
+        "facilities": "CoreWeave DDTL 5.0",
+        "modeled_amount_b": 1.101,
+        "notes": "Syndicated delayed-draw credit agreement."
+    },
+    {
+        "capital_category": "Placement & Escrow Intermediaries",
+        "institution_name": "Goldman Sachs & Co. LLC",
+        "role_description": "Initial Purchaser Representative & Escrow Agent",
+        "facilities": "Applied Digital PF2 Notes Placement & Escrow",
+        "modeled_amount_b": 2.150,
+        "notes": "Underwriter / placement representative; economic holders are distributed 144A investors, not Goldman balance sheet."
+    },
+    {
+        "capital_category": "Distributed Public / 144A Bondholders",
+        "institution_name": "Institutional High-Yield & Convertible Market",
+        "role_description": "Broadly Distributed Institutional Bondholders (Mutual Funds, Insurance, Credit Funds)",
+        "facilities": "CRWV Senior Notes & Converts ($16.617B); APLD Notes/Converts ($6.540B); WULF Converts ($2.525B)",
+        "modeled_amount_b": 25.682,
+        "notes": "Reconciled total across 14 distinct note/convertible tranches in frozen ledger."
+    }
 ]
 
 # -----------------------------------------------------------------------------
-# 4. Computation Engine
+# 4. Computation & Sensitivity Engine
 # -----------------------------------------------------------------------------
 def run_analysis():
     print("=" * 80)
-    print("RUNNING ANALYSIS SPRINT 2: HIDDEN DEPENDENCY & PROTECTION INDEPENDENCE")
+    print("RUNNING ANALYSIS SPRINT 2.1: CONTRACTUAL PROTECTION COMPRESSION & SENSITIVITY")
     print("=" * 80)
 
-    # Calculate Protection Independence metrics for each structure
+    df_prot = pd.DataFrame(PROTECTIONS_DATA)
+    structures = df_prot["structure_id"].unique()
+
     summary_records = []
-    mapping_rows = []
 
-    for s in STRUCTURES:
-        sid = s["structure_id"]
-        prots = s["protections"]
-        n_prot = len(prots)
-        terminal_nodes = set(p["terminal_support_node"] for p in prots)
-        n_term = len(terminal_nodes)
-        pir = n_term / n_prot
-        convergence_idx = 1.0 - pir
+    for sid in structures:
+        sub = df_prot[df_prot["structure_id"] == sid]
+        sname = sub["structure_name"].iloc[0]
+        cat = sub["category"].iloc[0]
+        vol = sub["capital_volume_b"].iloc[0]
+        n_prot_total = len(sub)
 
-        # Classification against falsification boundaries
-        if pir < 0.50:
-            classification = "Concentration Supported (Severe Reconvergence)"
-        elif pir <= 0.67:
-            classification = "Concentration Supported (Moderate Reconvergence)"
-        elif pir >= 0.75:
-            classification = "Resilience Supported (High Independence)"
+        # Model 1: Economic Convergence (Systemic Baseline)
+        nodes_m1 = set(sub["node_model_1"].dropna())
+        sncr_m1 = len(nodes_m1) / n_prot_total
+
+        # Model 2: Legal Partitioning (Strict Contractual Form)
+        nodes_m2 = set(sub["node_model_2"].dropna())
+        sncr_m2 = len(nodes_m2) / n_prot_total
+
+        # Model 3: Active-Only Covenants (Lifecycle Filtered)
+        sub_active = sub[sub["node_model_3"].notna()]
+        n_prot_active = len(sub_active)
+        nodes_m3 = set(sub_active["node_model_3"].dropna())
+        sncr_m3 = len(nodes_m3) / n_prot_active if n_prot_active > 0 else 0.0
+
+        # Predeclared classification based on Model 1:
+        # < 0.50: Severe Compression / Concentration
+        # 0.50 - 0.74: Moderate Compression / Mixed
+        # >= 0.75: High Independence / Orthogonal
+        if sncr_m1 < 0.50:
+            classification = "Severe Compression (SNCR < 0.50)"
+        elif sncr_m1 < 0.75:
+            classification = "Moderate Compression / Mixed (0.50 <= SNCR < 0.75)"
         else:
-            classification = "Unresolved / Mixed"
+            classification = "High Independence (SNCR >= 0.75)"
 
         summary_records.append({
             "structure_id": sid,
-            "name": s["name"],
-            "category": s["category"],
-            "capital_volume_b": s["capital_volume_b"],
-            "active_carry_m_yr": s["active_carry_m_yr"],
-            "mw_capacity": s["mw_capacity"],
-            "n_protections": n_prot,
-            "n_terminal_nodes": n_term,
-            "protection_independence_ratio": round(pir, 4),
-            "convergence_index": round(convergence_idx, 4),
-            "classification": classification,
-            "terminal_nodes": sorted(list(terminal_nodes))
+            "structure_name": sname,
+            "category": cat,
+            "capital_volume_b": vol,
+            "n_protections_total": n_prot_total,
+            "n_protections_active": n_prot_active,
+            "sncr_model_1_economic": round(sncr_m1, 4),
+            "sncr_model_2_legal": round(sncr_m2, 4),
+            "sncr_model_3_active_only": round(sncr_m3, 4),
+            "nodes_model_1": sorted(list(nodes_m1)),
+            "nodes_model_2": sorted(list(nodes_m2)),
+            "nodes_model_3": sorted(list(nodes_m3)),
+            "baseline_classification": classification
         })
 
-        for p in prots:
-            mapping_rows.append({
-                "structure_id": sid,
-                "structure_name": s["name"],
-                "protection_id": p["protection_id"],
-                "protection_name": p["name"],
-                "functional_tier": p["functional_tier"],
-                "immediate_holder": p["immediate_holder"],
-                "terminal_support_node": p["terminal_support_node"],
-                "supporting_assumption": p["supporting_assumption"],
-                "description": p["description"]
-            })
-
     df_summary = pd.DataFrame(summary_records)
-    df_mapping = pd.DataFrame(mapping_rows)
-    df_failures = pd.DataFrame(FAILURE_SETS)
-    df_lenders = pd.DataFrame(LENDERS)
+    df_scenarios = pd.DataFrame(PAIRED_SCENARIOS)
+    df_lenders = pd.DataFrame(LENDER_ROLES)
 
-    print("\n--- Summary Table: Protection Independence Ratio (PIR) ---")
-    print(df_summary[["structure_id", "capital_volume_b", "n_protections", "n_terminal_nodes", "protection_independence_ratio", "classification"]].to_string(index=False))
+    print("\n--- Support-Node Compression Ratio (SNCR) Multi-Model Sensitivity Table ---")
+    print(df_summary[["structure_id", "capital_volume_b", "n_protections_total", "sncr_model_1_economic", "sncr_model_2_legal", "sncr_model_3_active_only", "baseline_classification"]].to_string(index=False))
 
-    # Save CSVs
+    # Export CSVs
     df_summary.to_csv(ANALYSIS_DIR / "protection_independence_summary.csv", index=False)
-    df_mapping.to_csv(ANALYSIS_DIR / "protection_mapping_table.csv", index=False)
-    df_failures.to_csv(ANALYSIS_DIR / "minimum_failure_sets.csv", index=False)
-    df_lenders.to_csv(ANALYSIS_DIR / "lender_diversity_profile.csv", index=False)
+    df_prot.to_csv(ANALYSIS_DIR / "protection_mapping_table.csv", index=False)
+    df_scenarios.to_csv(ANALYSIS_DIR / "selected_paired_scenarios.csv", index=False)
+    df_lenders.to_csv(ANALYSIS_DIR / "lender_role_profile.csv", index=False)
 
-    # Save JSON summary
-    export_json = {
-        "analysis_sprint": "Analysis Sprint 2: Hidden Dependency & Protection Independence",
+    # Export JSON
+    export_data = {
+        "analysis_sprint": "Analysis Sprint 2.1: Contractual Protection Compression & Sensitivity",
         "date": "2026-09-30",
-        "falsification_standard": {
-            "concentration_threshold_pir": "< 0.50",
-            "resilience_threshold_pir": ">= 0.75",
-            "empirical_finding": "PF2 and CoreWeave DDTLs exhibit severe reconvergence (PIR = 0.50), while Mackenzie and Nebius exhibit true structural independence (PIR = 1.00)."
+        "methodological_note": (
+            "SNCR (Support-Node Compression Ratio) is an analyst-coded classification metric "
+            "measuring the ratio of distinct underlying economic support nodes to stated contractual safeguards. "
+            "It is evaluated under three sensitivity models to verify robustness."
+        ),
+        "sensitivity_models": {
+            "model_1": "Economic Convergence (groups related nodes by systemic economic driver)",
+            "model_2": "Legal Partitioning (preserves legal distinctions like SPV partitioning and bad-acts carveouts)",
+            "model_3": "Active-Only Covenants (prunes expired conditions like PF2 escrow and dormant springing guaranties)"
         },
         "structures_summary": summary_records,
-        "minimum_failure_sets": FAILURE_SETS,
-        "lenders_profile": LENDERS
+        "selected_paired_scenarios": PAIRED_SCENARIOS,
+        "lender_roles_profile": LENDER_ROLES
     }
 
     with open(ANALYSIS_DIR / "protection_independence_summary.json", "w") as f:
-        json.dump(export_json, f, indent=2)
+        json.dump(export_data, f, indent=2)
 
-    print(f"\n[OK] Analysis JSON saved to {ANALYSIS_DIR / 'protection_independence_summary.json'}")
+    print(f"\n[OK] Summary JSON saved to {ANALYSIS_DIR / 'protection_independence_summary.json'}")
 
     # Generate Figures
-    generate_figures(df_summary, df_mapping, df_failures, df_lenders)
+    generate_figures(df_summary, df_scenarios, df_lenders)
 
 
 # -----------------------------------------------------------------------------
 # 5. Visualizations Generator
 # -----------------------------------------------------------------------------
-def generate_figures(df_summary, df_mapping, df_failures, df_lenders):
+def generate_figures(df_summary, df_scenarios, df_lenders):
     plt.style.use("seaborn-v0_8-whitegrid" if "seaborn-v0_8-whitegrid" in plt.style.available else "default")
     matplotlib.rcParams["font.sans-serif"] = ["DejaVu Sans", "Arial", "Helvetica"]
     matplotlib.rcParams["axes.edgecolor"] = "#cccccc"
     matplotlib.rcParams["axes.linewidth"] = 0.8
 
     # -------------------------------------------------------------------------
-    # FIGURE 1: Protection Independence Matrix & Reconvergence Architecture
+    # FIGURE 1: Support-Node Compression & Multi-Model Sensitivity
     # -------------------------------------------------------------------------
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 7))
 
-    # Panel A: Protection Count vs. Unique Terminal Nodes
     structures = df_summary["structure_id"].tolist()
-    n_prot = df_summary["n_protections"].values
-    n_term = df_summary["n_terminal_nodes"].values
-    pir_values = df_summary["protection_independence_ratio"].values
+    labels = [f"{s}\n(${df_summary.loc[df_summary['structure_id']==s, 'capital_volume_b'].values[0]:.1f}B)" for s in structures]
+
+    m1_vals = df_summary["sncr_model_1_economic"].values
+    m2_vals = df_summary["sncr_model_2_legal"].values
+    m3_vals = df_summary["sncr_model_3_active_only"].values
+
     x = np.arange(len(structures))
-    width = 0.35
+    width = 0.25
 
-    rects1 = ax1.bar(x - width/2, n_prot, width, label="Contractual Protections (N_prot)", color="#1f77b4", alpha=0.85, edgecolor="#0c4a6e")
-    rects2 = ax1.bar(x + width/2, n_term, width, label="Unique Terminal Nodes (N_term)", color="#e65100", alpha=0.85, edgecolor="#b33600")
+    # Panel A: Sensitivity across 3 Models
+    rects1 = ax1.bar(x - width, m1_vals, width, label="Model 1: Economic Convergence", color="#b71c1c", alpha=0.85, edgecolor="#333333")
+    rects2 = ax1.bar(x, m2_vals, width, label="Model 2: Legal Partitioning", color="#1976d2", alpha=0.85, edgecolor="#333333")
+    rects3 = ax1.bar(x + width, m3_vals, width, label="Model 3: Active-Only Covenants", color="#388e3c", alpha=0.85, edgecolor="#333333")
 
-    ax1.set_ylabel("Count", fontsize=12, fontweight="bold")
-    ax1.set_title("A. Contractual Safeguards vs. Terminal Economic Support Nodes", fontsize=13, fontweight="bold", pad=12)
+    ax1.axhline(y=0.50, color="#d9534f", linestyle="--", linewidth=1.2, label="Compression Threshold (0.50)")
+    ax1.axhline(y=0.75, color="#5cb85c", linestyle="--", linewidth=1.2, label="Independence Threshold (0.75)")
+
+    ax1.set_ylabel("Support-Node Compression Ratio (SNCR)", fontsize=11, fontweight="bold")
+    ax1.set_title("A. Sensitivity Analysis of Protection Compression Across Models", fontsize=12, fontweight="bold", pad=12)
     ax1.set_xticks(x)
-    ax1.set_xticklabels([f"{s}\n(${df_summary.loc[df_summary['structure_id']==s, 'capital_volume_b'].values[0]:.1f}B)" for s in structures], fontsize=10, fontweight="bold")
-    ax1.legend(loc="upper left", frameon=True)
-    ax1.set_ylim(0, 7.5)
+    ax1.set_xticklabels(labels, fontsize=9, fontweight="bold")
+    ax1.set_ylim(0, 1.25)
+    ax1.legend(loc="upper right", frameon=True, fontsize=9)
 
-    # Add count labels
     for bar in rects1:
-        yval = bar.get_height()
-        ax1.text(bar.get_x() + bar.get_width()/2, yval + 0.15, f"{int(yval)}", ha="center", va="bottom", fontsize=10, fontweight="bold", color="#1f77b4")
+        ax1.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.02, f"{bar.get_height():.2f}", ha="center", va="bottom", fontsize=8)
     for bar in rects2:
-        yval = bar.get_height()
-        ax1.text(bar.get_x() + bar.get_width()/2, yval + 0.15, f"{int(yval)}", ha="center", va="bottom", fontsize=10, fontweight="bold", color="#e65100")
+        ax1.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.02, f"{bar.get_height():.2f}", ha="center", va="bottom", fontsize=8)
+    for bar in rects3:
+        ax1.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.02, f"{bar.get_height():.2f}", ha="center", va="bottom", fontsize=8)
 
-    # Panel B: Protection Independence Ratio (PIR) vs Thresholds
-    colors = ["#d9534f" if p <= 0.50 else ("#f0ad4e" if p < 0.75 else "#5cb85c") for p in pir_values]
-    bars = ax2.bar(structures, pir_values, color=colors, width=0.55, edgecolor="#333333", alpha=0.85)
+    # Panel B: Protection Counts vs Unique Economic Support Nodes (Model 1 Baseline)
+    n_prot = df_summary["n_protections_total"].values
+    n_nodes_m1 = [len(nodes) for nodes in df_summary["nodes_model_1"]]
 
-    ax2.axhline(y=0.50, color="#d9534f", linestyle="--", linewidth=1.5, label="Severe Reconvergence (PIR <= 0.50)")
-    ax2.axhline(y=0.75, color="#5cb85c", linestyle="--", linewidth=1.5, label="High Independence (PIR >= 0.75)")
-    ax2.set_ylabel("Protection Independence Ratio (PIR = N_term / N_prot)", fontsize=12, fontweight="bold")
-    ax2.set_title("B. Structural Convergence Index: Quantifying the Illusion of Diversification", fontsize=13, fontweight="bold", pad=12)
-    ax2.set_ylim(0, 1.25)
-    ax2.legend(loc="upper left", frameon=True)
+    w2 = 0.35
+    b1 = ax2.bar(x - w2/2, n_prot, w2, label="Contractual Protections (N_prot)", color="#455a64", alpha=0.85, edgecolor="#263238")
+    b2 = ax2.bar(x + w2/2, n_nodes_m1, w2, label="Underlying Economic Support Nodes (N_nodes)", color="#e65100", alpha=0.85, edgecolor="#bf360c")
 
-    for bar, val in zip(bars, pir_values):
-        ax2.text(bar.get_x() + bar.get_width()/2, val + 0.03, f"{val:.2f}", ha="center", va="bottom", fontsize=11, fontweight="bold")
+    ax2.set_ylabel("Count", fontsize=11, fontweight="bold")
+    ax2.set_title("B. Contractual Safeguards vs. Terminal Support Nodes (Model 1)", fontsize=12, fontweight="bold", pad=12)
+    ax2.set_xticks(x)
+    ax2.set_xticklabels(labels, fontsize=9, fontweight="bold")
+    ax2.set_ylim(0, 8.5)
+    ax2.legend(loc="upper left", frameon=True, fontsize=9)
 
-    # Annotation of findings
-    ax2.text(0.5, -0.18, 
-             "Empirical Insight: PF2 & CoreWeave DDTLs collapse into half their stated protections (PIR=0.50).\n"
-             "Mackenzie & Nebius achieve true structural orthogonality (PIR=1.00) via pre-draw gating and treasury reserves.",
-             ha="center", va="top", transform=ax2.transAxes, fontsize=10, style="italic",
+    for bar in b1:
+        ax2.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.15, f"{int(bar.get_height())}", ha="center", va="bottom", fontsize=9, fontweight="bold", color="#455a64")
+    for bar in b2:
+        ax2.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.15, f"{int(bar.get_height())}", ha="center", va="bottom", fontsize=9, fontweight="bold", color="#e65100")
+
+    ax2.text(0.5, -0.20,
+             "Methodological Takeaway: SNCR quantifies how many distinct economic resources underlie N covenants.\n"
+             "PF2 and CoreWeave exhibit reconvergence across all models; Mackenzie and Nebius maintain higher independence.",
+             ha="center", va="top", transform=ax2.transAxes, fontsize=9, style="italic",
              bbox=dict(boxstyle="round,pad=0.5", facecolor="#f8f9fa", edgecolor="#dddddd"))
 
     plt.tight_layout()
@@ -592,44 +836,56 @@ def generate_figures(df_summary, df_mapping, df_failures, df_lenders):
     print(f"[OK] Figure 1 saved to {fig1_path}")
 
     # -------------------------------------------------------------------------
-    # FIGURE 2: Minimum Failure Sets & Multi-Layer Systemic Stress Matrix
+    # FIGURE 2: Selected Paired-Shock Scenarios & Role-Aware Capital Profile
     # -------------------------------------------------------------------------
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 7))
 
-    # Panel A: Touched Debt Volume by Minimum Failure Set
-    mfs_ids = df_failures["set_id"].tolist()
-    debt_vols = df_failures["touched_debt_volume_b"].values
-    mw_vols = df_failures["touched_mw_capacity"].values
+    # Panel A: Capital Volume Touched by Selected Paired-Shock Scenarios
+    scen_ids = df_scenarios["scenario_id"].tolist()
+    debt_vols = df_scenarios["touched_debt_b"].values
+    scen_names = [f"{row.scenario_id}: {row.name.split('+')[0].strip()}" for row in df_scenarios.itertuples()]
 
-    bar_colors = ["#b71c1c", "#c62828", "#d32f2f", "#e53935", "#f44336"]
-    bars1 = ax1.barh(mfs_ids, debt_vols, color=bar_colors, edgecolor="#333333", alpha=0.85, height=0.55)
-    ax1.set_xlabel("Funded / Committed Capital Touched ($B)", fontsize=12, fontweight="bold")
-    ax1.set_title("A. Capital Exposure Under Paired Assumption Shocks", fontsize=13, fontweight="bold", pad=12)
-    ax1.set_xlim(0, 20)
+    colors_scen = ["#c62828", "#d32f2f", "#e53935", "#1565c0", "#ad1457"]
+    b_scen = ax1.barh(scen_ids, debt_vols, color=colors_scen, edgecolor="#333333", alpha=0.85, height=0.55)
 
-    for bar, val, row in zip(bars1, debt_vols, df_failures.itertuples()):
-        ax1.text(val + 0.3, bar.get_y() + bar.get_height()/2, f"${val:.1f}B\n({row.name.split('+')[0].strip()})",
-                 ha="left", va="center", fontsize=9, fontweight="bold", color="#333333")
+    ax1.set_xlabel("Attributable Funded / Committed Debt Touched ($B)", fontsize=11, fontweight="bold")
+    ax1.set_title("A. Selected Paired-Shock Scenarios: Attributable Debt Exposure", fontsize=12, fontweight="bold", pad=12)
+    ax1.set_xlim(0, 24)
 
-    # Panel B: Lender Diversification vs Operational Concentration
-    lender_names = df_lenders["lender_name"].tolist()
-    lender_exposures = df_lenders["exposure_b"].values
-    y_pos = np.arange(len(lender_names))
+    for bar, val, name in zip(b_scen, debt_vols, scen_names):
+        txt = f"${val:.1f}B" if val > 0 else "$0.0B (Colo/Cash Flow Only)"
+        ax1.text(val + 0.4, bar.get_y() + bar.get_height()/2, f"{txt} — {name}",
+                 ha="left", va="center", fontsize=8.5, fontweight="bold", color="#333333")
 
-    bars2 = ax2.barh(y_pos, lender_exposures, color="#2e7d32", alpha=0.85, edgecolor="#1b5e20", height=0.55)
+    # Panel B: Role-Aware Capital Provider Categories
+    roles = df_lenders["institution_name"].tolist()
+    vols = df_lenders["modeled_amount_b"].values
+    cats = df_lenders["capital_category"].tolist()
+
+    y_pos = np.arange(len(roles))
+    cat_colors = {
+        "Direct Lenders & Lessors": "#2e7d32",
+        "Institutional Note Purchasers": "#388e3c",
+        "Syndicate Administrative Agents": "#1976d2",
+        "Placement & Escrow Intermediaries": "#f57c00",
+        "Distributed Public / 144A Bondholders": "#455a64"
+    }
+    bar_c = [cat_colors.get(c, "#757575") for c in cats]
+
+    b_roles = ax2.barh(y_pos, vols, color=bar_c, alpha=0.85, edgecolor="#333333", height=0.55)
     ax2.set_yticks(y_pos)
-    ax2.set_yticklabels([name.split("(")[0].strip() for name in lender_names], fontsize=9)
-    ax2.set_xlabel("Capital Committed / Held ($B)", fontsize=12, fontweight="bold")
-    ax2.set_title("B. Lender Syndicate Diversification (Negative Result for Cartel Thesis)", fontsize=13, fontweight="bold", pad=12)
-    ax2.set_xlim(0, 32)
+    ax2.set_yticklabels([f"{name.split('(')[0].strip()}" for name in roles], fontsize=8.5)
+    ax2.set_xlabel("Capital Modeled in Ledger ($B)", fontsize=11, fontweight="bold")
+    ax2.set_title("B. Capital Structure by Institutional Role ($25.682B Distributed 144A Market)", fontsize=12, fontweight="bold", pad=12)
+    ax2.set_xlim(0, 30)
 
-    for bar, val in zip(bars2, lender_exposures):
-        ax2.text(val + 0.4, bar.get_y() + bar.get_height()/2, f"${val:.2f}B", ha="left", va="center", fontsize=9, fontweight="bold")
+    for bar, val in zip(b_roles, vols):
+        ax2.text(val + 0.4, bar.get_y() + bar.get_height()/2, f"${val:.2f}B", ha="left", va="center", fontsize=8.5, fontweight="bold")
 
-    ax2.text(0.5, -0.18,
-             "Empirical Finding: Private credit capital is diversified across 8+ distinct institutional syndicates.\n"
-             "Systemic fragility arises from shared operational nodes (CoreWeave demand, ERCOT grid, APLD liquidity), NOT common lenders.",
-             ha="center", va="top", transform=ax2.transAxes, fontsize=10, style="italic",
+    ax2.text(0.5, -0.20,
+             "Key Empirical Clarification: Public/144A bondholders represent $25.682B across 14 tranches.\n"
+             "Lender concentration across private credit is not demonstrated; fragility lives in operational nodes (Power, Anchor Tenant).",
+             ha="center", va="top", transform=ax2.transAxes, fontsize=9, style="italic",
              bbox=dict(boxstyle="round,pad=0.5", facecolor="#f8f9fa", edgecolor="#dddddd"))
 
     plt.tight_layout()
