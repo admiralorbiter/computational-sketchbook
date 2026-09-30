@@ -113,7 +113,7 @@ Pipeline ROW denied             Loans trade 89-91c             Cutoff Date t_0  
    - Under rigorous survival analysis, the SEC corporate disclosure lead time is **RIGHT-CENSORED at $\ge 77$ calendar days**:
      $$\Delta t_{\text{SEC}} \ge 77\ \text{Calendar Days}\quad (\text{No public filing as of 2026-09-30})$$
 
-This right-censoring proves that physical and regulatory ground truth led official SEC corporate filings by more than 2.5 months, conclusively validating the foundational thesis of the Computational Observatory.
+Under survival analysis, this right-censored observation demonstrates that in this specific natural experiment, physical and regulatory ground reality led official SEC corporate filings by more than 2.5 months ($\ge 77$ days), providing strong empirical case evidence for the cross-domain knowledge lag.
 
 ---
 
@@ -152,12 +152,12 @@ A central conceptual finding emerged from the Project Jupiter shock:
 
 > **"Legal protection changes the timing and location of risk rather than necessarily eliminating it."**
 
-When Oracle issued its force-majeure notice under `OBL-ORCL-JUPITER-LEASE`, it exercised a legal protection designed to insulate the tenant from carrying costs during an unenergized state. However, this legal shield **did not extinguish the physical carrying cost of capital**. 
+When Oracle issued its force-majeure notice under `OBL-ORCL-JUPITER-LEASE`, it exercised a legal defense designed to insulate the tenant from carrying costs during an unenergized state. However, this legal shield **does not extinguish the underlying economic carrying cost of capital**.
 
-Instead, the force-majeure declaration redirected the debt service burden across the graph:
-1. **Tenant Relief:** Oracle prevented pre-energization rent payments from depleting corporate operating cash.
-2. **SPV & Sponsor Burden:** The project SPV (`PROJECT_JUPITER_SPV`) and its equity sponsors (`STACK_INFRA`, `BLUE_OWL`) suddenly faced debt service on ~$18.0B of syndicated debt without incoming offtake lease cash flows.
-3. **Syndicate Milestone Impairment:** The construction lenders (`CONSTRUCTION_LENDER_SYNDICATE`) faced conversion milestone delays, maturity rollover risk, and secondary loan market discounts (89–91c).
+As reported by Reuters on September 24, Oracle's notice aimed to shield the company from higher rent and carry obligations if the project missed its commercial operational schedule, while Blue Owl stated that the notice did not alter the long-term project commitments. From a structural network perspective, this demonstrates how contractual risk-allocation clauses redirect rather than eliminate exposure:
+1. **Tenant Protection Interpretation:** Oracle invoked force majeure to assert a legal defense against pre-energization rent payments, seeking to insulate tenant operating cash from carrying costs caused by pipeline delays.
+2. **SPV & Sponsor Allocation:** If sustained, the defense redirects the carrying burden of the ~$18.0B construction debt stack directly onto the project SPV (`PROJECT_JUPITER_SPV`) and its equity sponsors (`STACK_INFRA`, `BLUE_OWL`) in the absence of interim lease cash inflows.
+3. **Syndicate Milestone Impairment:** The construction lenders (`CONSTRUCTION_LENDER_SYNDICATE`) face conversion milestone delays and secondary market loan discounts (89–91c), as debt service becomes reliant on sponsor equity cures or loan renegotiations rather than contracted tenant rent.
 
 The cross-layer knowledge graph makes this risk redirection explicit: by modeling both the commercial lease edge and the construction debt edge meeting at the SPV node, the observatory exposes how contractual protections at one node amplify liquidity stress at connected counterparties.
 
