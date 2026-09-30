@@ -748,4 +748,29 @@ erc_regional_entity.
   - Seals Task 024.2 with unassailable scientific integrity.
   - Prepares the observatory for out-of-sample empirical validation on Project Jupiter (Task 025).
 
+---
+
+## ADR-025A: Pre-Specification Protocol for Project Jupiter Out-of-Sample Shock Validation
+
+- **Status:** Accepted (2026-09-30, Task 025A Pre-Registration)
+- **Pre-Event Epistemic Cutoff:** September 23, 2026, 23:59:59 UTC
+- **Event Realization Horizon:** September 24, 2026 – September 30, 2026
+- **Target Event:** Project Jupiter (New Mexico) Force-Majeure Notice, Power/Permitting Interruption, and ~$18B Construction Debt Scrutiny (Oracle / Blue Owl / STACK Infrastructure)
+- **Pre-Specification Protocol Document:** [`docs/task025_prespecification.md`](task025_prespecification.md)
+- **Context:**
+  - Tasks 021–024 established internal consistency, bitemporal isolation, and cross-layer reconvergence on the frozen Phase 0/1 corpus.
+  - Task 025 executes the first true out-of-sample validation of the observatory's core thesis: *"The crisis lives in the JOIN"*.
+  - To eliminate hindsight bias and ensure strict epistemic separation, the research design mandates three chronologically decoupled stages:
+    1. **Task 025A (Preregistration):** Commit hypotheses, structural path sequences, entity candidate universes, directional stress mechanisms, and scoring rubrics *before* ingesting pre-event or post-event data.
+    2. **Task 025B (Pre-Event Reconstruction):** Reconstruct $G_{\text{join}}$ strictly as of September 23, 2026 using only contemporaneous primary sources (SEC filings, NMPRC dockets, utility filings).
+    3. **Task 025C (Reveal & Scoring):** Ingest September 24+ market disclosures and evaluate against the preregistered precision, recall, and mechanism coverage rubrics.
+- **Preregistered Hypotheses:**
+  - **H1 (Admissible Structural Path):** Transmission must follow the typed chain: `PNM / WECC -> PROJECT_JUPITER -> STACK / BLUE_OWL SPV -> ORCL -> BLUE_OWL_OBDC / Debt Syndicate`.
+  - **H2 (Contractual Carry Friction):** Financial stress manifests primarily as contractual carry cost liability (standby reservation fees, interest carry) on the tenant (`ORCL`) or project SPV prior to commercial energization, rather than operating loss.
+  - **H3 (Debt Stack & Collateral Refinancing Vulnerability):** The ~$18B construction debt stack dependent on energization milestones experiences syndication delays, rating scrutiny, and below-par secondary market valuation.
+  - **H4 (Bitemporal Knowledge Asymmetry):** Physical permitting and utility queue delays precede public corporate disclosure by at least 30 days.
+- **Scoring Rubric:**
+  - Passing thresholds: $\text{Recall}_{\text{entity}} \ge 0.80$, $\text{Precision}_{\text{entity}} \ge 0.70$, Mechanism Coverage $= 3/3$ (100%), Directional Stress Alignment confirmed.
+
+
 
