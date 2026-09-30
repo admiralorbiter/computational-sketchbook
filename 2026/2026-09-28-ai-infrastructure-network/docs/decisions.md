@@ -668,5 +668,35 @@ erc_regional_entity.
   - Complete elimination of hardcoded facility facts in analytical scripts.
   - Faithful representation of completion uncertainty, pre-service risk segmentation, and institutional synchronization resilience.
 
+---
+
+## ADR-023: Empirical Bitemporal Visibility Analysis & Two-Clock Network Dynamics
+
+- **Status:** Accepted (2026-09-30, Task 023 Certification)
+- **Context:**
+  1. *The Fallacy of Continuous Observability:* Retrospective quantitative modeling routinely back-projects later-disclosed liabilities onto historical dates, introducing look-ahead bias and misrepresenting market informational states.
+  2. *The Research Question:* When did systemic debt concentration and counterparty linkages become economically binding versus when did they become legible to public capital markets via SEC filings?
+- **Decision:**
+  1. **Empirical Lag Quantification ($\Delta t = t_{\text{pub}} - t_{\text{eco}}$):**
+     - Audited all 47 obligations, 57 lifecycle events, and 64 measurement facts in the frozen observatory at commit `42f9a74`.
+     - Established an empirical mean lag of **92.64 days** (median: 3.0 days, max: 599 days).
+  2. **Institutional Regulatory Bifurcation:**
+     - Demonstrated a structural visibility divergence:
+       * **Public / 144A Bond & Convertible Notes ($N=13$):** Mean lag of **0.23 days** (median: 0.0 days, range: -4 to 3 days), driven by Form 8-K Items 1.01/2.03 and Rule 135c requirements.
+       * **Private Credit / Delayed-Draw Facilities ($N=11$):** Mean lag of **216.45 days** (median: 7.0 days, range: 1 to 599 days), driven by bilateral confidentiality and periodic disclosure exemptions.
+       * **Longest-Lag Contract:** CoreWeave DDTL 1.0 ($1.300B) incurred July 30, 2023, disclosed March 20, 2025 (**599-day opacity window**).
+  3. **Monthly Bitemporal Simulation (33 Monthly Intervals: 2024–2026):**
+     - Simulated parallel time series for the Economic Reality Graph $G_{\text{eco}}(t)$ vs Public Knowledge Graph $G_{\text{kno}}(t)$.
+     - Quantified the **Shadow Debt Gap** ($\Delta \text{Debt} = D_{\text{eco}} - D_{\text{kno}}$) and **Network Opacity Ratio** ($1 - D_{\text{kno}} / D_{\text{eco}}$).
+  4. **Empirical Discovery of Peak Opacity Episodes:**
+     - *Episode 1 (The Private Credit Incubation Cloak, Jan 2024 – Mar 2025):* Up to $9.9B of credit capacity active with $0.0B publicly known; 0-node public graph vs 4-node economic graph.
+     - *Episode 4 (The Summer 2026 Shadow Debt Gap, Jun 30 – Aug 12, 2026):* On July 1, 2026, **$32.801B of debt (73.52% of total system debt)** was an epistemic shadow ($44.616B economic vs $11.815B publicly known) during the 43-day pre-10-Q filing window.
+  5. **Topological Visibility Lag & The Hidden Hub:**
+     - Proved that CoreWeave’s topological degree in the economic network led public knowledge by 3 to 5 degrees throughout 2024–2025. In March 2025, public markets observed $k=1$, whereas economic reality was $k=6$.
+- **Consequences:**
+  - Establishes that AI infrastructure leverage accumulated under an empirical regulatory cloak before crossing public knowledge thresholds.
+  - Formulates the definitive two-clock foundation for Phase 2 dynamic contagion and liquidity cascade modeling without look-ahead bias.
+
+
 
 
