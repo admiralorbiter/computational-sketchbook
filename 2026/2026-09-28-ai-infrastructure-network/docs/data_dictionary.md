@@ -185,5 +185,92 @@ This document defines the schema, types, constraints, and operational definition
 | `spread_grid_id` | String | Yes | Identifier for credit-spread matrix; null if fixed/single-spread. | `null` |
 | `description` | String | Yes | Contractual description of the rate tranche. | *Text* |
 
+---
+
+## 10. Facilities Registry (`facilities.parquet` / `facilities.csv`)
+
+| Column Name | Data Type | Nullable | Description / Controlled Vocabulary | Example |
+| :--- | :--- | :--- | :--- | :--- |
+| `facility_id` | String | No | Primary Key: `FAC-{OPERATOR}-{CAMPUS_SLUG}`. | `FAC-APLD-POLARIS-FORGE-1` |
+| `facility_name` | String | No | Descriptive campus or facility name. | `Polaris Forge 1 Campus` |
+| `operator_entity_id` | String | No | Foreign Key referencing `entities.entity_id` (operating company). | `APLD` |
+| `landlord_spv_entity_id` | String | Yes | Foreign Key referencing `entities.entity_id` (property-holding SPV); null if operating co direct. | `APLD_COMPUTECO` |
+| `tenant_entity_id` | String | Yes | Foreign Key referencing `entities.entity_id` (anchor AI tenant); null if unleased/self-operated. | `CRWV` |
+| `city` | String | No | Municipality or town location. | `Ellendale` |
+| `county` | String | Yes | County or district jurisdiction. | `Dickey County` |
+| `state_or_country` | String | No | State or ISO country code (`US-ND`, `US-TX`, `FI`). | `US-ND` |
+| `status` | String | No | Operational status: `operational`, `operational_and_expanding`, `under_construction`, `announced`. | `operational_and_expanding` |
+| `primary_grid_region` | String | No | Balancing authority / RTO control area: `MISO`, `ERCOT`, `SERC`, `SPP`, `NYISO_ZONE_A`, `FINGRID_NORDIC`. | `MISO` |
+| `description` | String | Yes | Summary of campus physical and computing architecture. | *Text* |
+
+---
+
+## 11. Power Relationships Ledger (`power_relationships.parquet` / `power_relationships.csv`)
+
+| Column Name | Data Type | Nullable | Description / Controlled Vocabulary | Example |
+| :--- | :--- | :--- | :--- | :--- |
+| `power_rel_id` | String | No | Primary Key: `PWR-{OPERATOR}-{CAMPUS}-{UTILITY_SHORT}`. | `PWR-APLD-PF1-MDU-ESA` |
+| `facility_id` | String | No | Foreign Key referencing `facilities.facility_id`. | `FAC-APLD-POLARIS-FORGE-1` |
+| `utility_entity_id` | String | Yes | Foreign Key referencing `entities.entity_id` (contractual electric utility); null if pending/unverified. | `MDU` |
+| `grid_operator_entity_id` | String | Yes | Foreign Key referencing `entities.entity_id` (RTO/ISO/TSO); null if pending/unverified. | `MISO` |
+| `relationship_type` | String | No | Taxonomy: `electric_service_agreement`, `interconnection_agreement`, `power_allocation_agreement`, `interconnection_request`. | `electric_service_agreement` |
+| `firm_or_interruptible` | String | No | Power reliability classification: `firm`, `firm_with_market_passthrough`, `curtailable`, `unspecified`. | `firm_with_market_passthrough` |
+| `curtailment_rights` | String | Yes | Curtailment conditions, emergency protocols, or demand response commitments. | *Text* |
+| `tariff_structure` | String | Yes | Rate design, cost-of-service, or wholesale pass-through pricing mechanism. | *Text* |
+| `effective_date` | Date (str)| Yes | Execution date of power contract (`YYYY-MM-DD`). | `2023-01-01` |
+| `term_years` | Float | Yes | Stated initial agreement term duration in years. | `10.0` |
+| `claim_id` | String | No | Foreign Key referencing `power_claims.claim_id`. | `CLM-PWR-MDU-001` |
+| `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted), `C` (Inferred). | `A` |
+
+---
+
+## 12. Power Facts Ledger (`power_facts.parquet` / `power_facts.csv`)
+
+| Column Name | Data Type | Nullable | Description / Controlled Vocabulary | Example |
+| :--- | :--- | :--- | :--- | :--- |
+| `fact_id` | String | No | Primary Key: `PFACT-{OPERATOR}-{CAMPUS}-{MW_TYPE}`. | `PFACT-APLD-PF1-CRIT-IT` |
+| `facility_id` | String | No | Foreign Key referencing `facilities.facility_id`. | `FAC-APLD-POLARIS-FORGE-1` |
+| `power_rel_id` | String | No | Foreign Key referencing `power_relationships.power_rel_id`. | `PWR-APLD-PF1-MDU-ESA` |
+| `mw_type` | String | No | Strictly typed MW concept: `critical_it_mw`, `leased_customer_mw`, `gross_utility_capacity_mw`, `contracted_service_mw`, `energized_mw`, `planned_mw`, `interconnection_request_mw`. | `critical_it_mw` |
+| `value_mw` | Float | No | Electrical power capacity in Megawatts (MW). | `400.0` |
+| `economic_as_of` | Date (str)| No | Measurement date in economic reality (`YYYY-MM-DD`). | `2026-05-31` |
+| `publicly_known_from` | Date (str)| No | Date when measurement was publicly disclosed (Information Clock). | `2026-07-29` |
+| `truth_claim_id` | String | No | Foreign Key referencing `evidence_claims.claim_id` or `power_claims.claim_id`. | `CLM-PWR-APLD-001` |
+| `knowledge_claim_id` | String | No | Foreign Key referencing earliest public disclosure claim. | `CLM-PWR-APLD-001` |
+| `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted), `C` (Inferred). | `A` |
+
+---
+
+## 13. Power Contract Terms Ledger (`power_terms.parquet` / `power_terms.csv`)
+
+| Column Name | Data Type | Nullable | Description / Controlled Vocabulary | Example |
+| :--- | :--- | :--- | :--- | :--- |
+| `term_id` | String | No | Primary Key: `PTERM-{OPERATOR}-{CAMPUS}-{ATTR}`. | `PTERM-APLD-PF1-TOTAL-SRV` |
+| `power_rel_id` | String | No | Foreign Key referencing `power_relationships.power_rel_id`. | `PWR-APLD-PF1-MDU-ESA` |
+| `attribute` | String | No | Contractual attribute: `total_approved_service_mw`, `expansion_approval_mw`, `regulatory_regime`, `approved_capacity_mw`, `allocated_hydro_power_mw`, `grid_connection_capacity_mw`, `total_site_capacity_mw`. | `total_approved_service_mw` |
+| `value` | String | No | String-encoded contractual value or regulatory parameter. | `530.0` |
+| `claim_id` | String | No | Foreign Key referencing `power_claims.claim_id`. | `CLM-PWR-MDU-001` |
+| `source_locator` | String | Yes | Specific Note, Item, or Exhibit locator in cited filing. | `Item 2. MD&A` |
+| `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted), `C` (Inferred). | `A` |
+
+---
+
+## 14. Power Evidence Ledger (`power_claims.parquet` / `power_claims.csv`)
+
+| Column Name | Data Type | Nullable | Description | Example |
+| :--- | :--- | :--- | :--- | :--- |
+| `claim_id` | String | No | Primary Key: `CLM-PWR-{ENTITY}-{NUM}`. | `CLM-PWR-MDU-001` |
+| `entity_id` | String | No | Company filing the source disclosure. | `MDU` |
+| `filing_type` | String | No | Regulatory filing type: `10-K`, `10-Q`, `8-K`, `20-F`. | `10-Q` |
+| `accession_number` | String | No | Unique SEC EDGAR accession number. | `0000067716-26-000072` |
+| `filing_date` | Date (str)| No | Date filed with regulatory commission (`YYYY-MM-DD`). | `2026-08-06` |
+| `document_url` | String | No | Direct HTTPS hyperlink to filing text. | `https://www.sec.gov/...` |
+| `section_locator` | String | No | Specific section or header in filing. | `Item 2. MD&A` |
+| `quote_type` | String | No | Typology: `source_excerpt`, `exact_quote`. | `source_excerpt` |
+| `exact_quote` | String | No | Verbatim excerpt transcribed from regulatory disclosure. | *Text* |
+| `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted), `C` (Inferred). | `A` |
+| `extraction_method` | String | No | Audit protocol used to extract disclosure. | `SEC Form 10-Q direct audit` |
+| `verifier_notes` | String | Yes | Analytical context on physical power connectivity. | *Text* |
+
 
 

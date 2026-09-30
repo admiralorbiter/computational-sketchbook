@@ -1,0 +1,8 @@
+term_id,power_rel_id,attribute,value,claim_id,source_locator,evidence_class
+PTERM-APLD-PF1-EXPANSION,PWR-APLD-PF1-MDU-ESA,expansion_approval_mw,350.0,CLM-PWR-MDU-001,Item 2. MD&A,A
+PTERM-APLD-PF1-TOTAL-SRV,PWR-APLD-PF1-MDU-ESA,total_approved_service_mw,530.0,CLM-PWR-MDU-001,Item 2. MD&A,A
+PTERM-CORZ-DME-ERCOT-LOAD,PWR-CORZ-DENTON-DME,regulatory_regime,ERCOT Large Flexible Load,CLM-PWR-CORZ-002,Item 8.01,A
+PTERM-CORZ-DME-CAP,PWR-CORZ-DENTON-DME,approved_capacity_mw,394.0,CLM-PWR-CORZ-001,Item 2. Properties,A
+PTERM-WULF-NYPA-ALLOC,PWR-WULF-LM-NYPA,allocated_hydro_power_mw,90.0,CLM-PWR-WULF-001,Note 11,A
+PTERM-IREN-SW2-AEP-AGMT,PWR-IREN-SW2-AEP-TX,grid_connection_capacity_mw,600.0,CLM-PWR-IREN-001,Item 1. Business,A
+PTERM-IREN-CHIL-TOTAL,PWR-IREN-CHIL-ERCOT,total_site_capacity_mw,750.0,CLM-PWR-IREN-001,Item 1. Business,A

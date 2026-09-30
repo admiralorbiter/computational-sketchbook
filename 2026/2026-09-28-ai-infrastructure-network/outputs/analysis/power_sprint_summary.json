@@ -1,0 +1,960 @@
+{
+  "analysis_id": "PHASE1-POWER-SPRINT-020",
+  "as_of_date": "2026-09-28",
+  "topological_join": {
+    "financial_baseline": {
+      "node_count": 19,
+      "edge_count": 17,
+      "component_count": 3,
+      "largest_component_size": 14,
+      "components": [
+        [
+          "APLD",
+          "BLACKSTONE_MAGNETAR_SYN",
+          "CORZ",
+          "CRWV",
+          "INSTITUTIONAL_BONDHOLDERS",
+          "META",
+          "MORGAN_STANLEY_SYN",
+          "MSFT",
+          "MUFG_BANK_SYN",
+          "NBIS",
+          "NVDA",
+          "OEM_FINANCING_PARTNERS",
+          "PROJECT_LENDERS",
+          "WULF"
+        ],
+        [
+          "BLUE_OWL_OBDC",
+          "IREN",
+          "PIMCO"
+        ],
+        [
+          "HARDWARE_SUPPLIERS",
+          "SMCI"
+        ]
+      ],
+      "articulation_points": [
+        "APLD",
+        "CRWV",
+        "INSTITUTIONAL_BONDHOLDERS",
+        "IREN",
+        "MUFG_BANK_SYN",
+        "NBIS"
+      ],
+      "simple_bridges_count": 14
+    },
+    "joint_network": {
+      "node_count": 34,
+      "edge_count": 42,
+      "multigraph_edge_count": 76,
+      "component_count": 2,
+      "largest_component_size": 32,
+      "components": [
+        [
+          "AEP_TEXAS",
+          "APLD",
+          "AUSTIN_ENERGY",
+          "BLACKSTONE_MAGNETAR_SYN",
+          "BLUE_OWL_OBDC",
+          "CORZ",
+          "CRWV",
+          "DALTON_UTILITIES",
+          "DME",
+          "DUKE_ENERGY",
+          "ERCOT",
+          "FINGRID",
+          "INSTITUTIONAL_BONDHOLDERS",
+          "IREN",
+          "MDU",
+          "META",
+          "MISO",
+          "MORGAN_STANLEY_SYN",
+          "MSFT",
+          "MUFG_BANK_SYN",
+          "NBIS",
+          "NIVOS",
+          "NVDA",
+          "NYISO",
+          "NYPA",
+          "OEM_FINANCING_PARTNERS",
+          "OGE",
+          "PIMCO",
+          "PROJECT_LENDERS",
+          "SERC",
+          "SPP",
+          "WULF"
+        ],
+        [
+          "HARDWARE_SUPPLIERS",
+          "SMCI"
+        ]
+      ],
+      "articulation_points": [
+        "APLD",
+        "CORZ",
+        "CRWV",
+        "ERCOT",
+        "INSTITUTIONAL_BONDHOLDERS",
+        "IREN",
+        "MUFG_BANK_SYN",
+        "NBIS",
+        "WULF"
+      ],
+      "simple_bridges_count": 14,
+      "multigraph_bridges_count": 6
+    },
+    "centrality_top10": [
+      {
+        "entity_id": "CRWV",
+        "category": "neocloud_operator",
+        "degree": 9,
+        "degree_centrality": 0.2727,
+        "betweenness_centrality": 0.661,
+        "closeness_centrality": 0.455
+      },
+      {
+        "entity_id": "CORZ",
+        "category": "datacenter_developer",
+        "degree": 9,
+        "degree_centrality": 0.2727,
+        "betweenness_centrality": 0.5114,
+        "closeness_centrality": 0.416
+      },
+      {
+        "entity_id": "ERCOT",
+        "category": "grid_operator_rto",
+        "degree": 5,
+        "degree_centrality": 0.1515,
+        "betweenness_centrality": 0.2055,
+        "closeness_centrality": 0.3236
+      },
+      {
+        "entity_id": "MUFG_BANK_SYN",
+        "category": "private_credit_syndicate",
+        "degree": 2,
+        "degree_centrality": 0.0606,
+        "betweenness_centrality": 0.2045,
+        "closeness_centrality": 0.3386
+      },
+      {
+        "entity_id": "NBIS",
+        "category": "neocloud_operator",
+        "degree": 4,
+        "degree_centrality": 0.1212,
+        "betweenness_centrality": 0.1629,
+        "closeness_centrality": 0.2647
+      },
+      {
+        "entity_id": "APLD",
+        "category": "datacenter_developer",
+        "degree": 5,
+        "degree_centrality": 0.1515,
+        "betweenness_centrality": 0.1629,
+        "closeness_centrality": 0.3467
+      },
+      {
+        "entity_id": "INSTITUTIONAL_BONDHOLDERS",
+        "category": "capital_markets",
+        "degree": 3,
+        "degree_centrality": 0.0909,
+        "betweenness_centrality": 0.1591,
+        "closeness_centrality": 0.3467
+      },
+      {
+        "entity_id": "IREN",
+        "category": "datacenter_developer",
+        "degree": 4,
+        "degree_centrality": 0.1212,
+        "betweenness_centrality": 0.1117,
+        "closeness_centrality": 0.2532
+      },
+      {
+        "entity_id": "WULF",
+        "category": "datacenter_developer",
+        "degree": 3,
+        "degree_centrality": 0.0909,
+        "betweenness_centrality": 0.1098,
+        "closeness_centrality": 0.2647
+      },
+      {
+        "entity_id": "SERC",
+        "category": "grid_operator_rto",
+        "degree": 3,
+        "degree_centrality": 0.0909,
+        "betweenness_centrality": 0.0009,
+        "closeness_centrality": 0.2972
+      }
+    ]
+  },
+  "excision_experiments": [
+    {
+      "target_node": "CRWV",
+      "financial_baseline_impact": {
+        "active_nodes": 12,
+        "component_count": 4,
+        "largest_comp_size": 4,
+        "isolated_count": 6,
+        "isolated_nodes": [
+          "BLACKSTONE_MAGNETAR_SYN",
+          "CORZ",
+          "MORGAN_STANLEY_SYN",
+          "MSFT",
+          "NVDA",
+          "OEM_FINANCING_PARTNERS"
+        ],
+        "components": [
+          [
+            "APLD",
+            "INSTITUTIONAL_BONDHOLDERS",
+            "PROJECT_LENDERS",
+            "WULF"
+          ],
+          [
+            "META",
+            "MUFG_BANK_SYN",
+            "NBIS"
+          ],
+          [
+            "BLUE_OWL_OBDC",
+            "IREN",
+            "PIMCO"
+          ],
+          [
+            "HARDWARE_SUPPLIERS",
+            "SMCI"
+          ]
+        ]
+      },
+      "joint_network_impact": {
+        "active_nodes": 28,
+        "component_count": 4,
+        "largest_comp_size": 13,
+        "isolated_count": 5,
+        "isolated_nodes": [
+          "BLACKSTONE_MAGNETAR_SYN",
+          "MORGAN_STANLEY_SYN",
+          "MSFT",
+          "NVDA",
+          "OEM_FINANCING_PARTNERS"
+        ],
+        "components": [
+          [
+            "AEP_TEXAS",
+            "AUSTIN_ENERGY",
+            "BLUE_OWL_OBDC",
+            "CORZ",
+            "DALTON_UTILITIES",
+            "DME",
+            "DUKE_ENERGY",
+            "ERCOT",
+            "IREN",
+            "OGE",
+            "PIMCO",
+            "SERC",
+            "SPP"
+          ],
+          [
+            "APLD",
+            "INSTITUTIONAL_BONDHOLDERS",
+            "MDU",
+            "MISO",
+            "NYISO",
+            "NYPA",
+            "PROJECT_LENDERS",
+            "WULF"
+          ],
+          [
+            "FINGRID",
+            "META",
+            "MUFG_BANK_SYN",
+            "NBIS",
+            "NIVOS"
+          ],
+          [
+            "HARDWARE_SUPPLIERS",
+            "SMCI"
+          ]
+        ]
+      }
+    },
+    {
+      "target_node": "ERCOT",
+      "financial_baseline_impact": null,
+      "joint_network_impact": {
+        "active_nodes": 33,
+        "component_count": 3,
+        "largest_comp_size": 27,
+        "isolated_count": 0,
+        "isolated_nodes": [],
+        "components": [
+          [
+            "APLD",
+            "AUSTIN_ENERGY",
+            "BLACKSTONE_MAGNETAR_SYN",
+            "CORZ",
+            "CRWV",
+            "DALTON_UTILITIES",
+            "DME",
+            "DUKE_ENERGY",
+            "FINGRID",
+            "INSTITUTIONAL_BONDHOLDERS",
+            "MDU",
+            "META",
+            "MISO",
+            "MORGAN_STANLEY_SYN",
+            "MSFT",
+            "MUFG_BANK_SYN",
+            "NBIS",
+            "NIVOS",
+            "NVDA",
+            "NYISO",
+            "NYPA",
+            "OEM_FINANCING_PARTNERS",
+            "OGE",
+            "PROJECT_LENDERS",
+            "SERC",
+            "SPP",
+            "WULF"
+          ],
+          [
+            "AEP_TEXAS",
+            "BLUE_OWL_OBDC",
+            "IREN",
+            "PIMCO"
+          ],
+          [
+            "HARDWARE_SUPPLIERS",
+            "SMCI"
+          ]
+        ]
+      }
+    },
+    {
+      "target_node": "CORZ",
+      "financial_baseline_impact": {
+        "active_nodes": 18,
+        "component_count": 3,
+        "largest_comp_size": 13,
+        "isolated_count": 0,
+        "isolated_nodes": [],
+        "components": [
+          [
+            "APLD",
+            "BLACKSTONE_MAGNETAR_SYN",
+            "CRWV",
+            "INSTITUTIONAL_BONDHOLDERS",
+            "META",
+            "MORGAN_STANLEY_SYN",
+            "MSFT",
+            "MUFG_BANK_SYN",
+            "NBIS",
+            "NVDA",
+            "OEM_FINANCING_PARTNERS",
+            "PROJECT_LENDERS",
+            "WULF"
+          ],
+          [
+            "BLUE_OWL_OBDC",
+            "IREN",
+            "PIMCO"
+          ],
+          [
+            "HARDWARE_SUPPLIERS",
+            "SMCI"
+          ]
+        ]
+      },
+      "joint_network_impact": {
+        "active_nodes": 33,
+        "component_count": 5,
+        "largest_comp_size": 19,
+        "isolated_count": 0,
+        "isolated_nodes": [],
+        "components": [
+          [
+            "APLD",
+            "BLACKSTONE_MAGNETAR_SYN",
+            "CRWV",
+            "FINGRID",
+            "INSTITUTIONAL_BONDHOLDERS",
+            "MDU",
+            "META",
+            "MISO",
+            "MORGAN_STANLEY_SYN",
+            "MSFT",
+            "MUFG_BANK_SYN",
+            "NBIS",
+            "NIVOS",
+            "NVDA",
+            "NYISO",
+            "NYPA",
+            "OEM_FINANCING_PARTNERS",
+            "PROJECT_LENDERS",
+            "WULF"
+          ],
+          [
+            "AEP_TEXAS",
+            "AUSTIN_ENERGY",
+            "BLUE_OWL_OBDC",
+            "DME",
+            "ERCOT",
+            "IREN",
+            "PIMCO"
+          ],
+          [
+            "DALTON_UTILITIES",
+            "DUKE_ENERGY",
+            "SERC"
+          ],
+          [
+            "HARDWARE_SUPPLIERS",
+            "SMCI"
+          ],
+          [
+            "OGE",
+            "SPP"
+          ]
+        ]
+      }
+    },
+    {
+      "target_node": "APLD",
+      "financial_baseline_impact": {
+        "active_nodes": 17,
+        "component_count": 3,
+        "largest_comp_size": 12,
+        "isolated_count": 1,
+        "isolated_nodes": [
+          "PROJECT_LENDERS"
+        ],
+        "components": [
+          [
+            "BLACKSTONE_MAGNETAR_SYN",
+            "CORZ",
+            "CRWV",
+            "INSTITUTIONAL_BONDHOLDERS",
+            "META",
+            "MORGAN_STANLEY_SYN",
+            "MSFT",
+            "MUFG_BANK_SYN",
+            "NBIS",
+            "NVDA",
+            "OEM_FINANCING_PARTNERS",
+            "WULF"
+          ],
+          [
+            "BLUE_OWL_OBDC",
+            "IREN",
+            "PIMCO"
+          ],
+          [
+            "HARDWARE_SUPPLIERS",
+            "SMCI"
+          ]
+        ]
+      },
+      "joint_network_impact": {
+        "active_nodes": 32,
+        "component_count": 3,
+        "largest_comp_size": 28,
+        "isolated_count": 1,
+        "isolated_nodes": [
+          "PROJECT_LENDERS"
+        ],
+        "components": [
+          [
+            "AEP_TEXAS",
+            "AUSTIN_ENERGY",
+            "BLACKSTONE_MAGNETAR_SYN",
+            "BLUE_OWL_OBDC",
+            "CORZ",
+            "CRWV",
+            "DALTON_UTILITIES",
+            "DME",
+            "DUKE_ENERGY",
+            "ERCOT",
+            "FINGRID",
+            "INSTITUTIONAL_BONDHOLDERS",
+            "IREN",
+            "META",
+            "MORGAN_STANLEY_SYN",
+            "MSFT",
+            "MUFG_BANK_SYN",
+            "NBIS",
+            "NIVOS",
+            "NVDA",
+            "NYISO",
+            "NYPA",
+            "OEM_FINANCING_PARTNERS",
+            "OGE",
+            "PIMCO",
+            "SERC",
+            "SPP",
+            "WULF"
+          ],
+          [
+            "HARDWARE_SUPPLIERS",
+            "SMCI"
+          ],
+          [
+            "MDU",
+            "MISO"
+          ]
+        ]
+      }
+    },
+    {
+      "target_node": "IREN",
+      "financial_baseline_impact": {
+        "active_nodes": 16,
+        "component_count": 2,
+        "largest_comp_size": 14,
+        "isolated_count": 2,
+        "isolated_nodes": [
+          "BLUE_OWL_OBDC",
+          "PIMCO"
+        ],
+        "components": [
+          [
+            "APLD",
+            "BLACKSTONE_MAGNETAR_SYN",
+            "CORZ",
+            "CRWV",
+            "INSTITUTIONAL_BONDHOLDERS",
+            "META",
+            "MORGAN_STANLEY_SYN",
+            "MSFT",
+            "MUFG_BANK_SYN",
+            "NBIS",
+            "NVDA",
+            "OEM_FINANCING_PARTNERS",
+            "PROJECT_LENDERS",
+            "WULF"
+          ],
+          [
+            "HARDWARE_SUPPLIERS",
+            "SMCI"
+          ]
+        ]
+      },
+      "joint_network_impact": {
+        "active_nodes": 31,
+        "component_count": 2,
+        "largest_comp_size": 29,
+        "isolated_count": 2,
+        "isolated_nodes": [
+          "BLUE_OWL_OBDC",
+          "PIMCO"
+        ],
+        "components": [
+          [
+            "AEP_TEXAS",
+            "APLD",
+            "AUSTIN_ENERGY",
+            "BLACKSTONE_MAGNETAR_SYN",
+            "CORZ",
+            "CRWV",
+            "DALTON_UTILITIES",
+            "DME",
+            "DUKE_ENERGY",
+            "ERCOT",
+            "FINGRID",
+            "INSTITUTIONAL_BONDHOLDERS",
+            "MDU",
+            "META",
+            "MISO",
+            "MORGAN_STANLEY_SYN",
+            "MSFT",
+            "MUFG_BANK_SYN",
+            "NBIS",
+            "NIVOS",
+            "NVDA",
+            "NYISO",
+            "NYPA",
+            "OEM_FINANCING_PARTNERS",
+            "OGE",
+            "PROJECT_LENDERS",
+            "SERC",
+            "SPP",
+            "WULF"
+          ],
+          [
+            "HARDWARE_SUPPLIERS",
+            "SMCI"
+          ]
+        ]
+      }
+    },
+    {
+      "target_node": "AEP_TEXAS",
+      "financial_baseline_impact": null,
+      "joint_network_impact": {
+        "active_nodes": 33,
+        "component_count": 2,
+        "largest_comp_size": 31,
+        "isolated_count": 0,
+        "isolated_nodes": [],
+        "components": [
+          [
+            "APLD",
+            "AUSTIN_ENERGY",
+            "BLACKSTONE_MAGNETAR_SYN",
+            "BLUE_OWL_OBDC",
+            "CORZ",
+            "CRWV",
+            "DALTON_UTILITIES",
+            "DME",
+            "DUKE_ENERGY",
+            "ERCOT",
+            "FINGRID",
+            "INSTITUTIONAL_BONDHOLDERS",
+            "IREN",
+            "MDU",
+            "META",
+            "MISO",
+            "MORGAN_STANLEY_SYN",
+            "MSFT",
+            "MUFG_BANK_SYN",
+            "NBIS",
+            "NIVOS",
+            "NVDA",
+            "NYISO",
+            "NYPA",
+            "OEM_FINANCING_PARTNERS",
+            "OGE",
+            "PIMCO",
+            "PROJECT_LENDERS",
+            "SERC",
+            "SPP",
+            "WULF"
+          ],
+          [
+            "HARDWARE_SUPPLIERS",
+            "SMCI"
+          ]
+        ]
+      }
+    },
+    {
+      "target_node": "MDU",
+      "financial_baseline_impact": null,
+      "joint_network_impact": {
+        "active_nodes": 33,
+        "component_count": 2,
+        "largest_comp_size": 31,
+        "isolated_count": 0,
+        "isolated_nodes": [],
+        "components": [
+          [
+            "AEP_TEXAS",
+            "APLD",
+            "AUSTIN_ENERGY",
+            "BLACKSTONE_MAGNETAR_SYN",
+            "BLUE_OWL_OBDC",
+            "CORZ",
+            "CRWV",
+            "DALTON_UTILITIES",
+            "DME",
+            "DUKE_ENERGY",
+            "ERCOT",
+            "FINGRID",
+            "INSTITUTIONAL_BONDHOLDERS",
+            "IREN",
+            "META",
+            "MISO",
+            "MORGAN_STANLEY_SYN",
+            "MSFT",
+            "MUFG_BANK_SYN",
+            "NBIS",
+            "NIVOS",
+            "NVDA",
+            "NYISO",
+            "NYPA",
+            "OEM_FINANCING_PARTNERS",
+            "OGE",
+            "PIMCO",
+            "PROJECT_LENDERS",
+            "SERC",
+            "SPP",
+            "WULF"
+          ],
+          [
+            "HARDWARE_SUPPLIERS",
+            "SMCI"
+          ]
+        ]
+      }
+    },
+    {
+      "target_node": "MISO",
+      "financial_baseline_impact": null,
+      "joint_network_impact": {
+        "active_nodes": 33,
+        "component_count": 2,
+        "largest_comp_size": 31,
+        "isolated_count": 0,
+        "isolated_nodes": [],
+        "components": [
+          [
+            "AEP_TEXAS",
+            "APLD",
+            "AUSTIN_ENERGY",
+            "BLACKSTONE_MAGNETAR_SYN",
+            "BLUE_OWL_OBDC",
+            "CORZ",
+            "CRWV",
+            "DALTON_UTILITIES",
+            "DME",
+            "DUKE_ENERGY",
+            "ERCOT",
+            "FINGRID",
+            "INSTITUTIONAL_BONDHOLDERS",
+            "IREN",
+            "MDU",
+            "META",
+            "MORGAN_STANLEY_SYN",
+            "MSFT",
+            "MUFG_BANK_SYN",
+            "NBIS",
+            "NIVOS",
+            "NVDA",
+            "NYISO",
+            "NYPA",
+            "OEM_FINANCING_PARTNERS",
+            "OGE",
+            "PIMCO",
+            "PROJECT_LENDERS",
+            "SERC",
+            "SPP",
+            "WULF"
+          ],
+          [
+            "HARDWARE_SUPPLIERS",
+            "SMCI"
+          ]
+        ]
+      }
+    }
+  ],
+  "regional_grid_mw": {
+    "pivot_mw": [
+      {
+        "grid_region": "ERCOT",
+        "contracted_service_mw": 1350.0,
+        "critical_it_mw": 0.0,
+        "energized_mw": 450.0,
+        "gross_utility_capacity_mw": 469.0,
+        "interconnection_request_mw": 1400.0,
+        "leased_customer_mw": 310.0,
+        "planned_mw": 800.0,
+        "total_firm_and_utility_mw": 1819.0
+      },
+      {
+        "grid_region": "Fingrid",
+        "contracted_service_mw": 0.0,
+        "critical_it_mw": 75.0,
+        "energized_mw": 75.0,
+        "gross_utility_capacity_mw": 0.0,
+        "interconnection_request_mw": 0.0,
+        "leased_customer_mw": 0.0,
+        "planned_mw": 310.0,
+        "total_firm_and_utility_mw": 0.0
+      },
+      {
+        "grid_region": "MISO",
+        "contracted_service_mw": 0.0,
+        "critical_it_mw": 400.0,
+        "energized_mw": 150.0,
+        "gross_utility_capacity_mw": 530.0,
+        "interconnection_request_mw": 0.0,
+        "leased_customer_mw": 400.0,
+        "planned_mw": 250.0,
+        "total_firm_and_utility_mw": 530.0
+      },
+      {
+        "grid_region": "NYISO",
+        "contracted_service_mw": 90.0,
+        "critical_it_mw": 0.0,
+        "energized_mw": 245.0,
+        "gross_utility_capacity_mw": 500.0,
+        "interconnection_request_mw": 0.0,
+        "leased_customer_mw": 0.0,
+        "planned_mw": 0.0,
+        "total_firm_and_utility_mw": 590.0
+      },
+      {
+        "grid_region": "SERC",
+        "contracted_service_mw": 0.0,
+        "critical_it_mw": 0.0,
+        "energized_mw": 0.0,
+        "gross_utility_capacity_mw": 260.0,
+        "interconnection_request_mw": 0.0,
+        "leased_customer_mw": 162.0,
+        "planned_mw": 0.0,
+        "total_firm_and_utility_mw": 260.0
+      },
+      {
+        "grid_region": "SPP",
+        "contracted_service_mw": 0.0,
+        "critical_it_mw": 0.0,
+        "energized_mw": 0.0,
+        "gross_utility_capacity_mw": 150.0,
+        "interconnection_request_mw": 0.0,
+        "leased_customer_mw": 118.0,
+        "planned_mw": 0.0,
+        "total_firm_and_utility_mw": 150.0
+      }
+    ],
+    "total_service_mw": 3349.0,
+    "total_energized_mw": 920.0,
+    "total_planned_mw": 1360.0,
+    "hhi_utility_service": 3591.2,
+    "hhi_energized": 3434.0,
+    "hhi_planned": 4317.7,
+    "regional_shares_pct": {
+      "ERCOT": 54.31,
+      "Fingrid": 0.0,
+      "MISO": 15.83,
+      "NYISO": 17.62,
+      "SERC": 7.76,
+      "SPP": 4.48
+    }
+  },
+  "curtailment_structure": {
+    "firmness_contract_counts": {
+      "curtailable": 5,
+      "firm": 5,
+      "firm_with_market_passthrough": 1,
+      "unspecified": 1
+    },
+    "firmness_capacity_mw": {
+      "curtailable": 1819.0,
+      "firm": 1000.0,
+      "firm_with_market_passthrough": 530.0,
+      "unspecified": 0.0
+    },
+    "curtailment_details": [
+      {
+        "power_rel_id": "PWR-APLD-PF1-MDU-ESA",
+        "facility_name": "Polaris Forge 1 Campus",
+        "operator": "APLD",
+        "grid_region": "MISO",
+        "utility": "MDU",
+        "firm_or_interruptible": "firm_with_market_passthrough",
+        "curtailment_rights": "Subject to MISO emergency operating procedures and wholesale price caps.",
+        "tariff_structure": "Cost-of-service transmission + MISO wholesale market energy pass-through."
+      },
+      {
+        "power_rel_id": "PWR-CORZ-DENTON-DME",
+        "facility_name": "Denton Data Center",
+        "operator": "CORZ",
+        "grid_region": "ERCOT",
+        "utility": "DME",
+        "firm_or_interruptible": "curtailable",
+        "curtailment_rights": "ERCOT Large Flexible Load curtailment protocols during grid emergency alerts (EEA).",
+        "tariff_structure": "Municipal power purchase agreement with indexed wholesale energy pricing."
+      },
+      {
+        "power_rel_id": "PWR-CORZ-DALTON-DALTON",
+        "facility_name": "Dalton Data Center",
+        "operator": "CORZ",
+        "grid_region": "SERC",
+        "utility": "DALTON_UTILITIES",
+        "firm_or_interruptible": "firm",
+        "curtailment_rights": "Standard municipal utility industrial curtailment.",
+        "tariff_structure": "Industrial Large Power Service Tariff."
+      },
+      {
+        "power_rel_id": "PWR-CORZ-MUSKOGEE-OGE",
+        "facility_name": "Muskogee Data Center",
+        "operator": "CORZ",
+        "grid_region": "SPP",
+        "utility": "OGE",
+        "firm_or_interruptible": "firm",
+        "curtailment_rights": "SPP market balancing curtailment provisions.",
+        "tariff_structure": "Large Power and High Load Factor Service Tariff."
+      },
+      {
+        "power_rel_id": "PWR-CORZ-MARBLE-DUKE",
+        "facility_name": "Marble Data Center",
+        "operator": "CORZ",
+        "grid_region": "SERC",
+        "utility": "DUKE_ENERGY",
+        "firm_or_interruptible": "firm",
+        "curtailment_rights": "Standard industrial service.",
+        "tariff_structure": "Industrial Large General Service Tariff."
+      },
+      {
+        "power_rel_id": "PWR-CORZ-AUSTIN-AUSTIN",
+        "facility_name": "Austin Data Center",
+        "operator": "CORZ",
+        "grid_region": "ERCOT",
+        "utility": "AUSTIN_ENERGY",
+        "firm_or_interruptible": "curtailable",
+        "curtailment_rights": "ERCOT 4CP demand response and emergency curtailment.",
+        "tariff_structure": "High Load Factor Primary Service Tariff."
+      },
+      {
+        "power_rel_id": "PWR-WULF-LM-NYPA",
+        "facility_name": "Lake Mariner Campus",
+        "operator": "WULF",
+        "grid_region": "NYISO_ZONE_A",
+        "utility": "NYPA",
+        "firm_or_interruptible": "firm",
+        "curtailment_rights": "Economic dispatch and NYISO Zone A local transmission constraints.",
+        "tariff_structure": "Preservation Power hydro allocation tariff with fixed administrative adder."
+      },
+      {
+        "power_rel_id": "PWR-IREN-CHIL-ERCOT",
+        "facility_name": "Childress Data Center",
+        "operator": "IREN",
+        "grid_region": "ERCOT",
+        "utility": "AEP_TEXAS",
+        "firm_or_interruptible": "curtailable",
+        "curtailment_rights": "ERCOT Large Flexible Load protocols, 4CP avoidance, and Ancillary Services participation (RRS/ECRS).",
+        "tariff_structure": "Wholesale market nodal energy pass-through + transmission cost of service."
+      },
+      {
+        "power_rel_id": "PWR-IREN-SW1-ERCOT",
+        "facility_name": "Sweetwater 1 Campus",
+        "operator": "IREN",
+        "grid_region": "ERCOT",
+        "utility": null,
+        "firm_or_interruptible": "curtailable",
+        "curtailment_rights": "ERCOT large-load interconnection queue protocols.",
+        "tariff_structure": "ERCOT wholesale nodal market."
+      },
+      {
+        "power_rel_id": "PWR-IREN-SW2-AEP-TX",
+        "facility_name": "Sweetwater 2 Campus",
+        "operator": "IREN",
+        "grid_region": "ERCOT",
+        "utility": "AEP_TEXAS",
+        "firm_or_interruptible": "curtailable",
+        "curtailment_rights": "ERCOT 600 MW large-load interconnection agreement with AEP Texas.",
+        "tariff_structure": "AEP Texas transmission interconnection tariff + ERCOT wholesale nodal market."
+      },
+      {
+        "power_rel_id": "PWR-NBIS-MANTSALA-NIVOS",
+        "facility_name": "M\u00e4nts\u00e4l\u00e4 Supercomputing Center",
+        "operator": "NBIS",
+        "grid_region": "FINGRID_NORDIC",
+        "utility": "NIVOS",
+        "firm_or_interruptible": "firm",
+        "curtailment_rights": "Nordic power grid balancing.",
+        "tariff_structure": "Industrial bilateral tariff with waste-heat offset credit."
+      },
+      {
+        "power_rel_id": "PWR-NBIS-LAPPEENRANTA-PENDING",
+        "facility_name": "Lappeenranta AI Factory",
+        "operator": "NBIS",
+        "grid_region": "FINGRID_NORDIC",
+        "utility": null,
+        "firm_or_interruptible": "unspecified",
+        "curtailment_rights": "Pending execution.",
+        "tariff_structure": "Under negotiation."
+      }
+    ]
+  }
+}

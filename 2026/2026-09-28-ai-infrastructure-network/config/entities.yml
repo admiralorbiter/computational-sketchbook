@@ -666,3 +666,213 @@ entities:
     fiscal_year_end: "12-31"
     description: "Global technology holding company operating Google Cloud Platform (GCP), developing custom TPU accelerators and deploying multi-gigawatt AI infrastructure."
     key_counterparties: [NVDA]
+
+  MDU:
+    entity_id: MDU
+    name: MDU Resources Group, Inc. / Montana-Dakota Utilities Co.
+    ticker: MDU
+    cik: "0000067716"
+    category: electric_utility
+    subsector: regulated_electric_utility
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Regulated energy delivery company; electric utility serving Applied Digital's Polaris Forge 1 campus in Ellendale, ND."
+    key_counterparties: [APLD, MISO]
+
+  MISO:
+    entity_id: MISO
+    name: Midcontinent Independent System Operator, Inc.
+    ticker: null
+    cik: null
+    category: grid_operator_rto
+    subsector: regional_transmission_organization
+    jurisdiction: US-DE
+    status: private_nonprofit
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Regional transmission organization (RTO) operating the high-voltage electricity grid across 15 U.S. states and Manitoba, serving MDU and Polaris Forge 1."
+    key_counterparties: [MDU, APLD]
+
+  DME:
+    entity_id: DME
+    name: Denton Municipal Electric
+    ticker: null
+    cik: null
+    category: electric_utility
+    subsector: municipal_electric_utility
+    jurisdiction: US-TX
+    status: municipal_utility
+    reporting_standard: GASB
+    fiscal_year_end: "09-30"
+    description: "City-owned electric utility for Denton, TX; provides power and ERCOT large-load interconnection service to Core Scientific's Denton data center."
+    key_counterparties: [CORZ, ERCOT]
+
+  ERCOT:
+    entity_id: ERCOT
+    name: Electric Reliability Council of Texas, Inc.
+    ticker: null
+    cik: null
+    category: grid_operator_rto
+    subsector: independent_system_operator
+    jurisdiction: US-TX
+    status: private_nonprofit
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Independent system operator (ISO) managing the flow of electric power to more than 26 million Texas customers, representing 90 percent of the state's electric load."
+    key_counterparties: [DME, AUSTIN_ENERGY, AEP_TEXAS, CORZ, IREN]
+
+  DALTON_UTILITIES:
+    entity_id: DALTON_UTILITIES
+    name: Dalton Utilities
+    ticker: null
+    cik: null
+    category: electric_utility
+    subsector: municipal_electric_utility
+    jurisdiction: US-GA
+    status: municipal_utility
+    reporting_standard: GASB
+    fiscal_year_end: "12-31"
+    description: "Municipal utility owned by the City of Dalton, Georgia; supplies 160 MW electric service capacity to Core Scientific's Dalton data center."
+    key_counterparties: [CORZ, SERC]
+
+  SERC:
+    entity_id: SERC
+    name: SERC Reliability Corporation
+    ticker: null
+    cik: null
+    category: grid_operator_rto
+    subsector: regional_reliability_entity
+    jurisdiction: US-NC
+    status: private_nonprofit
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Regional electric reliability entity covering the southeastern United States across all or parts of 16 states."
+    key_counterparties: [DALTON_UTILITIES, DUKE_ENERGY, CORZ]
+
+  OGE:
+    entity_id: OGE
+    name: OGE Energy Corp. / Oklahoma Gas and Electric Company
+    ticker: OGE
+    cik: "0001021635"
+    category: electric_utility
+    subsector: regulated_electric_utility
+    jurisdiction: US-OK
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Regulated electric utility providing power to Core Scientific's Muskogee, OK data center within the Southwest Power Pool."
+    key_counterparties: [CORZ, SPP]
+
+  SPP:
+    entity_id: SPP
+    name: Southwest Power Pool, Inc.
+    ticker: null
+    cik: null
+    category: grid_operator_rto
+    subsector: regional_transmission_organization
+    jurisdiction: US-AR
+    status: private_nonprofit
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Regional transmission organization mandated by FERC to ensure reliable power supplies, adequate transmission infrastructure, and competitive wholesale electricity prices across 14 central US states."
+    key_counterparties: [OGE, CORZ]
+
+  DUKE_ENERGY:
+    entity_id: DUKE_ENERGY
+    name: Duke Energy Corporation
+    ticker: DUK
+    cik: "0001326160"
+    category: electric_utility
+    subsector: regulated_electric_utility
+    jurisdiction: US-NC
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Energy holding company whose regulated utilities provide electric service to Core Scientific's Marble, NC facility (jointly with Murphy Electric Power Board)."
+    key_counterparties: [CORZ, SERC]
+
+  AUSTIN_ENERGY:
+    entity_id: AUSTIN_ENERGY
+    name: Austin Energy
+    ticker: null
+    cik: null
+    category: electric_utility
+    subsector: municipal_electric_utility
+    jurisdiction: US-TX
+    status: municipal_utility
+    reporting_standard: GASB
+    fiscal_year_end: "09-30"
+    description: "City of Austin's municipal electric utility providing power to Core Scientific's Austin data center within ERCOT."
+    key_counterparties: [CORZ, ERCOT]
+
+  NYPA:
+    entity_id: NYPA
+    name: New York Power Authority
+    ticker: null
+    cik: null
+    category: electric_utility
+    subsector: state_power_authority
+    jurisdiction: US-NY
+    status: state_authority
+    reporting_standard: GASB
+    fiscal_year_end: "12-31"
+    description: "Largest state public power organization in the United States; allocates 90 MW of low-cost hydro power to TeraWulf's Lake Mariner facility."
+    key_counterparties: [WULF, NYISO]
+
+  NYISO:
+    entity_id: NYISO
+    name: New York Independent System Operator, Inc.
+    ticker: null
+    cik: null
+    category: grid_operator_rto
+    subsector: independent_system_operator
+    jurisdiction: US-NY
+    status: private_nonprofit
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Independent system operator administering New York State's wholesale electricity markets and operating high-voltage transmission, including Zone A Western NY."
+    key_counterparties: [NYPA, WULF]
+
+  AEP_TEXAS:
+    entity_id: AEP_TEXAS
+    name: AEP Texas Inc.
+    ticker: null
+    cik: "0000002528"
+    category: electric_utility
+    subsector: transmission_and_distribution_utility
+    jurisdiction: US-DE
+    status: public_subsidiary
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Transmission and distribution utility subsidiary of American Electric Power Company (AEP), executing interconnection and grid-connection agreements with IREN Childress and Sweetwater 2."
+    key_counterparties: [IREN, ERCOT]
+
+  NIVOS:
+    entity_id: NIVOS
+    name: Nivos Oy
+    ticker: null
+    cik: null
+    category: electric_utility
+    subsector: municipal_energy_utility
+    jurisdiction: FI
+    status: municipal_utility
+    reporting_standard: IFRS_local
+    fiscal_year_end: "12-31"
+    description: "Finnish regional energy utility operating local electric and district heating networks in Mäntsälä, utilizing waste heat from Nebius's supercomputing facility."
+    key_counterparties: [NBIS, FINGRID]
+
+  FINGRID:
+    entity_id: FINGRID
+    name: Fingrid Oyj
+    ticker: null
+    cik: null
+    category: grid_operator_rto
+    subsector: transmission_system_operator
+    jurisdiction: FI
+    status: state_enterprise
+    reporting_standard: IFRS
+    fiscal_year_end: "12-31"
+    description: "Finnish national transmission system operator (TSO) responsible for high-voltage electricity transmission grid across Finland."
+    key_counterparties: [NIVOS, NBIS]

@@ -245,7 +245,7 @@ def validate_observatory():
     # 1. Check datasets exist
     # ---------------------------------------------------------
     required_files = {
-        "entities.parquet": 46,
+        "entities.parquet": 61,
         "financials.parquet": 13754,
         "obligations.parquet": 47,
         "obligation_events.parquet": 56,
@@ -253,6 +253,11 @@ def validate_observatory():
         "obligation_terms.parquet": 44,
         "assumptions.parquet": 7,
         "evidence_claims.parquet": 54,
+        "facilities.parquet": 12,
+        "power_relationships.parquet": 12,
+        "power_facts.parquet": 28,
+        "power_terms.parquet": 7,
+        "power_claims.parquet": 7,
     }
     for rf, expected_rows in required_files.items():
         p = PROCESSED_DIR / rf
@@ -260,7 +265,7 @@ def validate_observatory():
             errors.append(f"Missing required dataset: {rf}")
         else:
             df = pd.read_parquet(p)
-            print(f"  [OK] {rf:25} : {len(df)} rows")
+            print(f"  [OK] {rf:28} : {len(df)} rows")
             if len(df) != expected_rows:
                 errors.append(f"{rf} row count mismatch: {len(df)} (expected {expected_rows})")
 
@@ -330,6 +335,67 @@ def validate_observatory():
         errors.append(f"TeraWulf convertible terms incomplete: found {len(wulf_terms)} terms (expected >= 16)")
     else:
         print(f"  [OK] Field-level contract provenance verified: {len(terms_df)} attribute-level terms (43 Class A, 1 Class C) with 100% verified claims and canonical obligation field alignment.")
+
+    # ---------------------------------------------------------
+    # 1b. Validate Power Backplane & Physical Ontology (ADR-020)
+    # ---------------------------------------------------------
+    fac_df = pd.read_parquet(PROCESSED_DIR / "facilities.parquet")
+    pwr_rel_df = pd.read_parquet(PROCESSED_DIR / "power_relationships.parquet")
+    pwr_facts_df = pd.read_parquet(PROCESSED_DIR / "power_facts.parquet")
+    pwr_terms_df = pd.read_parquet(PROCESSED_DIR / "power_terms.parquet")
+    pwr_claims_df = pd.read_parquet(PROCESSED_DIR / "power_claims.parquet")
+
+    # Check entity references in facilities
+    valid_entity_ids = set(ent_df["entity_id"])
+    for _, r in fac_df.iterrows():
+        if r["operator_entity_id"] not in valid_entity_ids:
+            errors.append(f"Facility {r['facility_id']} operator {r['operator_entity_id']} not in entities registry")
+        if pd.notna(r["landlord_spv_entity_id"]) and r["landlord_spv_entity_id"] not in valid_entity_ids:
+            errors.append(f"Facility {r['facility_id']} landlord {r['landlord_spv_entity_id']} not in entities registry")
+        if pd.notna(r["tenant_entity_id"]) and r["tenant_entity_id"] not in valid_entity_ids:
+            errors.append(f"Facility {r['facility_id']} tenant {r['tenant_entity_id']} not in entities registry")
+
+    # Check power relationships
+    valid_fac_ids = set(fac_df["facility_id"])
+    for _, r in pwr_rel_df.iterrows():
+        if r["facility_id"] not in valid_fac_ids:
+            errors.append(f"Power relationship {r['power_rel_id']} references unknown facility {r['facility_id']}")
+        if pd.notna(r["utility_entity_id"]) and r["utility_entity_id"] not in valid_entity_ids:
+            errors.append(f"Power relationship {r['power_rel_id']} references unknown utility {r['utility_entity_id']}")
+        if pd.notna(r["grid_operator_entity_id"]) and r["grid_operator_entity_id"] not in valid_entity_ids:
+            errors.append(f"Power relationship {r['power_rel_id']} references unknown grid operator {r['grid_operator_entity_id']}")
+        if r["claim_id"] not in set(pwr_claims_df["claim_id"]):
+            errors.append(f"Power relationship {r['power_rel_id']} references unknown claim {r['claim_id']}")
+
+    # Check power facts typed MW and bitemporality
+    allowed_mw_types = {
+        "critical_it_mw", "leased_customer_mw", "gross_utility_capacity_mw",
+        "contracted_service_mw", "energized_mw", "planned_mw", "interconnection_request_mw"
+    }
+    valid_rel_ids = set(pwr_rel_df["power_rel_id"])
+    all_claim_ids = set(pwr_claims_df["claim_id"]).union(set(clm_temp_df["claim_id"]))
+    for _, r in pwr_facts_df.iterrows():
+        if r["mw_type"] not in allowed_mw_types:
+            errors.append(f"Power fact {r['fact_id']} has invalid mw_type: {r['mw_type']}")
+        if r["facility_id"] not in valid_fac_ids:
+            errors.append(f"Power fact {r['fact_id']} references unknown facility {r['facility_id']}")
+        if r["power_rel_id"] not in valid_rel_ids:
+            errors.append(f"Power fact {r['fact_id']} references unknown power_rel {r['power_rel_id']}")
+        if r["value_mw"] <= 0:
+            errors.append(f"Power fact {r['fact_id']} has non-positive value_mw: {r['value_mw']}")
+        if r["truth_claim_id"] not in all_claim_ids:
+            errors.append(f"Power fact {r['fact_id']} references unknown truth_claim_id: {r['truth_claim_id']}")
+        if r["knowledge_claim_id"] not in all_claim_ids:
+            errors.append(f"Power fact {r['fact_id']} references unknown knowledge_claim_id: {r['knowledge_claim_id']}")
+
+    # Check power terms
+    for _, r in pwr_terms_df.iterrows():
+        if r["power_rel_id"] not in valid_rel_ids:
+            errors.append(f"Power term {r['term_id']} references unknown power_rel {r['power_rel_id']}")
+        if r["claim_id"] not in set(pwr_claims_df["claim_id"]):
+            errors.append(f"Power term {r['term_id']} references unknown claim {r['claim_id']}")
+
+    print(f"  [OK] Power Backplane verified: {len(fac_df)} facilities, {len(pwr_rel_df)} power contracts, {len(pwr_facts_df)} typed MW facts, {len(pwr_terms_df)} terms, {len(pwr_claims_df)} primary claims.")
 
     # ---------------------------------------------------------
     # 2. Validate CoreWeave & Applied Digital Exact Debt Decomposition

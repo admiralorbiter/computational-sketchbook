@@ -441,8 +441,44 @@ This log records the durable architectural, methodological, and data design choi
      - Asserted exact evidence class distribution: 43 Class A + 1 Class C term.
   7. **Certified Invariant Baseline:**
      - Master datasets: 46 entities, 13,754 financials, 47 obligations, 56 lifecycle events, 64 bitemporal facts, 44 terms (43 Class A, 1 Class C), 7 assumptions, 54 evidence claims, 46 primary HTML verbatim verified exhibits, 0 CIK collisions, 21 collapsed parent nodes, and 0.00% Phase 0 data drift.
+---
+
+### ADR-020: Facility-Level Power Backplane & Physical Dependency Architecture
+- **Status:** Accepted (2026-09-30, Task 020 / Power Backplane Sprint)
+- **Context:**
+  1. *Limits of Corporate/Financial Topology:* Phase 0 and Phase 1 Wave 1 mapped contractual and debt perimeters across 46 legal entities. However, the Phase 1 Analysis Sprint (commits `f6ac4da` and `35bd01e`) revealed that the network is heavily CoreWeave-centric (an articulation point whose removal shatters the giant component into 4 isolated pieces).
+  2. *The Abstract Assumption Trap:* Systemic assumption `A004: POWER_DELIVERY_TIMELINE` was previously an abstract topological tag attached to real estate leases and credit facilities. It did not represent real-world physical transmission, utility counterparties, or grid interconnection queues.
+  3. *The Anti-Pattern of Arbitrary Company Ingestion:* Simply ingesting a list of large utilities (e.g. AEP, Southern Co., Duke) or RTOs (ERCOT, PJM, MISO) as abstract public companies without linking them to actual data center campuses creates administrative bloat without topological depth.
+  4. *Evidentiary Discrepancies in Power Metrics:* Primary SEC disclosures reveal that headline power numbers are non-fungible across distinct physical metrics. For example, Applied Digital reports 400 MW of "critical IT load" at Polaris Forge 1, while Montana-Dakota Utilities (`MDU`, CIK `0000067716`) reports an approved electric service agreement for 180 MW initial + 350 MW additional = 530 MW of "gross utility service capacity". Without typed MW measures, these numbers appear contradictory.
+  5. *Actual Facility Footprints from Primary Disclosures:*
+     - `APLD` Polaris Forge 1 (Ellendale, ND) is served by Montana-Dakota Utilities (`MDU`) purchasing power from the `MISO` market.
+     - `CORZ` ~590 MW CoreWeave footprint spans 5 actual utilities: Denton Municipal Electric (`DME`, Texas / ERCOT large-load), Dalton Utilities (GA / Southern Co.), Oklahoma Gas & Electric (`OG&E`, OK / SPP), Duke Energy / Murphy (NC), and Austin Energy (TX / ERCOT).
+     - `WULF` Lake Mariner (Somerset, NY) connects to NYISO Zone A with a 90 MW allocation from New York Power Authority (`NYPA`).
+     - `IREN` connects Childress directly to ERCOT with an amended AEP connection, and Sweetwater 2 has a 600 MW grid-connection agreement with AEP Texas in ERCOT.
+     - `NBIS` operates Mäntsälä, Finland (75 MW) with district heat recovery via Nivos Oy and plans Lappeenranta (up to 310 MW), with national transmission via Fingrid Oyj; but utility/interconnection contracts must only be assigned when substantiated by primary evidence, with unknown counterparties remaining `null`.
+- **Decision:**
+  1. **Four Dedicated Physical Layer Datasets:**
+     - `facilities.parquet` (and `.csv`): Primary key `facility_id`, corporate `operator_entity_id`, legal landlord entity, campus name, location (city, county, state/country), operational status, grid region / RTO.
+     - `power_relationships.parquet` (and `.csv`): Primary key `power_rel_id`, `facility_id`, `utility_entity_id`, `grid_operator_entity_id`, relationship type (`electric_service_agreement`, `interconnection_agreement`, `power_purchase_agreement`, `capacity_allocation`), tariff/pricing structure, firm vs. interruptible status, curtailment terms, and evidence claim links.
+     - `power_facts.parquet` (and `.csv`): Bitemporal factual ledger (`fact_id`, `facility_id`, `mw_type`, `value_mw`, `economic_as_of`, `publicly_known_from`, `truth_claim_id`, `knowledge_claim_id`).
+     - `power_terms.parquet` (and `.csv`): Attribute-level contractual terms (`term_id`, `power_rel_id`, `attribute`, `value`, `claim_id`, `source_locator`, `evidence_class`).
+  2. **Strictly Typed MW Ontology (Eliminating False Contradictions):**
+     Every MW measurement must specify its exact physical concept:
+     - `critical_it_mw`: Actual computing power capacity inside data halls.
+     - `leased_customer_mw`: MW contracted/leased to specific AI tenants (e.g. CoreWeave).
+     - `gross_utility_capacity_mw`: Substation / transformer nameplate service capacity delivered by utility.
+     - `contracted_service_mw`: Contractually agreed power delivery under ESA/PPA.
+     - `energized_mw`: Currently live and drawing power.
+     - `planned_mw`: Future phased expansion load.
+     - `interconnection_request_mw`: MW entered in RTO/ISO interconnection queue.
+  3. **Conservative Evidentiary Attribution:**
+     - No geographic guessing: an RTO or utility is connected only if SEC filings, utility commission dockets, or executed contracts cite it.
+     - If the specific contractual supplier is undisclosed in primary materials, `utility_entity_id = null`.
+  4. **The Graph Join Experiment:**
+     - Query whether the physical power layer bridges the 4 non-CoreWeave components. Specifically: does ERCOT or AEP Texas reconnect Core Scientific and IREN? Does the network form a shared physical backbone, or does it resolve into fragmented local utility silos?
 - **Consequences:**
-  Eliminates all remaining data-integrity defects from Wave 1. The observatory enters Wave 2 with bidirectional contract provenance, true BDC corporate independence, and fully verified multi-era capacity and debt evolution.
+  Establishes a rigorous facility-first physical ontology underneath the financial network, reconciles divergent power metrics with typed MW attributes, avoids speculative utility node injection, and tests whether physical power infrastructure provides an independent macro-connection across the AI buildout.
+
 
 
 
