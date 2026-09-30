@@ -479,11 +479,42 @@ This log records the durable architectural, methodological, and data design choi
 - **Consequences:**
   Establishes a rigorous facility-first physical ontology underneath the financial network, reconciles divergent power metrics with typed MW attributes, avoids speculative utility node injection, and tests whether physical power infrastructure provides an independent macro-connection across the AI buildout.
 
+---
 
-
-
-
-
-
-
+### ADR-020.1: Power Measurement Certification & Facility-First Topology Hardening
+- **Status:** Accepted (2026-09-30, Task 020.1 / Physical Layer Hardening)
+- **Context:**
+  1. *Audit of ADR-020 Implementation:* An audit of ADR-020 revealed that while the core thesis (ERCOT serves as an inter-operator physical bridge) was directionally verified, several structural topology and empirical measurement defects required remediation:
+     - *Synthetic Topology Shortcuts:* uild_joint_network() previously added direct operator <-> grid edges and omitted explicit physical facility nodes from the graph projection, collapsing five distinct Core Scientific campuses into CORZ and creating synthetic electrical shortcuts.
+     - *SERC Reliability Corporation Misclassification:* SERC was improperly classified as a grid_operator_rto. SERC is a NERC Regional Entity enforcing reliability standards across 16 states, not an operational balancing authority, RTO, or dispatch coordinator.
+     - *Core Scientific Colocation Footprint:* Reconstructed exact gross utility capacities from CORZ 2025 Form 10-K Item 2 Properties table: Denton = 394 MW, Dalton = 195 MW, Muskogee = 100 MW, Marble = 117 MW (Murphy Electric Power Board 35 MW + Duke Energy Carolinas 82 MW), Austin = 20 MW. Gross colocation footprint = 826 MW. Added MURPHY_ELECTRIC to entity registry.
+     - *IREN Empirical Disaggregation:* Disaggregated Childress (750 MW executed grid connection / ~650 MW operating data center capacity) from greenfield developments Sweetwater 1 (1,400 MW development) and Sweetwater 2 (600 MW executed connection agreement with AEP Texas).
+     - *Lake Mariner Non-Overlapping Representation:* Separated the 90 MW NYPA hydro allocation from the 500 MW expansion envelope. Energized operating capacity = 226 MW (145 MW mining + 81 MW critical IT HPC leasing).
+     - *Polaris Forge 1 Disaggregation:* Separated the 180 MW initial hosting data center (2023) from the 350 MW incremental ESA approved by NDPSC (60 MW online as of Q2 2026). Refrained from treating the 130 MW delta as cooling overhead without primary engineering documentation.
+     - *Mechanism-Specific Reliability Regimes:* Replaced binary curtailable flags with 5 discrete legal/regulatory mechanisms: irm_service, mandatory_grid_emergency_curtailment, oluntary_price_response, interconnection_not_energized, and interruptible_tariff.
+     - *Concentration Metric Reframing:* Renamed HHI to **Grid Exposure Concentration Index (HHI-form)**, eliminated inappropriate DOJ/antitrust analogies, and evaluated concentration strictly on non-overlapping capacity_basis_mw per relationship.
+- **Decision:**
+  1. **Literal Multi-Layer Topology (operator -> facility -> utility -> grid):**
+     - Model explicit physical facility nodes (FAC-*) in the network.
+     - Corporate operator connects to facility (operator_facility); facility connects to utility (acility_utility); utility connects to grid operator (utility_grid).
+     - In the absence of an intermediate utility (e.g. direct high-voltage transmission interconnects), facility connects directly to grid (acility_direct_grid).
+     - Prohibit all synthetic operator -> grid and operator -> utility shortcuts.
+  2. **Decouple SERC from Operational Grid Graph:**
+     - Reclassify SERC in config/entities.yml as 
+erc_regional_entity.
+     - Exclude SERC from power_relationships.parquet and acilities.parquet grid operator fields.
+  3. **Non-Overlapping Capacity Basis Accounting:**
+     - Exactly one capacity_basis_mw assigned per power relationship.
+     - Compute Grid Exposure Concentration Index on mutually exclusive regional capacity shares.
+  4. **Validator Hardening for Power Data:**
+     - Validate power_claims against raw SEC EDGAR submissions JSON and require 100% exact normalized contiguous verbatim substrings in cached HTML filings.
+     - Cross-check power_terms attribute values against power_relationships (capacity_basis_mw) and power_facts (alue_mw).
+     - Assert 100% Class A evidence for all contractual terms and enforce the public knowledge invariant (publicly_known_from >= claim.filing_date).
+- **Consequences:**
+  - The literal facility-first topology confirms that ERCOT remains an articulation point and structural bridge (betweenness centrality = 0.2576, ranking 3rd behind CoreWeave and Core Scientific).
+  - The joint network forms 2 connected components: a 44-node giant component and a 2-node SMCI/supplier component.
+  - Excision of CoreWeave reveals that the 21-node Texas/credit component survives intact via the CORZ -> ERCOT -> IREN physical bridge.
+  - Excision of ERCOT fragments the network, isolating IREN, AEP Texas, and credit syndicates from the broader AI infrastructure graph.
+  - Non-overlapping Grid Exposure Concentration Index (HHI-form) is certified at **5,443.8** on capacity basis (4,401.0 MW) and **5,045.7** on energized capacity (1,111.0 MW).
+  - 100% certified consistency: 62 entities, 12 facilities, 13 power relationships, 29 power facts, 14 power terms (100% Class A), 8 power claims, and zero drift on the Phase 0/Wave 1 financial baseline.
 

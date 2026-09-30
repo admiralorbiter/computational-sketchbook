@@ -1,13 +1,13 @@
 facility_id,facility_name,operator_entity_id,landlord_spv_entity_id,tenant_entity_id,city,county,state_or_country,status,primary_grid_region,description
 FAC-APLD-POLARIS-FORGE-1,Polaris Forge 1 Campus,APLD,APLD_COMPUTECO,CRWV,Ellendale,Dickey County,US-ND,operational_and_expanding,MISO,"400 MW critical IT campus leased to CoreWeave across Buildings 2, 3, and 4."
-FAC-CORZ-DENTON,Denton Data Center,CORZ,,CRWV,Denton,Denton County,US-TX,operational_and_expanding,ERCOT,394 MW utility capacity colocation campus in ERCOT supporting CoreWeave expansion.
-FAC-CORZ-DALTON,Dalton Data Center,CORZ,,CRWV,Dalton,Whitfield County,US-GA,operational,SERC,160 MW colocation campus supporting CoreWeave Option 2 (112 MW).
-FAC-CORZ-MUSKOGEE,Muskogee Data Center,CORZ,,CRWV,Muskogee,Muskogee County,US-OK,operational,SPP,150 MW colocation campus supporting CoreWeave Option 3 (118 MW).
-FAC-CORZ-MARBLE,Marble Data Center,CORZ,,CRWV,Marble,Cherokee County,US-NC,operational,SERC,100 MW colocation facility in Duke Energy / Murphy service area supporting CoreWeave (50 MW).
-FAC-CORZ-AUSTIN,Austin Data Center,CORZ,,CRWV,Austin,Travis County,US-TX,operational,ERCOT,75 MW colocation campus in Austin Energy service area supporting CoreWeave (40 MW).
-FAC-WULF-LAKE-MARINER,Lake Mariner Campus,WULF,,,Barker,Niagara County,US-NY,operational_and_expanding,NYISO_ZONE_A,500+ MW industrial HPC campus interconnected to NYISO Zone A with NYPA hydro allocation.
-FAC-IREN-CHILDRESS,Childress Data Center,IREN,,,Childress,Childress County,US-TX,operational_and_expanding,ERCOT,750 MW total capacity campus directly connected to ERCOT via amended AEP Texas interconnect.
-FAC-IREN-SWEETWATER-1,Sweetwater 1 Campus,IREN,,,Sweetwater,Nolan County,US-TX,under_construction,ERCOT,800 MW planned development in ERCOT market.
+FAC-CORZ-DENTON,Denton Data Center,CORZ,,CRWV,Denton,Denton County,US-TX,operational_and_expanding,ERCOT,394 MW gross utility capacity colocation campus in ERCOT supporting CoreWeave expansion.
+FAC-CORZ-DALTON,Dalton Data Center,CORZ,,CRWV,Dalton,Whitfield County,US-GA,operational,,195 MW gross utility capacity colocation campus served by Dalton Utilities.
+FAC-CORZ-MUSKOGEE,Muskogee Data Center,CORZ,,CRWV,Muskogee,Muskogee County,US-OK,operational,SPP,100 MW gross utility capacity colocation campus served by OG&E within SPP.
+FAC-CORZ-MARBLE,Marble Data Center,CORZ,,CRWV,Marble,Cherokee County,US-NC,operational,,117 MW colocation facility served jointly by Murphy Electric Power Board (35 MW) and Duke Energy (82 MW).
+FAC-CORZ-AUSTIN,Austin Data Center,CORZ,,CRWV,Austin,Travis County,US-TX,operational,ERCOT,20 MW colocation campus served by Austin Energy within ERCOT.
+FAC-WULF-LAKE-MARINER,Lake Mariner Campus,WULF,,,Barker,Niagara County,US-NY,operational_and_expanding,NYISO,226 MW energized campus (145 MW mining + 81 MW HPC) interconnected to NYISO Zone A with 90 MW NYPA hydro allocation.
+FAC-IREN-CHILDRESS,Childress Data Center,IREN,,,Childress,Childress County,US-TX,operational_and_expanding,ERCOT,750 MW total capacity campus with ~650 MW operating capacity in ERCOT via AEP Texas interconnection.
+FAC-IREN-SWEETWATER-1,Sweetwater 1 Campus,IREN,,,Sweetwater,Nolan County,US-TX,under_construction,ERCOT,"1,400 MW planned development in ERCOT market with executed connection agreement."
 FAC-IREN-SWEETWATER-2,Sweetwater 2 Campus,IREN,,,Sweetwater,Nolan County,US-TX,under_construction,ERCOT,600 MW planned development with executed AEP Texas grid-connection agreement in ERCOT.
-FAC-NBIS-MANTSALA,Mäntsälä Supercomputing Center,NBIS,,,Mäntsälä,Uusimaa,FI,operational,FINGRID_NORDIC,75 MW proprietary supercomputing facility with residential district heating integration.
-FAC-NBIS-LAPPEENRANTA,Lappeenranta AI Factory,NBIS,,,Lappeenranta,South Karelia,FI,announced,FINGRID_NORDIC,Announced 310 MW AI supercomputing factory development in Finland.
+FAC-NBIS-MANTSALA,Mäntsälä Supercomputing Center,NBIS,,,Mäntsälä,Uusimaa,FI,operational,FINGRID,75 MW proprietary supercomputing facility served by Nivos with Fingrid transmission.
+FAC-NBIS-LAPPEENRANTA,Lappeenranta AI Factory,NBIS,,,Lappeenranta,South Karelia,FI,announced,,Announced 310 MW AI supercomputing factory development in Finland.

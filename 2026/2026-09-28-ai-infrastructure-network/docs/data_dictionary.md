@@ -191,16 +191,16 @@ This document defines the schema, types, constraints, and operational definition
 
 | Column Name | Data Type | Nullable | Description / Controlled Vocabulary | Example |
 | :--- | :--- | :--- | :--- | :--- |
-| `facility_id` | String | No | Primary Key: `FAC-{OPERATOR}-{CAMPUS_SLUG}`. | `FAC-APLD-POLARIS-FORGE-1` |
-| `facility_name` | String | No | Descriptive campus or facility name. | `Polaris Forge 1 Campus` |
-| `operator_entity_id` | String | No | Foreign Key referencing `entities.entity_id` (operating company). | `APLD` |
+| `facility_id` | String | No | Primary Key: `FAC-{OPERATOR}-{CAMPUS}`. | `FAC-APLD-POLARIS-FORGE-1` |
+| `facility_name` | String | No | Official commercial name of the campus or data center. | `Polaris Forge 1 Campus` |
+| `operator_entity_id` | String | No | Foreign Key referencing `entities.entity_id` (primary operating entity). | `APLD` |
 | `landlord_spv_entity_id` | String | Yes | Foreign Key referencing `entities.entity_id` (property-holding SPV); null if operating co direct. | `APLD_COMPUTECO` |
 | `tenant_entity_id` | String | Yes | Foreign Key referencing `entities.entity_id` (anchor AI tenant); null if unleased/self-operated. | `CRWV` |
 | `city` | String | No | Municipality or town location. | `Ellendale` |
 | `county` | String | Yes | County or district jurisdiction. | `Dickey County` |
 | `state_or_country` | String | No | State or ISO country code (`US-ND`, `US-TX`, `FI`). | `US-ND` |
 | `status` | String | No | Operational status: `operational`, `operational_and_expanding`, `under_construction`, `announced`. | `operational_and_expanding` |
-| `primary_grid_region` | String | No | Balancing authority / RTO control area: `MISO`, `ERCOT`, `SERC`, `SPP`, `NYISO_ZONE_A`, `FINGRID_NORDIC`. | `MISO` |
+| `primary_grid_region` | String | Yes | Operational balancing authority / RTO control area: `MISO`, `ERCOT`, `SPP`, `NYISO`, `FINGRID`, or `None` (for local municipal distribution or pending interconnections). Note: SERC is excluded as it is a NERC Regional Entity, not an operational balancing authority. | `MISO` |
 | `description` | String | Yes | Summary of campus physical and computing architecture. | *Text* |
 
 ---
@@ -211,14 +211,16 @@ This document defines the schema, types, constraints, and operational definition
 | :--- | :--- | :--- | :--- | :--- |
 | `power_rel_id` | String | No | Primary Key: `PWR-{OPERATOR}-{CAMPUS}-{UTILITY_SHORT}`. | `PWR-APLD-PF1-MDU-ESA` |
 | `facility_id` | String | No | Foreign Key referencing `facilities.facility_id`. | `FAC-APLD-POLARIS-FORGE-1` |
-| `utility_entity_id` | String | Yes | Foreign Key referencing `entities.entity_id` (contractual electric utility); null if pending/unverified. | `MDU` |
-| `grid_operator_entity_id` | String | Yes | Foreign Key referencing `entities.entity_id` (RTO/ISO/TSO); null if pending/unverified. | `MISO` |
+| `utility_entity_id` | String | Yes | Foreign Key referencing `entities.entity_id` (contractual electric utility); null if direct transmission interconnection or pending. | `MDU` |
+| `grid_operator_entity_id` | String | Yes | Foreign Key referencing `entities.entity_id` (RTO/ISO/TSO); null if non-RTO municipal distribution or pending. | `MISO` |
 | `relationship_type` | String | No | Taxonomy: `electric_service_agreement`, `interconnection_agreement`, `power_allocation_agreement`, `interconnection_request`. | `electric_service_agreement` |
-| `firm_or_interruptible` | String | No | Power reliability classification: `firm`, `firm_with_market_passthrough`, `curtailable`, `unspecified`. | `firm_with_market_passthrough` |
+| `reliability_regime` | String | No | Mechanism-specific reliability state: `firm_service`, `mandatory_grid_emergency_curtailment`, `voluntary_price_response`, `interconnection_not_energized`, `interruptible_tariff`. | `firm_service` |
+| `firm_or_interruptible` | String | No | Operational status summary: `firm`, `curtailable`, `not_energized`. | `firm` |
 | `curtailment_rights` | String | Yes | Curtailment conditions, emergency protocols, or demand response commitments. | *Text* |
 | `tariff_structure` | String | Yes | Rate design, cost-of-service, or wholesale pass-through pricing mechanism. | *Text* |
-| `effective_date` | Date (str)| Yes | Execution date of power contract (`YYYY-MM-DD`). | `2023-01-01` |
-| `term_years` | Float | Yes | Stated initial agreement term duration in years. | `10.0` |
+| `effective_date` | Date (str)| Yes | Execution date of power contract (`YYYY-MM-DD`). | `2024-06-04` |
+| `term_years` | Float | Yes | Stated initial agreement term duration in years. | `12.0` |
+| `capacity_basis_mw` | Float | No | Non-overlapping electrical capacity basis in Megawatts (MW) for regional concentration analysis. | `350.0` |
 | `claim_id` | String | No | Foreign Key referencing `power_claims.claim_id`. | `CLM-PWR-MDU-001` |
 | `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted), `C` (Inferred). | `A` |
 
@@ -245,13 +247,13 @@ This document defines the schema, types, constraints, and operational definition
 
 | Column Name | Data Type | Nullable | Description / Controlled Vocabulary | Example |
 | :--- | :--- | :--- | :--- | :--- |
-| `term_id` | String | No | Primary Key: `PTERM-{OPERATOR}-{CAMPUS}-{ATTR}`. | `PTERM-APLD-PF1-TOTAL-SRV` |
+| `term_id` | String | No | Primary Key: `PTERM-{OPERATOR}-{CAMPUS}-{ATTR}`. | `PTERM-APLD-PF1-ESA-INC` |
 | `power_rel_id` | String | No | Foreign Key referencing `power_relationships.power_rel_id`. | `PWR-APLD-PF1-MDU-ESA` |
-| `attribute` | String | No | Contractual attribute: `total_approved_service_mw`, `expansion_approval_mw`, `regulatory_regime`, `approved_capacity_mw`, `allocated_hydro_power_mw`, `grid_connection_capacity_mw`, `total_site_capacity_mw`. | `total_approved_service_mw` |
-| `value` | String | No | String-encoded contractual value or regulatory parameter. | `530.0` |
+| `attribute` | String | No | Contractual attribute: `approved_service_capacity_mw`, `gross_utility_capacity_mw`, `allocated_hydro_power_mw`, `total_energized_capacity_mw`, `operating_datacenter_capacity_mw`, `planned_development_capacity_mw`, `grid_connection_capacity_mw`, `contracted_electricity_connection_mw`. | `approved_service_capacity_mw` |
+| `value` | String | No | String-encoded contractual value or regulatory parameter. | `350.0` |
 | `claim_id` | String | No | Foreign Key referencing `power_claims.claim_id`. | `CLM-PWR-MDU-001` |
 | `source_locator` | String | Yes | Specific Note, Item, or Exhibit locator in cited filing. | `Item 2. MD&A` |
-| `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted), `C` (Inferred). | `A` |
+| `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted), `C` (Inferred). All current terms certified 100% Class A. | `A` |
 
 ---
 
@@ -260,17 +262,14 @@ This document defines the schema, types, constraints, and operational definition
 | Column Name | Data Type | Nullable | Description | Example |
 | :--- | :--- | :--- | :--- | :--- |
 | `claim_id` | String | No | Primary Key: `CLM-PWR-{ENTITY}-{NUM}`. | `CLM-PWR-MDU-001` |
-| `entity_id` | String | No | Company filing the source disclosure. | `MDU` |
-| `filing_type` | String | No | Regulatory filing type: `10-K`, `10-Q`, `8-K`, `20-F`. | `10-Q` |
-| `accession_number` | String | No | Unique SEC EDGAR accession number. | `0000067716-26-000072` |
-| `filing_date` | Date (str)| No | Date filed with regulatory commission (`YYYY-MM-DD`). | `2026-08-06` |
+| `entity_id` | String | No | Company filing the source disclosure (`MDU`, `APLD`, `CORZ`, `WULF`, `IREN`, `NBIS`, `NIVOS`). | `MDU` |
+| `filing_type` | String | No | Regulatory filing type: `10-K`, `10-Q`, `8-K`, `20-F`, `PressRelease`. | `10-Q` |
+| `accession_number` | String | No | Unique SEC EDGAR accession number or utility disclosure identifier. | `0000067716-26-000072` |
+| `filing_date` | Date (str)| No | Date filed with regulatory commission or released (`YYYY-MM-DD`). | `2026-08-06` |
 | `document_url` | String | No | Direct HTTPS hyperlink to filing text. | `https://www.sec.gov/...` |
 | `section_locator` | String | No | Specific section or header in filing. | `Item 2. MD&A` |
-| `quote_type` | String | No | Typology: `source_excerpt`, `exact_quote`. | `source_excerpt` |
-| `exact_quote` | String | No | Verbatim excerpt transcribed from regulatory disclosure. | *Text* |
+| `quote_type` | String | No | Typology: `source_excerpt`. | `source_excerpt` |
+| `exact_quote` | String | No | 100% normalized contiguous verbatim substring transcribed from primary disclosure. | *Text* |
 | `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted), `C` (Inferred). | `A` |
 | `extraction_method` | String | No | Audit protocol used to extract disclosure. | `SEC Form 10-Q direct audit` |
-| `verifier_notes` | String | Yes | Analytical context on physical power connectivity. | *Text* |
-
-
-
+| `verifier_notes` | String | Yes | Analytical context on physical power connectivity and grid boundary. | *Text* |

@@ -98,8 +98,10 @@ def validate_sec_source_existence():
                 all_filings[entity][acc] = {'form': form, 'filingDate': fdate, 'primaryDocument': doc}
 
     clm_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
+    pwr_clm_df = pd.read_parquet(PROCESSED_DIR / "power_claims.parquet")
     errors = []
     
+    # Check financial evidence claims
     for _, row in clm_df.iterrows():
         cid = row["claim_id"]
         entity = row["entity_id"]
@@ -121,14 +123,37 @@ def validate_sec_source_existence():
             f_date = found['filingDate']
             errors.append(f"Claim {cid}: filing date mismatch for {acc} (expected {fdate}, found in EDGAR {f_date})")
 
+    # Check power claims (SEC filings only)
+    for _, row in pwr_clm_df.iterrows():
+        cid = row["claim_id"]
+        entity = row["entity_id"]
+        acc = row.get("accession_number")
+        form = row.get("filing_type")
+        fdate = row.get("filing_date")
+        if form in ["10-K", "10-Q", "8-K", "20-F", "6-K"]:
+            if entity not in all_filings:
+                errors.append(f"Power claim {cid}: entity {entity} has no cached raw submissions")
+                continue
+            found = all_filings[entity].get(acc)
+            if not found:
+                errors.append(f"Power claim {cid}: accession {acc} not found in {entity} raw submissions")
+            elif found['form'] != form:
+                f_form = found['form']
+                errors.append(f"Power claim {cid}: form mismatch for {acc} (expected {form}, found in EDGAR {f_form})")
+            elif found['filingDate'] != fdate:
+                f_date = found['filingDate']
+                errors.append(f"Power claim {cid}: filing date mismatch for {acc} (expected {fdate}, found in EDGAR {f_date})")
+
     # Check event public knowledge timing invariant
     events_df = pd.read_parquet(PROCESSED_DIR / "obligation_events.parquet")
-    claims_dates = dict(zip(clm_df["claim_id"], clm_df["filing_date"]))
+    combined_claims_dates = dict(zip(clm_df["claim_id"], clm_df["filing_date"]))
+    combined_claims_dates.update(dict(zip(pwr_clm_df["claim_id"], pwr_clm_df["filing_date"])))
+
     for _, ev in events_df.iterrows():
         eid = ev["event_id"]
         cid = ev.get("claim_id")
-        if cid in claims_dates:
-            c_date = claims_dates[cid]
+        if cid in combined_claims_dates:
+            c_date = combined_claims_dates[cid]
             if str(ev["publicly_known_at"]) < str(c_date):
                 errors.append(f"Event {eid}: publicly_known_at {ev['publicly_known_at']} predates claim {cid} filing date {c_date}")
 
@@ -137,10 +162,20 @@ def validate_sec_source_existence():
     for _, f_row in facts_df.iterrows():
         fid = f_row["fact_id"]
         k_cid = f_row.get("knowledge_claim_id")
-        if k_cid in claims_dates:
-            k_fdate = claims_dates[k_cid]
+        if k_cid in combined_claims_dates:
+            k_fdate = combined_claims_dates[k_cid]
             if str(f_row["publicly_known_from"]) < str(k_fdate):
                 errors.append(f"Fact {fid}: publicly_known_from {f_row['publicly_known_from']} predates knowledge claim {k_cid} filing date {k_fdate}")
+
+    # Check power facts public knowledge timing invariant
+    pwr_facts_df = pd.read_parquet(PROCESSED_DIR / "power_facts.parquet")
+    for _, pf_row in pwr_facts_df.iterrows():
+        pfid = pf_row["fact_id"]
+        k_cid = pf_row.get("knowledge_claim_id")
+        if k_cid in combined_claims_dates:
+            k_fdate = combined_claims_dates[k_cid]
+            if str(pf_row["publicly_known_from"]) < str(k_fdate):
+                errors.append(f"Power fact {pfid}: publicly_known_from {pf_row['publicly_known_from']} predates knowledge claim {k_cid} filing date {k_fdate}")
 
     return errors
 
@@ -193,13 +228,21 @@ CLAIM_TO_SEC_FILE = {
     'CLM-CORZ-004': 'CORZ_8K_20240806_opt2.htm',
     'CLM-CORZ-005': 'CORZ_8K_20241023_opt3.htm',
     'CLM-CORZ-006': 'CORZ_8K_20250227_opt4.htm',
+    # Power Backplane Primary Filings (ADR-020.1)
+    'CLM-PWR-MDU-001': 'MDU_10Q_20260630.htm',
+    'CLM-PWR-APLD-001': 'APLD_10K_20260531.htm',
+    'CLM-PWR-CORZ-001': 'CORZ_10K_20251231.htm',
+    'CLM-PWR-CORZ-002': 'CORZ_8K_20260910.htm',
+    'CLM-PWR-WULF-001': 'WULF_10Q_20260630.htm',
+    'CLM-PWR-IREN-001': 'IREN_10K_20250630.htm',
+    'CLM-PWR-NBIS-001': 'NBIS_20F_20251231.htm',
 }
 
 
 def validate_sec_html_content():
     """
     Validates that evidence claims match 100% exact contiguous verbatim substrings
-    in the cached primary SEC HTML filings in data/raw/sec/ (ADR-016).
+    in the cached primary SEC HTML filings in data/raw/sec/ (ADR-016 / ADR-020.1).
     """
     sec_dir = PROJECT_ROOT / "data" / "raw" / "sec"
     htm_files = list(sec_dir.glob("*.htm"))
@@ -211,6 +254,7 @@ def validate_sec_html_content():
         text = text.replace('\u201c', '"').replace('\u201d', '"').replace('\u2018', "'").replace('\u2019', "'")
         text = text.replace('&#8220;', '"').replace('&#8221;', '"').replace('&#8216;', "'").replace('&#8217;', "'")
         text = text.replace('&ldquo;', '"').replace('&rdquo;', '"').replace('&lsquo;', "'").replace('&rsquo;', "'")
+        text = text.replace('\u2013', '-').replace('\u2014', '-').replace('&#8211;', '-').replace('&ndash;', '-').replace('&mdash;', '-')
         text = text.replace('&nbsp;', ' ').replace('&#160;', ' ')
         text = re.sub(r'</?(?:b|i|u|strong|em|font|span)(?:\s+[^>]*)?>', '', text, flags=re.IGNORECASE)
         text = re.sub(r'<[^>]+>', ' ', text)
@@ -221,11 +265,14 @@ def validate_sec_html_content():
         file_contents[f.name] = normalize(f.read_text(encoding='utf-8', errors='ignore'))
 
     clm_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
+    pwr_clm_df = pd.read_parquet(PROCESSED_DIR / "power_claims.parquet")
+    combined_claims = pd.concat([clm_df, pwr_clm_df], ignore_index=True)
+
     errors = []
     for cid, target_file in CLAIM_TO_SEC_FILE.items():
-        c_sub = clm_df[clm_df["claim_id"] == cid]
+        c_sub = combined_claims[combined_claims["claim_id"] == cid]
         if c_sub.empty:
-            errors.append(f"Verifiable claim {cid} not found in evidence_claims.parquet")
+            errors.append(f"Verifiable claim {cid} not found in claims datasets")
             continue
         quote = normalize(c_sub.iloc[0]["exact_quote"])
         if target_file not in file_contents:
@@ -245,7 +292,7 @@ def validate_observatory():
     # 1. Check datasets exist
     # ---------------------------------------------------------
     required_files = {
-        "entities.parquet": 61,
+        "entities.parquet": 62,
         "financials.parquet": 13754,
         "obligations.parquet": 47,
         "obligation_events.parquet": 56,
@@ -254,10 +301,10 @@ def validate_observatory():
         "assumptions.parquet": 7,
         "evidence_claims.parquet": 54,
         "facilities.parquet": 12,
-        "power_relationships.parquet": 12,
-        "power_facts.parquet": 28,
-        "power_terms.parquet": 7,
-        "power_claims.parquet": 7,
+        "power_relationships.parquet": 13,
+        "power_facts.parquet": 29,
+        "power_terms.parquet": 14,
+        "power_claims.parquet": 8,
     }
     for rf, expected_rows in required_files.items():
         p = PROCESSED_DIR / rf
@@ -337,7 +384,7 @@ def validate_observatory():
         print(f"  [OK] Field-level contract provenance verified: {len(terms_df)} attribute-level terms (43 Class A, 1 Class C) with 100% verified claims and canonical obligation field alignment.")
 
     # ---------------------------------------------------------
-    # 1b. Validate Power Backplane & Physical Ontology (ADR-020)
+    # 1b. Validate Power Backplane & Physical Ontology (ADR-020.1 Hardened)
     # ---------------------------------------------------------
     fac_df = pd.read_parquet(PROCESSED_DIR / "facilities.parquet")
     pwr_rel_df = pd.read_parquet(PROCESSED_DIR / "power_relationships.parquet")
@@ -355,8 +402,24 @@ def validate_observatory():
         if pd.notna(r["tenant_entity_id"]) and r["tenant_entity_id"] not in valid_entity_ids:
             errors.append(f"Facility {r['facility_id']} tenant {r['tenant_entity_id']} not in entities registry")
 
+    # SERC Decoupling assertion: SERC is a NERC Regional Entity, NOT an operational grid operator / balancing authority
+    if (fac_df["primary_grid_region"] == "SERC").any():
+        errors.append("SERC improperly designated as primary_grid_region in facilities.parquet")
+    if (pwr_rel_df["grid_operator_entity_id"] == "SERC").any():
+        errors.append("SERC improperly designated as operational grid operator in power_relationships.parquet")
+    serc_rows = ent_df[ent_df["entity_id"] == "SERC"]
+    if not serc_rows.empty and serc_rows.iloc[0]["category"] != "nerc_regional_entity":
+        errors.append(f"SERC entity category mismatch: {serc_rows.iloc[0]['category']} (expected nerc_regional_entity)")
+
     # Check power relationships
     valid_fac_ids = set(fac_df["facility_id"])
+    allowed_reliability_regimes = {
+        "firm_service",
+        "mandatory_grid_emergency_curtailment",
+        "voluntary_price_response",
+        "interruptible_tariff",
+        "interconnection_not_energized",
+    }
     for _, r in pwr_rel_df.iterrows():
         if r["facility_id"] not in valid_fac_ids:
             errors.append(f"Power relationship {r['power_rel_id']} references unknown facility {r['facility_id']}")
@@ -366,6 +429,10 @@ def validate_observatory():
             errors.append(f"Power relationship {r['power_rel_id']} references unknown grid operator {r['grid_operator_entity_id']}")
         if r["claim_id"] not in set(pwr_claims_df["claim_id"]):
             errors.append(f"Power relationship {r['power_rel_id']} references unknown claim {r['claim_id']}")
+        if r["reliability_regime"] not in allowed_reliability_regimes:
+            errors.append(f"Power relationship {r['power_rel_id']} has invalid reliability_regime: {r['reliability_regime']}")
+        if r["capacity_basis_mw"] <= 0:
+            errors.append(f"Power relationship {r['power_rel_id']} has non-positive capacity_basis_mw: {r['capacity_basis_mw']}")
 
     # Check power facts typed MW and bitemporality
     allowed_mw_types = {
@@ -388,14 +455,42 @@ def validate_observatory():
         if r["knowledge_claim_id"] not in all_claim_ids:
             errors.append(f"Power fact {r['fact_id']} references unknown knowledge_claim_id: {r['knowledge_claim_id']}")
 
-    # Check power terms
+    # Check power terms field-level provenance and cross-check against relationships & facts
+    pwr_rel_indexed = pwr_rel_df.set_index("power_rel_id")
+    capacity_basis_attrs = {
+        "approved_service_capacity_mw", "gross_utility_capacity_mw",
+        "grid_connection_capacity_mw", "contracted_electricity_connection_mw",
+        "planned_development_capacity_mw", "allocated_hydro_power_mw"
+    }
     for _, r in pwr_terms_df.iterrows():
-        if r["power_rel_id"] not in valid_rel_ids:
-            errors.append(f"Power term {r['term_id']} references unknown power_rel {r['power_rel_id']}")
+        tid = r["term_id"]
+        rel_id = r["power_rel_id"]
+        if rel_id not in valid_rel_ids:
+            errors.append(f"Power term {tid} references unknown power_rel {rel_id}")
         if r["claim_id"] not in set(pwr_claims_df["claim_id"]):
-            errors.append(f"Power term {r['term_id']} references unknown claim {r['claim_id']}")
+            errors.append(f"Power term {tid} references unknown claim {r['claim_id']}")
+        if r["evidence_class"] != "A":
+            errors.append(f"Power term {tid} has evidence_class {r['evidence_class']} (expected Class A)")
+        try:
+            val_num = float(r["value"])
+            if val_num <= 0:
+                errors.append(f"Power term {tid} has non-positive numeric value: {val_num}")
+        except ValueError:
+            errors.append(f"Power term {tid} has non-numeric value: {r['value']}")
+            continue
 
-    print(f"  [OK] Power Backplane verified: {len(fac_df)} facilities, {len(pwr_rel_df)} power contracts, {len(pwr_facts_df)} typed MW facts, {len(pwr_terms_df)} terms, {len(pwr_claims_df)} primary claims.")
+        # Cross-check capacity_basis_mw when applicable
+        if r["attribute"] in capacity_basis_attrs and rel_id in pwr_rel_indexed.index:
+            rel_cap = pwr_rel_indexed.loc[rel_id, "capacity_basis_mw"]
+            if abs(val_num - rel_cap) > 1e-4:
+                errors.append(f"Power term {tid} capacity mismatch with relationship {rel_id}: {val_num} vs {rel_cap}")
+
+        # Cross-check that a corresponding power fact exists with matching value
+        matching_facts = pwr_facts_df[(pwr_facts_df["power_rel_id"] == rel_id) & (abs(pwr_facts_df["value_mw"] - val_num) < 1e-4)]
+        if matching_facts.empty:
+            errors.append(f"Power term {tid} ({r['attribute']}={val_num}) has no matching power_facts row for {rel_id}")
+
+    print(f"  [OK] Power Backplane verified: {len(fac_df)} facilities, {len(pwr_rel_df)} power contracts, {len(pwr_facts_df)} typed MW facts, {len(pwr_terms_df)} terms (100% Class A), {len(pwr_claims_df)} primary claims.")
 
     # ---------------------------------------------------------
     # 2. Validate CoreWeave & Applied Digital Exact Debt Decomposition

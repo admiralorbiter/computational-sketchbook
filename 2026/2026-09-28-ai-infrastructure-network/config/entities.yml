@@ -734,22 +734,22 @@ entities:
     status: municipal_utility
     reporting_standard: GASB
     fiscal_year_end: "12-31"
-    description: "Municipal utility owned by the City of Dalton, Georgia; supplies 160 MW electric service capacity to Core Scientific's Dalton data center."
-    key_counterparties: [CORZ, SERC]
+    description: "Municipal utility owned by the City of Dalton, Georgia; supplies 195 MW electric service capacity to Core Scientific's Dalton data center."
+    key_counterparties: [CORZ]
 
   SERC:
     entity_id: SERC
     name: SERC Reliability Corporation
     ticker: null
     cik: null
-    category: grid_operator_rto
-    subsector: regional_reliability_entity
+    category: nerc_regional_entity
+    subsector: regional_reliability_organization
     jurisdiction: US-NC
     status: private_nonprofit
     reporting_standard: null
     fiscal_year_end: null
-    description: "Regional electric reliability entity covering the southeastern United States across all or parts of 16 states."
-    key_counterparties: [DALTON_UTILITIES, DUKE_ENERGY, CORZ]
+    description: "NERC Regional Entity responsible for reliability standards and bulk power system compliance in the southeastern United States; NOT an RTO, ISO, or operational balancing authority."
+    key_counterparties: []
 
   OGE:
     entity_id: OGE
@@ -762,7 +762,7 @@ entities:
     status: public
     reporting_standard: US-GAAP
     fiscal_year_end: "12-31"
-    description: "Regulated electric utility providing power to Core Scientific's Muskogee, OK data center within the Southwest Power Pool."
+    description: "Regulated electric utility providing 100 MW power to Core Scientific's Muskogee, OK data center within the Southwest Power Pool."
     key_counterparties: [CORZ, SPP]
 
   SPP:
@@ -790,8 +790,22 @@ entities:
     status: public
     reporting_standard: US-GAAP
     fiscal_year_end: "12-31"
-    description: "Energy holding company whose regulated utilities provide electric service to Core Scientific's Marble, NC facility (jointly with Murphy Electric Power Board)."
-    key_counterparties: [CORZ, SERC]
+    description: "Energy holding company whose regulated utility (Duke Energy Carolinas) operates a balancing authority and provides 82 MW electric service to Core Scientific's Marble, NC facility."
+    key_counterparties: [CORZ]
+
+  MURPHY_ELECTRIC:
+    entity_id: MURPHY_ELECTRIC
+    name: Murphy Electric Power Board
+    ticker: null
+    cik: null
+    category: electric_utility
+    subsector: municipal_electric_utility
+    jurisdiction: US-NC
+    status: municipal_utility
+    reporting_standard: GASB
+    fiscal_year_end: "06-30"
+    description: "Municipal electric power board in Cherokee County, North Carolina; supplies 35 MW power capacity to Core Scientific's Marble facility (alongside Duke Energy's 82 MW)."
+    key_counterparties: [CORZ]
 
   AUSTIN_ENERGY:
     entity_id: AUSTIN_ENERGY
@@ -804,7 +818,7 @@ entities:
     status: municipal_utility
     reporting_standard: GASB
     fiscal_year_end: "09-30"
-    description: "City of Austin's municipal electric utility providing power to Core Scientific's Austin data center within ERCOT."
+    description: "City of Austin's municipal electric utility providing 20 MW power to Core Scientific's Austin data center within ERCOT."
     key_counterparties: [CORZ, ERCOT]
 
   NYPA:

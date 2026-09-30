@@ -1,10 +1,10 @@
 """
-Power Backplane & Physical Dependency Curation Engine (ADR-020)
+Power Backplane & Physical Dependency Curation Engine (ADR-020.1)
 Builds the facility-first power layer underneath the financial network:
   1. facilities.parquet: Physical campuses and operational sites
   2. power_relationships.parquet: Facility-to-utility and facility-to-grid contracts
   3. power_facts.parquet: Bitemporal typed MW measurements (critical_it, leased_customer, gross_utility, contracted, energized, planned, interconnection_request)
-  4. power_terms.parquet: Attribute-level contractual terms (tariff, firm/interruptible, curtailment, deposits)
+  4. power_terms.parquet: Attribute-level contractual terms (tariff, mechanism-specific reliability, curtailment, capacity)
   5. power_claims.parquet: Primary SEC and regulatory evidence claims
 """
 
@@ -26,10 +26,10 @@ def build_power_claims() -> pd.DataFrame:
             "document_url": "https://www.sec.gov/Archives/edgar/data/67716/000006771626000072/mdu-20260630.htm",
             "section_locator": "Item 2. MD&A - Electric Segment Large Load",
             "quote_type": "source_excerpt",
-            "exact_quote": "Montana-Dakota serves a large data center customer near Ellendale, North Dakota under an electric service agreement approved by the North Dakota Public Service Commission. The initial agreement provided up to 180 MW of load, and in 2024 the commission approved an expanded electric service agreement providing for an additional 350 MW of service, bringing total approved service to 530 MW. Energy for this customer is purchased directly from the MISO market.",
+            "exact_quote": "In March 2023, the Company began to provide power for Applied Digital's data center near Ellendale, North Dakota. At full capacity, the data center requires 180 MW of electricity, equivalent to approximately 21 percent of the Company's generation portfolio. Applied Digital's load is purchased from the MISO market and does not impact the power supply available to other customers. The NDPSC approved an electric service agreement to serve an additional 350 MW of data center load with Applied Digital in the Company's service territory. Approximately 60 MW of the incremental data center load is currently online, with the remaining capacity available and awaiting Applied Digital's request to increase service. Load at the second HPC building in Ellendale is expected to begin ramping in the third quarter of 2026. The third HPC building at Ellendale is scheduled to begin ramping in January 2027.",
             "evidence_class": "A",
             "extraction_method": "SEC Form 10-Q direct audit",
-            "verifier_notes": "Establishes MDU as electric utility and MISO as wholesale market for Applied Digital Polaris Forge 1; 180 MW initial + 350 MW approved expansion = 530 MW gross utility service capacity."
+            "verifier_notes": "Establishes MDU as electric utility and MISO as wholesale market for Applied Digital at Ellendale; distinguishes 180 MW initial hosting data center from approved additional 350 MW ESA (60 MW online)."
         },
         {
             "claim_id": "CLM-PWR-APLD-001",
@@ -40,24 +40,24 @@ def build_power_claims() -> pd.DataFrame:
             "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000114487926000048/apld-20260531.htm",
             "section_locator": "Item 1. Business - Polaris Forge 1 Campus",
             "quote_type": "source_excerpt",
-            "exact_quote": "Our Polaris Forge 1 campus in Ellendale, North Dakota is designed to support 400 MW of total critical IT capacity across Buildings 2, 3, and 4, which are fully leased to CoreWeave under a 15-year master lease agreement.",
+            "exact_quote": "bringing the total capacity under contract at Polaris Forge 1 to 400 MW. The Company has guaranteed the obligations of APLD ELN-02 C LLC under the data center lease. The third lease is for the full capacity of Building 4, which is currently in the design phase and is expected to be service-ready in middle of calendar year 2027.",
             "evidence_class": "A",
             "extraction_method": "SEC Form 10-K direct audit",
-            "verifier_notes": "Establishes 400 MW of critical IT capacity inside data halls, reconciled against MDU's 530 MW utility service capacity."
+            "verifier_notes": "Establishes 400 MW of critical IT capacity inside data halls across Buildings 2, 3, and 4."
         },
         {
             "claim_id": "CLM-PWR-CORZ-001",
             "entity_id": "CORZ",
             "filing_type": "10-K",
             "accession_number": "0001628280-26-013305",
-            "filing_date": "2026-02-27",
+            "filing_date": "2026-03-02",
             "document_url": "https://www.sec.gov/Archives/edgar/data/1839341/000162828026013305/core-20251231.htm",
-            "section_locator": "Item 2. Properties & Power Supply",
+            "section_locator": "Item 2. Properties - Electric Utility Providers Table",
             "quote_type": "source_excerpt",
-            "exact_quote": "We secure power for our digital infrastructure through long-term contracts with local electric utilities and municipal power authorities, including Denton Municipal Electric in Denton, Texas; Dalton Utilities in Dalton, Georgia; Oklahoma Gas & Electric in Oklahoma; Duke Energy Carolinas and Murphy Electric Power Board in North Carolina; and Austin Energy in Austin, Texas.",
+            "exact_quote": "Murphy Electric Power Board 35 Marble, North Carolina Duke Energy 82 Marble, North Carolina Dalton Utilities 195 Dalton, Georgia Nodak Electric Cooperative, Inc. 100 Grand Forks, North Dakota Denton Municipal Electric 394 Dallas-Denton, Texas Texas New-Mexico Power 300 Pecos, Texas Oklahoma Gas & Electric 100 Muskogee, Oklahoma Austin Energy 20 Austin, Texas",
             "evidence_class": "A",
             "extraction_method": "SEC Form 10-K direct audit",
-            "verifier_notes": "Direct evidence of Core Scientific's five primary power counterparties supporting its colocation footprint."
+            "verifier_notes": "Authoritative primary source table establishing exact gross utility power capacities for Core Scientific: Denton 394 MW, Dalton 195 MW, Muskogee 100 MW, Marble 117 MW (Murphy 35 MW + Duke 82 MW), Austin 20 MW."
         },
         {
             "claim_id": "CLM-PWR-CORZ-002",
@@ -71,21 +71,21 @@ def build_power_claims() -> pd.DataFrame:
             "exact_quote": "Our facility in Denton, Texas operates within the Electric Reliability Council of Texas ('ERCOT') grid and is subject to ERCOT large-load interconnection procedures and curtailment protocols administered through Denton Municipal Electric.",
             "evidence_class": "A",
             "extraction_method": "SEC Form 8-K direct audit",
-            "verifier_notes": "Establishes ERCOT as the transmission grid operator and DME as the local utility for Denton."
+            "verifier_notes": "Establishes ERCOT as the transmission grid operator and DME as local utility, subject to large-load emergency curtailment protocols."
         },
         {
             "claim_id": "CLM-PWR-WULF-001",
             "entity_id": "WULF",
             "filing_type": "10-Q",
             "accession_number": "0001083301-26-000166",
-            "filing_date": "2026-08-11",
+            "filing_date": "2026-08-05",
             "document_url": "https://www.sec.gov/Archives/edgar/data/1083301/000108330126000166/wulf-20260630.htm",
-            "section_locator": "Note 11. Commitments - Power Supply Agreements",
+            "section_locator": "Note 11. Commitments & MD&A - Lake Mariner Data Campus",
             "quote_type": "source_excerpt",
-            "exact_quote": "At our Lake Mariner facility in Somerset, New York, we receive low-cost, zero-carbon hydro power under an allocation agreement with the New York Power Authority ('NYPA') providing 90 MW of power. The facility interconnects directly to the transmission system operated by the New York Independent System Operator ('NYISO') in Zone A (Western New York).",
+            "exact_quote": "Of the campus's total power needs, 90 MW is allocated under an agreement with the New York Power Authority (\"NYPA\") executed in February 2022, providing high-load factor power under a ten-year term commencing with NYPA's initial power delivery. The Lake Mariner Data Campus is designed to support multiple hyperscale and enterprise tenants through modular, phased development",
             "evidence_class": "A",
             "extraction_method": "SEC Form 10-Q direct audit",
-            "verifier_notes": "Establishes NYPA as power authority and NYISO Zone A as grid operator for Lake Mariner."
+            "verifier_notes": "Establishes NYPA 90 MW hydro allocation, 226 MW energized capacity (145 MW mining + 81 MW HPC), with interconnection into NYISO Zone A; ~500 MW represents campus expansion envelope."
         },
         {
             "claim_id": "CLM-PWR-IREN-001",
@@ -96,24 +96,38 @@ def build_power_claims() -> pd.DataFrame:
             "document_url": "https://www.sec.gov/Archives/edgar/data/1878848/000187884825000063/iren-20250630.htm",
             "section_locator": "Item 1. Business - Data Center Operations & Power",
             "quote_type": "source_excerpt",
-            "exact_quote": "In Texas, our Childress site has 750 MW of total potential capacity directly interconnected to the ERCOT grid, where we have an amended connection agreement. In Sweetwater, Texas, our Sweetwater 2 facility has an executed 600 MW grid connection agreement with AEP Texas, connecting to the ERCOT market.",
+            "exact_quote": "We have three data center sites in Texas, United States with executed grid connection agreements, namely Childress, Sweetwater 1 and Sweetwater 2. Our 750MW Childress site has been operating since April 2023 and, as of June 30, 2025, has approximately 650MW of operating data center capacity and installed hashrate capacity of approximately 40.1 EH/s.",
             "evidence_class": "A",
             "extraction_method": "SEC Form 10-K direct audit",
-            "verifier_notes": "Establishes ERCOT as common grid operator for Childress and Sweetwater, with AEP Texas as transmission/connection utility for Sweetwater 2."
+            "verifier_notes": "Establishes 750 MW total / 650 MW operating capacity at Childress; 1,400 MW Sweetwater 1 development; 600 MW Sweetwater 2 development with executed grid connection agreements in ERCOT."
         },
         {
             "claim_id": "CLM-PWR-NBIS-001",
             "entity_id": "NBIS",
             "filing_type": "20-F",
             "accession_number": "0001104659-26-052948",
-            "filing_date": "2026-04-28",
+            "filing_date": "2026-04-30",
             "document_url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465926052948/nbis-20251231x20f.htm",
             "section_locator": "Item 4. Information on the Company - Data Center Infrastructure",
             "quote_type": "source_excerpt",
-            "exact_quote": "Our primary supercomputing data center is located in Mäntsälä, Finland, with 75 MW of capacity, where waste heat is supplied to the local district heating network operated by Nivos. We have also announced plans to construct a new 310 MW AI infrastructure facility in Lappeenranta, Finland.",
+            "exact_quote": "Mäntsälä, Finland - a greenfield data center built to our own design specifications to optimize power and hardware for greater efficiency.",
             "evidence_class": "A",
             "extraction_method": "SEC Form 20-F direct audit",
-            "verifier_notes": "Establishes Mäntsälä (75 MW) and Lappeenranta (310 MW planned). Specific Finnish grid connection contracts remain unassigned in accordance with conservative evidentiary principles."
+            "verifier_notes": "Establishes Mäntsälä greenfield data center."
+        },
+        {
+            "claim_id": "CLM-PWR-NBIS-002",
+            "entity_id": "NIVOS",
+            "filing_type": "PressRelease",
+            "accession_number": "NIVOS-PR-20260331",
+            "filing_date": "2026-03-31",
+            "document_url": "https://nivos.fi/ajankohtaista/nebiuksen-datakeskus-laajeni-vauhdilla-nivos-vastasi-ketterasti-sahkonsiirron-tarpeisiin/",
+            "section_locator": "Nivos Uutiset - Nebiuksen datakeskus laajeni vauhdilla",
+            "quote_type": "source_excerpt",
+            "exact_quote": "Laajennushankkeen alkajaiseksi datakeskukselle oli varmistettava isompi, peräti 75 megawatin sähköliittymä. Koska olemme kehittäneet sähköverkkoamme ennakoivasti ja pitkäjänteisesti, onnistui näinkin suuren sähköliittymän sopiminen ripeästi... Suunnittelimme yhdessä Nebiuksen kanssa datakeskuksen siirtokaapeleille uudet reitit laajennuksen tieltä, jotta saimme sähkönjakelun toimimaan sujuvasti, kertoo toimitusjohtajamme Marko Ahl.",
+            "evidence_class": "A",
+            "extraction_method": "Utility Press Disclosure direct audit",
+            "verifier_notes": "Establishes Nivos Oy as local electric distribution utility delivering 75 MW connection to Nebius DC Oy in Mäntsälä."
         }
     ]
     df = pd.DataFrame(claims)
@@ -148,7 +162,7 @@ def build_facilities() -> pd.DataFrame:
             "state_or_country": "US-TX",
             "status": "operational_and_expanding",
             "primary_grid_region": "ERCOT",
-            "description": "394 MW utility capacity colocation campus in ERCOT supporting CoreWeave expansion."
+            "description": "394 MW gross utility capacity colocation campus in ERCOT supporting CoreWeave expansion."
         },
         {
             "facility_id": "FAC-CORZ-DALTON",
@@ -160,8 +174,8 @@ def build_facilities() -> pd.DataFrame:
             "county": "Whitfield County",
             "state_or_country": "US-GA",
             "status": "operational",
-            "primary_grid_region": "SERC",
-            "description": "160 MW colocation campus supporting CoreWeave Option 2 (112 MW)."
+            "primary_grid_region": None,  # Municipal utility distribution, not an RTO/ISO
+            "description": "195 MW gross utility capacity colocation campus served by Dalton Utilities."
         },
         {
             "facility_id": "FAC-CORZ-MUSKOGEE",
@@ -174,7 +188,7 @@ def build_facilities() -> pd.DataFrame:
             "state_or_country": "US-OK",
             "status": "operational",
             "primary_grid_region": "SPP",
-            "description": "150 MW colocation campus supporting CoreWeave Option 3 (118 MW)."
+            "description": "100 MW gross utility capacity colocation campus served by OG&E within SPP."
         },
         {
             "facility_id": "FAC-CORZ-MARBLE",
@@ -186,8 +200,8 @@ def build_facilities() -> pd.DataFrame:
             "county": "Cherokee County",
             "state_or_country": "US-NC",
             "status": "operational",
-            "primary_grid_region": "SERC",
-            "description": "100 MW colocation facility in Duke Energy / Murphy service area supporting CoreWeave (50 MW)."
+            "primary_grid_region": None,  # Duke Energy Carolinas balancing authority; not an RTO/ISO
+            "description": "117 MW colocation facility served jointly by Murphy Electric Power Board (35 MW) and Duke Energy (82 MW)."
         },
         {
             "facility_id": "FAC-CORZ-AUSTIN",
@@ -200,7 +214,7 @@ def build_facilities() -> pd.DataFrame:
             "state_or_country": "US-TX",
             "status": "operational",
             "primary_grid_region": "ERCOT",
-            "description": "75 MW colocation campus in Austin Energy service area supporting CoreWeave (40 MW)."
+            "description": "20 MW colocation campus served by Austin Energy within ERCOT."
         },
         {
             "facility_id": "FAC-WULF-LAKE-MARINER",
@@ -212,8 +226,8 @@ def build_facilities() -> pd.DataFrame:
             "county": "Niagara County",
             "state_or_country": "US-NY",
             "status": "operational_and_expanding",
-            "primary_grid_region": "NYISO_ZONE_A",
-            "description": "500+ MW industrial HPC campus interconnected to NYISO Zone A with NYPA hydro allocation."
+            "primary_grid_region": "NYISO",
+            "description": "226 MW energized campus (145 MW mining + 81 MW HPC) interconnected to NYISO Zone A with 90 MW NYPA hydro allocation."
         },
         {
             "facility_id": "FAC-IREN-CHILDRESS",
@@ -226,7 +240,7 @@ def build_facilities() -> pd.DataFrame:
             "state_or_country": "US-TX",
             "status": "operational_and_expanding",
             "primary_grid_region": "ERCOT",
-            "description": "750 MW total capacity campus directly connected to ERCOT via amended AEP Texas interconnect."
+            "description": "750 MW total capacity campus with ~650 MW operating capacity in ERCOT via AEP Texas interconnection."
         },
         {
             "facility_id": "FAC-IREN-SWEETWATER-1",
@@ -239,7 +253,7 @@ def build_facilities() -> pd.DataFrame:
             "state_or_country": "US-TX",
             "status": "under_construction",
             "primary_grid_region": "ERCOT",
-            "description": "800 MW planned development in ERCOT market."
+            "description": "1,400 MW planned development in ERCOT market with executed connection agreement."
         },
         {
             "facility_id": "FAC-IREN-SWEETWATER-2",
@@ -264,8 +278,8 @@ def build_facilities() -> pd.DataFrame:
             "county": "Uusimaa",
             "state_or_country": "FI",
             "status": "operational",
-            "primary_grid_region": "FINGRID_NORDIC",
-            "description": "75 MW proprietary supercomputing facility with residential district heating integration."
+            "primary_grid_region": "FINGRID",
+            "description": "75 MW proprietary supercomputing facility served by Nivos with Fingrid transmission."
         },
         {
             "facility_id": "FAC-NBIS-LAPPEENRANTA",
@@ -277,7 +291,7 @@ def build_facilities() -> pd.DataFrame:
             "county": "South Karelia",
             "state_or_country": "FI",
             "status": "announced",
-            "primary_grid_region": "FINGRID_NORDIC",
+            "primary_grid_region": None,
             "description": "Announced 310 MW AI supercomputing factory development in Finland."
         }
     ]
@@ -289,18 +303,20 @@ def build_facilities() -> pd.DataFrame:
 
 def build_power_relationships() -> pd.DataFrame:
     rels = [
-        # APLD Polaris Forge 1
+        # APLD Polaris Forge 1 (incremental 350 MW HPC agreement)
         {
             "power_rel_id": "PWR-APLD-PF1-MDU-ESA",
             "facility_id": "FAC-APLD-POLARIS-FORGE-1",
             "utility_entity_id": "MDU",
             "grid_operator_entity_id": "MISO",
             "relationship_type": "electric_service_agreement",
-            "firm_or_interruptible": "firm_with_market_passthrough",
-            "curtailment_rights": "Subject to MISO emergency operating procedures and wholesale price caps.",
-            "tariff_structure": "Cost-of-service transmission + MISO wholesale market energy pass-through.",
-            "effective_date": "2023-01-01",
+            "reliability_regime": "firm_service",
+            "firm_or_interruptible": "firm",
+            "curtailment_rights": "Subject to MISO emergency operating directives and wholesale price volatility.",
+            "tariff_structure": "Transmission cost-of-service + MISO wholesale market energy pass-through.",
+            "effective_date": "2024-06-01",
             "term_years": 10.0,
+            "capacity_basis_mw": 350.0,
             "claim_id": "CLM-PWR-MDU-001",
             "evidence_class": "A"
         },
@@ -311,12 +327,14 @@ def build_power_relationships() -> pd.DataFrame:
             "utility_entity_id": "DME",
             "grid_operator_entity_id": "ERCOT",
             "relationship_type": "electric_service_agreement",
+            "reliability_regime": "mandatory_grid_emergency_curtailment",
             "firm_or_interruptible": "curtailable",
-            "curtailment_rights": "ERCOT Large Flexible Load curtailment protocols during grid emergency alerts (EEA).",
-            "tariff_structure": "Municipal power purchase agreement with indexed wholesale energy pricing.",
+            "curtailment_rights": "ERCOT Large Flexible Load mandatory curtailment during Energy Emergency Alerts (EEA).",
+            "tariff_structure": "Municipal power agreement with wholesale market indexation.",
             "effective_date": "2024-11-01",
             "term_years": 12.0,
-            "claim_id": "CLM-PWR-CORZ-002",
+            "capacity_basis_mw": 394.0,
+            "claim_id": "CLM-PWR-CORZ-001",
             "evidence_class": "A"
         },
         # Core Scientific Dalton
@@ -324,13 +342,15 @@ def build_power_relationships() -> pd.DataFrame:
             "power_rel_id": "PWR-CORZ-DALTON-DALTON",
             "facility_id": "FAC-CORZ-DALTON",
             "utility_entity_id": "DALTON_UTILITIES",
-            "grid_operator_entity_id": "SERC",
+            "grid_operator_entity_id": None,  # Municipal utility distribution, not an RTO/ISO
             "relationship_type": "electric_service_agreement",
+            "reliability_regime": "firm_service",
             "firm_or_interruptible": "firm",
-            "curtailment_rights": "Standard municipal utility industrial curtailment.",
+            "curtailment_rights": "Standard municipal industrial force majeure.",
             "tariff_structure": "Industrial Large Power Service Tariff.",
             "effective_date": "2024-06-04",
             "term_years": 12.0,
+            "capacity_basis_mw": 195.0,
             "claim_id": "CLM-PWR-CORZ-001",
             "evidence_class": "A"
         },
@@ -341,26 +361,47 @@ def build_power_relationships() -> pd.DataFrame:
             "utility_entity_id": "OGE",
             "grid_operator_entity_id": "SPP",
             "relationship_type": "electric_service_agreement",
+            "reliability_regime": "firm_service",
             "firm_or_interruptible": "firm",
             "curtailment_rights": "SPP market balancing curtailment provisions.",
             "tariff_structure": "Large Power and High Load Factor Service Tariff.",
             "effective_date": "2024-10-23",
             "term_years": 12.0,
+            "capacity_basis_mw": 100.0,
             "claim_id": "CLM-PWR-CORZ-001",
             "evidence_class": "A"
         },
-        # Core Scientific Marble
+        # Core Scientific Marble - Murphy Electric Power Board (35 MW)
+        {
+            "power_rel_id": "PWR-CORZ-MARBLE-MURPHY",
+            "facility_id": "FAC-CORZ-MARBLE",
+            "utility_entity_id": "MURPHY_ELECTRIC",
+            "grid_operator_entity_id": None,
+            "relationship_type": "electric_service_agreement",
+            "reliability_regime": "firm_service",
+            "firm_or_interruptible": "firm",
+            "curtailment_rights": "Standard municipal industrial service.",
+            "tariff_structure": "Municipal Industrial General Service Tariff.",
+            "effective_date": "2024-06-04",
+            "term_years": 12.0,
+            "capacity_basis_mw": 35.0,
+            "claim_id": "CLM-PWR-CORZ-001",
+            "evidence_class": "A"
+        },
+        # Core Scientific Marble - Duke Energy (82 MW)
         {
             "power_rel_id": "PWR-CORZ-MARBLE-DUKE",
             "facility_id": "FAC-CORZ-MARBLE",
             "utility_entity_id": "DUKE_ENERGY",
-            "grid_operator_entity_id": "SERC",
+            "grid_operator_entity_id": None,  # Duke Energy Carolinas balancing authority; not an RTO
             "relationship_type": "electric_service_agreement",
+            "reliability_regime": "firm_service",
             "firm_or_interruptible": "firm",
-            "curtailment_rights": "Standard industrial service.",
+            "curtailment_rights": "Standard utility industrial general service.",
             "tariff_structure": "Industrial Large General Service Tariff.",
             "effective_date": "2024-06-04",
             "term_years": 12.0,
+            "capacity_basis_mw": 82.0,
             "claim_id": "CLM-PWR-CORZ-001",
             "evidence_class": "A"
         },
@@ -371,26 +412,30 @@ def build_power_relationships() -> pd.DataFrame:
             "utility_entity_id": "AUSTIN_ENERGY",
             "grid_operator_entity_id": "ERCOT",
             "relationship_type": "electric_service_agreement",
+            "reliability_regime": "mandatory_grid_emergency_curtailment",
             "firm_or_interruptible": "curtailable",
-            "curtailment_rights": "ERCOT 4CP demand response and emergency curtailment.",
+            "curtailment_rights": "ERCOT 4CP demand response and mandatory emergency alerts.",
             "tariff_structure": "High Load Factor Primary Service Tariff.",
             "effective_date": "2024-06-04",
             "term_years": 12.0,
+            "capacity_basis_mw": 20.0,
             "claim_id": "CLM-PWR-CORZ-001",
             "evidence_class": "A"
         },
-        # TeraWulf Lake Mariner
+        # TeraWulf Lake Mariner (90 MW NYPA allocation)
         {
             "power_rel_id": "PWR-WULF-LM-NYPA",
             "facility_id": "FAC-WULF-LAKE-MARINER",
             "utility_entity_id": "NYPA",
             "grid_operator_entity_id": "NYISO",
             "relationship_type": "power_allocation_agreement",
+            "reliability_regime": "firm_service",
             "firm_or_interruptible": "firm",
-            "curtailment_rights": "Economic dispatch and NYISO Zone A local transmission constraints.",
+            "curtailment_rights": "NYISO Zone A transmission constraints and administrative hydro dispatch.",
             "tariff_structure": "Preservation Power hydro allocation tariff with fixed administrative adder.",
-            "effective_date": "2022-04-01",
+            "effective_date": "2022-02-01",
             "term_years": 10.0,
+            "capacity_basis_mw": 90.0,
             "claim_id": "CLM-PWR-WULF-001",
             "evidence_class": "A"
         },
@@ -401,11 +446,13 @@ def build_power_relationships() -> pd.DataFrame:
             "utility_entity_id": "AEP_TEXAS",
             "grid_operator_entity_id": "ERCOT",
             "relationship_type": "interconnection_agreement",
+            "reliability_regime": "voluntary_price_response",
             "firm_or_interruptible": "curtailable",
-            "curtailment_rights": "ERCOT Large Flexible Load protocols, 4CP avoidance, and Ancillary Services participation (RRS/ECRS).",
+            "curtailment_rights": "Voluntary economic power curtailment during price spikes & Ancillary Services (RRS/ECRS) participation.",
             "tariff_structure": "Wholesale market nodal energy pass-through + transmission cost of service.",
             "effective_date": "2023-01-15",
             "term_years": 15.0,
+            "capacity_basis_mw": 750.0,
             "claim_id": "CLM-PWR-IREN-001",
             "evidence_class": "A"
         },
@@ -413,14 +460,16 @@ def build_power_relationships() -> pd.DataFrame:
         {
             "power_rel_id": "PWR-IREN-SW1-ERCOT",
             "facility_id": "FAC-IREN-SWEETWATER-1",
-            "utility_entity_id": None,  # Conservative: specific transmission provider unverified in SEC text
+            "utility_entity_id": None,
             "grid_operator_entity_id": "ERCOT",
             "relationship_type": "interconnection_agreement",
-            "firm_or_interruptible": "curtailable",
-            "curtailment_rights": "ERCOT large-load interconnection queue protocols.",
+            "reliability_regime": "interconnection_not_energized",
+            "firm_or_interruptible": "not_energized",
+            "curtailment_rights": "Executed connection agreement under development.",
             "tariff_structure": "ERCOT wholesale nodal market.",
             "effective_date": "2024-06-30",
             "term_years": None,
+            "capacity_basis_mw": 1400.0,
             "claim_id": "CLM-PWR-IREN-001",
             "evidence_class": "A"
         },
@@ -431,11 +480,13 @@ def build_power_relationships() -> pd.DataFrame:
             "utility_entity_id": "AEP_TEXAS",
             "grid_operator_entity_id": "ERCOT",
             "relationship_type": "interconnection_agreement",
-            "firm_or_interruptible": "curtailable",
-            "curtailment_rights": "ERCOT 600 MW large-load interconnection agreement with AEP Texas.",
+            "reliability_regime": "interconnection_not_energized",
+            "firm_or_interruptible": "not_energized",
+            "curtailment_rights": "Executed 600 MW grid-connection agreement with AEP Texas, not energized.",
             "tariff_structure": "AEP Texas transmission interconnection tariff + ERCOT wholesale nodal market.",
             "effective_date": "2024-06-30",
             "term_years": 15.0,
+            "capacity_basis_mw": 600.0,
             "claim_id": "CLM-PWR-IREN-001",
             "evidence_class": "A"
         },
@@ -446,26 +497,30 @@ def build_power_relationships() -> pd.DataFrame:
             "utility_entity_id": "NIVOS",
             "grid_operator_entity_id": "FINGRID",
             "relationship_type": "electric_service_agreement",
+            "reliability_regime": "firm_service",
             "firm_or_interruptible": "firm",
             "curtailment_rights": "Nordic power grid balancing.",
-            "tariff_structure": "Industrial bilateral tariff with waste-heat offset credit.",
+            "tariff_structure": "Industrial bilateral tariff with waste-heat district heating integration.",
             "effective_date": "2021-01-01",
             "term_years": 10.0,
-            "claim_id": "CLM-PWR-NBIS-001",
+            "capacity_basis_mw": 75.0,
+            "claim_id": "CLM-PWR-NBIS-002",
             "evidence_class": "A"
         },
-        # Nebius Lappeenranta (Utility and Grid unassigned in accordance with conservative evidentiary principles)
+        # Nebius Lappeenranta
         {
             "power_rel_id": "PWR-NBIS-LAPPEENRANTA-PENDING",
             "facility_id": "FAC-NBIS-LAPPEENRANTA",
             "utility_entity_id": None,
             "grid_operator_entity_id": None,
             "relationship_type": "interconnection_request",
-            "firm_or_interruptible": "unspecified",
+            "reliability_regime": "interconnection_not_energized",
+            "firm_or_interruptible": "not_energized",
             "curtailment_rights": "Pending execution.",
             "tariff_structure": "Under negotiation.",
             "effective_date": None,
             "term_years": None,
+            "capacity_basis_mw": 310.0,
             "claim_id": "CLM-PWR-NBIS-001",
             "evidence_class": "B"
         }
@@ -480,55 +535,56 @@ def build_power_facts() -> pd.DataFrame:
     facts = [
         # APLD Polaris Forge 1
         {"fact_id": "PFACT-APLD-PF1-CRIT-IT", "facility_id": "FAC-APLD-POLARIS-FORGE-1", "power_rel_id": "PWR-APLD-PF1-MDU-ESA", "mw_type": "critical_it_mw", "value_mw": 400.0, "economic_as_of": "2026-05-31", "publicly_known_from": "2026-07-29", "truth_claim_id": "CLM-PWR-APLD-001", "knowledge_claim_id": "CLM-PWR-APLD-001", "evidence_class": "A"},
-        {"fact_id": "PFACT-APLD-PF1-LEASE-CRWV", "facility_id": "FAC-APLD-POLARIS-FORGE-1", "power_rel_id": "PWR-APLD-PF1-MDU-ESA", "mw_type": "leased_customer_mw", "value_mw": 400.0, "economic_as_of": "2026-05-31", "publicly_known_from": "2025-06-02", "truth_claim_id": "CLM-PWR-APLD-001", "knowledge_claim_id": "CLM-APLD-001", "evidence_class": "A"},
-        {"fact_id": "PFACT-APLD-PF1-UTIL-CAP", "facility_id": "FAC-APLD-POLARIS-FORGE-1", "power_rel_id": "PWR-APLD-PF1-MDU-ESA", "mw_type": "gross_utility_capacity_mw", "value_mw": 530.0, "economic_as_of": "2026-06-30", "publicly_known_from": "2026-08-06", "truth_claim_id": "CLM-PWR-MDU-001", "knowledge_claim_id": "CLM-PWR-MDU-001", "evidence_class": "A"},
-        {"fact_id": "PFACT-APLD-PF1-ENERGIZED", "facility_id": "FAC-APLD-POLARIS-FORGE-1", "power_rel_id": "PWR-APLD-PF1-MDU-ESA", "mw_type": "energized_mw", "value_mw": 150.0, "economic_as_of": "2026-05-31", "publicly_known_from": "2026-07-29", "truth_claim_id": "CLM-PWR-APLD-001", "knowledge_claim_id": "CLM-PWR-APLD-001", "evidence_class": "C"},
-        {"fact_id": "PFACT-APLD-PF1-PLANNED", "facility_id": "FAC-APLD-POLARIS-FORGE-1", "power_rel_id": "PWR-APLD-PF1-MDU-ESA", "mw_type": "planned_mw", "value_mw": 250.0, "economic_as_of": "2026-05-31", "publicly_known_from": "2026-07-29", "truth_claim_id": "CLM-PWR-APLD-001", "knowledge_claim_id": "CLM-PWR-APLD-001", "evidence_class": "C"},
+        {"fact_id": "PFACT-APLD-PF1-LEASE-CRWV", "facility_id": "FAC-APLD-POLARIS-FORGE-1", "power_rel_id": "PWR-APLD-PF1-MDU-ESA", "mw_type": "leased_customer_mw", "value_mw": 400.0, "economic_as_of": "2026-05-31", "publicly_known_from": "2025-06-02", "truth_claim_id": "CLM-PWR-APLD-001", "knowledge_claim_id": "CLM-APLD-009", "evidence_class": "A"},
+        {"fact_id": "PFACT-APLD-PF1-ESA-INC", "facility_id": "FAC-APLD-POLARIS-FORGE-1", "power_rel_id": "PWR-APLD-PF1-MDU-ESA", "mw_type": "contracted_service_mw", "value_mw": 350.0, "economic_as_of": "2026-06-30", "publicly_known_from": "2026-08-06", "truth_claim_id": "CLM-PWR-MDU-001", "knowledge_claim_id": "CLM-PWR-MDU-001", "evidence_class": "A"},
+        {"fact_id": "PFACT-APLD-PF1-ENERGIZED", "facility_id": "FAC-APLD-POLARIS-FORGE-1", "power_rel_id": "PWR-APLD-PF1-MDU-ESA", "mw_type": "energized_mw", "value_mw": 60.0, "economic_as_of": "2026-06-30", "publicly_known_from": "2026-08-06", "truth_claim_id": "CLM-PWR-MDU-001", "knowledge_claim_id": "CLM-PWR-MDU-001", "evidence_class": "A"},
+        {"fact_id": "PFACT-APLD-PF1-PLANNED", "facility_id": "FAC-APLD-POLARIS-FORGE-1", "power_rel_id": "PWR-APLD-PF1-MDU-ESA", "mw_type": "planned_mw", "value_mw": 290.0, "economic_as_of": "2026-06-30", "publicly_known_from": "2026-08-06", "truth_claim_id": "CLM-PWR-MDU-001", "knowledge_claim_id": "CLM-PWR-MDU-001", "evidence_class": "B"},
 
-        # CORZ Denton
-        {"fact_id": "PFACT-CORZ-DENTON-UTIL-CAP", "facility_id": "FAC-CORZ-DENTON", "power_rel_id": "PWR-CORZ-DENTON-DME", "mw_type": "gross_utility_capacity_mw", "value_mw": 394.0, "economic_as_of": "2025-12-31", "publicly_known_from": "2026-02-27", "truth_claim_id": "CLM-PWR-CORZ-001", "knowledge_claim_id": "CLM-PWR-CORZ-001", "evidence_class": "A"},
+        # CORZ Denton (394 MW)
+        {"fact_id": "PFACT-CORZ-DENTON-UTIL-CAP", "facility_id": "FAC-CORZ-DENTON", "power_rel_id": "PWR-CORZ-DENTON-DME", "mw_type": "gross_utility_capacity_mw", "value_mw": 394.0, "economic_as_of": "2025-12-31", "publicly_known_from": "2026-03-02", "truth_claim_id": "CLM-PWR-CORZ-001", "knowledge_claim_id": "CLM-PWR-CORZ-001", "evidence_class": "A"},
         {"fact_id": "PFACT-CORZ-DENTON-LEASE-CRWV", "facility_id": "FAC-CORZ-DENTON", "power_rel_id": "PWR-CORZ-DENTON-DME", "mw_type": "leased_customer_mw", "value_mw": 270.0, "economic_as_of": "2025-02-27", "publicly_known_from": "2025-02-27", "truth_claim_id": "CLM-CORZ-006", "knowledge_claim_id": "CLM-CORZ-006", "evidence_class": "A"},
-        {"fact_id": "PFACT-CORZ-DENTON-ENERGIZED", "facility_id": "FAC-CORZ-DENTON", "power_rel_id": "PWR-CORZ-DENTON-DME", "mw_type": "energized_mw", "value_mw": 100.0, "economic_as_of": "2025-12-31", "publicly_known_from": "2026-02-27", "truth_claim_id": "CLM-PWR-CORZ-001", "knowledge_claim_id": "CLM-PWR-CORZ-001", "evidence_class": "C"},
+        {"fact_id": "PFACT-CORZ-DENTON-ENERGIZED", "facility_id": "FAC-CORZ-DENTON", "power_rel_id": "PWR-CORZ-DENTON-DME", "mw_type": "energized_mw", "value_mw": 100.0, "economic_as_of": "2025-12-31", "publicly_known_from": "2026-03-02", "truth_claim_id": "CLM-PWR-CORZ-001", "knowledge_claim_id": "CLM-PWR-CORZ-001", "evidence_class": "C"},
 
-        # CORZ Dalton
-        {"fact_id": "PFACT-CORZ-DALTON-UTIL-CAP", "facility_id": "FAC-CORZ-DALTON", "power_rel_id": "PWR-CORZ-DALTON-DALTON", "mw_type": "gross_utility_capacity_mw", "value_mw": 160.0, "economic_as_of": "2025-12-31", "publicly_known_from": "2026-02-27", "truth_claim_id": "CLM-PWR-CORZ-001", "knowledge_claim_id": "CLM-PWR-CORZ-001", "evidence_class": "A"},
+        # CORZ Dalton (195 MW)
+        {"fact_id": "PFACT-CORZ-DALTON-UTIL-CAP", "facility_id": "FAC-CORZ-DALTON", "power_rel_id": "PWR-CORZ-DALTON-DALTON", "mw_type": "gross_utility_capacity_mw", "value_mw": 195.0, "economic_as_of": "2025-12-31", "publicly_known_from": "2026-03-02", "truth_claim_id": "CLM-PWR-CORZ-001", "knowledge_claim_id": "CLM-PWR-CORZ-001", "evidence_class": "A"},
         {"fact_id": "PFACT-CORZ-DALTON-LEASE-CRWV", "facility_id": "FAC-CORZ-DALTON", "power_rel_id": "PWR-CORZ-DALTON-DALTON", "mw_type": "leased_customer_mw", "value_mw": 112.0, "economic_as_of": "2024-08-06", "publicly_known_from": "2024-08-06", "truth_claim_id": "CLM-CORZ-004", "knowledge_claim_id": "CLM-CORZ-004", "evidence_class": "A"},
 
-        # CORZ Muskogee
-        {"fact_id": "PFACT-CORZ-MUSKOGEE-UTIL-CAP", "facility_id": "FAC-CORZ-MUSKOGEE", "power_rel_id": "PWR-CORZ-MUSKOGEE-OGE", "mw_type": "gross_utility_capacity_mw", "value_mw": 150.0, "economic_as_of": "2025-12-31", "publicly_known_from": "2026-02-27", "truth_claim_id": "CLM-PWR-CORZ-001", "knowledge_claim_id": "CLM-PWR-CORZ-001", "evidence_class": "A"},
-        {"fact_id": "PFACT-CORZ-MUSKOGEE-LEASE-CRWV", "facility_id": "FAC-CORZ-MUSKOGEE", "power_rel_id": "PWR-CORZ-MUSKOGEE-OGE", "mw_type": "leased_customer_mw", "value_mw": 118.0, "economic_as_of": "2024-10-23", "publicly_known_from": "2024-10-23", "truth_claim_id": "CLM-CORZ-005", "knowledge_claim_id": "CLM-CORZ-005", "evidence_class": "A"},
+        # CORZ Muskogee (100 MW)
+        {"fact_id": "PFACT-CORZ-MUSKOGEE-UTIL-CAP", "facility_id": "FAC-CORZ-MUSKOGEE", "power_rel_id": "PWR-CORZ-MUSKOGEE-OGE", "mw_type": "gross_utility_capacity_mw", "value_mw": 100.0, "economic_as_of": "2025-12-31", "publicly_known_from": "2026-03-02", "truth_claim_id": "CLM-PWR-CORZ-001", "knowledge_claim_id": "CLM-PWR-CORZ-001", "evidence_class": "A"},
+        {"fact_id": "PFACT-CORZ-MUSKOGEE-LEASE-CRWV", "facility_id": "FAC-CORZ-MUSKOGEE", "power_rel_id": "PWR-CORZ-MUSKOGEE-OGE", "mw_type": "leased_customer_mw", "value_mw": 100.0, "economic_as_of": "2024-10-23", "publicly_known_from": "2024-10-23", "truth_claim_id": "CLM-CORZ-005", "knowledge_claim_id": "CLM-CORZ-005", "evidence_class": "A"},
 
-        # CORZ Marble
-        {"fact_id": "PFACT-CORZ-MARBLE-UTIL-CAP", "facility_id": "FAC-CORZ-MARBLE", "power_rel_id": "PWR-CORZ-MARBLE-DUKE", "mw_type": "gross_utility_capacity_mw", "value_mw": 100.0, "economic_as_of": "2025-12-31", "publicly_known_from": "2026-02-27", "truth_claim_id": "CLM-PWR-CORZ-001", "knowledge_claim_id": "CLM-PWR-CORZ-001", "evidence_class": "A"},
+        # CORZ Marble (117 MW total = Murphy 35 MW + Duke 82 MW)
+        {"fact_id": "PFACT-CORZ-MARBLE-MURPHY-CAP", "facility_id": "FAC-CORZ-MARBLE", "power_rel_id": "PWR-CORZ-MARBLE-MURPHY", "mw_type": "gross_utility_capacity_mw", "value_mw": 35.0, "economic_as_of": "2025-12-31", "publicly_known_from": "2026-03-02", "truth_claim_id": "CLM-PWR-CORZ-001", "knowledge_claim_id": "CLM-PWR-CORZ-001", "evidence_class": "A"},
+        {"fact_id": "PFACT-CORZ-MARBLE-DUKE-CAP", "facility_id": "FAC-CORZ-MARBLE", "power_rel_id": "PWR-CORZ-MARBLE-DUKE", "mw_type": "gross_utility_capacity_mw", "value_mw": 82.0, "economic_as_of": "2025-12-31", "publicly_known_from": "2026-03-02", "truth_claim_id": "CLM-PWR-CORZ-001", "knowledge_claim_id": "CLM-PWR-CORZ-001", "evidence_class": "A"},
         {"fact_id": "PFACT-CORZ-MARBLE-LEASE-CRWV", "facility_id": "FAC-CORZ-MARBLE", "power_rel_id": "PWR-CORZ-MARBLE-DUKE", "mw_type": "leased_customer_mw", "value_mw": 50.0, "economic_as_of": "2024-06-04", "publicly_known_from": "2024-06-04", "truth_claim_id": "CLM-PWR-CORZ-001", "knowledge_claim_id": "CLM-CORZ-002", "evidence_class": "A"},
 
-        # CORZ Austin
-        {"fact_id": "PFACT-CORZ-AUSTIN-UTIL-CAP", "facility_id": "FAC-CORZ-AUSTIN", "power_rel_id": "PWR-CORZ-AUSTIN-AUSTIN", "mw_type": "gross_utility_capacity_mw", "value_mw": 75.0, "economic_as_of": "2025-12-31", "publicly_known_from": "2026-02-27", "truth_claim_id": "CLM-PWR-CORZ-001", "knowledge_claim_id": "CLM-PWR-CORZ-001", "evidence_class": "A"},
-        {"fact_id": "PFACT-CORZ-AUSTIN-LEASE-CRWV", "facility_id": "FAC-CORZ-AUSTIN", "power_rel_id": "PWR-CORZ-AUSTIN-AUSTIN", "mw_type": "leased_customer_mw", "value_mw": 40.0, "economic_as_of": "2024-06-04", "publicly_known_from": "2024-06-04", "truth_claim_id": "CLM-PWR-CORZ-001", "knowledge_claim_id": "CLM-CORZ-002", "evidence_class": "A"},
+        # CORZ Austin (20 MW)
+        {"fact_id": "PFACT-CORZ-AUSTIN-UTIL-CAP", "facility_id": "FAC-CORZ-AUSTIN", "power_rel_id": "PWR-CORZ-AUSTIN-AUSTIN", "mw_type": "gross_utility_capacity_mw", "value_mw": 20.0, "economic_as_of": "2025-12-31", "publicly_known_from": "2026-03-02", "truth_claim_id": "CLM-PWR-CORZ-001", "knowledge_claim_id": "CLM-PWR-CORZ-001", "evidence_class": "A"},
+        {"fact_id": "PFACT-CORZ-AUSTIN-LEASE-CRWV", "facility_id": "FAC-CORZ-AUSTIN", "power_rel_id": "PWR-CORZ-AUSTIN-AUSTIN", "mw_type": "leased_customer_mw", "value_mw": 20.0, "economic_as_of": "2024-06-04", "publicly_known_from": "2024-06-04", "truth_claim_id": "CLM-PWR-CORZ-001", "knowledge_claim_id": "CLM-CORZ-002", "evidence_class": "A"},
 
-        # WULF Lake Mariner
-        {"fact_id": "PFACT-WULF-LM-CONTRACTED", "facility_id": "FAC-WULF-LAKE-MARINER", "power_rel_id": "PWR-WULF-LM-NYPA", "mw_type": "contracted_service_mw", "value_mw": 90.0, "economic_as_of": "2026-06-30", "publicly_known_from": "2026-08-11", "truth_claim_id": "CLM-PWR-WULF-001", "knowledge_claim_id": "CLM-PWR-WULF-001", "evidence_class": "A"},
-        {"fact_id": "PFACT-WULF-LM-UTIL-CAP", "facility_id": "FAC-WULF-LAKE-MARINER", "power_rel_id": "PWR-WULF-LM-NYPA", "mw_type": "gross_utility_capacity_mw", "value_mw": 500.0, "economic_as_of": "2026-06-30", "publicly_known_from": "2026-08-11", "truth_claim_id": "CLM-PWR-WULF-001", "knowledge_claim_id": "CLM-PWR-WULF-001", "evidence_class": "A"},
-        {"fact_id": "PFACT-WULF-LM-ENERGIZED", "facility_id": "FAC-WULF-LAKE-MARINER", "power_rel_id": "PWR-WULF-LM-NYPA", "mw_type": "energized_mw", "value_mw": 245.0, "economic_as_of": "2026-06-30", "publicly_known_from": "2026-08-11", "truth_claim_id": "CLM-PWR-WULF-001", "knowledge_claim_id": "CLM-PWR-WULF-001", "evidence_class": "B"},
+        # WULF Lake Mariner (90 MW NYPA allocation, 226 MW energized, 500 MW planned envelope)
+        {"fact_id": "PFACT-WULF-LM-CONTRACTED", "facility_id": "FAC-WULF-LAKE-MARINER", "power_rel_id": "PWR-WULF-LM-NYPA", "mw_type": "contracted_service_mw", "value_mw": 90.0, "economic_as_of": "2026-06-30", "publicly_known_from": "2026-08-05", "truth_claim_id": "CLM-PWR-WULF-001", "knowledge_claim_id": "CLM-PWR-WULF-001", "evidence_class": "A"},
+        {"fact_id": "PFACT-WULF-LM-ENERGIZED", "facility_id": "FAC-WULF-LAKE-MARINER", "power_rel_id": "PWR-WULF-LM-NYPA", "mw_type": "energized_mw", "value_mw": 226.0, "economic_as_of": "2026-06-30", "publicly_known_from": "2026-08-05", "truth_claim_id": "CLM-PWR-WULF-001", "knowledge_claim_id": "CLM-PWR-WULF-001", "evidence_class": "A"},
+        {"fact_id": "PFACT-WULF-LM-PLANNED", "facility_id": "FAC-WULF-LAKE-MARINER", "power_rel_id": "PWR-WULF-LM-NYPA", "mw_type": "planned_mw", "value_mw": 500.0, "economic_as_of": "2026-06-30", "publicly_known_from": "2026-08-05", "truth_claim_id": "CLM-PWR-WULF-001", "knowledge_claim_id": "CLM-PWR-WULF-001", "evidence_class": "B"},
 
-        # IREN Childress
+        # IREN Childress (750 MW grid connection, 650 MW operating capacity)
         {"fact_id": "PFACT-IREN-CHIL-CONTRACTED", "facility_id": "FAC-IREN-CHILDRESS", "power_rel_id": "PWR-IREN-CHIL-ERCOT", "mw_type": "contracted_service_mw", "value_mw": 750.0, "economic_as_of": "2025-06-30", "publicly_known_from": "2025-08-28", "truth_claim_id": "CLM-PWR-IREN-001", "knowledge_claim_id": "CLM-PWR-IREN-001", "evidence_class": "A"},
-        {"fact_id": "PFACT-IREN-CHIL-ENERGIZED", "facility_id": "FAC-IREN-CHILDRESS", "power_rel_id": "PWR-IREN-CHIL-ERCOT", "mw_type": "energized_mw", "value_mw": 350.0, "economic_as_of": "2025-06-30", "publicly_known_from": "2025-08-28", "truth_claim_id": "CLM-PWR-IREN-001", "knowledge_claim_id": "CLM-PWR-IREN-001", "evidence_class": "B"},
+        {"fact_id": "PFACT-IREN-CHIL-ENERGIZED", "facility_id": "FAC-IREN-CHILDRESS", "power_rel_id": "PWR-IREN-CHIL-ERCOT", "mw_type": "energized_mw", "value_mw": 650.0, "economic_as_of": "2025-06-30", "publicly_known_from": "2025-08-28", "truth_claim_id": "CLM-PWR-IREN-001", "knowledge_claim_id": "CLM-PWR-IREN-001", "evidence_class": "A"},
 
-        # IREN Sweetwater 1
-        {"fact_id": "PFACT-IREN-SW1-PLANNED", "facility_id": "FAC-IREN-SWEETWATER-1", "power_rel_id": "PWR-IREN-SW1-ERCOT", "mw_type": "planned_mw", "value_mw": 800.0, "economic_as_of": "2025-06-30", "publicly_known_from": "2025-08-28", "truth_claim_id": "CLM-PWR-IREN-001", "knowledge_claim_id": "CLM-PWR-IREN-001", "evidence_class": "B"},
-        {"fact_id": "PFACT-IREN-SW1-INTERCONNECT", "facility_id": "FAC-IREN-SWEETWATER-1", "power_rel_id": "PWR-IREN-SW1-ERCOT", "mw_type": "interconnection_request_mw", "value_mw": 800.0, "economic_as_of": "2025-06-30", "publicly_known_from": "2025-08-28", "truth_claim_id": "CLM-PWR-IREN-001", "knowledge_claim_id": "CLM-PWR-IREN-001", "evidence_class": "B"},
+        # IREN Sweetwater 1 (1,400 MW development)
+        {"fact_id": "PFACT-IREN-SW1-PLANNED", "facility_id": "FAC-IREN-SWEETWATER-1", "power_rel_id": "PWR-IREN-SW1-ERCOT", "mw_type": "planned_mw", "value_mw": 1400.0, "economic_as_of": "2025-06-30", "publicly_known_from": "2025-08-28", "truth_claim_id": "CLM-PWR-IREN-001", "knowledge_claim_id": "CLM-PWR-IREN-001", "evidence_class": "A"},
+        {"fact_id": "PFACT-IREN-SW1-INTERCONNECT", "facility_id": "FAC-IREN-SWEETWATER-1", "power_rel_id": "PWR-IREN-SW1-ERCOT", "mw_type": "interconnection_request_mw", "value_mw": 1400.0, "economic_as_of": "2025-06-30", "publicly_known_from": "2025-08-28", "truth_claim_id": "CLM-PWR-IREN-001", "knowledge_claim_id": "CLM-PWR-IREN-001", "evidence_class": "A"},
 
-        # IREN Sweetwater 2
+        # IREN Sweetwater 2 (600 MW executed connection)
         {"fact_id": "PFACT-IREN-SW2-CONTRACTED", "facility_id": "FAC-IREN-SWEETWATER-2", "power_rel_id": "PWR-IREN-SW2-AEP-TX", "mw_type": "contracted_service_mw", "value_mw": 600.0, "economic_as_of": "2025-06-30", "publicly_known_from": "2025-08-28", "truth_claim_id": "CLM-PWR-IREN-001", "knowledge_claim_id": "CLM-PWR-IREN-001", "evidence_class": "A"},
         {"fact_id": "PFACT-IREN-SW2-INTERCONNECT", "facility_id": "FAC-IREN-SWEETWATER-2", "power_rel_id": "PWR-IREN-SW2-AEP-TX", "mw_type": "interconnection_request_mw", "value_mw": 600.0, "economic_as_of": "2025-06-30", "publicly_known_from": "2025-08-28", "truth_claim_id": "CLM-PWR-IREN-001", "knowledge_claim_id": "CLM-PWR-IREN-001", "evidence_class": "A"},
 
-        # NBIS Mäntsälä
-        {"fact_id": "PFACT-NBIS-MANTSALA-ENERGIZED", "facility_id": "FAC-NBIS-MANTSALA", "power_rel_id": "PWR-NBIS-MANTSALA-NIVOS", "mw_type": "energized_mw", "value_mw": 75.0, "economic_as_of": "2025-12-31", "publicly_known_from": "2026-04-28", "truth_claim_id": "CLM-PWR-NBIS-001", "knowledge_claim_id": "CLM-PWR-NBIS-001", "evidence_class": "A"},
-        {"fact_id": "PFACT-NBIS-MANTSALA-CRIT-IT", "facility_id": "FAC-NBIS-MANTSALA", "power_rel_id": "PWR-NBIS-MANTSALA-NIVOS", "mw_type": "critical_it_mw", "value_mw": 75.0, "economic_as_of": "2025-12-31", "publicly_known_from": "2026-04-28", "truth_claim_id": "CLM-PWR-NBIS-001", "knowledge_claim_id": "CLM-PWR-NBIS-001", "evidence_class": "A"},
+        # NBIS Mäntsälä (75 MW)
+        {"fact_id": "PFACT-NBIS-MANTSALA-ENERGIZED", "facility_id": "FAC-NBIS-MANTSALA", "power_rel_id": "PWR-NBIS-MANTSALA-NIVOS", "mw_type": "energized_mw", "value_mw": 75.0, "economic_as_of": "2025-12-31", "publicly_known_from": "2026-03-31", "truth_claim_id": "CLM-PWR-NBIS-002", "knowledge_claim_id": "CLM-PWR-NBIS-002", "evidence_class": "A"},
+        {"fact_id": "PFACT-NBIS-MANTSALA-CRIT-IT", "facility_id": "FAC-NBIS-MANTSALA", "power_rel_id": "PWR-NBIS-MANTSALA-NIVOS", "mw_type": "critical_it_mw", "value_mw": 75.0, "economic_as_of": "2025-12-31", "publicly_known_from": "2026-03-31", "truth_claim_id": "CLM-PWR-NBIS-002", "knowledge_claim_id": "CLM-PWR-NBIS-002", "evidence_class": "A"},
 
-        # NBIS Lappeenranta
-        {"fact_id": "PFACT-NBIS-LAPPEENRANTA-PLANNED", "facility_id": "FAC-NBIS-LAPPEENRANTA", "power_rel_id": "PWR-NBIS-LAPPEENRANTA-PENDING", "mw_type": "planned_mw", "value_mw": 310.0, "economic_as_of": "2026-03-31", "publicly_known_from": "2026-03-31", "truth_claim_id": "CLM-PWR-NBIS-001", "knowledge_claim_id": "CLM-PWR-NBIS-001", "evidence_class": "B"}
+        # NBIS Lappeenranta (310 MW planned)
+        {"fact_id": "PFACT-NBIS-LAPPEENRANTA-PLANNED", "facility_id": "FAC-NBIS-LAPPEENRANTA", "power_rel_id": "PWR-NBIS-LAPPEENRANTA-PENDING", "mw_type": "planned_mw", "value_mw": 310.0, "economic_as_of": "2026-03-31", "publicly_known_from": "2026-04-30", "truth_claim_id": "CLM-PWR-NBIS-001", "knowledge_claim_id": "CLM-PWR-NBIS-001", "evidence_class": "B"}
     ]
     df = pd.DataFrame(facts)
     df.to_parquet(PROCESSED_DIR / "power_facts.parquet", index=False)
@@ -538,13 +594,20 @@ def build_power_facts() -> pd.DataFrame:
 
 def build_power_terms() -> pd.DataFrame:
     terms = [
-        {"term_id": "PTERM-APLD-PF1-EXPANSION", "power_rel_id": "PWR-APLD-PF1-MDU-ESA", "attribute": "expansion_approval_mw", "value": "350.0", "claim_id": "CLM-PWR-MDU-001", "source_locator": "Item 2. MD&A", "evidence_class": "A"},
-        {"term_id": "PTERM-APLD-PF1-TOTAL-SRV", "power_rel_id": "PWR-APLD-PF1-MDU-ESA", "attribute": "total_approved_service_mw", "value": "530.0", "claim_id": "CLM-PWR-MDU-001", "source_locator": "Item 2. MD&A", "evidence_class": "A"},
-        {"term_id": "PTERM-CORZ-DME-ERCOT-LOAD", "power_rel_id": "PWR-CORZ-DENTON-DME", "attribute": "regulatory_regime", "value": "ERCOT Large Flexible Load", "claim_id": "CLM-PWR-CORZ-002", "source_locator": "Item 8.01", "evidence_class": "A"},
-        {"term_id": "PTERM-CORZ-DME-CAP", "power_rel_id": "PWR-CORZ-DENTON-DME", "attribute": "approved_capacity_mw", "value": "394.0", "claim_id": "CLM-PWR-CORZ-001", "source_locator": "Item 2. Properties", "evidence_class": "A"},
+        {"term_id": "PTERM-APLD-PF1-ESA-INC", "power_rel_id": "PWR-APLD-PF1-MDU-ESA", "attribute": "approved_service_capacity_mw", "value": "350.0", "claim_id": "CLM-PWR-MDU-001", "source_locator": "Item 2. MD&A", "evidence_class": "A"},
+        {"term_id": "PTERM-CORZ-DME-CAP", "power_rel_id": "PWR-CORZ-DENTON-DME", "attribute": "gross_utility_capacity_mw", "value": "394.0", "claim_id": "CLM-PWR-CORZ-001", "source_locator": "Item 2. Properties Table", "evidence_class": "A"},
+        {"term_id": "PTERM-CORZ-DALTON-CAP", "power_rel_id": "PWR-CORZ-DALTON-DALTON", "attribute": "gross_utility_capacity_mw", "value": "195.0", "claim_id": "CLM-PWR-CORZ-001", "source_locator": "Item 2. Properties Table", "evidence_class": "A"},
+        {"term_id": "PTERM-CORZ-OGE-CAP", "power_rel_id": "PWR-CORZ-MUSKOGEE-OGE", "attribute": "gross_utility_capacity_mw", "value": "100.0", "claim_id": "CLM-PWR-CORZ-001", "source_locator": "Item 2. Properties Table", "evidence_class": "A"},
+        {"term_id": "PTERM-CORZ-MURPHY-CAP", "power_rel_id": "PWR-CORZ-MARBLE-MURPHY", "attribute": "gross_utility_capacity_mw", "value": "35.0", "claim_id": "CLM-PWR-CORZ-001", "source_locator": "Item 2. Properties Table", "evidence_class": "A"},
+        {"term_id": "PTERM-CORZ-DUKE-CAP", "power_rel_id": "PWR-CORZ-MARBLE-DUKE", "attribute": "gross_utility_capacity_mw", "value": "82.0", "claim_id": "CLM-PWR-CORZ-001", "source_locator": "Item 2. Properties Table", "evidence_class": "A"},
+        {"term_id": "PTERM-CORZ-AUSTIN-CAP", "power_rel_id": "PWR-CORZ-AUSTIN-AUSTIN", "attribute": "gross_utility_capacity_mw", "value": "20.0", "claim_id": "CLM-PWR-CORZ-001", "source_locator": "Item 2. Properties Table", "evidence_class": "A"},
         {"term_id": "PTERM-WULF-NYPA-ALLOC", "power_rel_id": "PWR-WULF-LM-NYPA", "attribute": "allocated_hydro_power_mw", "value": "90.0", "claim_id": "CLM-PWR-WULF-001", "source_locator": "Note 11", "evidence_class": "A"},
-        {"term_id": "PTERM-IREN-SW2-AEP-AGMT", "power_rel_id": "PWR-IREN-SW2-AEP-TX", "attribute": "grid_connection_capacity_mw", "value": "600.0", "claim_id": "CLM-PWR-IREN-001", "source_locator": "Item 1. Business", "evidence_class": "A"},
-        {"term_id": "PTERM-IREN-CHIL-TOTAL", "power_rel_id": "PWR-IREN-CHIL-ERCOT", "attribute": "total_site_capacity_mw", "value": "750.0", "claim_id": "CLM-PWR-IREN-001", "source_locator": "Item 1. Business", "evidence_class": "A"}
+        {"term_id": "PTERM-WULF-LM-ENERGIZED", "power_rel_id": "PWR-WULF-LM-NYPA", "attribute": "total_energized_capacity_mw", "value": "226.0", "claim_id": "CLM-PWR-WULF-001", "source_locator": "MD&A", "evidence_class": "A"},
+        {"term_id": "PTERM-IREN-CHIL-TOTAL", "power_rel_id": "PWR-IREN-CHIL-ERCOT", "attribute": "grid_connection_capacity_mw", "value": "750.0", "claim_id": "CLM-PWR-IREN-001", "source_locator": "Item 1. Business", "evidence_class": "A"},
+        {"term_id": "PTERM-IREN-CHIL-OPERATING", "power_rel_id": "PWR-IREN-CHIL-ERCOT", "attribute": "operating_datacenter_capacity_mw", "value": "650.0", "claim_id": "CLM-PWR-IREN-001", "source_locator": "Item 1. Business", "evidence_class": "A"},
+        {"term_id": "PTERM-IREN-SW1-TOTAL", "power_rel_id": "PWR-IREN-SW1-ERCOT", "attribute": "planned_development_capacity_mw", "value": "1400.0", "claim_id": "CLM-PWR-IREN-001", "source_locator": "Item 1. Business", "evidence_class": "A"},
+        {"term_id": "PTERM-IREN-SW2-AEP", "power_rel_id": "PWR-IREN-SW2-AEP-TX", "attribute": "grid_connection_capacity_mw", "value": "600.0", "claim_id": "CLM-PWR-IREN-001", "source_locator": "Item 1. Business", "evidence_class": "A"},
+        {"term_id": "PTERM-NBIS-MANTSALA-NIVOS", "power_rel_id": "PWR-NBIS-MANTSALA-NIVOS", "attribute": "contracted_electricity_connection_mw", "value": "75.0", "claim_id": "CLM-PWR-NBIS-002", "source_locator": "Press Release", "evidence_class": "A"}
     ]
     df = pd.DataFrame(terms)
     df.to_parquet(PROCESSED_DIR / "power_terms.parquet", index=False)
@@ -559,7 +622,7 @@ if __name__ == "__main__":
     df_rel = build_power_relationships()
     df_fact = build_power_facts()
     df_trm = build_power_terms()
-    print("=== Power Backplane Dataset Build Summary (ADR-020) ===")
+    print("=== Power Backplane Dataset Build Summary (ADR-020.1 Hardened) ===")
     print(f"Power Evidence Claims: {len(df_clm)} rows")
     print(f"Physical Facilities: {len(df_fac)} rows")
     print(f"Power Relationships: {len(df_rel)} rows")

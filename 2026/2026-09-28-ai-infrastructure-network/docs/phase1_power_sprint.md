@@ -1,20 +1,20 @@
-# Phase 1 Power Backplane & Physical Dependency Report (ADR-020)
+# Phase 1 Power Backplane & Physical Dependency Report (ADR-020.1 Hardened)
 
 **Date:** September 30, 2026  
-**Decision Reference:** ADR-020 (`docs/decisions.md`)  
-**Dataset State:** 61 registered entities, 47 decomposed financial obligations, 56 lifecycle events, 64 financial facts, 44 financial terms, 12 physical facilities, 12 power relationships, 28 typed MW power facts, 7 power terms, 54 financial claims, 7 primary power claims.  
+**Decision Reference:** ADR-020 & ADR-020.1 (`docs/decisions.md`)  
+**Dataset State:** 62 registered entities, 47 decomposed financial obligations, 56 lifecycle events, 64 financial facts, 44 financial terms, 12 physical facilities, 13 power relationships, 29 typed MW power facts, 14 power terms (100% Class A), 54 financial claims, 8 primary power claims.  
 **Baseline Certification:** Commit `35bd01e` financial baseline conserved with **0.00% data drift**.
 
 ---
 
 ## Executive Summary & Core Verdicts
 
-This report delivers the results of the **Phase 1 Power Backplane Sprint (ADR-020)**. By constructing a facility-first physical power ontology underneath the existing corporate and financial network, we executed the empirical graph join between private credit/hyperscaler capital and physical electric transmission infrastructure. 
+This report delivers the certified results of the **Phase 1 Power Backplane Sprint (ADR-020.1 Hardened)**. By constructing a literal, facility-first physical power ontology underneath the existing corporate and financial network, we executed the empirical graph join between private credit/hyperscaler capital and physical electric transmission infrastructure without synthetic topological shortcuts.
 
 ```
-                                  =================================================
-                                  AI INFRASTRUCTURE MULTI-LAYER TOPOLOGY (ADR-020)
-                                  =================================================
+                                  ========================================================
+                                  AI INFRASTRUCTURE LITERAL MULTI-LAYER TOPOLOGY (ADR-020.1)
+                                  ========================================================
 
     [ FINANCIAL LAYER ]           MSFT            NVDA            BLACKSTONE / MAGNETAR / MUFG
                                     \              /                        /
@@ -23,117 +23,113 @@ This report delivers the results of the **Phase 1 Power Backplane Sprint (ADR-02
                                   |     CoreWeave     | <----------------+
                                   +-------------------+
                                      /             \
-                   Lease (400 MW)   /               \   Colocation (590 MW)
+                   Lease (400 MW)   /               \   Colocation (590 MW Leased)
                                    v                 v
-    [ PHYSICAL FACILITY ]    Polaris Forge 1     Denton / Dalton / Muskogee / Austin / Marble
-                                (APLD)                           (CORZ)
-                                  |                                |
-                                  | Electric Service               | Interconnection / ESA
-                                  v                                v
-    [ ELECTRIC UTILITY ]         MDU                 DME / Austin Energy / Dalton / OGE / Duke
-                                  |                                |
-                                  | Wholesale Market               | Balancing / Curtailment
-                                  v                                v
-    [ TRANSMISSION GRID ]       MISO                             ERCOT <==== [STRUCTURAL JOIN] ====> AEP Texas
-                                                                   ^                                     ^
-                                                                   |                                     |
-                                                                   +----------- Childress / Sweetwater --+
-                                                                                       (IREN)
-                                                                                         |
-                                                                                         v
-                                                                               Blue Owl OBDC / PIMCO
+    [ CORPORATE OPERATOR ]       APLD               CORZ
+                                   |                 |
+                                   | (Assignment)    | (Assignment across 5 sites)
+                                   v                 v
+    [ PHYSICAL FACILITY ]   Polaris Forge 1     Denton (394 MW) / Dalton (195 MW) / Muskogee (100 MW) /
+                                (Ellendale)     Marble (117 MW) / Austin (20 MW)
+                                   |                 |
+                                   | (Facility-Util) | (Facility-Utility ESAs)
+                                   v                 v
+    [ ELECTRIC UTILITY ]          MDU           DME / Dalton Util / OG&E / Murphy & Duke / Austin Energy
+                                   |                 |
+                                   | (Utility-Grid)  | (Utility-Grid Interconnect)
+                                   v                 v
+    [ TRANSMISSION GRID ]        MISO              ERCOT <==== [STRUCTURAL POWER BRIDGE] ====> AEP Texas
+                                                     ^                                          ^
+                                                     | (Direct Transmission)                    | (Interconnect)
+                                                     |                                          |
+                                              Sweetwater 1 (1.4 GW)                     Childress (750 MW) /
+                                                                                        Sweetwater 2 (600 MW)
+                                                                                                ^
+                                                                                                | (Assignment)
+                                                                                               IREN
+                                                                                                |
+                                                                                                v
+                                                                                      Blue Owl OBDC / PIMCO
 ```
 
-### 1. The Physical Join Overcomes Financial Graph Fragmentation
+### 1. Literal Topology Overcomes Financial Graph Fragmentation
 In the pure corporate/financial graph (frozen at commit `35bd01e`), the network was fragmented into **3 isolated components**: the 14-node CoreWeave giant component, the 3-node Iris Energy credit island (`IREN <-> BLUE_OWL_OBDC / PIMCO`), and the 2-node server OEM pair (`SMCI <-> HARDWARE_SUPPLIERS`).
 
-When physical facilities and their primary-disclosed utility and grid counterparties are integrated:
+When physical facilities and their primary-disclosed utility and grid counterparties are integrated with literal multi-layer edges (`operator -> facility -> utility -> grid`):
 - **Component Count Drops from 3 to 2**: `CORZ` (Core Scientific) and `IREN` (Iris Energy) join through their common transmission grid operator, **ERCOT** (Electric Reliability Council of Texas).
-- **The Giant Component Expands from 14 to 32 Nodes**: The Texas interconnection bridges `IREN`, `BLUE_OWL_OBDC`, and `PIMCO` into direct topological continuity with the broader infrastructure network. Only the standalone server supply pair (`SMCI <-> HARDWARE_SUPPLIERS`) remains detached.
+- **The Giant Component Expands to 44 Nodes**: The Texas grid bridges `IREN`, `BLUE_OWL_OBDC`, and `PIMCO` into direct topological continuity with the broader infrastructure network. Only the standalone server supply pair (`SMCI <-> HARDWARE_SUPPLIERS`) remains detached.
+- **Literal Multi-Layer Separation Preserved**: Facilities are explicit graph nodes. Five distinct Core Scientific sites remain geographically separate instead of collapsing into a synthetic shortcut, and SERC is decoupled from operational balancing authorities.
 
-### 2. ERCOT Emerges as an Independent Structural Bridge
+### 2. ERCOT Confirmed as an Articulation Point and Top-3 Structural Hub
 `ERCOT` is not merely an operational backdrop; it is an **articulation point** and the **third most central node in the entire national network**:
-- **Betweenness Centrality:** `CRWV` (0.6610) $\to$ `CORZ` (0.5114) $\to$ **`ERCOT` (0.2055)** $\to$ `MUFG_BANK_SYN` (0.2045) $\to$ `NBIS` (0.1629) $\to$ `APLD` (0.1629).
-- **Core Scientific (`CORZ`) Surges to Hub Status:** Connecting CoreWeave's 590 MW colocation footprint to 5 municipal/investor-owned utilities (`DME`, `DALTON_UTILITIES`, `OGE`, `DUKE_ENERGY`, `AUSTIN_ENERGY`) and 3 regional grids (`ERCOT`, `SERC`, `SPP`), `CORZ` achieves a betweenness centrality of **0.5114**, rivaling CoreWeave itself.
+- **Betweenness Centrality:** `CRWV` (0.6333) $\to$ `CORZ` (0.5848) $\to$ **`ERCOT` (0.2576)** $\to$ `MUFG_BANK_SYN` (0.2242) $\to$ `NBIS` (0.1990) $\to$ `FAC-CORZ-DENTON` (0.1621) $\to$ `APLD` (0.1606).
+- **Core Scientific (`CORZ`) Surges to Hub Status:** Connecting CoreWeave's 590 MW colocation footprint to 6 municipal and investor-owned utilities across 5 distinct campuses, `CORZ` achieves a betweenness centrality of **0.5848**, trailing only CoreWeave itself.
 
 ### 3. Falsification of the "Total Dissolution" Hypothesis
 The Phase 1 Analysis Sprint demonstrated that excising CoreWeave shattered the pure financial giant component into 4 subgraphs and orphaned 6 nodes, leading to the hypothesis that the observatory was solely an artifact of CoreWeave's credit facility.
 
-**The Power Backplane falsifies this hypothesis:**
-- When `CRWV` is excised from the joint corporate-power graph, **Core Scientific does NOT become an isolated singleton**.
-- Instead, `CORZ` anchors a robust **13-node surviving component**:
-  `['AEP_TEXAS', 'AUSTIN_ENERGY', 'BLUE_OWL_OBDC', 'CORZ', 'DALTON_UTILITIES', 'DME', 'DUKE_ENERGY', 'ERCOT', 'IREN', 'OGE', 'PIMCO', 'SERC', 'SPP']`.
-- The physical grid provides an **independent macro-scaffolding**: Iris Energy, Core Scientific, their private lenders (`BLUE_OWL_OBDC`, `PIMCO`), and municipal utilities remain interconnected through the Texas transmission backplane even in the complete absence of CoreWeave.
-- Only the pure CoreWeave financial and hyperscaler satellites are orphaned: `['BLACKSTONE_MAGNETAR_SYN', 'MORGAN_STANLEY_SYN', 'MSFT', 'NVDA', 'OEM_FINANCING_PARTNERS']`.
+**The literal power backplane falsifies this hypothesis:**
+- When `CRWV` is excised from the joint corporate-power graph, **the network does NOT dissolve into disconnected pieces**.
+- Instead, `CORZ` anchors a robust **21-node surviving component**:
+  `['AEP_TEXAS', 'AUSTIN_ENERGY', 'BLUE_OWL_OBDC', 'CORZ', 'DALTON_UTILITIES', 'DME', 'DUKE_ENERGY', 'ERCOT', 'FAC-CORZ-AUSTIN', 'FAC-CORZ-DALTON', 'FAC-CORZ-DENTON', 'FAC-CORZ-MARBLE', 'FAC-CORZ-MUSKOGEE', 'FAC-IREN-CHILDRESS', 'FAC-IREN-SWEETWATER-1', 'FAC-IREN-SWEETWATER-2', 'IREN', 'MURPHY_ELECTRIC', 'OGE', 'PIMCO', 'SPP']`.
+- The physical grid provides an **independent macro-scaffolding**: Iris Energy, Core Scientific, their private lenders (`BLUE_OWL_OBDC`, `PIMCO`), and regional utilities remain interconnected through the Texas transmission backplane even in the complete absence of CoreWeave.
+- Conversely, excising **`ERCOT`** fragments the joint graph into 3 components, immediately cutting off the 7-node Texas/credit cluster (`IREN`, `AEP_TEXAS`, `BLUE_OWL_OBDC`, `PIMCO`, and 3 IREN campuses) from the broader AI ecosystem.
 
-### 4. Severe Regional Concentration (HHI = 3,591)
-Power infrastructure is geographically and jurisdictionally hyper-concentrated:
-- **ERCOT Dominance:** Accounts for **54.31% (1,819.0 MW)** of total modeled utility service capacity across Texas campuses (`CORZ` Denton/Austin, `IREN` Childress/Sweetwater 1 & 2).
-- **Herfindahl-Hirschman Index (HHI):** Total utility service capacity exhibits an HHI of **3,591.2**, and energized capacity exhibits an HHI of **3,434.0**. Under Department of Justice and economic antitrust thresholds, any HHI over 2,500 indicates an **extremely concentrated market**.
-- **Regional Silos:** Because North American interconnections (ERCOT, Eastern Interconnection, Western Interconnection) lack high-capacity inter-regional DC ties, power capacity in Texas cannot relieve shortages in MISO (North Dakota) or NYISO (Western New York).
+### 4. Grid Exposure Concentration Index (HHI-form = 5,443.8)
+Measuring regional power exposure on a strictly non-overlapping capacity basis reveals heavy jurisdictional concentration:
+- **ERCOT Dominance:** Accounts for **71.89% (3,164.0 MW)** of total modeled capacity basis across Texas campuses (`CORZ` Denton/Austin, `IREN` Childress, Sweetwater 1 & 2).
+- **Grid Exposure Concentration Index (HHI-form):** Total capacity basis exhibits an HHI-form index of **5,443.8**, and energized operating capacity exhibits an index of **5,045.7** (ERCOT 67.51%, NYISO 20.34%, Fingrid 6.75%, MISO 5.40%).
+- **Sample Characteristic, Not Systemic Antitrust:** This concentration reflects the commercial preference of modeled operators for Texas large-load interconnection speed, rather than an antitrust violation of general electricity markets.
 
-### 5. Asymmetric Reliability: 54.3% of Capacity is Curtailable
-By enforcing strictly typed MW contracts, we reveal that headline capacity is deeply stratified by firmness:
-- **Curtailable / Demand Response:** **1,819.0 MW (54.3%)**—all situated in ERCOT, subject to ERCOT Large Flexible Load curtailment procedures and 4CP demand response alerts.
-- **Firm Utility Capacity:** **1,000.0 MW (29.9%)**—predominantly SERC (`DALTON_UTILITIES`, `DUKE_ENERGY`), SPP (`OGE`), and NYPA hydro allocation.
-- **Firm with Wholesale Market Pass-Through:** **530.0 MW (15.8%)**—Polaris Forge 1 (`MDU` / `MISO`).
+### 5. Mechanism-Specific Reliability Regimes
+By replacing binary curtailability flags with five discrete operational/regulatory states, headline capacity is disaggregated by actual legal availability:
+- **Unenergized Interconnection Queue Development:** **2,310.0 MW (52.49%)**—Sweetwater 1 (1,400 MW), Sweetwater 2 (600 MW), and Lappeenranta (310 MW).
+- **Firm Industrial Service Tariffs:** **927.0 MW (21.06%)**—Polaris Forge 1 ESA (350 MW), Dalton Utilities (195 MW), Muskogee OG&E (100 MW), Marble Murphy & Duke (117 MW), NYPA hydro allocation (90 MW), and Mäntsälä Nivos (75 MW).
+- **Voluntary Price Response:** **750.0 MW (17.04%)**—IREN Childress (voluntary economic curtailment during nodal price spikes and Ancillary Services participation).
+- **Mandatory Grid Emergency Curtailment:** **414.0 MW (9.41%)**—CORZ Denton (394 MW) and Austin (20 MW) subject to ERCOT Large Flexible Load emergency curtailment alerts.
 
 ---
 
-## 1. The Facility-First Ontology & Typed MW Taxonomy
+## 1. The Facility-First Physical Ontology
 
-### Resolving the Non-Fungible Power Metric Problem
-In earlier iterations, conflating distinct engineering and regulatory power disclosures created apparent empirical contradictions:
-- Applied Digital reports **400 MW** of "critical IT load" at Polaris Forge 1 ([APLD Form 10-K](file:///data/raw/sec/APLD_submissions_0001144879.json)).
-- Montana-Dakota Utilities reports **530 MW** of approved electric service capacity (180 MW initial + 350 MW approved expansion) purchased from MISO ([MDU Form 10-Q](file:///data/raw/sec/MDU_submissions_0000067716.json)).
+### Reconstructing Authoritative Campus Footprints
 
-Under ADR-020, typing MW measurements mathematically eliminates the contradiction:
-$$\text{Gross Utility Service Capacity (530 MW)} = \text{Critical IT Load (400 MW)} + \text{Cooling / Auxiliary Power / Transformer Margins (130 MW)}$$
+Under ADR-020.1, power measurements are strictly typed and audited directly against SEC 10-K, 10-Q, and 8-K filings:
 
 ```
-                      +-------------------------------------------------------+
-                      |        MDU GROSS UTILITY CAPACITY: 530 MW             |
-                      +-------------------------------------------------------+
-                      |  CRITICAL IT COMPUTING LOAD  |   AUXILIARY / COOLING  |
-                      |          (400 MW)            |        (130 MW)        |
-                      +------------------------------+------------------------+
-                      |  Energized  |    Planned     |
-                      |   (150 MW)  |    (250 MW)    |
-                      +-------------+----------------+
+                      +-------------------------------------------------------------+
+                      |         POLARIS FORGE 1 (ELLENDALE, ND) CAPACITY            |
+                      +-------------------------------------------------------------+
+                      |  MDU Approved Incremental ESA: 350 MW (60 MW Online)        |
+                      +-------------------------------------------------------------+
+                      |  APLD Critical IT Computing Load: 400 MW Leased to CRWV     |
+                      +-------------------------------------------------------------+
+                      |  Legacy Ellendale Hosting Data Center (2023): 180 MW        |
+                      +-------------------------------------------------------------+
 ```
-
-### Typed MW Controlled Vocabulary
-Every factual observation in `power_facts.parquet` is strictly typed:
-1. `critical_it_mw`: Actual compute power delivered to server racks inside data halls.
-2. `leased_customer_mw`: MW capacity contracted/leased to specific AI tenants.
-3. `gross_utility_capacity_mw`: Substation/transformer nameplate service delivered by the utility.
-4. `contracted_service_mw`: Contractually agreed power delivery under an executed Electric Service Agreement (ESA) or Power Purchase Agreement (PPA).
-5. `energized_mw`: Currently energized and drawing power.
-6. `planned_mw`: Permitted or engineered expansion load.
-7. `interconnection_request_mw`: MW entered in formal RTO/ISO interconnection study queues.
 
 ### Roster of Modeled Facilities (12 Campuses)
 
-| Facility ID | Campus Name | Operator | Anchor Tenant | City / State | Grid Region | Contracted / Utility MW | Primary Utility Counterparty |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `FAC-APLD-POLARIS-FORGE-1` | Polaris Forge 1 | `APLD` | `CRWV` | Ellendale, ND | `MISO` | 530.0 MW gross (400 IT) | Montana-Dakota Utilities (`MDU`) |
-| `FAC-CORZ-DENTON` | Denton Data Center | `CORZ` | `CRWV` | Denton, TX | `ERCOT` | 394.0 MW gross | Denton Municipal Electric (`DME`) |
-| `FAC-CORZ-DALTON` | Dalton Data Center | `CORZ` | `CRWV` | Dalton, GA | `SERC` | 160.0 MW gross | Dalton Utilities (`DALTON_UTILITIES`) |
-| `FAC-CORZ-MUSKOGEE` | Muskogee Data Center | `CORZ` | `CRWV` | Muskogee, OK | `SPP` | 150.0 MW gross | Oklahoma Gas & Electric (`OGE`) |
-| `FAC-CORZ-MARBLE` | Marble Data Center | `CORZ` | `CRWV` | Marble, NC | `SERC` | 100.0 MW gross | Duke Energy (`DUKE_ENERGY`) |
-| `FAC-CORZ-AUSTIN` | Austin Data Center | `CORZ` | `CRWV` | Austin, TX | `ERCOT` | 75.0 MW gross | Austin Energy (`AUSTIN_ENERGY`) |
-| `FAC-WULF-LAKE-MARINER` | Lake Mariner Campus | `WULF` | *Self-operated* | Barker, NY | `NYISO` | 500.0 MW gross (90 NYPA) | New York Power Authority (`NYPA`) |
-| `FAC-IREN-CHILDRESS` | Childress Data Center | `IREN` | *Self-operated* | Childress, TX | `ERCOT` | 750.0 MW contracted | AEP Texas (`AEP_TEXAS`) |
-| `FAC-IREN-SWEETWATER-1` | Sweetwater 1 Campus | `IREN` | *Self-operated* | Sweetwater, TX | `ERCOT` | 800.0 MW planned | *Pending / Unassigned* |
-| `FAC-IREN-SWEETWATER-2` | Sweetwater 2 Campus | `IREN` | *Self-operated* | Sweetwater, TX | `ERCOT` | 600.0 MW contracted | AEP Texas (`AEP_TEXAS`) |
-| `FAC-NBIS-MANTSALA` | Mäntsälä Supercomputer | `NBIS` | *Self-operated* | Mäntsälä, FI | `Fingrid` | 75.0 MW energized | Nivos Oy (`NIVOS`) |
-| `FAC-NBIS-LAPPEENRANTA` | Lappeenranta AI Factory | `NBIS` | *Self-operated* | Lappeenranta, FI| `Fingrid` | 310.0 MW planned | *Pending / Unassigned* |
+| Facility ID | Campus Name | Operator | Anchor Tenant | Location | Grid Region | Capacity Basis (MW) | Reliability Regime | Primary Counterparties |
+| :--- | :--- | :--- | :--- | :--- | :--- | :---: | :--- | :--- |
+| `FAC-APLD-POLARIS-FORGE-1` | Polaris Forge 1 | `APLD` | `CRWV` | Ellendale, ND | `MISO` | 350.0 | `firm_service` | Montana-Dakota Utilities (`MDU`) / MISO |
+| `FAC-CORZ-DENTON` | Denton Data Center | `CORZ` | `CRWV` | Denton, TX | `ERCOT` | 394.0 | `mandatory_grid_emergency_curtailment` | Denton Municipal Electric (`DME`) / ERCOT |
+| `FAC-CORZ-DALTON` | Dalton Data Center | `CORZ` | `CRWV` | Dalton, GA | *Non-RTO* | 195.0 | `firm_service` | Dalton Utilities (`DALTON_UTILITIES`) |
+| `FAC-CORZ-MUSKOGEE` | Muskogee Data Center | `CORZ` | `CRWV` | Muskogee, OK | `SPP` | 100.0 | `firm_service` | Oklahoma Gas & Electric (`OGE`) / SPP |
+| `FAC-CORZ-MARBLE` | Marble Data Center | `CORZ` | `CRWV` | Marble, NC | *Non-RTO* | 117.0 | `firm_service` | Murphy Electric (35 MW) & Duke Energy (82 MW) |
+| `FAC-CORZ-AUSTIN` | Austin Data Center | `CORZ` | `CRWV` | Austin, TX | `ERCOT` | 20.0 | `mandatory_grid_emergency_curtailment` | Austin Energy (`AUSTIN_ENERGY`) / ERCOT |
+| `FAC-WULF-LAKE-MARINER` | Lake Mariner Campus | `WULF` | *Self-operated* | Barker, NY | `NYISO` | 90.0 | `firm_service` | New York Power Authority (`NYPA`) / NYISO |
+| `FAC-IREN-CHILDRESS` | Childress Data Center | `IREN` | *Self-operated* | Childress, TX | `ERCOT` | 750.0 | `voluntary_price_response` | AEP Texas (`AEP_TEXAS`) / ERCOT |
+| `FAC-IREN-SWEETWATER-1` | Sweetwater 1 Campus | `IREN` | *Self-operated* | Sweetwater, TX | `ERCOT` | 1,400.0 | `interconnection_not_energized` | Direct Grid Interconnection / ERCOT |
+| `FAC-IREN-SWEETWATER-2` | Sweetwater 2 Campus | `IREN` | *Self-operated* | Sweetwater, TX | `ERCOT` | 600.0 | `interconnection_not_energized` | AEP Texas (`AEP_TEXAS`) / ERCOT |
+| `FAC-NBIS-MANTSALA` | Mäntsälä Supercomputer | `NBIS` | *Self-operated* | Mäntsälä, FI | `Fingrid` | 75.0 | `firm_service` | Nivos Oy (`NIVOS`) / Fingrid |
+| `FAC-NBIS-LAPPEENRANTA` | Lappeenranta AI Factory | `NBIS` | *Self-operated* | Lappeenranta, FI| *Non-RTO* | 310.0 | `interconnection_not_energized` | Interconnection Request Pending |
 
 ---
 
-## 2. Multi-Layer Topological Join Analysis
+## 2. Literal Multi-Layer Topological Join Analysis
 
-### Mathematical Graph Comparison
+### Comparative Topological Invariants
 
 ```mermaid
 flowchart TD
@@ -143,56 +139,49 @@ flowchart TD
         C3["Component 3 (2 nodes)<br>SMCI, HARDWARE_SUPPLIERS"]
     end
 
-    subgraph JointPhysical["Joint Financial + Physical Backplane (ADR-020)"]
-        J1["Component 1: Giant Macro-Component (32 nodes)<br>All Corporate Nodes + Utilities + RTOs (ERCOT, MISO, SERC, SPP, NYISO, Fingrid)<br>BRIDGED BY ERCOT"]
+    subgraph LiteralJointPhysical["Literal Multi-Layer Joint Network (ADR-020.1)"]
+        J1["Component 1: Giant Macro-Component (44 nodes)<br>All Corporate Nodes + Facilities + Utilities + RTOs<br>BRIDGED BY ERCOT & CORZ"]
         J2["Component 2: Server OEM Supply Island (2 nodes)<br>SMCI, HARDWARE_SUPPLIERS"]
     end
 
-    PureFinancial -->|Join Physical Power Layer| JointPhysical
+    PureFinancial -->|Literal Multi-Layer Join| LiteralJointPhysical
 ```
 
-| Topological Metric | Financial Baseline (Sep 28, 2026) | Joint Corporate-Power Network | Delta / Structural Significance |
-| :--- | :--- | :--- | :--- |
-| **Connected Entities / Nodes ($|V|$)** | 19 root entities | 34 active nodes | +15 nodes (9 utilities, 6 grid operators) |
-| **Active Undirected Edges ($|E|$)** | 20 unique pairs | 39 unique pairs | +19 physical power relationships |
-| **Multigraph Edges ($|E_{multi}|$)** | 45 legal obligations | 64 total contractual links | +19 utility & grid contracts |
-| **Connected Components** | 3 components | **2 components** | **Component 2 (IREN) collapsed into Giant Component** |
-| **Giant Component Size** | 14 nodes (73.7%) | **32 nodes (94.1%)** | Macro-network unification across power backplane |
-| **Articulation Points (Cut-Vertices)** | 6 nodes (`CRWV`, `MUFG`, `APLD`, `BONDS`, `NBIS`, `IREN`) | **9 nodes** (`CRWV`, `CORZ`, `ERCOT`, `APLD`, `WULF`, `IREN`, `NBIS`, `MUFG`, `BONDS`) | **`ERCOT` and `CORZ` become cut-vertices** |
-| **Simple Bridges** | 14 bridges | 23 bridges | Expanded tree-like physical branches |
-| **Multigraph Single Bridges** | 6 bridges | 25 bridges | Most utility contracts are single bilateral ESAs |
+| Topological Metric | Financial Baseline (Sep 28, 2026) | Literal Joint Corporate-Power Network | Delta / Structural Significance |
+| :--- | :---: | :---: | :--- |
+| **Connected Nodes ($|V|$)** | 19 root entities | **46 active nodes** | +27 nodes (12 facilities, 10 utilities, 5 grid operators) |
+| **Active Undirected Edges ($|E|$)** | 17 unique pairs | **48 unique pairs** | +31 literal layer connections |
+| **Connected Components** | 3 components | **2 components** | **Component 2 (IREN credit island) joins Giant Component** |
+| **Giant Component Size** | 14 nodes (73.7%) | **44 nodes (95.7%)** | Macro-network unification across ERCOT |
+| **Articulation Points (Cut-Vertices)** | 6 nodes | **19 nodes** | Includes `ERCOT`, `CORZ`, `CRWV`, `APLD`, `WULF`, `IREN`, `NBIS`, and facilities |
+| **Top-3 Betweenness Centrality** | CRWV, Bonds, MUFG | **CRWV (0.6333), CORZ (0.5848), ERCOT (0.2576)** | `ERCOT` and `CORZ` emerge as primary structural bridges |
 
-### Centrality Reallocation: The Rise of Infrastructure Hubs
-In the pure financial network, CoreWeave dominated all betweenness centrality measures. In the joint network, physical colocation developers and grid operators absorb substantial betweenness:
+### Centrality Distribution in the Literal Multi-Layer Graph
 
-| Rank | Entity ID | Category | Degree | Degree Centrality | Betweenness Centrality | Closeness Centrality |
-| :---: | :--- | :--- | :---: | :---: | :---: | :---: |
-| **1** | `CRWV` | Neocloud Operator | 9 | 0.2727 | **0.6610** | 0.4550 |
-| **2** | `CORZ` | Data Center Developer | 9 | 0.2727 | **0.5114** | 0.4160 |
-| **3** | `ERCOT` | Grid Operator / RTO | 5 | 0.1515 | **0.2055** | 0.3236 |
-| **4** | `MUFG_BANK_SYN` | Private Credit Syndicate | 2 | 0.0606 | **0.2045** | 0.3386 |
-| **5** | `NBIS` | Neocloud Operator | 4 | 0.1212 | **0.1629** | 0.2647 |
-| **6** | `APLD` | Data Center Developer | 5 | 0.1515 | **0.1629** | 0.3467 |
-| **7** | `INSTITUTIONAL_BONDHOLDERS`| Capital Markets | 3 | 0.0909 | **0.1591** | 0.3467 |
-| **8** | `IREN` | Data Center Developer | 4 | 0.1212 | **0.1117** | 0.2532 |
-| **9** | `WULF` | Data Center Developer | 3 | 0.0909 | **0.1098** | 0.2647 |
-| **10** | `SERC` | Grid Operator / RTO | 3 | 0.0909 | **0.0009** | 0.2972 |
-
-**Key Finding:** Core Scientific's betweenness centrality jumped to **0.5114** because it sits directly at the intersection of private credit demand (CoreWeave's 590 MW option exercise) and five regional power authorities across three independent electric grids.
+| Rank | Node Identifier | Category | Degree | Betweenness Centrality | Closeness Centrality | Structural Role |
+| :---: | :--- | :--- | :---: | :---: | :---: | :--- |
+| **1** | `CRWV` | Neocloud Operator | 9 | **0.6333** | 0.4500 | Commercial & Debt Aggregator |
+| **2** | `CORZ` | Data Center Operator | 6 | **0.5848** | 0.4412 | Multi-Site Colocation Bridge |
+| **3** | `ERCOT` | Grid Operator / RTO | 6 | **0.2576** | 0.3543 | **Physical Power Backplane Bridge** |
+| **4** | `MUFG_BANK_SYN` | Private Credit Syndicate | 2 | **0.2242** | 0.3309 | European Debt Link |
+| **5** | `NBIS` | Neocloud Operator | 4 | **0.1990** | 0.2848 | Nordic Supercomputing Operator |
+| **6** | `FAC-CORZ-DENTON` | Physical Facility | 2 | **0.1621** | 0.3600 | CORZ $\leftrightarrow$ DME Transmission Node |
+| **7** | `FAC-CORZ-AUSTIN` | Physical Facility | 2 | **0.1621** | 0.3600 | CORZ $\leftrightarrow$ Austin Energy Transmission Node |
+| **8** | `APLD` | Data Center Operator | 4 | **0.1606** | 0.3409 | Polaris Forge Developer |
+| **9** | `INSTITUTIONAL_BONDHOLDERS`| Capital Markets | 3 | **0.1576** | 0.3409 | Public Debt Counterparty |
+| **10** | `DME` | Electric Utility | 2 | **0.1379** | 0.3358 | Denton Municipal Interconnect |
 
 ---
 
-## 3. The CoreWeave Excision Falsification Experiment
-
-To test whether the modeled infrastructure network is genuinely systemic or merely a descriptive autopsy of CoreWeave, we simulated the complete removal of `CRWV` from both graphs.
+## 3. CoreWeave & Key Node Excision Analysis
 
 ```
 ========================================================================================
-                          COREWEAVE EXCISION COMPARISON
+                          COREWEAVE EXCISION EXPERIMENT (ADR-020.1)
 ========================================================================================
 
 A. PURE FINANCIAL GRAPH (WITHOUT CRWV)
-   Total Active Nodes: 12 | Components: 4 | Isolated Nodes: 6
+   Total Active Nodes: 13 | Components: 4 | Isolated Singletons: 6
    
    [Cluster 1: 4 nodes]     APLD <====> INSTITUTIONAL_BONDHOLDERS <====> WULF
                                    \
@@ -208,144 +197,139 @@ A. PURE FINANCIAL GRAPH (WITHOUT CRWV)
 
 ----------------------------------------------------------------------------------------
 
-B. JOINT CORPORATE-POWER NETWORK (WITHOUT CRWV)
-   Total Active Nodes: 28 | Components: 4 | Isolated Nodes: 5
+B. LITERAL MULTI-LAYER JOINT NETWORK (WITHOUT CRWV)
+   Total Active Nodes: 40 | Components: 4 | Isolated Singletons: 5
    
-   [Component 1: 13 NODES - TEXAS / ERCOT & SOUTHEAST HPC AXIS]
-         CORZ <===> DME, Austin Energy, Dalton, OG&E, Duke Energy, SERC, SPP
+   [Component 1: 21 NODES - TEXAS / ERCOT & SOUTHEAST POWER AXIS]
+         CORZ <===> 5 Facilities <===> DME, Austin Energy, Dalton, OG&E, Murphy & Duke
           ||
-        ERCOT <=================== [PHYSICAL POWER BRIDGE]
+        ERCOT <=================== [STRUCTURAL POWER BRIDGE]
           ||
-         IREN <===> AEP Texas
+         IREN <===> 3 Facilities <===> AEP Texas
           ||
      BLUE_OWL_OBDC & PIMCO
    
-   [Component 2: 8 NODES - NORTHERN / EASTERN PUBLIC DEBT AXIS]
-         MDU <===> MISO <===> APLD <===> Institutional Bondholders & Project Lenders
-                                                ||
-                                               WULF <===> NYPA & NYISO
+   [Component 2: 10 NODES - NORTHERN / EASTERN PUBLIC DEBT AXIS]
+         APLD <===> Polaris Forge 1 <===> MDU <===> MISO <===> Institutional Bondholders
+          ||                                                     ||
+     Project Lenders                                            WULF <===> Lake Mariner <===> NYPA / NYISO
    
-   [Component 3: 5 NODES - NORDIC AI CLUSTER]
-         META <===> NBIS <===> MUFG Bank Syn <===> Nivos <===> Fingrid
+   [Component 3: 7 NODES - NORDIC AI CLUSTER]
+         META <===> NBIS <===> 2 Facilities <===> MUFG Bank Syn <===> Nivos <===> Fingrid
    
    [Component 4: 2 NODES - SERVER OEM SUPPLY]
          SMCI <===> HARDWARE_SUPPLIERS
    
-   * ORPHANED SINGLETONS (5): MSFT, NVDA, BLACKSTONE, MORGAN_STANLEY, OEM_FINANCING
+   * ORPHANED SINGLETONS (5): MSFT, NVDA, BLACKSTONE_MAGNETAR, MORGAN_STANLEY, OEM_FINANCING
 ========================================================================================
 ```
 
-### Detailed Excision Impact Comparison
+### Detailed Excision Impact Table
 
-| Network Architecture | Active Nodes | Total Components | Largest Component | Isolated / Orphaned Nodes | Fate of Core Scientific (`CORZ`) |
-| :--- | :---: | :---: | :---: | :---: | :--- |
-| **Financial Graph Baseline** | 19 | 3 | 14 | 0 | Connected to CoreWeave |
-| **Financial Graph (No CRWV)** | 12 | 4 | 4 | 6 | **Completely Isolated Singleton** |
-| **Joint Network Baseline** | 34 | 2 | 32 | 0 | Integrated in Macro-Network |
-| **Joint Network (No CRWV)** | **28** | **4** | **13** | **5** | **Anchors 13-Node Texas HPC Component** |
-
-### Why This Falsifies the Sampling Artifact Critique
-1. In the pure credit layer, `CORZ` was merely a counterparty to CoreWeave. Removing CoreWeave severed `CORZ` completely.
-2. In the physical reality captured by ADR-020, `CORZ` is a multi-site infrastructure operator interconnected with five utilities and three balancing authorities.
-3. Because `CORZ` and `IREN` both interconnect into `ERCOT`, the Texas transmission grid creates an **autonomous physical nexus** connecting two major publicly traded AI infrastructure hosts, their regional utilities, and private credit providers (`BLUE_OWL_OBDC`, `PIMCO`).
-4. **Conclusion:** The AI infrastructure buildout possesses an authentic physical backbone independent of CoreWeave. CoreWeave serves as the primary commercial aggregator across these regions, but its collapse would leave coherent regional infrastructure clusters intact.
+| Excision Target | Graph Evaluated | Active Nodes | Total Components | Largest Component Size | Isolated / Orphaned Nodes | Structural Impact Summary |
+| :--- | :--- | :---: | :---: | :---: | :---: | :--- |
+| **Baseline** | Financial Baseline | 19 | 3 | 14 | 0 | Pure contractual network |
+| **Baseline** | Literal Joint Network | **46** | **2** | **44** | 0 | Fully unified physical backplane |
+| **Remove CRWV** | Financial Baseline | 13 | 4 | 4 | 6 | CORZ completely severed; network collapses |
+| **Remove CRWV** | Literal Joint Network | **40** | **4** | **21** | **5** | **21-node Texas/credit cluster survives intact via ERCOT** |
+| **Remove ERCOT**| Literal Joint Network | **45** | **3** | **36** | **0** | **Isolates IREN and credit syndicates (7 nodes) from main network** |
+| **Remove CORZ** | Literal Joint Network | **40** | **3** | **37** | 5 | Excises 5 Core Scientific colocation campuses |
 
 ---
 
-## 4. Regional Grid Concentration & Typed MW Breakdown
+## 4. Regional Grid Exposure & Typed MW Analysis
 
-### Grid Region x Typed MW Distribution (Megawatts)
+### Non-Overlapping Capacity Basis Distribution
 
-| Grid Balancing Authority | Gross Utility Capacity (MW) | Critical IT Load (MW) | Contracted Service (MW) | Energized Load (MW) | Leased to CoreWeave (MW) | Planned Expansion (MW) | Total Firm & Utility (MW) |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **ERCOT** (Texas) | 469.0 | 0.0 | 1,350.0 | 450.0 | 310.0 | 800.0 | **1,819.0** (54.3%) |
-| **NYISO** (New York Zone A) | 500.0 | 0.0 | 90.0 | 245.0 | 0.0 | 0.0 | **590.0** (17.6%) |
-| **MISO** (Midwest / ND) | 530.0 | 400.0 | 0.0 | 150.0 | 400.0 | 250.0 | **530.0** (15.8%) |
-| **SERC** (Southeast) | 260.0 | 0.0 | 0.0 | 0.0 | 162.0 | 0.0 | **260.0** (7.8%) |
-| **SPP** (Oklahoma) | 150.0 | 0.0 | 0.0 | 0.0 | 118.0 | 0.0 | **150.0** (4.5%) |
-| **Fingrid** (Finland) | 0.0 | 75.0 | 0.0 | 75.0 | 0.0 | 310.0 | **0.0** (0.0% US) |
-| **Total Footprint** | **1,909.0** | **475.0** | **1,440.0** | **920.0** | **990.0** | **1,360.0** | **3,349.0 MW** |
+To prevent double counting across overlapping engineering and regulatory filings, each power relationship carries exactly one mutually exclusive `capacity_basis_mw`:
 
-### Economic Concentration Metrics (HHI)
-- **Utility Service Capacity HHI:** **3,591.2**
-- **Energized Operating Capacity HHI:** **3,434.0**
-- **Planned Development Pipeline HHI:** **4,328.7**
+| Grid Region | Capacity Basis (MW) | Share (%) | Energized Operating (MW) | Energized Share (%) | Planned Expansion (MW) | Key Facilities Included |
+| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| **ERCOT** (Texas) | 3,164.0 | 71.89% | 770.0 | 67.51% | 2,000.0 | Denton (394 MW), Austin (20 MW), Childress (750 MW), Sweetwater 1 & 2 (2,000 MW) |
+| **Non-RTO / Municipal** | 622.0 | 14.13% | 0.0 | 0.00% | 310.0 | Dalton (195 MW), Marble (117 MW), Lappeenranta pending (310 MW) |
+| **MISO** (North Dakota) | 350.0 | 7.95% | 60.0 | 5.40% | 290.0 | Polaris Forge 1 incremental ESA (350 MW) |
+| **SPP** (Oklahoma) | 100.0 | 2.27% | 0.0 | 0.00% | 0.0 | Muskogee colocation campus (100 MW) |
+| **NYISO** (New York) | 90.0 | 2.04% | 226.0 | 20.34% | 500.0 | Lake Mariner NYPA allocation (90 MW) / Operating (226 MW) |
+| **Fingrid** (Finland) | 75.0 | 1.70% | 75.0 | 6.75% | 0.0 | Mäntsälä supercomputer connection (75 MW) |
+| **Total Modeled** | **4,401.0 MW** | **100.00%** | **1,111.0 MW** | **100.00%** | **2,500.0 MW** | **12 campuses across 6 jurisdictions** |
 
-Under the standard DOJ/FTC Horizontal Merger Guidelines:
-- $\text{HHI} < 1,500$: Unconcentrated Market
-- $1,500 \le \text{HHI} \le 2,500$: Moderately Concentrated Market
-- $\text{HHI} > 2,500$: **Highly Concentrated Market**
+### Concentration Metrics
 
-With an HHI exceeding 3,500 across all dimensions, the AI physical layer is **hyper-concentrated in ERCOT**. The availability of rapid large-load interconnection processes in deregulated Texas has concentrated over half of all modeled computing power into a single electric grid.
+- **Grid Exposure Concentration Index (HHI-form, Capacity Basis):** **5,443.8**
+- **Grid Exposure Concentration Index (HHI-form, Energized Load):** **5,045.7**
+
+*Note on Interpretation:* This high concentration index (5,443.8) is an empirical feature of our sample—reflecting that major AI infrastructure participants deliberately clustered in Texas for rapid interconnection queue access—not an antitrust determination regarding the broader United States electric grid.
 
 ---
 
-## 5. Contractual Power Firmness & Curtailment Protocols
+## 5. Mechanism-Specific Reliability Architecture
 
-A critical vulnerability surfaced by the physical join is that power capacity is legally and operationally asymmetric:
+Instead of treating power as a binary switch, the network models the contractual and regulatory curtailment mechanisms governing each relationship:
 
 ```
-                      +-------------------------------------------------------+
-                      |         TOTAL MODELED CAPACITY: 3,349.0 MW            |
-                      +-------------------------------------------------------+
-                      |      CURTAILABLE / DEMAND RESPONSE     |  FIRM / PASS |
-                      |                1,819.0 MW              |  1,530.0 MW  |
-                      |                 (54.3%)                |   (45.7%)    |
-                      +----------------------------------------+--------------+
+                      +-------------------------------------------------------------+
+                      |         TOTAL MODELED CAPACITY BASIS: 4,401.0 MW            |
+                      +-------------------------------------------------------------+
+                      |  UNENERGIZED DEVELOPMENT QUEUE  |  FIRM SERVICE TARIFFS     |
+                      |            2,310.0 MW           |         927.0 MW          |
+                      |             (52.5%)             |          (21.1%)          |
+                      +---------------------------------+---------------------------+
+                      |  VOLUNTARY PRICE RESPONSE       |  MANDATORY CURTAILMENT    |
+                      |            750.0 MW             |         414.0 MW          |
+                      |             (17.0%)             |          (9.4%)           |
+                      +---------------------------------+---------------------------+
 ```
 
-### Breakdown by Reliability Regime
+### Breakdown of Contractual Regimes
 
-1. **Curtailable / Demand-Response Power (1,819.0 MW, 54.3%):**
-   - **Locations:** `CORZ` Denton (394 MW), `CORZ` Austin (75 MW), `IREN` Childress (750 MW), `IREN` Sweetwater 2 (600 MW).
-   - **Contract Terms:** Governed by ERCOT Large Flexible Load protocols. Operators agree to curtail data hall consumption during Energy Emergency Alerts (EEA) and manage load to avoid Four Coincident Peak (4CP) transmission charges during summer peak hours.
-   - **Systemic Risk:** AI workloads running in these facilities are exposed to operational interruption or extreme wholesale nodal pricing during severe weather events (e.g. winter storms or heat domes).
-2. **Firm Power with Market Pass-Through (530.0 MW, 15.8%):**
-   - **Location:** `APLD` Polaris Forge 1 (Ellendale, ND).
-   - **Contract Terms:** 10-year Electric Service Agreement approved by ND PSC. Transmission is cost-of-service via Montana-Dakota Utilities; energy is purchased directly from the wholesale MISO market. Power is firm, but subject to wholesale power price volatility and MISO system-wide emergency directives.
-3. **Firm Industrial Power Allocation (1,000.0 MW, 29.9%):**
-   - **Locations:** `CORZ` Dalton (160 MW via Dalton Utilities), `CORZ` Muskogee (150 MW via OG&E / SPP), `CORZ` Marble (100 MW via Duke Energy Carolinas), `WULF` Lake Mariner (90 MW NYPA Preservation Power hydro allocation + 500 MW gross transmission interconnection).
-   - **Contract Terms:** Classical cost-of-service general industrial tariffs. Highly firm with standard utility force majeure provisions.
+1. **Unenergized Interconnection Queue Development (2,310.0 MW, 52.5%):**
+   - **Campuses:** `FAC-IREN-SWEETWATER-1` (1,400 MW), `FAC-IREN-SWEETWATER-2` (600 MW), `FAC-NBIS-LAPPEENRANTA` (310 MW).
+   - **Legal State:** Executed connection agreements or formal interconnection requests undergoing engineering review; 0 MW currently energized.
+2. **Firm Industrial Service Tariffs (927.0 MW, 21.1%):**
+   - **Campuses:** `FAC-APLD-POLARIS-FORGE-1` (350 MW via MDU), `FAC-CORZ-DALTON` (195 MW via Dalton Utilities), `FAC-CORZ-MUSKOGEE` (100 MW via OG&E), `FAC-CORZ-MARBLE` (117 MW via Murphy & Duke), `FAC-WULF-LAKE-MARINER` (90 MW via NYPA hydro allocation), `FAC-NBIS-MANTSALA` (75 MW via Nivos).
+   - **Legal State:** Cost-of-service or bilateral industrial tariffs with standard utility force majeure; 456 MW currently energized.
+3. **Voluntary Price Response & Ancillary Services (750.0 MW, 17.0%):**
+   - **Campus:** `FAC-IREN-CHILDRESS` (750 MW total connection / 650 MW operating data center).
+   - **Legal State:** Real-time wholesale nodal pricing pass-through; economic curtailment during price spikes and automated participation in ERCOT Responsive Reserve Service (RRS) and Contingency Reserve Service (ECRS).
+4. **Mandatory Grid Emergency Curtailment (414.0 MW, 9.4%):**
+   - **Campuses:** `FAC-CORZ-DENTON` (394 MW) and `FAC-CORZ-AUSTIN` (20 MW).
+   - **Legal State:** ERCOT Large Flexible Load interconnection protocols; mandatory physical curtailment under Energy Emergency Alerts (EEA) and voluntary 4CP peak shaving; 120 MW currently energized.
 
 ---
 
-## 6. Generated Visual Artifacts
+## 6. Publication Figures
 
-The analysis sprint produced three high-resolution figures stored in `outputs/figures/`:
+Three publication-quality visual artifacts are stored in `outputs/figures/`:
 
-1. **Joint Network Topology Diagram (`power_joint_network_topology.png`):**
-   - Renders the complete 34-node multi-layer network.
-   - Solid grey edges show financial debt and master lease commitments; dashed purple edges show physical utility service agreements and RTO market connections.
-   - Clearly displays ERCOT bridging the Core Scientific and Iris Energy clusters.
+1. **Literal Multi-Layer Network Topology (`power_joint_network_topology.png`):**
+   Renders all 46 nodes with explicit physical facility campuses (gold), corporate operators (blue), utilities (terracotta), grid operators (purple), and CoreWeave (red), illustrating the ERCOT bridge.
 2. **Regional Grid MW Distribution (`regional_grid_mw_distribution.png`):**
-   - Grouped bar chart comparing Gross Utility Capacity, Critical IT Load, Contracted Service, Energized MW, and Planned Pipeline across ERCOT, MISO, SERC, SPP, NYISO, and Fingrid.
-   - Visually highlights ERCOT's 1.8 GW dominance over secondary regions.
-3. **Power Curtailment & Firmness Architecture (`power_curtailment_structure.png`):**
-   - Dual-pie analysis showing the split of power contracts (curtailable vs firm) and the corresponding megawatt capacity exposure.
+   Grouped bar chart displaying the non-overlapping Capacity Basis (MW), Energized Load (MW), and Planned Envelope (MW) across all six grid jurisdictions.
+3. **Mechanism-Specific Reliability Architecture (`power_curtailment_structure.png`):**
+   Dual-pie analysis of contract counts and megawatt exposure across the five reliability regimes.
 
 ---
 
 ## 7. Zero Data Drift Verification
 
-In compliance with the project's invariant verification rules, the financial/credit baseline was validated before and after the physical backplane build:
-
 ```
-=== AI Infrastructure Observatory Consistency Validator (commit 35bd01e Baseline) ===
-  [OK] entities.parquet            : 61 rows (46 financial + 15 power utilities/RTOs)
-  [OK] financials.parquet          : 13,754 rows (0.00% drift)
-  [OK] obligations.parquet         : 47 rows (0.00% drift)
-  [OK] obligation_events.parquet   : 56 rows (0.00% drift)
-  [OK] obligation_facts.parquet    : 64 rows (0.00% drift)
-  [OK] obligation_terms.parquet    : 44 rows (0.00% drift)
-  [OK] assumptions.parquet         : 7 rows (0.00% drift)
-  [OK] evidence_claims.parquet     : 54 rows (0.00% drift)
-  [OK] facilities.parquet          : 12 rows (ADR-020 certified)
-  [OK] power_relationships.parquet : 12 rows (ADR-020 certified)
-  [OK] power_facts.parquet         : 28 rows (ADR-020 certified)
-  [OK] power_terms.parquet         : 7 rows (ADR-020 certified)
-  [OK] power_claims.parquet        : 7 rows (ADR-020 certified)
+=== AI Infrastructure Observatory Consistency Validator (Phase 0.7.2 / ADR-020.1) ===
+  [OK] entities.parquet             : 62 rows
+  [OK] financials.parquet           : 13754 rows
+  [OK] obligations.parquet          : 47 rows
+  [OK] obligation_events.parquet    : 56 rows
+  [OK] obligation_facts.parquet     : 64 rows
+  [OK] obligation_terms.parquet     : 44 rows (43 Class A, 1 Class C)
+  [OK] assumptions.parquet          : 7 rows
+  [OK] evidence_claims.parquet      : 54 rows
+  [OK] facilities.parquet           : 12 rows
+  [OK] power_relationships.parquet  : 13 rows
+  [OK] power_facts.parquet          : 29 rows
+  [OK] power_terms.parquet          : 14 rows (100% Class A)
+  [OK] power_claims.parquet         : 8 rows
   [OK] CIK uniqueness verified: 23 distinct reporting entities with zero CIK collisions.
-  [OK] Power Backplane verified: 12 facilities, 12 power contracts, 28 typed MW facts, 7 terms, 7 primary claims.
+  [OK] Power Backplane verified: 12 facilities, 13 power contracts, 29 typed MW facts, 14 terms, 8 primary claims.
+  [OK] All 54 financial claims & 8 power claims verified against raw SEC EDGAR submissions & exact HTML quotes.
   [OK] CoreWeave funded debt conserved: $35.551B across 16 tranches (exact 0.00% drift).
   [OK] Applied Digital debt conserved: $6.597B across 6 tranches (exact 0.00% drift).
 
@@ -354,13 +338,13 @@ ALL INTERNAL CONSISTENCY CHECKS PASSED: ZERO DATA DRIFT
 
 ---
 
-## 8. Summary of Answers to Task 020 Research Questions
+## 8. Final Research Answers
 
-1. **Does a non-CoreWeave physical power backbone emerge from the JOIN?**
-   **Yes, regionally, but not continentally.** ERCOT acts as a secondary structural hub bridging Core Scientific and Iris Energy into a 13-node cluster that survives CoreWeave's excision. However, North America does not possess a single physical power backbone; the network is partitioned into regional utility silos (ERCOT, MISO, SERC, SPP, NYISO).
-2. **Does the graph stay connected through ERCOT when CoreWeave is removed?**
-   **Yes.** The Texas and Southeastern infrastructure complex (`CORZ`, `IREN`, `BLUE_OWL_OBDC`, `PIMCO`, `AEP_TEXAS`, `DME`, `AUSTIN_ENERGY`, `DALTON_UTILITIES`, `OGE`, `DUKE_ENERGY`) remains completely connected via ERCOT, preserving 13 active nodes and 46% of all modeled network participants.
-3. **What is the true concentration of power delivery?**
-   **Extreme concentration in ERCOT (HHI = 3,591).** Over 54% of all contracted/utility service power (1,819 MW) is concentrated within the ERCOT balancing authority.
-4. **How much power is exposed to curtailment risk?**
-   **54.3% (1,819 MW)** of all modeled capacity is explicitly curtailable under ERCOT Large Flexible Load procedures and 4CP demand response tariffs. Only 29.9% is classic firm industrial power.
+1. **Does a non-CoreWeave physical power backbone emerge from the JOIN?**  
+   **Yes.** When facilities are modeled literally without synthetic shortcuts, ERCOT bridges Core Scientific and Iris Energy into a robust 21-node cluster that survives the complete excision of CoreWeave.
+2. **Does the graph stay connected through ERCOT when CoreWeave is removed?**  
+   **Yes.** ERCOT serves as a cut-vertex whose presence maintains topological continuity between public miners/HPC operators, municipal utilities, and private credit syndicates (`BLUE_OWL_OBDC`, `PIMCO`).
+3. **What is the true concentration of power delivery?**  
+   **Extreme concentration in ERCOT (HHI-form = 5,443.8 on basis, 5,045.7 on energized).** Texas accounts for 71.89% of modeled capacity basis and 67.51% of energized operating capacity.
+4. **How much power is exposed to curtailment?**  
+   **52.5% is unenergized development queue capacity, 17.0% is voluntary price response, and 9.4% is subject to mandatory grid emergency curtailment.** Only 21.1% (927 MW) is served under traditional firm industrial tariffs.
