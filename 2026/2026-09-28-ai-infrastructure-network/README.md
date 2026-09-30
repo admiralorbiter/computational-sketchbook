@@ -125,13 +125,13 @@ Phase 0 Epistemic Certification establishes an economically literal baseline acr
 4. **Pure Amount-Type Reachability vs Parameterized Financial Stress Prototype:**
    * We eliminate non-fungible dollar mixing across different categories. Reachability reports the percentage of each `amount_type` reachable within 2 hops of an assumption alongside edge reachability percentages.
    * The stress engine is framed as a **parameterized financial stress prototype** with contract-calibrated transmission functions.
-5. **Dynamic SPV Unwrapping & Event-Driven Bitemporal Graph Architecture (ADR-013, ADR-014, ADR-015, ADR-016):**
-   * **Dynamic Entity Hierarchy:** Rather than static lookup maps, the network traverses `parent_entity_id` attributes dynamically (`APLD_COMPUTECO3` $\to$ `APLD_HPC_HOLDINGS2` $\to$ `APLD`, and CoreWeave borrowing SPVs to `CRWV`), leaving 0 SPV nodes in the consolidated corporate graph across 27 certified entities.
-   * **Obligation Lifecycle Events (`obligation_events`, 37 rows):** Contract lifecycle state changes (creation, supersession, amendment/add-on, extinction) have independent economic and filing dates. On **June 17, 2026**, CoreWeave's 2032 Senior Notes ($1.250B + $2.279B EUR) do not yet exist economically or epistemically prior to their June 18 closing date. On June 17, the economic network has 32 active edges and the knowledge graph has 28 active edges. On **June 18, 2026**, the notes close and Form 8-K is filed, expanding the economic network to 34 edges and the knowledge graph to 30 edges.
-   * **Fact-Level Bitemporality (`obligation_facts`, 45 rows):** Invariant contract definitions in `obligations.parquet` (35 rows) are decoupled from time-varying point-in-time measurements in `obligation_facts.parquet`. Every fact carries a dual evidence claim: `truth_claim_id` (certifying audited ground truth) and `knowledge_claim_id` (certifying earliest public awareness), strictly enforcing `publicly_known_from >= claims[knowledge_claim_id].filing_date`. On April 15, 2026, CoreWeave's 9.75% Notes resolve to $1.750B (initial closing April 14); on April 22, 2026, the $1.000B add-on resolves to $2.750B total.
+5. **Dynamic SPV Unwrapping & Event-Driven Bitemporal Graph Architecture (ADR-013, ADR-014, ADR-015, ADR-016, ADR-018):**
+   * **Dynamic Entity Hierarchy:** Rather than static lookup maps, the network traverses `parent_entity_id` attributes dynamically across 46 registered entities (`APLD_COMPUTECO3` $\to$ `APLD_HPC_HOLDINGS2` $\to$ `APLD`, CoreWeave borrowing SPVs to `CRWV`, `NBIS_COMPUTECO_II_LLC` / `OY` to `NBIS`, `IREN_MACKENZIE_COMPUTE` to `IREN`, `BLUE_OWL_OBDC` to `BLUE_OWL`), leaving 0 SPV nodes in the consolidated corporate graph across 21 parent entities.
+   * **Obligation Lifecycle Events (`obligation_events`, 50 rows total; 37 in Phase 0 subnetwork):** Contract lifecycle state changes (creation, supersession, amendment/add-on, extinction) have independent economic and filing dates. On **June 17, 2026**, CoreWeave's 2032 Senior Notes ($1.250B + $2.279B EUR) do not yet exist economically or epistemically prior to their June 18 closing date. On June 17, the economic network has 32 active edges and the knowledge graph has 28 active edges. On **June 18, 2026**, the notes close and Form 8-K is filed, expanding the economic network to 34 edges and the knowledge graph to 30 edges.
+   * **Fact-Level Bitemporality (`obligation_facts`, 55 rows total; 45 in Phase 0 subnetwork):** Invariant contract definitions in `obligations.parquet` (47 rows total; 35 in Phase 0 subnetwork) are decoupled from time-varying point-in-time measurements in `obligation_facts.parquet`. Every fact carries a dual evidence claim: `truth_claim_id` (certifying audited ground truth) and `knowledge_claim_id` (certifying earliest public awareness), strictly enforcing `publicly_known_from >= claims[knowledge_claim_id].filing_date`. On April 15, 2026, CoreWeave's 9.75% Notes resolve to $1.750B (initial closing April 14); on April 22, 2026, the $1.000B add-on resolves to $2.750B total.
    * **Strict Zero-Lookahead Stress Engine:** In known mode on June 30, before CoreWeave's 10-Q was filed, floating debt amounts and debt maturities are unmeasured/unknown. The engine strictly avoids leaking the August 12 $12.206B total, returning `floating_principal_known = False`, `max_cash_drain = None`, `network_cash_drain_reported_baseline = None`, and enumerating all 6 unknown floating edges.
    * **Half-Open Validity Intervals $[v\_from, v\_to)$:** Supersession boundaries exclude `date >= valid_to`. On June 16, 2026, the $300M bridge is cleanly retired and the $1.59B notes are active, preserving exactly 32 edges without double-counting.
-   * **100% Authentic SEC EDGAR Verification:** All 37 evidence claims are 100% verified against raw SEC EDGAR submissions JSON (`data/raw/sec/*.json`), guaranteeing zero fabricated accession numbers, correct form types, and verified filing dates. All 29 primary SEC claims are verified with 100% character-level contiguous substring fidelity against cached primary SEC EDGAR HTML filings (`data/raw/sec/*.htm`).
+   * **100% Authentic SEC EDGAR Verification:** All 43 evidence claims are 100% verified against raw SEC EDGAR submissions JSON (`data/raw/sec/*.json`), guaranteeing zero fabricated accession numbers, correct form types, and verified filing dates. All 35 primary SEC claims are verified with 100% character-level contiguous substring fidelity against cached primary SEC EDGAR HTML filings (`data/raw/sec/*.htm`).
 
 ### Parameterized Financial Stress Prototype Results (`src/stress.py`)
 ![Financial Stress Waterfall](outputs/figures/financial_stress_waterfall.png)
@@ -166,13 +166,14 @@ Phase 0 Epistemic Certification establishes an economically literal baseline acr
 ├── data/
 │   ├── raw/sec/                   # Cached primary SEC EDGAR submissions JSON and exhibit HTMLs
 │   └── processed/                 # Standardized Parquet files and human-readable CSV mirrors
-│       ├── entities.parquet       # 27 entities (corporates, landlord SPVs, holding SPVs, borrowing SPVs, syndicates)
-│       ├── financials.parquet     # 5,440 standardized accounting observations (quarterly & annual)
-│       ├── obligations.parquet    # 35 decomposed obligations exactly reconciling debt
-│       ├── obligation_events.parquet# 37 discrete lifecycle events (creation, supersession, amendment)
-│       ├── obligation_facts.parquet# 45 fact-level bitemporal measurements (balances, capacities, swaps)
+│       ├── entities.parquet       # 46 entities (corporates, landlord SPVs, holding SPVs, borrowing SPVs, syndicates, discovery vehicles)
+│       ├── financials.parquet     # 13,983 standardized accounting observations across 19 SEC reporting entities
+│       ├── obligations.parquet    # 47 decomposed obligations reconciling debt & contracts (35 in Phase 0 subnetwork)
+│       ├── obligation_events.parquet# 50 discrete lifecycle events (creation, supersession, amendment, extinction)
+│       ├── obligation_facts.parquet# 55 fact-level bitemporal measurements (balances, capacities, swaps)
+│       ├── obligation_rate_legs.parquet# 2 discrete rate legs (DDTL 4.0 floating/fixed legs)
 │       ├── assumptions.parquet    # 7 assumption registries
-│       └── evidence_claims.parquet# 37 audited SEC citations with verbatim quotes and accession numbers
+│       └── evidence_claims.parquet# 43 audited SEC citations (35 verified verbatim against primary SEC HTML exhibits)
 ├── src/
 │   ├── sec_ingest.py              # Automated data.sec.gov XBRL ingestion pipeline (duration-aware)
 │   ├── curate_obligations.py      # Audited obligation, events, and evidence claim builder

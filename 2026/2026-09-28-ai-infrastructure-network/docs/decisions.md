@@ -313,6 +313,65 @@ This log records the durable architectural, methodological, and data design choi
 - **Consequences:**
   Establishes an epistemically sound, scalable architecture for network expansion; eliminates false balance-sheet conflations; handles private and foreign entities natively; and focuses observatory research on repeated cross-boundary structural joins and systemic fragility.
 
+---
+
+### ADR-018: Phase 1 Wave 1 Ingestion, Verbatim Exhibit Certification, Dynamic Multi-Jurisdiction SPV Unwrapping, and Invariant Dual-Layer Validation
+- **Status:** Accepted (2026-09-29, Phase 1 Wave 1)
+- **Context:**
+  Following ADR-017 and Step 2 engine refinements (ADR-016), Phase 1 Wave 1 ingests 12 high-join-density entities across hyperscalers (`META`, `AMZN`, `GOOGL`), compute/OEM hardware (`DELL`, `HPE`, `AMD`), next-generation neoclouds and HPC data centers (`NBIS`, `IREN`, `CORZ`, `WULF`, `HUT`), and private credit capital providers (`BLUE_OWL`).
+  The operational requirements demand expanding this multi-layered graph while strictly preserving the repository's epistemic integrity:
+  1. *Universal Zero-Lookahead Temporal Invariance:* Facts and events must never leak into temporal knowledge views prior to filing dissemination (`publicly_known_at >= claim.filing_date`).
+  2. *100% Exact Verbatim Primary SEC Exhibit Certification:* Every cited claim must be a 100% exact contiguous substring within a locally cached SEC filing HTML exhibit.
+  3. *Contract-Literal Debt & Financing Semantics:* No synthetic fallback rates or spreads (fail-closed principle); multi-leg floating facilities (e.g. DDTL 4.0) must use explicit rate leg tables.
+  4. *Multi-Jurisdiction SPV Unwrapping:* Transnational financing entities across Delaware, Finland, and British Columbia must unwrap dynamically to canonical corporate parents without leaving orphaned or unmapped SPVs in consolidated representations.
+  5. *Zero Data Drift on Frozen Phase 0 Baseline:* The pilot 5-company subnetwork topology and accounting baselines must remain 100% invariant across all canonical query dates.
+- **Decision:**
+  1. **Ingest and Cache Raw SEC Filings:**
+     - Ingested raw SEC company facts and submission histories for all 12 Wave 1 entities into `data/raw/sec/`.
+     - Ingested and cached 7 primary SEC HTML exhibits (`NBIS` 20-F & two 6-Ks, `IREN` 10-K, `CORZ` 10-Q, `HUT` 10-Q, `WULF` 10-Q).
+     - Extended `src/sec_ingest.py` with custom parsing logic to handle Foreign Private Issuer Form 20-F and Form 6-K filings for Nebius Group N.V. (`NBIS`).
+  2. **Entity Hierarchy and Discovery Vehicles (`config/entities.yml` & `entities.parquet`):**
+     - Registered 46 entities total, including 7 dynamically discovered financing and project vehicles:
+       - `NBIS_COMPUTECO_II_LLC` (Delaware SPV, borrower for MUFG facility)
+       - `NBIS_COMPUTECO_II_OY` (Finnish SPV, co-borrower for MUFG facility)
+       - `NBIS_INC` (US operating sub, guarantor for MUFG facility)
+       - `IREN_MACKENZIE_COMPUTE` (British Columbia SPV, borrower for Blue Owl/PIMCO GPU financing)
+       - `BLUE_OWL_OBDC` (Blue Owl Capital Corp, administrative agent / co-lender)
+       - `PIMCO` (Pacific Investment Management Co, co-lender for IREN MFSA)
+       - `COATUE` (Coatue Management, convertible noteholder for Hut 8)
+  3. **Canonical Financials Regeneration (`financials.parquet`):**
+     - Regenerated accounting ledgers containing 13,983 facts across 19 SEC reporting entities.
+     - Preserved Phase 0 debt totals identically: CoreWeave ($35.55B total obligations), Applied Digital ($4.98B), Supermicro ($8.72B), Oracle ($125.34B), Nvidia ($33.37B).
+  4. **Master Obligation Ledgers Expansion:**
+     - `obligations.parquet`: 47 rows (12 new Wave 1 contracts across credit facilities, equipment leases, and long-term offtake/colocation agreements).
+     - `obligation_events.parquet`: 50 rows (13 new lifecycle events).
+     - `obligation_facts.parquet`: 55 rows (10 new bitemporal facts).
+     - `evidence_claims.parquet`: 43 rows (6 new audited primary SEC claims).
+     - `obligation_rate_legs.parquet`: 2 rows (discrete spread legs for DDTL 4.0).
+  5. **100% Verbatim Primary SEC Exhibit Certification:**
+     - `CLM-NBIS-001` (MUFG $775M facility @ Term SOFR + 2.50%): 100% exact substring in `NBIS_6K_20260717_mufg.htm`.
+     - `CLM-NBIS-002` (Meta $27B commercial offtake agreement): 100% exact substring in `NBIS_6K_20260316_meta.htm`.
+     - `CLM-IREN-001` (IREN $2.4B GPU financing: $1.2B MFSA + $1.2B Notes): 100% exact substring in `IREN_10K_20260630.htm`.
+     - `CLM-CORZ-001` (Core Scientific 590 MW colocation for CoreWeave): 100% exact substring in `CORZ_10Q_20260630.htm`.
+     - `CLM-HUT-001` (Coatue $150M note conversion extinction to equity): 100% exact substring in `HUT_10Q_20260630.htm`.
+     - `CLM-WULF-001` (TeraWulf $2.525B convertible notes schedule): 100% exact substring in `WULF_10Q_20260630.htm`.
+     - Total certified claims bound to primary SEC HTML exhibits: 35.
+  6. **Dynamic Multi-Jurisdiction SPV Unwrapping:**
+     - Developed automated graph unwrapping logic that collapses subsidiary/SPV edges to ultimate root parents:
+       - `NBIS_COMPUTECO_II_LLC` & `NBIS_COMPUTECO_II_OY` $\to$ `NBIS`
+       - `IREN_MACKENZIE_COMPUTE` $\to$ `IREN`
+       - `BLUE_OWL_OBDC` $\to$ `BLUE_OWL`
+     - Consolidated graph contains exactly 21 parent entities with 0 SPVs remaining.
+  7. **Dual-Layer Network Topology Assertions in `src/validate.py`:**
+     - Implemented dual network validation confirming both the frozen Phase 0 subnetwork (35 obligations) and the expanded Phase 1 network (47 obligations) across canonical historical dates:
+       - Phase 0 economic edges: 32 (May 31, Jun 15, Jun 16, Jun 17), 34 (Jun 18, Sep 28).
+       - Phase 0 known edges: 28 (Jun 17), 30 (Jun 18, Jun 30), 34 (Sep 28).
+       - Phase 1 economic edges: 37 (May 31, Jun 15, Jun 16, Jun 17), 39 (Jun 18, Jun 30), 45 (Sep 28).
+       - Phase 1 known edges: 29 (May 31, Jun 17), 31 (Jun 18, Jun 30), 45 (Sep 28).
+     - Confirmed 0.00% data drift on Phase 0 obligations.
+- **Consequences:**
+  Validates the full vertical integration of Phase 1 Wave 1. The infrastructure network model now interconnects hyperscalers, GPU cloud specialists, HPC colocation providers, and private credit syndicates under rigorous contract-literal and bitemporal rules.
+
 
 
 

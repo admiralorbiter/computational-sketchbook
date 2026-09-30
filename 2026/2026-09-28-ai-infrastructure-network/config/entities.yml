@@ -390,3 +390,278 @@ entities:
     fiscal_year_end: null
     description: "Project finance noteholders and bank lenders funding data center construction."
     key_counterparties: [APLD_COMPUTECO, APLD_COMPUTECO2, APLD]
+
+  # =========================================================================
+  # Phase 1 Wave 1 Entities & Discovery-Driven Vehicles (ADR-017)
+  # =========================================================================
+
+  NBIS:
+    entity_id: NBIS
+    name: Nebius Group N.V.
+    ticker: NBIS
+    cik: "0001513845"
+    category: neocloud_operator
+    subsector: specialized_gpu_cloud
+    jurisdiction: NL
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Global AI cloud infrastructure provider operating large-scale GPU clusters financed via asset-backed credit facilities."
+    key_counterparties: [META, MUFG_BANK_SYN]
+
+  NBIS_COMPUTECO_II_LLC:
+    entity_id: NBIS_COMPUTECO_II_LLC
+    name: Nebius Compute II, LLC
+    ticker: null
+    cik: null
+    parent_entity_id: NBIS
+    category: project_spv
+    subsector: equipment_financing_bankruptcy_remote_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "12-31"
+    description: "Direct wholly owned subsidiary and Delaware borrowing SPV under $775M asset-backed credit facility from MUFG Bank syndicate."
+    key_counterparties: [NBIS, MUFG_BANK_SYN, NBIS_COMPUTECO_II_OY]
+
+  NBIS_COMPUTECO_II_OY:
+    entity_id: NBIS_COMPUTECO_II_OY
+    name: Nebius Compute II Oy
+    ticker: null
+    cik: null
+    parent_entity_id: NBIS
+    category: project_spv
+    subsector: equipment_financing_bankruptcy_remote_spv
+    jurisdiction: FI
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "12-31"
+    description: "Indirect wholly owned subsidiary and Finnish borrowing SPV under $775M asset-backed credit facility from MUFG Bank syndicate."
+    key_counterparties: [NBIS, MUFG_BANK_SYN, NBIS_COMPUTECO_II_LLC]
+
+  NBIS_INC:
+    entity_id: NBIS_INC
+    name: Nebius, Inc.
+    ticker: null
+    cik: null
+    parent_entity_id: NBIS
+    category: operating_subsidiary
+    subsector: cloud_operating_entity
+    jurisdiction: US-DE
+    status: subsidiary_operating
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "12-31"
+    description: "Wholly owned operating subsidiary of Nebius Group N.V. contracting the $27B commercial infrastructure service agreement with Meta Platforms."
+    key_counterparties: [NBIS, META]
+
+  IREN:
+    entity_id: IREN
+    name: IREN Limited
+    ticker: IREN
+    cik: "0001878848"
+    category: datacenter_developer
+    subsector: digital_infrastructure_hpc
+    jurisdiction: AU
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "06-30"
+    description: "Next-generation data center and digital infrastructure developer engineered for AI workloads and Bitcoin mining, operating high-efficiency renewable energy campuses."
+    key_counterparties: [BLUE_OWL_OBDC, PIMCO, NVDA]
+
+  IREN_MACKENZIE_COMPUTE:
+    entity_id: IREN_MACKENZIE_COMPUTE
+    name: IE Mackenzie Compute Ltd.
+    ticker: null
+    cik: null
+    parent_entity_id: IREN
+    category: project_spv
+    subsector: equipment_financing_bankruptcy_remote_spv
+    jurisdiction: CA-BC
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "06-30"
+    description: "Wholly owned British Columbia subsidiary and borrowing SPV under $2.4B August 2026 financing agreements with Blue Owl and PIMCO."
+    key_counterparties: [IREN, BLUE_OWL_OBDC, PIMCO]
+
+  BLUE_OWL:
+    entity_id: BLUE_OWL
+    name: Blue Owl Capital Inc.
+    ticker: OWL
+    cik: "0001823945"
+    category: capital_provider
+    subsector: private_credit_alternative_asset_manager
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Leading alternative asset manager and private credit sponsor providing large-scale direct lending and infrastructure capital solutions."
+    key_counterparties: [BLUE_OWL_OBDC, IREN]
+
+  BLUE_OWL_OBDC:
+    entity_id: BLUE_OWL_OBDC
+    name: Blue Owl Capital Corporation (OBDC)
+    ticker: OBDC
+    cik: "0001823945"
+    parent_entity_id: BLUE_OWL
+    category: capital_provider_vehicle
+    subsector: direct_lending_bdc
+    jurisdiction: US-MD
+    status: public_bdc
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Business Development Company and direct lending fund managed by Blue Owl Capital, acting as administrative agent, collateral agent, and lender to AI infrastructure developers."
+    key_counterparties: [BLUE_OWL, IREN_MACKENZIE_COMPUTE]
+
+  PIMCO:
+    entity_id: PIMCO
+    name: Pacific Investment Management Company LLC
+    ticker: null
+    cik: null
+    category: capital_provider
+    subsector: institutional_fixed_income_asset_manager
+    jurisdiction: US-DE
+    status: private_manager
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Global investment management firm acting as investment adviser to note purchasers in large-scale structured AI infrastructure debt."
+    key_counterparties: [IREN_MACKENZIE_COMPUTE, BLUE_OWL_OBDC]
+
+  CORZ:
+    entity_id: CORZ
+    name: Core Scientific, Inc.
+    ticker: CORZ
+    cik: "0001839341"
+    category: datacenter_developer
+    subsector: digital_infrastructure_hpc
+    jurisdiction: US-TX
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Specialized data center infrastructure developer providing 590 MW high-density colocation to CoreWeave under long-term contract."
+    key_counterparties: [CRWV]
+
+  WULF:
+    entity_id: WULF
+    name: TeraWulf Inc.
+    ticker: WULF
+    cik: "0001083301"
+    category: datacenter_developer
+    subsector: digital_infrastructure_hpc
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Owner and operator of zero-carbon digital infrastructure, developing Lake Mariner facility for high-density AI and HPC workloads."
+    key_counterparties: [INSTITUTIONAL_BONDHOLDERS]
+
+  HUT:
+    entity_id: HUT
+    name: Hut 8 Corp.
+    ticker: HUT
+    cik: "0001964789"
+    category: datacenter_developer
+    subsector: digital_infrastructure_hpc
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Energy infrastructure operator and digital asset miner expanding into AI high-density computing infrastructure."
+    key_counterparties: [COATUE]
+
+  COATUE:
+    entity_id: COATUE
+    name: Coatue Management / Coatue Tactical Solutions
+    ticker: null
+    cik: null
+    category: capital_provider
+    subsector: tech_alternative_asset_manager
+    jurisdiction: US-DE
+    status: private_manager
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Technology-focused alternative investment firm providing structured convertible debt and equity capital to AI infrastructure operators."
+    key_counterparties: [HUT, CRWV]
+
+  DELL:
+    entity_id: DELL
+    name: Dell Technologies Inc.
+    ticker: DELL
+    cik: "0001571996"
+    category: server_oem
+    subsector: enterprise_ai_server_solutions
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "01-31"
+    description: "Global technology provider and Tier-1 server integrator delivering PowerEdge AI servers powered by NVIDIA GPUs."
+    key_counterparties: [NVDA, CRWV]
+
+  HPE:
+    entity_id: HPE
+    name: Hewlett Packard Enterprise Company
+    ticker: HPE
+    cik: "0001645590"
+    category: server_oem
+    subsector: enterprise_ai_server_solutions
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "10-31"
+    description: "Global edge-to-cloud company providing Cray supercomputing and ProLiant high-density AI server solutions."
+    key_counterparties: [NVDA]
+
+  AMD:
+    entity_id: AMD
+    name: Advanced Micro Devices, Inc.
+    ticker: AMD
+    cik: "0000002488"
+    category: hardware_supplier
+    subsector: accelerated_computing_silicon
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Semiconductor leader supplying Instinct MI300/MI325 accelerators and EPYC server CPUs for AI data centers."
+    key_counterparties: [MSFT, META, ORCL]
+
+  META:
+    entity_id: META
+    name: Meta Platforms, Inc.
+    ticker: META
+    cik: "0001326801"
+    category: hyperscaler_anchor
+    subsector: cloud_ai_offtaker
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Global technology conglomerate investing aggressively in AI compute infrastructure; anchor offtaker for Nebius capacity under $27B agreement."
+    key_counterparties: [NBIS_INC, NVDA, AMD]
+
+  AMZN:
+    entity_id: AMZN
+    name: Amazon.com, Inc.
+    ticker: AMZN
+    cik: "0001018724"
+    category: hyperscaler_cloud
+    subsector: cloud_ai_infrastructure
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Leading global cloud provider (AWS) operating hyperscale data centers, developing custom AI silicon (Trainium/Inferentia) and deploying large-scale NVIDIA clusters."
+    key_counterparties: [NVDA]
+
+  GOOGL:
+    entity_id: GOOGL
+    name: Alphabet Inc.
+    ticker: GOOGL
+    cik: "0001652044"
+    category: hyperscaler_cloud
+    subsector: cloud_ai_infrastructure
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Global technology holding company operating Google Cloud Platform (GCP), developing custom TPU accelerators and deploying multi-gigawatt AI infrastructure."
+    key_counterparties: [NVDA]

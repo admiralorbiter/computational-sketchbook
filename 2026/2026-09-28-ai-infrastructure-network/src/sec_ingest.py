@@ -157,13 +157,15 @@ class SECIngestPipeline:
         facts_gaap = data.get("facts", {}).get("us-gaap", {})
         extracted = []
 
+        ALLOWED_FORMS = ["10-K", "10-Q", "10-K/A", "10-Q/A", "20-F", "20-F/A"]
+
         # 1. Flow metrics - inspect all concepts with priority and deduplicate
         for metric, concepts in FLOW_METRIC_CONCEPTS.items():
             metric_flow_records = []
             for p_idx, c in enumerate(concepts):
                 if c in facts_gaap:
                     units = facts_gaap[c].get("units", {}).get("USD", [])
-                    recent_units = [u for u in units if u.get("form") in ["10-K", "10-Q", "10-K/A", "10-Q/A"]]
+                    recent_units = [u for u in units if u.get("form") in ALLOWED_FORMS]
                     for item in recent_units:
                         end_date = item.get("end")
                         start_date = item.get("start")
@@ -253,7 +255,7 @@ class SECIngestPipeline:
             for p_idx, c in enumerate(concepts):
                 if c in facts_gaap:
                     units = facts_gaap[c].get("units", {}).get("USD", [])
-                    matched = [u for u in units if u.get("form") in ["10-K", "10-Q", "10-K/A", "10-Q/A"]]
+                    matched = [u for u in units if u.get("form") in ALLOWED_FORMS]
                     for item in matched:
                         end_date = item.get("end")
                         val = item.get("val")
@@ -291,7 +293,7 @@ class SECIngestPipeline:
         for k in ["Revenues", "RevenueFromContractWithCustomerExcludingAssessedTax", "CashAndCashEquivalentsAtCarryingValue", "OperatingIncomeLoss"]:
             if k in facts_gaap:
                 for u in facts_gaap[k].get("units", {}).get("USD", []):
-                    if u.get("form") in ["10-K", "10-Q"]:
+                    if u.get("form") in ALLOWED_FORMS:
                         reporting_dates.add((u.get("end"), u.get("form"), u.get("fy"), u.get("fp"), u.get("filed"), u.get("accn")))
 
         for (end_date, form, fy, fp, filed, accn) in reporting_dates:
@@ -309,9 +311,9 @@ class SECIngestPipeline:
             # Combined total or carrying amount
             v_comb, c_comb = get_val(["DebtLongtermAndShorttermCombinedAmount", "DebtInstrumentCarryingAmount"])
             # Separate components
-            v_lt, c_lt = get_val(["LongTermDebtNoncurrent", "LongTermNotesPayable", "LongTermNotesAndLoans", "LongTermDebtAndCapitalLeaseObligations"])
+            v_lt, c_lt = get_val(["LongTermDebtNoncurrent", "LongTermNotesPayable", "LongTermNotesAndLoans", "LongTermDebtAndCapitalLeaseObligations", "LongTermDebt"])
             v_cur, c_cur = get_val(["LongTermDebtCurrent", "NotesPayableCurrent", "DebtCurrent"])
-            v_conv, c_conv = get_val(["ConvertibleLongTermNotesPayable", "ConvertibleDebtNoncurrent"])
+            v_conv, c_conv = get_val(["ConvertibleLongTermNotesPayable", "ConvertibleDebtNoncurrent", "ConvertibleDebtCurrent"])
 
             total_debt = 0.0
             concept_used = ""

@@ -36,3 +36,16 @@ EVT-APLD-DEBT-BRIDGE-CREATED,OBL-APLD-DEBT-BRIDGE,created,2026-05-01,2026-05-05,
 EVT-APLD-DEBT-BRIDGE-SUPERSEDED,OBL-APLD-DEBT-BRIDGE,superseded,2026-06-16,2026-06-16,OBL-APLD-DEBT-7PCT-2026,CLM-APLD-008,Repayment in full and termination of $300.0M Bridge Credit Facility from proceeds of $1.59B 7.00% Senior Secured Notes
 EVT-APLD-DEBT-7PCT-CREATED,OBL-APLD-DEBT-7PCT-2026,created,2026-06-16,2026-06-16,OBL-APLD-DEBT-BRIDGE,CLM-APLD-008,"APLD ComputeCo 3 LLC issuance of $1,590.0M 7.00% Senior Secured Notes due 2031"
 EVT-APLD-DEBT-OTHER-CREATED,OBL-APLD-DEBT-OTHER,created,2026-05-31,2026-07-29,,CLM-APLD-003,"Aggregate residual debt ($56.68M) reconciling gross contractual principal to $5,306.68M"
+EVT-NBIS-DEBT-MUFG-CREATED,OBL-NBIS-DEBT-MUFG-2026,created,2026-07-10,2026-07-17,,CLM-NBIS-001,"Entry into $775.0M senior secured asset-backed credit facility with MUFG Bank syndicate due October 31, 2030"
+EVT-NBIS-COBORROWER-MUFG-CREATED,OBL-NBIS-COBORROWER-MUFG-2026,created,2026-07-10,2026-07-17,OBL-NBIS-DEBT-MUFG-2026,CLM-NBIS-001,Nebius Compute II Oy joins as joint co-borrower under $775M MUFG Facility
+EVT-NBIS-GUARANTY-MUFG-CREATED,OBL-NBIS-GUARANTY-MUFG-2026,created,2026-07-10,2026-07-17,OBL-NBIS-DEBT-MUFG-2026,CLM-NBIS-001,Nebius Group N.V. executes limited non-recourse bad-acts parent guaranty for MUFG facility
+EVT-NBIS-META-OFFTAKE-CREATED,OBL-NBIS-META-OFFTAKE-2026,created,2026-03-13,2026-03-16,,CLM-NBIS-002,"Execution of 5-year Infrastructure Service Agreement between Meta Platforms and Nebius, Inc. up to $27B"
+EVT-IREN-DEBT-MFSA-CREATED,OBL-IREN-DEBT-MFSA-2026,created,2026-08-25,2026-08-27,,CLM-IREN-001,IE Mackenzie Compute Ltd. enters into Master Financing and Security Agreement (MFSA) up to $1.2B with Blue Owl Capital Corporation
+EVT-IREN-DEBT-NOTES-CREATED,OBL-IREN-DEBT-NOTES-2026,created,2026-08-25,2026-08-27,,CLM-IREN-001,IE Mackenzie Compute Ltd. enters into Note Purchase Agreement for up to $1.2B senior notes advised by PIMCO and Blue Owl as note agent
+EVT-IREN-GUARANTY-CREATED,OBL-IREN-GUARANTY-2026,created,2026-08-25,2026-08-27,OBL-IREN-DEBT-MFSA-2026,CLM-IREN-001,IREN Limited executes unconditional parent payment guaranty for August 2026 financing agreements
+EVT-CRWV-CORZ-COLOCATION-CREATED,OBL-CRWV-CORZ-COLOCATION-2024,created,2024-06-03,2026-07-28,,CLM-CORZ-001,Core Scientific contracts 590 MW high-density colocation with CoreWeave across five sites
+EVT-HUT-DEBT-COATUE-CONV-CREATED,OBL-HUT-DEBT-COATUE-CONV-2024,created,2024-06-24,2026-08-04,,CLM-HUT-001,Hut 8 Corp. issues $150.0M 8.0% convertible note to Coatue Tactical Solutions
+EVT-HUT-DEBT-COATUE-CONV-CONVERTED,OBL-HUT-DEBT-COATUE-CONV-2024,extinguished,2026-05-11,2026-08-04,,CLM-HUT-001,"Coatue converts full $159.3M accreted note principal into 9,715,476 common shares, extinguishing the debt"
+EVT-WULF-DEBT-CONV-2030-CREATED,OBL-WULF-DEBT-CONV-2030,created,2025-01-28,2026-08-05,,CLM-WULF-001,TeraWulf Inc. issuance of $500.0M 2.75% Convertible Senior Notes due 2030
+EVT-WULF-DEBT-CONV-2031-CREATED,OBL-WULF-DEBT-CONV-2031,created,2025-08-15,2026-08-05,,CLM-WULF-001,"TeraWulf Inc. issuance of $1,000.0M 3.00% Convertible Senior Notes due 2031"
+EVT-WULF-DEBT-CONV-2032-CREATED,OBL-WULF-DEBT-CONV-2032,created,2026-02-15,2026-08-05,,CLM-WULF-001,"TeraWulf Inc. issuance of $1,025.0M 3.25% Convertible Senior Notes due 2032"
