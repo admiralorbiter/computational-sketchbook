@@ -1,0 +1,678 @@
+{
+  "as_of_date": "2026-09-28",
+  "articulation_points": [
+    "INSTITUTIONAL_BONDHOLDERS",
+    "APLD",
+    "CRWV",
+    "NBIS",
+    "MUFG_BANK_SYN",
+    "IREN"
+  ],
+  "bridges": [
+    [
+      "NVDA",
+      "CRWV"
+    ],
+    [
+      "CRWV",
+      "CORZ"
+    ],
+    [
+      "CRWV",
+      "MSFT"
+    ],
+    [
+      "SMCI",
+      "HARDWARE_SUPPLIERS"
+    ],
+    [
+      "NBIS",
+      "META"
+    ],
+    [
+      "IREN",
+      "PIMCO"
+    ]
+  ],
+  "node_removal_sensitivity": [
+    {
+      "removed_node": "CRWV",
+      "orig_components": 3,
+      "new_components": 4,
+      "max_component_size": 4,
+      "component_sizes": [
+        4,
+        3,
+        3,
+        2
+      ],
+      "isolated_orphaned_nodes": 6,
+      "component_details": [
+        [
+          "APLD",
+          "INSTITUTIONAL_BONDHOLDERS",
+          "PROJECT_LENDERS",
+          "WULF"
+        ],
+        [
+          "META",
+          "MUFG_BANK_SYN",
+          "NBIS"
+        ],
+        [
+          "HARDWARE_SUPPLIERS",
+          "SMCI"
+        ],
+        [
+          "BLUE_OWL_OBDC",
+          "IREN",
+          "PIMCO"
+        ]
+      ]
+    },
+    {
+      "removed_node": "MUFG_BANK_SYN",
+      "orig_components": 3,
+      "new_components": 4,
+      "max_component_size": 11,
+      "component_sizes": [
+        11,
+        3,
+        2,
+        2
+      ],
+      "isolated_orphaned_nodes": 0,
+      "component_details": [
+        [
+          "APLD",
+          "BLACKSTONE_MAGNETAR_SYN",
+          "CORZ",
+          "CRWV",
+          "INSTITUTIONAL_BONDHOLDERS",
+          "MORGAN_STANLEY_SYN",
+          "MSFT",
+          "NVDA",
+          "OEM_FINANCING_PARTNERS",
+          "PROJECT_LENDERS",
+          "WULF"
+        ],
+        [
+          "HARDWARE_SUPPLIERS",
+          "SMCI"
+        ],
+        [
+          "META",
+          "NBIS"
+        ],
+        [
+          "BLUE_OWL_OBDC",
+          "IREN",
+          "PIMCO"
+        ]
+      ]
+    },
+    {
+      "removed_node": "APLD",
+      "orig_components": 3,
+      "new_components": 3,
+      "max_component_size": 12,
+      "component_sizes": [
+        12,
+        3,
+        2
+      ],
+      "isolated_orphaned_nodes": 1,
+      "component_details": [
+        [
+          "BLACKSTONE_MAGNETAR_SYN",
+          "CORZ",
+          "CRWV",
+          "INSTITUTIONAL_BONDHOLDERS",
+          "META",
+          "MORGAN_STANLEY_SYN",
+          "MSFT",
+          "MUFG_BANK_SYN",
+          "NBIS",
+          "NVDA",
+          "OEM_FINANCING_PARTNERS",
+          "WULF"
+        ],
+        [
+          "HARDWARE_SUPPLIERS",
+          "SMCI"
+        ],
+        [
+          "BLUE_OWL_OBDC",
+          "IREN",
+          "PIMCO"
+        ]
+      ]
+    },
+    {
+      "removed_node": "BLUE_OWL_OBDC",
+      "orig_components": 3,
+      "new_components": 3,
+      "max_component_size": 14,
+      "component_sizes": [
+        14,
+        2,
+        2
+      ],
+      "isolated_orphaned_nodes": 0,
+      "component_details": [
+        [
+          "APLD",
+          "BLACKSTONE_MAGNETAR_SYN",
+          "CORZ",
+          "CRWV",
+          "INSTITUTIONAL_BONDHOLDERS",
+          "META",
+          "MORGAN_STANLEY_SYN",
+          "MSFT",
+          "MUFG_BANK_SYN",
+          "NBIS",
+          "NVDA",
+          "OEM_FINANCING_PARTNERS",
+          "PROJECT_LENDERS",
+          "WULF"
+        ],
+        [
+          "HARDWARE_SUPPLIERS",
+          "SMCI"
+        ],
+        [
+          "IREN",
+          "PIMCO"
+        ]
+      ]
+    },
+    {
+      "removed_node": "INSTITUTIONAL_BONDHOLDERS",
+      "orig_components": 3,
+      "new_components": 3,
+      "max_component_size": 12,
+      "component_sizes": [
+        12,
+        3,
+        2
+      ],
+      "isolated_orphaned_nodes": 1,
+      "component_details": [
+        [
+          "APLD",
+          "BLACKSTONE_MAGNETAR_SYN",
+          "CORZ",
+          "CRWV",
+          "META",
+          "MORGAN_STANLEY_SYN",
+          "MSFT",
+          "MUFG_BANK_SYN",
+          "NBIS",
+          "NVDA",
+          "OEM_FINANCING_PARTNERS",
+          "PROJECT_LENDERS"
+        ],
+        [
+          "HARDWARE_SUPPLIERS",
+          "SMCI"
+        ],
+        [
+          "BLUE_OWL_OBDC",
+          "IREN",
+          "PIMCO"
+        ]
+      ]
+    },
+    {
+      "removed_node": "CORZ",
+      "orig_components": 3,
+      "new_components": 3,
+      "max_component_size": 13,
+      "component_sizes": [
+        13,
+        3,
+        2
+      ],
+      "isolated_orphaned_nodes": 0,
+      "component_details": [
+        [
+          "APLD",
+          "BLACKSTONE_MAGNETAR_SYN",
+          "CRWV",
+          "INSTITUTIONAL_BONDHOLDERS",
+          "META",
+          "MORGAN_STANLEY_SYN",
+          "MSFT",
+          "MUFG_BANK_SYN",
+          "NBIS",
+          "NVDA",
+          "OEM_FINANCING_PARTNERS",
+          "PROJECT_LENDERS",
+          "WULF"
+        ],
+        [
+          "HARDWARE_SUPPLIERS",
+          "SMCI"
+        ],
+        [
+          "BLUE_OWL_OBDC",
+          "IREN",
+          "PIMCO"
+        ]
+      ]
+    },
+    {
+      "removed_node": "NBIS",
+      "orig_components": 3,
+      "new_components": 3,
+      "max_component_size": 12,
+      "component_sizes": [
+        12,
+        3,
+        2
+      ],
+      "isolated_orphaned_nodes": 1,
+      "component_details": [
+        [
+          "APLD",
+          "BLACKSTONE_MAGNETAR_SYN",
+          "CORZ",
+          "CRWV",
+          "INSTITUTIONAL_BONDHOLDERS",
+          "MORGAN_STANLEY_SYN",
+          "MSFT",
+          "MUFG_BANK_SYN",
+          "NVDA",
+          "OEM_FINANCING_PARTNERS",
+          "PROJECT_LENDERS",
+          "WULF"
+        ],
+        [
+          "HARDWARE_SUPPLIERS",
+          "SMCI"
+        ],
+        [
+          "BLUE_OWL_OBDC",
+          "IREN",
+          "PIMCO"
+        ]
+      ]
+    },
+    {
+      "removed_node": "IREN",
+      "orig_components": 3,
+      "new_components": 2,
+      "max_component_size": 14,
+      "component_sizes": [
+        14,
+        2
+      ],
+      "isolated_orphaned_nodes": 2,
+      "component_details": [
+        [
+          "APLD",
+          "BLACKSTONE_MAGNETAR_SYN",
+          "CORZ",
+          "CRWV",
+          "INSTITUTIONAL_BONDHOLDERS",
+          "META",
+          "MORGAN_STANLEY_SYN",
+          "MSFT",
+          "MUFG_BANK_SYN",
+          "NBIS",
+          "NVDA",
+          "OEM_FINANCING_PARTNERS",
+          "PROJECT_LENDERS",
+          "WULF"
+        ],
+        [
+          "HARDWARE_SUPPLIERS",
+          "SMCI"
+        ]
+      ]
+    },
+    {
+      "removed_node": "WULF",
+      "orig_components": 3,
+      "new_components": 3,
+      "max_component_size": 13,
+      "component_sizes": [
+        13,
+        3,
+        2
+      ],
+      "isolated_orphaned_nodes": 0,
+      "component_details": [
+        [
+          "APLD",
+          "BLACKSTONE_MAGNETAR_SYN",
+          "CORZ",
+          "CRWV",
+          "INSTITUTIONAL_BONDHOLDERS",
+          "META",
+          "MORGAN_STANLEY_SYN",
+          "MSFT",
+          "MUFG_BANK_SYN",
+          "NBIS",
+          "NVDA",
+          "OEM_FINANCING_PARTNERS",
+          "PROJECT_LENDERS"
+        ],
+        [
+          "HARDWARE_SUPPLIERS",
+          "SMCI"
+        ],
+        [
+          "BLUE_OWL_OBDC",
+          "IREN",
+          "PIMCO"
+        ]
+      ]
+    }
+  ],
+  "assumption_density_breadth": [
+    {
+      "assumption_id": "A001",
+      "name": "GPU_RESIDUAL_VALUE",
+      "edge_count": 25,
+      "root_entity_count": 13,
+      "root_counterparty_pairs_count": 9,
+      "density_ratio_edges_to_pairs": 2.78,
+      "density_ratio_edges_to_nodes": 1.92,
+      "total_quantified_usd": 56245000000.0,
+      "amount_type_breakdown": {
+        "principal_outstanding": 22045000000.0,
+        "remaining_commitment": 34200000000.0
+      },
+      "root_entities": [
+        "BLACKSTONE_MAGNETAR_SYN",
+        "BLUE_OWL_OBDC",
+        "CRWV",
+        "HARDWARE_SUPPLIERS",
+        "INSTITUTIONAL_BONDHOLDERS",
+        "IREN",
+        "MORGAN_STANLEY_SYN",
+        "MUFG_BANK_SYN",
+        "NBIS",
+        "OEM_FINANCING_PARTNERS",
+        "PIMCO",
+        "SMCI",
+        "WULF"
+      ],
+      "root_pairs": [
+        "BLACKSTONE_MAGNETAR_SYN <-> CRWV",
+        "BLUE_OWL_OBDC <-> IREN",
+        "CRWV <-> MORGAN_STANLEY_SYN",
+        "CRWV <-> MUFG_BANK_SYN",
+        "CRWV <-> OEM_FINANCING_PARTNERS",
+        "HARDWARE_SUPPLIERS <-> SMCI",
+        "INSTITUTIONAL_BONDHOLDERS <-> WULF",
+        "IREN <-> PIMCO",
+        "MUFG_BANK_SYN <-> NBIS"
+      ]
+    },
+    {
+      "assumption_id": "A002",
+      "name": "REFINANCING_AVAILABILITY",
+      "edge_count": 31,
+      "root_entity_count": 8,
+      "root_counterparty_pairs_count": 8,
+      "density_ratio_edges_to_pairs": 3.88,
+      "density_ratio_edges_to_nodes": 3.88,
+      "total_quantified_usd": 53147680000.0,
+      "amount_type_breakdown": {
+        "principal_outstanding": 42147680000.0,
+        "lifetime_contract_value": 11000000000.0
+      },
+      "root_entities": [
+        "APLD",
+        "BLACKSTONE_MAGNETAR_SYN",
+        "CRWV",
+        "INSTITUTIONAL_BONDHOLDERS",
+        "MORGAN_STANLEY_SYN",
+        "MUFG_BANK_SYN",
+        "OEM_FINANCING_PARTNERS",
+        "PROJECT_LENDERS"
+      ],
+      "root_pairs": [
+        "APLD <-> CRWV",
+        "APLD <-> INSTITUTIONAL_BONDHOLDERS",
+        "APLD <-> PROJECT_LENDERS",
+        "BLACKSTONE_MAGNETAR_SYN <-> CRWV",
+        "CRWV <-> INSTITUTIONAL_BONDHOLDERS",
+        "CRWV <-> MORGAN_STANLEY_SYN",
+        "CRWV <-> MUFG_BANK_SYN",
+        "CRWV <-> OEM_FINANCING_PARTNERS"
+      ]
+    },
+    {
+      "assumption_id": "A003",
+      "name": "CLUSTER_UTILIZATION",
+      "edge_count": 5,
+      "root_entity_count": 5,
+      "root_counterparty_pairs_count": 3,
+      "density_ratio_edges_to_pairs": 1.67,
+      "density_ratio_edges_to_nodes": 1.0,
+      "total_quantified_usd": 38000000000.0,
+      "amount_type_breakdown": {
+        "lifetime_contract_value": 38000000000.0
+      },
+      "root_entities": [
+        "APLD",
+        "CORZ",
+        "CRWV",
+        "META",
+        "NBIS"
+      ],
+      "root_pairs": [
+        "APLD <-> CRWV",
+        "CORZ <-> CRWV",
+        "META <-> NBIS"
+      ]
+    },
+    {
+      "assumption_id": "A004",
+      "name": "POWER_DELIVERY_TIMELINE",
+      "edge_count": 10,
+      "root_entity_count": 10,
+      "root_counterparty_pairs_count": 7,
+      "density_ratio_edges_to_pairs": 1.43,
+      "density_ratio_edges_to_nodes": 1.0,
+      "total_quantified_usd": 17865000000.0,
+      "amount_type_breakdown": {
+        "lifetime_contract_value": 11000000000.0,
+        "principal_outstanding": 6865000000.0
+      },
+      "root_entities": [
+        "APLD",
+        "BLUE_OWL_OBDC",
+        "CORZ",
+        "CRWV",
+        "INSTITUTIONAL_BONDHOLDERS",
+        "IREN",
+        "MUFG_BANK_SYN",
+        "NBIS",
+        "PIMCO",
+        "PROJECT_LENDERS"
+      ],
+      "root_pairs": [
+        "APLD <-> CRWV",
+        "APLD <-> INSTITUTIONAL_BONDHOLDERS",
+        "APLD <-> PROJECT_LENDERS",
+        "BLUE_OWL_OBDC <-> IREN",
+        "CORZ <-> CRWV",
+        "IREN <-> PIMCO",
+        "MUFG_BANK_SYN <-> NBIS"
+      ]
+    },
+    {
+      "assumption_id": "A005",
+      "name": "ANCHOR_CUSTOMER_CONTINUATION",
+      "edge_count": 4,
+      "root_entity_count": 3,
+      "root_counterparty_pairs_count": 2,
+      "density_ratio_edges_to_pairs": 2.0,
+      "density_ratio_edges_to_nodes": 1.33,
+      "total_quantified_usd": 14438000000.0,
+      "amount_type_breakdown": {
+        "recognized_revenue": 3438000000.0,
+        "lifetime_contract_value": 11000000000.0
+      },
+      "root_entities": [
+        "APLD",
+        "CRWV",
+        "MSFT"
+      ],
+      "root_pairs": [
+        "APLD <-> CRWV",
+        "CRWV <-> MSFT"
+      ]
+    },
+    {
+      "assumption_id": "A006",
+      "name": "HYPERSCALER_CAPEX_EXPANSION",
+      "edge_count": 4,
+      "root_entity_count": 7,
+      "root_counterparty_pairs_count": 4,
+      "density_ratio_edges_to_pairs": 1.0,
+      "density_ratio_edges_to_nodes": 0.57,
+      "total_quantified_usd": 66638000000.0,
+      "amount_type_breakdown": {
+        "equity_investment": 2000000000.0,
+        "remaining_commitment": 34200000000.0,
+        "recognized_revenue": 3438000000.0,
+        "lifetime_contract_value": 27000000000.0
+      },
+      "root_entities": [
+        "CRWV",
+        "HARDWARE_SUPPLIERS",
+        "META",
+        "MSFT",
+        "NBIS",
+        "NVDA",
+        "SMCI"
+      ],
+      "root_pairs": [
+        "CRWV <-> MSFT",
+        "CRWV <-> NVDA",
+        "HARDWARE_SUPPLIERS <-> SMCI",
+        "META <-> NBIS"
+      ]
+    },
+    {
+      "assumption_id": "A007",
+      "name": "BACKLOG_CASH_CONVERSION",
+      "edge_count": 1,
+      "root_entity_count": 2,
+      "root_counterparty_pairs_count": 1,
+      "density_ratio_edges_to_pairs": 1.0,
+      "density_ratio_edges_to_nodes": 0.5,
+      "total_quantified_usd": 34200000000.0,
+      "amount_type_breakdown": {
+        "remaining_commitment": 34200000000.0
+      },
+      "root_entities": [
+        "HARDWARE_SUPPLIERS",
+        "SMCI"
+      ],
+      "root_pairs": [
+        "HARDWARE_SUPPLIERS <-> SMCI"
+      ]
+    }
+  ],
+  "falsification_no_crwv": {
+    "edges_remaining": 16,
+    "total_edges": 45,
+    "components_count": 4,
+    "components": [
+      [
+        "APLD",
+        "INSTITUTIONAL_BONDHOLDERS",
+        "PROJECT_LENDERS",
+        "WULF"
+      ],
+      [
+        "META",
+        "MUFG_BANK_SYN",
+        "NBIS"
+      ],
+      [
+        "HARDWARE_SUPPLIERS",
+        "SMCI"
+      ],
+      [
+        "BLUE_OWL_OBDC",
+        "IREN",
+        "PIMCO"
+      ]
+    ],
+    "orphaned_nodes": [
+      "BLACKSTONE_MAGNETAR_SYN",
+      "CORZ",
+      "MORGAN_STANLEY_SYN",
+      "MSFT",
+      "NVDA",
+      "OEM_FINANCING_PARTNERS"
+    ],
+    "surviving_assumptions": {
+      "A002": {
+        "edges": 5,
+        "entities": [
+          "APLD",
+          "INSTITUTIONAL_BONDHOLDERS",
+          "PROJECT_LENDERS"
+        ]
+      },
+      "A001": {
+        "edges": 10,
+        "entities": [
+          "BLUE_OWL_OBDC",
+          "HARDWARE_SUPPLIERS",
+          "INSTITUTIONAL_BONDHOLDERS",
+          "IREN",
+          "MUFG_BANK_SYN",
+          "NBIS",
+          "PIMCO",
+          "SMCI",
+          "WULF"
+        ]
+      },
+      "A006": {
+        "edges": 2,
+        "entities": [
+          "HARDWARE_SUPPLIERS",
+          "META",
+          "NBIS",
+          "SMCI"
+        ]
+      },
+      "A007": {
+        "edges": 1,
+        "entities": [
+          "HARDWARE_SUPPLIERS",
+          "SMCI"
+        ]
+      },
+      "A004": {
+        "edges": 8,
+        "entities": [
+          "APLD",
+          "BLUE_OWL_OBDC",
+          "INSTITUTIONAL_BONDHOLDERS",
+          "IREN",
+          "MUFG_BANK_SYN",
+          "NBIS",
+          "PIMCO",
+          "PROJECT_LENDERS"
+        ]
+      },
+      "A003": {
+        "edges": 1,
+        "entities": [
+          "META",
+          "NBIS"
+        ]
+      }
+    }
+  }
+}
