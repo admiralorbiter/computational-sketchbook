@@ -22,17 +22,19 @@ This natural experiment allows us to test whether the multi-layer knowledge grap
 
 ## 2. Epistemic Separation & Sequencing Rules
 
-To guarantee strict scientific integrity and prevent hindsight bias, Task 025 is divided into three chronologically decoupled stages:
+To guarantee strict scientific integrity and prevent hindsight bias, Task 025 was designed with chronologically decoupled stages:
 
 ```
-[Task 025A: Preregistration]  -->  [Task 025B: Pre-Event Reconstruction]  -->  [Task 025C: Reveal & Scoring]
-   (Commit Protocol at               (Ingest only filings/dockets               (Ingest Sept 24+ disclosures,
-    epistemic freeze:                 dated <= 2026-09-23;                       evaluate against preregistered
-    2026-09-23 cutoff)                construct pre-event G_join)                 rubric, record precision/recall)
+[Task 025A: Protocol]       -->  [Task 025B: Pre-Event Graph]  -->  [Task 025C: Reveal & Scoring]
+Commit: 6bc951d (Sept 30)         Cutoff: <= 2026-09-23             Evidence: >= 2026-09-24
+Protocol committed to Git.        Reconstructs pre-event G_join.    Scores precision/recall.
 ```
 
-1. **Task 025A (This Document):** Pre-specifies hypotheses, admissible traversal sequences, target entity/contract candidate sets, directional stress mechanisms, and quantitative precision/recall rubrics. **Committed to version control before ingesting pre-event or post-event data.**
-2. **Task 025B (Pre-Event Reconstruction):** Constructs the pre-event knowledge graph $G_{\text{join}}(t \le \text{2026-09-23})$ using only SEC filings (Oracle 10-K/10-Q, Blue Owl OBDC Form 10-Q), New Mexico Public Regulation Commission (NMPRC) / PNM dockets, and local development agreements filed before September 24, 2026.
+> [!NOTE] Methodological Classification: Retrospective Temporal Holdout Backtest
+> Because protocol commit `6bc951d` was committed on September 30, 2026—following the September 24 public force-majeure report—this experiment is formally classified as a **Retrospective Temporal Holdout Validation / Historical Backtest** using an epistemic cutoff of September 23, 2026, rather than a prospective out-of-sample prediction. Git establishes that the analytical code and scoring rubric were committed without post-hoc cherry-picking of thresholds, but retrospective backtests inherently possess weaker epistemic blindness than ex-ante prospective commits. Genuine prospective validation requires an immutable frozen commit *prior* to real-world shock occurrence.
+
+1. **Task 025A (This Document):** Pre-specifies hypotheses, admissible traversal sequences, target entity/contract candidate sets, directional stress mechanisms, and quantitative precision/recall rubrics.
+2. **Task 025B (Pre-Event Reconstruction):** Constructs the pre-event knowledge graph $G_{\text{join}}(t \le \text{2026-09-23})$ using only primary disclosures available before September 24, 2026 (Oracle 10-K, NMSLO pipeline permit denial orders of July 15, 2026, and Reuters debt reporting of September 18, 2026).
 3. **Task 025C (Post-Event Reveal & Scoring):** Ingests the September 24+ observed event record and scores the pre-event model against the preregistered criteria.
 
 ---

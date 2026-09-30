@@ -1,12 +1,9 @@
-entity_or_node_id,predicted_preevent,implicated_postevent,classification,role
-BLUE_OWL,True,True,TP,Implicated Entity / Facility Node
-BLUE_OWL_OBDC,True,True,TP,Implicated Entity / Facility Node
-BORDERPLEX,True,True,TP,Implicated Entity / Facility Node
-CONSTRUCTION_LENDER_SYNDICATE,True,True,TP,Implicated Entity / Facility Node
-FAC-PROJECT-JUPITER-NM,True,True,TP,Implicated Entity / Facility Node
-NMSLO,True,True,TP,Implicated Entity / Facility Node
-ORCL,True,True,TP,Implicated Entity / Facility Node
-PNM,True,True,TP,Implicated Entity / Facility Node
-PROJECT_JUPITER_SPV,True,True,TP,Implicated Entity / Facility Node
-STACK_INFRA,True,True,TP,Implicated Entity / Facility Node
-WECC,True,False,FP,Candidate Node
+node_id,implicated_in_evidence,predicted_strict_conduit,strict_classification,predicted_extended_tree,tree_classification
+BLUE_OWL,True,False,FN,True,TP
+BORDERPLEX,True,False,FN,True,TP
+CONSTRUCTION_LENDER_SYNDICATE,True,True,TP,True,TP
+FAC-PROJECT-JUPITER-NM,True,True,TP,True,TP
+NMSLO,True,True,TP,True,TP
+ORCL,True,True,TP,True,TP
+PROJECT_JUPITER_SPV,True,True,TP,True,TP
+STACK_INFRA,True,False,FN,True,TP
