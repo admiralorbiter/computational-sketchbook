@@ -35,6 +35,7 @@ def build_entities_table():
             "ticker": info.get("ticker"),
             "cik": info.get("cik"),
             "parent_entity_id": info.get("parent_entity_id"),
+            "manager_entity_id": info.get("manager_entity_id"),
             "category": info.get("category"),
             "subsector": info.get("subsector"),
             "jurisdiction": info.get("jurisdiction"),
@@ -713,7 +714,21 @@ def build_evidence_claims():
             "exact_quote": 'completed its previously announced private offering of 1.00% Convertible Senior Notes due 2031 (the "notes"). The notes were sold under a purchase agreement, dated as of August 18, 2025, entered into by and between the Company and Morgan Stanley & Co. LLC, as representative of the several initial purchasers named therein (the "Initial Purchasers"), for resale to persons reasonably believed to be qualified institutional buyers pursuant to Rule 144A under the Securities Act of 1933, as amended (the "Securities Act"). The aggregate principal amount of notes sold in the offering was $850 million. The Company also granted to the initial purchasers of the notes an option to purchase, within a 13-day period beginning on, and including, the date on which the notes were first issued, up to an additional $150 million aggregate principal amount of the notes.',
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 8-K direct audit",
-            "verifier_notes": "Form 8-K filed August 20, 2025 establishing issuance of $850.0M + $150.0M greenshoe ($1,000.0M total) 1.00% convertible senior notes maturing September 1, 2031."
+            "verifier_notes": "Form 8-K filed August 20, 2025 establishing initial issuance of $850.0M 1.00% convertible senior notes maturing September 1, 2031, plus 13-day option for up to $150.0M additional notes."
+        },
+        {
+            "claim_id": "CLM-WULF-003A",
+            "entity_id": "WULF",
+            "filing_type": "8-K",
+            "accession_number": "0001104659-25-081886",
+            "filing_date": "2025-08-22",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1083301/000110465925081886/tm2523651d6_8k.htm",
+            "section_locator": "Item 3.02 Unregistered Sales of Equity Securities",
+            "quote_type": "exact_quote",
+            "exact_quote": 'On August 21, 2025, the Initial Purchasers elected to fully exercise such option, and on August 22, 2025, the Company issued $150 million aggregate principal amount of Additional Notes. The aggregate principal amount of notes sold in the offering was $1 billion, inclusive of the $150 million aggregate principal amount of Additional Notes issued pursuant to the option.',
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 8-K direct audit",
+            "verifier_notes": "Form 8-K filed August 22, 2025 establishing full exercise of $150.0M greenshoe option and issuance of additional notes, bringing total 2031 notes principal to $1,000.0M ($1.0B)."
         },
         {
             "claim_id": "CLM-WULF-004",
@@ -744,18 +759,88 @@ def build_evidence_claims():
             "verifier_notes": "Contemporaneous Form 8-K filed June 24, 2024 establishing execution of Coatue $150.0M convertible note agreement and earliest public awareness."
         },
         {
+            "claim_id": "CLM-HUT-003",
+            "entity_id": "HUT",
+            "filing_type": "8-K",
+            "accession_number": "0001558370-24-009418",
+            "filing_date": "2024-06-24",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1964789/000155837024009418/hut-20240621x8k.htm",
+            "section_locator": "Item 1.01 Entry into a Material Definitive Agreement - Maturity Semantics",
+            "quote_type": "exact_quote",
+            "exact_quote": "The Note will have an initial term of five years and may be extended, at the Company's option, for up to three one-year terms. At maturity, the Company will pay the Purchaser the Accreted Principal Amount, together with any accrued and unpaid interest thereon.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 8-K direct audit",
+            "verifier_notes": "Form 8-K filed June 24, 2024 establishing 5-year initial maturity to June 28, 2029 with up to three optional one-year extensions."
+        },
+        {
             "claim_id": "CLM-CORZ-002",
             "entity_id": "CORZ",
             "filing_type": "8-K",
             "accession_number": "0001628280-24-026483",
             "filing_date": "2024-06-04",
             "document_url": "https://www.sec.gov/Archives/edgar/data/1839341/000162828024026483/corzcoreweavehpc.htm",
-            "section_locator": "Exhibit 99.1 Press Release",
+            "section_locator": "Exhibit 99.1 Press Release - Initial Contract",
             "quote_type": "exact_quote",
             "exact_quote": 'Core Scientific, Inc. (NASDAQ: CORZ) ("Core Scientific" or the "Company"), one of the largest owners and operators of high-powered digital infrastructure for bitcoin mining and hosting services in North America, today announced the signing of a series of 12-year contracts with CoreWeave, the AI Hyperscaler. Under the terms of the agreements, Core Scientific will deliver approximately 200 megawatts ("MW") of infrastructure to host CoreWeave\'s high-performance compute ("HPC") operations.',
             "evidence_class": "A",
             "extraction_method": "SEC EDGAR Form 8-K direct audit",
             "verifier_notes": "Contemporaneous Form 8-K filed June 4, 2024 establishing execution of initial 12-year colocation contract with CoreWeave for ~200 MW and earliest public awareness."
+        },
+        {
+            "claim_id": "CLM-CORZ-003",
+            "entity_id": "CORZ",
+            "filing_type": "8-K",
+            "accession_number": "0001628280-24-029900",
+            "filing_date": "2024-06-25",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1839341/000162828024029900/ex991-finalcorzhpcoptionre.htm",
+            "section_locator": "Exhibit 99.1 Press Release - Option 1 Exercise",
+            "quote_type": "exact_quote",
+            "exact_quote": "Building on the previously announced 200 MW of infrastructure for HPC hosting, the agreement announced today will position Core Scientific to provide approximately 270 MW of HPC infrastructure to CoreWeave by the second half of 2025.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 8-K direct audit",
+            "verifier_notes": "Form 8-K filed June 25, 2024 establishing CoreWeave exercise of Option 1 expanding colocation infrastructure to 270 MW."
+        },
+        {
+            "claim_id": "CLM-CORZ-004",
+            "entity_id": "CORZ",
+            "filing_type": "8-K",
+            "accession_number": "0001628280-24-034989",
+            "filing_date": "2024-08-06",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1839341/000162828024034989/exhibit991-corescientifich.htm",
+            "section_locator": "Exhibit 99.1 Press Release - Option 2 Exercise",
+            "quote_type": "exact_quote",
+            "exact_quote": "Building on the previously announced 270 MW of infrastructure for HPC hosting, the agreement announced today will position Core Scientific to provide a total of approximately 382 MW of HPC infrastructure to CoreWeave by the first half of 2026.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 8-K direct audit",
+            "verifier_notes": "Form 8-K filed August 6, 2024 establishing CoreWeave exercise of Option 2 expanding colocation infrastructure to 382 MW."
+        },
+        {
+            "claim_id": "CLM-CORZ-005",
+            "entity_id": "CORZ",
+            "filing_type": "8-K",
+            "accession_number": "0001628280-24-043341",
+            "filing_date": "2024-10-23",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1839341/000162828024043341/corescientifichpcoption3re.htm",
+            "section_locator": "Exhibit 99.1 Press Release - Option 3 Exercise",
+            "quote_type": "exact_quote",
+            "exact_quote": "Building on the previously announced 382 MW of infrastructure for HPC hosting, the option exercise announced today will position Core Scientific to provide a total of approximately 500 MW of critical IT load for HPC infrastructure to CoreWeave by the second half of 2026.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 8-K direct audit",
+            "verifier_notes": "Form 8-K filed October 23, 2024 establishing CoreWeave exercise of Option 3 expanding critical IT load to 500 MW."
+        },
+        {
+            "claim_id": "CLM-CORZ-006",
+            "entity_id": "CORZ",
+            "filing_type": "8-K",
+            "accession_number": "0001628280-25-008312",
+            "filing_date": "2025-02-27",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1839341/000162828025008312/ex991-coreweavepressrelease.htm",
+            "section_locator": "Exhibit 99.1 Press Release - Denton Expansion",
+            "quote_type": "exact_quote",
+            "exact_quote": "The expansion increases CoreWeave's total contracted HPC infrastructure with Core Scientific to approximately 590 MW across six sites.",
+            "evidence_class": "A",
+            "extraction_method": "SEC EDGAR Form 8-K direct audit",
+            "verifier_notes": "Form 8-K filed February 27, 2025 establishing Denton site expansion increasing total contracted capacity to 590 MW across six sites."
         }
     ]
     df = pd.DataFrame(claims)
@@ -2416,7 +2501,7 @@ def build_obligations():
             "payment_conditions": "Monthly colocation service fees; represents ~77% of Core Scientific revenue",
             "supersedes": None,
             "superseded_by": None,
-            "claim_ids": "CLM-CORZ-001,CLM-CORZ-002",
+            "claim_ids": "CLM-CORZ-001,CLM-CORZ-002,CLM-CORZ-003,CLM-CORZ-004,CLM-CORZ-005,CLM-CORZ-006",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A003,A004"
@@ -2434,7 +2519,7 @@ def build_obligations():
             "currency": "USD",
             "effective_date": "2024-06-28",
             "valid_from": "2024-06-28",
-            "maturity_date": "2029-06-30",
+            "maturity_date": "2029-06-28",
             "valid_to": "2026-05-11",
             "economic_valid_from": "2024-06-28",
             "economic_valid_to": "2026-05-11",
@@ -2453,7 +2538,7 @@ def build_obligations():
             "payment_conditions": "8.0% coupon; converted into 9,715,476 shares ($159.3M accreted value) on May 11, 2026 extinguishing debt",
             "supersedes": None,
             "superseded_by": None,
-            "claim_ids": "CLM-HUT-001,CLM-HUT-002",
+            "claim_ids": "CLM-HUT-001,CLM-HUT-002,CLM-HUT-003",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A001"
@@ -2525,7 +2610,7 @@ def build_obligations():
             "payment_conditions": "Semi-annual coupon at 1.00% per annum; $850M initial + $150M greenshoe ($1.0B total)",
             "supersedes": None,
             "superseded_by": None,
-            "claim_ids": "CLM-WULF-001,CLM-WULF-003",
+            "claim_ids": "CLM-WULF-001,CLM-WULF-003,CLM-WULF-003A",
             "evidence_class": "A",
             "confidence": 1.0,
             "shared_assumptions": "A001"
@@ -2598,8 +2683,8 @@ def build_obligations():
         "OBL-IREN-DEBT-NOTES-2026": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0900, "spread_grid_id": None},
         "OBL-HUT-DEBT-COATUE-CONV-2024": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0800, "spread_grid_id": None},
         "OBL-WULF-DEBT-CONV-2030": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0275, "spread_grid_id": None},
-        "OBL-WULF-DEBT-CONV-2031": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0300, "spread_grid_id": None},
-        "OBL-WULF-DEBT-CONV-2032": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0325, "spread_grid_id": None},
+        "OBL-WULF-DEBT-CONV-2031": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0100, "spread_grid_id": None},
+        "OBL-WULF-DEBT-CONV-2032": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0000, "spread_grid_id": None},
     }
 
     for obl in obligations:
@@ -3140,7 +3225,51 @@ def build_obligation_events():
             "claim_id": "CLM-CORZ-002",
             "description": "Core Scientific executes initial 12-year colocation agreement with CoreWeave for ~200 MW"
         },
-        # 46. Core Scientific CoreWeave Colocation expansion
+        # 46. Core Scientific CoreWeave Colocation Option 1
+        {
+            "event_id": "EVT-CRWV-CORZ-COLOCATION-OPT1",
+            "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024",
+            "event_type": "amended",
+            "economic_effective_at": "2024-06-25",
+            "publicly_known_at": "2024-06-25",
+            "related_obligation_id": None,
+            "claim_id": "CLM-CORZ-003",
+            "description": "CoreWeave exercises Option 1, increasing contracted HPC infrastructure capacity to approximately 270 MW"
+        },
+        # 47. Core Scientific CoreWeave Colocation Option 2
+        {
+            "event_id": "EVT-CRWV-CORZ-COLOCATION-OPT2",
+            "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024",
+            "event_type": "amended",
+            "economic_effective_at": "2024-08-06",
+            "publicly_known_at": "2024-08-06",
+            "related_obligation_id": None,
+            "claim_id": "CLM-CORZ-004",
+            "description": "CoreWeave exercises Option 2, increasing contracted HPC infrastructure capacity to approximately 382 MW"
+        },
+        # 48. Core Scientific CoreWeave Colocation Option 3
+        {
+            "event_id": "EVT-CRWV-CORZ-COLOCATION-OPT3",
+            "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024",
+            "event_type": "amended",
+            "economic_effective_at": "2024-10-22",
+            "publicly_known_at": "2024-10-23",
+            "related_obligation_id": None,
+            "claim_id": "CLM-CORZ-005",
+            "description": "CoreWeave exercises Option 3, increasing contracted HPC infrastructure capacity to approximately 500 MW"
+        },
+        # 49. Core Scientific CoreWeave Colocation Option 4 / Denton Expansion
+        {
+            "event_id": "EVT-CRWV-CORZ-COLOCATION-OPT4",
+            "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024",
+            "event_type": "amended",
+            "economic_effective_at": "2025-02-26",
+            "publicly_known_at": "2025-02-27",
+            "related_obligation_id": None,
+            "claim_id": "CLM-CORZ-006",
+            "description": "Core Scientific and CoreWeave expand colocation contract with Denton site addition, bringing total capacity to 590 MW across six sites"
+        },
+        # 50. Core Scientific CoreWeave Colocation expansion (Q2 2026 10-Q observation)
         {
             "event_id": "EVT-CRWV-CORZ-COLOCATION-EXPANDED",
             "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024",
@@ -3151,7 +3280,7 @@ def build_obligation_events():
             "claim_id": "CLM-CORZ-001",
             "description": "Core Scientific and CoreWeave expand colocation contract to ~590 MW across 5 sites (~77% of revenue)"
         },
-        # 47. Hut 8 Coatue Convertible Note creation
+        # 51. Hut 8 Coatue Convertible Note creation
         {
             "event_id": "EVT-HUT-DEBT-COATUE-CONV-CREATED",
             "obligation_id": "OBL-HUT-DEBT-COATUE-CONV-2024",
@@ -3162,7 +3291,7 @@ def build_obligation_events():
             "claim_id": "CLM-HUT-002",
             "description": "Hut 8 Corp. issues $150.0M 8.0% convertible senior note to Coatue Tactical Solutions"
         },
-        # 48. Hut 8 Coatue Convertible Note extinction / conversion
+        # 52. Hut 8 Coatue Convertible Note extinction / conversion
         {
             "event_id": "EVT-HUT-DEBT-COATUE-CONV-CONVERTED",
             "obligation_id": "OBL-HUT-DEBT-COATUE-CONV-2024",
@@ -3173,7 +3302,7 @@ def build_obligation_events():
             "claim_id": "CLM-HUT-001",
             "description": "Coatue converts full $159.3M accreted note principal into 9,715,476 common shares, extinguishing the debt"
         },
-        # 49. TeraWulf 2030 Convertible Notes creation
+        # 53. TeraWulf 2030 Convertible Notes creation
         {
             "event_id": "EVT-WULF-DEBT-CONV-2030-CREATED",
             "obligation_id": "OBL-WULF-DEBT-CONV-2030",
@@ -3184,7 +3313,7 @@ def build_obligation_events():
             "claim_id": "CLM-WULF-002",
             "description": "TeraWulf Inc. completes offering of $500.0M 2.75% Convertible Senior Notes due 2030"
         },
-        # 50. TeraWulf 2031 Convertible Notes creation
+        # 54. TeraWulf 2031 Convertible Notes initial issuance ($850.0M)
         {
             "event_id": "EVT-WULF-DEBT-CONV-2031-CREATED",
             "obligation_id": "OBL-WULF-DEBT-CONV-2031",
@@ -3193,9 +3322,20 @@ def build_obligation_events():
             "publicly_known_at": "2025-08-20",
             "related_obligation_id": None,
             "claim_id": "CLM-WULF-003",
-            "description": "TeraWulf Inc. completes offering of $850.0M initial + $150.0M greenshoe ($1,000.0M total) 1.00% Convertible Senior Notes due 2031"
+            "description": "TeraWulf Inc. completes private offering of $850.0M 1.00% Convertible Senior Notes due 2031"
         },
-        # 51. TeraWulf 2032 Convertible Notes creation
+        # 55. TeraWulf 2031 Convertible Notes greenshoe exercise ($150.0M -> $1.0B total)
+        {
+            "event_id": "EVT-WULF-DEBT-CONV-2031-GREENSHOE",
+            "obligation_id": "OBL-WULF-DEBT-CONV-2031",
+            "event_type": "amended",
+            "economic_effective_at": "2025-08-22",
+            "publicly_known_at": "2025-08-22",
+            "related_obligation_id": None,
+            "claim_id": "CLM-WULF-003A",
+            "description": "Initial purchasers exercise greenshoe option in full; TeraWulf issues $150.0M additional notes bringing aggregate principal to $1,000.0M"
+        },
+        # 56. TeraWulf 2032 Convertible Notes creation
         {
             "event_id": "EVT-WULF-DEBT-CONV-2032-CREATED",
             "obligation_id": "OBL-WULF-DEBT-CONV-2032",
@@ -3939,7 +4079,67 @@ def build_obligation_facts_table():
             "claim_id": "CLM-CORZ-002",
             "evidence_class": "A"
         },
-        # 51. Core Scientific CoreWeave Expanded Colocation Capacity
+        # 51. Core Scientific CoreWeave Option 1 Colocation Capacity
+        {
+            "fact_id": "FACT-CRWV-CORZ-CAP-20240625",
+            "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024",
+            "entity_id": "CRWV",
+            "attribute": "capacity_mw",
+            "value": 270.0,
+            "unit": "MW",
+            "economic_as_of": "2024-06-25",
+            "publicly_known_from": "2024-06-25",
+            "truth_claim_id": "CLM-CORZ-003",
+            "knowledge_claim_id": "CLM-CORZ-003",
+            "claim_id": "CLM-CORZ-003",
+            "evidence_class": "A"
+        },
+        # 52. Core Scientific CoreWeave Option 2 Colocation Capacity
+        {
+            "fact_id": "FACT-CRWV-CORZ-CAP-20240806",
+            "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024",
+            "entity_id": "CRWV",
+            "attribute": "capacity_mw",
+            "value": 382.0,
+            "unit": "MW",
+            "economic_as_of": "2024-08-06",
+            "publicly_known_from": "2024-08-06",
+            "truth_claim_id": "CLM-CORZ-004",
+            "knowledge_claim_id": "CLM-CORZ-004",
+            "claim_id": "CLM-CORZ-004",
+            "evidence_class": "A"
+        },
+        # 53. Core Scientific CoreWeave Option 3 Colocation Capacity
+        {
+            "fact_id": "FACT-CRWV-CORZ-CAP-20241022",
+            "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024",
+            "entity_id": "CRWV",
+            "attribute": "capacity_mw",
+            "value": 500.0,
+            "unit": "MW",
+            "economic_as_of": "2024-10-22",
+            "publicly_known_from": "2024-10-23",
+            "truth_claim_id": "CLM-CORZ-005",
+            "knowledge_claim_id": "CLM-CORZ-005",
+            "claim_id": "CLM-CORZ-005",
+            "evidence_class": "A"
+        },
+        # 54. Core Scientific CoreWeave Option 4 Colocation Capacity (Denton Expansion)
+        {
+            "fact_id": "FACT-CRWV-CORZ-CAP-20250226",
+            "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024",
+            "entity_id": "CRWV",
+            "attribute": "capacity_mw",
+            "value": 590.0,
+            "unit": "MW",
+            "economic_as_of": "2025-02-26",
+            "publicly_known_from": "2025-02-27",
+            "truth_claim_id": "CLM-CORZ-006",
+            "knowledge_claim_id": "CLM-CORZ-006",
+            "claim_id": "CLM-CORZ-006",
+            "evidence_class": "A"
+        },
+        # 55. Core Scientific CoreWeave Expanded Colocation Capacity (Q2 2026 Period End)
         {
             "fact_id": "FACT-CRWV-CORZ-CAP-20260630",
             "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024",
@@ -3954,7 +4154,7 @@ def build_obligation_facts_table():
             "claim_id": "CLM-CORZ-001",
             "evidence_class": "A"
         },
-        # 52. Hut 8 Coatue Convertible Initial Principal
+        # 56. Hut 8 Coatue Convertible Initial Principal
         {
             "fact_id": "FACT-HUT-COATUE-PRIN-20240628",
             "obligation_id": "OBL-HUT-DEBT-COATUE-CONV-2024",
@@ -3969,7 +4169,7 @@ def build_obligation_facts_table():
             "claim_id": "CLM-HUT-001",
             "evidence_class": "A"
         },
-        # 53. Hut 8 Coatue Convertible Extinction upon Conversion
+        # 57. Hut 8 Coatue Convertible Extinction upon Conversion
         {
             "fact_id": "FACT-HUT-COATUE-PRIN-20260511",
             "obligation_id": "OBL-HUT-DEBT-COATUE-CONV-2024",
@@ -3984,7 +4184,7 @@ def build_obligation_facts_table():
             "claim_id": "CLM-HUT-001",
             "evidence_class": "A"
         },
-        # 54. TeraWulf 2030 Convertible Notes Principal at Issuance
+        # 58. TeraWulf 2030 Convertible Notes Principal at Issuance
         {
             "fact_id": "FACT-WULF-CONV-2030-PRIN-20241025",
             "obligation_id": "OBL-WULF-DEBT-CONV-2030",
@@ -3999,7 +4199,7 @@ def build_obligation_facts_table():
             "claim_id": "CLM-WULF-002",
             "evidence_class": "A"
         },
-        # 55. TeraWulf 2030 Convertible Notes Principal at 2026-06-30
+        # 59. TeraWulf 2030 Convertible Notes Principal at 2026-06-30
         {
             "fact_id": "FACT-WULF-CONV-2030-PRIN-20260630",
             "obligation_id": "OBL-WULF-DEBT-CONV-2030",
@@ -4014,13 +4214,13 @@ def build_obligation_facts_table():
             "claim_id": "CLM-WULF-001",
             "evidence_class": "A"
         },
-        # 56. TeraWulf 2031 Convertible Notes Principal at Issuance
+        # 60. TeraWulf 2031 Convertible Notes Initial Issuance Principal ($850.0M)
         {
             "fact_id": "FACT-WULF-CONV-2031-PRIN-20250820",
             "obligation_id": "OBL-WULF-DEBT-CONV-2031",
             "entity_id": "WULF",
             "attribute": "principal_outstanding",
-            "value": 1000000000.0,
+            "value": 850000000.0,
             "unit": "USD",
             "economic_as_of": "2025-08-20",
             "publicly_known_from": "2025-08-20",
@@ -4029,7 +4229,22 @@ def build_obligation_facts_table():
             "claim_id": "CLM-WULF-003",
             "evidence_class": "A"
         },
-        # 57. TeraWulf 2031 Convertible Notes Principal at 2026-06-30
+        # 61. TeraWulf 2031 Convertible Notes Greenshoe Exercise Principal ($1.0B total)
+        {
+            "fact_id": "FACT-WULF-CONV-2031-PRIN-20250822",
+            "obligation_id": "OBL-WULF-DEBT-CONV-2031",
+            "entity_id": "WULF",
+            "attribute": "principal_outstanding",
+            "value": 1000000000.0,
+            "unit": "USD",
+            "economic_as_of": "2025-08-22",
+            "publicly_known_from": "2025-08-22",
+            "truth_claim_id": "CLM-WULF-003A",
+            "knowledge_claim_id": "CLM-WULF-003A",
+            "claim_id": "CLM-WULF-003A",
+            "evidence_class": "A"
+        },
+        # 62. TeraWulf 2031 Convertible Notes Principal at 2026-06-30
         {
             "fact_id": "FACT-WULF-CONV-2031-PRIN-20260630",
             "obligation_id": "OBL-WULF-DEBT-CONV-2031",
@@ -4044,7 +4259,7 @@ def build_obligation_facts_table():
             "claim_id": "CLM-WULF-001",
             "evidence_class": "A"
         },
-        # 58. TeraWulf 2032 Convertible Notes Principal at Issuance
+        # 63. TeraWulf 2032 Convertible Notes Principal at Issuance
         {
             "fact_id": "FACT-WULF-CONV-2032-PRIN-20251031",
             "obligation_id": "OBL-WULF-DEBT-CONV-2032",
@@ -4059,7 +4274,7 @@ def build_obligation_facts_table():
             "claim_id": "CLM-WULF-004",
             "evidence_class": "A"
         },
-        # 59. TeraWulf 2032 Convertible Notes Principal at 2026-06-30
+        # 64. TeraWulf 2032 Convertible Notes Principal at 2026-06-30
         {
             "fact_id": "FACT-WULF-CONV-2032-PRIN-20260630",
             "obligation_id": "OBL-WULF-DEBT-CONV-2032",
@@ -4130,7 +4345,8 @@ def build_obligation_terms() -> pd.DataFrame:
         {"term_id": "TRM-WULF-CONV2030-REC", "obligation_id": "OBL-WULF-DEBT-CONV-2030", "attribute": "recourse", "value": "senior_unsecured_convertible", "claim_id": "CLM-WULF-002", "source_locator": "Item 1.01", "evidence_class": "A"},
 
         # --- TeraWulf 2031 Convertible Notes ---
-        {"term_id": "TRM-WULF-CONV2031-PRIN", "obligation_id": "OBL-WULF-DEBT-CONV-2031", "attribute": "principal_amount", "value": "1000000000.0", "claim_id": "CLM-WULF-003", "source_locator": "Item 1.01", "evidence_class": "A"},
+        {"term_id": "TRM-WULF-CONV2031-INIT-PRIN", "obligation_id": "OBL-WULF-DEBT-CONV-2031", "attribute": "initial_principal_amount", "value": "850000000.0", "claim_id": "CLM-WULF-003", "source_locator": "Item 1.01", "evidence_class": "A"},
+        {"term_id": "TRM-WULF-CONV2031-PRIN", "obligation_id": "OBL-WULF-DEBT-CONV-2031", "attribute": "principal_amount", "value": "1000000000.0", "claim_id": "CLM-WULF-003A", "source_locator": "Item 3.02", "evidence_class": "A"},
         {"term_id": "TRM-WULF-CONV2031-RATE", "obligation_id": "OBL-WULF-DEBT-CONV-2031", "attribute": "interest_rate", "value": "0.0100", "claim_id": "CLM-WULF-003", "source_locator": "Item 1.01", "evidence_class": "A"},
         {"term_id": "TRM-WULF-CONV2031-EFF", "obligation_id": "OBL-WULF-DEBT-CONV-2031", "attribute": "effective_date", "value": "2025-08-20", "claim_id": "CLM-WULF-003", "source_locator": "Item 1.01", "evidence_class": "A"},
         {"term_id": "TRM-WULF-CONV2031-MAT", "obligation_id": "OBL-WULF-DEBT-CONV-2031", "attribute": "maturity_date", "value": "2031-09-01", "claim_id": "CLM-WULF-003", "source_locator": "Item 1.01", "evidence_class": "A"},
@@ -4148,11 +4364,16 @@ def build_obligation_terms() -> pd.DataFrame:
         {"term_id": "TRM-HUT-COATUE-EFF", "obligation_id": "OBL-HUT-DEBT-COATUE-CONV-2024", "attribute": "effective_date", "value": "2024-06-28", "claim_id": "CLM-HUT-001", "source_locator": "Note 9", "evidence_class": "A"},
         {"term_id": "TRM-HUT-COATUE-AGMT", "obligation_id": "OBL-HUT-DEBT-COATUE-CONV-2024", "attribute": "purchase_agreement_date", "value": "2024-06-21", "claim_id": "CLM-HUT-002", "source_locator": "Item 1.01", "evidence_class": "A"},
         {"term_id": "TRM-HUT-COATUE-RATE", "obligation_id": "OBL-HUT-DEBT-COATUE-CONV-2024", "attribute": "interest_rate", "value": "0.0800", "claim_id": "CLM-HUT-001", "source_locator": "Note 9", "evidence_class": "A"},
+        {"term_id": "TRM-HUT-COATUE-MAT", "obligation_id": "OBL-HUT-DEBT-COATUE-CONV-2024", "attribute": "maturity_date", "value": "2029-06-28", "claim_id": "CLM-HUT-003", "source_locator": "Item 1.01", "evidence_class": "A"},
+        {"term_id": "TRM-HUT-COATUE-EXT-OPT", "obligation_id": "OBL-HUT-DEBT-COATUE-CONV-2024", "attribute": "extension_options", "value": "up to three one-year terms", "claim_id": "CLM-HUT-003", "source_locator": "Item 1.01", "evidence_class": "A"},
         {"term_id": "TRM-HUT-COATUE-EXT", "obligation_id": "OBL-HUT-DEBT-COATUE-CONV-2024", "attribute": "extinction_date", "value": "2026-05-11", "claim_id": "CLM-HUT-001", "source_locator": "Note 9 / Item 2", "evidence_class": "A"},
 
         # --- Core Scientific CoreWeave Colocation ---
         {"term_id": "TRM-CORZ-CRWV-INIT-CAP", "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024", "attribute": "initial_capacity_mw", "value": "200.0", "claim_id": "CLM-CORZ-002", "source_locator": "Exhibit 99.1", "evidence_class": "A"},
-        {"term_id": "TRM-CORZ-CRWV-EXP-CAP", "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024", "attribute": "contracted_capacity_mw", "value": "590.0", "claim_id": "CLM-CORZ-001", "source_locator": "Note 5", "evidence_class": "A"},
+        {"term_id": "TRM-CORZ-CRWV-OPT1-CAP", "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024", "attribute": "option1_capacity_mw", "value": "270.0", "claim_id": "CLM-CORZ-003", "source_locator": "Exhibit 99.1", "evidence_class": "A"},
+        {"term_id": "TRM-CORZ-CRWV-OPT2-CAP", "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024", "attribute": "option2_capacity_mw", "value": "382.0", "claim_id": "CLM-CORZ-004", "source_locator": "Exhibit 99.1", "evidence_class": "A"},
+        {"term_id": "TRM-CORZ-CRWV-OPT3-CAP", "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024", "attribute": "option3_capacity_mw", "value": "500.0", "claim_id": "CLM-CORZ-005", "source_locator": "Exhibit 99.1", "evidence_class": "A"},
+        {"term_id": "TRM-CORZ-CRWV-EXP-CAP", "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024", "attribute": "contracted_capacity_mw", "value": "590.0", "claim_id": "CLM-CORZ-006", "source_locator": "Exhibit 99.1", "evidence_class": "A"},
         {"term_id": "TRM-CORZ-CRWV-TERM", "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024", "attribute": "term_years", "value": "12.0", "claim_id": "CLM-CORZ-002", "source_locator": "Exhibit 99.1", "evidence_class": "A"},
 
         # --- IREN Blue Owl & PIMCO GPU Financing ---

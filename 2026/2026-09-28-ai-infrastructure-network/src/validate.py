@@ -183,10 +183,16 @@ CLAIM_TO_SEC_FILE = {
     'CLM-HUT-001': 'HUT_10Q_20260630.htm',
     'CLM-WULF-001': 'WULF_10Q_20260630.htm',
     'CLM-WULF-002': 'WULF_8K_20241025_conv2030.htm',
-    'CLM-WULF-003': 'WULF_8K_20250822_conv2031.htm',
+    'CLM-WULF-003': 'WULF_8K_20250820_conv2031.htm',
+    'CLM-WULF-003A': 'WULF_8K_20250822_greenshoe.htm',
     'CLM-WULF-004': 'WULF_8K_20251031_conv2032.htm',
     'CLM-HUT-002': 'HUT_8K_20240624_coatue.htm',
+    'CLM-HUT-003': 'HUT_8K_20240624_coatue.htm',
     'CLM-CORZ-002': 'CORZ_8K_20240604_crwv.htm',
+    'CLM-CORZ-003': 'CORZ_8K_20240625_opt1.htm',
+    'CLM-CORZ-004': 'CORZ_8K_20240806_opt2.htm',
+    'CLM-CORZ-005': 'CORZ_8K_20241023_opt3.htm',
+    'CLM-CORZ-006': 'CORZ_8K_20250227_opt4.htm',
 }
 
 
@@ -242,11 +248,11 @@ def validate_observatory():
         "entities.parquet": 46,
         "financials.parquet": 13754,
         "obligations.parquet": 47,
-        "obligation_events.parquet": 51,
-        "obligation_facts.parquet": 59,
-        "obligation_terms.parquet": 38,
+        "obligation_events.parquet": 56,
+        "obligation_facts.parquet": 64,
+        "obligation_terms.parquet": 44,
         "assumptions.parquet": 7,
-        "evidence_claims.parquet": 48,
+        "evidence_claims.parquet": 54,
     }
     for rf, expected_rows in required_files.items():
         p = PROCESSED_DIR / rf
@@ -267,9 +273,10 @@ def validate_observatory():
     else:
         print(f"  [OK] CIK uniqueness verified: {len(ciks)} distinct reporting entities with zero CIK collisions.")
 
-    # Check obligation_terms.parquet field-level contract provenance (ADR-019)
+    # Check obligation_terms.parquet field-level contract provenance (ADR-019 / ADR-019.1)
     terms_df = pd.read_parquet(PROCESSED_DIR / "obligation_terms.parquet")
     clm_temp_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
+    obl_temp_df = pd.read_parquet(PROCESSED_DIR / "obligations.parquet").set_index("obligation_id")
     required_term_cols = {"term_id", "obligation_id", "attribute", "value", "claim_id", "source_locator", "evidence_class"}
     missing_cols = required_term_cols - set(terms_df.columns)
     if missing_cols:
@@ -277,11 +284,52 @@ def validate_observatory():
     invalid_claim_ids = set(terms_df["claim_id"]) - set(clm_temp_df["claim_id"])
     if invalid_claim_ids:
         errors.append(f"obligation_terms contains invalid claim_ids: {invalid_claim_ids}")
+
+    class_a_count = (terms_df["evidence_class"] == "A").sum()
+    class_c_count = (terms_df["evidence_class"] == "C").sum()
+    if class_a_count != 43 or class_c_count != 1:
+        errors.append(f"obligation_terms evidence class distribution mismatch: {class_a_count} Class A, {class_c_count} Class C (expected 43 Class A, 1 Class C)")
+
+    # Field-mapping cross-check comparing obligation_terms against canonical obligations.parquet fields
+    term_field_mapping = {
+        "principal_amount": "amount",
+        "facility_capacity": "amount",
+        "contract_value": "amount",
+        "interest_rate": "fixed_coupon",
+        "effective_date": "effective_date",
+        "maturity_date": "maturity_date",
+        "maturity_rule": "maturity_rule",
+        "reported_final_possible_maturity": "reported_final_possible_maturity",
+        "recourse": "recourse",
+        "contracted_capacity_mw": "capacity_mw",
+        "term_years": "term_years",
+        "duration_years": "term_years",
+        "margin_bps": "margin_bps",
+        "floor_bps": "floor_bps",
+        "benchmark": "benchmark",
+        "reference_exposure_estimate": "reference_exposure_estimate"
+    }
+    for _, tr in terms_df.iterrows():
+        toid = tr["obligation_id"]
+        tattr = tr["attribute"]
+        tval = tr["value"]
+        if tattr in term_field_mapping and toid in obl_temp_df.index:
+            ocol = term_field_mapping[tattr]
+            oval = obl_temp_df.loc[toid, ocol]
+            try:
+                ft = float(tval)
+                fo = float(oval)
+                if abs(ft - fo) > 1e-4:
+                    errors.append(f"obligation_terms mismatch with obligations.parquet: {toid}.{ocol} = {oval} != term {tval}")
+            except (ValueError, TypeError):
+                if str(tval).strip() != str(oval).strip():
+                    errors.append(f"obligation_terms mismatch with obligations.parquet: {toid}.{ocol} = '{oval}' != term '{tval}'")
+
     wulf_terms = terms_df[terms_df["obligation_id"].str.startswith("OBL-WULF")]
-    if len(wulf_terms) < 15:
-        errors.append(f"TeraWulf convertible terms incomplete: found {len(wulf_terms)} terms (expected >= 15)")
+    if len(wulf_terms) < 16:
+        errors.append(f"TeraWulf convertible terms incomplete: found {len(wulf_terms)} terms (expected >= 16)")
     else:
-        print(f"  [OK] Field-level contract provenance verified: {len(terms_df)} attribute-level terms with 100% verified Class A claims.")
+        print(f"  [OK] Field-level contract provenance verified: {len(terms_df)} attribute-level terms (43 Class A, 1 Class C) with 100% verified claims and canonical obligation field alignment.")
 
     # ---------------------------------------------------------
     # 2. Validate CoreWeave & Applied Digital Exact Debt Decomposition
@@ -598,6 +646,16 @@ def validate_observatory():
         else:
             print(f"  [OK] Dynamic SPV unwrapping: 0 SPVs remaining in consolidated network ({collapsed.number_of_nodes()} parent nodes).")
 
+        # BDC Consolidation Isolation Verification (ADR-019.1)
+        if net.get_root_parent("BLUE_OWL_OBDC") != "BLUE_OWL_OBDC":
+            errors.append(f"BLUE_OWL_OBDC root parent mismatch: {net.get_root_parent('BLUE_OWL_OBDC')} (expected BLUE_OWL_OBDC)")
+        if "BLUE_OWL_OBDC" not in collapsed.nodes():
+            errors.append("BLUE_OWL_OBDC missing from unwrapped consolidated perimeter")
+        if "BLUE_OWL" in collapsed.nodes():
+            errors.append("BLUE_OWL should not appear as a lender in collapsed graph (OBDC is independent BDC)")
+        else:
+            print("  [OK] BDC consolidation isolation verified: BLUE_OWL_OBDC is distinct root lender node (does not collapse into BLUE_OWL).")
+
         # Corporate Hierarchy Verification (ADR-013 & ADR-015)
         p_c3 = net.get_parent("APLD_COMPUTECO3")
         p_hpc2 = net.get_parent("APLD_HPC_HOLDINGS2")
@@ -861,7 +919,7 @@ def validate_observatory():
     # 3c. Validate Obligation Lifecycle Events & Bitemporal Facts Ledger
     # ---------------------------------------------------------
     events_df = pd.read_parquet(PROCESSED_DIR / "obligation_events.parquet")
-    expected_events_count = 51
+    expected_events_count = 56
     if len(events_df) != expected_events_count:
         errors.append(f"Obligation events count mismatch: {len(events_df)} (expected {expected_events_count})")
     else:
@@ -900,9 +958,20 @@ def validate_observatory():
         else:
             print("  [OK] CoreWeave 9.75% Notes add-on amendment event verified: amended on 2026-04-21, publicly known 2026-04-21.")
 
+    # TeraWulf 2031 greenshoe amendment event specifically
+    greenshoe_ev = events_df[events_df["event_id"] == "EVT-WULF-DEBT-CONV-2031-GREENSHOE"]
+    if greenshoe_ev.empty:
+        errors.append("Missing EVT-WULF-DEBT-CONV-2031-GREENSHOE event")
+    else:
+        gev = greenshoe_ev.iloc[0]
+        if gev["event_type"] != "amended" or gev["economic_effective_at"] != "2025-08-22" or gev["publicly_known_at"] != "2025-08-22":
+            errors.append(f"WULF greenshoe event dates mismatch: econ={gev['economic_effective_at']}, known={gev['publicly_known_at']}")
+        else:
+            print("  [OK] TeraWulf 2031 Greenshoe amendment event verified: amended on 2025-08-22, publicly known 2025-08-22.")
+
     facts_df = pd.read_parquet(PROCESSED_DIR / "obligation_facts.parquet")
     clm_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
-    expected_facts_count = 59
+    expected_facts_count = 64
     if len(facts_df) != expected_facts_count:
         errors.append(f"Obligation facts count mismatch: {len(facts_df)} (expected {expected_facts_count})")
     else:
@@ -1059,6 +1128,35 @@ def validate_observatory():
 
         print("  [OK] EpistemicResolver temporal matrix verified for 9.75% Notes: 2026-04-13 (not_yet_existent) -> 2026-04-15 ($1.75B) -> 2026-04-22 ($2.75B) -> 2026-06-30 ($2.75B).")
 
+        # 4b. TeraWulf 2031 Greenshoe Temporal Resolution Check (ADR-019.1)
+        r_wulf_aug20 = EpistemicResolver(as_of_date="2025-08-20", temporal_mode="known")
+        ks_wulf_aug20 = r_wulf_aug20.resolve_fact(obligation_id="OBL-WULF-DEBT-CONV-2031", attribute="principal_outstanding")
+        if ks_wulf_aug20.value != 850000000.0 or not ks_wulf_aug20.is_known:
+            errors.append(f"WULF 2031 @ 2025-08-20 mismatch: val={ks_wulf_aug20.value} (expected $850.0M)")
+
+        r_wulf_aug22 = EpistemicResolver(as_of_date="2025-08-22", temporal_mode="known")
+        ks_wulf_aug22 = r_wulf_aug22.resolve_fact(obligation_id="OBL-WULF-DEBT-CONV-2031", attribute="principal_outstanding")
+        if ks_wulf_aug22.value != 1000000000.0 or not ks_wulf_aug22.is_known:
+            errors.append(f"WULF 2031 @ 2025-08-22 mismatch: val={ks_wulf_aug22.value} (expected $1.0B)")
+
+        print("  [OK] TeraWulf 2031 greenshoe bitemporal isolation verified: 2025-08-20 ($850.0M) -> 2025-08-22 ($1,000.0M).")
+
+        # 4c. Core Scientific / CoreWeave Sequential Capacity Evolution (ADR-019.1)
+        corz_evolution_checks = [
+            ("2024-06-04", 200.0),
+            ("2024-06-25", 270.0),
+            ("2024-08-06", 382.0),
+            ("2024-10-23", 500.0),
+            ("2025-02-27", 590.0),
+        ]
+        for c_date, exp_mw in corz_evolution_checks:
+            r_corz = EpistemicResolver(as_of_date=c_date, temporal_mode="known")
+            ks_corz = r_corz.resolve_fact(obligation_id="OBL-CRWV-CORZ-COLOCATION-2024", attribute="capacity_mw")
+            if ks_corz.value != exp_mw or not ks_corz.is_known:
+                errors.append(f"CORZ capacity @ {c_date} mismatch: {ks_corz.value} (expected {exp_mw} MW)")
+
+        print("  [OK] Core Scientific colocation sequential capacity evolution verified: 200 MW -> 270 MW -> 382 MW -> 500 MW -> 590 MW across 2024-2025.")
+
         # 5. Anchor Customer Demand Trim Temporal Isolation (Zero-Escape Audit Trail)
         from src.graph import ObligationNetwork
         net_feb01 = ObligationNetwork().known_as_of("2026-02-01")
@@ -1139,7 +1237,7 @@ def validate_observatory():
     # ---------------------------------------------------------
     # 4. Validate Evidence Claims & Quote Categorization
     # ---------------------------------------------------------
-    expected_claims_count = 48
+    expected_claims_count = 54
     if len(clm_df) != expected_claims_count:
         errors.append(f"Evidence claims count mismatch: {len(clm_df)} (expected {expected_claims_count})")
     else:

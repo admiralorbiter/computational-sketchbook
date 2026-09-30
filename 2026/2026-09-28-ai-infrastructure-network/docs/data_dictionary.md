@@ -147,11 +147,43 @@ This document defines the schema, types, constraints, and operational definition
 | :--- | :--- | :--- | :--- | :--- |
 | `event_id` | String | No | Primary Key: `EVT-{OBLIGATION_SUFFIX}-{EVENT_TYPE}`. | `EVT-APLD-DEBT-BRIDGE-SUPERSEDED` |
 | `obligation_id` | String | No | Foreign Key referencing `obligations.obligation_id`. | `OBL-APLD-DEBT-BRIDGE` |
-| `event_type` | String | No | Lifecycle event classification: `created`, `superseded`, `extinguished`. | `superseded` |
+| `event_type` | String | No | Lifecycle event classification: `created`, `superseded`, `amended`, `extinguished`. | `superseded` |
 | `economic_effective_at` | Date (str)| No | Effective date of the event in economic reality (`YYYY-MM-DD`). | `2026-06-16` |
 | `publicly_known_at` | Date (str)| No | Date when the event was publicly disclosed (e.g. Form 8-K filing date). | `2026-06-18` |
 | `related_obligation_id` | String | Yes | Foreign Key referencing successor or linked obligation; null if standalone. | `OBL-APLD-DEBT-7PCT-2026` |
 | `claim_id` | String | No | Foreign Key referencing `evidence_claims.claim_id` substantiating the event. | `CLM-APLD-008` |
 | `description` | String | No | Detailed contractual narrative describing the lifecycle transition. | *Text* |
+
+---
+
+## 8. Attribute-Level Contract Terms Provenance Ledger (`obligation_terms.parquet` / `obligation_terms.csv`)
+
+| Column Name | Data Type | Nullable | Description / Controlled Vocabulary | Example |
+| :--- | :--- | :--- | :--- | :--- |
+| `term_id` | String | No | Primary Key: `TRM-{ENTITY}-{SUFFIX}-{ATTR}`. | `TRM-WULF-CONV2030-RATE` |
+| `obligation_id` | String | No | Foreign Key referencing `obligations.obligation_id`. | `OBL-WULF-DEBT-CONV-2030` |
+| `attribute` | String | No | Specific contractual attribute: `principal_amount`, `interest_rate`, `effective_date`, `maturity_date`, `maturity_rule`, `recourse`, `contracted_capacity_mw`, `term_years`, `margin_bps`, `floor_bps`, `benchmark`, `contract_value`. | `interest_rate` |
+| `value` | String | No | String-encoded verbatim or normalized contractual value. | `0.0275` |
+| `claim_id` | String | No | Foreign Key referencing `evidence_claims.claim_id`. | `CLM-WULF-002` |
+| `source_locator` | String | Yes | Item, Note, or Exhibit reference in the cited primary SEC filing. | `Item 1.01` |
+| `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted), `C` (Inferred). | `A` |
+
+---
+
+## 9. Obligation Rate Legs Ledger (`obligation_rate_legs.parquet` / `obligation_rate_legs.csv`)
+
+| Column Name | Data Type | Nullable | Description / Controlled Vocabulary | Example |
+| :--- | :--- | :--- | :--- | :--- |
+| `leg_id` | String | No | Primary Key: `LEG-{ENTITY}-{SUFFIX}-{TYPE}`. | `LEG-CRWV-DDTL4-FLOATING` |
+| `obligation_id` | String | No | Foreign Key referencing `obligations.obligation_id`. | `OBL-CRWV-DEBT-DDTL4` |
+| `leg_type` | String | No | Rate leg classification: `floating`, `fixed`. | `floating` |
+| `principal` | Float | No | Allocated principal balance for this specific tranche/leg in USD. | `1400000000.0` |
+| `benchmark` | String | Yes | Underlying floating benchmark index: `SOFR`, null if fixed leg. | `SOFR` |
+| `margin_bps` | Float | Yes | Spread over benchmark in basis points. | `225.0` |
+| `floor_bps` | Float | Yes | Benchmark floor in basis points. | `0.0` |
+| `fixed_coupon` | Float | Yes | Annual fixed coupon rate as a decimal (e.g. 0.0635 for 6.35%); null if floating. | `0.0635` |
+| `spread_grid_id` | String | Yes | Identifier for credit-spread matrix; null if fixed/single-spread. | `null` |
+| `description` | String | Yes | Contractual description of the rate tranche. | *Text* |
+
 
 

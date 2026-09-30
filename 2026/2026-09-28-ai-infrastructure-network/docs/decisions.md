@@ -410,6 +410,40 @@ This log records the durable architectural, methodological, and data design choi
 - **Consequences:**
   Prevents attribute hallucination, enforces legal identity boundaries for private credit BDCs, restores historical public information sets without lookahead bias, and establishes institutional-grade evidentiary rigor across all network layers.
 
+---
+
+### ADR-019.1: BDC Legal Consolidation Isolation, Multi-Era Capacity Expansion, and Field-Level Provenance Certification
+- **Status:** Accepted (2026-09-29, Wave 1 Epistemic Finalization)
+- **Context:**
+  Following implementation of ADR-019 (commit `549cec9`), six residual evidentiary and structural boundary issues were audited prior to opening Wave 2:
+  1. *Lender Entity Consolidation Trap:* In `config/entities.yml`, `BLUE_OWL_OBDC` retained `parent_entity_id: BLUE_OWL`. Because OBDC is an externally managed public BDC (Blue Owl Capital Corporation, CIK `0001655888`, ticker `OBDC`) and not a corporate subsidiary of Blue Owl Capital Inc. (`OWL`, CIK `0001823945`), recursive SPV unwrapping improperly collapsed OBDC into its manager parent, recreating the Lender Identity Trap in the unwrapped network.
+  2. *Greenshoe Two-Day Back-Projection:* For TeraWulf's 2031 convertible notes, the initial Form 8-K filed August 20, 2025 (`CLM-WULF-003`) only established an $850.0M private offering plus a 13-day option for up to $150.0M additional notes. The greenshoe option was exercised August 21 and the additional notes were issued August 22, 2025, as disclosed in Form 8-K Item 3.02 filed August 22, 2025 (`CLM-WULF-003A`). Modeling $1.0B as known and effective on August 20 back-projected the greenshoe by two days.
+  3. *Stale RATE_METADATA Overrides:* In `src/curate_obligations.py`, `RATE_METADATA` contained placeholder fixed coupons for WULF 2031 (`0.0300`) and WULF 2032 (`0.0325`), overriding the contract table attributes at build time and diverging from `obligation_terms`.
+  4. *Step-Function Capacity Evolution Under-Observation:* CoreWeave's colocation hosting contract with Core Scientific was modeled as jumping directly from the initial 200 MW contract (June 4, 2024) to the final 590 MW expansion (mid-2026), omitting the sequential contractual option exercises (Option 1 to 270 MW on 2024-06-25, Option 2 to 382 MW on 2024-08-06, Option 3 to 500 MW on 2024-10-23, and Option 4 / Denton expansion to 590 MW on 2025-02-27). This caused historical point-in-time capacity queries (e.g. `known_as_of("2025-01-01")`) to return 200 MW rather than the active 500 MW.
+  5. *Hut 8 Coatue Maturity & Extension Terms:* The Coatue note maturity was recorded as an arbitrary month-end date (`2029-06-30`) instead of the exact 5-year initial term from closing (`2029-06-28`), and lacked formal term provenance for the three one-year extension options.
+  6. *Absence of Automated Terms Field-Mapping Cross-Check:* `src/validate.py` validated existence and claim IDs of `obligation_terms` but lacked an automated cross-check asserting that attribute-level values match canonical fields in `obligations.parquet`.
+- **Decision:**
+  1. **BDC Legal Consolidation Isolation:**
+     - Set `parent_entity_id: null` and `manager_entity_id: BLUE_OWL` for `BLUE_OWL_OBDC` in `config/entities.yml`.
+     - In `src/validate.py`, assert that `net.get_root_parent("BLUE_OWL_OBDC") == "BLUE_OWL_OBDC"`, that `BLUE_OWL_OBDC` is present as an independent root node in the unwrapped graph (21 collapsed nodes), and that `BLUE_OWL` does not appear as a lender node.
+  2. **Two-Stage Greenshoe Bitemporal Modeling:**
+     - Split WULF 2031 into two discrete lifecycle events and facts: $850.0M on 2025-08-20 (`CLM-WULF-003`, `EVT-WULF-DEBT-CONV-2031-CREATED`, `FACT-WULF-CONV-2031-PRIN-20250820`) and $1,000.0M on 2025-08-22 (`CLM-WULF-003A`, `EVT-WULF-DEBT-CONV-2031-GREENSHOE`, `FACT-WULF-CONV-2031-PRIN-20250822`).
+     - Cached primary HTML exhibits for both filings (`WULF_8K_20250820_conv2031.htm` and `WULF_8K_20250822_greenshoe.htm`).
+  3. **RATE_METADATA Alignment:**
+     - Corrected `fixed_coupon` to `0.0100` for WULF 2031 and `0.0000` for WULF 2032 in `src/curate_obligations.py`.
+  4. **Multi-Era Colocation Capacity Evolution:**
+     - Ingested four sequential Form 8-K exhibits (`CORZ_8K_20240625_opt1.htm`, `CORZ_8K_20240806_opt2.htm`, `CORZ_8K_20241023_opt3.htm`, `CORZ_8K_20250227_opt4.htm`).
+     - Added four amendment events (`EVT-CRWV-CORZ-COLOCATION-OPT1` through `OPT4`), four bitemporal facts (270 MW, 382 MW, 500 MW, 590 MW), and four attribute-level provenance terms.
+  5. **Contract-Literal Hut 8 Maturity:**
+     - Updated maturity date to `2029-06-28` and added attribute-level provenance for the initial term and extension options (`CLM-HUT-003`).
+  6. **Bidirectional Term-Field Cross-Certification:**
+     - Implemented automated field-mapping cross-validation in `src/validate.py` comparing `obligation_terms` against canonical `obligations.parquet` attributes (`principal_amount`, `facility_capacity`, `contract_value`, `interest_rate`, `effective_date`, `maturity_date`, `maturity_rule`, `recourse`, `contracted_capacity_mw`, `term_years`, `margin_bps`, `floor_bps`, `benchmark`, `reference_exposure_estimate`).
+     - Asserted exact evidence class distribution: 43 Class A + 1 Class C term.
+  7. **Certified Invariant Baseline:**
+     - Master datasets: 46 entities, 13,754 financials, 47 obligations, 56 lifecycle events, 64 bitemporal facts, 44 terms (43 Class A, 1 Class C), 7 assumptions, 54 evidence claims, 46 primary HTML verbatim verified exhibits, 0 CIK collisions, 21 collapsed parent nodes, and 0.00% Phase 0 data drift.
+- **Consequences:**
+  Eliminates all remaining data-integrity defects from Wave 1. The observatory enters Wave 2 with bidirectional contract provenance, true BDC corporate independence, and fully verified multi-era capacity and debt evolution.
+
 
 
 

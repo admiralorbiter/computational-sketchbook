@@ -502,14 +502,15 @@ entities:
     name: Blue Owl Capital Corporation (OBDC)
     ticker: OBDC
     cik: "0001655888"
-    parent_entity_id: BLUE_OWL
+    parent_entity_id: null
+    manager_entity_id: BLUE_OWL
     category: capital_provider_vehicle
     subsector: direct_lending_bdc
     jurisdiction: US-MD
     status: public_bdc
     reporting_standard: US-GAAP
     fiscal_year_end: "12-31"
-    description: "Business Development Company and direct lending fund managed by Blue Owl Capital, acting as administrative agent, collateral agent, and lender to AI infrastructure developers."
+    description: "Business Development Company and direct lending fund externally managed by Blue Owl Credit Advisors LLC (an affiliate of Blue Owl Capital Inc.), acting as administrative agent, collateral agent, and lender to AI infrastructure developers."
     key_counterparties: [BLUE_OWL, IREN_MACKENZIE_COMPUTE]
 
   PIMCO:
