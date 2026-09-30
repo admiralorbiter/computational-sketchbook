@@ -168,14 +168,14 @@ cells.append(nbf.v4.new_markdown_cell("""## 3. Layer 2: The Contractual Obligati
 
 We model obligations using `nx.MultiDiGraph` with `obligation_id` as the edge key.
 This architecture preserves multiple distinct facilities between the same counterparty pair:
-* **CoreWeave Indebtedness Exactly Reconciled:** 16 modeled debt components/edges reconciling to the dollar with the **$35.551B** future principal total in Form 10-Q Note 7 (Table 36):
+* **CoreWeave Indebtedness Exactly Reconciled:** 16 modeled debt components/edges reconciling to the dollar with the **$35.551B** future principal total in Form 10-Q Note 10 (Table 36):
   - Recourse DDTLs (5 facilities from distinct borrower SPVs): DDTL 1.0 ($1.300B, `CRWV_CCAC_II`), DDTL 2.0 ($3.190B, `CRWV_CCAC_IV`), DDTL 2.1 ($3.000B, `CRWV_CCAC_IV`), DDTL 3.0 ($2.215B, `CRWV_CCAC_VII`), DDTL 5.0 ($1.101B, `CRWV_FINANCING_DDTL_V`) = $10.806B.
   - Non-Recourse SPV DDTL 4.0: **$2.837B** outstanding principal under an $8.500B facility capacity (`CRWV_SPV_VIII` -> `MUFG_BANK_SYN`).
-  - Senior Notes (5 discrete tranches): 2030 ($2.000B), 2031 9.00% ($1.750B), 2031 9.75% ($2.750B), 2032 9.625% ($1.250B), 2032 EUR ($2.279B) = $10.029B.
+  - Senior Notes (5 discrete tranches): 2030 ($2.000B), 2031 9.00% ($1.750B), 2031 9.75% ($2.750B [$1.75B Apr 14 + $1.00B Apr 21 add-on]), 2032 9.625% ($1.250B), 2032 EUR ($2.279B) = $10.029B.
   - Convertibles (2 discrete tranches): 2031 ($2.588B), 2032 ($4.000B) = $6.588B.
   - OEM Equipment Facilities & Magnetar: Recourse OEM ($4.220B), Non-Recourse OEM (**$0.882B**), Magnetar ($0.189B) = $5.291B.
   - Total: $10.806 + $2.837 + $10.029 + $6.588 + $5.291 = **$35.551B** exact (0.00% drift).
-  - Recourse Parent Guarantees: 5 discrete parent guarantee edges from `CRWV` to syndicates (`amount_type = "contingent_guarantee"`) covering CCAC II, IV, VII, and Financing V; DDTL 4.0 is strictly non-recourse (0 parent guarantee edge).
+  - Recourse Parent Guarantees: 6 discrete parent guarantee edges from `CRWV` to syndicates (`amount_type = "contingent_guarantee"`, amount = None; 5 full recourse + 1 limited bad-acts carve-out for DDTL 4.0) and 1 co-borrower edge (`CRWV_CCAC_V` under DDTL 3.0).
 * **Applied Digital Debt Decomposed:** Form 10-K balance sheet reports net carrying debt of **$4.976B** ($4,959.5M net long-term + $16.4M current portion), while Note 8 discloses gross contractual remaining principal payments of **$5.307B** ($5,306.7M), with $330.7M in unamortized discount and debt issuance costs. Modeled contract-literally across 5 real instruments:
   - $2.35B 9.25% Senior Notes due **December 15, 2030** issued by APLD ComputeCo LLC (`APLD_COMPUTECO`), holding ELN-02 and ELN-03.
   - $2.15B 6.75% Senior Notes due **March 15, 2031** issued by APLD ComputeCo 2 LLC (`APLD_COMPUTECO2`).
@@ -199,7 +199,7 @@ crwv_debt_edges["amount_B"] = (crwv_debt_edges["amount"] / 1e9).round(3)
 reconciliation_table = crwv_debt_edges[["obligation_id", "from_entity", "to_entity", "amount_B", "recourse", "maturity_date", "payment_conditions"]]
 print(f"=== CoreWeave Funded Debt Principal Reconciliation ===")
 print(f"Sum of 16 Decomposed Edges: ${crwv_debt_edges['amount'].sum() / 1e9:.3f}B")
-print(f"Audited 10-Q Note 7 Principal Total: $35.551B")
+print(f"Audited 10-Q Note 10 Principal Total: $35.551B")
 print(f"Discrepancy: ${abs(crwv_debt_edges['amount'].sum() - 35551000000.0) / 1e6:.2f}M (0.00% Drift)")
 reconciliation_table
 """))

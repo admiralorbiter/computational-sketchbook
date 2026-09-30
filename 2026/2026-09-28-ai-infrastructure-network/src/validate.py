@@ -262,7 +262,7 @@ def validate_observatory():
         errors.append(f"CRWV debt components count mismatch: {len(crwv_debt)} (expected {expected_tranches})")
     
     total_crwv_debt = crwv_debt["amount"].sum()
-    target_debt = 35_551_000_000.0  # $35.551B from Form 10-Q Note 7 Table 36
+    target_debt = 35_551_000_000.0  # $35.551B from Form 10-Q Note 10 Table 36
     debt_drift = abs(total_crwv_debt - target_debt)
     if debt_drift > 1.0:
         errors.append(f"CRWV total debt drift: ${total_crwv_debt/1e9:.4f}B vs ${target_debt/1e9:.4f}B (drift ${debt_drift:,.2f})")
@@ -363,8 +363,10 @@ def validate_observatory():
             errors.append(f"DDTL 4.0 parent guarantee should have amount = None, found {g4['amount']}")
         if g4["reference_exposure_estimate"] != 2_837_000_000.0:
             errors.append(f"DDTL 4.0 parent guarantee reference_exposure_estimate mismatch: {g4['reference_exposure_estimate']}")
+        if g4.get("reference_exposure_class") != "Class C (Underlying Principal Reference)":
+            errors.append(f"DDTL 4.0 parent guarantee reference_exposure_class mismatch: {g4.get('reference_exposure_class')}")
         else:
-            print("  [OK] DDTL 4.0 limited parent guarantee verified: recourse='limited_bad_acts', ref_exposure=$2.837B.")
+            print("  [OK] DDTL 4.0 limited parent guarantee verified: recourse='limited_bad_acts', ref_exposure=$2.837B (Class C Underlying Principal Reference).")
 
     # Check DDTL 3.0 co-borrower edge
     coborrower = obl_df[obl_df["obligation_id"] == "OBL-CRWV-COBORROWER-DDTL3"]
@@ -938,7 +940,7 @@ def validate_observatory():
         for phrase in ["Interest rate swaps", "4,661"]:
             if phrase not in qc5:
                 errors.append(f"CLM-CRWV-005 missing expected verbatim phrase: '{phrase}'")
-        print("  [OK] CLM-CRWV-005 verified against Note 8 verbatim swap disclosures.")
+        print("  [OK] CLM-CRWV-005 verified against Note 3 Derivative Instruments verbatim swap disclosures.")
 
     c8 = clm_df[clm_df["claim_id"] == "CLM-APLD-008"]
     if c8.empty:

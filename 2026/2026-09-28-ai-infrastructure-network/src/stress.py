@@ -384,6 +384,7 @@ class FinancialStressEngine:
             "crwv_cash_buffer_usd": crwv_cash,
             "coverage_years": round(coverage_ratio, 2) if coverage_ratio is not None else None,
             "eln03_reference_proxy_usd": eln03_reference_proxy_usd,
+            "debt_service_proxy_flag": "Modeled rate proxy (Phase 1 backlog: facility-level coupon engine)",
             "springing_event_analyzed": "Springing Event (ii) - Colocation Agreement Payment Cessation or Material Reduction",
             "conditional_join_status": "Conditional: requires Microsoft to be the specific Colocation Customer at Building ELN-03",
             "transmission_narrative": narrative
@@ -540,7 +541,7 @@ class FinancialStressEngine:
         """
         Scenario 3B: Credit Spread / Refinancing Shock at Maturity (+300 bps)
         Evaluates the refinancing penalty when scheduled debt principal rolls over into higher secondary credit spreads.
-        Uses CoreWeave's audited debt maturities table (CRWV 10-Q Note 7):
+        Uses CoreWeave's audited debt maturities table (CRWV 10-Q Note 10):
         - 2026 remainder: $4,413M ($4.413B)
         - 2027: $6,184M ($6.184B)
         - 2028: $4,416M ($4.416B)
@@ -551,7 +552,7 @@ class FinancialStressEngine:
         delta_spread = spread_increase_bps / 10000.0  # 0.03
         crwv_cash = self.financials.get("CRWV", {}).get("cash_and_equivalents", 5520000000.0)
 
-        # Note 7 debt maturities were disclosed on 2026-08-12 in Form 10-Q (CLM-CRWV-005)
+        # Note 10 debt maturities were disclosed on 2026-08-12 in Form 10-Q (CLM-CRWV-001)
         maturities_known = True
         if self.temporal_mode in ["known", "knowledge"]:
             if str(self.as_of_date) < "2026-08-12":
@@ -576,7 +577,7 @@ class FinancialStressEngine:
                 },
                 "crwv_starting_cash_usd": crwv_cash,
                 "transmission_narrative": (
-                    f"As of {self.as_of_date}, CoreWeave contractual debt maturity schedule (Note 7) remains unfiled "
+                    f"As of {self.as_of_date}, CoreWeave contractual debt maturity schedule (Note 10) remains unfiled "
                     f"and undisclosed prior to the Form 10-Q filing on 2026-08-12. Under zero-lookahead epistemic "
                     f"constraints, rollover refinancing sensitivity cannot be computed without lookahead bias."
                 )
