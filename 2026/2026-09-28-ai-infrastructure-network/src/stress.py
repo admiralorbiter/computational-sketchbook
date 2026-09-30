@@ -255,10 +255,19 @@ class FinancialStressEngine:
             "crwv_cash_after_scenario_usd": crwv_cash,  # Cash intact
             "modeled_gap_to_cash_pct": round(gap_to_cash_pct, 1) if gap_to_cash_pct is not None else None,
             "contractual_caveat": (
-                "Under Exhibit 10.1 and Section 2.05 of the DDTL 5.0 Credit Agreement, debt sizing is tied to Funding Date Capex (cost) "
-                "with straight-line 6-year depreciation, and mandatory prepayments govern asset sales, debt issuances, and defaults—not an automatic "
-                "secondary market mark-to-market appraisal margin call. This $4.32B gap is an analytical sensitivity proxy (Class C) measuring "
-                "refinancing capacity contraction rather than a contractual cash call."
+                (
+                    "Under Exhibit 10.1 and Section 2.05 of the DDTL 5.0 Credit Agreement, debt sizing is tied to Funding Date Capex (cost) "
+                    "with straight-line 6-year depreciation, and mandatory prepayments govern asset sales, debt issuances, and defaults—not an automatic "
+                    f"secondary market mark-to-market appraisal margin call. This ${modeled_refinancing_gap/1e9:.2f}B gap is an analytical sensitivity proxy (Class C) measuring "
+                    "refinancing capacity contraction rather than a contractual cash call."
+                )
+                if modeled_refinancing_gap is not None
+                else (
+                    "Under Exhibit 10.1 and Section 2.05 of the DDTL 5.0 Credit Agreement, debt sizing is tied to Funding Date Capex (cost) "
+                    "with straight-line 6-year depreciation, and mandatory prepayments govern asset sales, debt issuances, and defaults—not an automatic "
+                    "secondary market mark-to-market appraisal margin call. Under zero-lookahead epistemic constraints, asset base and refinancing capacity "
+                    "remain unmeasured prior to filing."
+                )
             ),
             "transmission_narrative": narrative
         }
@@ -282,16 +291,58 @@ class FinancialStressEngine:
 
         annual_rev_loss = base_revenue * trim_pct  # $1.031B/yr at 30%
 
-        # CoreWeave annual debt service across all funded tranches ($35.551B total):
-        annual_debt_service = (
-            10806000000.0 * 0.085 + 2837000000.0 * 0.075 + 10029000000.0 * 0.095 +
-            6588000000.0 * 0.01875 + 4220000000.0 * 0.11 + 882000000.0 * 0.10
-        )  # ~$2.76B/yr
+        # Derive CoreWeave annual debt service dynamically across active funded debt tranches:
+        all_debt_known = True
+        annual_debt_service = 0.0
+
+        for u, v, k, d in self.graph.edges(keys=True, data=True):
+            root_u = self.network.get_root_parent(u)
+            if root_u == "CRWV" and d.get("obligation_type") in ["debt_facility", "senior_unsecured", "senior_unsecured_convertible"]:
+                amt = d.get("amount")
+                amt_known = d.get("amount_known", True)
+                if amt is None or not amt_known:
+                    all_debt_known = False
+                else:
+                    cond = str(d.get("payment_conditions", ""))
+                    rec = str(d.get("recourse", ""))
+                    rate_type = d.get("rate_type")
+                    if "convertible" in rec or "convertible" in cond.lower():
+                        rate = 0.0175
+                    elif "9.75" in cond:
+                        rate = 0.0975
+                    elif "9.625" in cond:
+                        rate = 0.09625
+                    elif "9.25" in cond:
+                        rate = 0.0925
+                    elif "9.00" in cond:
+                        rate = 0.0900
+                    elif "8.50" in cond:
+                        rate = 0.0850
+                    elif "11%" in cond:
+                        rate = 0.11
+                    elif "10%" in cond:
+                        rate = 0.10
+                    elif rate_type == "floating":
+                        rate = 0.085
+                    else:
+                        rate = 0.085
+                    annual_debt_service += float(amt) * rate
+
+        if self.temporal_mode in ["known", "knowledge"]:
+            if not all_debt_known or annual_debt_service == 0.0:
+                annual_debt_service = None
+        else:
+            if annual_debt_service == 0.0:
+                annual_debt_service = (
+                    10806000000.0 * 0.085 + 2837000000.0 * 0.075 + 10029000000.0 * 0.095 +
+                    6588000000.0 * 0.01875 + 4220000000.0 * 0.11 + 882000000.0 * 0.10
+                )
+
         # Polaris Forge 1 lease rent: $11.0B / 15 years = $733.3M/yr fully energized (~$275.0M/yr operational 150 MW)
         annual_full_lease_rent = 11000000000.0 / 15.0
         operational_lease_rent = annual_full_lease_rent * (150.0 / 400.0)
 
-        total_annual_commitments = annual_debt_service + annual_full_lease_rent  # ~$3.49B/yr
+        total_annual_commitments = (annual_debt_service + annual_full_lease_rent) if annual_debt_service is not None else None
         crwv_cash = self.financials.get("CRWV", {}).get("cash_and_equivalents", 5520000000.0)
 
         # Springing Guarantees Scope:
@@ -299,7 +350,26 @@ class FinancialStressEngine:
         # Class C reference exposure proxy for Building 3 (150 MW / 400 MW * $11.0B): ~$4.125B.
         eln03_reference_proxy_usd = 4125000000.0
 
-        coverage_ratio = crwv_cash / total_annual_commitments
+        coverage_ratio = (crwv_cash / total_annual_commitments) if total_annual_commitments else None
+
+        if annual_debt_service is None:
+            narrative = (
+                f"A {int(trim_pct*100)}% demand trim on Microsoft's recognized revenue reduces CoreWeave's cash inflow by ${annual_rev_loss/1e9:.2f}B/yr. "
+                f"As of {self.as_of_date}, CoreWeave annual debt service across all funded tranches remains unmeasured and undisclosed prior to the Form 10-Q filing on 2026-08-12. "
+                f"If Microsoft is the Colocation Customer at SPV VIII (Building ELN-03) and reduces colocation payments, this fulfills the literal predicate of Springing Event (ii) under Exhibit 10.2, "
+                f"conditionally activating CoreWeave parent's Unconditional Springing Guaranty on Building ELN-03 (carrying a Class C reference proxy of ${eln03_reference_proxy_usd/1e9:.2f}B) "
+                f"and potentially Exhibit 10.1 for the Building 2 SPV lease (Phase 2/4 Space, 2 of 4 data halls; unstated face value). "
+                f"Building 4 ($4.13B, 150 MW) is excluded as it carries no CoreWeave parent guarantee."
+            )
+        else:
+            narrative = (
+                f"A {int(trim_pct*100)}% demand trim on Microsoft's recognized revenue reduces CoreWeave's cash inflow by ${annual_rev_loss/1e9:.2f}B/yr. "
+                f"Against ${total_annual_commitments/1e9:.2f}B in annual debt service and facility commitments, if Microsoft is the Colocation Customer "
+                f"at SPV VIII (Building ELN-03) and reduces colocation payments, this fulfills the literal predicate of Springing Event (ii) under Exhibit 10.2, "
+                f"conditionally activating CoreWeave parent's Unconditional Springing Guaranty on Building ELN-03 (carrying a Class C reference proxy of ${eln03_reference_proxy_usd/1e9:.2f}B) "
+                f"and potentially Exhibit 10.1 for the Building 2 SPV lease (Phase 2/4 Space, 2 of 4 data halls; unstated face value). "
+                f"Building 4 ($4.13B, 150 MW) is excluded as it carries no CoreWeave parent guarantee."
+            )
 
         return {
             "scenario_name": "Anchor Customer Demand Trim & Conditional Springing Guaranty",
@@ -312,18 +382,11 @@ class FinancialStressEngine:
             "polaris_forge_operational_rent_usd": operational_lease_rent,
             "total_fixed_commitments_usd": total_annual_commitments,
             "crwv_cash_buffer_usd": crwv_cash,
-            "coverage_years": round(coverage_ratio, 2),
+            "coverage_years": round(coverage_ratio, 2) if coverage_ratio is not None else None,
             "eln03_reference_proxy_usd": eln03_reference_proxy_usd,
             "springing_event_analyzed": "Springing Event (ii) - Colocation Agreement Payment Cessation or Material Reduction",
             "conditional_join_status": "Conditional: requires Microsoft to be the specific Colocation Customer at Building ELN-03",
-            "transmission_narrative": (
-                f"A {int(trim_pct*100)}% demand trim on Microsoft's recognized revenue reduces CoreWeave's cash inflow by ${annual_rev_loss/1e9:.2f}B/yr. "
-                f"Against ${total_annual_commitments/1e9:.2f}B in annual debt service and facility commitments, if Microsoft is the Colocation Customer "
-                f"at SPV VIII (Building ELN-03) and reduces colocation payments, this fulfills the literal predicate of Springing Event (ii) under Exhibit 10.2, "
-                f"conditionally activating CoreWeave parent's Unconditional Springing Guaranty on Building ELN-03 (carrying a Class C reference proxy of ${eln03_reference_proxy_usd/1e9:.2f}B) "
-                f"and potentially Exhibit 10.1 for the Building 2 SPV lease (Phase 2/4 Space, 2 of 4 data halls; unstated face value). "
-                f"Building 4 ($4.13B, 150 MW) is excluded as it carries no CoreWeave parent guarantee."
-            )
+            "transmission_narrative": narrative
         }
 
     def simulate_sofr_base_rate_shock(self, sofr_increase_bps: float = 300.0, as_of_date: Optional[str] = None) -> Dict[str, Any]:
@@ -570,6 +633,38 @@ class FinancialStressEngine:
         Carrying cost on construction debt uses modeled Class C MW-allocation ($2.35B notes * delayed_mw / 400).
         Evaluates a sensitivity band across building3_operational_mw in [25, 50, 75, 100] MW.
         """
+        # Operational phasing of campus buildings (Building 2 100MW, Building 3 150MW, Building 4 150MW)
+        # was disclosed in APLD Form 10-K (Item 1) filed on 2026-07-29.
+        phasing_known = True
+        if self.temporal_mode in ["known", "knowledge"]:
+            if str(self.as_of_date) < "2026-07-29":
+                phasing_known = False
+
+        apld_cash = self.financials.get("APLD", {}).get("cash_and_equivalents", 1590000000.0)
+
+        if not phasing_known:
+            return {
+                "scenario_name": "Phased Grid Energization Delay (Polaris Forge 1)",
+                "delay_months": delay_months,
+                "building3_operational_mw": None,
+                "project": "POLARIS_FORGE_1",
+                "operational_mw": None,
+                "delayed_mw": None,
+                "ongoing_operational_rent_usd": None,
+                "deferred_expansion_rent_usd": None,
+                "construction_phase_debt_modeled_usd": None,
+                "apld_debt_carrying_cost_usd": None,
+                "apld_starting_cash_usd": apld_cash,
+                "apld_cash_drain_pct": None,
+                "sensitivity_band": {},
+                "debt_allocation_flag": "Class C (modeled MW allocation; not contractual debt tranche)",
+                "transmission_narrative": (
+                    f"As of {self.as_of_date}, Polaris Forge 1 campus construction phasing and operational energization status "
+                    f"remain unfiled and undisclosed prior to Applied Digital's Form 10-K filing on 2026-07-29. Under zero-lookahead "
+                    f"epistemic constraints, phased grid energization delay cannot be computed without lookahead bias."
+                )
+            }
+
         total_mw = 400.0
         operational_mw = 100.0 + building3_operational_mw
         delayed_mw = total_mw - operational_mw
@@ -582,7 +677,6 @@ class FinancialStressEngine:
         construction_phase_debt = 2350000000.0 * (delayed_mw / total_mw)
         apld_construction_carrying_cost = construction_phase_debt * 0.0925 * (delay_months / 12.0)
 
-        apld_cash = self.financials.get("APLD", {}).get("cash_and_equivalents", 1590000000.0)
         cash_drain_pct = (apld_construction_carrying_cost / apld_cash) * 100.0 if apld_cash else 100.0
 
         # Sensitivity band across Building 3 operational MW [25, 50, 75, 100]
@@ -657,7 +751,7 @@ class FinancialStressEngine:
                 "cancellation_cash_drain_pct": None,
                 "gross_delivery_cash_drain_pct": None,
                 "transmission_narrative": (
-                    f"As of {self.as_of_date}, Supermicro purchase commitments ($34.2B) remain unfiled and undisclosed "
+                    f"As of {self.as_of_date}, Supermicro purchase commitments remain unfiled and undisclosed "
                     f"prior to the Form 10-K filing on 2026-08-31. Under zero-lookahead epistemic constraints, "
                     f"purchase commitment markdown cannot be computed without lookahead bias."
                 )
@@ -734,6 +828,17 @@ class FinancialStressEngine:
             if oem_drain_pct is not None
             else "Unmeasured prior to 2026-08-31 Form 10-K filing"
         )
+        grid_drain_pct = res_grid.get("apld_cash_drain_pct")
+        grid_desc = (
+            f"{grid_drain_pct}% Cash Drain (Range: 6.8% - 9.4% across 25-100 MW)"
+            if grid_drain_pct is not None
+            else "Unmeasured prior to 2026-07-29 Form 10-K filing"
+        )
+        grid_contagion = (
+            "Defers $458M expansion rent on 250 MW pending, while 150 MW produces $275M base rent; carrying cost is $136M (range: $109M to $149M across 25-100 MW)."
+            if grid_drain_pct is not None
+            else "Polaris Forge 1 operational phasing and building energization unfiled prior to 2026-07-29 Form 10-K filing."
+        )
 
         summary_rows = [
             {
@@ -773,8 +878,8 @@ class FinancialStressEngine:
                 "shock_parameter": "12-Month Energization Delay",
                 "direct_cash_or_collateral_hit_usd": res_grid["apld_debt_carrying_cost_usd"],
                 "target_entity": "APLD",
-                "covenant_or_liquidity_impact": f"{res_grid['apld_cash_drain_pct']}% Cash Drain (Range: 6.8% - 9.4% across 25-100 MW)",
-                "contagion_mechanism": "Defers $458M expansion rent on 250 MW pending, while 150 MW produces $275M base rent; carrying cost is $136M (range: $109M to $149M across 25-100 MW)."
+                "covenant_or_liquidity_impact": grid_desc,
+                "contagion_mechanism": grid_contagion
             },
             {
                 "scenario_name": res_oem["scenario_name"],

@@ -172,26 +172,50 @@ def validate_sec_html_content():
 
     clm_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
     
-    verifiable_claims = [
-        'CLM-APLD-001', 'CLM-APLD-002', 'CLM-APLD-004', 'CLM-APLD-005', 'CLM-APLD-006',
-        'CLM-APLD-007', 'CLM-APLD-008',
-        'CLM-CRWV-001', 'CLM-CRWV-002', 'CLM-CRWV-003', 'CLM-CRWV-004', 'CLM-CRWV-005',
-        'CLM-CRWV-006', 'CLM-CRWV-007', 'CLM-CRWV-008', 'CLM-CRWV-008A', 'CLM-CRWV-009',
-        'CLM-CRWV-009A', 'CLM-CRWV-010', 'CLM-CRWV-011', 'CLM-CRWV-012', 'CLM-CRWV-013',
-        'CLM-CRWV-013A', 'CLM-CRWV-014', 'CLM-CRWV-014A', 'CLM-CRWV-015', 'CLM-CRWV-016',
-        'CLM-SMCI-001', 'CLM-NVDA-CRWV-001'
-    ]
+    CLAIM_TO_SEC_FILE = {
+        'CLM-APLD-001': 'APLD_10K_20260531.htm',
+        'CLM-APLD-002': 'APLD_10K_20260531.htm',
+        'CLM-APLD-004': 'APLD_10K_20260531.htm',
+        'CLM-APLD-005': 'APLD_ex10_1.htm',
+        'CLM-APLD-006': 'APLD_ex10_2.htm',
+        'CLM-APLD-007': 'APLD_10K_20260531.htm',
+        'CLM-APLD-008': 'APLD_8K_20260616.htm',
+        'CLM-CRWV-001': 'CRWV_10Q_20260630.htm',
+        'CLM-CRWV-002': 'CRWV_10Q_20260630.htm',
+        'CLM-CRWV-003': 'CRWV_10K_20251231.htm',
+        'CLM-CRWV-004': 'CRWV_10Q_20260630.htm',
+        'CLM-CRWV-005': 'CRWV_10Q_20260630.htm',
+        'CLM-CRWV-006': 'CRWV_8K_20260515_ddtl5.htm',
+        'CLM-CRWV-007': 'CRWV_S1A_20250320.htm',
+        'CLM-CRWV-008': 'CRWV_8K_20250527_notes2030.htm',
+        'CLM-CRWV-008A': 'CRWV_8K_20250521_pricing2030.htm',
+        'CLM-CRWV-009': 'CRWV_8K_20250728_ddtl3.htm',
+        'CLM-CRWV-009A': 'CRWV_8K_20250728_notes2031.htm',
+        'CLM-CRWV-010': 'CRWV_8K_20251002_ddtl21.htm',
+        'CLM-CRWV-011': 'CRWV_8K_20251208_conv2031.htm',
+        'CLM-CRWV-012': 'CRWV_8K_20260330_ddtl4.htm',
+        'CLM-CRWV-013': 'CRWV_8K_20260409_notes.htm',
+        'CLM-CRWV-013A': 'CRWV_8K_20260416_addon.htm',
+        'CLM-CRWV-014': 'CRWV_8K_20260618_notes2032.htm',
+        'CLM-CRWV-014A': 'CRWV_8K_20260611_pricing2032.htm',
+        'CLM-CRWV-015': 'CRWV_10Q_20260331.htm',
+        'CLM-CRWV-016': 'CRWV_10Q_20250630.htm',
+        'CLM-SMCI-001': 'SMCI_10K_20260630.htm',
+        'CLM-NVDA-CRWV-001': 'CRWV_10Q_20260331.htm',
+    }
 
     errors = []
-    for cid in verifiable_claims:
+    for cid, target_file in CLAIM_TO_SEC_FILE.items():
         c_sub = clm_df[clm_df["claim_id"] == cid]
         if c_sub.empty:
             errors.append(f"Verifiable claim {cid} not found in evidence_claims.parquet")
             continue
         quote = normalize(c_sub.iloc[0]["exact_quote"])
-        matched = any(quote in content for content in file_contents.values())
-        if not matched:
-            errors.append(f"Claim {cid} exact quote is not a verbatim substring in cached SEC HTML filings")
+        if target_file not in file_contents:
+            errors.append(f"Claim {cid} target document {target_file} not found in cached files")
+            continue
+        if quote not in file_contents[target_file]:
+            errors.append(f"Claim {cid} exact quote is not a normalized contiguous verbatim substring in cited document {target_file}")
 
     return errors
 
@@ -207,8 +231,8 @@ def validate_observatory():
         "entities.parquet": 27,
         "financials.parquet": 5440,
         "obligations.parquet": 35,
-        "obligation_events.parquet": 36,
-        "obligation_facts.parquet": 43,
+        "obligation_events.parquet": 37,
+        "obligation_facts.parquet": 45,
         "assumptions.parquet": 7,
         "evidence_claims.parquet": 37,
     }
@@ -259,19 +283,38 @@ def validate_observatory():
     else:
         print(f"  [OK] All 16 distinct CRWV debt components present.")
 
-    # Check borrower entities for DDTLs
+    # Check borrower entities and maturity semantics for DDTLs
     for _, r in crwv_debt.iterrows():
         oid = r["obligation_id"]
         if oid == "OBL-CRWV-DEBT-DDTL1" and r["from_entity"] != "CRWV_CCAC_II":
             errors.append(f"DDTL 1 borrower mismatch: {r['from_entity']} (expected CRWV_CCAC_II)")
-        elif oid in ["OBL-CRWV-DEBT-DDTL2", "OBL-CRWV-DEBT-DDTL2-1"] and r["from_entity"] != "CRWV_CCAC_IV":
-            errors.append(f"{oid} borrower mismatch: {r['from_entity']} (expected CRWV_CCAC_IV)")
+        elif oid == "OBL-CRWV-DEBT-DDTL2":
+            if r["from_entity"] != "CRWV_CCAC_IV":
+                errors.append(f"DDTL 2 borrower mismatch: {r['from_entity']} (expected CRWV_CCAC_IV)")
+            if r.get("maturity_date") != "2030-08-31":
+                errors.append(f"DDTL 2 maturity_date mismatch: {r.get('maturity_date')} (expected 2030-08-31)")
+            if r.get("maturity_rule") != "funding_date + 5 years":
+                errors.append(f"DDTL 2 maturity_rule mismatch: {r.get('maturity_rule')} (expected funding_date + 5 years)")
+            if r.get("reported_final_maturity") != "2030-08":
+                errors.append(f"DDTL 2 reported_final_maturity mismatch: {r.get('reported_final_maturity')} (expected 2030-08)")
+        elif oid == "OBL-CRWV-DEBT-DDTL2-1":
+            if r["from_entity"] != "CRWV_CCAC_IV":
+                errors.append(f"DDTL 2.1 borrower mismatch: {r['from_entity']} (expected CRWV_CCAC_IV)")
+            if r.get("economic_valid_from") != "2025-09-29":
+                errors.append(f"DDTL 2.1 economic_valid_from mismatch: {r.get('economic_valid_from')} (expected 2025-09-29)")
+            if r.get("publicly_known_from") != "2025-10-02":
+                errors.append(f"DDTL 2.1 publicly_known_from mismatch: {r.get('publicly_known_from')} (expected 2025-10-02)")
+            if r.get("maturity_rule") != "funding_date + 5 years":
+                errors.append(f"DDTL 2.1 maturity_rule mismatch: {r.get('maturity_rule')} (expected funding_date + 5 years)")
+            if r.get("reported_final_maturity") != "2031-03":
+                errors.append(f"DDTL 2.1 reported_final_maturity mismatch: {r.get('reported_final_maturity')} (expected 2031-03)")
         elif oid == "OBL-CRWV-DEBT-DDTL3" and r["from_entity"] != "CRWV_CCAC_VII":
             errors.append(f"DDTL 3 borrower mismatch: {r['from_entity']} (expected CRWV_CCAC_VII)")
         elif oid == "OBL-CRWV-DEBT-DDTL4" and r["from_entity"] != "CRWV_SPV_VIII":
             errors.append(f"DDTL 4 borrower mismatch: {r['from_entity']} (expected CRWV_SPV_VIII)")
         elif oid == "OBL-CRWV-DEBT-DDTL5" and r["from_entity"] != "CRWV_FINANCING_DDTL_V":
             errors.append(f"DDTL 5 borrower mismatch: {r['from_entity']} (expected CRWV_FINANCING_DDTL_V)")
+    print("  [OK] DDTL 2.0 and DDTL 2.1 maturity semantics and contemporaneous lifecycle dates verified.")
 
     # Check Senior Notes and Convertibles ranking (Senior Unsecured with subsidiary guarantees)
     unsecured_tranches = [
@@ -669,6 +712,23 @@ def validate_observatory():
         else:
             print("  [OK] Fact-level bitemporality verified: CoreWeave DDTL 1.0 amount is $1.300B on Sep 28, 2026.")
 
+        # 9.75% Senior Notes Add-On Bitemporality (ADR-013 & ADR-014)
+        # On April 15, 2026: only initial $1.75B tranche is known (EVT-CRWV-DEBT-NOTES-2031-975-CREATED closed 2026-04-14).
+        net_known_apr15 = net.known_as_of("2026-04-15")
+        notes975_apr15 = net_known_apr15.graph.get_edge_data("CRWV", "INSTITUTIONAL_BONDHOLDERS", key="OBL-CRWV-DEBT-NOTES-2031-975")
+        if notes975_apr15 is None or notes975_apr15.get("amount") != 1_750_000_000.0 or notes975_apr15.get("amount_known") is not True:
+            errors.append(f"9.75% Notes amount mismatch on 2026-04-15: {notes975_apr15.get('amount') if notes975_apr15 else None} (expected $1.75B)")
+        else:
+            print("  [OK] Fact-level bitemporality verified: CoreWeave 9.75% Notes amount is $1.75B on April 15, 2026.")
+
+        # On April 22, 2026: $1.0B add-on is incorporated (EVT-CRWV-DEBT-NOTES-2031-975-ADDON closed 2026-04-21), resolving to $2.75B.
+        net_known_apr22 = net.known_as_of("2026-04-22")
+        notes975_apr22 = net_known_apr22.graph.get_edge_data("CRWV", "INSTITUTIONAL_BONDHOLDERS", key="OBL-CRWV-DEBT-NOTES-2031-975")
+        if notes975_apr22 is None or notes975_apr22.get("amount") != 2_750_000_000.0 or notes975_apr22.get("amount_known") is not True:
+            errors.append(f"9.75% Notes amount mismatch on 2026-04-22: {notes975_apr22.get('amount') if notes975_apr22 else None} (expected $2.75B)")
+        else:
+            print("  [OK] Fact-level bitemporality verified: CoreWeave 9.75% Notes amount is $2.75B on April 22, 2026.")
+
         # Coupling to Stress Engine Test (Dynamic Floating Debt Derivation)
         engine_may = FinancialStressEngine(network=net_may)
         engine_sep = FinancialStressEngine(network=net_sep)
@@ -699,6 +759,40 @@ def validate_observatory():
         else:
             print("  [OK] Zero-lookahead epistemic stress check verified on June 30, 2026: floating_principal_known=False, 6 unknown floating edges, reported hits=None.")
 
+        # Check customer trim zero-lookahead on June 30
+        cust_known_jun = engine_known_jun.simulate_anchor_customer_trim()
+        if cust_known_jun["crwv_annual_debt_service_usd"] is not None:
+            errors.append("Expected crwv_annual_debt_service_usd to be None under net_known_jun")
+        if cust_known_jun["total_fixed_commitments_usd"] is not None:
+            errors.append("Expected total_fixed_commitments_usd to be None under net_known_jun")
+        if "35,551" in cust_known_jun["transmission_narrative"] or "35.55" in cust_known_jun["transmission_narrative"]:
+            errors.append("Customer trim narrative leaked future debt total in known mode")
+
+        # Check grid delay zero-lookahead on June 30
+        grid_known_jun = engine_known_jun.simulate_grid_energization_delay()
+        if grid_known_jun["operational_mw"] is not None or grid_known_jun["delayed_mw"] is not None:
+            errors.append("Expected operational_mw and delayed_mw to be None under net_known_jun")
+        if grid_known_jun["apld_debt_carrying_cost_usd"] is not None:
+            errors.append("Expected apld_debt_carrying_cost_usd to be None under net_known_jun")
+        if "135.9" in grid_known_jun["transmission_narrative"]:
+            errors.append("Grid delay narrative leaked future carrying cost in known mode")
+
+        # Check OEM markdown zero-lookahead on June 30
+        oem_known_jun = engine_known_jun.simulate_oem_purchase_commitment_markdown()
+        if oem_known_jun["total_purchase_commitments_usd"] is not None:
+            errors.append("Expected total_purchase_commitments_usd to be None under net_known_jun")
+        if oem_known_jun["accounting_nrv_write_down_usd"] is not None:
+            errors.append("Expected accounting_nrv_write_down_usd to be None under net_known_jun")
+        if "34.2" in oem_known_jun["transmission_narrative"]:
+            errors.append("OEM markdown narrative leaked future commitment amount in known mode")
+
+        # Check GPU collateral caveat zero-lookahead
+        gpu_known_jun = engine_known_jun.simulate_gpu_collateral_haircut()
+        if "4.32" in gpu_known_jun["contractual_caveat"]:
+            errors.append("GPU collateral caveat leaked $4.32B in known mode")
+
+        print("  [OK] Zero-lookahead verified across all stress scenarios on June 30, 2026 (no metric or narrative leaks).")
+
     except Exception as e:
         errors.append(f"Error during graph unwrapping/temporal validation: {e}")
 
@@ -706,13 +800,13 @@ def validate_observatory():
     # 3c. Validate Obligation Lifecycle Events & Bitemporal Facts Ledger
     # ---------------------------------------------------------
     events_df = pd.read_parquet(PROCESSED_DIR / "obligation_events.parquet")
-    expected_events_count = 36
+    expected_events_count = 37
     if len(events_df) != expected_events_count:
         errors.append(f"Obligation events count mismatch: {len(events_df)} (expected {expected_events_count})")
     else:
         print(f"  [OK] Exactly {expected_events_count} lifecycle events present in obligation_events.parquet.")
 
-    valid_event_types = {"created", "superseded"}
+    valid_event_types = {"created", "superseded", "amended"}
     for _, ev in events_df.iterrows():
         eid = ev["event_id"]
         etype = ev.get("event_type")
@@ -734,9 +828,20 @@ def validate_observatory():
         else:
             print("  [OK] Bridge supersession lifecycle event verified: economic 2026-06-16, publicly known 2026-06-16.")
 
+    # 9.75% Notes add-on amendment event specifically
+    addon_ev = events_df[events_df["event_id"] == "EVT-CRWV-DEBT-NOTES-2031-975-ADDON"]
+    if addon_ev.empty:
+        errors.append("Missing EVT-CRWV-DEBT-NOTES-2031-975-ADDON event")
+    else:
+        aev = addon_ev.iloc[0]
+        if aev["event_type"] != "amended" or aev["economic_effective_at"] != "2026-04-21" or aev["publicly_known_at"] != "2026-04-21":
+            errors.append(f"9.75% Notes add-on event mismatch: type={aev['event_type']}, econ={aev['economic_effective_at']}, known={aev['publicly_known_at']}")
+        else:
+            print("  [OK] CoreWeave 9.75% Notes add-on amendment event verified: amended on 2026-04-21, publicly known 2026-04-21.")
+
     facts_df = pd.read_parquet(PROCESSED_DIR / "obligation_facts.parquet")
     clm_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
-    expected_facts_count = 43
+    expected_facts_count = 45
     if len(facts_df) != expected_facts_count:
         errors.append(f"Obligation facts count mismatch: {len(facts_df)} (expected {expected_facts_count})")
     else:

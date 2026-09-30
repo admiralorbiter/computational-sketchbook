@@ -420,16 +420,16 @@ def build_evidence_claims():
         {
             "claim_id": "CLM-CRWV-010",
             "entity_id": "CRWV",
-            "filing_type": "10-K",
-            "accession_number": "0001769628-26-000104",
-            "filing_date": "2026-03-02",
-            "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000104/crwv-20251231.htm",
-            "section_locator": "Item 7. MD&A - Liquidity and Capital Resources (DDTL Facilities)",
+            "filing_type": "8-K",
+            "accession_number": "0001193125-25-227562",
+            "filing_date": "2025-10-02",
+            "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000119312525227562/d910811d8k.htm",
+            "section_locator": "Item 1.01 Entry into a Material Definitive Agreement / Item 2.03",
             "quote_type": "source_excerpt",
-            "exact_quote": 'In September 2025, we further amended the DDTL 2.0 Facility by entering into the DDTL 2.1 Facility to create a new tranche of delayed draw term loan facility up to $3.0 billion and extend the draw period for new borrowings to March 2026. In July 2025, CoreWeave Compute Acquisition Co. V, LLC, our direct, wholly owned subsidiary, and CoreWeave Compute Acquisition Co. VII, LLC, our indirect subsidiary, entered into the DDTL 3.0 Facility (together with the DDTL 1.0 Facility, the DDTL 2.0 Facility, and the DDTL 2.1 Facility, the "DDTL Facilities") providing for up to $2.6 billion in delayed draw term loans. All obligations under the DDTL Facilities are unconditionally guaranteed by us.',
+            "exact_quote": 'On September 29, 2025, CoreWeave Compute Acquisition Co., IV, LLC ("CCAC IV"), a Delaware limited liability company and a direct subsidiary of CoreWeave, Inc., a Delaware Corporation (the "Parent") entered into an amendment (the "Fifth Amendment") to amend that certain Credit Agreement, dated as of May 16, 2024 (the "DDTL 2.0 Credit Agreement"), by and among CCAC IV, as borrower, with U.S. Bank Trust Company, National Association as administrative agent and collateral agent, U.S. Bank National Association, as depository bank and the lenders party thereto. The Fifth Amendment adds an incremental $3.0 billion tranche of delayed draw term loans (the "Fifth Amendment DDTL") to the DDTL 2.0 Credit Agreement.',
             "evidence_class": "A",
-            "extraction_method": "SEC EDGAR Form 10-K direct audit",
-            "verifier_notes": "Form 10-K audit proving DDTL 2.1 ($3.0B capacity), DDTL 3.0 co-borrowers CCAC V and CCAC VII, and unconditional parent guarantees across DDTL facilities."
+            "extraction_method": "SEC EDGAR Form 8-K direct audit",
+            "verifier_notes": "Contemporaneous Form 8-K filed October 2, 2025 establishing Fifth Amendment to DDTL 2.0 on September 29, 2025 adding $3.0B DDTL 2.1 facility tranche."
         },
         {
             "claim_id": "CLM-CRWV-011",
@@ -793,12 +793,14 @@ def build_obligations():
             "currency": "USD",
             "effective_date": "2024-05-16",
             "valid_from": "2024-05-16",
-            "maturity_date": "2029-05-16",
-            "valid_to": "2029-05-16",
+            "maturity_date": "2030-08-31",
+            "valid_to": "2030-08-31",
             "economic_valid_from": "2024-05-16",
-            "economic_valid_to": "2029-05-16",
+            "economic_valid_to": "2030-08-31",
             "publicly_known_from": "2025-03-20",
-            "term_years": 5.0,
+            "maturity_rule": "funding_date + 5 years",
+            "reported_final_maturity": "2030-08",
+            "term_years": 6.25,
             "capacity_mw": None,
             "committed_or_optional": "committed",
             "recourse": "limited_recourse_spv",
@@ -807,7 +809,7 @@ def build_obligations():
             "collateral": "First-priority lien on NVIDIA GPU hardware clusters & customer contracts",
             "guarantee": "Parent guarantee by CoreWeave, Inc.",
             "termination_rights": "Acceleration upon borrowing base deficiency",
-            "payment_conditions": "Floating rate (Term SOFR + spread tiered 6.00% to 13.00% by customer credit; 6.00% specified IG, 6.50% IG, 13.00% non-IG); quarterly principal installments begin Jan 2026, balloon 5 yrs post-funding",
+            "payment_conditions": "Floating rate (Term SOFR + spread tiered 6.00% to 13.00% by customer credit; 6.00% specified IG, 6.50% IG, 13.00% non-IG); each draw matures 5 years post-funding with reported final facility maturity August 2030 (quarterly principal installments begin Jan 2026, balloon 5 yrs post-funding)",
             "supersedes": None,
             "superseded_by": None,
             "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-007,CLM-CRWV-016",
@@ -828,13 +830,15 @@ def build_obligations():
             "as_of_date": "2026-06-30",
             "observed_as_of": "2026-06-30",
             "currency": "USD",
-            "effective_date": "2025-09-25",
-            "valid_from": "2025-09-25",
+            "effective_date": "2025-09-29",
+            "valid_from": "2025-09-29",
             "maturity_date": "2031-03-31",
             "valid_to": "2031-03-31",
-            "economic_valid_from": "2025-09-25",
+            "economic_valid_from": "2025-09-29",
             "economic_valid_to": "2031-03-31",
-            "publicly_known_from": "2026-03-02",
+            "publicly_known_from": "2025-10-02",
+            "maturity_rule": "funding_date + 5 years",
+            "reported_final_maturity": "2031-03",
             "term_years": 5.5,
             "capacity_mw": None,
             "committed_or_optional": "committed",
@@ -844,7 +848,7 @@ def build_obligations():
             "collateral": "First-priority lien on NVIDIA GPU hardware clusters & customer contracts",
             "guarantee": "Parent guarantee by CoreWeave, Inc.",
             "termination_rights": "Acceleration upon borrowing base deficiency",
-            "payment_conditions": "Floating rate (SOFR + 4.25%); quarterly installments begin July 2026 with final balloon 5 yrs post-funding; hedge ratio undisclosed in SEC disclosures",
+            "payment_conditions": "Floating rate (SOFR + 4.25%); each draw matures five years after date of draw (available in draws until March 2026 commitment termination date; reported final maturity March 2031)",
             "supersedes": None,
             "superseded_by": None,
             "claim_ids": "CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-010",
@@ -1393,12 +1397,14 @@ def build_obligations():
             "currency": "USD",
             "effective_date": "2024-05-16",
             "valid_from": "2024-05-16",
-            "maturity_date": "2029-05-16",
-            "valid_to": "2029-05-16",
+            "maturity_date": "2030-08-31",
+            "valid_to": "2030-08-31",
             "economic_valid_from": "2024-05-16",
-            "economic_valid_to": "2029-05-16",
+            "economic_valid_to": "2030-08-31",
             "publicly_known_from": "2025-03-20",
-            "term_years": 5.0,
+            "maturity_rule": "funding_date + 5 years",
+            "reported_final_maturity": "2030-08",
+            "term_years": 6.25,
             "capacity_mw": None,
             "capacity_description": "Recourse parent guarantee of CRWV CCAC IV LLC obligations under $3.190B DDTL 2.0 Credit Facility",
             "reference_exposure_estimate": 3190000000.0,
@@ -1430,13 +1436,15 @@ def build_obligations():
             "as_of_date": "2026-06-30",
             "observed_as_of": "2026-06-30",
             "currency": "USD",
-            "effective_date": "2025-09-25",
-            "valid_from": "2025-09-25",
+            "effective_date": "2025-09-29",
+            "valid_from": "2025-09-29",
             "maturity_date": "2031-03-31",
             "valid_to": "2031-03-31",
-            "economic_valid_from": "2025-09-25",
+            "economic_valid_from": "2025-09-29",
             "economic_valid_to": "2031-03-31",
-            "publicly_known_from": "2026-03-02",
+            "publicly_known_from": "2025-10-02",
+            "maturity_rule": "funding_date + 5 years",
+            "reported_final_maturity": "2031-03",
             "term_years": 5.5,
             "capacity_mw": None,
             "capacity_description": "Recourse parent guarantee of CRWV CCAC IV LLC obligations under $3.000B DDTL 2.1 Credit Facility",
@@ -1966,6 +1974,10 @@ def build_obligations():
             obl["valid_from"] = obl["economic_valid_from"]
         if "valid_to" not in obl:
             obl["valid_to"] = obl["economic_valid_to"]
+        if "maturity_rule" not in obl:
+            obl["maturity_rule"] = None
+        if "reported_final_maturity" not in obl:
+            obl["reported_final_maturity"] = None
 
     df = pd.DataFrame(obligations)
     df.to_parquet(PROCESSED_DIR / "obligations.parquet", index=False)
@@ -2041,11 +2053,11 @@ def build_obligation_events():
             "event_id": "EVT-CRWV-DEBT-DDTL21-CREATED",
             "obligation_id": "OBL-CRWV-DEBT-DDTL2-1",
             "event_type": "created",
-            "economic_effective_at": "2025-09-25",
-            "publicly_known_at": "2026-03-02",
+            "economic_effective_at": "2025-09-29",
+            "publicly_known_at": "2025-10-02",
             "related_obligation_id": None,
             "claim_id": "CLM-CRWV-010",
-            "description": "Closing of DDTL 2.1 Credit Facility by CCAC IV ($3,000M commitments)"
+            "description": "Entry into Fifth Amendment adding $3,000.0M DDTL 2.1 facility tranche by CCAC IV"
         },
         # 7. CoreWeave DDTL 3.0 creation
         {
@@ -2111,7 +2123,18 @@ def build_obligation_events():
             "publicly_known_at": "2026-04-14",
             "related_obligation_id": None,
             "claim_id": "CLM-CRWV-013",
-            "description": "Issuance of $2,750.0M 9.750% Senior Notes due October 1, 2031 ($1,750M initial on April 14, $1,000M add-on on April 21)"
+            "description": "Initial issuance of $1,750.0M 9.750% Senior Notes due October 1, 2031"
+        },
+        # 12B. CoreWeave 2031 9.75% Notes add-on amendment
+        {
+            "event_id": "EVT-CRWV-DEBT-NOTES-2031-975-ADDON",
+            "obligation_id": "OBL-CRWV-DEBT-NOTES-2031-975",
+            "event_type": "amended",
+            "economic_effective_at": "2026-04-21",
+            "publicly_known_at": "2026-04-21",
+            "related_obligation_id": None,
+            "claim_id": "CLM-CRWV-013A",
+            "description": "Issuance of $1,000.0M Additional Notes under 9.750% 2031 indenture ($2,750.0M total principal)"
         },
         # 13. CoreWeave 2032 9.625% Notes creation
         {
@@ -2217,11 +2240,11 @@ def build_obligation_events():
             "event_id": "EVT-CRWV-GUARANTY-DDTL21-CREATED",
             "obligation_id": "OBL-CRWV-GUARANTY-DDTL2-1",
             "event_type": "created",
-            "economic_effective_at": "2025-09-25",
-            "publicly_known_at": "2026-03-02",
+            "economic_effective_at": "2025-09-29",
+            "publicly_known_at": "2025-10-02",
             "related_obligation_id": "OBL-CRWV-DEBT-DDTL2-1",
             "claim_id": "CLM-CRWV-010",
-            "description": "Parent recourse guarantee of CCAC IV obligations under DDTL 2.1 facility"
+            "description": "Parent recourse guarantee of CCAC IV obligations under DDTL 2.1 facility (Fifth Amendment)"
         },
         # 23. Parent Guaranty DDTL 3.0 creation
         {
@@ -2466,14 +2489,14 @@ def build_obligation_facts_table():
             "evidence_class": "A"
         },
         {
-            "fact_id": "FACT-CRWV-DDTL21-CAP-20250925",
+            "fact_id": "FACT-CRWV-DDTL21-CAP-20250929",
             "obligation_id": "OBL-CRWV-DEBT-DDTL2-1",
             "entity_id": "CRWV_CCAC_IV",
             "attribute": "facility_capacity",
             "value": 3000000000.0,
             "unit": "USD",
-            "economic_as_of": "2025-09-25",
-            "publicly_known_from": "2026-03-02",
+            "economic_as_of": "2025-09-29",
+            "publicly_known_from": "2025-10-02",
             "truth_claim_id": "CLM-CRWV-010",
             "knowledge_claim_id": "CLM-CRWV-010",
             "claim_id": "CLM-CRWV-010",
@@ -2647,6 +2670,34 @@ def build_obligation_facts_table():
             "truth_claim_id": "CLM-CRWV-001",
             "knowledge_claim_id": "CLM-CRWV-001",
             "claim_id": "CLM-CRWV-001",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-CRWV-NOTES-2031-975-PRIN-20260414",
+            "obligation_id": "OBL-CRWV-DEBT-NOTES-2031-975",
+            "entity_id": "CRWV",
+            "attribute": "principal_outstanding",
+            "value": 1750000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-04-14",
+            "publicly_known_from": "2026-04-14",
+            "truth_claim_id": "CLM-CRWV-013",
+            "knowledge_claim_id": "CLM-CRWV-013",
+            "claim_id": "CLM-CRWV-013",
+            "evidence_class": "A"
+        },
+        {
+            "fact_id": "FACT-CRWV-NOTES-2031-975-PRIN-20260421",
+            "obligation_id": "OBL-CRWV-DEBT-NOTES-2031-975",
+            "entity_id": "CRWV",
+            "attribute": "principal_outstanding",
+            "value": 2750000000.0,
+            "unit": "USD",
+            "economic_as_of": "2026-04-21",
+            "publicly_known_from": "2026-04-21",
+            "truth_claim_id": "CLM-CRWV-013A",
+            "knowledge_claim_id": "CLM-CRWV-013A",
+            "claim_id": "CLM-CRWV-013A",
             "evidence_class": "A"
         },
         {
