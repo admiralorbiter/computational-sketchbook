@@ -1,48 +1,48 @@
-obligation_id,from_entity,to_entity,obligation_type,research_category,amount,amount_type,facility_capacity,capacity_mw,economic_valid_from,publicly_known_from,lag_days,claim_ids
-OBL-CRWV-DEBT-DDTL1,CRWV_CCAC_II,BLACKSTONE_MAGNETAR_SYN,debt_facility,Private Credit / Delayed-Draw Facilities,1300000000.0,principal_outstanding,,,2023-07-30,2025-03-20,599,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-007"
-OBL-CRWV-GUARANTY-DDTL1,CRWV,BLACKSTONE_MAGNETAR_SYN,contingent_guarantee,Private Credit / Bank Guarantees & SPV Liens,,contingent_guarantee,,,2023-07-30,2025-03-20,599,"CLM-CRWV-001,CLM-CRWV-007"
-OBL-CRWV-DEBT-OEM,CRWV,OEM_FINANCING_PARTNERS,debt_facility,Private Credit / Delayed-Draw Facilities,4220000000.0,principal_outstanding,,,2025-01-01,2026-08-12,588,"CLM-CRWV-001,CLM-CRWV-002"
-OBL-CRWV-DEBT-OEM-NR,CRWV,OEM_FINANCING_PARTNERS,debt_facility,Private Credit / Delayed-Draw Facilities,882000000.0,principal_outstanding,,,2025-06-01,2026-08-12,437,"CLM-CRWV-001,CLM-CRWV-004"
-OBL-CRWV-DEBT-MAGNETAR,CRWV,BLACKSTONE_MAGNETAR_SYN,debt_facility,Private Credit / Delayed-Draw Facilities,189000000.0,principal_outstanding,,,2024-01-15,2025-03-20,430,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-007"
-OBL-SMCI-SUPPLIER-COMMIT,SMCI,HARDWARE_SUPPLIERS,gpu_procurement,Supplier Purchase Commitments,34200000000.0,remaining_commitment,,,2025-07-01,2026-08-31,426,CLM-SMCI-001
-REL-MSFT-CRWV-REVENUE-CONCENTRATION,MSFT,CRWV,customer_revenue_concentration,Commercial Offtake & Colocation Contracts,3437770000.0,recognized_revenue,,,2025-01-01,2026-03-02,425,CLM-CRWV-003
-OBL-CRWV-DEBT-DDTL2,CRWV_CCAC_IV,BLACKSTONE_MAGNETAR_SYN,debt_facility,Private Credit / Delayed-Draw Facilities,3190000000.0,principal_outstanding,,,2024-05-16,2025-03-20,308,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-007,CLM-CRWV-016"
-OBL-CRWV-GUARANTY-DDTL2,CRWV,BLACKSTONE_MAGNETAR_SYN,contingent_guarantee,Private Credit / Bank Guarantees & SPV Liens,,contingent_guarantee,,,2024-05-16,2025-03-20,308,"CLM-CRWV-001,CLM-CRWV-007"
+obligation_id,from_entity,to_entity,obligation_type,calibrated_category,amount,amount_type,facility_capacity,capacity_mw,economic_valid_from,publicly_known_from,sec_lag_days,claim_ids
+OBL-CRWV-DEBT-DDTL1,CRWV_CCAC_II,BLACKSTONE_MAGNETAR_SYN,debt_facility,Private Credit Delayed-Draw Facilities,1300000000.0,principal_outstanding,,,2023-07-30,2025-03-20,599,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-007"
+OBL-CRWV-GUARANTY-DDTL1,CRWV,BLACKSTONE_MAGNETAR_SYN,contingent_guarantee,Parent Guarantees & Springing Indemnities,,contingent_guarantee,,,2023-07-30,2025-03-20,599,"CLM-CRWV-001,CLM-CRWV-007"
+OBL-CRWV-DEBT-OEM,CRWV,OEM_FINANCING_PARTNERS,debt_facility,Corporate Residual & OEM Debt,4220000000.0,principal_outstanding,,,2025-01-01,2026-08-12,588,"CLM-CRWV-001,CLM-CRWV-002"
+OBL-CRWV-DEBT-OEM-NR,CRWV,OEM_FINANCING_PARTNERS,debt_facility,Corporate Residual & OEM Debt,882000000.0,principal_outstanding,,,2025-06-01,2026-08-12,437,"CLM-CRWV-001,CLM-CRWV-004"
+OBL-CRWV-DEBT-MAGNETAR,CRWV,BLACKSTONE_MAGNETAR_SYN,debt_facility,Private Credit Delayed-Draw Facilities,189000000.0,principal_outstanding,,,2024-01-15,2025-03-20,430,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-007"
+OBL-SMCI-SUPPLIER-COMMIT,SMCI,HARDWARE_SUPPLIERS,gpu_procurement,Supplier Purchase Commitments (Annual Footnote Aggregation),34200000000.0,remaining_commitment,,,2025-07-01,2026-08-31,426,CLM-SMCI-001
+REL-MSFT-CRWV-REVENUE-CONCENTRATION,MSFT,CRWV,customer_revenue_concentration,Customer Revenue Concentration (Measurement Period),3437770000.0,recognized_revenue,,,2025-01-01,2026-03-02,425,CLM-CRWV-003
+OBL-CRWV-DEBT-DDTL2,CRWV_CCAC_IV,BLACKSTONE_MAGNETAR_SYN,debt_facility,Private Credit Delayed-Draw Facilities,3190000000.0,principal_outstanding,,,2024-05-16,2025-03-20,308,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-007,CLM-CRWV-016"
+OBL-CRWV-GUARANTY-DDTL2,CRWV,BLACKSTONE_MAGNETAR_SYN,contingent_guarantee,Parent Guarantees & Springing Indemnities,,contingent_guarantee,,,2024-05-16,2025-03-20,308,"CLM-CRWV-001,CLM-CRWV-007"
 OBL-NVDA-CRWV-EQUITY,NVDA,CRWV,equity_investment,Strategic Equity Investments,2000000000.0,equity_investment,,,2026-01-15,2026-05-08,113,CLM-NVDA-CRWV-001
-OBL-APLD-DEBT-OTHER,APLD,PROJECT_LENDERS,aggregate_residual_debt,Corporate Project & Residual Debt,56680000.0,principal_outstanding,,,2026-05-31,2026-07-29,59,CLM-APLD-003
-OBL-NBIS-DEBT-MUFG-2026,NBIS_COMPUTECO_II_LLC,MUFG_BANK_SYN,debt_facility,Private Credit / Delayed-Draw Facilities,775000000.0,principal_outstanding,,,2026-07-10,2026-07-17,7,CLM-NBIS-001
-OBL-NBIS-COBORROWER-MUFG-2026,NBIS_COMPUTECO_II_OY,MUFG_BANK_SYN,joint_co_borrower,Private Credit / Bank Guarantees & SPV Liens,,contingent_obligations,,,2026-07-10,2026-07-17,7,CLM-NBIS-001
-OBL-NBIS-GUARANTY-MUFG-2026,NBIS,MUFG_BANK_SYN,contingent_guarantee,Private Credit / Bank Guarantees & SPV Liens,,contingent_guarantee,,,2026-07-10,2026-07-17,7,CLM-NBIS-001
-OBL-CRWV-APLD-LEASE,CRWV_SPV_VIII,APLD_COMPUTECO,datacenter_lease,Commercial Offtake & Colocation Contracts,11000000000.0,lifetime_contract_value,,400.0,2025-05-28,2025-06-02,5,"CLM-APLD-001,CLM-APLD-004,CLM-APLD-009"
-OBL-APLD-DEBT-BRIDGE,APLD,PROJECT_LENDERS,debt_facility,Corporate Project & Residual Debt,300000000.0,principal_outstanding,,,2026-05-01,2026-05-05,4,"CLM-APLD-003,CLM-APLD-013,CLM-APLD-018"
-OBL-NBIS-META-OFFTAKE-2026,META,NBIS_INC,customer_contract,Commercial Offtake & Colocation Contracts,27000000000.0,lifetime_contract_value,,,2026-03-13,2026-03-16,3,CLM-NBIS-002
-OBL-CRWV-DEBT-DDTL3,CRWV_CCAC_VII,MUFG_BANK_SYN,debt_facility,Private Credit / Delayed-Draw Facilities,2215000000.0,principal_outstanding,,,2025-07-28,2025-07-31,3,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-009,CLM-CRWV-010"
-OBL-CRWV-DEBT-DDTL2-1,CRWV_CCAC_IV,BLACKSTONE_MAGNETAR_SYN,debt_facility,Private Credit / Delayed-Draw Facilities,3000000000.0,principal_outstanding,,,2025-09-29,2025-10-02,3,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-010"
-OBL-CRWV-GUARANTY-DDTL5,CRWV,MORGAN_STANLEY_SYN,contingent_guarantee,Private Credit / Bank Guarantees & SPV Liens,,contingent_guarantee,,,2026-05-15,2026-05-18,3,"CLM-CRWV-001,CLM-CRWV-006"
-OBL-CRWV-COBORROWER-DDTL3,CRWV_CCAC_V,MUFG_BANK_SYN,joint_co_borrower,Private Credit / Bank Guarantees & SPV Liens,,contingent_guarantee,,,2025-07-28,2025-07-31,3,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-009,CLM-CRWV-010"
-OBL-CRWV-GUARANTY-DDTL3,CRWV,MUFG_BANK_SYN,contingent_guarantee,Private Credit / Bank Guarantees & SPV Liens,,contingent_guarantee,,,2025-07-28,2025-07-31,3,"CLM-CRWV-001,CLM-CRWV-009,CLM-CRWV-010"
-OBL-CRWV-GUARANTY-DDTL2-1,CRWV,BLACKSTONE_MAGNETAR_SYN,contingent_guarantee,Private Credit / Bank Guarantees & SPV Liens,,contingent_guarantee,,,2025-09-29,2025-10-02,3,"CLM-CRWV-001,CLM-CRWV-010"
-OBL-CRWV-DEBT-DDTL5,CRWV_FINANCING_DDTL_V,MORGAN_STANLEY_SYN,debt_facility,Private Credit / Delayed-Draw Facilities,1101000000.0,principal_outstanding,3100000000.0,,2026-05-15,2026-05-18,3,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-005,CLM-CRWV-006"
-OBL-CRWV-DEBT-NOTES-2031-900,CRWV,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Bond & Convertible Notes,1750000000.0,principal_outstanding,,,2025-07-25,2025-07-28,3,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-009A"
-OBL-IREN-DEBT-MFSA-2026,IREN_MACKENZIE_COMPUTE,BLUE_OWL_OBDC,debt_facility,Private Credit / Delayed-Draw Facilities,1200000000.0,facility_capacity,,,2026-08-25,2026-08-27,2,CLM-IREN-001
-OBL-IREN-DEBT-NOTES-2026,IREN_MACKENZIE_COMPUTE,PIMCO,debt_facility,Public / 144A Bond & Convertible Notes,1200000000.0,facility_capacity,,,2026-08-25,2026-08-27,2,CLM-IREN-001
-OBL-IREN-GUARANTY-2026,IREN,BLUE_OWL_OBDC,contingent_guarantee,Corporate Project & Residual Debt,,contingent_guarantee,,,2026-08-25,2026-08-27,2,CLM-IREN-001
-OBL-CRWV-APLD-GUARANTY-ELN02,CRWV,APLD_ELN02_LLC,contingent_guarantee,Corporate Project & Residual Debt,,contingent_obligations,,,2026-03-30,2026-04-01,2,"CLM-APLD-002,CLM-APLD-005"
-OBL-CRWV-APLD-GUARANTY-ELN03,CRWV,APLD_ELN03_LLC,contingent_guarantee,Corporate Project & Residual Debt,,contingent_obligations,,150.0,2026-03-30,2026-04-01,2,"CLM-APLD-002,CLM-APLD-006"
-OBL-CRWV-DEBT-DDTL4,CRWV_SPV_VIII,MUFG_BANK_SYN,debt_facility,Private Credit / Delayed-Draw Facilities,2837000000.0,principal_outstanding,8500000000.0,,2026-03-30,2026-03-31,1,"CLM-CRWV-001,CLM-CRWV-004,CLM-CRWV-012"
-OBL-CRWV-DEBT-NOTES-2030,CRWV,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Bond & Convertible Notes,2000000000.0,principal_outstanding,,,2025-05-27,2025-05-28,1,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-008,CLM-CRWV-008A"
-OBL-APLD-DEBT-CONV,APLD,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Bond & Convertible Notes,450000000.0,principal_outstanding,,,2024-11-04,2024-11-05,1,"CLM-APLD-003,CLM-APLD-012"
-OBL-CRWV-GUARANTY-DDTL4,CRWV,MUFG_BANK_SYN,contingent_guarantee,Private Credit / Bank Guarantees & SPV Liens,,contingent_guarantee,,,2026-03-30,2026-03-31,1,"CLM-CRWV-004,CLM-CRWV-012"
-OBL-CRWV-CORZ-COLOCATION-2024,CRWV,CORZ,capacity_reservation,Commercial Offtake & Colocation Contracts,,contingent_obligations,,590.0,2024-06-03,2024-06-04,1,"CLM-CORZ-001,CLM-CORZ-002,CLM-CORZ-003,CLM-CORZ-004,CLM-CORZ-005,CLM-CORZ-006"
-OBL-CRWV-DEBT-CONV-2031,CRWV,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Bond & Convertible Notes,2588000000.0,principal_outstanding,,,2025-12-11,2025-12-11,0,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-011"
-OBL-CRWV-DEBT-NOTES-2032-EUR,CRWV,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Bond & Convertible Notes,2279000000.0,principal_outstanding,,,2026-06-18,2026-06-18,0,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-014,CLM-CRWV-014A"
-OBL-CRWV-DEBT-NOTES-2032-9625,CRWV,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Bond & Convertible Notes,1250000000.0,principal_outstanding,,,2026-06-18,2026-06-18,0,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-014,CLM-CRWV-014A"
-OBL-CRWV-DEBT-NOTES-2031-975,CRWV,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Bond & Convertible Notes,2750000000.0,principal_outstanding,,,2026-04-14,2026-04-14,0,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-013,CLM-CRWV-013A"
-OBL-WULF-DEBT-CONV-2030,WULF,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Bond & Convertible Notes,500000000.0,principal_outstanding,,,2024-10-25,2024-10-25,0,"CLM-WULF-001,CLM-WULF-002"
-OBL-APLD-DEBT-7PCT-2026,APLD_COMPUTECO3,INSTITUTIONAL_BONDHOLDERS,debt_facility,Corporate Project & Residual Debt,1590000000.0,principal_outstanding,,,2026-06-16,2026-06-16,0,"CLM-APLD-003,CLM-APLD-007,CLM-APLD-008"
-OBL-APLD-DEBT-PF1,APLD_COMPUTECO,PROJECT_LENDERS,debt_facility,Corporate Project & Residual Debt,2350000000.0,principal_outstanding,,400.0,2025-11-20,2025-11-20,0,"CLM-APLD-001,CLM-APLD-003,CLM-APLD-010,CLM-APLD-017"
-OBL-CRWV-DEBT-CONV-2032,CRWV,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Bond & Convertible Notes,4000000000.0,principal_outstanding,,,2026-04-14,2026-04-14,0,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-013"
-OBL-WULF-DEBT-CONV-2032,WULF,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Bond & Convertible Notes,1025000000.0,principal_outstanding,,,2025-10-31,2025-10-31,0,"CLM-WULF-001,CLM-WULF-004"
-OBL-WULF-DEBT-CONV-2031,WULF,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Bond & Convertible Notes,1000000000.0,principal_outstanding,,,2025-08-20,2025-08-20,0,"CLM-WULF-001,CLM-WULF-003,CLM-WULF-003A"
-OBL-HUT-DEBT-COATUE-CONV-2024,HUT,COATUE,debt_facility,Public / 144A Bond & Convertible Notes,150000000.0,principal_outstanding,,,2024-06-28,2024-06-24,-4,"CLM-HUT-001,CLM-HUT-002,CLM-HUT-003"
-OBL-APLD-DEBT-PF2,APLD_COMPUTECO2,PROJECT_LENDERS,debt_facility,Corporate Project & Residual Debt,2150000000.0,principal_outstanding,,,2026-03-10,2026-03-04,-6,"CLM-APLD-003,CLM-APLD-011,CLM-APLD-016"
+OBL-APLD-DEBT-OTHER,APLD,PROJECT_LENDERS,aggregate_residual_debt,Corporate Residual & OEM Debt,56680000.0,principal_outstanding,,,2026-05-31,2026-07-29,59,CLM-APLD-003
+OBL-NBIS-DEBT-MUFG-2026,NBIS_COMPUTECO_II_LLC,MUFG_BANK_SYN,debt_facility,Private Credit Delayed-Draw Facilities,775000000.0,principal_outstanding,,,2026-07-10,2026-07-17,7,CLM-NBIS-001
+OBL-NBIS-COBORROWER-MUFG-2026,NBIS_COMPUTECO_II_OY,MUFG_BANK_SYN,joint_co_borrower,Parent Guarantees & Springing Indemnities,,contingent_obligations,,,2026-07-10,2026-07-17,7,CLM-NBIS-001
+OBL-NBIS-GUARANTY-MUFG-2026,NBIS,MUFG_BANK_SYN,contingent_guarantee,Parent Guarantees & Springing Indemnities,,contingent_guarantee,,,2026-07-10,2026-07-17,7,CLM-NBIS-001
+OBL-CRWV-APLD-LEASE,CRWV_SPV_VIII,APLD_COMPUTECO,datacenter_lease,Commercial Colocation & Master Leases,11000000000.0,lifetime_contract_value,,400.0,2025-05-28,2025-06-02,5,"CLM-APLD-001,CLM-APLD-004,CLM-APLD-009"
+OBL-APLD-DEBT-BRIDGE,APLD,PROJECT_LENDERS,debt_facility,Corporate Residual & OEM Debt,300000000.0,principal_outstanding,,,2026-05-01,2026-05-05,4,"CLM-APLD-003,CLM-APLD-013,CLM-APLD-018"
+OBL-NBIS-META-OFFTAKE-2026,META,NBIS_INC,customer_contract,Commercial Colocation & Master Leases,27000000000.0,lifetime_contract_value,,,2026-03-13,2026-03-16,3,CLM-NBIS-002
+OBL-CRWV-DEBT-DDTL3,CRWV_CCAC_VII,MUFG_BANK_SYN,debt_facility,Private Credit Delayed-Draw Facilities,2215000000.0,principal_outstanding,,,2025-07-28,2025-07-31,3,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-009,CLM-CRWV-010"
+OBL-CRWV-DEBT-DDTL2-1,CRWV_CCAC_IV,BLACKSTONE_MAGNETAR_SYN,debt_facility,Private Credit Delayed-Draw Facilities,3000000000.0,principal_outstanding,,,2025-09-29,2025-10-02,3,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-010"
+OBL-CRWV-GUARANTY-DDTL5,CRWV,MORGAN_STANLEY_SYN,contingent_guarantee,Parent Guarantees & Springing Indemnities,,contingent_guarantee,,,2026-05-15,2026-05-18,3,"CLM-CRWV-001,CLM-CRWV-006"
+OBL-CRWV-COBORROWER-DDTL3,CRWV_CCAC_V,MUFG_BANK_SYN,joint_co_borrower,Parent Guarantees & Springing Indemnities,,contingent_guarantee,,,2025-07-28,2025-07-31,3,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-009,CLM-CRWV-010"
+OBL-CRWV-GUARANTY-DDTL3,CRWV,MUFG_BANK_SYN,contingent_guarantee,Parent Guarantees & Springing Indemnities,,contingent_guarantee,,,2025-07-28,2025-07-31,3,"CLM-CRWV-001,CLM-CRWV-009,CLM-CRWV-010"
+OBL-CRWV-GUARANTY-DDTL2-1,CRWV,BLACKSTONE_MAGNETAR_SYN,contingent_guarantee,Parent Guarantees & Springing Indemnities,,contingent_guarantee,,,2025-09-29,2025-10-02,3,"CLM-CRWV-001,CLM-CRWV-010"
+OBL-CRWV-DEBT-DDTL5,CRWV_FINANCING_DDTL_V,MORGAN_STANLEY_SYN,debt_facility,Private Credit Delayed-Draw Facilities,1101000000.0,principal_outstanding,3100000000.0,,2026-05-15,2026-05-18,3,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-005,CLM-CRWV-006"
+OBL-CRWV-DEBT-NOTES-2031-900,CRWV,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Capital Market Notes,1750000000.0,principal_outstanding,,,2025-07-25,2025-07-28,3,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-009A"
+OBL-IREN-DEBT-MFSA-2026,IREN_MACKENZIE_COMPUTE,BLUE_OWL_OBDC,debt_facility,Privately Placed Equipment / Growth Debt,1200000000.0,facility_capacity,,,2026-08-25,2026-08-27,2,CLM-IREN-001
+OBL-IREN-DEBT-NOTES-2026,IREN_MACKENZIE_COMPUTE,PIMCO,debt_facility,Privately Placed Equipment / Growth Debt,1200000000.0,facility_capacity,,,2026-08-25,2026-08-27,2,CLM-IREN-001
+OBL-IREN-GUARANTY-2026,IREN,BLUE_OWL_OBDC,contingent_guarantee,Parent Guarantees & Springing Indemnities,,contingent_guarantee,,,2026-08-25,2026-08-27,2,CLM-IREN-001
+OBL-CRWV-APLD-GUARANTY-ELN02,CRWV,APLD_ELN02_LLC,contingent_guarantee,Parent Guarantees & Springing Indemnities,,contingent_obligations,,,2026-03-30,2026-04-01,2,"CLM-APLD-002,CLM-APLD-005"
+OBL-CRWV-APLD-GUARANTY-ELN03,CRWV,APLD_ELN03_LLC,contingent_guarantee,Parent Guarantees & Springing Indemnities,,contingent_obligations,,150.0,2026-03-30,2026-04-01,2,"CLM-APLD-002,CLM-APLD-006"
+OBL-CRWV-DEBT-DDTL4,CRWV_SPV_VIII,MUFG_BANK_SYN,debt_facility,Private Credit Delayed-Draw Facilities,2837000000.0,principal_outstanding,8500000000.0,,2026-03-30,2026-03-31,1,"CLM-CRWV-001,CLM-CRWV-004,CLM-CRWV-012"
+OBL-CRWV-DEBT-NOTES-2030,CRWV,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Capital Market Notes,2000000000.0,principal_outstanding,,,2025-05-27,2025-05-28,1,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-008,CLM-CRWV-008A"
+OBL-APLD-DEBT-CONV,APLD,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Capital Market Notes,450000000.0,principal_outstanding,,,2024-11-04,2024-11-05,1,"CLM-APLD-003,CLM-APLD-012"
+OBL-CRWV-GUARANTY-DDTL4,CRWV,MUFG_BANK_SYN,contingent_guarantee,Parent Guarantees & Springing Indemnities,,contingent_guarantee,,,2026-03-30,2026-03-31,1,"CLM-CRWV-004,CLM-CRWV-012"
+OBL-CRWV-CORZ-COLOCATION-2024,CRWV,CORZ,capacity_reservation,Commercial Colocation & Master Leases,,contingent_obligations,,590.0,2024-06-03,2024-06-04,1,"CLM-CORZ-001,CLM-CORZ-002,CLM-CORZ-003,CLM-CORZ-004,CLM-CORZ-005,CLM-CORZ-006"
+OBL-CRWV-DEBT-CONV-2031,CRWV,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Capital Market Notes,2588000000.0,principal_outstanding,,,2025-12-11,2025-12-11,0,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-011"
+OBL-CRWV-DEBT-NOTES-2032-EUR,CRWV,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Capital Market Notes,2279000000.0,principal_outstanding,,,2026-06-18,2026-06-18,0,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-014,CLM-CRWV-014A"
+OBL-CRWV-DEBT-NOTES-2032-9625,CRWV,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Capital Market Notes,1250000000.0,principal_outstanding,,,2026-06-18,2026-06-18,0,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-014,CLM-CRWV-014A"
+OBL-CRWV-DEBT-NOTES-2031-975,CRWV,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Capital Market Notes,2750000000.0,principal_outstanding,,,2026-04-14,2026-04-14,0,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-013,CLM-CRWV-013A"
+OBL-WULF-DEBT-CONV-2030,WULF,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Capital Market Notes,500000000.0,principal_outstanding,,,2024-10-25,2024-10-25,0,"CLM-WULF-001,CLM-WULF-002"
+OBL-APLD-DEBT-7PCT-2026,APLD_COMPUTECO3,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Capital Market Notes,1590000000.0,principal_outstanding,,,2026-06-16,2026-06-16,0,"CLM-APLD-003,CLM-APLD-007,CLM-APLD-008"
+OBL-APLD-DEBT-PF1,APLD_COMPUTECO,PROJECT_LENDERS,debt_facility,Public / 144A Capital Market Notes,2350000000.0,principal_outstanding,,400.0,2025-11-20,2025-11-20,0,"CLM-APLD-001,CLM-APLD-003,CLM-APLD-010,CLM-APLD-017"
+OBL-CRWV-DEBT-CONV-2032,CRWV,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Capital Market Notes,4000000000.0,principal_outstanding,,,2026-04-14,2026-04-14,0,"CLM-CRWV-001,CLM-CRWV-002,CLM-CRWV-013"
+OBL-WULF-DEBT-CONV-2032,WULF,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Capital Market Notes,1025000000.0,principal_outstanding,,,2025-10-31,2025-10-31,0,"CLM-WULF-001,CLM-WULF-004"
+OBL-WULF-DEBT-CONV-2031,WULF,INSTITUTIONAL_BONDHOLDERS,debt_facility,Public / 144A Capital Market Notes,1000000000.0,principal_outstanding,,,2025-08-20,2025-08-20,0,"CLM-WULF-001,CLM-WULF-003,CLM-WULF-003A"
+OBL-HUT-DEBT-COATUE-CONV-2024,HUT,COATUE,debt_facility,Privately Placed Equipment / Growth Debt,150000000.0,principal_outstanding,,,2024-06-28,2024-06-24,-4,"CLM-HUT-001,CLM-HUT-002,CLM-HUT-003"
+OBL-APLD-DEBT-PF2,APLD_COMPUTECO2,PROJECT_LENDERS,debt_facility,Public / 144A Capital Market Notes,2150000000.0,principal_outstanding,,,2026-03-10,2026-03-04,-6,"CLM-APLD-003,CLM-APLD-011,CLM-APLD-016"

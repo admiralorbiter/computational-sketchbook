@@ -670,32 +670,39 @@ erc_regional_entity.
 
 ---
 
-## ADR-023: Empirical Bitemporal Visibility Analysis & Two-Clock Network Dynamics
+## ADR-023.1: Calibrated SEC Legibility vs. Public Awareness & Two-Clock Contractual Dynamics
 
-- **Status:** Accepted (2026-09-30, Task 023 Certification)
+- **Status:** Accepted (2026-09-30, Task 023.1 Calibration)
 - **Context:**
   1. *The Fallacy of Continuous Observability:* Retrospective quantitative modeling routinely back-projects later-disclosed liabilities onto historical dates, introducing look-ahead bias and misrepresenting market informational states.
-  2. *The Research Question:* When did systemic debt concentration and counterparty linkages become economically binding versus when did they become legible to public capital markets via SEC filings?
+  2. *Refinement from Binary Opacity:* Binary "public invisibility" models conflate SEC/EDGAR filing legibility with total public ignorance. While public headline awareness (via press releases) often occurred within 1–4 days, detailed legal legibility (SPVs, advance rates, collateral lien scope, springing guarantees) and mid-quarter drawn balances remained opaque on EDGAR for hundreds of days.
 - **Decision:**
-  1. **Empirical Lag Quantification ($\Delta t = t_{\text{pub}} - t_{\text{eco}}$):**
-     - Audited all 47 obligations, 57 lifecycle events, and 64 measurement facts in the frozen observatory at commit `42f9a74`.
-     - Established an empirical mean lag of **92.64 days** (median: 3.0 days, max: 599 days).
-  2. **Institutional Regulatory Bifurcation:**
-     - Demonstrated a structural visibility divergence:
-       * **Public / 144A Bond & Convertible Notes ($N=13$):** Mean lag of **0.23 days** (median: 0.0 days, range: -4 to 3 days), driven by Form 8-K Items 1.01/2.03 and Rule 135c requirements.
-       * **Private Credit / Delayed-Draw Facilities ($N=11$):** Mean lag of **216.45 days** (median: 7.0 days, range: 1 to 599 days), driven by bilateral confidentiality and periodic disclosure exemptions.
-       * **Longest-Lag Contract:** CoreWeave DDTL 1.0 ($1.300B) incurred July 30, 2023, disclosed March 20, 2025 (**599-day opacity window**).
-  3. **Monthly Bitemporal Simulation (33 Monthly Intervals: 2024–2026):**
-     - Simulated parallel time series for the Economic Reality Graph $G_{\text{eco}}(t)$ vs Public Knowledge Graph $G_{\text{kno}}(t)$.
-     - Quantified the **Shadow Debt Gap** ($\Delta \text{Debt} = D_{\text{eco}} - D_{\text{kno}}$) and **Network Opacity Ratio** ($1 - D_{\text{kno}} / D_{\text{eco}}$).
-  4. **Empirical Discovery of Peak Opacity Episodes:**
-     - *Episode 1 (The Private Credit Incubation Cloak, Jan 2024 – Mar 2025):* Up to $9.9B of credit capacity active with $0.0B publicly known; 0-node public graph vs 4-node economic graph.
-     - *Episode 4 (The Summer 2026 Shadow Debt Gap, Jun 30 – Aug 12, 2026):* On July 1, 2026, **$32.801B of debt (73.52% of total system debt)** was an epistemic shadow ($44.616B economic vs $11.815B publicly known) during the 43-day pre-10-Q filing window.
-  5. **Topological Visibility Lag & The Hidden Hub:**
-     - Proved that CoreWeave’s topological degree in the economic network led public knowledge by 3 to 5 degrees throughout 2024–2025. In March 2025, public markets observed $k=1$, whereas economic reality was $k=6$.
+  1. **Four-Level Information Resolution Framework:**
+     - Level 0: Economic Reality ($t_{\text{eco}}$, contract execution).
+     - Level 1: Public Headline Awareness ($t_{\text{press}}$, 1–4 days lag via press releases naming lenders and facility sizes).
+     - Level 2: SEC/EDGAR Detailed Legal Legibility ($t_{\text{sec}}$, 300–600 days lag via Form S-1/10-Q exhibit filing disclosing SPVs, advance rates, and collateral liens).
+     - Level 3: Current Balance Measurability ($t_{\text{meas}}$, quarterly 10-Q financial footnotes, 40–45 days lag).
+  2. **Role-Aware Lag Taxonomy ($N=45$ Inceptions):**
+     - Separated 45 contract inceptions from 2 periodic measurements (`REL-MSFT-CRWV-REVENUE-CONCENTRATION` [425d] and `OBL-SMCI-SUPPLIER-COMMIT` [426d]).
+     - **Public / 144A Capital Market Notes ($N=14$):** Mean lag of **-0.07 days** (median 0.0 days, range -6 to 3 days), driven by Form 8-K Items 1.01/2.03 and Rule 135c.
+     - **Privately Placed Equipment / Growth Debt ($N=3$):** Mean lag of **0.00 days** (median 2.0 days, range -4 to 2 days).
+     - **Commercial Colocation & Leases ($N=3$):** Mean lag of **3.00 days** (median 3.0 days, range 1 to 5 days).
+     - **Parent Guarantees & Springing Indemnities ($N=12$):** Mean lag of **78.33 days** (median 3.0 days, max 599 days).
+     - **Private Credit Delayed-Draw Facilities ($N=8$):** Mean lag of **169.25 days** (median 5.0 days, max 599 days).
+     - Overall contract inceptions mean lag: **77.84 days** (median 3.0 days, max 599 days).
+  3. **Calibrated Debt Baseline & Unresolved Current-Principal Gap:**
+     - Withdrew the uncalibrated $32.801B / 73.52% "shadow debt" headline resulting from point-in-time fact-ledger queries.
+     - Carried forward the known **$25.682B public note pool** ($16.617B CoreWeave, $6.540B Applied Digital, $2.525B TeraWulf) disclosed in prior Form 8-Ks.
+     - Established that on July 1, 2026 ($44.616B economic debt), the true **unresolved current-principal gap** was at most **$18.934B (42.44%)**, representing unobservable mid-year private credit / DDTL drawdowns prior to CoreWeave's Form 10-Q filing on August 12, 2026.
+  4. **Multigraph Active Legal Edges vs. Unique-Root Counterparty Degree:**
+     - Throughout 2024 and early 2025, CoreWeave's active legal-edge degree led EDGAR legibility by 3 to 5 edges, and its unique-root counterparty degree led by 1 to 3 corporate parents.
+     - In March 2025, EDGAR showed $k=1$ (Core Scientific), whereas economic reality connected CoreWeave to 4 distinct corporate counterparties (Blackstone, Magnetar, Core Scientific, Microsoft) across 6 legal edges.
+  5. **Surviving Regulatory & Contagion Thesis:**
+     - Form 8-K Item 2.03 already applies to registrants; the vulnerability is private infrastructure borrowers operating outside SEC registration.
+     - *The surviving thesis:* **"The important information was often not secret. What remained opaque was the JOIN."**
 - **Consequences:**
-  - Establishes that AI infrastructure leverage accumulated under an empirical regulatory cloak before crossing public knowledge thresholds.
-  - Formulates the definitive two-clock foundation for Phase 2 dynamic contagion and liquidity cascade modeling without look-ahead bias.
+  - Eliminates look-ahead bias and fact-ledger coverage artifacts.
+  - Establishes the calibrated two-clock baseline for Phase 2 dynamic contagion and liquidity cascade modeling without data drift.
 
 
 
