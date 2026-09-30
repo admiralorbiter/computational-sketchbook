@@ -180,64 +180,6 @@ def validate_sec_source_existence():
     return errors
 
 
-CLAIM_TO_SEC_FILE = {
-    'CLM-APLD-001': 'APLD_10K_20260531.htm',
-    'CLM-APLD-002': 'APLD_10K_20260531.htm',
-    'CLM-APLD-004': 'APLD_10K_20260531.htm',
-    'CLM-APLD-005': 'APLD_ex10_1.htm',
-    'CLM-APLD-006': 'APLD_ex10_2.htm',
-    'CLM-APLD-007': 'APLD_10K_20260531.htm',
-    'CLM-APLD-008': 'APLD_8K_20260616.htm',
-    'CLM-CRWV-001': 'CRWV_10Q_20260630.htm',
-    'CLM-CRWV-002': 'CRWV_10Q_20260630.htm',
-    'CLM-CRWV-003': 'CRWV_10K_20251231.htm',
-    'CLM-CRWV-004': 'CRWV_10Q_20260630.htm',
-    'CLM-CRWV-005': 'CRWV_10Q_20260630.htm',
-    'CLM-CRWV-006': 'CRWV_8K_20260515_ddtl5.htm',
-    'CLM-CRWV-007': 'CRWV_S1A_20250320.htm',
-    'CLM-CRWV-008': 'CRWV_8K_20250527_notes2030.htm',
-    'CLM-CRWV-008A': 'CRWV_8K_20250521_pricing2030.htm',
-    'CLM-CRWV-009': 'CRWV_8K_20250728_ddtl3.htm',
-    'CLM-CRWV-009A': 'CRWV_8K_20250728_notes2031.htm',
-    'CLM-CRWV-010': 'CRWV_8K_20251002_ddtl21.htm',
-    'CLM-CRWV-011': 'CRWV_8K_20251208_conv2031.htm',
-    'CLM-CRWV-012': 'CRWV_8K_20260330_ddtl4.htm',
-    'CLM-CRWV-013': 'CRWV_8K_20260409_notes.htm',
-    'CLM-CRWV-013A': 'CRWV_8K_20260416_addon.htm',
-    'CLM-CRWV-014': 'CRWV_8K_20260618_notes2032.htm',
-    'CLM-CRWV-014A': 'CRWV_8K_20260611_pricing2032.htm',
-    'CLM-CRWV-015': 'CRWV_10Q_20260331.htm',
-    'CLM-CRWV-016': 'CRWV_10Q_20250630.htm',
-    'CLM-SMCI-001': 'SMCI_10K_20260630.htm',
-    'CLM-NVDA-CRWV-001': 'CRWV_10Q_20260331.htm',
-    # Wave 1 Primary SEC Filings
-    'CLM-NBIS-001': 'NBIS_6K_20260717_mufg.htm',
-    'CLM-NBIS-002': 'NBIS_6K_20260316_meta.htm',
-    'CLM-IREN-001': 'IREN_10K_20260630.htm',
-    'CLM-CORZ-001': 'CORZ_10Q_20260630.htm',
-    'CLM-HUT-001': 'HUT_10Q_20260630.htm',
-    'CLM-WULF-001': 'WULF_10Q_20260630.htm',
-    'CLM-WULF-002': 'WULF_8K_20241025_conv2030.htm',
-    'CLM-WULF-003': 'WULF_8K_20250820_conv2031.htm',
-    'CLM-WULF-003A': 'WULF_8K_20250822_greenshoe.htm',
-    'CLM-WULF-004': 'WULF_8K_20251031_conv2032.htm',
-    'CLM-HUT-002': 'HUT_8K_20240624_coatue.htm',
-    'CLM-HUT-003': 'HUT_8K_20240624_coatue.htm',
-    'CLM-CORZ-002': 'CORZ_8K_20240604_crwv.htm',
-    'CLM-CORZ-003': 'CORZ_8K_20240625_opt1.htm',
-    'CLM-CORZ-004': 'CORZ_8K_20240806_opt2.htm',
-    'CLM-CORZ-005': 'CORZ_8K_20241023_opt3.htm',
-    'CLM-CORZ-006': 'CORZ_8K_20250227_opt4.htm',
-    # Power Backplane Primary Filings (ADR-020.1 / ADR-020.1a)
-    'CLM-PWR-MDU-001': 'MDU_10Q_20260630.htm',
-    'CLM-PWR-APLD-001': 'APLD_10K_20260531.htm',
-    'CLM-PWR-CORZ-001': 'CORZ_10K_20251231.htm',
-    'CLM-PWR-CORZ-002': 'CORZ_8K_20260910.htm',
-    'CLM-PWR-WULF-001': 'WULF_10Q_20260630.htm',
-    'CLM-PWR-IREN-001': 'IREN_10K_20250630.htm',
-    'CLM-PWR-IREN-002': 'IREN_10K_20250630.htm',
-    'CLM-PWR-NBIS-001': 'NBIS_20F_20251231.htm',
-}
 
 CLAIM_TO_UTILITY_FILE = {
     'CLM-PWR-NBIS-002': ('NIVOS_PR_20260331.htm', '86355307b3952738465b1813e6d5ea612a8e11d037b0daf3f97315fbf0e1204d'),
@@ -288,13 +230,18 @@ def validate_utility_primary_sources():
 
 def validate_sec_html_content():
     """
-    Validates that evidence claims match 100% exact contiguous verbatim substrings
-    in the cached primary SEC HTML filings in data/raw/sec/ (ADR-016 / ADR-020.1).
+    Validates that Class A SEC claims match 100% exact contiguous verbatim substrings
+    strictly within their registered primary SEC HTML filing in data/raw/sec/ (ADR-016 / ADR-021.1a).
+    Enforces accession + document_url -> local_file + sha256 binding via source_registry.json.
     """
+    import hashlib
     sec_dir = PROJECT_ROOT / "data" / "raw" / "sec"
-    htm_files = list(sec_dir.glob("*.htm"))
-    if not htm_files:
-        return ["No cached SEC HTML files found in data/raw/sec"]
+    registry_path = sec_dir / "source_registry.json"
+    if not registry_path.exists():
+        return ["SEC source registry not found: data/raw/sec/source_registry.json"]
+
+    with open(registry_path, "r", encoding="utf-8") as f:
+        source_registry = json.load(f)
 
     def normalize(text):
         text = html.unescape(text)
@@ -307,10 +254,6 @@ def validate_sec_html_content():
         text = re.sub(r'<[^>]+>', ' ', text)
         return ' '.join(text.split())
 
-    file_contents = {}
-    for f in htm_files:
-        file_contents[f.name] = normalize(f.read_text(encoding='utf-8', errors='ignore'))
-
     clm_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
     pwr_clm_df = pd.read_parquet(PROCESSED_DIR / "power_claims.parquet")
     combined_claims = pd.concat([clm_df, pwr_clm_df], ignore_index=True)
@@ -321,13 +264,38 @@ def validate_sec_html_content():
         (combined_claims["claim_id"] != "CLM-PWR-NBIS-002")
     ]
 
+    file_content_cache = {}
     errors = []
+
     for _, r in sec_claims.iterrows():
         cid = r["claim_id"]
+        acc = r["accession_number"]
+        url = r["document_url"]
+        key = f"{acc}::{url}"
+
+        if key not in source_registry:
+            errors.append(f"Claim {cid} citation ({acc}, {url}) not found in SEC source registry data/raw/sec/source_registry.json")
+            continue
+
+        entry = source_registry[key]
+        fname = entry["local_file"]
+        expected_hash = entry["sha256"]
+        fpath = sec_dir / fname
+
+        if not fpath.exists():
+            errors.append(f"Claim {cid} registered source file {fname} not found in {sec_dir}")
+            continue
+
+        if fname not in file_content_cache:
+            raw_bytes = fpath.read_bytes()
+            actual_hash = hashlib.sha256(raw_bytes).hexdigest()
+            if actual_hash != expected_hash:
+                errors.append(f"Claim {cid} SHA-256 hash mismatch for registered source {fname}: {actual_hash} vs expected {expected_hash}")
+            file_content_cache[fname] = normalize(raw_bytes.decode("utf-8", errors="ignore"))
+
         quote = normalize(r["exact_quote"])
-        matched_files = [fname for fname, content in file_contents.items() if quote in content]
-        if not matched_files:
-            errors.append(f"Claim {cid} exact quote is not a normalized contiguous verbatim substring in any cached primary SEC document in data/raw/sec/")
+        if quote not in file_content_cache[fname]:
+            errors.append(f"Claim {cid} exact quote is not a normalized contiguous verbatim substring in registered source {fname} ({acc})")
 
     return errors
 
@@ -347,13 +315,14 @@ def validate_observatory():
         "obligation_facts.parquet": 64,
         "obligation_terms.parquet": 44,
         "assumptions.parquet": 7,
-        "evidence_claims.parquet": 56,
+        "evidence_claims.parquet": 59,
         "facilities.parquet": 14,
         "power_relationships.parquet": 13,
         "power_facts.parquet": 29,
         "power_terms.parquet": 27,
         "power_claims.parquet": 9,
         "obligation_facility_links.parquet": 51,
+        "facility_completion_facts.parquet": 14,
     }
     for rf, expected_rows in required_files.items():
         p = PROCESSED_DIR / rf
@@ -665,6 +634,34 @@ def validate_observatory():
         print(f"  [OK] Active corporate unallocated debt as of Sep 28, 2026 verified: ${active_corp_debt/1e9:.3f}B ($39,358M, exact).")
 
     print(f"  [OK] Attribution Layer certified: {len(lnk_df)} links across all 47 obligations, zero synthetic facility pro-rations, discrete bitemporal lineage.")
+
+    # ---------------------------------------------------------
+    # 1C. Validate Facility Completion Facts (ADR-021.1a)
+    # ---------------------------------------------------------
+    facts_p = PROCESSED_DIR / "facility_completion_facts.parquet"
+    if facts_p.exists():
+        fcf_df = pd.read_parquet(facts_p)
+        if len(fcf_df) != 14:
+            errors.append(f"facility_completion_facts.parquet row count mismatch: {len(fcf_df)} (expected 14)")
+        if set(fcf_df["facility_id"]) != valid_fac_ids:
+            errors.append(f"facility_completion_facts facility_id mismatch: {set(fcf_df['facility_id']) ^ valid_fac_ids}")
+        for _, fr in fcf_df.iterrows():
+            fid = fr["facility_id"]
+            if fr["truth_claim_id"] not in all_claims_map:
+                errors.append(f"Facility {fid} completion fact references unknown truth_claim_id: {fr['truth_claim_id']}")
+            if fr["knowledge_claim_id"] not in all_claims_map:
+                errors.append(f"Facility {fid} completion fact references unknown knowledge_claim_id: {fr['knowledge_claim_id']}")
+            k_cid = fr["knowledge_claim_id"]
+            if k_cid in all_claims_map:
+                k_date = str(all_claims_map[k_cid])
+                if str(fr["publicly_known_from"]) < k_date:
+                    errors.append(f"Facility {fid} completion fact: publicly_known_from {fr['publicly_known_from']} predates knowledge claim {k_cid} filing date {k_date}")
+            if fr["completion_status"] not in {"operational", "operational_and_expanding", "under_construction", "announced"}:
+                errors.append(f"Facility {fid} invalid completion_status: {fr['completion_status']}")
+            if pd.notna(fr["equipment_accepted_fraction"]):
+                if not (0.0 <= fr["equipment_accepted_fraction"] <= 1.0):
+                    errors.append(f"Facility {fid} equipment_accepted_fraction out of bounds: {fr['equipment_accepted_fraction']}")
+        print(f"  [OK] Facility Completion Facts verified: {len(fcf_df)} facilities with typed MW dimensions and bitemporal claim lineage.")
 
     # ---------------------------------------------------------
     # 2. Validate CoreWeave & Applied Digital Exact Debt Decomposition
@@ -1571,7 +1568,7 @@ def validate_observatory():
     # ---------------------------------------------------------
     # 4. Validate Evidence Claims & Quote Categorization
     # ---------------------------------------------------------
-    expected_claims_count = 56
+    expected_claims_count = 59
     if len(clm_df) != expected_claims_count:
         errors.append(f"Evidence claims count mismatch: {len(clm_df)} (expected {expected_claims_count})")
     else:

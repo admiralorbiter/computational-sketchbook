@@ -630,5 +630,43 @@ erc_regional_entity.
   - Guarantees zero data drift and zero timing invariant violations across all observatory layers.
   - Provides a trustworthy, contract-literal foundation for Phase 2 systemic contagion and cascade modeling.
 
+---
+
+## ADR-021.1a: Source-Registry Epistemic Auto-Binding, Bitemporal Completion Facts, and Layered Synchronization Architecture
+
+- **Status:** Accepted (2026-09-30, Task 021 Stage B Certification)
+- **Context:**
+  1. *Validator Cross-Filing Vulnerability:* In ADR-021.1, `validate_sec_html_content()` checked whether each quote existed in *any* cached SEC HTML file. Global quote searching allowed cross-filing false positives (e.g. repeated boilerplate in one 10-Q validating citations to another).
+  2. *Contemporaneous Knowledge Clock for APLD Debt:* PF1 ($2.35B) was closed November 20, 2025, but its knowledge clock was pinned to the Jan 8, 2026 Form 10-Q, overlooking the contemporaneous Form 8-K filed November 20, 2025 (`0001493152-25-024479`). PF2 ($2.15B) announced March 4, 2026 was missing distinct truth/knowledge claims for its economic closing on March 10, 2026 (`0001493152-26-009538`). The Bridge facility knowledge clock was pinned to the July 29, 2026 10-K rather than the contemporaneous May 5, 2026 Form 8-K (`0001493152-26-021333`).
+  3. *Unsegmented Funded Debt:* Characterizing all $6.090B of funded project debt as "before service" overstated pre-service exposure because Building 2 (100 MW) at Polaris Forge 1 is already service-ready and operational.
+  4. *Building 3 Partial-Operation Uncertainty:* Building 3 (150 MW) is described in Form 10-K Note 8 as partially operational, meaning the uncommissioned campus capacity is an uncertainty range (150 MW to 300 MW, 37.5% to 75.0%), and $550M/yr represents a delay ceiling rather than an exact delayed cash flow.
+  5. *Hardcoded Facility Structures in Analysis Script:* The analysis engine contained a 150-line Python dictionary rather than querying a canonical database table.
+- **Decision:**
+  1. **Source-Registry Epistemic Auto-Binding (`data/raw/sec/source_registry.json`):**
+     - Established a machine-generated source registry mapping `(accession_number, document_url) -> local_file + sha256`.
+     - Hardened `validate_sec_html_content()` so that every Class A SEC claim binds strictly to its registered source document. Global search across non-registered documents is eliminated.
+  2. **Contemporaneous Primary Source Curations:**
+     - Downloaded and verified: `APLD_8K_20251120_pf1closing.htm`, `APLD_8K_20260310_pf2closing.htm`, `APLD_8K_20260505_bridge.htm`.
+     - Updated `CLM-APLD-010` (PF1 closing Nov 20, 2025 8-K) and `CLM-APLD-013` (Bridge May 5, 2026 8-K).
+     - Added `CLM-APLD-016` (PF2 closing March 10, 2026 8-K), `CLM-APLD-017` (APLD PF1 parent completion guarantee), and `CLM-APLD-018` (10-K Note 8 truth claim for Bridge).
+     - Aligned public knowledge dates for `OBL-APLD-DEBT-PF1` (`2025-11-20`) and `OBL-APLD-DEBT-BRIDGE` (`2026-05-05`).
+  3. **Canonical Completion Facts Table (`facility_completion_facts.parquet` / `.csv`):**
+     - Created `src/curate_completion_facts.py` to curate typed completion dimensions (`utility_service_capacity_mw`, `utility_load_online_mw`, `critical_it_contracted_mw`, `service_ready_it_mw`, `gpu_equipment_deployment_state`, `gpu_compute_operational_mw`, `equipment_accepted_fraction`, `completion_status`, `next_milestone`) with bitemporal dates and claim IDs across all 14 facilities.
+     - Refactored `src/analyze_energization_at_risk.py` to load directly from parquet with zero hardcoded numbers.
+  4. **Re-segmented Funded Project Debt:**
+     - Split $6.090B into:
+       * **$3.740B Pre-Service Funded Debt:** $1.590B Building 4 7.00% notes + $2.150B PF2 6.75% notes.
+       * **$2.350B Mixed Completion/Operational Exposure:** PF1 ELN-02/03 9.25% notes (Building 2 100 MW service-ready).
+     - Separated active funded debt ($45.448B = $39.358B corporate + $6.090B project) from $2.400B committed equipment financing capacity ($47.848B total obligations).
+  5. **Building 3 Partial-Operation Uncertainty Range:**
+     - Defined uncommissioned campus capacity range: 150 MW floor (Building 4, 37.5%) to 300 MW ceiling (Buildings 3 & 4, 75.0%).
+     - Relabeled contract-value delay exposure as: **$275.0M/year definitive floor** to **$550.0M/year maximum ceiling**.
+  6. **Layered Synchronization Devices:**
+     - Formally characterized direct parent completion guarantees (APLD PF1 shortfall funding; PF2 construction completion guarantee), escrow accounts (Goldman Sachs PF2 escrow released June 18, 2026), tenant springing guaranties (CoreWeave ELN-02/03), and staged equipment drawdown windows (IREN Mackenzie cliff Dec 31, 2026).
+- **Consequences:**
+  - Zero cross-filing false positives via cryptographic source-registry binding.
+  - Complete elimination of hardcoded facility facts in analytical scripts.
+  - Faithful representation of completion uncertainty, pre-service risk segmentation, and institutional synchronization resilience.
+
 
 

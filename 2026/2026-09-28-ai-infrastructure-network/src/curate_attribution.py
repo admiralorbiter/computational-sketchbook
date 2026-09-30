@@ -84,10 +84,10 @@ def get_links():
             "amount_type": "funded_principal",
             "evidence_class": "A",
             "knowledge_claim_id": "CLM-APLD-010",
-            "truth_claim_id": "CLM-APLD-003",
-            "claim_id": "CLM-APLD-003",
+            "truth_claim_id": "CLM-APLD-010",
+            "claim_id": "CLM-APLD-010",
             "economic_from": "2025-11-20",
-            "publicly_known_from": "2026-01-08",
+            "publicly_known_from": "2025-11-20",
             "notes": "9.250% Senior Secured Notes due 2030 issued by APLD ComputeCo LLC to finance Polaris Forge 1 campus (closed Nov 20, 2025)."
         },
         {
@@ -101,8 +101,8 @@ def get_links():
             "amount_type": "funded_principal",
             "evidence_class": "A",
             "knowledge_claim_id": "CLM-APLD-011",
-            "truth_claim_id": "CLM-APLD-003",
-            "claim_id": "CLM-APLD-003",
+            "truth_claim_id": "CLM-APLD-016",
+            "claim_id": "CLM-APLD-016",
             "economic_from": "2026-03-10",
             "publicly_known_from": "2026-03-04",
             "notes": "6.750% Senior Secured Notes due 2031 issued by APLD ComputeCo 2 LLC to finance Polaris Forge 2 (closed Mar 10, 2026; escrow released Jun 18, 2026)."
@@ -135,10 +135,10 @@ def get_links():
             "amount_type": "unallocated_debt",
             "evidence_class": "A",
             "knowledge_claim_id": "CLM-APLD-013",
-            "truth_claim_id": "CLM-APLD-003",
-            "claim_id": "CLM-APLD-003",
+            "truth_claim_id": "CLM-APLD-018",
+            "claim_id": "CLM-APLD-018",
             "economic_from": "2026-05-01",
-            "publicly_known_from": "2026-07-29",
+            "publicly_known_from": "2026-05-05",
             "notes": "Corporate transitional bridge credit facility ($300M, retired 2026-06-16 upon 7% Notes issuance)."
         },
         {

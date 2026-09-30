@@ -304,3 +304,31 @@ Tracks 51 granular attribution links across all 47 decomposed financial obligati
 | `publicly_known_from`| Date (str)| No | Earliest date publicly disclosed (`YYYY-MM-DD`). | `2026-01-08` |
 | `notes` | String | Yes | Detailed provenance and boundary documentation. | *Text* |
 
+---
+
+## 16. Facility Completion Facts (`facility_completion_facts.parquet` / `facility_completion_facts.csv`)
+
+Tracks 14 canonical facility completion records capturing typed physical, energization, and contractual status dimensions across all modeled campuses with bitemporal dates and claim IDs (ADR-021.1a).
+
+| Column Name | Data Type | Nullable | Description / Controlled Vocabulary | Example |
+| :--- | :--- | :--- | :--- | :--- |
+| `facility_id` | String | No | Primary Key. Foreign Key referencing `facilities.facility_id`. | `FAC-APLD-POLARIS-FORGE-1` |
+| `facility_name` | String | No | Canonical facility name. | `Polaris Forge 1 (Ellendale)` |
+| `operator_entity_id` | String | No | Foreign Key referencing `entities.entity_id`. | `APLD` |
+| `utility_service_capacity_mw` | Float | Yes | Total utility agreement service capacity (MW); null if pending/uncontracted. | `350.0` |
+| `utility_load_online_mw` | Float | Yes | Energized utility load online as of observation horizon (MW); null if pre-energized/undisclosed. | `60.0` |
+| `critical_it_contracted_mw` | Float | Yes | Contracted critical IT load under anchor lease or colocation (MW); null if self-operated/uncontracted. | `400.0` |
+| `service_ready_it_mw` | Float | Yes | Certified Ready-for-Service or operating critical IT capacity (MW); 0.0 if under construction. | `100.0` |
+| `gpu_equipment_deployment_state` | String | No | Descriptive status of tenant/operator GPU cluster deployment. | `Tenant (CoreWeave) cluster commissioning & fit-out` |
+| `gpu_compute_operational_mw` | Float | Yes | IT load actively executing commercial GPU compute (MW); null if tenant-managed/undisclosed. | `75.0` |
+| `equipment_accepted_fraction` | Float | Yes | Fraction of cluster IT equipment delivered, accepted, and funded (0.0 to 1.0); null if tenant-owned. | `0.0`, `1.0` |
+| `completion_status` | String | No | Status taxonomy: `operational`, `operational_and_expanding`, `under_construction`, `announced`. | `operational_and_expanding` |
+| `next_milestone` | String | No | Next development, energization, or cluster acceptance milestone. | `Building 2 full tenant occupancy & Building 3 commissioning (2026-2027)` |
+| `economic_as_of` | Date (str)| No | Period-end date of the measurement in economic reality (`YYYY-MM-DD`). | `2026-05-31` |
+| `publicly_known_from` | Date (str)| No | Earliest date publicly disclosed (`YYYY-MM-DD`). | `2026-07-29` |
+| `truth_claim_id` | String | No | Foreign Key referencing `evidence_claims.claim_id` or `power_claims.claim_id`. | `CLM-APLD-004` |
+| `knowledge_claim_id` | String | No | Foreign Key referencing disclosure establishing public awareness. | `CLM-APLD-004` |
+| `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted). | `A` |
+| `verifier_notes` | String | Yes | Analytical context on physical phasing, substation readiness, and escrow conditions. | *Text* |
+
+

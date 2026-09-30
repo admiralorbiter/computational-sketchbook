@@ -1,0 +1,537 @@
+{
+  "0000067716-26-000072::https://www.sec.gov/Archives/edgar/data/67716/000006771626000072/mdu-20260630.htm": {
+    "accession_number": "0000067716-26-000072",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/67716/000006771626000072/mdu-20260630.htm",
+    "local_file": "MDU_10Q_20260630.htm",
+    "sha256": "a4d6528db09d531495b2941395f4e26c739e9affc4c21338c156f20ba47b239a",
+    "file_size": 2312948,
+    "claims": [
+      "CLM-PWR-MDU-001"
+    ]
+  },
+  "0000950142-24-002636::https://www.sec.gov/Archives/edgar/data/1083301/000095014224002636/eh240549125_8k.htm": {
+    "accession_number": "0000950142-24-002636",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1083301/000095014224002636/eh240549125_8k.htm",
+    "local_file": "WULF_8K_20241025_conv2030.htm",
+    "sha256": "4473f7797563c6507898abfe0f8da0be024e33dd255290a0e9536138b10669bf",
+    "file_size": 41531,
+    "claims": [
+      "CLM-WULF-002"
+    ]
+  },
+  "0001083301-26-000166::https://www.sec.gov/Archives/edgar/data/1083301/000108330126000166/wulf-20260630.htm": {
+    "accession_number": "0001083301-26-000166",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1083301/000108330126000166/wulf-20260630.htm",
+    "local_file": "WULF_10Q_20260630.htm",
+    "sha256": "6c6f2dd4eea16045bcba1275120a9454898669423209da7731ea7ebc1f714a98",
+    "file_size": 1819385,
+    "claims": [
+      "CLM-WULF-001",
+      "CLM-PWR-WULF-001"
+    ]
+  },
+  "0001104659-25-080911::https://www.sec.gov/Archives/edgar/data/1083301/000110465925080911/tm2523651d5_8k.htm": {
+    "accession_number": "0001104659-25-080911",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1083301/000110465925080911/tm2523651d5_8k.htm",
+    "local_file": "WULF_8K_20250820_conv2031.htm",
+    "sha256": "544b8c398ab93b8e49ab8d789e4476e2c467a6d0bc43305c9f08c7a52c92313f",
+    "file_size": 40444,
+    "claims": [
+      "CLM-WULF-003"
+    ]
+  },
+  "0001104659-25-081886::https://www.sec.gov/Archives/edgar/data/1083301/000110465925081886/tm2523651d6_8k.htm": {
+    "accession_number": "0001104659-25-081886",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1083301/000110465925081886/tm2523651d6_8k.htm",
+    "local_file": "WULF_8K_20250822_greenshoe.htm",
+    "sha256": "cf492121450966893abf4324257168ff1d5d79ae9df98d105f4d98563ecf6b98",
+    "file_size": 34020,
+    "claims": [
+      "CLM-WULF-003A"
+    ]
+  },
+  "0001104659-25-104928::https://www.sec.gov/Archives/edgar/data/1083301/000110465925104928/tm2529894d1_8k.htm": {
+    "accession_number": "0001104659-25-104928",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1083301/000110465925104928/tm2529894d1_8k.htm",
+    "local_file": "WULF_8K_20251031_conv2032.htm",
+    "sha256": "b131f8b83faeba257e8074ea1bc806a91e3fe999390344b5e3a3ba39b39c2cc1",
+    "file_size": 40398,
+    "claims": [
+      "CLM-WULF-004"
+    ]
+  },
+  "0001104659-26-027886::https://www.sec.gov/Archives/edgar/data/1513845/000110465926027886/tm268879d1_6k.htm": {
+    "accession_number": "0001104659-26-027886",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465926027886/tm268879d1_6k.htm",
+    "local_file": "NBIS_6K_20260316_meta.htm",
+    "sha256": "386515123a8c3f2823a48be7eb136cecefbbed84ebd44e9584fc351bf09be8b6",
+    "file_size": 12080,
+    "claims": [
+      "CLM-NBIS-002"
+    ]
+  },
+  "0001104659-26-052948::https://www.sec.gov/Archives/edgar/data/1513845/000110465926052948/nbis-20251231x20f.htm": {
+    "accession_number": "0001104659-26-052948",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465926052948/nbis-20251231x20f.htm",
+    "local_file": "NBIS_20F_20251231.htm",
+    "sha256": "487431ebe9539191c698f763b1c914630b0bbd556a714b2847e250951434dd43",
+    "file_size": 4251925,
+    "claims": [
+      "CLM-PWR-NBIS-001"
+    ]
+  },
+  "0001104659-26-084452::https://www.sec.gov/Archives/edgar/data/1513845/000110465926084452/tm2620683d1_6k.htm": {
+    "accession_number": "0001104659-26-084452",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1513845/000110465926084452/tm2620683d1_6k.htm",
+    "local_file": "NBIS_6K_20260717_mufg.htm",
+    "sha256": "f76c4a3cf37515b8dbe02a8fb263d15247621726a3817334461aa14bb4a259cf",
+    "file_size": 13485,
+    "claims": [
+      "CLM-NBIS-001"
+    ]
+  },
+  "0001104659-26-090025::https://www.sec.gov/Archives/edgar/data/1964789/000110465926090025/hut-20260630x10q.htm": {
+    "accession_number": "0001104659-26-090025",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1964789/000110465926090025/hut-20260630x10q.htm",
+    "local_file": "HUT_10Q_20260630.htm",
+    "sha256": "b9dbb8b6b90d87c974eeb51e94351ade3440b5d1c14e58f7a275280807a7773e",
+    "file_size": 3719501,
+    "claims": [
+      "CLM-HUT-001"
+    ]
+  },
+  "0001144879-26-000002::https://www.sec.gov/Archives/edgar/data/1144879/000114487926000002/apld-20260107.htm": {
+    "accession_number": "0001144879-26-000002",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000114487926000002/apld-20260107.htm",
+    "local_file": "APLD_8K_20260107_q2release.htm",
+    "sha256": "4193ea66b7448403f8ed6cc325a83684c11b02df73f90ff290ef50a29b2cb623",
+    "file_size": 389850,
+    "claims": [
+      "CLM-APLD-015"
+    ]
+  },
+  "0001144879-26-000048::https://www.sec.gov/Archives/edgar/data/1144879/000114487926000048/apld-20260531.htm": {
+    "accession_number": "0001144879-26-000048",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000114487926000048/apld-20260531.htm",
+    "local_file": "APLD_10K_20260531.htm",
+    "sha256": "33ec74bdb51cb45043cdc8c692d13f4de1857e5267771cfca851246bf38b1c21",
+    "file_size": 3089222,
+    "claims": [
+      "CLM-APLD-001",
+      "CLM-APLD-002",
+      "CLM-APLD-003",
+      "CLM-APLD-004",
+      "CLM-APLD-007",
+      "CLM-APLD-014",
+      "CLM-APLD-018",
+      "CLM-PWR-APLD-001"
+    ]
+  },
+  "0001193125-25-058309::https://www.sec.gov/Archives/edgar/data/1769628/000119312525058309/d899798ds1a.htm": {
+    "accession_number": "0001193125-25-058309",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000119312525058309/d899798ds1a.htm",
+    "local_file": "CRWV_S1A_20250320.htm",
+    "sha256": "467fef1aaf70ef709a5c8cb1db17d3de6b232577db3270ff0ece7eddf993e3a9",
+    "file_size": 3259378,
+    "claims": [
+      "CLM-CRWV-007"
+    ]
+  },
+  "0001193125-25-165924::https://www.sec.gov/Archives/edgar/data/1769628/000119312525165924/d73657d8k.htm": {
+    "accession_number": "0001193125-25-165924",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000119312525165924/d73657d8k.htm",
+    "local_file": "CRWV_8K_20250728_notes2031.htm",
+    "sha256": "698ebf5e22270edeff9d7a710816d0351303f074a6f5d5d5671b89198b34e202",
+    "file_size": 32213,
+    "claims": [
+      "CLM-CRWV-009A"
+    ]
+  },
+  "0001193125-25-227562::https://www.sec.gov/Archives/edgar/data/1769628/000119312525227562/d910811d8k.htm": {
+    "accession_number": "0001193125-25-227562",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000119312525227562/d910811d8k.htm",
+    "local_file": "CRWV_8K_20251002_ddtl21.htm",
+    "sha256": "be7e649ca2b781c0cd967ecd7d14ce46744b512974061a0c4504ba99a5ec3108",
+    "file_size": 28600,
+    "claims": [
+      "CLM-CRWV-010"
+    ]
+  },
+  "0001193125-26-277521::https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm": {
+    "accession_number": "0001193125-26-277521",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1341439/000119312526277521/orcl-20260531.htm",
+    "local_file": "ORCL_10K_20260531.htm",
+    "sha256": "f0444470313563d6949815978768d51c246d0a8006e5f297895064b99b682f76",
+    "file_size": 6890010,
+    "claims": [
+      "CLM-ORCL-001"
+    ]
+  },
+  "0001193125-26-323660::https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/msft-20260630.htm": {
+    "accession_number": "0001193125-26-323660",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/789019/000119312526323660/msft-20260630.htm",
+    "local_file": "MSFT_10K_20260630.htm",
+    "sha256": "75adce560eb0658131f22d6db19eac1d73f93f977c4c055edd93ab415c67dd12",
+    "file_size": 8609504,
+    "claims": [
+      "CLM-MSFT-001"
+    ]
+  },
+  "0001375365-26-000022::https://www.sec.gov/Archives/edgar/data/1375365/000137536526000022/smci-20260630.htm": {
+    "accession_number": "0001375365-26-000022",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1375365/000137536526000022/smci-20260630.htm",
+    "local_file": "SMCI_10K_20260630.htm",
+    "sha256": "b42cbbd76f14cf28c92e89156733ca181bb76efdb142477081f18aeccd4c3aa3",
+    "file_size": 3990487,
+    "claims": [
+      "CLM-SMCI-001"
+    ]
+  },
+  "0001493152-24-043604::https://www.sec.gov/Archives/edgar/data/1144879/000149315224043604/form8-k.htm": {
+    "accession_number": "0001493152-24-043604",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000149315224043604/form8-k.htm",
+    "local_file": "APLD_8K_20241105_conv2030.htm",
+    "sha256": "44514e59fe912b07b483bb26042265464ce5ba7ea952d0e9a4f9eb37953843fa",
+    "file_size": 69483,
+    "claims": [
+      "CLM-APLD-012"
+    ]
+  },
+  "0001493152-25-024479::https://www.sec.gov/Archives/edgar/data/1144879/000149315225024479/form8-k.htm": {
+    "accession_number": "0001493152-25-024479",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000149315225024479/form8-k.htm",
+    "local_file": "APLD_8K_20251120_pf1closing.htm",
+    "sha256": "b54e8b282149eb5d5af876baf69f6b0240dbeb843e6462b8a9d2c54ce824eec8",
+    "file_size": 52927,
+    "claims": [
+      "CLM-APLD-010",
+      "CLM-APLD-017"
+    ]
+  },
+  "0001493152-26-008772::https://www.sec.gov/Archives/edgar/data/1144879/000149315226008772/form8-k.htm": {
+    "accession_number": "0001493152-26-008772",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000149315226008772/form8-k.htm",
+    "local_file": "APLD_8K_20260304_notes2031.htm",
+    "sha256": "1595a87aa46b541ab3cc603a8175f0f5a28db30da928d563a23de9b7a219d3f3",
+    "file_size": 46476,
+    "claims": [
+      "CLM-APLD-011"
+    ]
+  },
+  "0001493152-26-009538::https://www.sec.gov/Archives/edgar/data/1144879/000149315226009538/form8-k.htm": {
+    "accession_number": "0001493152-26-009538",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000149315226009538/form8-k.htm",
+    "local_file": "APLD_8K_20260310_pf2closing.htm",
+    "sha256": "38d7d7c26ae6190cdcdee5e71032e9ed0764bfa33af0146ecbc7398530c2bac8",
+    "file_size": 59749,
+    "claims": [
+      "CLM-APLD-016"
+    ]
+  },
+  "0001493152-26-014498::https://www.sec.gov/Archives/edgar/data/1144879/000149315226014498/ex10-1.htm": {
+    "accession_number": "0001493152-26-014498",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000149315226014498/ex10-1.htm",
+    "local_file": "APLD_ex10_1.htm",
+    "sha256": "73a5823fda5ab65f87aea53b95cd95fff8578d7910f10410e99a53a8e229e9b0",
+    "file_size": 143339,
+    "claims": [
+      "CLM-APLD-005"
+    ]
+  },
+  "0001493152-26-014498::https://www.sec.gov/Archives/edgar/data/1144879/000149315226014498/ex10-2.htm": {
+    "accession_number": "0001493152-26-014498",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000149315226014498/ex10-2.htm",
+    "local_file": "APLD_ex10_2.htm",
+    "sha256": "bdc46cb6f1b29be15398287b8a67b9c494a58ae32f38a3a1f3bafa98e26c3942",
+    "file_size": 127655,
+    "claims": [
+      "CLM-APLD-006"
+    ]
+  },
+  "0001493152-26-021333::https://www.sec.gov/Archives/edgar/data/1144879/000149315226021333/form8-k.htm": {
+    "accession_number": "0001493152-26-021333",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000149315226021333/form8-k.htm",
+    "local_file": "APLD_8K_20260505_bridge.htm",
+    "sha256": "d16a0ca6ee8855d04a972e089c8b1015a13d05ed77193555e57d7f2e9ba52eeb",
+    "file_size": 93410,
+    "claims": [
+      "CLM-APLD-013"
+    ]
+  },
+  "0001493152-26-028899::https://www.sec.gov/Archives/edgar/data/1144879/000149315226028899/form8-k.htm": {
+    "accession_number": "0001493152-26-028899",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000149315226028899/form8-k.htm",
+    "local_file": "APLD_8K_20260616.htm",
+    "sha256": "263c121ecbb2e83838cfe2f97a0f05ba959842da56ae2e06d6476b05c49bb508",
+    "file_size": 55818,
+    "claims": [
+      "CLM-APLD-008"
+    ]
+  },
+  "0001558370-24-009418::https://www.sec.gov/Archives/edgar/data/1964789/000155837024009418/hut-20240621x8k.htm": {
+    "accession_number": "0001558370-24-009418",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1964789/000155837024009418/hut-20240621x8k.htm",
+    "local_file": "HUT_8K_20240624_coatue.htm",
+    "sha256": "b03bea658ac7e419bb0ef4ce5d908e0e8a635078da129cbd1fdcb025b7b6e008",
+    "file_size": 48126,
+    "claims": [
+      "CLM-HUT-002",
+      "CLM-HUT-003"
+    ]
+  },
+  "0001628280-24-026483::https://www.sec.gov/Archives/edgar/data/1839341/000162828024026483/corzcoreweavehpc.htm": {
+    "accession_number": "0001628280-24-026483",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1839341/000162828024026483/corzcoreweavehpc.htm",
+    "local_file": "CORZ_8K_20240604_crwv.htm",
+    "sha256": "078084f455f81f695d4f46c38c2c822bcd6e144f2d6bdca14a559856a0ae8b7a",
+    "file_size": 23454,
+    "claims": [
+      "CLM-CORZ-002"
+    ]
+  },
+  "0001628280-24-029900::https://www.sec.gov/Archives/edgar/data/1839341/000162828024029900/ex991-finalcorzhpcoptionre.htm": {
+    "accession_number": "0001628280-24-029900",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1839341/000162828024029900/ex991-finalcorzhpcoptionre.htm",
+    "local_file": "CORZ_8K_20240625_opt1.htm",
+    "sha256": "53174d79e0c636f5876117fa590a19bf503b79786570a35f1de039dd02f655f7",
+    "file_size": 21519,
+    "claims": [
+      "CLM-CORZ-003"
+    ]
+  },
+  "0001628280-24-034989::https://www.sec.gov/Archives/edgar/data/1839341/000162828024034989/exhibit991-corescientifich.htm": {
+    "accession_number": "0001628280-24-034989",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1839341/000162828024034989/exhibit991-corescientifich.htm",
+    "local_file": "CORZ_8K_20240806_opt2.htm",
+    "sha256": "4cc88ab8268cddbf79f2c76425f3f62dd3d0c4f93948737f3a497dfd98a6bb7a",
+    "file_size": 21535,
+    "claims": [
+      "CLM-CORZ-004"
+    ]
+  },
+  "0001628280-24-043341::https://www.sec.gov/Archives/edgar/data/1839341/000162828024043341/corescientifichpcoption3re.htm": {
+    "accession_number": "0001628280-24-043341",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1839341/000162828024043341/corescientifichpcoption3re.htm",
+    "local_file": "CORZ_8K_20241023_opt3.htm",
+    "sha256": "e7e4edec6a225e388c00e4e832d571bd83a2ec02aa592fafee05a54f194106a6",
+    "file_size": 23210,
+    "claims": [
+      "CLM-CORZ-005"
+    ]
+  },
+  "0001628280-25-008312::https://www.sec.gov/Archives/edgar/data/1839341/000162828025008312/ex991-coreweavepressrelease.htm": {
+    "accession_number": "0001628280-25-008312",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1839341/000162828025008312/ex991-coreweavepressrelease.htm",
+    "local_file": "CORZ_8K_20250227_opt4.htm",
+    "sha256": "33cc7adb007b5971cec58ed96487ce7ef6cd7b0e3ffa2165bb74dc30befd4d05",
+    "file_size": 17207,
+    "claims": [
+      "CLM-CORZ-006"
+    ]
+  },
+  "0001628280-26-013305::https://www.sec.gov/Archives/edgar/data/1839341/000162828026013305/core-20251231.htm": {
+    "accession_number": "0001628280-26-013305",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1839341/000162828026013305/core-20251231.htm",
+    "local_file": "CORZ_10K_20251231.htm",
+    "sha256": "0782e45cbd5bed220e8f37d37960077fff08784c5151a4f035a2a3685e425be3",
+    "file_size": 4367217,
+    "claims": [
+      "CLM-PWR-CORZ-001"
+    ]
+  },
+  "0001641172-25-013199::https://www.sec.gov/Archives/edgar/data/1144879/000164117225013199/form8-k.htm": {
+    "accession_number": "0001641172-25-013199",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1144879/000164117225013199/form8-k.htm",
+    "local_file": "APLD_8K_20250602.htm",
+    "sha256": "65ce94232f8f67791e16acacd68742091ebdbb9d7b1e5137dc5ffda901e33ad8",
+    "file_size": 75869,
+    "claims": [
+      "CLM-APLD-009"
+    ]
+  },
+  "0001769628-25-000019::https://www.sec.gov/Archives/edgar/data/1769628/000176962825000019/crwv-20250521.htm": {
+    "accession_number": "0001769628-25-000019",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962825000019/crwv-20250521.htm",
+    "local_file": "CRWV_8K_20250521_pricing2030.htm",
+    "sha256": "d82baa38532e13950a7913fd0be1a54ae0caad38bd009c5cb53f1e03a13ac02b",
+    "file_size": 30494,
+    "claims": [
+      "CLM-CRWV-008A"
+    ]
+  },
+  "0001769628-25-000025::https://www.sec.gov/Archives/edgar/data/1769628/000176962825000025/crwv-20250527.htm": {
+    "accession_number": "0001769628-25-000025",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962825000025/crwv-20250527.htm",
+    "local_file": "CRWV_8K_20250527_notes2030.htm",
+    "sha256": "5ee89d8f792bfaa74167752b3842d3e27b820497e207ca4fe6a1965b842ca042",
+    "file_size": 36265,
+    "claims": [
+      "CLM-CRWV-008"
+    ]
+  },
+  "0001769628-25-000033::https://www.sec.gov/Archives/edgar/data/1769628/000176962825000033/crwv-20250728.htm": {
+    "accession_number": "0001769628-25-000033",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962825000033/crwv-20250728.htm",
+    "local_file": "CRWV_8K_20250728_ddtl3.htm",
+    "sha256": "fc61ed717d0c525b0fd91c1d3d2b55e39abd898328e5f1d2ee1f0adc47c0d113",
+    "file_size": 38337,
+    "claims": [
+      "CLM-CRWV-009"
+    ]
+  },
+  "0001769628-25-000041::https://www.sec.gov/Archives/edgar/data/1769628/000176962825000041/crwv-20250630.htm": {
+    "accession_number": "0001769628-25-000041",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962825000041/crwv-20250630.htm",
+    "local_file": "CRWV_10Q_20250630.htm",
+    "sha256": "8a88acbaebfd879409009c28c28372f655c0401672231e2e652a3ec88f4e3170",
+    "file_size": 2222971,
+    "claims": [
+      "CLM-CRWV-016"
+    ]
+  },
+  "0001769628-25-000105::https://www.sec.gov/Archives/edgar/data/1769628/000176962825000105/crwv-20251208.htm": {
+    "accession_number": "0001769628-25-000105",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962825000105/crwv-20251208.htm",
+    "local_file": "CRWV_8K_20251208_conv2031.htm",
+    "sha256": "ea363f0961feff586dd6f388b2f758b4600d3254372b2ac16128aff5f5b81032",
+    "file_size": 54237,
+    "claims": [
+      "CLM-CRWV-011"
+    ]
+  },
+  "0001769628-26-000104::https://www.sec.gov/Archives/edgar/data/1769628/000176962826000104/crwv-20251231.htm": {
+    "accession_number": "0001769628-26-000104",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000104/crwv-20251231.htm",
+    "local_file": "CRWV_10K_20251231.htm",
+    "sha256": "52820e59a39d85a8573f01aa10019e53f2e92997366ec4562aa3b2692bd8f515",
+    "file_size": 2792150,
+    "claims": [
+      "CLM-CRWV-003"
+    ]
+  },
+  "0001769628-26-000129::https://www.sec.gov/Archives/edgar/data/1769628/000176962826000129/crwv-20260330.htm": {
+    "accession_number": "0001769628-26-000129",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000129/crwv-20260330.htm",
+    "local_file": "CRWV_8K_20260330_ddtl4.htm",
+    "sha256": "a907ee85c6662928472b8097bd3b74b147208839fa99c215d82acad76e1e6172",
+    "file_size": 39689,
+    "claims": [
+      "CLM-CRWV-012"
+    ]
+  },
+  "0001769628-26-000164::https://www.sec.gov/Archives/edgar/data/1769628/000176962826000164/crwv-20260409.htm": {
+    "accession_number": "0001769628-26-000164",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000164/crwv-20260409.htm",
+    "local_file": "CRWV_8K_20260409_notes.htm",
+    "sha256": "91143dc64d3c04f368fae86bcf6510bbb0da95d9d578b56212548613d03e28c5",
+    "file_size": 60942,
+    "claims": [
+      "CLM-CRWV-013"
+    ]
+  },
+  "0001769628-26-000183::https://www.sec.gov/Archives/edgar/data/1769628/000176962826000183/crwv-20260416.htm": {
+    "accession_number": "0001769628-26-000183",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000183/crwv-20260416.htm",
+    "local_file": "CRWV_8K_20260416_addon.htm",
+    "sha256": "53c15883933f6be00784df8b5c3ed15a81d3329a9c2a16ba9dccc62108b0515f",
+    "file_size": 37326,
+    "claims": [
+      "CLM-CRWV-013A"
+    ]
+  },
+  "0001769628-26-000222::https://www.sec.gov/Archives/edgar/data/1769628/000176962826000222/crwv-20260331.htm": {
+    "accession_number": "0001769628-26-000222",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000222/crwv-20260331.htm",
+    "local_file": "CRWV_10Q_20260331.htm",
+    "sha256": "64582305f202b34aec543fff5956a86fa884ac58ef245a3dcdbe42b127080a0f",
+    "file_size": 1741661,
+    "claims": [
+      "CLM-CRWV-015",
+      "CLM-NVDA-CRWV-001"
+    ]
+  },
+  "0001769628-26-000236::https://www.sec.gov/Archives/edgar/data/1769628/000176962826000236/crwv-20260515.htm": {
+    "accession_number": "0001769628-26-000236",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000236/crwv-20260515.htm",
+    "local_file": "CRWV_8K_20260515_ddtl5.htm",
+    "sha256": "0bb8f669dc3febddb53e846eb28bed8145dd535626aff7aa4c4561a9649edde9",
+    "file_size": 39630,
+    "claims": [
+      "CLM-CRWV-006"
+    ]
+  },
+  "0001769628-26-000278::https://www.sec.gov/Archives/edgar/data/1769628/000176962826000278/crwv-20260611.htm": {
+    "accession_number": "0001769628-26-000278",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000278/crwv-20260611.htm",
+    "local_file": "CRWV_8K_20260611_pricing2032.htm",
+    "sha256": "e9db79f9288d5922676d0ef67852a1d7e881e3bdabd54fdb73e55606caa748bb",
+    "file_size": 33673,
+    "claims": [
+      "CLM-CRWV-014A"
+    ]
+  },
+  "0001769628-26-000291::https://www.sec.gov/Archives/edgar/data/1769628/000176962826000291/crwv-20260618.htm": {
+    "accession_number": "0001769628-26-000291",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000291/crwv-20260618.htm",
+    "local_file": "CRWV_8K_20260618_notes2032.htm",
+    "sha256": "7084019d38be37dc7f40891cd5172b8a645ca4073283b8e0833cf6a77fbd6531",
+    "file_size": 37653,
+    "claims": [
+      "CLM-CRWV-014"
+    ]
+  },
+  "0001769628-26-000366::https://www.sec.gov/Archives/edgar/data/1769628/000176962826000366/crwv-20260630.htm": {
+    "accession_number": "0001769628-26-000366",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000366/crwv-20260630.htm",
+    "local_file": "CRWV_10Q_20260630.htm",
+    "sha256": "17dc29ceecd642f98bee5abf7eaf27f87b776f67b49562c74d33ffe5524b6868",
+    "file_size": 2197645,
+    "claims": [
+      "CLM-CRWV-001",
+      "CLM-CRWV-002",
+      "CLM-CRWV-004",
+      "CLM-CRWV-005"
+    ]
+  },
+  "0001839341-26-000014::https://www.sec.gov/Archives/edgar/data/1839341/000183934126000014/core-20260630.htm": {
+    "accession_number": "0001839341-26-000014",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1839341/000183934126000014/core-20260630.htm",
+    "local_file": "CORZ_10Q_20260630.htm",
+    "sha256": "3df7a9035ece8ef3f67ed9fb25a2b2d222118fb3ac794cbc8f3532f83133558d",
+    "file_size": 1531560,
+    "claims": [
+      "CLM-CORZ-001"
+    ]
+  },
+  "0001839341-26-000023::https://www.sec.gov/Archives/edgar/data/1839341/000183934126000023/core-20260910.htm": {
+    "accession_number": "0001839341-26-000023",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1839341/000183934126000023/core-20260910.htm",
+    "local_file": "CORZ_8K_20260910.htm",
+    "sha256": "a3e2e1e5010f939a3ebe1611d1509cdefa219e1db384ee106bc6e5a19ce02a28",
+    "file_size": 571,
+    "claims": [
+      "CLM-PWR-CORZ-002"
+    ]
+  },
+  "0001878848-25-000063::https://www.sec.gov/Archives/edgar/data/1878848/000187884825000063/iren-20250630.htm": {
+    "accession_number": "0001878848-25-000063",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1878848/000187884825000063/iren-20250630.htm",
+    "local_file": "IREN_10K_20250630.htm",
+    "sha256": "b26164d02dbd6c9e8b955dc9bcea04bbe00ba5ee4818f8464011d1899a4cad5f",
+    "file_size": 3222614,
+    "claims": [
+      "CLM-PWR-IREN-001",
+      "CLM-PWR-IREN-002"
+    ]
+  },
+  "0001878848-26-000052::https://www.sec.gov/Archives/edgar/data/1878848/000187884826000052/iren-20260630.htm": {
+    "accession_number": "0001878848-26-000052",
+    "document_url": "https://www.sec.gov/Archives/edgar/data/1878848/000187884826000052/iren-20260630.htm",
+    "local_file": "IREN_10K_20260630.htm",
+    "sha256": "717694b994874afdedce23f0c98ace2616e050c2583a49b4cae93fa247e3f543",
+    "file_size": 3199009,
+    "claims": [
+      "CLM-IREN-001"
+    ]
+  }
+}

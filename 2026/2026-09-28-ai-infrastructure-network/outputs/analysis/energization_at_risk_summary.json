@@ -1,44 +1,97 @@
 {
   "task": "Task 021 - Energization-at-Risk & Capital Synchronization Resilience",
-  "stage": "ADR-021.1 Certified",
+  "stage": "ADR-021.1a Certified",
   "total_modeled_facilities": 14,
-  "total_facility_attributable_funded_debt_m": 6090.0,
-  "total_committed_equipment_financing_capacity_m": 2400.0,
-  "capital_at_risk_before_service_m": 6090.0,
-  "capital_at_risk_funded_debt_pct": 100.0,
-  "total_active_unallocated_corporate_debt_m": 39357.68,
-  "annual_funded_debt_carrying_cost_apld_m": 473.8,
-  "annual_iren_full_capacity_coupon_equivalent_m": 216.0,
-  "annual_uncommissioned_lease_revenue_at_risk_m": 550.0,
-  "synchronization_resilience_mechanisms": {
-    "escrow_protections": "APLD PF2 $2.15B held in escrow from March 10, 2026 until condition satisfaction on June 18, 2026.",
-    "staged_funding": "IREN $2.4B MFSA & Notes fund pro rata upon delivery and acceptance through Dec 31, 2026.",
-    "completion_support": "CoreWeave uncapped legal indemnities (ELN-02 & ELN-03) protect Building 2 and Building 3 cash flows."
+  "capital_structure_breakdown_m": {
+    "total_modeled_obligations": 47847.68,
+    "total_active_funded_debt": 45447.68,
+    "active_unallocated_corporate_debt": 39357.68,
+    "facility_attributable_funded_project_debt": 6090.0,
+    "committed_equipment_financing_capacity": 2400.0
+  },
+  "funded_project_debt_segmentation_m": {
+    "pre_service_funded_debt": 3740.0,
+    "pre_service_components": {
+      "pf1_building_4_7pct_notes": 1590.0,
+      "pf2_675pct_notes": 2150.0
+    },
+    "mixed_completion_operational_exposure": 2350.0,
+    "mixed_components": {
+      "pf1_eln02_eln03_925pct_notes": 2350.0
+    }
+  },
+  "annual_debt_carrying_costs_m": {
+    "apld_total_project_debt_carry": 473.8,
+    "apld_pre_service_debt_carry": 256.425,
+    "apld_mixed_operational_debt_carry": 217.375,
+    "iren_full_capacity_coupon_equivalent": 216.0
+  },
+  "phased_lease_delay_exposure_m": {
+    "campus_total_capacity_mw": 400.0,
+    "building_2_service_ready_mw": 100.0,
+    "building_3_partial_operational_mw": 150.0,
+    "building_4_under_construction_mw": 150.0,
+    "uncommissioned_capacity_range_mw": [
+      150.0,
+      300.0
+    ],
+    "uncommissioned_fraction_range_pct": [
+      37.5,
+      75.0
+    ],
+    "annualized_contract_value_floor_m": 275.0,
+    "annualized_contract_value_ceiling_m": 550.0,
+    "description": "Building 4 definitive floor ($275M/yr) to Building 3+4 maximum ceiling ($550M/yr)"
+  },
+  "layered_synchronization_devices": {
+    "apld_parent_completion_guarantees": {
+      "pf1": "Nov 20, 2025 Form 8-K: Mandatory shortfall funding guarantee ensuring achievement of Commencement Date.",
+      "pf2": "March 10, 2026 Form 8-K: Parent completion guarantee ensuring completion of Construction Period and first Service Commencement Date."
+    },
+    "escrow_protections": {
+      "pf2_escrow": "March 10, 2026 gross proceeds deposited with Goldman Sachs Bank USA; released June 18, 2026 upon ESA satisfaction."
+    },
+    "coreweave_springing_lease_guaranties": {
+      "eln_02": "Exhibit 10.1: Uncapped springing performance guaranty for Phase 2/4 Space.",
+      "eln_03": "Exhibit 10.2: Uncapped springing performance guaranty for Building 3 (150 MW)."
+    },
+    "staged_funding": {
+      "iren_mackenzie": "MFSA & Notes fund pro rata upon delivery and equipment acceptance through Dec 31, 2026."
+    }
   },
   "slippage_scenarios": {
     "6_month_delay": {
-      "apld_debt_carrying_cost_m": 236.9,
+      "apld_total_debt_carrying_cost_m": 236.9,
+      "apld_pre_service_debt_carrying_cost_m": 128.213,
       "iren_full_capacity_coupon_equivalent_m": 108.0,
-      "phased_uncommissioned_lease_delayed_m": 275.0,
+      "contract_value_exposure_floor_m": 137.5,
+      "contract_value_exposure_ceiling_m": 275.0,
+      "uncommissioned_capacity_range_mw": "150 MW (floor) to 300 MW (ceiling)",
+      "uncommissioned_fraction_range_pct": "37.5% (floor) to 75.0% (ceiling)",
       "qualitative_risk_tier": "Modeled Hypothesis: Moderate (Reserves & Escrow Cushion Active)",
-      "iren_financing_mechanism": "Staged equipment acceptance funding window expires Dec 31, 2026; un-drawn capacity may expire or require extension.",
-      "covenant_and_resilience_notes": "PF2 escrow release already satisfied (June 18, 2026); ELN-02/ELN-03 springing indemnities provide CoreWeave completion backstop."
+      "layered_synchronization_resilience": "PF1 completion guarantee requires APLD to fund shortfalls; PF2 escrow ($2.15B) was released June 18, 2026; CoreWeave springing lease guaranties (ELN-02/03) provide colocation tenant credit backing."
     },
     "12_month_delay": {
-      "apld_debt_carrying_cost_m": 473.8,
+      "apld_total_debt_carrying_cost_m": 473.8,
+      "apld_pre_service_debt_carrying_cost_m": 256.425,
       "iren_full_capacity_coupon_equivalent_m": 216.0,
-      "phased_uncommissioned_lease_delayed_m": 550.0,
+      "contract_value_exposure_floor_m": 275.0,
+      "contract_value_exposure_ceiling_m": 550.0,
+      "uncommissioned_capacity_range_mw": "150 MW (floor) to 300 MW (ceiling)",
+      "uncommissioned_fraction_range_pct": "37.5% (floor) to 75.0% (ceiling)",
       "qualitative_risk_tier": "Modeled Hypothesis: High (Carrying Costs Consume Liquidity Buffers)",
-      "iren_financing_mechanism": "30-month maturity clock on drawn tranches begins amortizing; un-drawn capacity unavailable without formal credit amendment.",
-      "covenant_and_resilience_notes": "Uncommissioned space lease delays require parent equity injections or debt service reserve drawdowns unless CoreWeave indemnities cure shortfall."
+      "layered_synchronization_resilience": "Carrying costs exceed standard debt service reserves. Building 4 floor ($275M) definitive delay requires parent equity support; IREN 30-month note maturity begins amortizing if drawn without productive ARR."
     },
     "18_month_delay": {
-      "apld_debt_carrying_cost_m": 710.7,
+      "apld_total_debt_carrying_cost_m": 710.7,
+      "apld_pre_service_debt_carrying_cost_m": 384.638,
       "iren_full_capacity_coupon_equivalent_m": 324.0,
-      "phased_uncommissioned_lease_delayed_m": 825.0,
+      "contract_value_exposure_floor_m": 412.5,
+      "contract_value_exposure_ceiling_m": 825.0,
+      "uncommissioned_capacity_range_mw": "150 MW (floor) to 300 MW (ceiling)",
+      "uncommissioned_fraction_range_pct": "37.5% (floor) to 75.0% (ceiling)",
       "qualitative_risk_tier": "Modeled Hypothesis: Critical (Restructuring or Refinancing Required)",
-      "iren_financing_mechanism": "Over 50% of 30-month note term consumed without productive GPU ARR on drawn equipment.",
-      "covenant_and_resilience_notes": "Project SPV debt service defaults probable without major corporate refinancing or equity recapitalization."
+      "layered_synchronization_resilience": "Project SPV default acceleration risk. Direct completion guarantee exposes parent balance sheet ($39.36B corporate debt environment)."
     }
   },
   "facility_metrics": [
@@ -54,9 +107,14 @@
       "critical_it_contracted_mw": 400.0,
       "service_ready_it_mw": 100.0,
       "gpu_equipment_deployment_state": "Tenant (CoreWeave) cluster commissioning & fit-out",
-      "gpu_compute_operational_mw": null,
+      "gpu_compute_operational_mw": NaN,
+      "equipment_accepted_fraction": NaN,
+      "completion_status": "operational_and_expanding",
       "next_milestone": "Building 2 full tenant occupancy & Building 3 commissioning (2026-2027)",
-      "evidence_completeness": "Class A (10-K, 8-K, Ex 10.1 & 10.2)"
+      "evidence_class": "A",
+      "truth_claim_id": "CLM-APLD-004",
+      "knowledge_claim_id": "CLM-APLD-004",
+      "verifier_notes": "100 MW Building 2 operational; 150 MW Building 3 partially operational; 150 MW Building 4 under construction. MDU reports 60 MW initial service ramp toward 350 MW approved agreement."
     },
     {
       "facility_id": "FAC-CORZ-DENTON",
@@ -70,9 +128,14 @@
       "critical_it_contracted_mw": 270.0,
       "service_ready_it_mw": 100.0,
       "gpu_equipment_deployment_state": "Tenant fit-out / ongoing colocation conversion",
-      "gpu_compute_operational_mw": null,
+      "gpu_compute_operational_mw": NaN,
+      "equipment_accepted_fraction": NaN,
+      "completion_status": "operational_and_expanding",
       "next_milestone": "Colocation fit-out across multi-building campus",
-      "evidence_completeness": "Class A (10-K, 8-K Note Denton Lease)"
+      "evidence_class": "A",
+      "truth_claim_id": "CLM-CORZ-001",
+      "knowledge_claim_id": "CLM-CORZ-001",
+      "verifier_notes": "394 MW total DME utility agreement; 100 MW initial colocation data hall energized and leased to CoreWeave out of 270 MW contracted."
     },
     {
       "facility_id": "FAC-CORZ-DALTON",
@@ -82,13 +145,18 @@
       "committed_financing_capacity_m": 0.0,
       "customer_lease_commitment_m": 0.0,
       "utility_service_capacity_mw": 195.0,
-      "utility_load_online_mw": null,
-      "critical_it_contracted_mw": null,
-      "service_ready_it_mw": null,
+      "utility_load_online_mw": NaN,
+      "critical_it_contracted_mw": NaN,
+      "service_ready_it_mw": NaN,
       "gpu_equipment_deployment_state": "HPC infrastructure retrofit from mining",
-      "gpu_compute_operational_mw": null,
+      "gpu_compute_operational_mw": NaN,
+      "equipment_accepted_fraction": NaN,
+      "completion_status": "operational",
       "next_milestone": "HPC infrastructure retrofit from mining",
-      "evidence_completeness": "Class A (10-K Colocation table)"
+      "evidence_class": "A",
+      "truth_claim_id": "CLM-PWR-CORZ-001",
+      "knowledge_claim_id": "CLM-PWR-CORZ-001",
+      "verifier_notes": "195 MW Dalton Utilities agreement. Operational bitcoin mining infrastructure undergoing staged HPC retrofit."
     },
     {
       "facility_id": "FAC-CORZ-MUSKOGEE",
@@ -98,13 +166,18 @@
       "committed_financing_capacity_m": 0.0,
       "customer_lease_commitment_m": 0.0,
       "utility_service_capacity_mw": 100.0,
-      "utility_load_online_mw": null,
-      "critical_it_contracted_mw": null,
-      "service_ready_it_mw": null,
+      "utility_load_online_mw": NaN,
+      "critical_it_contracted_mw": NaN,
+      "service_ready_it_mw": NaN,
       "gpu_equipment_deployment_state": "HPC infrastructure retrofit from mining",
-      "gpu_compute_operational_mw": null,
+      "gpu_compute_operational_mw": NaN,
+      "equipment_accepted_fraction": NaN,
+      "completion_status": "operational",
       "next_milestone": "HPC infrastructure retrofit from mining",
-      "evidence_completeness": "Class A (10-K Colocation table)"
+      "evidence_class": "A",
+      "truth_claim_id": "CLM-PWR-CORZ-001",
+      "knowledge_claim_id": "CLM-PWR-CORZ-001",
+      "verifier_notes": "100 MW OG&E agreement. Operational bitcoin mining site undergoing staged HPC retrofit."
     },
     {
       "facility_id": "FAC-CORZ-MARBLE",
@@ -114,13 +187,18 @@
       "committed_financing_capacity_m": 0.0,
       "customer_lease_commitment_m": 0.0,
       "utility_service_capacity_mw": 117.0,
-      "utility_load_online_mw": null,
-      "critical_it_contracted_mw": null,
-      "service_ready_it_mw": null,
+      "utility_load_online_mw": NaN,
+      "critical_it_contracted_mw": NaN,
+      "service_ready_it_mw": NaN,
       "gpu_equipment_deployment_state": "HPC infrastructure retrofit from mining",
-      "gpu_compute_operational_mw": null,
+      "gpu_compute_operational_mw": NaN,
+      "equipment_accepted_fraction": NaN,
+      "completion_status": "operational",
       "next_milestone": "HPC infrastructure retrofit from mining",
-      "evidence_completeness": "Class A (10-K Colocation table)"
+      "evidence_class": "A",
+      "truth_claim_id": "CLM-PWR-CORZ-001",
+      "knowledge_claim_id": "CLM-PWR-CORZ-001",
+      "verifier_notes": "117 MW dual utility supply (82 MW Duke Energy, 35 MW Murphy EPB). Operational bitcoin mining site undergoing staged HPC retrofit."
     },
     {
       "facility_id": "FAC-CORZ-AUSTIN",
@@ -130,13 +208,18 @@
       "committed_financing_capacity_m": 0.0,
       "customer_lease_commitment_m": 0.0,
       "utility_service_capacity_mw": 20.0,
-      "utility_load_online_mw": null,
-      "critical_it_contracted_mw": null,
-      "service_ready_it_mw": null,
+      "utility_load_online_mw": NaN,
+      "critical_it_contracted_mw": NaN,
+      "service_ready_it_mw": NaN,
       "gpu_equipment_deployment_state": "HPC infrastructure retrofit from mining",
-      "gpu_compute_operational_mw": null,
+      "gpu_compute_operational_mw": NaN,
+      "equipment_accepted_fraction": NaN,
+      "completion_status": "operational",
       "next_milestone": "HPC infrastructure retrofit from mining",
-      "evidence_completeness": "Class A (10-K Colocation table)"
+      "evidence_class": "A",
+      "truth_claim_id": "CLM-PWR-CORZ-001",
+      "knowledge_claim_id": "CLM-PWR-CORZ-001",
+      "verifier_notes": "20 MW Austin Energy municipal service. Small operational testbed / retrofit facility."
     },
     {
       "facility_id": "FAC-WULF-LAKE-MARINER",
@@ -147,12 +230,17 @@
       "customer_lease_commitment_m": 0.0,
       "utility_service_capacity_mw": 226.0,
       "utility_load_online_mw": 226.0,
-      "critical_it_contracted_mw": null,
+      "critical_it_contracted_mw": NaN,
       "service_ready_it_mw": 226.0,
       "gpu_equipment_deployment_state": "Operational mining / 500 MW expansion engineering",
-      "gpu_compute_operational_mw": null,
+      "gpu_compute_operational_mw": NaN,
+      "equipment_accepted_fraction": NaN,
+      "completion_status": "operational_and_expanding",
       "next_milestone": "500 MW planned expansion engineering",
-      "evidence_completeness": "Class A (10-K NYPA allocation)"
+      "evidence_class": "A",
+      "truth_claim_id": "CLM-WULF-001",
+      "knowledge_claim_id": "CLM-WULF-001",
+      "verifier_notes": "226 MW operational energization from NYPA / National Grid. Expansion engineering underway toward 500 MW target."
     },
     {
       "facility_id": "FAC-IREN-CHILDRESS",
@@ -163,12 +251,17 @@
       "customer_lease_commitment_m": 0.0,
       "utility_service_capacity_mw": 750.0,
       "utility_load_online_mw": 650.0,
-      "critical_it_contracted_mw": null,
+      "critical_it_contracted_mw": NaN,
       "service_ready_it_mw": 650.0,
       "gpu_equipment_deployment_state": "Operating mining & cloud pilot",
-      "gpu_compute_operational_mw": null,
+      "gpu_compute_operational_mw": NaN,
+      "equipment_accepted_fraction": NaN,
+      "completion_status": "operational_and_expanding",
       "next_milestone": "Final 100 MW substation expansion to 750 MW",
-      "evidence_completeness": "Class A (10-K Item 1 & Note 7)"
+      "evidence_class": "A",
+      "truth_claim_id": "CLM-PWR-IREN-001",
+      "knowledge_claim_id": "CLM-PWR-IREN-001",
+      "verifier_notes": "750 MW executed connection agreement with AEP Texas in ERCOT. 650 MW substation energized and operational."
     },
     {
       "facility_id": "FAC-IREN-SWEETWATER-1",
@@ -178,13 +271,18 @@
       "committed_financing_capacity_m": 0.0,
       "customer_lease_commitment_m": 0.0,
       "utility_service_capacity_mw": 1400.0,
-      "utility_load_online_mw": null,
-      "critical_it_contracted_mw": null,
+      "utility_load_online_mw": NaN,
+      "critical_it_contracted_mw": NaN,
       "service_ready_it_mw": 0.0,
       "gpu_equipment_deployment_state": "Substation procurement & interconnection construction",
-      "gpu_compute_operational_mw": null,
+      "gpu_compute_operational_mw": NaN,
+      "equipment_accepted_fraction": 0.0,
+      "completion_status": "under_construction",
       "next_milestone": "Interconnection substation construction (1,400 MW)",
-      "evidence_completeness": "Class A (10-K Item 1)"
+      "evidence_class": "A",
+      "truth_claim_id": "CLM-PWR-IREN-001",
+      "knowledge_claim_id": "CLM-PWR-IREN-001",
+      "verifier_notes": "1,400 MW connection agreement executed with Oncor in ERCOT. Not energized; under substation procurement and construction."
     },
     {
       "facility_id": "FAC-IREN-SWEETWATER-2",
@@ -194,13 +292,18 @@
       "committed_financing_capacity_m": 0.0,
       "customer_lease_commitment_m": 0.0,
       "utility_service_capacity_mw": 600.0,
-      "utility_load_online_mw": null,
-      "critical_it_contracted_mw": null,
+      "utility_load_online_mw": NaN,
+      "critical_it_contracted_mw": NaN,
       "service_ready_it_mw": 0.0,
       "gpu_equipment_deployment_state": "AEP Texas substation engineering",
-      "gpu_compute_operational_mw": null,
+      "gpu_compute_operational_mw": NaN,
+      "equipment_accepted_fraction": 0.0,
+      "completion_status": "under_construction",
       "next_milestone": "AEP Texas 600 MW substation engineering",
-      "evidence_completeness": "Class A (10-K Item 1)"
+      "evidence_class": "A",
+      "truth_claim_id": "CLM-PWR-IREN-001",
+      "knowledge_claim_id": "CLM-PWR-IREN-001",
+      "verifier_notes": "600 MW connection agreement executed with AEP Texas in ERCOT. Not energized; preliminary substation engineering."
     },
     {
       "facility_id": "FAC-NBIS-MANTSALA",
@@ -215,8 +318,13 @@
       "service_ready_it_mw": 75.0,
       "gpu_equipment_deployment_state": "Fully operational GPU cluster operations",
       "gpu_compute_operational_mw": 75.0,
+      "equipment_accepted_fraction": 1.0,
+      "completion_status": "operational",
       "next_milestone": "Commercial operational service / heat recovery",
-      "evidence_completeness": "Class A (10-K & Utility Primary Source)"
+      "evidence_class": "A",
+      "truth_claim_id": "CLM-PWR-NBIS-002",
+      "knowledge_claim_id": "CLM-PWR-NBIS-002",
+      "verifier_notes": "75 MW connection with Nivos in Fingrid zone. Fully energized and hosting commercial GPU clusters."
     },
     {
       "facility_id": "FAC-NBIS-LAPPEENRANTA",
@@ -226,13 +334,18 @@
       "committed_financing_capacity_m": 0.0,
       "customer_lease_commitment_m": 0.0,
       "utility_service_capacity_mw": 310.0,
-      "utility_load_online_mw": null,
-      "critical_it_contracted_mw": null,
+      "utility_load_online_mw": NaN,
+      "critical_it_contracted_mw": NaN,
       "service_ready_it_mw": 0.0,
       "gpu_equipment_deployment_state": "Engineering design / pre-construction",
-      "gpu_compute_operational_mw": null,
+      "gpu_compute_operational_mw": NaN,
+      "equipment_accepted_fraction": 0.0,
+      "completion_status": "announced",
       "next_milestone": "Pending grid interconnection & engineering review",
-      "evidence_completeness": "Class B (10-K development announcement)"
+      "evidence_class": "B",
+      "truth_claim_id": "CLM-PWR-NBIS-001",
+      "knowledge_claim_id": "CLM-PWR-NBIS-001",
+      "verifier_notes": "310 MW planned development in Finland. Grid connection study and pre-construction engineering underway."
     },
     {
       "facility_id": "FAC-IREN-MACKENZIE",
@@ -246,9 +359,14 @@
       "critical_it_contracted_mw": 80.0,
       "service_ready_it_mw": 80.0,
       "gpu_equipment_deployment_state": "Staged GPU server delivery & acceptance through Dec 31, 2026",
-      "gpu_compute_operational_mw": null,
+      "gpu_compute_operational_mw": NaN,
+      "equipment_accepted_fraction": 0.0,
+      "completion_status": "operational_and_expanding",
       "next_milestone": "GPU server staged delivery & acceptance through Dec 31, 2026",
-      "evidence_completeness": "Class A (10-K Note August 2026 Financing)"
+      "evidence_class": "A",
+      "truth_claim_id": "CLM-IREN-001",
+      "knowledge_claim_id": "CLM-IREN-001",
+      "verifier_notes": "Facility infrastructure fully energized at 80 MW under BC Hydro connection agreement. $2.4B financing staged to delivery and acceptance conditions."
     },
     {
       "facility_id": "FAC-APLD-POLARIS-FORGE-2",
@@ -257,14 +375,19 @@
       "attributable_funded_debt_m": 2150.0,
       "committed_financing_capacity_m": 0.0,
       "customer_lease_commitment_m": 0.0,
-      "utility_service_capacity_mw": null,
-      "utility_load_online_mw": null,
+      "utility_service_capacity_mw": NaN,
+      "utility_load_online_mw": NaN,
       "critical_it_contracted_mw": 200.0,
       "service_ready_it_mw": 0.0,
       "gpu_equipment_deployment_state": "Civil / electrical shell construction",
-      "gpu_compute_operational_mw": null,
+      "gpu_compute_operational_mw": NaN,
+      "equipment_accepted_fraction": 0.0,
+      "completion_status": "under_construction",
       "next_milestone": "Initial capacity H2 2026; full 200 MW early 2027",
-      "evidence_completeness": "Class A (10-K Item 1 & Note 10)"
+      "evidence_class": "A",
+      "truth_claim_id": "CLM-APLD-003",
+      "knowledge_claim_id": "CLM-APLD-011",
+      "verifier_notes": "Under active construction. $2.15B gross proceeds held in escrow until electric service agreement satisfied on June 18, 2026."
     }
   ]
 }
