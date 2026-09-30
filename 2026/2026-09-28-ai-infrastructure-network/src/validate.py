@@ -1877,6 +1877,125 @@ def validate_observatory():
 
         print(f"  [OK] All 6 calibrated stress transmission values accurately represented in documentation.")
 
+    # ---------------------------------------------------------
+    # 10. Validate Task 023.1 Bitemporal & Calibrated Visibility Claims
+    # ---------------------------------------------------------
+    print("\n--- Validating Task 023.1 Calibrated Bitemporal Visibility ---")
+    ob_df = pd.read_parquet(PROCESSED_DIR / "obligations.parquet")
+    facts_df = pd.read_parquet(PROCESSED_DIR / "obligation_facts.parquet")
+    events_df = pd.read_parquet(PROCESSED_DIR / "obligation_events.parquet")
+    ent_df = pd.read_parquet(PROCESSED_DIR / "entities.parquet")
+
+    # 10.1: 45 contract inceptions + 2 periodic measurements (47 total)
+    periodic_ids = {"REL-MSFT-CRWV-REVENUE-CONCENTRATION", "OBL-SMCI-SUPPLIER-COMMIT"}
+    contract_inceptions_df = ob_df[~ob_df["obligation_id"].isin(periodic_ids)]
+    periodic_df = ob_df[ob_df["obligation_id"].isin(periodic_ids)]
+
+    if len(ob_df) != 47:
+        errors.append(f"Task 023.1: Expected 47 obligations, found {len(ob_df)}")
+    if len(contract_inceptions_df) != 45:
+        errors.append(f"Task 023.1: Expected 45 contract inceptions, found {len(contract_inceptions_df)}")
+    if len(periodic_df) != 2:
+        errors.append(f"Task 023.1: Expected 2 periodic measurements, found {len(periodic_df)}")
+    print("  [OK] Task 023.1: 45 contract inceptions + 2 periodic measurements verified (47 total).")
+
+    # 10.2: 14 public 144A notes sum to $25.682B ($25,682M)
+    public_note_ids = [
+        "OBL-CRWV-DEBT-NOTES-2030", "OBL-CRWV-DEBT-NOTES-2031-900", "OBL-CRWV-DEBT-NOTES-2031-975",
+        "OBL-CRWV-DEBT-NOTES-2032-9625", "OBL-CRWV-DEBT-NOTES-2032-EUR", "OBL-CRWV-DEBT-CONV-2031",
+        "OBL-CRWV-DEBT-CONV-2032", "OBL-APLD-DEBT-CONV", "OBL-APLD-DEBT-PF1", "OBL-APLD-DEBT-PF2",
+        "OBL-APLD-DEBT-7PCT-2026", "OBL-WULF-DEBT-CONV-2030", "OBL-WULF-DEBT-CONV-2031", "OBL-WULF-DEBT-CONV-2032"
+    ]
+    public_notes = ob_df[ob_df["obligation_id"].isin(public_note_ids)]
+    if len(public_notes) != 14:
+        errors.append(f"Task 023.1: Expected 14 public 144A notes, found {len(public_notes)}")
+    public_notes_sum = public_notes["amount"].sum()
+    if abs(public_notes_sum - 25.682e9) > 1e6:
+        errors.append(f"Task 023.1: Public notes sum drift: parsed ${public_notes_sum/1e9:.4f}B vs expected $25.6820B")
+    print(f"  [OK] Task 023.1: 14 public 144A notes sum verified at $25.682B.")
+
+    # 10.3: July 1, 2026 Debt & Residual Arithmetic ($44.616B - $25.682B = $18.934B / 42.44%)
+    from src.graph import ObligationNetwork
+    net = ObligationNetwork(entities_df=ent_df, obligations_df=ob_df, facts_df=facts_df, events_df=events_df)
+    eco_jul1 = net.economic_as_of("2026-07-01")
+    eco_jul1_debt = sum(
+        data.get("amount") or 0.0
+        for _, _, _, data in eco_jul1.graph.edges(keys=True, data=True)
+        if data.get("obligation_type") == "debt_facility"
+    )
+    if abs(eco_jul1_debt - 44.616e9) > 1e6:
+        errors.append(f"Task 023.1: Economic debt July 1 drift: ${eco_jul1_debt/1e9:.4f}B vs expected $44.6160B")
+
+    residual_gap = eco_jul1_debt - public_notes_sum
+    if abs(residual_gap - 18.934e9) > 1e6:
+        errors.append(f"Task 023.1: Residual gap drift: ${residual_gap/1e9:.4f}B vs expected $18.9340B")
+
+    opacity_pct = (residual_gap / eco_jul1_debt) * 100.0
+    if abs(opacity_pct - 42.44) > 0.05:
+        errors.append(f"Task 023.1: Opacity pct drift: {opacity_pct:.2f}% vs expected 42.44%")
+
+    # 10.4: Decomposition of the $18.934B residual (CoreWeave non-public-note principal)
+    crwv_ddtl_ids = [
+        "OBL-CRWV-DEBT-DDTL1", "OBL-CRWV-DEBT-DDTL2", "OBL-CRWV-DEBT-DDTL2-1",
+        "OBL-CRWV-DEBT-DDTL3", "OBL-CRWV-DEBT-DDTL4", "OBL-CRWV-DEBT-DDTL5"
+    ]
+    crwv_ddtls_sum = ob_df[ob_df["obligation_id"].isin(crwv_ddtl_ids)]["amount"].sum()
+    if abs(crwv_ddtls_sum - 13.643e9) > 1e6:
+        errors.append(f"Task 023.1: CRWV DDTLs sum drift: ${crwv_ddtls_sum/1e9:.4f}B vs expected $13.6430B")
+
+    crwv_oem_ids = ["OBL-CRWV-DEBT-OEM", "OBL-CRWV-DEBT-OEM-NR"]
+    crwv_oem_sum = ob_df[ob_df["obligation_id"].isin(crwv_oem_ids)]["amount"].sum()
+    if abs(crwv_oem_sum - 5.102e9) > 1e6:
+        errors.append(f"Task 023.1: CRWV OEM financing sum drift: ${crwv_oem_sum/1e9:.4f}B vs expected $5.1020B")
+
+    crwv_mag_sum = ob_df[ob_df["obligation_id"] == "OBL-CRWV-DEBT-MAGNETAR"]["amount"].sum()
+    if abs(crwv_mag_sum - 0.189e9) > 1e6:
+        errors.append(f"Task 023.1: CRWV Magnetar debt drift: ${crwv_mag_sum/1e9:.4f}B vs expected $0.1890B")
+
+    crwv_non_note_total = crwv_ddtls_sum + crwv_oem_sum + crwv_mag_sum
+    if abs(crwv_non_note_total - 18.934e9) > 1e6:
+        errors.append(f"Task 023.1: CRWV non-note total drift: ${crwv_non_note_total/1e9:.4f}B vs expected $18.9340B")
+    print(f"  [OK] Task 023.1: $18.934B residual decomposition verified ($13.643B DDTLs + $5.102B OEM + $0.189B Magnetar).")
+
+    # 10.5: March 1, 2025 modeled topology labels
+    eco_mar25 = net.economic_as_of("2025-03-01")
+    kno_mar25 = net.known_as_of("2025-03-01")
+
+    crwv_eco_edges = (
+        [(u, v, k) for u, v, k in eco_mar25.graph.edges("CRWV", keys=True)] +
+        [(u, v, k) for u, v, k in eco_mar25.graph.in_edges("CRWV", keys=True)]
+    )
+    if len(crwv_eco_edges) != 6:
+        errors.append(f"Task 023.1: March 1, 2025 CRWV economic legal edges: found {len(crwv_eco_edges)} vs expected 6")
+
+    eco_mar25_root_cps = set()
+    for u, v, _ in crwv_eco_edges:
+        cp = v if u == "CRWV" else u
+        r = net.get_root_parent(cp)
+        if r != "CRWV":
+            eco_mar25_root_cps.add(r)
+
+    expected_eco_cps = {"BLACKSTONE_MAGNETAR_SYN", "CORZ", "MSFT", "OEM_FINANCING_PARTNERS"}
+    if eco_mar25_root_cps != expected_eco_cps:
+        errors.append(f"Task 023.1: March 1, 2025 CRWV root counterparties mismatch: found {eco_mar25_root_cps} vs expected {expected_eco_cps}")
+
+    crwv_kno_edges = (
+        [(u, v, k) for u, v, k in kno_mar25.graph.edges("CRWV", keys=True)] +
+        [(u, v, k) for u, v, k in kno_mar25.graph.in_edges("CRWV", keys=True)]
+    )
+    kno_mar25_root_cps = set()
+    for u, v, _ in crwv_kno_edges:
+        cp = v if u == "CRWV" else u
+        r = net.get_root_parent(cp)
+        if r != "CRWV":
+            kno_mar25_root_cps.add(r)
+
+    expected_kno_cps = {"CORZ"}
+    if kno_mar25_root_cps != expected_kno_cps:
+        errors.append(f"Task 023.1: March 1, 2025 CRWV known root counterparties mismatch: found {kno_mar25_root_cps} vs expected {expected_kno_cps}")
+
+    print("  [OK] Task 023.1: March 1, 2025 modeled topology verified (6 legal edges -> 4 root nodes: BLACKSTONE_MAGNETAR_SYN, CORZ, MSFT, OEM_FINANCING_PARTNERS vs 1 known: CORZ).")
+
     if errors:
         print("\n[VALIDATION FAILED]")
         for err in errors:

@@ -675,13 +675,14 @@ erc_regional_entity.
 - **Status:** Accepted (2026-09-30, Task 023.1 Calibration)
 - **Context:**
   1. *The Fallacy of Continuous Observability:* Retrospective quantitative modeling routinely back-projects later-disclosed liabilities onto historical dates, introducing look-ahead bias and misrepresenting market informational states.
-  2. *Refinement from Binary Opacity:* Binary "public invisibility" models conflate SEC/EDGAR filing legibility with total public ignorance. While public headline awareness (via press releases) often occurred within 1–4 days, detailed legal legibility (SPVs, advance rates, collateral lien scope, springing guarantees) and mid-quarter drawn balances remained opaque on EDGAR for hundreds of days.
+  2. *Refinement from Binary Opacity:* Binary "public invisibility" models conflate SEC/EDGAR filing legibility with total public ignorance. While public headline awareness (via press releases) often occurred within 1–4 days in audited anchor cases, detailed legal legibility (SPVs, advance rates, collateral lien scope, springing guarantees) and mid-quarter drawn balances remained opaque on EDGAR for hundreds of days.
 - **Decision:**
   1. **Four-Level Information Resolution Framework:**
-     - Level 0: Economic Reality ($t_{\text{eco}}$, contract execution).
-     - Level 1: Public Headline Awareness ($t_{\text{press}}$, 1–4 days lag via press releases naming lenders and facility sizes).
+     - Level 0: Economic Reality ($t_{\text{eco}}$, binding contract execution).
+     - Level 1: Public Headline Awareness ($t_{\text{press}}$, 1–4 days lag in audited CoreWeave anchor cases via press releases naming lenders and facility sizes; illustrative framework, not a 45-contract ledger).
      - Level 2: SEC/EDGAR Detailed Legal Legibility ($t_{\text{sec}}$, 300–600 days lag via Form S-1/10-Q exhibit filing disclosing SPVs, advance rates, and collateral liens).
      - Level 3: Current Balance Measurability ($t_{\text{meas}}$, quarterly 10-Q financial footnotes, 40–45 days lag).
+     - *Anchor Illustration:* DDTL 1.0 was announced as a \$2.3B facility in 4 days (Aug 3, 2023), gained SEC legal legibility on Mar 20, 2025 (599d lag), and had an outstanding drawn balance of \$1.300B at June 30, 2026. DDTL 2.0 was announced as a \$7.5B facility in 1 day (May 17, 2024), was defined in SEC credit agreements as up to \$7.6B, and had a drawn balance of \$3.190B at June 30, 2026.
   2. **Role-Aware Lag Taxonomy ($N=45$ Inceptions):**
      - Separated 45 contract inceptions from 2 periodic measurements (`REL-MSFT-CRWV-REVENUE-CONCENTRATION` [425d] and `OBL-SMCI-SUPPLIER-COMMIT` [426d]).
      - **Public / 144A Capital Market Notes ($N=14$):** Mean lag of **-0.07 days** (median 0.0 days, range -6 to 3 days), driven by Form 8-K Items 1.01/2.03 and Rule 135c.
@@ -690,19 +691,21 @@ erc_regional_entity.
      - **Parent Guarantees & Springing Indemnities ($N=12$):** Mean lag of **78.33 days** (median 3.0 days, max 599 days).
      - **Private Credit Delayed-Draw Facilities ($N=8$):** Mean lag of **169.25 days** (median 5.0 days, max 599 days).
      - Overall contract inceptions mean lag: **77.84 days** (median 3.0 days, max 599 days).
-  3. **Calibrated Debt Baseline & Unresolved Current-Principal Gap:**
+  3. **Calibrated Debt Baseline & Unresolved Current-Principal Residual Ceiling:**
      - Withdrew the uncalibrated $32.801B / 73.52% "shadow debt" headline resulting from point-in-time fact-ledger queries.
      - Carried forward the known **$25.682B public note pool** ($16.617B CoreWeave, $6.540B Applied Digital, $2.525B TeraWulf) disclosed in prior Form 8-Ks.
-     - Established that on July 1, 2026 ($44.616B economic debt), the true **unresolved current-principal gap** was at most **$18.934B (42.44%)**, representing unobservable mid-year private credit / DDTL drawdowns prior to CoreWeave's Form 10-Q filing on August 12, 2026.
-  4. **Multigraph Active Legal Edges vs. Unique-Root Counterparty Degree:**
+     - Established that on July 1, 2026 ($44.616B economic debt), the true **unresolved current-principal residual ceiling** was **$18.934B (42.44%)**.
+     - **Residual Decomposition:** All \$18.934B is CoreWeave non-public-note principal: \$13.643B across 6 DDTLs + \$5.102B OEM hardware/software financing + \$0.189B Magnetar promissory note.
+     - **Q1 10-Q Context:** CoreWeave filed its Q1 10-Q on May 8, 2026 showing \$25.149B total debt with itemized balances as of March 31, 2026. Therefore, \$18.934B was not previously unknown debt, but the maximum ceiling of liabilities whose June 30 current balance was not pinned down by the public-note baseline alone prior to the Q2 10-Q on Aug 12, 2026 (stale balances / unobservable Q2 draws, not nonexistent debt).
+  4. **Modeled Topology Labels & The Hidden Hub:**
      - Throughout 2024 and early 2025, CoreWeave's active legal-edge degree led EDGAR legibility by 3 to 5 edges, and its unique-root counterparty degree led by 1 to 3 corporate parents.
-     - In March 2025, EDGAR showed $k=1$ (Core Scientific), whereas economic reality connected CoreWeave to 4 distinct corporate counterparties (Blackstone, Magnetar, Core Scientific, Microsoft) across 6 legal edges.
+     - In March 2025, EDGAR showed $k=1$ (`CORZ`), whereas economic reality connected CoreWeave to 4 modeled root counterparty nodes (`BLACKSTONE_MAGNETAR_SYN`, `CORZ`, `MSFT`, `OEM_FINANCING_PARTNERS`) across 6 active legal edges.
   5. **Surviving Regulatory & Contagion Thesis:**
      - Form 8-K Item 2.03 already applies to registrants; the vulnerability is private infrastructure borrowers operating outside SEC registration.
      - *The surviving thesis:* **"The important information was often not secret. What remained opaque was the JOIN."**
 - **Consequences:**
   - Eliminates look-ahead bias and fact-ledger coverage artifacts.
-  - Establishes the calibrated two-clock baseline for Phase 2 dynamic contagion and liquidity cascade modeling without data drift.
+  - Formulates the calibrated two-clock baseline for Phase 2 dynamic contagion and liquidity cascade modeling without data drift.
 
 
 

@@ -6,7 +6,8 @@
     "level_0": "Economic Inception (binding contract execution / facility closing)",
     "level_1": "Public Headline Awareness (press release / news announcement of existence and size)",
     "level_2": "SEC/EDGAR Detailed Legal Legibility (filing of SPVs, advance rates, covenants on EDGAR)",
-    "level_3": "Current Balance Measurability (quarter-end drawn debt reported in periodic 10-Q footnotes)"
+    "level_3": "Current Balance Measurability (quarter-end drawn debt reported in periodic 10-Q footnotes)",
+    "note": "Level 1 is an illustrative framework supported by audited CoreWeave anchor cases (1-4 day awareness) rather than a systematic network-wide ledger."
   },
   "headline_calibrated_findings": {
     "mean_contract_inception_lag_days": 77.84,
@@ -14,15 +15,20 @@
     "public_144a_notes_mean_lag_days": -0.07,
     "private_credit_facilities_mean_lag_days": 169.25,
     "ddtl_1_layered_timeline": {
-      "level_0_economic_inception": "2023-07-30",
-      "level_1_public_headline_announcement": "2023-08-03 (Blackstone / Magnetar press release, 4-day lag)",
-      "level_2_sec_edgar_detailed_legibility": "2025-03-20 (Form S-1 / 10-Q filing, 599-day lag)",
-      "insight": "Headline existence was public within 4 days; detailed SPV and borrowing base architecture lagged by 599 days."
+      "facility_name": "CoreWeave DDTL 1.0 Credit Facility",
+      "level_0_economic_inception": "2023-07-30 (binding credit agreement executed)",
+      "level_1_public_headline_announcement": "2023-08-03 (Blackstone / Magnetar press release, 4-day lag: $2.3B facility announced)",
+      "level_2_sec_edgar_detailed_legibility": "2025-03-20 (Form S-1 / 10-Q exhibit filing, 599-day lag: CCAC II SPV, advance rates, covenants)",
+      "level_3_current_balance_measurability": "2026-06-30 balance of $1.300B reported in Form 10-Q on 2026-08-12",
+      "anchor_insight": "Facility capacity of $2.3B was public within 4 days; contractual legibility lagged by 599 days; outstanding balance as of June 30, 2026 was $1.300B."
     },
     "ddtl_2_layered_timeline": {
-      "level_0_economic_inception": "2024-05-16",
-      "level_1_public_headline_announcement": "2024-05-17 (Blackstone press release, 1-day lag)",
-      "level_2_sec_edgar_detailed_legibility": "2025-03-20 (Form S-1 / 10-Q filing, 308-day lag)"
+      "facility_name": "CoreWeave DDTL 2.0 Credit Facility",
+      "level_0_economic_inception": "2024-05-16 (binding credit agreement executed)",
+      "level_1_public_headline_announcement": "2024-05-17 (Blackstone press release, 1-day lag: $7.5B facility announced)",
+      "level_2_sec_edgar_detailed_legibility": "2025-03-20 (Form S-1 / 10-Q exhibit filing, 308-day lag: legal credit agreement capacity up to $7.6B)",
+      "level_3_current_balance_measurability": "2026-06-30 balance of $3.190B reported in Form 10-Q on 2026-08-12",
+      "anchor_insight": "May 2024 press release announced $7.5B facility; subsequent SEC filings define the legal credit agreement capacity as up to $7.6B; outstanding balance as of June 30, 2026 was $3.190B."
     },
     "summer_2026_pre_filing_debt_gap": {
       "date": "2026-07-01",
@@ -30,13 +36,43 @@
       "publicly_known_144a_notes_baseline_b": 25.682,
       "calibrated_unresolved_principal_gap_b": 18.934,
       "calibrated_unresolved_percentage": 42.44,
-      "fact_ledger_coverage_artifact_note": "Pure fact-ledger queries returned $11.815B because several public note principal facts were pegged to June 30 published Aug 12. Carrying forward the known $25.682B public note pool establishes a maximum residual gap of $18.934B (42.4%), representing unobservable DDTL draws prior to 10-Q disclosure."
+      "unresolved_principal_decomposition": {
+        "coreweave_ddtls_total_b": 13.643,
+        "coreweave_ddtls_breakdown": {
+          "ddtl_1_0_b": 1.3,
+          "ddtl_2_0_b": 3.19,
+          "ddtl_2_1_b": 3.0,
+          "ddtl_3_0_b": 2.215,
+          "ddtl_4_0_b": 2.837,
+          "ddtl_5_0_b": 1.101
+        },
+        "coreweave_oem_financing_b": 5.102,
+        "coreweave_magnetar_promissory_note_b": 0.189,
+        "sum_verification_b": 18.934
+      },
+      "context_and_resolution_boundary": "The $18.934B residual represents all CoreWeave non-public-note principal ($13.643B DDTLs + $5.102B OEM + $0.189B Magnetar). Investors already possessed CoreWeave's Q1 Form 10-Q filed May 8, 2026 showing $25.149B total debt with itemized DDTL, OEM, and Magnetar balances as of March 31, 2026. Therefore, on July 1, 2026, this $18.934B was not previously unknown debt, but the maximum ceiling of liabilities whose June 30 current balance was not pinned down by the public-note baseline alone prior to the Q2 10-Q filing on Aug 12, 2026. The actual informational condition was balance staleness / unobservable Q2 draws, not nonexistent debt."
     },
     "peak_committed_capacity_gap": {
       "period": "January 2024 - March 2025 (15 Months)",
       "economic_capacity_b": 9.9,
       "public_known_capacity_b": 0.0,
-      "gap_b": 9.9
+      "gap_b": 9.9,
+      "insight": "15-month incubation period where up to $9.9B of credit capacity was active under bilateral agreements before Form S-1 disclosure."
+    },
+    "march_2025_coreweave_topology": {
+      "date": "2025-03-01",
+      "active_legal_edges_economic": 6,
+      "active_legal_edges_sec_known": 1,
+      "modeled_root_counterparty_nodes_economic": [
+        "BLACKSTONE_MAGNETAR_SYN",
+        "CORZ",
+        "MSFT",
+        "OEM_FINANCING_PARTNERS"
+      ],
+      "modeled_root_counterparty_nodes_sec_known": [
+        "CORZ"
+      ],
+      "note": "In the modeled graph, Blackstone and Magnetar are consolidated into BLACKSTONE_MAGNETAR_SYN, and OEM loans into OEM_FINANCING_PARTNERS."
     }
   },
   "calibrated_category_statistics": [

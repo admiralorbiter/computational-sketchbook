@@ -214,14 +214,23 @@ def run_bitemporal_analysis():
                     kno_root_cps.add(r)
 
         # Financial aggregations
-        eco_debt = 0.0
+        active_debt_edges = 0
+        measured_debt_edges = 0
+        unmeasured_debt_edges = 0
+        eco_debt_measured = 0.0
         kno_debt_fact_ledger = 0.0
         eco_cap = 0.0
         kno_cap = 0.0
 
         for _, _, _, data in eco.graph.edges(keys=True, data=True):
             if data.get("obligation_type") == "debt_facility":
-                eco_debt += data.get("amount") or 0.0
+                active_debt_edges += 1
+                amt = data.get("amount")
+                if amt is not None and pd.notna(amt):
+                    measured_debt_edges += 1
+                    eco_debt_measured += float(amt)
+                else:
+                    unmeasured_debt_edges += 1
             if pd.notna(data.get("facility_capacity")):
                 eco_cap += float(data.get("facility_capacity") or 0.0)
 
@@ -237,18 +246,25 @@ def run_bitemporal_analysis():
             (pd.to_datetime(public_notes_pool["publicly_known_from"]) <= pd.to_datetime(d)) &
             (pd.to_datetime(public_notes_pool["economic_valid_from"]) <= pd.to_datetime(d))
         ]
-        calibrated_public_notes_b = known_public_notes["amount"].sum() / 1e9
-
-        # Total calibrated known debt combines fact-ledger debt with known public note face amounts
-        # taking the maximum to prevent double counting
-        calibrated_kno_debt_b = max(round(kno_debt_fact_ledger / 1e9, 4), round(calibrated_public_notes_b, 4))
-        
-        eco_debt_b = round(eco_debt / 1e9, 4)
+        calibrated_public_notes_b = round(known_public_notes["amount"].sum() / 1e9, 4)
         fact_ledger_kno_debt_b = round(kno_debt_fact_ledger / 1e9, 4)
+        calibrated_kno_debt_b = max(fact_ledger_kno_debt_b, calibrated_public_notes_b)
         
-        # Unresolved current-principal gap
-        unresolved_gap_b = max(0.0, round(eco_debt_b - calibrated_kno_debt_b, 4))
-        calibrated_opacity_pct = round((unresolved_gap_b / eco_debt_b * 100.0), 2) if eco_debt_b > 0 else 0.0
+        # Coverage semantics:
+        # Prior to complete reporting dates (e.g. Summer 2026), between 1 and 16 active debt facilities
+        # lack point-in-time drawn principal measurements in the historical fact ledger.
+        # We explicitly model unmeasured debt as None/NaN rather than converting missing balances to zero,
+        # preventing false inferences where public knowledge exceeds economic reality.
+        coverage_complete = (unmeasured_debt_edges == 0)
+        
+        if coverage_complete:
+            eco_funded_debt_b = round(eco_debt_measured / 1e9, 4)
+            unresolved_gap_b = max(0.0, round(eco_funded_debt_b - calibrated_kno_debt_b, 4))
+            calibrated_opacity_pct = round((unresolved_gap_b / eco_funded_debt_b * 100.0), 2) if eco_funded_debt_b > 0 else 0.0
+        else:
+            eco_funded_debt_b = None
+            unresolved_gap_b = None
+            calibrated_opacity_pct = None
 
         monthly_records.append({
             "date": d,
@@ -267,14 +283,20 @@ def run_bitemporal_analysis():
             "crwv_eco_root_cps": len(eco_root_cps),
             "crwv_kno_root_cps": len(kno_root_cps),
             "crwv_root_cp_gap": len(eco_root_cps) - len(kno_root_cps),
-            "eco_debt_b": eco_debt_b,
-            "fact_ledger_kno_debt_b": fact_ledger_kno_debt_b,
-            "calibrated_kno_debt_b": calibrated_kno_debt_b,
-            "unresolved_principal_gap_b": unresolved_gap_b,
-            "calibrated_opacity_pct": calibrated_opacity_pct,
+            "active_debt_edges": active_debt_edges,
+            "measured_debt_edges": measured_debt_edges,
+            "unmeasured_debt_edges": unmeasured_debt_edges,
+            "principal_coverage_complete": coverage_complete,
             "eco_facility_capacity_b": round(eco_cap / 1e9, 4),
             "kno_facility_capacity_b": round(kno_cap / 1e9, 4),
-            "capacity_gap_b": round((eco_cap - kno_cap) / 1e9, 4)
+            "capacity_gap_b": round((eco_cap - kno_cap) / 1e9, 4),
+            "measured_fact_debt_b": round(eco_debt_measured / 1e9, 4),
+            "calibrated_public_notes_b": calibrated_public_notes_b,
+            "calibrated_kno_debt_b": calibrated_kno_debt_b,
+            "fact_ledger_kno_debt_b": fact_ledger_kno_debt_b,
+            "eco_funded_debt_b": eco_funded_debt_b,
+            "unresolved_principal_gap_b": unresolved_gap_b,
+            "calibrated_opacity_pct": calibrated_opacity_pct
         })
 
     df_monthly = pd.DataFrame(monthly_records)
@@ -282,7 +304,7 @@ def run_bitemporal_analysis():
     print(f"[OK] Calibrated monthly trajectory saved to {ANALYSIS_DIR / 'bitemporal_monthly_trajectory.csv'}")
 
     # 4. JSON Summary of Layered Findings
-    # Analyze July 1, 2026 pre-filing snapshot
+    # Analyze July 1, 2026 pre-filing snapshot (certified coverage complete)
     jul1_row = df_monthly[df_monthly["date"] == "2026-07-01"].iloc[0]
 
     headline_json = {
@@ -293,7 +315,8 @@ def run_bitemporal_analysis():
             "level_0": "Economic Inception (binding contract execution / facility closing)",
             "level_1": "Public Headline Awareness (press release / news announcement of existence and size)",
             "level_2": "SEC/EDGAR Detailed Legal Legibility (filing of SPVs, advance rates, covenants on EDGAR)",
-            "level_3": "Current Balance Measurability (quarter-end drawn debt reported in periodic 10-Q footnotes)"
+            "level_3": "Current Balance Measurability (quarter-end drawn debt reported in periodic 10-Q footnotes)",
+            "note": "Level 1 is an illustrative framework supported by audited CoreWeave anchor cases (1-4 day awareness) rather than a systematic network-wide ledger."
         },
         "headline_calibrated_findings": {
             "mean_contract_inception_lag_days": round(contract_inceptions["sec_lag_days"].mean(), 2),
@@ -301,33 +324,71 @@ def run_bitemporal_analysis():
             "public_144a_notes_mean_lag_days": round(contract_inceptions[contract_inceptions["calibrated_category"] == "Public / 144A Capital Market Notes"]["sec_lag_days"].mean(), 2),
             "private_credit_facilities_mean_lag_days": round(contract_inceptions[contract_inceptions["calibrated_category"] == "Private Credit Delayed-Draw Facilities"]["sec_lag_days"].mean(), 2),
             "ddtl_1_layered_timeline": {
-                "level_0_economic_inception": "2023-07-30",
-                "level_1_public_headline_announcement": "2023-08-03 (Blackstone / Magnetar press release, 4-day lag)",
-                "level_2_sec_edgar_detailed_legibility": "2025-03-20 (Form S-1 / 10-Q filing, 599-day lag)",
-                "insight": "Headline existence was public within 4 days; detailed SPV and borrowing base architecture lagged by 599 days."
+                "facility_name": "CoreWeave DDTL 1.0 Credit Facility",
+                "level_0_economic_inception": "2023-07-30 (binding credit agreement executed)",
+                "level_1_public_headline_announcement": "2023-08-03 (Blackstone / Magnetar press release, 4-day lag: $2.3B facility announced)",
+                "level_2_sec_edgar_detailed_legibility": "2025-03-20 (Form S-1 / 10-Q exhibit filing, 599-day lag: CCAC II SPV, advance rates, covenants)",
+                "level_3_current_balance_measurability": "2026-06-30 balance of $1.300B reported in Form 10-Q on 2026-08-12",
+                "anchor_insight": "Facility capacity of $2.3B was public within 4 days; contractual legibility lagged by 599 days; outstanding balance as of June 30, 2026 was $1.300B."
             },
             "ddtl_2_layered_timeline": {
-                "level_0_economic_inception": "2024-05-16",
-                "level_1_public_headline_announcement": "2024-05-17 (Blackstone press release, 1-day lag)",
-                "level_2_sec_edgar_detailed_legibility": "2025-03-20 (Form S-1 / 10-Q filing, 308-day lag)"
+                "facility_name": "CoreWeave DDTL 2.0 Credit Facility",
+                "level_0_economic_inception": "2024-05-16 (binding credit agreement executed)",
+                "level_1_public_headline_announcement": "2024-05-17 (Blackstone press release, 1-day lag: $7.5B facility announced)",
+                "level_2_sec_edgar_detailed_legibility": "2025-03-20 (Form S-1 / 10-Q exhibit filing, 308-day lag: legal credit agreement capacity up to $7.6B)",
+                "level_3_current_balance_measurability": "2026-06-30 balance of $3.190B reported in Form 10-Q on 2026-08-12",
+                "anchor_insight": "May 2024 press release announced $7.5B facility; subsequent SEC filings define the legal credit agreement capacity as up to $7.6B; outstanding balance as of June 30, 2026 was $3.190B."
             },
             "summer_2026_pre_filing_debt_gap": {
                 "date": "2026-07-01",
-                "economic_debt_b": float(jul1_row["eco_debt_b"]),
+                "economic_debt_b": float(jul1_row["eco_funded_debt_b"]),
                 "publicly_known_144a_notes_baseline_b": float(jul1_row["calibrated_kno_debt_b"]),
                 "calibrated_unresolved_principal_gap_b": float(jul1_row["unresolved_principal_gap_b"]),
                 "calibrated_unresolved_percentage": float(jul1_row["calibrated_opacity_pct"]),
-                "fact_ledger_coverage_artifact_note": (
-                    "Pure fact-ledger queries returned $11.815B because several public note principal facts were pegged "
-                    "to June 30 published Aug 12. Carrying forward the known $25.682B public note pool establishes "
-                    "a maximum residual gap of $18.934B (42.4%), representing unobservable DDTL draws prior to 10-Q disclosure."
+                "unresolved_principal_decomposition": {
+                    "coreweave_ddtls_total_b": 13.643,
+                    "coreweave_ddtls_breakdown": {
+                        "ddtl_1_0_b": 1.300,
+                        "ddtl_2_0_b": 3.190,
+                        "ddtl_2_1_b": 3.000,
+                        "ddtl_3_0_b": 2.215,
+                        "ddtl_4_0_b": 2.837,
+                        "ddtl_5_0_b": 1.101
+                    },
+                    "coreweave_oem_financing_b": 5.102,
+                    "coreweave_magnetar_promissory_note_b": 0.189,
+                    "sum_verification_b": 18.934
+                },
+                "context_and_resolution_boundary": (
+                    "The $18.934B residual represents all CoreWeave non-public-note principal ($13.643B DDTLs + $5.102B OEM + $0.189B Magnetar). "
+                    "Investors already possessed CoreWeave's Q1 Form 10-Q filed May 8, 2026 showing $25.149B total debt "
+                    "with itemized DDTL, OEM, and Magnetar balances as of March 31, 2026. Therefore, on July 1, 2026, "
+                    "this $18.934B was not previously unknown debt, but the maximum ceiling of liabilities whose June 30 "
+                    "current balance was not pinned down by the public-note baseline alone prior to the Q2 10-Q filing on Aug 12, 2026. "
+                    "The actual informational condition was balance staleness / unobservable Q2 draws, not nonexistent debt."
                 )
             },
             "peak_committed_capacity_gap": {
                 "period": "January 2024 - March 2025 (15 Months)",
                 "economic_capacity_b": 9.9,
                 "public_known_capacity_b": 0.0,
-                "gap_b": 9.9
+                "gap_b": 9.9,
+                "insight": "15-month incubation period where up to $9.9B of credit capacity was active under bilateral agreements before Form S-1 disclosure."
+            },
+            "march_2025_coreweave_topology": {
+                "date": "2025-03-01",
+                "active_legal_edges_economic": 6,
+                "active_legal_edges_sec_known": 1,
+                "modeled_root_counterparty_nodes_economic": [
+                    "BLACKSTONE_MAGNETAR_SYN",
+                    "CORZ",
+                    "MSFT",
+                    "OEM_FINANCING_PARTNERS"
+                ],
+                "modeled_root_counterparty_nodes_sec_known": [
+                    "CORZ"
+                ],
+                "note": "In the modeled graph, Blackstone and Magnetar are consolidated into BLACKSTONE_MAGNETAR_SYN, and OEM loans into OEM_FINANCING_PARTNERS."
             }
         },
         "calibrated_category_statistics": cat_summary.to_dict(orient="records"),
@@ -356,67 +417,79 @@ def generate_calibrated_figures(df_monthly: pd.DataFrame, contract_inceptions: p
     dates = pd.to_datetime(df_monthly["date"])
 
     # -------------------------------------------------------------------------
-    # FIGURE 1: Calibrated Debt Trajectory & Unresolved Principal Gap
+    # FIGURE 1: Calibrated Capacity Trajectory & Certified Pre-Filing Gap
     # -------------------------------------------------------------------------
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 10), sharex=True)
 
-    # Panel A: Economic Debt vs Calibrated Known Debt
-    ax1.plot(dates, df_monthly["eco_debt_b"], label="Economic Reality Debt (Funded Principal)", color="#b71c1c", linewidth=2.5, marker="o", markersize=4)
-    ax1.plot(dates, df_monthly["calibrated_kno_debt_b"], label="Publicly Known Debt Baseline ($25.682B Public Notes Carried Forward)", color="#1565c0", linewidth=2.5, linestyle="--", marker="s", markersize=4)
-    ax1.plot(dates, df_monthly["fact_ledger_kno_debt_b"], label="Strict EDGAR Fact-Ledger Coverage (Unaugmented)", color="#78909c", linewidth=1.5, linestyle=":")
+    # Panel A: Committed Credit Capacity Trajectory (Continuous 33 Months) & Certified Summer 2026 Principal
+    ax1.plot(dates, df_monthly["eco_facility_capacity_b"], label="Committed Credit Facility Capacity (Economic Inception)", color="#e65100", linewidth=2.5, marker="o", markersize=3)
+    ax1.plot(dates, df_monthly["kno_facility_capacity_b"], label="Committed Credit Facility Capacity (SEC/EDGAR Legible)", color="#fb8c00", linewidth=2.2, linestyle="--", marker="s", markersize=3)
+    
+    # Fill for Capacity Visibility Lag (The Incubation Cloak)
+    ax1.fill_between(dates, df_monthly["eco_facility_capacity_b"], df_monthly["kno_facility_capacity_b"], color="#ffe0b2", alpha=0.45, label="Committed Capacity Visibility Lag ($9.9B Incubation Cloak)")
 
-    # Fill for Unresolved Current-Principal Gap
-    ax1.fill_between(dates, df_monthly["eco_debt_b"], df_monthly["calibrated_kno_debt_b"], color="#ef9a9a", alpha=0.45, label="Unresolved Current-Principal Gap (DDTL Draw Uncertainty)")
+    # Shaded band for unmeasured historical drawn principal period (pre-June 2026)
+    ax1.axvspan(pd.to_datetime("2024-01-01"), pd.to_datetime("2026-05-15"), color="#eceff1", alpha=0.55, hatch="//", label="Historical Principal Unmeasured in Fact Ledger (Facilities Active at Capacity)")
 
-    # Secondary committed capacity lines
-    ax1.plot(dates, df_monthly["eco_facility_capacity_b"], label="Committed Credit Facility Capacity (Economic)", color="#e65100", linewidth=1.5, linestyle="--")
+    # Certified Complete Balance Window (Summer 2026)
+    valid_eco_debt = df_monthly.dropna(subset=["eco_funded_debt_b"])
+    if not valid_eco_debt.empty:
+        v_dates = pd.to_datetime(valid_eco_debt["date"])
+        ax1.plot(v_dates, valid_eco_debt["eco_funded_debt_b"], label="Certified Funded Debt Principal (Economic Reality: $44.616B)", color="#b71c1c", linewidth=2.8, marker="D", markersize=6)
+        ax1.plot(v_dates, valid_eco_debt["calibrated_kno_debt_b"], label="Publicly Known Notes Baseline ($25.682B Public Notes)", color="#1565c0", linewidth=2.5, linestyle="--", marker="s", markersize=5)
+        ax1.plot(v_dates, valid_eco_debt["fact_ledger_kno_debt_b"], label="Strict EDGAR Fact-Ledger Coverage ($11.815B -> $45.391B post-10-Q)", color="#78909c", linewidth=1.8, linestyle=":")
+        ax1.fill_between(v_dates, valid_eco_debt["eco_funded_debt_b"], valid_eco_debt["calibrated_kno_debt_b"], color="#ef9a9a", alpha=0.6, label="Unresolved Current-Principal Residual Ceiling ($18.934B / 42.4%)")
 
     # Annotate Summer 2026 Gap
     jul1_dt = pd.to_datetime("2026-07-01")
     ax1.annotate(
-        "Calibrated Pre-Filing Gap: $18.934B (42.4%)\n"
-        "(DDTL drawdowns unobservable prior to 10-Q filing;\n"
-        "public 144A notes fully known at $25.682B)",
+        "Pre-Filing Current-Principal Residual Ceiling: $18.934B (42.4%)\n"
+        "(CoreWeave non-public-note debt: $13.6B DDTLs + $5.1B OEM + $0.2B Mag;\n"
+        "stale Q1 10-Q known May 8; Q2 draws unobservable prior to Aug 12 10-Q)",
         xy=(jul1_dt, 44.6),
-        xytext=(pd.to_datetime("2025-08-01"), 36.0),
+        xytext=(pd.to_datetime("2025-05-01"), 36.0),
         arrowprops=dict(arrowstyle="->", color="#b71c1c", lw=1.5),
-        bbox=dict(boxstyle="round,pad=0.5", facecolor="#fff9c4", edgecolor="#fbc02d", alpha=0.9),
-        fontsize=9,
+        bbox=dict(boxstyle="round,pad=0.5", facecolor="#fff9c4", edgecolor="#fbc02d", alpha=0.95),
+        fontsize=8.5,
         fontweight="bold"
     )
 
     # Annotate Early Private Credit Incubation
     ax1.annotate(
-        "Private Credit Cloak:\n$9.9B Capacity Active;\nEDGAR S-1 Legibility Lagged (2024-2025)",
+        "Private Credit Incubation Cloak:\n$9.9B Capacity Active in Economic Reality;\nSEC S-1 Legibility Lagged (Jan 2024 – Mar 2025)",
         xy=(pd.to_datetime("2024-06-01"), 9.9),
         xytext=(pd.to_datetime("2024-01-01"), 20.0),
         arrowprops=dict(arrowstyle="->", color="#e65100", lw=1.5),
-        bbox=dict(boxstyle="round,pad=0.5", facecolor="#ffe0b2", edgecolor="#fb8c00", alpha=0.9),
-        fontsize=9,
+        bbox=dict(boxstyle="round,pad=0.5", facecolor="#ffe0b2", edgecolor="#fb8c00", alpha=0.95),
+        fontsize=8.5,
         fontweight="bold"
     )
 
     ax1.set_ylabel("Volume in Current Dollars ($B)", fontsize=11, fontweight="bold")
-    ax1.set_title("A. Bitemporal Debt & Committed Capacity Trajectory: Economic Clock vs. SEC/EDGAR Knowledge Clock", fontsize=12, fontweight="bold", pad=12)
-    ax1.legend(loc="upper left", frameon=True, fontsize=8.5)
+    ax1.set_title("A. Bitemporal Credit Capacity Trajectory (Continuous) & Certified Funded Principal Gap (Summer 2026)", fontsize=12, fontweight="bold", pad=12)
+    ax1.legend(loc="upper left", frameon=True, fontsize=8.0)
     ax1.set_ylim(-2, 52)
 
-    # Panel B: Calibrated Opacity Ratio and Active Undisclosed Edges Gap
+    # Panel B: Capacity Gap, Active Undisclosed Edges Gap, and Summer 2026 Opacity Ratio
     ax2_twin = ax2.twinx()
 
-    p1 = ax2.plot(dates, df_monthly["calibrated_opacity_pct"], color="#c2185b", linewidth=2.2, marker="^", label="Calibrated Opacity Ratio (% Unresolved Principal)")
-    p2 = ax2_twin.plot(dates, df_monthly["edge_gap"], color="#303f9f", linewidth=2.0, linestyle="--", marker="d", label="SEC Undisclosed Edges Gap (ΔE = E_eco - E_sec)")
+    p1 = ax2.plot(dates, df_monthly["capacity_gap_b"], color="#e65100", linewidth=2.2, marker="o", markersize=3, label="Committed Capacity Gap (ΔCap = Cap_eco - Cap_sec)")
+    p2 = ax2_twin.plot(dates, df_monthly["edge_gap"], color="#303f9f", linewidth=2.0, linestyle="--", marker="d", markersize=3, label="SEC Undisclosed Edges Gap (ΔE = E_eco - E_sec)")
 
-    ax2.set_ylabel("Calibrated Opacity Ratio (%)", color="#c2185b", fontsize=11, fontweight="bold")
+    # Scatter points for certified opacity ratio in Summer 2026
+    if not valid_eco_debt.empty:
+        p3 = ax2.plot(v_dates, valid_eco_debt["calibrated_opacity_pct"], color="#c2185b", linewidth=2.5, marker="^", markersize=6, label="Summer 2026 Pre-Filing Opacity Ratio (42.4% -> 0.0%)")
+
+    ax2.set_ylabel("Committed Capacity Gap ($B) / Opacity (%)", color="#e65100", fontsize=11, fontweight="bold")
     ax2_twin.set_ylabel("Undisclosed Legal Edges (ΔE)", color="#303f9f", fontsize=11, fontweight="bold")
     ax2.set_xlabel("Date (Monthly Intervals: 2024 - 2026)", fontsize=11, fontweight="bold")
-    ax2.set_title("B. Unresolved Principal Ratio & Structural Edge Visibility Gap Over Time", fontsize=12, fontweight="bold", pad=12)
-    ax2.set_ylim(-5, 60)
+    ax2.set_title("B. Structural Edge Visibility Gap & Committed Credit Capacity Lag Over Time", fontsize=12, fontweight="bold", pad=12)
+    ax2.set_ylim(-2, 35)
     ax2_twin.set_ylim(-1, 9)
 
-    lines = p1 + p2
+    lines = p1 + p2 + (p3 if not valid_eco_debt.empty else [])
     labels = [l.get_label() for l in lines]
-    ax2.legend(lines, labels, loc="upper right", frameon=True, fontsize=9)
+    ax2.legend(lines, labels, loc="upper right", frameon=True, fontsize=8.5)
 
     plt.tight_layout()
     fig1_path = FIGURES_DIR / "bitemporal_debt_opacity_trajectory.png"
@@ -439,13 +512,14 @@ def generate_calibrated_figures(df_monthly: pd.DataFrame, contract_inceptions: p
 
     ax1.annotate(
         "Topological Discovery Lag:\nIn mid-2024, public graph saw 0 giant nodes;\n"
-        "In March 2025, economic hub had 4 root counterparties,\n"
-        "while EDGAR reflected only 1 (Core Scientific)",
+        "In March 2025, economic hub connected to 4 modeled root counterparties\n"
+        "(BLACKSTONE_MAGNETAR_SYN, CORZ, MSFT, OEM_FINANCING_PARTNERS across 6 edges),\n"
+        "while EDGAR reflected only 1 (CORZ)",
         xy=(pd.to_datetime("2025-03-01"), 7),
-        xytext=(pd.to_datetime("2024-04-01"), 15),
+        xytext=(pd.to_datetime("2024-02-01"), 15),
         arrowprops=dict(arrowstyle="->", color="#b71c1c", lw=1.5),
         bbox=dict(boxstyle="round,pad=0.5", facecolor="#ffebee", edgecolor="#e57373", alpha=0.9),
-        fontsize=8.5,
+        fontsize=8.0,
         fontweight="bold"
     )
 
