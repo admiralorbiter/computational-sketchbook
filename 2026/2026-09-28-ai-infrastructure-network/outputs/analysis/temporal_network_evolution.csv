@@ -1,4 +1,4 @@
-date,description,economic_edges,economic_root_nodes,economic_components,economic_debt_usd,known_edges,known_root_nodes,known_components,known_debt_usd,corz_mw
+date,description,economic_edges,economic_root_nodes,economic_components,measured_principal_in_ledger_usd,known_edges,known_root_nodes,known_components,known_measured_principal_usd,corz_mw
 2024-01-01,"Early Neocloud (DDTL 1.0, Magnetar)",2,2,1,0.0,0,0,0,0.0,
 2024-06-04,CRWV / CORZ Initial 200 MW Colocation,6,3,1,0.0,1,2,1,0.0,200.0
 2024-06-25,CORZ Option 1 Exercise (270 MW),7,5,2,0.0,2,4,2,0.0,270.0
