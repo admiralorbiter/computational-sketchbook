@@ -802,6 +802,38 @@ erc_regional_entity.
   - Confirms the structural validity of the cross-layer JOIN out-of-sample without hindsight exaggeration or invented numbers.
   - Prepares the observatory for a genuinely prospective test on Phase 2 assets preregistered prior to real-world shock realization.
 
+---
+
+## ADR-025.2: Calibrated Retrospective Case Study, Graph Traversal Discovery, and Honest Epistemic Accounting
+
+- **Status:** Accepted (2026-09-30, Task 025.2 Calibration & Certification)
+- **Methodology Classification:** Retrospective Temporal Holdout Validation / Historical Backtest
+- **Original Pre-Specification Protocol:** [`docs/task025_prespecification.md`](task025_prespecification.md) (Restored to immutable commit `6bc951d`)
+- **Calibration Protocol Amendment:** [`docs/task025_1_calibration.md`](task025_1_calibration.md)
+- **Pre-Event Epistemic Cutoff ($t_0$):** September 23, 2026, 23:59:59 UTC
+- **Observed Shock Event:** September 24, 2026 (Oracle Force-Majeure Notice)
+- **Validation Report:** [`docs/phase1_task025_out_of_sample_validation.md`](phase1_task025_out_of_sample_validation.md)
+- **Context & Methodological Hardening:**
+  External methodological review of Task 025.1 (`f93e8be`) identified seven essential improvements to ensure complete scientific rigor:
+  1. *Protocol Immutability & Decoupling:* Restored `docs/task025_prespecification.md` to immutable commit `6bc951d`. Documented all retrospective calibration rules in a separate amendment file: `docs/task025_1_calibration.md`.
+  2. *Model Decoupling (Honest Negative Accounting):* Evaluated the original preregistered model (Hypothesis 1: PNM/WECC grid interconnect conduit) separately and scored it as **FAILED** ($P=62.5\%$, $R=71.4\%$) because it missed the operative Bloom fuel-cell microgrid and NMSLO pipeline permit choke-point. Refused to retroactively blend failed hypotheses with calibrated models.
+  3. *Algorithmic Traversal & Branching Subgraph:* Replaced hardcoded node lists in traversal functions with dynamic NetworkX graph traversals (`G.out_edges`, `G.in_edges`). Machine-asserted that every traversed edge exists in the multi-directed graph $G_{\text{join}}$. Represented the extended corporate structure as a branching tree rather than a linear sequence.
+  4. *Zero Post-Event Contract Leakage:* Stripped delay risk and rent suspension mechanisms from pre-event obligation records. Marked lease delay risk allocation as `UNKNOWN_AT_T0` and retained `None` for facility stated lease amount (adhering to ADR-021).
+  5. *Evidence Ledger Cleanup & 7-Node Truth Set:* Excised unevidenced post-event claims (`CLM-POST-BORDERPLEX-NM`) and bound `CLM-POST-NMSLO-CONFIRM` to the September 24 Reuters investigation. Established an audited 7-node truth set:
+     $$\mathcal{E}_{\text{impl}} = \{\text{NMSLO}, \text{FAC-PROJECT-JUPITER-NM}, \text{PROJECT\_JUPITER\_SPV}, \text{ORCL}, \text{CONSTRUCTION\_LENDER\_SYNDICATE}, \text{STACK\_INFRA}, \text{BLUE\_OWL}\}$$
+  6. *Honest Scoring:*
+     - Strict Linear Conduit (5 nodes): Recall = **71.43%** ($5/7$), Precision = **100.0%** ($5/5$), $F_1$ = 0.8333 (Passes $\ge 60\%$ partial threshold).
+     - Descriptive Corporate Tree (8 nodes): Precision = **87.5%** ($7/8$), Recall = **100.0%** ($7/7$), $F_1$ = 0.9333. Recorded `BORDERPLEX` as an honest False Positive rather than overfitting.
+  7. *Bitemporal Precedence & Right-Censored SEC Disclosure Analysis (H4):*
+     - Public notice lead time: **71 calendar days** (July 15 NMSLO denial to Sept 24 force majeure; lead time over Sept 18 debt report = **65 days**).
+     - SEC corporate filing lead time: **RIGHT-CENSORED at $\ge 77$ calendar days** as of September 30, 2026 (neither Oracle nor Blue Owl OBDC filed Form 8-K/10-Q regarding the force-majeure notice).
+  8. *Risk Redirection Thesis:* Documented that legal protections (force-majeure rent suspension) do not extinguish capital carrying costs; they redirect debt service obligations onto the project SPV, sponsors (STACK/Blue Owl), and construction lenders.
+- **Consequences:**
+  - Establishes a transparent and unassailable epistemic standard for retrospective case studies.
+  - Proves that physical and regulatory monitoring provides over 2.5 months of lead time over corporate SEC filings.
+  - Concludes Task 025 with zero data drift and positions the observatory for prospective Phase 2 validation.
+
+
 
 
 

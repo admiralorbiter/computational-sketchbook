@@ -2237,62 +2237,68 @@ def validate_observatory():
     else:
         with open(preevent_graph_file, "r", encoding="utf-8") as f:
             pg_data = json.load(f)
-        if pg_data.get("task_id") != "TASK-025.1":
-            sub_err.append(f"Task 025.1: Expected task_id TASK-025.1, got: {pg_data.get('task_id')}")
+        if pg_data.get("task_id") != "TASK-025.2":
+            sub_err.append(f"Task 025.2: Expected task_id TASK-025.2, got: {pg_data.get('task_id')}")
         if pg_data.get("epistemic_freeze_date") != "2026-09-23T23:59:59Z":
-            sub_err.append(f"Task 025.1: Epistemic freeze date mismatch: {pg_data.get('epistemic_freeze_date')}")
+            sub_err.append(f"Task 025.2: Epistemic freeze date mismatch: {pg_data.get('epistemic_freeze_date')}")
         if pg_data.get("total_construction_debt_usd") != 18000000000.0:
-            sub_err.append(f"Task 025.1: Construction debt mismatch: {pg_data.get('total_construction_debt_usd')}")
+            sub_err.append(f"Task 025.2: Construction debt mismatch: {pg_data.get('total_construction_debt_usd')}")
         if pg_data.get("oracle_facility_lease_usd") is not None:
-            sub_err.append(f"Task 025.1: Oracle facility lease must be None (attribution discipline), got: {pg_data.get('oracle_facility_lease_usd')}")
+            sub_err.append(f"Task 025.2: Oracle facility lease must be None (attribution discipline), got: {pg_data.get('oracle_facility_lease_usd')}")
 
     # 12.3: Validation Summary & Empirical Scoring
     val_sum_file = OUTPUTS_DIR / "analysis" / "task025_validation_summary.json"
     if not val_sum_file.exists():
-        sub_err.append(f"Task 025.1: Missing validation summary: {val_sum_file}")
+        sub_err.append(f"Task 025.2: Missing validation summary: {val_sum_file}")
     else:
         with open(val_sum_file, "r", encoding="utf-8") as f:
             vs_data = json.load(f)
-        if vs_data.get("task_id") != "TASK-025.1":
-            sub_err.append(f"Task 025.1: Expected task_id TASK-025.1, got: {vs_data.get('task_id')}")
+        if vs_data.get("task_id") != "TASK-025.2":
+            sub_err.append(f"Task 025.2: Expected task_id TASK-025.2, got: {vs_data.get('task_id')}")
         if vs_data.get("overall_calibrated_verdict") != "SUPPORTED RETROSPECTIVE TEMPORAL BACKTEST (CRITERIA MET UNDER CALIBRATED RUBRIC)":
-            sub_err.append(f"Task 025.1: Verdict mismatch: {vs_data.get('overall_calibrated_verdict')}")
+            sub_err.append(f"Task 025.2: Verdict mismatch: {vs_data.get('overall_calibrated_verdict')}")
         
         # Entity scoring assertions
         crit_eval = vs_data.get("criteria_evaluations", {})
+        orig_model = crit_eval.get("original_preregistered_model", {})
+        if not orig_model.get("verdict", "").startswith("FAILED"):
+            sub_err.append(f"Task 025.2: Original model must be reported as FAILED, got: {orig_model.get('verdict')}")
+
         strict_score = crit_eval.get("strict_linear_conduit_entity_scoring", {})
         tree_score = crit_eval.get("corporate_augmented_tree_entity_scoring", {})
-        if strict_score.get("recall", 0.0) != 0.625:
-            sub_err.append(f"Task 025.1: Strict conduit recall mismatch: {strict_score.get('recall')} vs expected 0.625")
+        if strict_score.get("recall", 0.0) != 0.7143:
+            sub_err.append(f"Task 025.2: Strict conduit recall mismatch: {strict_score.get('recall')} vs expected 0.7143")
         if strict_score.get("precision", 0.0) != 1.0:
-            sub_err.append(f"Task 025.1: Strict conduit precision mismatch: {strict_score.get('precision')} vs expected 1.0")
-        if tree_score.get("recall", 0.0) != 1.0 or tree_score.get("precision", 0.0) != 1.0:
-            sub_err.append(f"Task 025.1: Augmented tree scoring mismatch: {tree_score}")
+            sub_err.append(f"Task 025.2: Strict conduit precision mismatch: {strict_score.get('precision')} vs expected 1.0")
+        if tree_score.get("recall", 0.0) != 1.0 or tree_score.get("precision", 0.0) != 0.875:
+            sub_err.append(f"Task 025.2: Augmented tree scoring mismatch: {tree_score}")
 
         # Mechanism scoring
         mech_score = crit_eval.get("contractual_mechanism_coverage", {})
         if mech_score.get("mechanism_coverage", 0.0) < 1.0 or not mech_score.get("mechanism_test_passed"):
-            sub_err.append(f"Task 025.1: Mechanism coverage failed: {mech_score.get('mechanism_coverage')}")
+            sub_err.append(f"Task 025.2: Mechanism coverage failed: {mech_score.get('mechanism_coverage')}")
 
         # Directional stress scoring
         dir_score = crit_eval.get("directional_stress_alignment", {})
         if dir_score.get("directional_alignment") != "CONFIRMED" or not dir_score.get("alignment_passed"):
-            sub_err.append(f"Task 025.1: Directional stress alignment failed: {dir_score}")
+            sub_err.append(f"Task 025.2: Directional stress alignment failed: {dir_score}")
 
         # Hypothesis 4 Bitemporal Precedence
         h4_score = crit_eval.get("hypothesis_4_bitemporal_precedence", {})
-        if h4_score.get("lead_time_vs_force_majeure_days") != 71 or not h4_score.get("hypothesis_4_passed"):
-            sub_err.append(f"Task 025.1: Hypothesis 4 lead time verification failed: {h4_score}")
+        if h4_score.get("regulatory_to_public_notice_lead_days") != 71 or not h4_score.get("public_notice_lead_test_passed"):
+            sub_err.append(f"Task 025.2: Hypothesis 4 public notice lead time mismatch: {h4_score}")
+        if h4_score.get("preregistered_sec_filing_lead_days_right_censored") != 77 or h4_score.get("sec_filing_observed_as_of_sept30") != False:
+            sub_err.append(f"Task 025.2: Hypothesis 4 right-censored SEC status mismatch: {h4_score}")
 
     # 12.4: Validation Figure
     val_fig_file = OUTPUTS_DIR / "figures" / "task025_project_jupiter_validation.png"
     if not val_fig_file.exists():
-        sub_err.append(f"Task 025.1: Validation figure missing: {val_fig_file}")
+        sub_err.append(f"Task 025.2: Validation figure missing: {val_fig_file}")
 
     if sub_err:
         errors.extend(sub_err)
     else:
-        print("  [OK] Task 025.1: Project Jupiter Calibrated Retrospective Backtest Invariants verified (Pre-event cutoff 2026-09-23, $18.0B debt stack baseline, Jupiter lease=None, Strict Recall=62.5%, Tree Recall=100.0%, Mechanism Coverage=3/3, H4 Lead Time=71 days, Verdict=SUPPORTED RETROSPECTIVE TEMPORAL BACKTEST).")
+        print("  [OK] Task 025.2: Project Jupiter Calibrated Retrospective Backtest Invariants verified (Pre-event cutoff 2026-09-23, $18.0B debt baseline, Strict Recall=71.4%, Tree Precision=87.5%/Recall=100%, Mechanism Coverage=3/3, H4 Lead Time=71d / SEC >=77d right-censored, Verdict=SUPPORTED RETROSPECTIVE TEMPORAL BACKTEST).")
 
     if errors:
         print("\n[VALIDATION FAILED]")

@@ -1,5 +1,5 @@
 {
-  "task_id": "TASK-025.1",
+  "task_id": "TASK-025.2",
   "methodology": "Retrospective Temporal Holdout Reconstruction (as-of September 23, 2026)",
   "epistemic_freeze_date": "2026-09-23T23:59:59Z",
   "nodes_count": 8,
@@ -27,5 +27,22 @@
   "grid_interconnect_capacity_mw": null,
   "nmslo_pipeline_row_permit_status": "PERMIT_DENIED (July 15, 2026)",
   "september_18_debt_status": "TRADING_BELOW_PAR_89_91 (Baseline at t_0)",
-  "preregistered_paths_count": 2
+  "strict_conduit_nodes": [
+    "NMSLO",
+    "FAC-PROJECT-JUPITER-NM",
+    "PROJECT_JUPITER_SPV",
+    "ORCL",
+    "CONSTRUCTION_LENDER_SYNDICATE"
+  ],
+  "augmented_tree_nodes": [
+    "BLUE_OWL",
+    "BORDERPLEX",
+    "CONSTRUCTION_LENDER_SYNDICATE",
+    "FAC-PROJECT-JUPITER-NM",
+    "NMSLO",
+    "ORCL",
+    "PROJECT_JUPITER_SPV",
+    "STACK_INFRA"
+  ],
+  "structures_count": 2
 }
