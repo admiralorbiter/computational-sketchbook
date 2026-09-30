@@ -1,10 +1,10 @@
 case_id,case_name,layer_id,layer_name,origin_present,traversed_path_nodes,traversed_facilities_count,traversed_utilities_count,directly_attributed_debt_b,utility_service_capacity_mw,critical_it_contracted_mw,connected_component_nodes,connected_component_financial_perimeter_b,connected_component_physical_perimeter_mw,cross_domain_path_reconstructible
-CASE_A,Hyperscaler Demand Shock (MSFT),L1_FIN,Corporate Balance Sheet (G_fin),True,14,0,0,3.94,Not Representable (0.0),Not Representable (0.0),14,45.448,0.0,False
-CASE_A,Hyperscaler Demand Shock (MSFT),L2_CONT,Contractual / Legal Decomposed (G_cont),True,30,0,0,3.94,Not Representable (0.0),Not Representable (0.0),30,45.448,0.0,False
+CASE_A,Hyperscaler Demand Shock (MSFT),L1_FIN,Corporate Balance Sheet (G_fin),True,14,0,0,3.940,Not Representable (0.0),Not Representable (0.0),14,45.448,0.0,False
+CASE_A,Hyperscaler Demand Shock (MSFT),L2_CONT,Contractual / Legal Decomposed (G_cont),True,30,0,0,3.940,Not Representable (0.0),Not Representable (0.0),30,45.448,0.0,False
 CASE_A,Hyperscaler Demand Shock (MSFT),L3_PHYS,Physical Facility & Power (G_phys),False,0,0,0,Not Representable (0.000),Not Representable (0.0),Not Representable (0.0),0,0.0,0.0,False
 CASE_A,Hyperscaler Demand Shock (MSFT),L4_JOIN,Multi-Layer Joined Network (G_join),True,63,6,7,3.940,1176.0,990.0,63,45.448,4401.0,True
-CASE_B,GPU Collateral Value Depletion (A001),L1_FIN,Corporate Balance Sheet (G_fin),True,14,0,0,3.94,Not Representable (0.0),Not Representable (0.0),14,45.448,0.0,False
-CASE_B,GPU Collateral Value Depletion (A001),L2_CONT,Contractual / Legal Decomposed (G_cont),True,30,0,0,3.94,Not Representable (0.0),Not Representable (0.0),30,45.448,0.0,False
+CASE_B,GPU Collateral Value Depletion (A001),L1_FIN,Corporate Balance Sheet (G_fin),True,14,0,0,3.940,Not Representable (0.0),Not Representable (0.0),14,45.448,0.0,False
+CASE_B,GPU Collateral Value Depletion (A001),L2_CONT,Contractual / Legal Decomposed (G_cont),True,30,0,0,3.940,Not Representable (0.0),Not Representable (0.0),30,45.448,0.0,False
 CASE_B,GPU Collateral Value Depletion (A001),L3_PHYS,Physical Facility & Power (G_phys),False,0,0,0,Not Representable (0.000),Not Representable (0.0),Not Representable (0.0),0,0.0,0.0,False
 CASE_B,GPU Collateral Value Depletion (A001),L4_JOIN,Multi-Layer Joined Network (G_join),True,63,6,7,3.940,1176.0,990.0,63,45.448,4401.0,True
 CASE_C,Transmission Substation Delay (MDU),L1_FIN,Corporate Balance Sheet (G_fin),False,0,0,0,Not Representable (0.000),Not Representable (0.0),Not Representable (0.0),0,0.0,0.0,False

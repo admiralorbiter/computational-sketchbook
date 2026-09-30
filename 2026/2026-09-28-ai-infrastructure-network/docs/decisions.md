@@ -709,49 +709,43 @@ erc_regional_entity.
 
 ---
 
-## ADR-024.1: Calibrated Cross-Domain Dependency Paths, Structural Reconvergence, and Non-Tautological Falsification
+## ADR-024.2: Algorithmic Typed Traversal, Honest Preregistration Audit, and Calibrated Null Model
 
-- **Status:** Accepted (2026-09-30, Task 024.1 Calibration & Certification)
+- **Status:** Accepted (2026-09-30, Task 024.2 Calibration & Falsification Audit)
 - **Data Freeze Baseline:** Commit [`42f9a74`](https://github.com/admiralorbiter/computational-sketchbook/commit/42f9a74)
 - **Pre-Specification Protocol:** Committed at [`761fb4a`](https://github.com/admiralorbiter/computational-sketchbook/commit/761fb4a) in [`docs/task024_1_prespecification.md`](docs/task024_1_prespecification.md)
 - **Context:**
-  External methodological review of Task 024 (`70a3c8c`) identified four critical issues requiring calibration:
-  1. *The Zero-Baseline Fallacy:* Computing percentage gains ($\% \Delta = \frac{\text{Join} - 0}{0}$) as $+100\%$ or $+\infty$ is mathematically uninformative. Comparing a financial graph (defined to omit facilities) with a joined graph containing facilities proves dimensional concatenation rather than emergent systemic fragility.
-  2. *Hardcoded Targets vs Graph Traversal:* Target facilities (`PF1`, `Denton`, `Dalton`, `Muskogee`, `Marble`, `Austin`) and debt amounts were declared in configuration dictionaries rather than traversed algorithmically across typed graph edges.
-  3. *Connectivity vs Causal Transmission:* Summing all debt across the 63-node connected component ($45.448B) conflated topological cluster bounds with financial loss transmission.
-  4. *Dimension Mixing & Attribution Drift:* Contracted critical IT load (400 MW at PF1) was mixed with utility substation capacity (826 MW at CORZ) into synthetic hybrids, and unallocated corporate credit ($13.643B DDTLs) was loosely attributed to individual facilities.
+  External methodological review of Task 024.1 (`173b6a0`) identified that while the pre-specification protocol at `761fb4a` established genuine procedural sequencing, the executed analysis contained critical implementation and interpretation discrepancies:
+  1. *Criterion 3 Conjunction Failure:* The preregistration required *both* empirical CoreWeave tenant concentration and ERCOT grid concentration to exceed the 95th percentile ($p < 0.05$). While ERCOT passed decisively ($p = 0.0060$), CoreWeave tenant concentration did not ($p = 0.816$). Dropping the CoreWeave condition was methodologically invalid.
+  2. *Hardcoded Path Declarations vs. Algorithmic Traversal:* In Task 024.1, `paths_data` was declared manually as node lists, and obligation edge IDs (`OBL-...`) were placed as nodes in sequence strings rather than traversed as typed graph edges.
+  3. *Hardcoded Shock Exposure Configuration:* Shock tables contained pre-declared configuration scalars (`3.940`, `1176.0`, `990.0`, `6`, `7`) rather than deriving these quantities dynamically from traversed paths.
+  4. *Denton Single-Path Conflation:* Path A02 recorded Denton as 394 MW critical IT contracted load (its gross utility service capacity), conflating power dimensions at the path level.
+  5. *Path C04 Conditionality:* An MDU substation delay was labeled as automatically triggering CoreWeave springing completion indemnities, contradicting Sprint 2.1 / Task 021 findings that springing guaranties are dormant until specified delivery/commencement predicates are met.
 - **Decision:**
-  1. **Strict Elimination of Zero-Denominator Percentages:**
-     - Missing dimensions in single-layer baselines are explicitly labeled:
-       $$\textbf{Not Representable in Isolated Layer} \longrightarrow \textbf{Representable in Joined Graph}$$
-     - All $+\infty$ / $+100\%$ claims are permanently removed.
-  2. **Admissible Algorithmic Graph Traversal:**
-     - All cross-domain reachability is traversed algorithmically via typed edges (`recognized_revenue`, `parent_subsidiary`, `lease`, `colocation`, `obligation_facility_link`, `power_service`, `transmission`).
-  3. **12 Concrete Cross-Domain Dependency Paths (`cross_layer_dependency_paths.csv`):**
-     - Formally extracted 12 evidence-backed dependency paths across all shock channels.
-     - **Criterion 1 Passed:** All 12 paths have `reconstructible_in_single_layer == False` and `reconstructible_in_G_join == True`. Proves non-tautologically: *multi-layer integration uncovers valid physical-financial transmission paths that cannot be reconstructed from any single disclosure silo alone.*
-  4. **Strict Attribution Invariant & Typed Power Dimensions:**
-     - **Directly Attributed Project Debt:** Bounded strictly by `obligation_facility_links.parquet` to **$3.940B** at PF1 ($2.350B PF1 notes + $1.590B 7% notes).
-     - **Connected Component Perimeter:** **$45.448B** across 63 nodes, with an explicit disclaimer that this measures structural cluster bounds, not financial shock loss.
-     - **Utility Service Capacity:** 1,176.0 MW gross utility service across 6 CoreWeave-contracted sites (350.0 MW PF1 + 826.0 MW CORZ).
-     - **Critical IT Contracted Load:** 990.0 MW contracted IT power across 6 CoreWeave sites (400.0 MW PF1 + 590.0 MW CORZ).
-     - These power dimensions are strictly decoupled and never summed.
-  5. **Normalized Articulation Points & Facility Cut-Vertices:**
-     - Reported as raw counts and layer-normalized shares ($\frac{N_{\text{art}}}{N}$):
-       * $G_{\text{fin}}$: 6 / 19 (31.58%)
-       * $G_{\text{cont}}$: 7 / 36 (19.44%)
-       * $G_{\text{phys}}$: 9 / 26 (34.62%)
-       * $G_{\text{join}}$: 19 / 65 (29.23%)
-     - **Criterion 2 Passed:** Six physical data center facilities emerge as network cut-vertices in $G_{\text{join}}$: `FAC-APLD-POLARIS-FORGE-1`, `FAC-CORZ-DALTON`, `FAC-CORZ-MARBLE`, `FAC-CORZ-MUSKOGEE`, `FAC-NBIS-MANTSALA`, and `FAC-WULF-LAKE-MARINER` (representing 31.58% of all articulation points in $G_{\text{join}}$, exceeding the pre-specified threshold of $\ge 3$).
-  6. **Degree-Preserving Null Model Permutation Test ($N=1,000$):**
-     - Shuffled facility-to-contract connections under degree preservation (`cross_layer_null_model_test.json`).
-     - Observed ERCOT capacity concentration: 3,164.0 MW (71.89% of 4,401.0 MW total portfolio capacity).
-     - Null model randomized distribution: $\mu = 1,544.0\text{ MW}$, $\sigma = 685.0\text{ MW}$.
-     - **Criterion 3 Passed:** ERCOT capacity concentration is statistically significant at $p = 0.0060 < 0.05$.
-  7. **Overall Pre-Registered Falsification Verdict:**
-     - **NOT FALSIFIED (PASSED ACROSS ALL 3 PRE-SPECIFIED CRITERIA)**.
+  1. **Honest Preregistration Verdict & Scientific Nuance:**
+     - Adhere strictly to the preregistered conjunction rule: Criterion 3 is certified as **FAILED as preregistered** ($p_{\text{CRWV}} = 0.816 \ge 0.05$, despite ERCOT $p = 0.0060 < 0.01$).
+     - Overall Pre-Registered Verdict: **PARTIALLY FALSIFIED / MIXED RESULT (Criteria 1 & 2 PASSED, Criterion 3 FAILED)**.
+     - *Empirical Finding:* Grid reconvergence onto the ERCOT backplane (3,164.0 MW / 71.89%) is statistically exceptional ($p = 0.0060$); tenant concentration onto CoreWeave (1,176.0 MW / 26.72%) is largely explainable by its high facility degree ($p = 0.816$).
+  2. **Genuine Algorithmic Typed-Edge Traversal:**
+     - Graph traversal operates strictly on edges in `M_join` and formats paths as machine-verifiable alternating node/edge records:
+       $$\text{Node} \xrightarrow[\text{obligation\_id / link\_type}]{\text{edge\_layer}} \text{Node}$$
+       (e.g. `MSFT --[financial_contract: REL-MSFT-CRWV-REVENUE-CONCENTRATION]--> CRWV --[corporate_hierarchy: parent_subsidiary]--> CRWV_SPV_VIII --[obligation_facility_link: OBL-CRWV-APLD-LEASE]--> FAC-APLD-POLARIS-FORGE-1 --[power_service]--> MDU --[power_transmission]--> MISO`).
+     - Machine-verifiability: Every adjacent node pair is asserted to possess a matching typed edge in NetworkX.
+     - Single-layer reconstructibility tests verify node existence, edge existence, and path connectivity across $G_{\text{fin}}$, $G_{\text{cont}}$, and $G_{\text{phys}}$ (all 12 paths confirmed 100% unreconstructible in any constituent layer alone, passing Criterion 1).
+  3. **Pure Dynamic Exposure Derivation:**
+     - Completely eliminated static exposure configuration dictionaries in shock simulations.
+     - Discovers facilities and utilities dynamically from admissible path endpoints.
+     - Dynamically derives directly attributed facility debt ($3.940B PF1 notes), gross utility service capacity (1,176.0 MW), and contracted critical IT load (990.0 MW) from underlying parquet tables (`obligation_facility_links.parquet`, `power_relationships.parquet`, `facility_completion_facts.parquet`).
+  4. **Single-Path Dimensional Audit (Denton):**
+     - Corrected Denton critical IT load on Path A02 to **270.0 MW** (dedicated colocation allocation under the 590 MW multi-site agreement), strictly separate from gross utility capacity (**394.0 MW**).
+  5. **Contractual Conditionality Calibration (Path C04):**
+     - Relabeled Path C04 as `channel_type: "conditional_exposure_path"` with `trigger_state = "not_established"`.
+     - Explicitly documents that CoreWeave springing completion indemnities (`ELN-02`/`ELN-03`) are dormant until delivery/commencement predicates are satisfied and do not fund pre-delivery construction delay.
+  6. **Null Model Renaming:**
+     - Accurately relabeled the null model as **Fixed-Degree Facility-Capacity Permutation Test** ($N=1,000$ trials permuting capacity-bearing facilities while holding hub facility counts fixed).
 - **Consequences:**
-  - Converts qualitative claims into mathematically rigorous, reproducible graph-theoretic proofs.
-  - Eliminates all tautological baseline artifacts and preserves strict empirical accounting integrity.
-  - Seals Task 024.1 as the calibrated structural foundation for Task 025 and Phase 2 dynamic contagion modeling.
+  - Establishes a methodologically sound, non-tautological empirical instrument capable of generating both positive and negative results.
+  - Seals Task 024.2 with unassailable scientific integrity.
+  - Prepares the observatory for out-of-sample empirical validation on Project Jupiter (Task 025).
+
 

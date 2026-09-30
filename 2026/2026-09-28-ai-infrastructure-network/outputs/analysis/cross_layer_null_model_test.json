@@ -1,4 +1,5 @@
 {
+  "null_model_name": "Fixed-Degree Facility-Capacity Permutation Test",
   "null_model_trials": 1000,
   "total_portfolio_capacity_mw": 4401.0,
   "ercot_grid_concentration": {
@@ -15,7 +16,9 @@
     "observed_share_pct": 26.72,
     "null_model_mean_mw": 1882.0,
     "null_model_std_mw": 718.9,
-    "p_value": 0.816
+    "p_value": 0.816,
+    "statistically_significant_at_05": false
   },
-  "criterion_3_passed": true
+  "criterion_3_preregistered_conjunction_passed": false,
+  "criterion_3_verdict_note": "Criterion 3 failed under the strict preregistered conjunction rule because CoreWeave tenant concentration (p = 0.816) was not unusually high relative to random facility assignment, while ERCOT grid concentration (p = 0.0060) passed decisively. This proves grid reconvergence is statistically exceptional, whereas tenant concentration is explainable by facility degree."
 }

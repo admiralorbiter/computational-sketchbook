@@ -1,10 +1,10 @@
 {
-  "task_id": "TASK-024.1",
-  "title": "Calibrated Cross-Domain Dependency Paths & Structural Reconvergence",
+  "task_id": "TASK-024.2",
+  "title": "Algorithmic Typed Traversal & Honest Preregistration Audit",
   "data_freeze_commit": "42f9a74",
   "as_of_date": "2026-09-28",
   "pre_specified_protocol_commit": "761fb4a",
-  "falsification_verdict": "NOT FALSIFIED (PASSED)",
+  "falsification_verdict": "PARTIALLY FALSIFIED / MIXED RESULT (Criteria 1 & 2 PASSED, Criterion 3 FAILED)",
   "layers": {
     "L1_FIN": {
       "name": "Corporate Balance Sheet (G_fin)",
@@ -93,10 +93,15 @@
       "passed": true
     },
     "criterion_3_null_model_concentration": {
+      "null_model_name": "Fixed-Degree Facility-Capacity Permutation Test",
       "ercot_p_value": 0.006,
-      "passed": true
+      "ercot_passed": true,
+      "coreweave_p_value": 0.816,
+      "coreweave_passed": false,
+      "passed": false,
+      "note": "Criterion 3 failed under the strict preregistered conjunction rule because CoreWeave tenant concentration (p = 0.816) was not unusually high relative to random facility assignment, while ERCOT grid concentration (p = 0.0060) passed decisively. This proves grid reconvergence is statistically exceptional, whereas tenant concentration is explainable by facility degree."
     },
-    "overall_verdict": "NOT FALSIFIED (PASSED ACROSS ALL 3 CRITERIA)"
+    "overall_verdict": "PARTIALLY FALSIFIED / MIXED RESULT (Criteria 1 & 2 PASSED, Criterion 3 FAILED)"
   },
   "reconvergence": {
     "coreweave_tenant_utility_mw": 1176.0,
