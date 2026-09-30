@@ -890,6 +890,10 @@ def validate_observatory():
         if ddtl3["rate_type"] != "floating" or ddtl3["benchmark"] != "SOFR" or abs(ddtl3["margin_bps"] - 400.0) > 0.01:
             errors.append(f"DDTL 3.0 typed rate mismatch: {ddtl3['rate_type']}, margin={ddtl3['margin_bps']} bps")
 
+        ddtl4 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-DEBT-DDTL4"].iloc[0]
+        if ddtl4["rate_type"] != "rate_legs":
+            errors.append(f"DDTL 4.0 typed rate_type mismatch: {ddtl4['rate_type']} (expected rate_legs)")
+
         ddtl5 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-DEBT-DDTL5"].iloc[0]
         if ddtl5["rate_type"] != "floating" or ddtl5["benchmark"] != "SOFR" or abs(ddtl5["margin_bps"] - 450.0) > 0.01:
             errors.append(f"DDTL 5.0 typed rate mismatch: {ddtl5['rate_type']}, margin={ddtl5['margin_bps']} bps")
@@ -902,17 +906,55 @@ def validate_observatory():
         if conv32["rate_type"] != "fixed" or abs(conv32["fixed_coupon"] - 0.0175) > 0.0001:
             errors.append(f"2032 Convertibles typed rate mismatch: {conv32['rate_type']}, coupon={conv32['fixed_coupon']}")
 
-        print("  [OK] Typed contractual rate schema verified across obligations (floating, fixed, spread grids).")
+        # Validate discrete rate legs table
+        rate_legs_df = pd.read_parquet(PROCESSED_DIR / "obligation_rate_legs.parquet")
+        if len(rate_legs_df) < 2:
+            errors.append(f"Expected at least 2 rate legs in obligation_rate_legs.parquet, found {len(rate_legs_df)}")
+        ddtl4_legs = rate_legs_df[rate_legs_df["obligation_id"] == "OBL-CRWV-DEBT-DDTL4"]
+        if len(ddtl4_legs) != 2:
+            errors.append(f"Expected 2 rate legs for DDTL 4.0, found {len(ddtl4_legs)}")
+        else:
+            flt_leg = ddtl4_legs[ddtl4_legs["leg_type"] == "floating"].iloc[0]
+            fix_leg = ddtl4_legs[ddtl4_legs["leg_type"] == "fixed"].iloc[0]
+            if flt_leg["principal"] != 1400000000.0 or flt_leg["margin_bps"] != 225.0:
+                errors.append(f"DDTL 4.0 floating leg mismatch: {flt_leg['principal']}, margin={flt_leg['margin_bps']}")
+            if fix_leg["principal"] != 1437000000.0 or abs(fix_leg["fixed_coupon"] - 0.0635) > 1e-4:
+                errors.append(f"DDTL 4.0 fixed leg mismatch: {fix_leg['principal']}, coupon={fix_leg['fixed_coupon']}")
 
-        # 2. Validate ContractualRate computation & spread grid tiers
+        print("  [OK] Typed contractual rate schema and discrete rate legs verified across obligations.")
+
+        # 2. Validate ContractualRate computation & strict rate semantics
         c_fixed = ContractualRate(rate_type="fixed", fixed_coupon=0.0975)
         if abs(c_fixed.compute_rate() - 0.0975) > 1e-6:
             errors.append(f"ContractualRate fixed calculation failed: {c_fixed.compute_rate()}")
 
-        c_flt = ContractualRate(rate_type="floating", benchmark="SOFR", margin_bps=450.0)
-        if abs(c_flt.compute_rate(sofr_rate=0.053) - 0.098) > 1e-6:
-            errors.append(f"ContractualRate floating calculation failed: {c_flt.compute_rate(sofr_rate=0.053)}")
+        # Missing fixed coupon returns None (fails closed)
+        c_fix_none = ContractualRate(rate_type="fixed", fixed_coupon=None)
+        if c_fix_none.compute_rate() is not None:
+            errors.append("ContractualRate with None fixed coupon should return None (failed closed)")
 
+        # Floating rate with benchmark floor: max(base, floor) + margin
+        c_flt = ContractualRate(rate_type="floating", benchmark="SOFR", margin_bps=300.0, floor_bps=100.0)
+        r_subfloor = c_flt.compute_rate(sofr_rate=0.005)  # 0.5% SOFR < 1.0% floor -> 1.0% + 3.0% = 4.0%
+        if abs(r_subfloor - 0.040) > 1e-6:
+            errors.append(f"ContractualRate floating benchmark floor failed: {r_subfloor} (expected 0.040)")
+
+        # Unrecognized benchmark fails closed
+        c_bad_bm = ContractualRate(rate_type="floating", benchmark="UNRECOGNIZED", margin_bps=300.0)
+        if c_bad_bm.compute_rate() is not None:
+            errors.append("ContractualRate with unrecognized benchmark should return None (failed closed)")
+
+        # Unknown spread grid raises ValueError (fails closed)
+        c_bad_grid = ContractualRate(rate_type="spread_grid", spread_grid_id="GRID-NONEXISTENT")
+        caught_bad_grid = False
+        try:
+            c_bad_grid.compute_rate()
+        except ValueError:
+            caught_bad_grid = True
+        if not caught_bad_grid:
+            errors.append("ContractualRate with unknown spread_grid_id should raise ValueError (failed closed)")
+
+        # Real spread_grids.yml loading and tier checks
         c_grid = ContractualRate(rate_type="spread_grid", benchmark="SOFR", spread_grid_id="GRID-CRWV-DDTL2")
         grid_tier_checks = [
             ("specified_investment_grade", 0.053 + 0.0600),
@@ -925,12 +967,70 @@ def validate_observatory():
             if abs(computed_r - expected_r) > 1e-6:
                 errors.append(f"GRID-CRWV-DDTL2 tier {tier} mismatch: {computed_r} (expected {expected_r})")
 
-        print("  [OK] ContractualRate calculation verified: fixed coupons, benchmark margins, and GRID-CRWV-DDTL2 tiers (6.0%-13.0%).")
+        print("  [OK] ContractualRate calculation verified: benchmark floor semantics, strict null returns, and YAML-loaded spread grids.")
 
-        # 3. Validate EpistemicResolver KnowledgeState and Universal Zero-Lookahead Invariant
+        # 3. Validate EpistemicResolver KnowledgeState, Null-Safety, and Zero-Lookahead Invariant
+        # Type safety: NaN must never be treated as known
+        ks_nan = KnowledgeState(status="known", value=float("nan"))
+        if ks_nan.is_known:
+            errors.append("KnowledgeState.is_known returned True for NaN value!")
+        if not ks_nan.is_unknown:
+            errors.append("KnowledgeState with NaN value should have is_unknown=True!")
+
+        # 4. Direct Resolver Temporal Matrix for 9.75% Notes (Historical Observation Selection)
+        r_apr13 = EpistemicResolver(as_of_date="2026-04-13", temporal_mode="known")
+        ks_apr13 = r_apr13.resolve_fact(obligation_id="OBL-CRWV-DEBT-NOTES-2031-975", attribute="principal_outstanding")
+        if ks_apr13.status != "not_yet_existent" or ks_apr13.value is not None or ks_apr13.is_known:
+            errors.append(f"9.75% Notes @ 2026-04-13 mismatch: status={ks_apr13.status}, val={ks_apr13.value} (expected not_yet_existent, None)")
+
+        r_apr15 = EpistemicResolver(as_of_date="2026-04-15", temporal_mode="known")
+        ks_apr15 = r_apr15.resolve_fact(obligation_id="OBL-CRWV-DEBT-NOTES-2031-975", attribute="principal_outstanding")
+        if ks_apr15.status != "known" or ks_apr15.value != 1750000000.0 or not ks_apr15.is_known:
+            errors.append(f"9.75% Notes @ 2026-04-15 mismatch: status={ks_apr15.status}, val={ks_apr15.value} (expected known, $1.75B)")
+
+        r_apr22 = EpistemicResolver(as_of_date="2026-04-22", temporal_mode="known")
+        ks_apr22 = r_apr22.resolve_fact(obligation_id="OBL-CRWV-DEBT-NOTES-2031-975", attribute="principal_outstanding")
+        if ks_apr22.status != "known" or ks_apr22.value != 2750000000.0 or not ks_apr22.is_known:
+            errors.append(f"9.75% Notes @ 2026-04-22 mismatch: status={ks_apr22.status}, val={ks_apr22.value} (expected known, $2.75B)")
+
+        r_jun30 = EpistemicResolver(as_of_date="2026-06-30", temporal_mode="known")
+        ks_jun30 = r_jun30.resolve_fact(obligation_id="OBL-CRWV-DEBT-NOTES-2031-975", attribute="principal_outstanding")
+        if ks_jun30.status != "known" or ks_jun30.value != 2750000000.0 or not ks_jun30.is_known:
+            errors.append(f"9.75% Notes @ 2026-06-30 mismatch: status={ks_jun30.status}, val={ks_jun30.value} (expected known, $2.75B)")
+
+        print("  [OK] EpistemicResolver temporal matrix verified for 9.75% Notes: 2026-04-13 (not_yet_existent) -> 2026-04-15 ($1.75B) -> 2026-04-22 ($2.75B) -> 2026-06-30 ($2.75B).")
+
+        # 5. Anchor Customer Demand Trim Temporal Isolation (Zero-Escape Audit Trail)
+        from src.graph import ObligationNetwork
+        net_feb01 = ObligationNetwork().known_as_of("2026-02-01")
+        eng_feb01 = FinancialStressEngine(network=net_feb01)
+        res_feb01 = eng_feb01.simulate_anchor_customer_trim()
+        if res_feb01["base_recognized_revenue_usd"] is not None:
+            errors.append("Anchor customer revenue should be None on 2026-02-01 (disclosed March 2, 2026)")
+        if res_feb01["annual_revenue_loss_usd"] is not None:
+            errors.append("Anchor customer revenue loss should be None on 2026-02-01")
+        if "3.438" in res_feb01["transmission_narrative"] or "3438" in res_feb01["transmission_narrative"]:
+            errors.append("Anchor customer narrative leaked $3.438B on 2026-02-01 in known mode!")
+
+        net_mar03 = ObligationNetwork().known_as_of("2026-03-03")
+        eng_mar03 = FinancialStressEngine(network=net_mar03)
+        res_mar03 = eng_mar03.simulate_anchor_customer_trim()
+        if res_mar03["base_recognized_revenue_usd"] != 3438000000.0:
+            errors.append(f"Anchor customer revenue mismatch on 2026-03-03: {res_mar03['base_recognized_revenue_usd']} (expected $3.438B)")
+
+        print("  [OK] Anchor Customer Demand Trim verified: 2026-02-01 (unknown/None, zero leaks) -> 2026-03-03 ($3.438B known).")
+
+        # 6. Discrete Rate Legs Debt Service Engine Verification (DDTL 4.0)
+        res_default = EpistemicResolver()
+        srv_ddtl4 = res_default.compute_obligation_debt_service("OBL-CRWV-DEBT-DDTL4", 2837000000.0, {})
+        expected_srv_ddtl4 = (1400000000.0 * (0.053 + 0.0225)) + (1437000000.0 * 0.0635)  # $105.70M + $91.25M = $196.95M
+        if abs(srv_ddtl4 - expected_srv_ddtl4) > 1e-4:
+            errors.append(f"DDTL 4.0 rate legs debt service mismatch: ${srv_ddtl4/1e6:.2f}M (expected ${expected_srv_ddtl4/1e6:.2f}M)")
+        else:
+            print(f"  [OK] DDTL 4.0 discrete rate legs debt service verified: ${srv_ddtl4/1e6:.2f}M/yr ($1.400B floating + $1.437B fixed).")
+
+        # 7. Unfiled periodic disclosures must resolve to unknown with None value on June 30
         resolver_jun = EpistemicResolver(as_of_date="2026-06-30", temporal_mode="known")
-        
-        # Unfiled periodic disclosures must resolve to unknown with None value
         ks_mat = resolver_jun.resolve_fact(entity_id="CRWV", attribute="debt_maturities")
         if ks_mat.status != "unknown" or ks_mat.value is not None or ks_mat.is_known:
             errors.append(f"Resolver failed to isolate unfiled CRWV debt_maturities on 2026-06-30: status={ks_mat.status}, val={ks_mat.value}")
@@ -972,7 +1072,7 @@ def validate_observatory():
         if not caught_poison:
             errors.append("Universal Zero-Lookahead Invariant failed to detect non-null value in unknown state!")
 
-        print("  [OK] EpistemicResolver verified: audit trail, strict unknown=None rule, and Universal Zero-Lookahead Invariant enforcement.")
+        print("  [OK] EpistemicResolver certified: audit trail, strict unknown=None rule, and Universal Zero-Lookahead Invariant enforcement.")
 
     except Exception as e:
         errors.append(f"Error during Step 2 generic engine layer validation: {e}")

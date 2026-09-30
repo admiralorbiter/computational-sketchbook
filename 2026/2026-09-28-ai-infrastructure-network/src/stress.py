@@ -295,8 +295,8 @@ class FinancialStressEngine:
           Building 4 (150 MW, ~$4.13B) carries no CoreWeave parent springing guarantee (guaranteed by APLD parent).
         """
         ks_rev = self.resolver.resolve_fact(obligation_id="REL-MSFT-CRWV-REVENUE-CONCENTRATION", attribute="recognized_revenue")
-        base_revenue = float(ks_rev.value) if ks_rev.is_known else 3437770000.0
-        annual_rev_loss = base_revenue * trim_pct  # $1.031B/yr at 30%
+        base_revenue = float(ks_rev.value) if ks_rev.is_known else None
+        annual_rev_loss = (base_revenue * trim_pct) if base_revenue is not None else None
 
         # Derive CoreWeave annual debt service dynamically across active funded debt tranches:
         all_debt_known = True
@@ -309,51 +309,62 @@ class FinancialStressEngine:
                 if not ks.is_known:
                     all_debt_known = False
                 else:
-                    crate = ContractualRate.from_edge(d)
-                    rate = crate.compute_rate(sofr_rate=0.053)
-                    if rate == 0.0:
-                        rate = 0.085
-                    annual_debt_service += float(ks.value) * rate
+                    # Use resolver's discrete rate legs / contractual rate calculation
+                    srv = self.resolver.compute_obligation_debt_service(
+                        obligation_id=k,
+                        total_principal=float(ks.value),
+                        edge_data=d,
+                        sofr_rate=0.053
+                    )
+                    if srv is None:
+                        all_debt_known = False
+                    else:
+                        annual_debt_service += srv
 
         if self.temporal_mode in ["known", "knowledge"]:
             if not all_debt_known or annual_debt_service == 0.0:
                 annual_debt_service = None
         else:
-            if annual_debt_service == 0.0:
-                annual_debt_service = (
-                    10806000000.0 * 0.085 + 2837000000.0 * 0.075 + 10029000000.0 * 0.095 +
-                    6588000000.0 * 0.01875 + 4220000000.0 * 0.11 + 882000000.0 * 0.10
-                )
+            if not all_debt_known or annual_debt_service == 0.0:
+                annual_debt_service = None
 
-        # Polaris Forge 1 lease rent: $11.0B / 15 years = $733.3M/yr fully energized (~$275.0M/yr operational 150 MW)
-        annual_full_lease_rent = 11000000000.0 / 15.0
-        operational_lease_rent = annual_full_lease_rent * (150.0 / 400.0)
+        # Polaris Forge 1 lease rent resolved via epistemic resolver:
+        ks_lease = self.resolver.resolve_fact(obligation_id="OBL-CRWV-APLD-LEASE", attribute="lifetime_contract_value")
+        if ks_lease.is_known:
+            lease_val = float(ks_lease.value)
+            annual_full_lease_rent = lease_val / 15.0  # $733.3M/yr fully energized
+            operational_lease_rent = annual_full_lease_rent * (150.0 / 400.0)  # ~$275.0M/yr operational 150 MW
+        else:
+            annual_full_lease_rent = None
+            operational_lease_rent = None
 
-        total_annual_commitments = (annual_debt_service + annual_full_lease_rent) if annual_debt_service is not None else None
+        total_annual_commitments = (annual_debt_service + annual_full_lease_rent) if (annual_debt_service is not None and annual_full_lease_rent is not None) else None
         crwv_cash = self.financials.get("CRWV", {}).get("cash_and_equivalents", 5520000000.0)
 
         # Springing Guarantees Scope:
-        # Legal terms cover Base Rent, Additional Rent, charges, and performance obligations under SPV leases (uncapped fixed face value).
-        # Class C reference exposure proxy for Building 3 (150 MW / 400 MW * $11.0B): ~$4.125B.
-        eln03_reference_proxy_usd = 4125000000.0
+        ks_eln03 = self.resolver.resolve_fact(obligation_id="OBL-CRWV-APLD-GUARANTY-ELN03", attribute="reference_exposure_estimate")
+        eln03_reference_proxy_usd = float(ks_eln03.value) if ks_eln03.is_known else None
 
-        coverage_ratio = (crwv_cash / total_annual_commitments) if total_annual_commitments else None
+        coverage_ratio = (crwv_cash / total_annual_commitments) if (total_annual_commitments and crwv_cash) else None
 
-        if annual_debt_service is None:
+        rev_loss_desc = f"${annual_rev_loss/1e9:.2f}B/yr" if annual_rev_loss is not None else "an unmeasured amount"
+        eln03_desc = f"(carrying a Class C reference proxy of ${eln03_reference_proxy_usd/1e9:.2f}B)" if eln03_reference_proxy_usd is not None else "(carrying an unmeasured Class C reference proxy)"
+
+        if annual_debt_service is None or base_revenue is None:
             narrative = (
-                f"A {int(trim_pct*100)}% demand trim on Microsoft's recognized revenue reduces CoreWeave's cash inflow by ${annual_rev_loss/1e9:.2f}B/yr. "
+                f"A {int(trim_pct*100)}% demand trim on Microsoft's recognized revenue reduces CoreWeave's cash inflow by {rev_loss_desc}. "
                 f"As of {self.as_of_date}, CoreWeave annual debt service across all funded tranches remains unmeasured and undisclosed prior to the Form 10-Q filing on 2026-08-12. "
                 f"If Microsoft is the Colocation Customer at SPV VIII (Building ELN-03) and reduces colocation payments, this fulfills the literal predicate of Springing Event (ii) under Exhibit 10.2, "
-                f"conditionally activating CoreWeave parent's Unconditional Springing Guaranty on Building ELN-03 (carrying a Class C reference proxy of ${eln03_reference_proxy_usd/1e9:.2f}B) "
+                f"conditionally activating CoreWeave parent's Unconditional Springing Guaranty on Building ELN-03 {eln03_desc} "
                 f"and potentially Exhibit 10.1 for the Building 2 SPV lease (Phase 2/4 Space, 2 of 4 data halls; unstated face value). "
                 f"Building 4 ($4.13B, 150 MW) is excluded as it carries no CoreWeave parent guarantee."
             )
         else:
             narrative = (
-                f"A {int(trim_pct*100)}% demand trim on Microsoft's recognized revenue reduces CoreWeave's cash inflow by ${annual_rev_loss/1e9:.2f}B/yr. "
+                f"A {int(trim_pct*100)}% demand trim on Microsoft's recognized revenue reduces CoreWeave's cash inflow by {rev_loss_desc}. "
                 f"Against ${total_annual_commitments/1e9:.2f}B in annual debt service and facility commitments, if Microsoft is the Colocation Customer "
                 f"at SPV VIII (Building ELN-03) and reduces colocation payments, this fulfills the literal predicate of Springing Event (ii) under Exhibit 10.2, "
-                f"conditionally activating CoreWeave parent's Unconditional Springing Guaranty on Building ELN-03 (carrying a Class C reference proxy of ${eln03_reference_proxy_usd/1e9:.2f}B) "
+                f"conditionally activating CoreWeave parent's Unconditional Springing Guaranty on Building ELN-03 {eln03_desc} "
                 f"and potentially Exhibit 10.1 for the Building 2 SPV lease (Phase 2/4 Space, 2 of 4 data halls; unstated face value). "
                 f"Building 4 ($4.13B, 150 MW) is excluded as it carries no CoreWeave parent guarantee."
             )
@@ -373,7 +384,7 @@ class FinancialStressEngine:
             "crwv_cash_buffer_usd": crwv_cash,
             "coverage_years": round(coverage_ratio, 2) if coverage_ratio is not None else None,
             "eln03_reference_proxy_usd": eln03_reference_proxy_usd,
-            "debt_service_proxy_flag": "Modeled rate proxy (Phase 1 backlog: facility-level coupon engine)",
+            "debt_service_proxy_flag": "Contractual discrete rate legs and coupon engine",
             "springing_event_analyzed": "Springing Event (ii) - Colocation Agreement Payment Cessation or Material Reduction",
             "conditional_join_status": "Conditional: requires Microsoft to be the specific Colocation Customer at Building ELN-03",
             "transmission_narrative": narrative

@@ -1975,7 +1975,7 @@ def build_obligations():
         "OBL-CRWV-DEBT-DDTL2": {"rate_type": "spread_grid", "benchmark": "SOFR", "margin_bps": 600.0, "floor_bps": 0.0, "fixed_coupon": None, "spread_grid_id": "GRID-CRWV-DDTL2"},
         "OBL-CRWV-DEBT-DDTL2-1": {"rate_type": "floating", "benchmark": "SOFR", "margin_bps": 425.0, "floor_bps": 0.0, "fixed_coupon": None, "spread_grid_id": None},
         "OBL-CRWV-DEBT-DDTL3": {"rate_type": "floating", "benchmark": "SOFR", "margin_bps": 400.0, "floor_bps": 0.0, "fixed_coupon": None, "spread_grid_id": None},
-        "OBL-CRWV-DEBT-DDTL4": {"rate_type": "floating", "benchmark": "SOFR", "margin_bps": 350.0, "floor_bps": 0.0, "fixed_coupon": None, "spread_grid_id": None},
+        "OBL-CRWV-DEBT-DDTL4": {"rate_type": "rate_legs", "benchmark": "SOFR", "margin_bps": 225.0, "floor_bps": 0.0, "fixed_coupon": 0.0635, "spread_grid_id": None},
         "OBL-CRWV-DEBT-DDTL5": {"rate_type": "floating", "benchmark": "SOFR", "margin_bps": 450.0, "floor_bps": 0.0, "fixed_coupon": None, "spread_grid_id": None},
         "OBL-CRWV-DEBT-NOTES-2030": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0925, "spread_grid_id": None},
         "OBL-CRWV-DEBT-NOTES-2031-900": {"rate_type": "fixed", "benchmark": None, "margin_bps": None, "floor_bps": None, "fixed_coupon": 0.0900, "spread_grid_id": None},
@@ -3106,6 +3106,40 @@ def build_obligation_facts_table():
     return df
 
 
+def build_obligation_rate_legs() -> pd.DataFrame:
+    """Build discrete contractual rate legs for mixed-rate obligations."""
+    legs = [
+        {
+            "leg_id": "LEG-CRWV-DDTL4-FLOATING",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL4",
+            "leg_type": "floating",
+            "principal": 1400000000.0,
+            "benchmark": "SOFR",
+            "margin_bps": 225.0,
+            "floor_bps": 0.0,
+            "fixed_coupon": None,
+            "spread_grid_id": None,
+            "description": "DDTL 4.0 Floating Tranche ($1.400B at Term SOFR + 2.25%)"
+        },
+        {
+            "leg_id": "LEG-CRWV-DDTL4-FIXED",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL4",
+            "leg_type": "fixed",
+            "principal": 1437000000.0,
+            "benchmark": None,
+            "margin_bps": None,
+            "floor_bps": None,
+            "fixed_coupon": 0.0635,
+            "spread_grid_id": None,
+            "description": "DDTL 4.0 Fixed Tranche ($1.437B at UST 3.14yr + 2.00% fixed at funding)"
+        }
+    ]
+    df = pd.DataFrame(legs)
+    df.to_parquet(PROCESSED_DIR / "obligation_rate_legs.parquet", index=False)
+    df.to_csv(PROCESSED_DIR / "obligation_rate_legs.csv", index=False)
+    return df
+
+
 if __name__ == "__main__":
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     df_ent = build_entities_table()
@@ -3114,9 +3148,11 @@ if __name__ == "__main__":
     df_obl = build_obligations()
     df_evt = build_obligation_events()
     df_facts = build_obligation_facts_table()
+    df_legs = build_obligation_rate_legs()
     print(f"Entities: {len(df_ent)} rows")
     print(f"Assumptions: {len(df_ass)} rows")
     print(f"Evidence Claims: {len(df_clm)} rows")
     print(f"Obligations: {len(df_obl)} rows")
     print(f"Obligation Events: {len(df_evt)} rows")
     print(f"Obligation Facts: {len(df_facts)} rows")
+    print(f"Obligation Rate Legs: {len(df_legs)} rows")
