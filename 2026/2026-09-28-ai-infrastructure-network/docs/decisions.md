@@ -285,26 +285,31 @@ This log records the durable architectural, methodological, and data design choi
   4. *Static Roster Trap (Framing Expansion as a Fixed Company List):* The core research objective of Phase 1 is **boundary-crossing edge expansion**, not accumulating 25–30 disconnected balance sheets. Companies are merely entry points. Every primary filing analyzed must be authorized to spawn borrower SPVs, project vehicles, lender funds, equipment vendors, and anchor customer relationships outside the nominal list.
 - **Decision:**
   1. **Define Five Formal Ingestion & Source Classes:**
-     - `public_us_xbrl`: US domestic reporting companies filing Form 10-K/10-Q with structured XBRL. Ingested via automated `data.sec.gov` pipeline.
-     - `foreign_private_issuer`: Foreign private issuers using Form 20-F and Form 6-K (`NBIS` Nebius Group). Ingested via specialized 20-F/6-K parsing adapter. Note that `IREN` (Iris Energy), while Australian-incorporated, files US Form 10-K/10-Q and is ingested via `public_us_xbrl`.
-     - `private_evidence_only`: Unregistered private operating companies (`LAMBDA`, `CRUSOE`, `TOGETHER`). Ingested via relationship-first / evidence-ledger mechanisms (Form D filings, official credit announcements, verified contract disclosures). Explicitly tolerated with `financials.parquet` accounting baseline omitted/set to `None`.
-     - `capital_provider`: Asset managers, private credit fund sponsors, and bank syndicates (`BLACKSTONE`, `BLUE_OWL`, `ARES`, `APOLLO`, `MUFG`, `MORGAN_STANLEY`). Identity rule: `manager_parent` $\to$ `fund/lender vehicle / administrative agent` $\to$ `borrower`. Exposure mapping derives primarily from borrower credit agreement disclosures, not manager parent corporate balance sheets.
-     - `infrastructure_operator`: Independent System Operators / Regional Transmission Organizations (`PJM_INTERCONNECTION`, `ERCOT_GRID`) classified under `category: iso_rto / grid_operator`. Regulated electric utilities (`AEP`) classified as `category: corporate_utility`. Physical electrical equipment bottleneck vendors (`VRT`, `ETN`, `GEV`) classified as `public_us_xbrl` under `category: physical_equipment_bottleneck`.
-  2. **Classify and Reconcile Proposed Universe (30 Entities):**
-     Explicitly correct the proposed universe count from 28 to 30 entities, classifying every proposed node by ingestion mode and role.
+     - `public_us_xbrl` (18 nominal entry nodes): US domestic reporting companies filing Form 10-K/10-Q with structured XBRL. Ingested via automated `data.sec.gov` pipeline. Includes corporate electric utility `AEP`. Note that `IREN` (IREN Limited, CIK `0001878848`), while Australian-incorporated, files US domestic Form 10-K/10-Q and is ingested via `public_us_xbrl`.
+     - `foreign_private_issuer` (1 nominal entry node): Foreign private issuers using Form 20-F and Form 6-K (`NBIS` Nebius Group N.V., CIK `0001513845`). Ingested via specialized 20-F/6-K parsing adapter.
+     - `private_evidence_only` (3 nominal entry nodes): Unregistered private operating companies (`LAMBDA`, `CRUSOE`, `TOGETHER`). Ingested via relationship-first / evidence-ledger mechanisms (Form D filings, official credit announcements, verified contract disclosures). Explicitly tolerated with `financials.parquet` accounting baseline omitted/set to `None`.
+     - `capital_provider` (6 nominal entry nodes): Asset managers, private credit fund sponsors, and bank syndicates (`BLACKSTONE`, `BLUE_OWL`, `ARES`, `APOLLO`, `MUFG`, `MORGAN_STANLEY`). Identity rule: `manager_parent` $\to$ `fund/lender vehicle / administrative agent` $\to$ `borrower`. Exposure mapping derives primarily from borrower credit agreement disclosures, not manager parent corporate balance sheets.
+     - `infrastructure_operator` (2 nominal entry nodes): Independent System Operators / Regional Transmission Organizations (`PJM_INTERCONNECTION`, `ERCOT_GRID`) classified under `category: iso_rto / grid_operator`. Governs interconnection queues and transmission constraints with no balance-sheet debt edges.
+     - `boundary_discovery_priority` / Wave 2 Bottleneck Candidates: Physical electrical and turbine bottleneck vendors (`VRT` Vertiv, `ETN` Eaton, `GEV` GE Vernova) are designated as discovery-priority targets to be spawned dynamically when equipment procurement or power interconnection edges point to them, keeping the nominal entry roster strictly at 30 nodes.
+  2. **Classify and Reconcile Proposed Universe (30 Nominal Universe Entry Nodes):**
+     Formally set the nominal entry denominator to 30 nodes (comprising 6 existing Phase 0 corporate nodes [`CRWV`, `APLD`, `NVDA`, `SMCI`, `MSFT`, `ORCL`] and 24 net-new entry targets: 18 + 1 + 3 + 6 + 2 = 30):
+     - Correct SEC CIKs: `APLD` is canonicalized to CIK `0001144879`; `CORZ` (Core Scientific post-reorganization) is canonicalized to CIK `0001839341`.
+     - Canonicalize legal registrant name for `IREN` as `IREN Limited`.
   3. **Establish Discovery-Driven Entity Creation Protocol:**
      Every primary filing is authorized to dynamically spawn:
      - Borrower SPVs (`borrower_spv`)
      - Holding SPVs (`holding_spv`)
      - Dedicated Lender Funds & Syndicates (`lender_spv`, `debt_syndicate`)
      - Physical Facilities & Campuses (`campus_facility`)
+     - Bottleneck Equipment Vendors (`boundary_discovery_priority`)
      - Unmodelled Commercial Customers & Suppliers
   4. **Phase 1 Wave 1 Manifest (Prioritizing by Cross-Layer Join Density):**
      Prioritize 12 initial entities maximized for cross-layer join density:
      `NBIS`, `IREN`, `CORZ`, `WULF`, `HUT`, `DELL`, `HPE`, `AMD`, `META`, `AMZN`, `GOOGL`, and `BLUE_OWL`.
-     Strict rule: Do not ingest raw XBRL or expand datasets until ADR-017 is codified and the Wave 1 manifest is established.
+     Establish all prospective cross-entity edges under "Candidate High-Value Joins to Verify", maintaining that relationships remain unverified until certified with an audited claim ID.
+     Strict rule: Do not ingest raw XBRL or expand datasets until ADR-017 is codified, manifest is aligned, and generic engine refinements are implemented.
   5. **Engine Refinement Sequencing:**
-     Execute the two Phase 1 backlog items (Generic Pre-Disclosure Guard and Contractual Facility-Level Coupon Engine) prior to running analytical Phase 1 stress/reachability notebooks, ensuring the expanded network maintains mathematical and epistemic zero-lookahead rigor without bespoke conditionals.
+     Execute Step 2 engine refinements (Generic Epistemic Resolver with typed knowledge state, typed contractual-rate schema, and universal zero-lookahead temporal invariant) prior to running analytical Phase 1 notebooks or ingesting Wave 1 data.
 - **Consequences:**
   Establishes an epistemically sound, scalable architecture for network expansion; eliminates false balance-sheet conflations; handles private and foreign entities natively; and focuses observatory research on repeated cross-boundary structural joins and systemic fragility.
 
