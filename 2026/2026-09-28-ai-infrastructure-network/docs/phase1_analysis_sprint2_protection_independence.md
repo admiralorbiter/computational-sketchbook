@@ -50,15 +50,15 @@ Because assigning a contractual covenant to an underlying economic resource invo
 
 | Structure ID | Structure Name & Category | Capital Volume (\$B) | Total Protections ($N_{\text{prot}}$) | Model 1: Economic Convergence | Model 2: Legal Partitioning | Model 3: Active-Only Covenants | Baseline Model 1 Classification |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **PF1** | APLD Polaris Forge 1 *(Project Debt)* | \$3.940B | 6 | **0.6667** | **0.6667** | **0.7500** | Moderate Compression / Mixed *(0.50 $\le$ SNCR < 0.75)* |
-| **PF2** | APLD Polaris Forge 2 *(Project Debt)* | \$2.150B | 4 | **0.5000** | **1.0000** | **0.6667** | Moderate Compression / Mixed *(0.50 $\le$ SNCR < 0.75)* |
-| **CRWV_DDTL**| CoreWeave DDTLs 1-5 *(Equipment Credit)* | \$13.643B | 7 | **0.5714** | **1.0000** | **0.5714** | Moderate Compression / Mixed *(0.50 $\le$ SNCR < 0.75)* |
-| **MACKENZIE** | IREN Mackenzie *(Staged Equipment Credit)*| \$2.400B | 4 | **1.0000** | **1.0000** | **1.0000** | High Independence *(SNCR $\ge$ 0.75)* |
-| **NBIS_MUFG** | Nebius Mäntsälä *(DC & GPU Term Loan)* | \$0.775B | 2 | **1.0000** | **1.0000** | **1.0000** | High Independence *(SNCR $\ge$ 0.75)* |
+| **PF1** | APLD Polaris Forge 1 *(Project Debt)* | \$3.940B | 6 | **0.6667** | **0.6667** | **0.7500** | Moderate Compression *(0.50 $\le$ SNCR < 0.75)* |
+| **PF2** | APLD Polaris Forge 2 *(Project Debt)* | \$2.150B | 4 | **0.5000** | **1.0000** | **0.6667** | Moderate Compression *(0.50 $\le$ SNCR < 0.75)* |
+| **CRWV_DDTL**| CoreWeave DDTLs 1-5 *(Equipment Credit)* | \$13.643B | 6 | **0.6667** | **1.0000** | **0.6667** | Moderate Compression *(0.50 $\le$ SNCR < 0.75)* |
+| **MACKENZIE** | IREN Mackenzie *(Staged Equipment Credit)*| \$2.400B | 4 | **1.0000** | **1.0000** | **1.0000** | Low Compression / High Mapped Node Diversity *(SNCR $\ge$ 0.75)* |
+| **NBIS_MUFG** | Nebius Mäntsälä *(DC & GPU Term Loan)* | \$0.775B | 2 | **1.0000** | **1.0000** | **1.0000** | Low Compression / High Mapped Node Diversity *(SNCR $\ge$ 0.75)* |
 
 > [!NOTE]
 > **Sensitivity Insight:**
-> Notice that PF2's score moves from **0.5000** (under economic convergence) to **1.0000** (under strict legal form) and **0.6667** (under active-only covenants). CoreWeave DDTLs move from **0.5714** to **1.0000**.
+> Notice that PF2's score moves from **0.5000** (under economic convergence) to **1.0000** (under strict legal form) and **0.6667** (under active-only covenants). CoreWeave DDTLs move from **0.6667** to **1.0000**.
 > This directly proves that compression scores are highly sensitive to legal vs. economic definitions of independence, and should be interpreted as exploratory indices rather than definitive empirical truths.
 
 ---
@@ -75,16 +75,20 @@ Because assigning a contractual covenant to an underlying economic resource invo
 
 ## 3. Epistemic Audit of the Five Benchmark Structures
 
+Every audited safeguard is structured with a two-tier epistemic separation:
+1. **Protection Evidence Basis (`protection_evidence_basis`, Conf A/B):** The empirical grounding of the covenant itself in credit agreements, SEC exhibits, and prospectuses.
+2. **Model Mapping Basis (`m1_mapping_basis`, `m2_mapping_basis`, Conf A/B):** The analytical interpretation that assigns that covenant to an underlying support node, ensuring readers never confuse an inferred economic driver with a certified contract fact.
+
 ### 1. Applied Digital Polaris Forge 1 & 2 (Project Debt)
 - **PF1 (\$3.940B Total Capital):** Comprises \$2.350B 9.25% notes, \$1.590B 7.00% notes, and 400 MW master lease.
-  - *DSRA (`contract_explicit`, Conf A):* Prefunded from note proceeds. Buffers interest temporarily; in a prolonged delay, replenishment falls back on sponsor equity.
-  - *Sponsor Parent Completion Guarantee (`contract_explicit`, Conf A):* Uncapped shortfall funding covenant legally pointing to Applied Digital, Inc.
-  - *First-Priority Mortgage Lien (`economic_inference`, Conf B):* Land and substation assets. Its ultimate recovery value is economically linked to regional grid energization.
+  - *DSRA (`contract_explicit`, Conf A):* Prefunded from note proceeds. Buffers interest temporarily; in a prolonged delay, replenishment falls back on sponsor equity (Model 1: `economic_inference`, Conf B).
+  - *Sponsor Parent Completion Guarantee (`contract_explicit`, Conf A):* Uncapped shortfall funding covenant legally pointing to Applied Digital, Inc. (Model 1 & 2: `contract_explicit`, Conf A).
+  - *First-Priority Mortgage Lien (`contract_explicit`, Conf A):* Land and substation assets. Under Model 1, its ultimate recovery value is economically linked to regional grid energization (`economic_inference`, Conf B).
   - *CoreWeave Master Lease & Springing Guaranties (`contract_explicit`, Conf A):* ELN-02 and ELN-03 springing indemnities remain **dormant until data hall delivery**; they do not fund pre-delivery construction delays.
 - **PF2 (\$2.150B Notes due 2031):**
   - *Goldman Sachs Escrow Gating (`contract_explicit`, Conf A):* Gross proceeds were withheld until Electric Service Agreement execution. **Note:** This protection is **expired / satisfied** (condition met June 18, 2026; Form 10-K Note 8). Once released, escrow cash converts into active construction spending.
 
-### 2. CoreWeave DDTL Portfolio (\$13.643B Active Stack)
+### 2. CoreWeave DDTL Portfolio (\$13.643B Active Stack across 6 Facilities)
 The active delayed-draw term loan portfolio sums to **\$13.643B across 6 facilities** (including the \$3.000B DDTL 2.1 omitted in preliminary drafts):
 - DDTL 1.0: \$1.300B (Blackstone / Magnetar)
 - DDTL 2.0: \$3.190B (Blackstone / Magnetar)
@@ -93,10 +97,16 @@ The active delayed-draw term loan portfolio sums to **\$13.643B across 6 facilit
 - DDTL 4.0: \$2.837B (MUFG Bank Syndicate)
 - DDTL 5.0: \$1.101B (Morgan Stanley Syndicate)
 
+> [!IMPORTANT]
+> **Removal of Generic DDTL DSRA (`DDTL-P2`):**
+> A generic DDTL-wide DSRA was removed from the audit because CoreWeave SEC disclosures do not establish a uniform prefunded debt service reserve across all 6 distinct credit agreements. The stack is audited on its **6 well-grounded contractual protections**:
+
 #### Critical Legal Distinctions within the DDTL Stack:
-1. **Recourse Disparity:** DDTLs 1, 2, 2.1, 3, and 5 feature broad parent debt-service guarantees. In contrast, **DDTL 4.0 is explicitly limited to specified bad acts and carve-out covenants**. Treating the entire stack as a homogeneous parent guarantee overstates recourse on \$2.837B of debt.
-2. **SPV Ring-Fencing:** The borrowing SPVs (CCAC II, IV, VII, etc.) provide **bankruptcy-remote asset partitioning**. This protects lenders from claims of the parent's general unsecured creditors, representing a distinct legal protection rather than mere enterprise liquidity.
-3. **Anchor Customer Assignment:** Cluster revenues depend heavily on Microsoft offload contracts (~67% of CoreWeave FY25 revenue).
+1. **Borrowing Base Advance Rate (P1):** Drawdowns capped against third-party appraised GPU liquidation values.
+2. **SPV Ring-Fencing (P3):** The borrowing SPVs (CCAC II, IV, VII, etc.) provide **bankruptcy-remote asset partitioning**. This protects lenders from claims of the parent's general unsecured creditors, representing a distinct legal protection rather than mere enterprise liquidity.
+3. **Recourse Disparity (P4a vs. P4b):** DDTLs 1, 2, 2.1, 3, and 5 feature broad parent debt-service guarantees. In contrast, **DDTL 4.0 is explicitly limited to specified bad acts and carve-out covenants**. Treating the entire stack as a homogeneous parent guarantee overstates recourse on \$2.837B of debt.
+4. **Joint Co-Borrower Liability Structure (P5):** DDTL 3.0 joins CCAC V and parent entities under joint liability.
+5. **Anchor Customer Offtake (P6):** Cluster revenues depend heavily on Microsoft offload contracts (~67% of CoreWeave FY25 revenue).
 
 ### 3. Recalibrating Mackenzie and Nebius (Why "Complete Orthogonality" is Inaccurate)
 Preliminary drafts characterized Mackenzie and Nebius as exhibiting "complete structural orthogonality" ($PIR = 1.00$). A rigorous review demonstrates that **this claim was overstated**:
@@ -117,13 +127,13 @@ Preliminary drafts characterized Mackenzie and Nebius as exhibiting "complete st
 
 Rather than claiming to have solved for mathematical "minimum failure sets," we evaluate **five exploratory paired-shock scenarios** to observe multi-layer transmission:
 
-| Scenario ID | Paired Assumption Breakdown | Category | Attributable Debt (\$B) | Attributable MW | Affected Contractual Safeguards | Exploratory Stress Observation |
+| Scenario ID | Paired Assumption Breakdown | Category | Attributable Debt (\$B) | Attributable MW Exposure | Affected Contractual Safeguards | Exploratory Stress Observation |
 | :--- | :--- | :--- | :---: | :---: | :--- | :--- |
-| **PAIR-01** | **Anchor Contraction (A005) + Power Delay (A004)** | Commercial & Physical | **\$19.733B** | 600.0 MW | PF1 Master Lease, PF1 Springing Guaranties, CRWV Offtake Cash Flows | Unenergized halls at Ellendale keep tenant springing guaranties dormant; CoreWeave pays no rent; APLD absorbs debt carry. |
-| **PAIR-02** | **GPU Haircut (A001) + Refinancing Freeze (A002)** | Capital Markets & Tech | **\$16.818B** | 745.0 MW | CRWV Borrowing Base Advance, MAC Equipment Collateral Lien, NBIS Security Lien | A 40% secondary GPU price drop compresses borrowing bases while credit rollover freezes, forcing equity cures. |
-| **PAIR-03** | **Sponsor Constraint (A002) + Construction Delay (A004)** | Sponsor Credit & Execution | **\$6.090B** | 600.0 MW | PF1 DSRA, PF1 Completion Guarantee, PF2 Project DSRA, PF2 Completion Support | Civil/substation delays outlast DSRA reserves; constrained parent liquidity threatens construction completion covenants. |
-| **PAIR-04** | **ERCOT Grid Disruption (A004) + Refinancing Freeze (A002)** | Regional Grid & Capital | **\$0.000B** *(Project Debt)* | 2,750.0 MW | CORZ Colocation (590 MW across sites), IREN Childress Cash Flow, Sweetwater 1/2 Pipeline | **Corrected Attribution:** Strictly tied to Texas physical and contractual assets (Denton, Childress, Sweetwater). Excludes non-ERCOT North Dakota debt. |
-| **PAIR-05** | **Hyperscaler Capex Deceleration (A006) + GPU Haircut (A001)** | Macro Capex & Tech | **\$16.043B** | 670.0 MW | CRWV Borrowing Base Advance, MAC Staged Drawdown, MAC Collateral Lien | Hyperscaler capex digestion dumps older silicon onto secondary markets, freezing equipment debt availability. |
+| **PAIR-01** | **Anchor Contraction (A005) + Power Delay (A004)** | Commercial & Physical | **\$19.733B** | 600.0 MW *(Campus Critical-IT Capacity Touched)* | PF1 Master Lease, PF1 Springing Guaranties, CRWV Offtake Cash Flows | Unenergized halls at Ellendale keep tenant springing guaranties dormant; CoreWeave pays no rent; APLD absorbs debt carry. (PF1 has 100 MW online, 150 MW partial; CRWV DDTL MW unknown / multi-site portfolio). |
+| **PAIR-02** | **GPU Haircut (A001) + Refinancing Freeze (A002)** | Capital Markets & Tech | **\$16.818B** | 155.0 MW *(Directly Attributable: 80 MW MAC + 75 MW NBIS)* | CRWV Borrowing Base Advance, MAC Equipment Collateral Lien, NBIS Security Lien, MAC Cliff | A 40% secondary GPU price drop compresses borrowing bases while credit rollover freezes, forcing equity cures. (CRWV DDTL MW unknown / multi-site portfolio; 590 MW colocation removed). |
+| **PAIR-03** | **Sponsor Constraint (A002) + Construction Delay (A004)** | Sponsor Credit & Execution | **\$6.090B** | 600.0 MW *(Campus Critical-IT Capacity Touched)* | PF1 DSRA, PF1 Completion Guarantee, PF2 Project DSRA, PF2 Completion Support | Civil/substation delays outlast DSRA reserves; constrained parent liquidity threatens construction completion covenants. (Not delayed MW; 100 MW online at PF1). |
+| **PAIR-04** | **ERCOT Grid Disruption (A004) + Refinancing Freeze (A002)** | Regional Grid & Capital | **\$0.000B** *(Project Debt)* | 2,750.0 MW *(Regional ERCOT Capacity Touched)* | CORZ Colocation (590 MW across sites), IREN Childress Cash Flow, Sweetwater 1/2 Pipeline | **Corrected Attribution:** Strictly tied to Texas physical and contractual assets (750 MW operational Childress/Denton + 2,000 MW Sweetwater pipeline). Excludes non-ERCOT North Dakota debt. |
+| **PAIR-05** | **Hyperscaler Capex Deceleration (A006) + GPU Haircut (A001)** | Macro Capex & Tech | **\$16.043B** | 80.0 MW *(Directly Attributable: 80 MW MAC)* | CRWV Borrowing Base Advance, MAC Staged Drawdown, MAC Collateral Lien | Hyperscaler capex digestion dumps older silicon onto secondary markets, freezing equipment debt availability. (CRWV DDTL MW unknown / multi-site portfolio). |
 
 ---
 
@@ -135,8 +145,8 @@ However, the capital provider profile must be categorized by **institutional eco
 
 | Capital Role Category | Institutional Entity / Group | Primary Modeled Facilities | Capital Modeled (\$B) | Structural Economic Role |
 | :--- | :--- | :--- | :---: | :--- |
-| **Direct Lenders & Lessors** | Blue Owl Capital / OBDC | IREN Mackenzie MFSA | **\$1.200B** | Direct equipment lessor providing milestone-based drawdowns. |
-| **Institutional Note Purchasers** | PIMCO | IREN Mackenzie Senior Notes | **\$1.200B** | Direct purchaser of privately placed senior equipment notes. |
+| **Direct Lenders & Lessors** | Blue Owl Capital / OBDC | IREN Mackenzie MFSA | **\$1.200B** | Administrative Agent and Secured Financing Provider under the MFSA; committed secured equipment financing drawn upon equipment acceptance. |
+| **Institutional Note Purchasers** | PIMCO / PIMCO-Advised Note Purchasers | IREN Mackenzie Senior Notes | **\$1.200B** | Investment Adviser to Purchasers of Senior Secured Notes (up to \$1.2B senior secured equipment notes drawn alongside MFSA; not sole beneficial owner). |
 | **Institutional Note Purchasers** | Coatue Management | Hut 8 Convertible Note | **\$0.150B** | Specialized technology growth investor holding convertible debt. |
 | **Syndicate Administrative Agents** | Blackstone & Magnetar (Lead / Agent) | CoreWeave DDTL 1.0, 2.0, 2.1 | **\$7.490B** | Administrative and collateral agent for syndicated private credit lenders. *(Beneficial syndicate composition is undisclosed).* |
 | **Syndicate Administrative Agents** | MUFG Bank Syndicate (Lead / Agent) | CoreWeave DDTL 3.0, 4.0; Nebius Term Loan | **\$5.827B** | Lead arranger and agent for syndicated commercial bank lending groups. |
@@ -171,7 +181,7 @@ Even after stripping away over-formalized ratios and speculative assertions, the
                     ▼                                               ▼
          [ MDU TRANSMISSION GRID ]                       [ GPU SECONDARY MARKET ]
                     ▲                                               ▲
-                    │ (Shared Grid / Interconnect)                  │ (Hardware Resale Clearing)
+                    │ (Regional Utility Risk)                       │ (Hardware Resale Clearing)
                     │                                               │
           [ APLD COMPUTECO 2 (PF2) ]                      [ IREN MACKENZIE COMPUTE ]
                     │                                               │
@@ -182,7 +192,7 @@ Even after stripping away over-formalized ratios and speculative assertions, the
 ```
 
 1. **The CoreWeave Revenue Hub:** CoreWeave’s enterprise cash flow is the operational linchpin that simultaneously services \$13.6B in DDTLs, services its senior notes, and provides the lease payments necessary to service Applied Digital's \$3.94B PF1 debt.
-2. **The Shared Regional Grid Milestone:** Civil construction progress at Ellendale cannot monetize until MDU's transmission expansion is energized, linking PF1 and PF2 to the same regional utility clock.
+2. **The Regional Grid & Utility Milestones:** Both PF1 and PF2 face North Dakota energization and ESA execution risk. PF1's 400 MW development depends on MDU's regional transmission expansion (100 MW operational, 150 MW in progress), while PF2's Harwood site is located in MISO, though its specific utility interconnection edge is not documented in the frozen power relationships.
 3. **The Sponsor Parent Absorption Buffer:** Because tenant springing guaranties remain dormant until data hall delivery, construction delays do not disperse into external credit markets—they pool directly onto **Applied Digital's corporate equity balance sheet**.
 
 ---

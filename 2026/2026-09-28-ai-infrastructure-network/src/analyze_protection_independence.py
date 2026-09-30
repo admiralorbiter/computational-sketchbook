@@ -62,12 +62,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Buffering",
         "protection_status": "active",
         "immediate_holder": "APLD ComputeCo Project Trust",
-        "mapping_basis": "contract_explicit",
-        "terminal_node_confidence": "A",
-        # Three model mappings:
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "economic_inference",
+        "m1_mapping_confidence": "B",
         "node_model_1": "APLD_PARENT_LIQUIDITY",      # Economic Convergence (replenishment falls on parent)
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "PREFUNDED_PROJECT_CASH",     # Legal Form (cash sitting in SPV trust account)
         "node_model_3": "APLD_PARENT_LIQUIDITY",      # Active-only
+        "mapping_basis": "economic_inference",        # Maintained for backward compatibility
+        "terminal_node_confidence": "B",
         "description": "Pre-funded cash reserve from note proceeds; replenishment falls on sponsor parent equity."
     },
     {
@@ -81,11 +86,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Transfer",
         "protection_status": "active",
         "immediate_holder": "Applied Digital, Inc. (Parent)",
-        "mapping_basis": "contract_explicit",
-        "terminal_node_confidence": "A",
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "contract_explicit",
+        "m1_mapping_confidence": "A",
         "node_model_1": "APLD_PARENT_LIQUIDITY",
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "APLD_PARENT_LIQUIDITY",
         "node_model_3": "APLD_PARENT_LIQUIDITY",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
         "description": "Mandatory sponsor shortfall funding to achieve Commencement Date; uncapped sponsor obligation."
     },
     {
@@ -99,11 +110,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Recovery",
         "protection_status": "active",
         "immediate_holder": "Noteholder Collateral Agent",
-        "mapping_basis": "economic_inference",
-        "terminal_node_confidence": "B",
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "economic_inference",
+        "m1_mapping_confidence": "B",
         "node_model_1": "POWER_GRID_ENERGIZATION",    # Economic Convergence (salvage value tied to energization)
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "PHYSICAL_ASSET_SALVAGE",     # Legal Form (land and physical electrical equipment)
         "node_model_3": "POWER_GRID_ENERGIZATION",
+        "mapping_basis": "economic_inference",
+        "terminal_node_confidence": "B",
         "description": "Senior mortgage on land, substation, and shells; recovery value is highly dependent on utility power delivery."
     },
     {
@@ -117,11 +134,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Transfer",
         "protection_status": "active",
         "immediate_holder": "CRWV SPV VIII (Tenant)",
-        "mapping_basis": "economic_inference",
-        "terminal_node_confidence": "B",
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "economic_inference",
+        "m1_mapping_confidence": "B",
         "node_model_1": "HYPERSCALER_ANCHOR_DEMAND",  # Economic Convergence (CoreWeave rent requires MSFT compute revenue)
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "CRWV_ENTERPRISE_LIQUIDITY",  # Legal Form (tenant creditworthiness)
         "node_model_3": "HYPERSCALER_ANCHOR_DEMAND",
+        "mapping_basis": "economic_inference",
+        "terminal_node_confidence": "B",
         "description": "$11.0B contracted lease revenue; tenant rent service depends on neocloud operating cash flows."
     },
     {
@@ -135,11 +158,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Transfer",
         "protection_status": "dormant_springing",
         "immediate_holder": "CoreWeave, Inc. (Parent)",
-        "mapping_basis": "contract_explicit",
-        "terminal_node_confidence": "A",
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "contract_explicit",
+        "m1_mapping_confidence": "A",
         "node_model_1": "CRWV_ENTERPRISE_LIQUIDITY",
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "CRWV_ENTERPRISE_LIQUIDITY",
         "node_model_3": None,                         # Pruned in active-only model (dormant until delivery)
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
         "description": "Uncapped parent indemnity backstopping tenant lease obligations for Building 2 post-handover."
     },
     {
@@ -153,11 +182,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Transfer",
         "protection_status": "dormant_springing",
         "immediate_holder": "CoreWeave, Inc. (Parent)",
-        "mapping_basis": "contract_explicit",
-        "terminal_node_confidence": "A",
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "contract_explicit",
+        "m1_mapping_confidence": "A",
         "node_model_1": "CRWV_ENTERPRISE_LIQUIDITY",
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "CRWV_ENTERPRISE_LIQUIDITY",
         "node_model_3": None,                         # Pruned in active-only model (dormant until delivery)
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
         "description": "Uncapped parent indemnity ($4.125B Class C proxy) for Building 3 post-handover."
     },
 
@@ -173,11 +208,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Preventive",
         "protection_status": "expired",              # Satisfied June 18, 2026
         "immediate_holder": "Goldman Sachs Escrow Agent",
-        "mapping_basis": "contract_explicit",
-        "terminal_node_confidence": "A",
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "contract_explicit",
+        "m1_mapping_confidence": "A",
         "node_model_1": "POWER_GRID_ENERGIZATION",    # Gated specifically on ESA execution
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "ESCROW_CASH_HELD",          # Legal form (proceeds in bank escrow)
         "node_model_3": None,                         # Pruned in active-only model (already released)
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
         "description": "Gross proceeds locked until ESA execution (satisfied June 18, 2026); gated capital release."
     },
     {
@@ -191,11 +232,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Buffering",
         "protection_status": "active",
         "immediate_holder": "APLD ComputeCo 2 Trust",
-        "mapping_basis": "contract_explicit",
-        "terminal_node_confidence": "A",
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "economic_inference",
+        "m1_mapping_confidence": "B",
         "node_model_1": "APLD_PARENT_LIQUIDITY",
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "PREFUNDED_PROJECT_CASH",
         "node_model_3": "APLD_PARENT_LIQUIDITY",
+        "mapping_basis": "economic_inference",
+        "terminal_node_confidence": "B",
         "description": "Project account reserve funding interim coupon service prior to commercial energization."
     },
     {
@@ -209,11 +256,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Transfer",
         "protection_status": "active",
         "immediate_holder": "Applied Digital, Inc. (Parent)",
-        "mapping_basis": "contract_explicit",
-        "terminal_node_confidence": "A",
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "contract_explicit",
+        "m1_mapping_confidence": "A",
         "node_model_1": "APLD_PARENT_LIQUIDITY",
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "APLD_PARENT_LIQUIDITY",
         "node_model_3": "APLD_PARENT_LIQUIDITY",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
         "description": "Sponsor parent covenants to fund completion of construction period and first commencement date."
     },
     {
@@ -227,11 +280,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Recovery",
         "protection_status": "active",
         "immediate_holder": "Noteholder Collateral Agent",
-        "mapping_basis": "economic_inference",
-        "terminal_node_confidence": "B",
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "economic_inference",
+        "m1_mapping_confidence": "B",
         "node_model_1": "POWER_GRID_ENERGIZATION",
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "PHYSICAL_ASSET_SALVAGE",
         "node_model_3": "POWER_GRID_ENERGIZATION",
+        "mapping_basis": "economic_inference",
+        "terminal_node_confidence": "B",
         "description": "Liens on project parcels, civil works, and utility rights; value contingent on substation completion."
     },
 
@@ -247,11 +306,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Preventive",
         "protection_status": "active",
         "immediate_holder": "IE Mackenzie Compute Ltd.",
-        "mapping_basis": "contract_explicit",
-        "terminal_node_confidence": "A",
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "economic_inference",
+        "m1_mapping_confidence": "B",
         "node_model_1": "VENDOR_SUPPLY_CHAIN",
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "VENDOR_SUPPLY_CHAIN",
         "node_model_3": "VENDOR_SUPPLY_CHAIN",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
         "description": "Capital funded strictly pro rata upon physical delivery and acceptance testing of operational servers."
     },
     {
@@ -265,11 +330,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Recovery",
         "protection_status": "active",
         "immediate_holder": "Blue Owl / PIMCO Collateral Agents",
-        "mapping_basis": "contract_explicit",
-        "terminal_node_confidence": "A",
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "economic_inference",
+        "m1_mapping_confidence": "B",
         "node_model_1": "GPU_SECONDARY_COLLATERAL",
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "GPU_SECONDARY_COLLATERAL",
         "node_model_3": "GPU_SECONDARY_COLLATERAL",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
         "description": "Direct security interest in GPU servers; recovery dependent on secondary market resale clearing values."
     },
     {
@@ -283,11 +354,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Transfer",
         "protection_status": "active",
         "immediate_holder": "IREN Limited (Parent)",
-        "mapping_basis": "contract_explicit",
-        "terminal_node_confidence": "A",
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "contract_explicit",
+        "m1_mapping_confidence": "A",
         "node_model_1": "IREN_PARENT_LIQUIDITY",
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "IREN_PARENT_LIQUIDITY",
         "node_model_3": "IREN_PARENT_LIQUIDITY",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
         "description": "Full parent recourse allowing lenders to pursue company cash flows if equipment revenue falls short."
     },
     {
@@ -301,11 +378,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Preventive",
         "protection_status": "active",
         "immediate_holder": "Lender Credit Facility",
-        "mapping_basis": "contract_explicit",
-        "terminal_node_confidence": "A",
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "contract_explicit",
+        "m1_mapping_confidence": "A",
         "node_model_1": "LENDER_COMMITMENT_LIFECYCLE", # Expiration of lender obligation
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "LENDER_COMMITMENT_LIFECYCLE",
         "node_model_3": "LENDER_COMMITMENT_LIFECYCLE",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
         "description": "Uncalled commitments terminate automatically, ending lender funding obligation."
     },
 
@@ -321,30 +404,18 @@ PROTECTIONS_DATA = [
         "functional_tier": "Preventive",
         "protection_status": "active",
         "immediate_holder": "Borrowing SPVs (CCAC II, IV, VII, etc.)",
-        "mapping_basis": "contract_explicit",
-        "terminal_node_confidence": "A",
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "economic_inference",
+        "m1_mapping_confidence": "B",
         "node_model_1": "GPU_SECONDARY_COLLATERAL",
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "GPU_SECONDARY_COLLATERAL",
         "node_model_3": "GPU_SECONDARY_COLLATERAL",
-        "description": "Loan draws bounded by third-party appraised liquidation value of H100/H200/B200 GPU clusters."
-    },
-    {
-        "structure_id": "CRWV_DDTL",
-        "structure_name": "CoreWeave DDTLs (Tranches 1.0 - 5.0, including 2.1)",
-        "facility_id": "PORTFOLIO_COREWEAVE",
-        "category": "Equipment Facility",
-        "capital_volume_b": 13.643,
-        "protection_id": "DDTL-P2",
-        "name": "Debt Service Reserve & Minimum Liquidity Covenants",
-        "functional_tier": "Buffering",
-        "protection_status": "active",
-        "immediate_holder": "SPV Project Accounts",
         "mapping_basis": "contract_explicit",
         "terminal_node_confidence": "A",
-        "node_model_1": "CRWV_ENTERPRISE_LIQUIDITY",
-        "node_model_2": "SPV_PREFUNDED_CASH",        # Legal partition (cash inside SPV account)
-        "node_model_3": "CRWV_ENTERPRISE_LIQUIDITY",
-        "description": "Cash liquidity covenants mandated across borrowing SPVs and consolidated enterprise."
+        "description": "Loan draws bounded by third-party appraised liquidation value of H100/H200/B200 GPU clusters."
     },
     {
         "structure_id": "CRWV_DDTL",
@@ -357,11 +428,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Recovery",
         "protection_status": "active",
         "immediate_holder": "Special Purpose Vehicles",
-        "mapping_basis": "contract_explicit",
-        "terminal_node_confidence": "A",
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "contract_explicit",
+        "m1_mapping_confidence": "A",
         "node_model_1": "SPV_ASSET_PARTITION",        # Legal estate partitioning (not mere parent liquidity)
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "SPV_ASSET_PARTITION",
         "node_model_3": "SPV_ASSET_PARTITION",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
         "description": "Legal isolation of GPU assets protecting secured lenders from general unsecured creditors of parent."
     },
     {
@@ -375,11 +452,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Transfer",
         "protection_status": "active",
         "immediate_holder": "CoreWeave, Inc. (Parent)",
-        "mapping_basis": "contract_explicit",
-        "terminal_node_confidence": "A",
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "contract_explicit",
+        "m1_mapping_confidence": "A",
         "node_model_1": "CRWV_ENTERPRISE_LIQUIDITY",
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "CRWV_ENTERPRISE_LIQUIDITY",
         "node_model_3": "CRWV_ENTERPRISE_LIQUIDITY",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
         "description": "Unconditional full-recourse parent debt service guarantee covering $10.806B of facilities."
     },
     {
@@ -393,11 +476,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Transfer",
         "protection_status": "active",
         "immediate_holder": "CoreWeave, Inc. (Parent)",
-        "mapping_basis": "contract_explicit",
-        "terminal_node_confidence": "A",
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "economic_inference",
+        "m1_mapping_confidence": "B",
         "node_model_1": "CRWV_ENTERPRISE_LIQUIDITY",
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "CRWV_BAD_ACTS_RECOURSE",     # Distinct legal recourse standard
         "node_model_3": "CRWV_ENTERPRISE_LIQUIDITY",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
         "description": "Non-recourse carve-out guaranty on $2.837B facility; parent liable only for specified bad acts."
     },
     {
@@ -411,11 +500,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Transfer",
         "protection_status": "active",
         "immediate_holder": "CRWV_CCAC_V (Co-Borrower)",
-        "mapping_basis": "contract_explicit",
-        "terminal_node_confidence": "A",
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "economic_inference",
+        "m1_mapping_confidence": "B",
         "node_model_1": "CRWV_ENTERPRISE_LIQUIDITY",
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "AFFILIATE_CROSS_COLLATERAL",
         "node_model_3": "CRWV_ENTERPRISE_LIQUIDITY",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
         "description": "Cross-subsidiary co-borrower liability joining multiple cluster entities under single agreement."
     },
     {
@@ -429,11 +524,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Transfer",
         "protection_status": "active",
         "immediate_holder": "CoreWeave Commercial Contracts",
-        "mapping_basis": "economic_inference",
-        "terminal_node_confidence": "B",
+        "protection_evidence_basis": "economic_inference",
+        "protection_evidence_confidence": "B",
+        "m1_mapping_basis": "economic_inference",
+        "m1_mapping_confidence": "B",
         "node_model_1": "HYPERSCALER_ANCHOR_DEMAND",
+        "m2_mapping_basis": "economic_inference",
+        "m2_mapping_confidence": "B",
         "node_model_2": "HYPERSCALER_ANCHOR_DEMAND",
         "node_model_3": "HYPERSCALER_ANCHOR_DEMAND",
+        "mapping_basis": "economic_inference",
+        "terminal_node_confidence": "B",
         "description": "Underlying cluster debt service relies on collections from primary offtaker (Microsoft ~67% FY25)."
     },
 
@@ -449,11 +550,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Recovery",
         "protection_status": "active",
         "immediate_holder": "MUFG Syndicate Collateral Agent",
-        "mapping_basis": "contract_explicit",
-        "terminal_node_confidence": "A",
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "contract_explicit",
+        "m1_mapping_confidence": "A",
         "node_model_1": "DC_AND_GPU_COLLATERAL",
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "DC_AND_GPU_COLLATERAL",
         "node_model_3": "DC_AND_GPU_COLLATERAL",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
         "description": "Security interest in physical datacenter infrastructure and GPU clusters at operating Finnish facility."
     },
     {
@@ -467,11 +574,17 @@ PROTECTIONS_DATA = [
         "functional_tier": "Transfer",
         "protection_status": "active",
         "immediate_holder": "Nebius Group N.V. (Parent)",
-        "mapping_basis": "contract_explicit",
-        "terminal_node_confidence": "A",
+        "protection_evidence_basis": "contract_explicit",
+        "protection_evidence_confidence": "A",
+        "m1_mapping_basis": "contract_explicit",
+        "m1_mapping_confidence": "A",
         "node_model_1": "NEBIUS_BAD_ACTS_RECOURSE",    # Limited carve-out, not broad debt-service guaranty
+        "m2_mapping_basis": "contract_explicit",
+        "m2_mapping_confidence": "A",
         "node_model_2": "NEBIUS_BAD_ACTS_RECOURSE",
         "node_model_3": "NEBIUS_BAD_ACTS_RECOURSE",
+        "mapping_basis": "contract_explicit",
+        "terminal_node_confidence": "A",
         "description": "Parent guarantee limited to specified bad acts and performance covenants; not a blanket debt-service guarantee."
     }
 ]
@@ -492,7 +605,8 @@ PAIRED_SCENARIOS = [
         ),
         "touched_structures": ["PF1", "PF2", "CRWV_DDTL"],
         "touched_debt_b": 19.733,  # $3.94B PF1 + $2.15B PF2 + $13.643B DDTL
-        "touched_mw": 600.0,       # 400 MW Ellendale PF1 + 200 MW PF2
+        "touched_mw": 600.0,       # 400 MW Ellendale PF1 + 200 MW PF2 campus critical-IT capacity touched
+        "mw_attribution_notes": "600 MW campus critical-IT capacity touched (PF1 400 MW total with 100 MW online; PF2 200 MW); CRWV DDTL MW unknown / multi-site portfolio",
         "affected_protections": [
             "PF1-P4 (Take-or-Pay Lease)",
             "PF1-P5 (Springing Guaranty ELN02)",
@@ -513,7 +627,8 @@ PAIRED_SCENARIOS = [
         ),
         "touched_structures": ["CRWV_DDTL", "MACKENZIE", "NBIS_MUFG"],
         "touched_debt_b": 16.818,  # $13.643B DDTL + $2.4B MAC + $0.775B NBIS
-        "touched_mw": 745.0,
+        "touched_mw": 155.0,       # 80 MW Mackenzie + 75 MW Nebius directly attributable; CRWV DDTL MW unknown / multi-site portfolio
+        "mw_attribution_notes": "155 MW directly attributable (80 MW Mackenzie + 75 MW Nebius); CRWV DDTL MW unknown / multi-site portfolio",
         "affected_protections": [
             "DDTL-P1 (Borrowing Base Advance)",
             "MAC-P2 (Equipment Collateral Lien)",
@@ -534,7 +649,8 @@ PAIRED_SCENARIOS = [
         ),
         "touched_structures": ["PF1", "PF2"],
         "touched_debt_b": 6.090,   # $3.94B PF1 + $2.15B PF2
-        "touched_mw": 600.0,
+        "touched_mw": 600.0,       # 400 MW Ellendale PF1 + 200 MW PF2 campus critical-IT capacity touched
+        "mw_attribution_notes": "600 MW campus critical-IT capacity touched (not delayed MW; PF1 400 MW total with 100 MW online; PF2 200 MW)",
         "affected_protections": [
             "PF1-P1 (DSRA Reserve)",
             "PF1-P2 (APLD Completion Guarantee)",
@@ -557,6 +673,7 @@ PAIRED_SCENARIOS = [
         "touched_structures": ["CORZ_COLOCATION", "IREN_CHILDRESS", "IREN_SWEETWATER"],
         "touched_debt_b": 0.000,   # Excludes non-ERCOT project debt (0.00% misattribution); corporate credit only
         "touched_mw": 2750.0,      # 750 MW live ERCOT + 2,000 MW Sweetwater pipeline
+        "mw_attribution_notes": "2,750 MW regional ERCOT capacity touched (750 MW operational Childress/Denton + 2,000 MW Sweetwater pipeline)",
         "affected_protections": [
             "CORZ CoreWeave Colocation Agreement (590 MW total across sites)",
             "IREN Operating Cash Flow Generation from Childress",
@@ -575,7 +692,8 @@ PAIRED_SCENARIOS = [
         ),
         "touched_structures": ["CRWV_DDTL", "MACKENZIE"],
         "touched_debt_b": 16.043,  # $13.643B DDTL + $2.4B MAC
-        "touched_mw": 670.0,
+        "touched_mw": 80.0,        # 80 MW Mackenzie directly attributable; CRWV DDTL MW unknown / multi-site portfolio
+        "mw_attribution_notes": "80 MW directly attributable (Mackenzie 80 MW); CRWV DDTL MW unknown / multi-site portfolio",
         "affected_protections": [
             "DDTL-P1 (Borrowing Base Advance)",
             "MAC-P1 (Staged Drawdown Condition)",
@@ -592,18 +710,18 @@ LENDER_ROLES = [
     {
         "capital_category": "Direct Lenders & Lessors",
         "institution_name": "Blue Owl Capital / OBDC",
-        "role_description": "Direct Equipment Financing Provider & Lessor",
+        "role_description": "Administrative Agent and Secured Financing Provider under the MFSA",
         "facilities": "IREN Mackenzie MFSA",
         "modeled_amount_b": 1.200,
-        "notes": "Committed direct lease financing drawn upon equipment acceptance."
+        "notes": "Committed secured equipment financing drawn upon equipment acceptance."
     },
     {
         "capital_category": "Institutional Note Purchasers",
-        "institution_name": "PIMCO",
-        "role_description": "Senior Secured Equipment Note Purchaser",
+        "institution_name": "PIMCO / PIMCO-Advised Note Purchasers",
+        "role_description": "Investment Adviser to Purchasers of Senior Secured Notes",
         "facilities": "IREN Mackenzie Senior Secured Notes",
         "modeled_amount_b": 1.200,
-        "notes": "Privately placed equipment notes drawn alongside MFSA."
+        "notes": "Investment adviser to purchasers of up to $1.2B senior secured equipment notes, drawn alongside MFSA (not sole beneficial owner)."
     },
     {
         "capital_category": "Institutional Note Purchasers",
@@ -690,15 +808,15 @@ def run_analysis():
         sncr_m3 = len(nodes_m3) / n_prot_active if n_prot_active > 0 else 0.0
 
         # Predeclared classification based on Model 1:
-        # < 0.50: Severe Compression / Concentration
-        # 0.50 - 0.74: Moderate Compression / Mixed
-        # >= 0.75: High Independence / Orthogonal
+        # < 0.50: High Compression
+        # 0.50 - 0.74: Moderate Compression
+        # >= 0.75: Low Compression / High Mapped Node Diversity
         if sncr_m1 < 0.50:
-            classification = "Severe Compression (SNCR < 0.50)"
+            classification = "High Compression (SNCR < 0.50)"
         elif sncr_m1 < 0.75:
-            classification = "Moderate Compression / Mixed (0.50 <= SNCR < 0.75)"
+            classification = "Moderate Compression (0.50 <= SNCR < 0.75)"
         else:
-            classification = "High Independence (SNCR >= 0.75)"
+            classification = "Low Compression / High Mapped Node Diversity (SNCR >= 0.75)"
 
         summary_records.append({
             "structure_id": sid,
@@ -786,8 +904,8 @@ def generate_figures(df_summary, df_scenarios, df_lenders):
     rects2 = ax1.bar(x, m2_vals, width, label="Model 2: Legal Partitioning", color="#1976d2", alpha=0.85, edgecolor="#333333")
     rects3 = ax1.bar(x + width, m3_vals, width, label="Model 3: Active-Only Covenants", color="#388e3c", alpha=0.85, edgecolor="#333333")
 
-    ax1.axhline(y=0.50, color="#d9534f", linestyle="--", linewidth=1.2, label="Compression Threshold (0.50)")
-    ax1.axhline(y=0.75, color="#5cb85c", linestyle="--", linewidth=1.2, label="Independence Threshold (0.75)")
+    ax1.axhline(y=0.50, color="#d9534f", linestyle="--", linewidth=1.2, label="High Compression Threshold (0.50)")
+    ax1.axhline(y=0.75, color="#5cb85c", linestyle="--", linewidth=1.2, label="Low Compression / High Diversity Threshold (0.75)")
 
     ax1.set_ylabel("Support-Node Compression Ratio (SNCR)", fontsize=11, fontweight="bold")
     ax1.set_title("A. Sensitivity Analysis of Protection Compression Across Models", fontsize=12, fontweight="bold", pad=12)

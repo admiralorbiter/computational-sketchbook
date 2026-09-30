@@ -35,7 +35,7 @@
         "HYPERSCALER_ANCHOR_DEMAND",
         "POWER_GRID_ENERGIZATION"
       ],
-      "baseline_classification": "Moderate Compression / Mixed (0.50 <= SNCR < 0.75)"
+      "baseline_classification": "Moderate Compression (0.50 <= SNCR < 0.75)"
     },
     {
       "structure_id": "PF2",
@@ -61,7 +61,7 @@
         "APLD_PARENT_LIQUIDITY",
         "POWER_GRID_ENERGIZATION"
       ],
-      "baseline_classification": "Moderate Compression / Mixed (0.50 <= SNCR < 0.75)"
+      "baseline_classification": "Moderate Compression (0.50 <= SNCR < 0.75)"
     },
     {
       "structure_id": "MACKENZIE",
@@ -91,18 +91,18 @@
         "LENDER_COMMITMENT_LIFECYCLE",
         "VENDOR_SUPPLY_CHAIN"
       ],
-      "baseline_classification": "High Independence (SNCR >= 0.75)"
+      "baseline_classification": "Low Compression / High Mapped Node Diversity (SNCR >= 0.75)"
     },
     {
       "structure_id": "CRWV_DDTL",
       "structure_name": "CoreWeave DDTLs (Tranches 1.0 - 5.0, including 2.1)",
       "category": "Equipment Facility",
       "capital_volume_b": 13.643,
-      "n_protections_total": 7,
-      "n_protections_active": 7,
-      "sncr_model_1_economic": 0.5714,
+      "n_protections_total": 6,
+      "n_protections_active": 6,
+      "sncr_model_1_economic": 0.6667,
       "sncr_model_2_legal": 1.0,
-      "sncr_model_3_active_only": 0.5714,
+      "sncr_model_3_active_only": 0.6667,
       "nodes_model_1": [
         "CRWV_ENTERPRISE_LIQUIDITY",
         "GPU_SECONDARY_COLLATERAL",
@@ -115,8 +115,7 @@
         "CRWV_ENTERPRISE_LIQUIDITY",
         "GPU_SECONDARY_COLLATERAL",
         "HYPERSCALER_ANCHOR_DEMAND",
-        "SPV_ASSET_PARTITION",
-        "SPV_PREFUNDED_CASH"
+        "SPV_ASSET_PARTITION"
       ],
       "nodes_model_3": [
         "CRWV_ENTERPRISE_LIQUIDITY",
@@ -124,7 +123,7 @@
         "HYPERSCALER_ANCHOR_DEMAND",
         "SPV_ASSET_PARTITION"
       ],
-      "baseline_classification": "Moderate Compression / Mixed (0.50 <= SNCR < 0.75)"
+      "baseline_classification": "Moderate Compression (0.50 <= SNCR < 0.75)"
     },
     {
       "structure_id": "NBIS_MUFG",
@@ -148,7 +147,7 @@
         "DC_AND_GPU_COLLATERAL",
         "NEBIUS_BAD_ACTS_RECOURSE"
       ],
-      "baseline_classification": "High Independence (SNCR >= 0.75)"
+      "baseline_classification": "Low Compression / High Mapped Node Diversity (SNCR >= 0.75)"
     }
   ],
   "selected_paired_scenarios": [
@@ -168,6 +167,7 @@
       ],
       "touched_debt_b": 19.733,
       "touched_mw": 600.0,
+      "mw_attribution_notes": "600 MW campus critical-IT capacity touched (PF1 400 MW total with 100 MW online; PF2 200 MW); CRWV DDTL MW unknown / multi-site portfolio",
       "affected_protections": [
         "PF1-P4 (Take-or-Pay Lease)",
         "PF1-P5 (Springing Guaranty ELN02)",
@@ -191,7 +191,8 @@
         "NBIS_MUFG"
       ],
       "touched_debt_b": 16.818,
-      "touched_mw": 745.0,
+      "touched_mw": 155.0,
+      "mw_attribution_notes": "155 MW directly attributable (80 MW Mackenzie + 75 MW Nebius); CRWV DDTL MW unknown / multi-site portfolio",
       "affected_protections": [
         "DDTL-P1 (Borrowing Base Advance)",
         "MAC-P2 (Equipment Collateral Lien)",
@@ -215,6 +216,7 @@
       ],
       "touched_debt_b": 6.09,
       "touched_mw": 600.0,
+      "mw_attribution_notes": "600 MW campus critical-IT capacity touched (not delayed MW; PF1 400 MW total with 100 MW online; PF2 200 MW)",
       "affected_protections": [
         "PF1-P1 (DSRA Reserve)",
         "PF1-P2 (APLD Completion Guarantee)",
@@ -239,6 +241,7 @@
       ],
       "touched_debt_b": 0.0,
       "touched_mw": 2750.0,
+      "mw_attribution_notes": "2,750 MW regional ERCOT capacity touched (750 MW operational Childress/Denton + 2,000 MW Sweetwater pipeline)",
       "affected_protections": [
         "CORZ CoreWeave Colocation Agreement (590 MW total across sites)",
         "IREN Operating Cash Flow Generation from Childress",
@@ -260,7 +263,8 @@
         "MACKENZIE"
       ],
       "touched_debt_b": 16.043,
-      "touched_mw": 670.0,
+      "touched_mw": 80.0,
+      "mw_attribution_notes": "80 MW directly attributable (Mackenzie 80 MW); CRWV DDTL MW unknown / multi-site portfolio",
       "affected_protections": [
         "DDTL-P1 (Borrowing Base Advance)",
         "MAC-P1 (Staged Drawdown Condition)",
@@ -273,18 +277,18 @@
     {
       "capital_category": "Direct Lenders & Lessors",
       "institution_name": "Blue Owl Capital / OBDC",
-      "role_description": "Direct Equipment Financing Provider & Lessor",
+      "role_description": "Administrative Agent and Secured Financing Provider under the MFSA",
       "facilities": "IREN Mackenzie MFSA",
       "modeled_amount_b": 1.2,
-      "notes": "Committed direct lease financing drawn upon equipment acceptance."
+      "notes": "Committed secured equipment financing drawn upon equipment acceptance."
     },
     {
       "capital_category": "Institutional Note Purchasers",
-      "institution_name": "PIMCO",
-      "role_description": "Senior Secured Equipment Note Purchaser",
+      "institution_name": "PIMCO / PIMCO-Advised Note Purchasers",
+      "role_description": "Investment Adviser to Purchasers of Senior Secured Notes",
       "facilities": "IREN Mackenzie Senior Secured Notes",
       "modeled_amount_b": 1.2,
-      "notes": "Privately placed equipment notes drawn alongside MFSA."
+      "notes": "Investment adviser to purchasers of up to $1.2B senior secured equipment notes, drawn alongside MFSA (not sole beneficial owner)."
     },
     {
       "capital_category": "Institutional Note Purchasers",

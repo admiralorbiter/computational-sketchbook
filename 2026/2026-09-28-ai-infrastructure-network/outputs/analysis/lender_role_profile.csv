@@ -1,6 +1,6 @@
 capital_category,institution_name,role_description,facilities,modeled_amount_b,notes
-Direct Lenders & Lessors,Blue Owl Capital / OBDC,Direct Equipment Financing Provider & Lessor,IREN Mackenzie MFSA,1.2,Committed direct lease financing drawn upon equipment acceptance.
-Institutional Note Purchasers,PIMCO,Senior Secured Equipment Note Purchaser,IREN Mackenzie Senior Secured Notes,1.2,Privately placed equipment notes drawn alongside MFSA.
+Direct Lenders & Lessors,Blue Owl Capital / OBDC,Administrative Agent and Secured Financing Provider under the MFSA,IREN Mackenzie MFSA,1.2,Committed secured equipment financing drawn upon equipment acceptance.
+Institutional Note Purchasers,PIMCO / PIMCO-Advised Note Purchasers,Investment Adviser to Purchasers of Senior Secured Notes,IREN Mackenzie Senior Secured Notes,1.2,"Investment adviser to purchasers of up to $1.2B senior secured equipment notes, drawn alongside MFSA (not sole beneficial owner)."
 Institutional Note Purchasers,Coatue Management,Convertible Note Investor,Hut 8 Senior Unsecured Convertible Note,0.15,Dedicated private convertible placement.
 Syndicate Administrative Agents,Blackstone & Magnetar (Agent / Lead),Administrative & Collateral Agent for Private Credit Syndicate,"CoreWeave DDTL 1.0, 2.0, 2.1",7.49,Represents syndicated private credit lenders; beneficial holder distribution undisclosed.
 Syndicate Administrative Agents,MUFG Bank Syndicate (Agent / Lead),Administrative Agent for Commercial Bank Syndicate,"CoreWeave DDTL 3.0, 4.0; Nebius Term Loan",5.827,Syndicated international commercial bank facilities ($2.215B + $2.837B + $0.775B).
