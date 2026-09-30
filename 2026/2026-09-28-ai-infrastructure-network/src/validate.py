@@ -2054,22 +2054,25 @@ def validate_observatory():
         print("  [OK] Task 023.1: Missing-data semantics regression test passed (March 2025 incomplete coverage declines aggregation; July 2026 complete coverage certifies $44.616B / $18.934B / 42.44%).")
 
     # -------------------------------------------------------------------------
-    # 11. TASK 024: CROSS-LAYER JOIN GAIN & STRUCTURAL RECONVERGENCE INVARIANTS
+    # 11. TASK 024.1: CALIBRATED CROSS-DOMAIN DEPENDENCY PATHS & RECONVERGENCE
     # -------------------------------------------------------------------------
-    print("\n--- 11. Validating Task 024 Cross-Layer JOIN Gain & Reconvergence Invariants ---")
+    print("\n--- 11. Validating Task 024.1 Calibrated Cross-Domain Dependency Paths & Invariants ---")
     sub_err = []
 
     # 11.1: Artifact Existence
     t24_artifacts = [
         OUTPUTS_DIR / "analysis" / "cross_layer_network_comparison.csv",
         OUTPUTS_DIR / "analysis" / "cross_layer_shock_reachability.csv",
+        OUTPUTS_DIR / "analysis" / "cross_layer_dependency_paths.csv",
+        OUTPUTS_DIR / "analysis" / "cross_layer_null_model_test.json",
         OUTPUTS_DIR / "analysis" / "cross_layer_join_gain_summary.json",
         OUTPUTS_DIR / "figures" / "cross_layer_join_gain.png",
-        PROJECT_ROOT / "docs" / "phase1_task024_cross_layer_join_gain.md"
+        PROJECT_ROOT / "docs" / "phase1_task024_cross_layer_join_gain.md",
+        PROJECT_ROOT / "docs" / "task024_1_prespecification.md"
     ]
     for art_path in t24_artifacts:
         if not art_path.exists():
-            sub_err.append(f"Task 024: Missing required artifact at {art_path}")
+            sub_err.append(f"Task 024.1: Missing required artifact at {art_path}")
 
     # 11.2: Summary JSON & Layer Topology Invariants
     summary_path = OUTPUTS_DIR / "analysis" / "cross_layer_join_gain_summary.json"
@@ -2077,55 +2080,107 @@ def validate_observatory():
         with open(summary_path, "r", encoding="utf-8") as f:
             t24_sum = json.load(f)
 
+        if t24_sum.get("task_id") != "TASK-024.1":
+            sub_err.append(f"Task 024.1: Task ID mismatch: {t24_sum.get('task_id')} vs expected TASK-024.1")
         if t24_sum.get("data_freeze_commit") != "42f9a74":
-            sub_err.append(f"Task 024: Data freeze commit drift: {t24_sum.get('data_freeze_commit')} vs expected 42f9a74")
+            sub_err.append(f"Task 024.1: Data freeze commit drift: {t24_sum.get('data_freeze_commit')} vs expected 42f9a74")
+        if t24_sum.get("pre_specified_protocol_commit") != "761fb4a":
+            sub_err.append(f"Task 024.1: Pre-specified protocol commit drift: {t24_sum.get('pre_specified_protocol_commit')} vs expected 761fb4a")
         if t24_sum.get("falsification_verdict") != "NOT FALSIFIED (PASSED)":
-            sub_err.append(f"Task 024: Falsification verdict failed: {t24_sum.get('falsification_verdict')}")
+            sub_err.append(f"Task 024.1: Falsification verdict failed: {t24_sum.get('falsification_verdict')}")
 
         layers_meta = t24_sum.get("layers", {})
         expected_layer_counts = {
-            "L1_FIN": {"nodes": 19, "edges_simple": 17, "edges_multigraph": 45},
-            "L2_CONT": {"nodes": 36, "edges_simple": 48, "edges_multigraph": 62},
-            "L3_PHYS": {"nodes": 26, "edges_simple": 19, "edges_multigraph": 20},
-            "L4_JOIN": {"nodes": 65, "edges_simple": 99, "edges_multigraph": 133}
+            "L1_FIN": {"nodes": 19, "edges_simple": 17, "edges_multigraph": 45, "debt": 45.448, "mw": 0.0},
+            "L2_CONT": {"nodes": 36, "edges_simple": 48, "edges_multigraph": 62, "debt": 45.448, "mw": 0.0},
+            "L3_PHYS": {"nodes": 26, "edges_simple": 19, "edges_multigraph": 20, "debt": 0.0, "mw": 4401.0},
+            "L4_JOIN": {"nodes": 65, "edges_simple": 99, "edges_multigraph": 133, "debt": 45.448, "mw": 4401.0}
         }
         for lid, exp in expected_layer_counts.items():
             act = layers_meta.get(lid, {})
-            for metric in ["nodes", "edges_simple", "edges_multigraph"]:
-                if act.get(metric) != exp[metric]:
-                    sub_err.append(f"Task 024: {lid} {metric} drift: {act.get(metric)} vs expected {exp[metric]}")
+            if act.get("nodes") != exp["nodes"]:
+                sub_err.append(f"Task 024.1: {lid} nodes drift: {act.get('nodes')} vs expected {exp['nodes']}")
+            if act.get("edges_simple") != exp["edges_simple"]:
+                sub_err.append(f"Task 024.1: {lid} edges_simple drift: {act.get('edges_simple')} vs expected {exp['edges_simple']}")
+            if act.get("edges_multigraph") != exp["edges_multigraph"]:
+                sub_err.append(f"Task 024.1: {lid} edges_multigraph drift: {act.get('edges_multigraph')} vs expected {exp['edges_multigraph']}")
+            if abs(act.get("funded_debt_b", 0.0) - exp["debt"]) > 0.001:
+                sub_err.append(f"Task 024.1: {lid} debt drift: {act.get('funded_debt_b')} vs expected {exp['debt']}")
+            if abs(act.get("utility_mw", 0.0) - exp["mw"]) > 0.1:
+                sub_err.append(f"Task 024.1: {lid} MW drift: {act.get('utility_mw')} vs expected {exp['mw']}")
 
-        # 11.3: Articulation Points & Giant Component Invariants
+        # 11.3: Articulation Points & Normalized Shares
         art_comp = t24_sum.get("articulation_points_comparison", {})
-        if art_comp.get("L1_FIN") != 6 or art_comp.get("L2_CONT") != 7 or art_comp.get("L3_PHYS") != 9 or art_comp.get("L4_JOIN") != 19:
-            sub_err.append(f"Task 024: Articulation points count mismatch: L1={art_comp.get('L1_FIN')}, L2={art_comp.get('L2_CONT')}, L3={art_comp.get('L3_PHYS')}, L4={art_comp.get('L4_JOIN')}")
-        if abs(art_comp.get("articulation_points_gain_pct", 0.0) - 216.7) > 0.1:
-            sub_err.append(f"Task 024: Articulation points gain % drift: {art_comp.get('articulation_points_gain_pct')} vs expected 216.7%")
+        l1_art = art_comp.get("L1_FIN", {})
+        l2_art = art_comp.get("L2_CONT", {})
+        l3_art = art_comp.get("L3_PHYS", {})
+        l4_art = art_comp.get("L4_JOIN", {})
 
-        # 11.4: Pre-Registered Falsification Test Invariants
-        fals_tests = t24_sum.get("falsification_tests", {})
-        for cid in ["CASE_A", "CASE_B", "CASE_C"]:
-            ctest = fals_tests.get(cid, {})
-            if not ctest.get("passes_50pct_threshold"):
-                sub_err.append(f"Task 024: Falsification test {cid} did not pass 50% threshold: {ctest}")
-            if cid in ["CASE_A", "CASE_B"]:
-                if ctest.get("single_best_value") != 0.0 or ctest.get("joined_value") != 1176.0:
-                    sub_err.append(f"Task 024: {cid} MW values drift: single={ctest.get('single_best_value')}, joined={ctest.get('joined_value')}")
-            else:
-                if ctest.get("single_best_value") != 0.0 or abs(ctest.get("joined_value", 0.0) - 3.94) > 0.01:
-                    sub_err.append(f"Task 024: {cid} debt values drift: single={ctest.get('single_best_value')}, joined={ctest.get('joined_value')}")
+        if l1_art.get("count") != 6 or abs(l1_art.get("share_pct", 0.0) - 31.58) > 0.1:
+            sub_err.append(f"Task 024.1: L1 articulation points drift: {l1_art}")
+        if l2_art.get("count") != 7 or abs(l2_art.get("share_pct", 0.0) - 19.44) > 0.1:
+            sub_err.append(f"Task 024.1: L2 articulation points drift: {l2_art}")
+        if l3_art.get("count") != 9 or abs(l3_art.get("share_pct", 0.0) - 34.62) > 0.1:
+            sub_err.append(f"Task 024.1: L3 articulation points drift: {l3_art}")
+        if l4_art.get("count") != 19 or abs(l4_art.get("share_pct", 0.0) - 29.23) > 0.1:
+            sub_err.append(f"Task 024.1: L4 articulation points drift: {l4_art}")
+        if l4_art.get("facility_cut_vertices_count") != 6 or abs(l4_art.get("facility_share_of_articulation_points_pct", 0.0) - 31.58) > 0.1:
+            sub_err.append(f"Task 024.1: L4 facility cut vertices drift: count={l4_art.get('facility_cut_vertices_count')}, share={l4_art.get('facility_share_of_articulation_points_pct')}")
+
+        # 11.4: Pre-Specified Three Falsification Criteria
+        fals_audit = t24_sum.get("falsification_audit", {})
+        c1 = fals_audit.get("criterion_1_cross_layer_path_reconstructibility", {})
+        if not c1.get("passed") or c1.get("total_paths_audited") != 12 or c1.get("paths_reconstructible_in_single_layer") != 0:
+            sub_err.append(f"Task 024.1: Criterion 1 failed or drifted: {c1}")
+
+        c2 = fals_audit.get("criterion_2_facility_cut_vertices", {})
+        if not c2.get("passed") or c2.get("facility_cut_vertices_count") != 6 or c2.get("facility_cut_vertices_count") < 3:
+            sub_err.append(f"Task 024.1: Criterion 2 failed or drifted: {c2}")
+
+        c3 = fals_audit.get("criterion_3_null_model_concentration", {})
+        if not c3.get("passed") or c3.get("ercot_p_value") >= 0.05:
+            sub_err.append(f"Task 024.1: Criterion 3 failed or p >= 0.05: {c3}")
+
+        if fals_audit.get("overall_verdict") != "NOT FALSIFIED (PASSED ACROSS ALL 3 CRITERIA)":
+            sub_err.append(f"Task 024.1: Overall falsification verdict mismatch: {fals_audit.get('overall_verdict')}")
 
         # 11.5: Reconvergence Invariants
         reconv = t24_sum.get("reconvergence", {})
-        if reconv.get("crwv_tenant_reconvergence_mw") != 1226.0:
-            sub_err.append(f"Task 024: CoreWeave tenant reconvergence MW drift: {reconv.get('crwv_tenant_reconvergence_mw')} vs expected 1226.0")
-        if reconv.get("ercot_grid_reconvergence_mw") != 3164.0:
-            sub_err.append(f"Task 024: ERCOT grid reconvergence MW drift: {reconv.get('ercot_grid_reconvergence_mw')} vs expected 3164.0")
+        if reconv.get("coreweave_tenant_utility_mw") != 1176.0:
+            sub_err.append(f"Task 024.1: CoreWeave tenant utility MW drift: {reconv.get('coreweave_tenant_utility_mw')} vs expected 1176.0")
+        if reconv.get("coreweave_tenant_it_mw") != 990.0:
+            sub_err.append(f"Task 024.1: CoreWeave tenant IT contracted MW drift: {reconv.get('coreweave_tenant_it_mw')} vs expected 990.0")
+        if reconv.get("ercot_grid_mw") != 3164.0:
+            sub_err.append(f"Task 024.1: ERCOT grid MW drift: {reconv.get('ercot_grid_mw')} vs expected 3164.0")
+        if abs(reconv.get("ercot_grid_share_pct", 0.0) - 71.89) > 0.01:
+            sub_err.append(f"Task 024.1: ERCOT grid share drift: {reconv.get('ercot_grid_share_pct')} vs expected 71.89%")
+
+    # 11.6: Direct Path Evidence Table Invariants
+    paths_csv_path = OUTPUTS_DIR / "analysis" / "cross_layer_dependency_paths.csv"
+    if paths_csv_path.exists():
+        paths_df = pd.read_csv(paths_csv_path)
+        if len(paths_df) != 12:
+            sub_err.append(f"Task 024.1: Dependency paths count mismatch: {len(paths_df)} vs expected 12")
+        if paths_df["reconstructible_in_G_fin"].any() or paths_df["reconstructible_in_G_cont"].any() or paths_df["reconstructible_in_G_phys"].any():
+            sub_err.append("Task 024.1: Regression! A cross-domain path was reconstructible in an isolated layer.")
+        if not paths_df["reconstructible_in_G_join"].all():
+            sub_err.append("Task 024.1: Cross-domain path failed to reconstruct in G_join.")
+
+    # 11.7: Null Model Statistical Test Invariants
+    null_test_path = OUTPUTS_DIR / "analysis" / "cross_layer_null_model_test.json"
+    if null_test_path.exists():
+        with open(null_test_path, "r", encoding="utf-8") as f:
+            nt_data = json.load(f)
+        if nt_data.get("null_model_trials") != 1000:
+            sub_err.append(f"Task 024.1: Null model trials mismatch: {nt_data.get('null_model_trials')} vs expected 1000")
+        ercot_res = nt_data.get("ercot_grid_concentration", {})
+        if ercot_res.get("p_value", 1.0) >= 0.05 or not ercot_res.get("statistically_significant_at_05"):
+            sub_err.append(f"Task 024.1: ERCOT null model concentration not significant: {ercot_res}")
 
     if sub_err:
         errors.extend(sub_err)
     else:
-        print("  [OK] Task 024: Cross-Layer JOIN Gain invariants verified (65 nodes, 99 edges, 19 articulation points [+216.7%], falsification test PASSED across all 3 shock cases).")
+        print("  [OK] Task 024.1: Cross-Domain Dependency Paths & Falsification Invariants verified (12 paths unconstructible in single layers, 6 facility cut-vertices, ERCOT null model p=0.0060 < 0.05, zero percentage-from-zero artifacts).")
 
     if errors:
         print("\n[VALIDATION FAILED]")

@@ -1,0 +1,21 @@
+{
+  "null_model_trials": 1000,
+  "total_portfolio_capacity_mw": 4401.0,
+  "ercot_grid_concentration": {
+    "observed_mw": 3164.0,
+    "observed_share_pct": 71.89,
+    "null_model_mean_mw": 1544.0,
+    "null_model_std_mw": 685.0,
+    "p_value": 0.006,
+    "statistically_significant_at_05": true
+  },
+  "coreweave_tenant_concentration": {
+    "observed_utility_mw": 1176.0,
+    "observed_it_contracted_mw": 990.0,
+    "observed_share_pct": 26.72,
+    "null_model_mean_mw": 1882.0,
+    "null_model_std_mw": 718.9,
+    "p_value": 0.816
+  },
+  "criterion_3_passed": true
+}
