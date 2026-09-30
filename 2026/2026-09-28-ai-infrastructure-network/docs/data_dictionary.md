@@ -295,10 +295,12 @@ Tracks 51 granular attribution links across all 47 decomposed financial obligati
 | `allocation_scope` | String | No | Scope taxonomy: `single_facility`, `multi_facility`, `corporate_unallocated`, `unknown`. | `single_facility` |
 | `allocated_amount` | Float | Yes | Disclosed funded principal, lease commitment, or contract value in USD; null for multi-facility, uncapped, or corporate unallocated. | `2350000000.0` |
 | `allocation_fraction`| Float | Yes | Disclosed proportion of obligation allocated (e.g. `1.0`, `0.5`); null otherwise. | `1.0` |
-| `amount_type` | String | No | Taxonomy: `funded_principal`, `lease_commitment`, `contingent_indemnity`, `guarantee_recourse`, `unallocated_debt`, `capacity_reservation`, `equity_investment`. | `funded_principal` |
+| `amount_type` | String | No | Taxonomy: `funded_principal`, `facility_capacity`, `lease_commitment`, `contingent_indemnity`, `guarantee_recourse`, `unallocated_debt`, `capacity_reservation`, `equity_investment`, `customer_concentration`, `joint_and_several_liability`. | `funded_principal` |
 | `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted), `C` (Inferred). | `A` |
-| `claim_id` | String | No | Foreign Key referencing `evidence_claims.claim_id` or `power_claims.claim_id`. | `CLM-APLD-001` |
-| `economic_from` | Date (str)| No | Effective date in economic reality (`YYYY-MM-DD`). | `2024-06-14` |
-| `publicly_known_from`| Date (str)| No | Earliest date publicly disclosed (`YYYY-MM-DD`). | `2024-06-14` |
+| `truth_claim_id` | String | No | Foreign Key referencing primary source establishing ontological truth of the link. | `CLM-APLD-003` |
+| `knowledge_claim_id` | String | No | Foreign Key referencing disclosure establishing public awareness of the link. | `CLM-APLD-010` |
+| `claim_id` | String | No | Backward-compatible Foreign Key referencing primary claim. | `CLM-APLD-003` |
+| `economic_from` | Date (str)| No | Effective date in economic reality (`YYYY-MM-DD`). | `2025-11-20` |
+| `publicly_known_from`| Date (str)| No | Earliest date publicly disclosed (`YYYY-MM-DD`). | `2026-01-08` |
 | `notes` | String | Yes | Detailed provenance and boundary documentation. | *Text* |
 

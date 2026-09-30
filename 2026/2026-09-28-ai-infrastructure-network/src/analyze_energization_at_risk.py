@@ -1,13 +1,32 @@
 """
-Analysis Engine: Energization-at-Risk & Capital-to-MW Attribution (Task 021)
-Implements ADR-021 Stage B Analysis.
+Analysis Engine: Energization-at-Risk & Capital Synchronization Resilience (Task 021 / ADR-021.1)
+Implements ADR-021.1 Stage B Analysis.
 
 Calculates:
-1. Facility-by-facility attribution table (Debt, Lease, Contracted MW, Energized MW, Milestone).
-2. Capital-at-Risk Before Service across incomplete physical assets.
-3. Systemic unallocated corporate debt isolation.
-4. Temporal mismatch dynamics (staged deliveries, 30-month notes, Carrying costs).
-5. Substation/Equipment delivery slippage sensitivity (6, 12, 18 months).
+1. Facility-by-facility attribution table with typed completion dimensions:
+   - utility_service_capacity_mw
+   - utility_load_online_mw
+   - critical_it_contracted_mw
+   - service_ready_it_mw
+   - gpu_equipment_deployment_state
+   - gpu_compute_operational_mw
+   (Preserves unknown/null without synthetic zero imputation).
+2. Capital-at-Risk Before Service:
+   - Facility-attributable funded debt: strictly $6,090.0M ($6.090B, APLD ComputeCo SPVs).
+   - Committed equipment financing capacity: $2,400.0M ($2.400B, IREN Mackenzie).
+   - Active corporate unallocated debt: $39,357.68M ($39.358B).
+3. Exact coupon carrying costs:
+   - PF1: $2.35B @ 9.25% ($217.375M) + $1.59B @ 7.00% ($111.300M) = $328.675M/yr
+   - PF2: $2.15B @ 6.75% = $145.125M/yr
+   - Total APLD project interest = $473.800M/yr
+   - IREN Mackenzie: $216.0M/yr full-capacity coupon equivalent (not current carry).
+4. Phased lease delay sensitivity:
+   - Building 2 (100 MW) service-ready in Oct 2025.
+   - Uncommissioned space (300 MW / 75%) exposed to delay: $550.0M/yr base ($275.0M / 6 mo).
+5. Capital Synchronization Resilience:
+   - Escrow holding (PF2 held until June 18, 2026).
+   - Staged funding on equipment acceptance (IREN Dec 31, 2026 cliff).
+   - Uncapped completion indemnities (ELN-02 / ELN-03).
 """
 
 from pathlib import Path
@@ -32,122 +51,190 @@ def run_energization_analysis():
     fac_df = pd.read_parquet(PROCESSED_DIR / "facilities.parquet")
     lnk_df = pd.read_parquet(PROCESSED_DIR / "obligation_facility_links.parquet")
     obl_df = pd.read_parquet(PROCESSED_DIR / "obligations.parquet")
-    pwr_rel_df = pd.read_parquet(PROCESSED_DIR / "power_relationships.parquet")
-    pwr_facts_df = pd.read_parquet(PROCESSED_DIR / "power_facts.parquet")
 
     # -------------------------------------------------------------
-    # 1. Build Facility Attribution & Energization Metrics
+    # 1. Typed Physical & Contractual Completion Dimensions
     # -------------------------------------------------------------
+    # Primary source facts: utility capacity vs IT capacity vs GPU state
+    typed_facility_dimensions = {
+        "FAC-APLD-POLARIS-FORGE-1": {
+            "utility_service_capacity_mw": 350.0,  # MDU ESA approved incremental capacity (180 MW initial)
+            "utility_load_online_mw": 60.0,        # MDU incremental online load at PF1
+            "critical_it_contracted_mw": 400.0,    # CoreWeave 15-yr master lease (Bldgs 2, 3, 4)
+            "service_ready_it_mw": 100.0,          # Bldg 2 service-ready Oct 2025; Bldg 3 (150 MW) partial
+            "gpu_equipment_deployment_state": "Tenant (CoreWeave) cluster commissioning & fit-out",
+            "gpu_compute_operational_mw": None,    # Undisclosed / tenant-managed
+            "next_milestone": "Building 2 full tenant occupancy & Building 3 commissioning (2026-2027)",
+            "evidence_completeness": "Class A (10-K, 8-K, Ex 10.1 & 10.2)"
+        },
+        "FAC-APLD-POLARIS-FORGE-2": {
+            "utility_service_capacity_mw": None,   # Pending service agreement finalization
+            "utility_load_online_mw": None,        # Pre-energization
+            "critical_it_contracted_mw": 200.0,    # Hyperscaler anchor lease
+            "service_ready_it_mw": 0.0,            # Under construction
+            "gpu_equipment_deployment_state": "Civil / electrical shell construction",
+            "gpu_compute_operational_mw": None,
+            "next_milestone": "Initial capacity H2 2026; full 200 MW early 2027",
+            "evidence_completeness": "Class A (10-K Item 1 & Note 10)"
+        },
+        "FAC-IREN-MACKENZIE": {
+            "utility_service_capacity_mw": 80.0,   # BC Hydro connection agreement (operating since April 2022)
+            "utility_load_online_mw": 80.0,        # Fully energized data center campus
+            "critical_it_contracted_mw": 80.0,     # Data center IT capacity
+            "service_ready_it_mw": 80.0,           # Operational facility infrastructure
+            "gpu_equipment_deployment_state": "Staged GPU server delivery & acceptance through Dec 31, 2026",
+            "gpu_compute_operational_mw": None,    # Undisclosed point-in-time GPU deployment
+            "next_milestone": "GPU server staged delivery & acceptance through Dec 31, 2026",
+            "evidence_completeness": "Class A (10-K Note August 2026 Financing)"
+        },
+        "FAC-CORZ-DENTON": {
+            "utility_service_capacity_mw": 394.0,  # Denton Municipal Electric total utility agreement
+            "utility_load_online_mw": 100.0,       # Energized operating colocation capacity
+            "critical_it_contracted_mw": 270.0,    # CoreWeave leased colocation capacity
+            "service_ready_it_mw": 100.0,          # Operating data hall capacity
+            "gpu_equipment_deployment_state": "Tenant fit-out / ongoing colocation conversion",
+            "gpu_compute_operational_mw": None,
+            "next_milestone": "Colocation fit-out across multi-building campus",
+            "evidence_completeness": "Class A (10-K, 8-K Note Denton Lease)"
+        },
+        "FAC-CORZ-DALTON": {
+            "utility_service_capacity_mw": 195.0,  # Dalton Utilities
+            "utility_load_online_mw": None,        # Undisclosed operating split
+            "critical_it_contracted_mw": None,     # Multi-facility contract allocation
+            "service_ready_it_mw": None,
+            "gpu_equipment_deployment_state": "HPC infrastructure retrofit from mining",
+            "gpu_compute_operational_mw": None,
+            "next_milestone": "HPC infrastructure retrofit from mining",
+            "evidence_completeness": "Class A (10-K Colocation table)"
+        },
+        "FAC-CORZ-MUSKOGEE": {
+            "utility_service_capacity_mw": 100.0,  # OG&E
+            "utility_load_online_mw": None,
+            "critical_it_contracted_mw": None,
+            "service_ready_it_mw": None,
+            "gpu_equipment_deployment_state": "HPC infrastructure retrofit from mining",
+            "gpu_compute_operational_mw": None,
+            "next_milestone": "HPC infrastructure retrofit from mining",
+            "evidence_completeness": "Class A (10-K Colocation table)"
+        },
+        "FAC-CORZ-MARBLE": {
+            "utility_service_capacity_mw": 117.0,  # Duke Energy (82 MW) + Murphy EPB (35 MW)
+            "utility_load_online_mw": None,
+            "critical_it_contracted_mw": None,
+            "service_ready_it_mw": None,
+            "gpu_equipment_deployment_state": "HPC infrastructure retrofit from mining",
+            "gpu_compute_operational_mw": None,
+            "next_milestone": "HPC infrastructure retrofit from mining",
+            "evidence_completeness": "Class A (10-K Colocation table)"
+        },
+        "FAC-CORZ-AUSTIN": {
+            "utility_service_capacity_mw": 20.0,   # Austin Energy
+            "utility_load_online_mw": None,
+            "critical_it_contracted_mw": None,
+            "service_ready_it_mw": None,
+            "gpu_equipment_deployment_state": "HPC infrastructure retrofit from mining",
+            "gpu_compute_operational_mw": None,
+            "next_milestone": "HPC infrastructure retrofit from mining",
+            "evidence_completeness": "Class A (10-K Colocation table)"
+        },
+        "FAC-WULF-LAKE-MARINER": {
+            "utility_service_capacity_mw": 226.0,  # NYPA hydro + National Grid
+            "utility_load_online_mw": 226.0,       # Energized operating capacity
+            "critical_it_contracted_mw": None,
+            "service_ready_it_mw": 226.0,
+            "gpu_equipment_deployment_state": "Operational mining / 500 MW expansion engineering",
+            "gpu_compute_operational_mw": None,
+            "next_milestone": "500 MW planned expansion engineering",
+            "evidence_completeness": "Class A (10-K NYPA allocation)"
+        },
+        "FAC-IREN-CHILDRESS": {
+            "utility_service_capacity_mw": 750.0,  # Connection agreement capacity
+            "utility_load_online_mw": 650.0,       # Operating substation load
+            "critical_it_contracted_mw": None,
+            "service_ready_it_mw": 650.0,
+            "gpu_equipment_deployment_state": "Operating mining & cloud pilot",
+            "gpu_compute_operational_mw": None,
+            "next_milestone": "Final 100 MW substation expansion to 750 MW",
+            "evidence_completeness": "Class A (10-K Item 1 & Note 7)"
+        },
+        "FAC-IREN-SWEETWATER-1": {
+            "utility_service_capacity_mw": 1400.0, # Connection agreement executed (not energized)
+            "utility_load_online_mw": None,
+            "critical_it_contracted_mw": None,
+            "service_ready_it_mw": 0.0,
+            "gpu_equipment_deployment_state": "Substation procurement & interconnection construction",
+            "gpu_compute_operational_mw": None,
+            "next_milestone": "Interconnection substation construction (1,400 MW)",
+            "evidence_completeness": "Class A (10-K Item 1)"
+        },
+        "FAC-IREN-SWEETWATER-2": {
+            "utility_service_capacity_mw": 600.0,  # Connection agreement executed (not energized)
+            "utility_load_online_mw": None,
+            "critical_it_contracted_mw": None,
+            "service_ready_it_mw": 0.0,
+            "gpu_equipment_deployment_state": "AEP Texas substation engineering",
+            "gpu_compute_operational_mw": None,
+            "next_milestone": "AEP Texas 600 MW substation engineering",
+            "evidence_completeness": "Class A (10-K Item 1)"
+        },
+        "FAC-NBIS-MANTSALA": {
+            "utility_service_capacity_mw": 75.0,   # Nivos grid connection
+            "utility_load_online_mw": 75.0,        # Fully energized commercial service
+            "critical_it_contracted_mw": 75.0,
+            "service_ready_it_mw": 75.0,
+            "gpu_equipment_deployment_state": "Fully operational GPU cluster operations",
+            "gpu_compute_operational_mw": 75.0,
+            "next_milestone": "Commercial operational service / heat recovery",
+            "evidence_completeness": "Class A (10-K & Utility Primary Source)"
+        },
+        "FAC-NBIS-LAPPEENRANTA": {
+            "utility_service_capacity_mw": 310.0,  # Planned grid connection capacity
+            "utility_load_online_mw": None,
+            "critical_it_contracted_mw": None,
+            "service_ready_it_mw": 0.0,
+            "gpu_equipment_deployment_state": "Engineering design / pre-construction",
+            "gpu_compute_operational_mw": None,
+            "next_milestone": "Pending grid interconnection & engineering review",
+            "evidence_completeness": "Class B (10-K development announcement)"
+        }
+    }
+
     facility_rows = []
-
-    # Map facility capacity and energized load from power_relationships & power_facts
-    # Measured energized load map
-    measured_energized = {
-        "FAC-APLD-POLARIS-FORGE-1": 60.0,   # MDU incremental online load
-        "FAC-CORZ-DENTON": 100.0,           # CORZ Form 10-K Denton operating colocation
-        "FAC-CORZ-DALTON": None,            # Unmeasured/unasserted in live operating disclosures
-        "FAC-CORZ-MUSKOGEE": None,
-        "FAC-CORZ-MARBLE": None,
-        "FAC-CORZ-AUSTIN": None,
-        "FAC-WULF-LAKE-MARINER": 226.0,     # Form 10-K operating capacity
-        "FAC-IREN-CHILDRESS": 650.0,        # Form 10-K operating capacity
-        "FAC-IREN-SWEETWATER-1": 0.0,       # Under development
-        "FAC-IREN-SWEETWATER-2": 0.0,       # Under development
-        "FAC-NBIS-MANTSALA": 75.0,          # Form 10-K operating capacity
-        "FAC-NBIS-LAPPEENRANTA": 0.0,       # Announced development
-        "FAC-IREN-MACKENZIE": 0.0,          # 80 MW campus; GPU cluster staged delivery underway
-        "FAC-APLD-POLARIS-FORGE-2": 0.0,    # Under construction
-    }
-
-    # Contracted capacity basis map (MW)
-    contracted_capacity = {
-        "FAC-APLD-POLARIS-FORGE-1": 400.0,  # 400 MW critical IT lease with CoreWeave (350 MW MDU ESA)
-        "FAC-CORZ-DENTON": 270.0,           # 270 MW leased to CoreWeave (394 MW gross utility capacity)
-        "FAC-CORZ-DALTON": 195.0,           # Gross utility capacity
-        "FAC-CORZ-MUSKOGEE": 100.0,         # Gross utility capacity
-        "FAC-CORZ-MARBLE": 117.0,           # Gross utility capacity (35 MW Murphy + 82 MW Duke)
-        "FAC-CORZ-AUSTIN": 20.0,            # Gross utility capacity
-        "FAC-WULF-LAKE-MARINER": 90.0,      # NYPA hydro allocation (226 MW total site)
-        "FAC-IREN-CHILDRESS": 750.0,        # Total connection agreement capacity
-        "FAC-IREN-SWEETWATER-1": 1400.0,    # Executed connection agreement
-        "FAC-IREN-SWEETWATER-2": 600.0,     # Executed connection agreement
-        "FAC-NBIS-MANTSALA": 75.0,          # Operational grid connection
-        "FAC-NBIS-LAPPEENRANTA": 310.0,     # Planned AI factory
-        "FAC-IREN-MACKENZIE": 80.0,         # 80 MW campus capacity in BC
-        "FAC-APLD-POLARIS-FORGE-2": 200.0,  # 200 MW hyperscaler lease
-    }
-
-    milestones = {
-        "FAC-APLD-POLARIS-FORGE-1": "Bldg 2 completion & Bldg 3/4 commissioning (2026-2027)",
-        "FAC-APLD-POLARIS-FORGE-2": "Initial capacity H2 2026; full 200 MW early 2027",
-        "FAC-IREN-MACKENZIE": "GPU server staged deliveries through Dec 31, 2026",
-        "FAC-CORZ-DENTON": "Colocation fit-out across multi-building campus",
-        "FAC-CORZ-DALTON": "HPC infrastructure retrofit from mining",
-        "FAC-CORZ-MUSKOGEE": "HPC infrastructure retrofit from mining",
-        "FAC-CORZ-MARBLE": "HPC infrastructure retrofit from mining",
-        "FAC-CORZ-AUSTIN": "HPC infrastructure retrofit from mining",
-        "FAC-WULF-LAKE-MARINER": "500 MW planned expansion engineering",
-        "FAC-IREN-CHILDRESS": "Final 100 MW substation expansion to 750 MW",
-        "FAC-IREN-SWEETWATER-1": "Interconnection substation construction (1,400 MW)",
-        "FAC-IREN-SWEETWATER-2": "AEP Texas 600 MW substation engineering",
-        "FAC-NBIS-MANTSALA": "Commercial operational service / heat recovery",
-        "FAC-NBIS-LAPPEENRANTA": "Pending grid interconnection & engineering review"
-    }
-
-    evidence_completeness = {
-        "FAC-APLD-POLARIS-FORGE-1": "Class A (10-K, 8-K, Ex 10.1 & 10.2)",
-        "FAC-APLD-POLARIS-FORGE-2": "Class A (10-K Item 1 & Note 10)",
-        "FAC-IREN-MACKENZIE": "Class A (10-K Note August 2026 Financing)",
-        "FAC-CORZ-DENTON": "Class A (10-K, 8-K Note Denton Lease)",
-        "FAC-CORZ-DALTON": "Class A (10-K Colocation table)",
-        "FAC-CORZ-MUSKOGEE": "Class A (10-K Colocation table)",
-        "FAC-CORZ-MARBLE": "Class A (10-K Colocation table)",
-        "FAC-CORZ-AUSTIN": "Class A (10-K Colocation table)",
-        "FAC-WULF-LAKE-MARINER": "Class A (10-K NYPA allocation)",
-        "FAC-IREN-CHILDRESS": "Class A (10-K Item 1 & Note 7)",
-        "FAC-IREN-SWEETWATER-1": "Class A (10-K Item 1)",
-        "FAC-IREN-SWEETWATER-2": "Class A (10-K Item 1)",
-        "FAC-NBIS-MANTSALA": "Class A (10-K & Utility Primary Source)",
-        "FAC-NBIS-LAPPEENRANTA": "Class B (10-K development announcement)"
-    }
-
     for _, fac in fac_df.iterrows():
         fid = fac["facility_id"]
         fname = fac["facility_name"]
         op = fac["operator_entity_id"]
+        dims = typed_facility_dimensions.get(fid, {})
 
         flinks = lnk_df[lnk_df["facility_id"] == fid]
 
-        # Funded attributable debt
-        debt_rows = flinks[flinks["link_type"].isin(["direct_project_financing", "direct_equipment_financing"])]
-        attributable_debt = debt_rows["allocated_amount"].sum() if not debt_rows.empty else 0.0
+        # Funded attributable debt (APLD ComputeCo notes only)
+        funded_rows = flinks[flinks["amount_type"] == "funded_principal"]
+        attributable_funded_debt = funded_rows["allocated_amount"].sum() if not funded_rows.empty else 0.0
+
+        # Committed financing capacity (IREN August 2026 agreements)
+        cap_rows = flinks[flinks["amount_type"] == "facility_capacity"]
+        committed_financing_capacity = cap_rows["allocated_amount"].sum() if not cap_rows.empty else 0.0
 
         # Customer / lease commitment
         lease_rows = flinks[flinks["link_type"].isin(["direct_lease", "direct_customer_contract"])]
         attributable_lease = lease_rows["allocated_amount"].sum() if not lease_rows.empty else 0.0
 
-        contracted_mw = contracted_capacity.get(fid, 0.0)
-        energized_mw = measured_energized.get(fid, None)
-
-        if energized_mw is not None:
-            unenergized_mw = max(0.0, contracted_mw - energized_mw)
-            gap_ratio = unenergized_mw / contracted_mw if contracted_mw > 0 else 0.0
-        else:
-            unenergized_mw = None
-            gap_ratio = None
-
         facility_rows.append({
             "facility_id": fid,
             "facility_name": fname,
             "operator_entity_id": op,
-            "attributable_funded_debt_m": attributable_debt / 1e6,
+            "attributable_funded_debt_m": attributable_funded_debt / 1e6,
+            "committed_financing_capacity_m": committed_financing_capacity / 1e6,
             "customer_lease_commitment_m": attributable_lease / 1e6,
-            "contracted_mw": contracted_mw,
-            "measured_energized_mw": energized_mw,
-            "unenergized_mw": unenergized_mw,
-            "energization_gap_ratio": gap_ratio,
-            "next_milestone": milestones.get(fid, "Operational"),
-            "evidence_completeness": evidence_completeness.get(fid, "Class A")
+            "utility_service_capacity_mw": dims.get("utility_service_capacity_mw"),
+            "utility_load_online_mw": dims.get("utility_load_online_mw"),
+            "critical_it_contracted_mw": dims.get("critical_it_contracted_mw"),
+            "service_ready_it_mw": dims.get("service_ready_it_mw"),
+            "gpu_equipment_deployment_state": dims.get("gpu_equipment_deployment_state"),
+            "gpu_compute_operational_mw": dims.get("gpu_compute_operational_mw"),
+            "next_milestone": dims.get("next_milestone", "Operational"),
+            "evidence_completeness": dims.get("evidence_completeness", "Class A")
         })
 
     table_df = pd.DataFrame(facility_rows)
@@ -156,46 +243,70 @@ def run_energization_analysis():
     # -------------------------------------------------------------
     # 2. Systemic Aggregates & Capital-at-Risk Before Service
     # -------------------------------------------------------------
-    # Capital-at-Risk Before Service: sum of attributable funded debt on incomplete facilities
-    # Incomplete facilities: PF1 (60 MW / 400 MW), PF2 (0 MW / 200 MW), Mackenzie (staged delivery through Dec 2026)
-    incomplete_facilities = ["FAC-APLD-POLARIS-FORGE-1", "FAC-APLD-POLARIS-FORGE-2", "FAC-IREN-MACKENZIE"]
-    capital_at_risk_before_service = table_df[table_df["facility_id"].isin(incomplete_facilities)]["attributable_funded_debt_m"].sum()
+    # Total facility-attributable funded debt is strictly $6,090.0M ($6.090B, APLD only)
+    total_funded_debt = table_df["attributable_funded_debt_m"].sum()
+    assert abs(total_funded_debt - 6090.0) < 1e-3, f"Expected $6,090M funded debt, got {total_funded_debt}"
 
-    total_attributable_debt = table_df["attributable_funded_debt_m"].sum()
-    total_customer_commitments = table_df["customer_lease_commitment_m"].sum()
+    # Committed capacity is $2,400.0M ($2.400B, IREN Mackenzie)
+    total_committed_cap = table_df["committed_financing_capacity_m"].sum()
+    assert abs(total_committed_cap - 2400.0) < 1e-3, f"Expected $2,400M committed cap, got {total_committed_cap}"
+
+    # Incomplete facilities with funded debt: PF1 ($3.94B) and PF2 ($2.15B) = $6.090B
+    # Note: PF1 Building 2 (100 MW) is service-ready, but Buildings 3 and 4 (300 MW / 75%) are under construction
+    capital_at_risk_before_service = total_funded_debt  # $6,090.0M
 
     # Unallocated corporate debt
     corp_links = lnk_df[lnk_df["allocation_scope"] == "corporate_unallocated"]
     corp_obls = obl_df[obl_df["obligation_id"].isin(corp_links["obligation_id"]) & (obl_df["amount_type"] == "principal_outstanding")]
-    total_unallocated_corp_debt = corp_obls["amount"].sum() / 1e6
+    active_corp = corp_obls[corp_obls["valid_to"].isna() | (corp_obls["valid_to"] > "2026-09-28")]
+    total_active_corp_debt = active_corp["amount"].sum() / 1e6  # $39,357.68M
 
     # -------------------------------------------------------------
-    # 3. Temporal Slippage Sensitivity (Carrying Cost & Delayed Cash Flow)
+    # 3. Exact Coupon Carrying Costs & Sensitivity Derivations
     # -------------------------------------------------------------
-    # For APLD PF1 ($3.94B @ ~6.85% blended) and PF2 ($2.15B @ 6.75%):
-    # Total APLD project debt = $6.090B. Annual interest = ~$415.0M.
-    # For IREN Mackenzie ($2.40B @ 9.00%):
-    # Annual interest = $216.0M.
-    total_at_risk_annual_interest = (3940.0 * 0.0685) + (2150.0 * 0.0675) + (2400.0 * 0.0900)
+    # APLD Project Notes Interest Carry (Exact):
+    # - PF1 2030 Notes: $2,350M @ 9.250% = $217.375M/yr
+    # - PF1 2031 Notes (ComputeCo 3): $1,590M @ 7.000% = $111.300M/yr
+    # - PF2 2031 Notes (ComputeCo 2): $2,150M @ 6.750% = $145.125M/yr
+    # Total APLD Annual Carrying Cost = $473.800M/yr
+    apld_annual_carrying_cost = (2350.0 * 0.0925) + (1590.0 * 0.0700) + (2150.0 * 0.0675)
+    assert abs(apld_annual_carrying_cost - 473.8) < 1e-3, f"Carrying cost mismatch: {apld_annual_carrying_cost}"
+
+    # IREN Mackenzie Full-Capacity Coupon Equivalent:
+    # $2,400M @ 9.00% = $216.0M/yr (committed capacity coupon equivalent, not observed carry)
+    iren_coupon_equivalent = 2400.0 * 0.0900
+
+    # Phased Lease Revenue Delay on Uncommissioned Space:
+    # APLD 15-yr master lease: $11.0B total = $733.33M/yr across 400 MW ($1.833M/MW/yr)
+    # Building 2 (100 MW) is service-ready in Oct 2025 (generating or ready for lease revenue).
+    # Uncommissioned space: Buildings 3 and 4 (300 MW out of 400 MW = 75%).
+    # Maximum uncommissioned delayed lease cash flow = 75% * $733.33M = $550.0M/yr.
+    annual_uncommissioned_lease_delay = (11000.0 / 15.0) * (300.0 / 400.0)  # $550.0M/yr
 
     slippage_scenarios = {
         "6_month_delay": {
-            "carrying_cost_m": round(total_at_risk_annual_interest * 0.5, 2),
-            "apld_lease_revenue_delayed_m": round(11000.0 / 15 * 0.5, 2),  # ~$366.7M
-            "iren_gpu_window_impact": "Availability period ends Dec 31, 2026; un-drawn tranches require extension or cancellation.",
-            "covenant_risk": "Moderate: APLD liquidity reserves required; ELN-02/03 Springing indemnity triggers monitored."
+            "apld_debt_carrying_cost_m": round(apld_annual_carrying_cost * 0.5, 3),  # $236.900M
+            "iren_full_capacity_coupon_equivalent_m": round(iren_coupon_equivalent * 0.5, 3), # $108.0M
+            "phased_uncommissioned_lease_delayed_m": round(annual_uncommissioned_lease_delay * 0.5, 3), # $275.0M
+            "qualitative_risk_tier": "Modeled Hypothesis: Moderate (Reserves & Escrow Cushion Active)",
+            "iren_financing_mechanism": "Staged equipment acceptance funding window expires Dec 31, 2026; un-drawn capacity may expire or require extension.",
+            "covenant_and_resilience_notes": "PF2 escrow release already satisfied (June 18, 2026); ELN-02/ELN-03 springing indemnities provide CoreWeave completion backstop."
         },
         "12_month_delay": {
-            "carrying_cost_m": round(total_at_risk_annual_interest * 1.0, 2),
-            "apld_lease_revenue_delayed_m": round(11000.0 / 15 * 1.0, 2),  # ~$733.3M
-            "iren_gpu_window_impact": "Severe mismatch: 30-month maturity clock begins amortizing while GPU clusters un-monetized.",
-            "covenant_risk": "High: Operating cash flow shortfall requires dilutive equity issuance or project restructuring."
+            "apld_debt_carrying_cost_m": round(apld_annual_carrying_cost * 1.0, 3),  # $473.800M
+            "iren_full_capacity_coupon_equivalent_m": round(iren_coupon_equivalent * 1.0, 3), # $216.0M
+            "phased_uncommissioned_lease_delayed_m": round(annual_uncommissioned_lease_delay * 1.0, 3), # $550.0M
+            "qualitative_risk_tier": "Modeled Hypothesis: High (Carrying Costs Consume Liquidity Buffers)",
+            "iren_financing_mechanism": "30-month maturity clock on drawn tranches begins amortizing; un-drawn capacity unavailable without formal credit amendment.",
+            "covenant_and_resilience_notes": "Uncommissioned space lease delays require parent equity injections or debt service reserve drawdowns unless CoreWeave indemnities cure shortfall."
         },
         "18_month_delay": {
-            "carrying_cost_m": round(total_at_risk_annual_interest * 1.5, 2),
-            "apld_lease_revenue_delayed_m": round(11000.0 / 15 * 1.5, 2),  # ~$1,100.0M
-            "iren_gpu_window_impact": "Critical: 60% of 30-month loan term consumed without productive cloud ARR.",
-            "covenant_risk": "Critical: Debt service default risk on SPV notes without parent recapitalization."
+            "apld_debt_carrying_cost_m": round(apld_annual_carrying_cost * 1.5, 3),  # $710.700M
+            "iren_full_capacity_coupon_equivalent_m": round(iren_coupon_equivalent * 1.5, 3), # $324.0M
+            "phased_uncommissioned_lease_delayed_m": round(annual_uncommissioned_lease_delay * 1.5, 3), # $825.0M
+            "qualitative_risk_tier": "Modeled Hypothesis: Critical (Restructuring or Refinancing Required)",
+            "iren_financing_mechanism": "Over 50% of 30-month note term consumed without productive GPU ARR on drawn equipment.",
+            "covenant_and_resilience_notes": "Project SPV debt service defaults probable without major corporate refinancing or equity recapitalization."
         }
     }
 
@@ -203,15 +314,22 @@ def run_energization_analysis():
     # 4. Save JSON Summary
     # -------------------------------------------------------------
     summary = {
-        "task": "Task 021 - Energization-at-Risk & Capital Attribution",
-        "stage": "ADR-021 Certified",
+        "task": "Task 021 - Energization-at-Risk & Capital Synchronization Resilience",
+        "stage": "ADR-021.1 Certified",
         "total_modeled_facilities": len(table_df),
-        "total_facility_attributable_funded_debt_m": total_attributable_debt,
+        "total_facility_attributable_funded_debt_m": total_funded_debt,
+        "total_committed_equipment_financing_capacity_m": total_committed_cap,
         "capital_at_risk_before_service_m": capital_at_risk_before_service,
-        "share_of_attributable_debt_at_risk_pct": 100.0 * (capital_at_risk_before_service / total_attributable_debt),
-        "total_customer_lease_commitments_linked_m": total_customer_commitments,
-        "total_unallocated_corporate_debt_m": total_unallocated_corp_debt,
-        "annual_interest_carrying_cost_on_incomplete_capacity_m": round(total_at_risk_annual_interest, 2),
+        "capital_at_risk_funded_debt_pct": 100.0 * (capital_at_risk_before_service / total_funded_debt),
+        "total_active_unallocated_corporate_debt_m": round(total_active_corp_debt, 2),
+        "annual_funded_debt_carrying_cost_apld_m": round(apld_annual_carrying_cost, 3),
+        "annual_iren_full_capacity_coupon_equivalent_m": round(iren_coupon_equivalent, 3),
+        "annual_uncommissioned_lease_revenue_at_risk_m": round(annual_uncommissioned_lease_delay, 3),
+        "synchronization_resilience_mechanisms": {
+            "escrow_protections": "APLD PF2 $2.15B held in escrow from March 10, 2026 until condition satisfaction on June 18, 2026.",
+            "staged_funding": "IREN $2.4B MFSA & Notes fund pro rata upon delivery and acceptance through Dec 31, 2026.",
+            "completion_support": "CoreWeave uncapped legal indemnities (ELN-02 & ELN-03) protect Building 2 and Building 3 cash flows."
+        },
         "slippage_scenarios": slippage_scenarios,
         "facility_metrics": facility_rows
     }
@@ -222,85 +340,102 @@ def run_energization_analysis():
     # -------------------------------------------------------------
     # 5. Generate Publication Visualizations
     # -------------------------------------------------------------
-    # Figure 1: Capital & Customer Commitments vs Energized State
-    plt.figure(figsize=(12, 7))
-    incomplete_df = table_df[table_df["attributable_funded_debt_m"] > 0].copy()
-    
-    x = np.arange(len(incomplete_df))
-    width = 0.35
+    # Figure 1: Capital Allocation Architecture vs Physical Energization
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6), gridspec_kw={'width_ratios': [1.2, 1]})
 
-    fig, ax1 = plt.subplots(figsize=(11, 6))
+    # Panel A: Capital Structure (Funded Project Debt vs Committed Capacity vs Corporate)
+    categories = ["APLD Project Debt\n(Funded SPV)", "IREN Mackenzie\n(Committed Cap)", "Unallocated Corporate\n(CRWV, WULF, etc.)"]
+    amounts = [total_funded_debt / 1e3, total_committed_cap / 1e3, total_active_corp_debt / 1e3]
+    colors = ["#d95f02", "#7570b3", "#1b9e77"]
 
-    color_debt = "#d95f02"
-    color_mw = "#1b9e77"
+    bars = ax1.bar(categories, amounts, color=colors, width=0.55, edgecolor="#333333", alpha=0.9)
+    ax1.set_ylabel("Capital Amount ($ Billions)", fontsize=11, fontweight="bold")
+    ax1.set_title("A. Capital Architecture: Project vs Corporate Debt ($47.85B Total)", fontsize=12, fontweight="bold", pad=12)
+    ax1.grid(axis="y", linestyle="--", alpha=0.5)
 
-    ax1.set_xlabel("Physical Facility Campus", fontweight="bold", fontsize=11)
-    ax1.set_ylabel("Attributable Funded Debt ($M)", color=color_debt, fontweight="bold", fontsize=11)
-    bars1 = ax1.bar(x - width/2, incomplete_df["attributable_funded_debt_m"], width, label="Attributable Funded Debt ($M)", color=color_debt, alpha=0.85)
-    ax1.tick_params(axis="y", labelcolor=color_debt)
-    ax1.set_xticks(x)
-    ax1.set_xticklabels([f"{r['facility_name']}\n({r['operator_entity_id']})" for _, r in incomplete_df.iterrows()], fontsize=10)
+    for bar in bars:
+        h = bar.get_height()
+        ax1.text(bar.get_x() + bar.get_width()/2.0, h + 0.8, f"${h:.2f}B", ha="center", va="bottom", fontsize=10, fontweight="bold")
 
-    # Annotate debt bars
-    for bar in bars1:
-        yval = bar.get_height()
-        ax1.text(bar.get_x() + bar.get_width()/2.0, yval + 50, f"${yval:,.0f}M", ha="center", va="bottom", fontsize=9, fontweight="bold")
+    # Annotate semantics
+    ax1.text(0, amounts[0]/2, "100% Funded\n($6.09B)", ha="center", va="center", color="white", fontweight="bold", fontsize=10)
+    ax1.text(1, amounts[1]/2, "Committed Capacity\n($2.40B)", ha="center", va="center", color="white", fontweight="bold", fontsize=10)
+    ax1.text(2, amounts[2]/2, "Corporate Balance Sheet\n($39.36B)", ha="center", va="center", color="white", fontweight="bold", fontsize=10)
 
-    ax2 = ax1.twinx()
-    ax2.set_ylabel("Megawatts (MW)", color=color_mw, fontweight="bold", fontsize=11)
-    
-    # Plot contracted vs energized
-    bars2 = ax2.bar(x + width/2, incomplete_df["contracted_mw"], width, label="Contracted Capacity (MW)", color="#7570b3", alpha=0.4)
-    bars3 = ax2.bar(x + width/2, [r["measured_energized_mw"] or 0 for _, r in incomplete_df.iterrows()], width, label="Measured Energized Load (MW)", color=color_mw, alpha=0.9)
-    ax2.tick_params(axis="y", labelcolor=color_mw)
+    # Panel B: APLD Polaris Forge 1 Campus Phasing (400 MW Critical IT)
+    bldg_names = ["Building 2\n(100 MW)", "Building 3\n(150 MW)", "Building 4\n(150 MW)"]
+    service_ready_mw = [100.0, 0.0, 0.0]
+    under_construction_mw = [0.0, 150.0, 150.0]
 
-    # Annotate gap ratio
-    for i, (_, r) in enumerate(incomplete_df.iterrows()):
-        c_mw = r["contracted_mw"]
-        e_mw = r["measured_energized_mw"] or 0
-        gap = ((c_mw - e_mw) / c_mw) * 100 if c_mw > 0 else 0
-        ax2.text(x[i] + width/2, c_mw + 15, f"{gap:.0f}% Gap", ha="center", va="bottom", fontsize=9, fontweight="bold", color="#7570b3")
+    b_idx = np.arange(len(bldg_names))
+    b_width = 0.5
 
-    plt.title("Capital-at-Risk Before Service: Attributable Debt vs Physical Energization Gap", fontsize=13, fontweight="bold", pad=15)
-    fig.tight_layout()
+    ax2.bar(b_idx, service_ready_mw, b_width, label="Service-Ready IT MW (Oct 2025)", color="#2ca02c", alpha=0.9, edgecolor="#333333")
+    ax2.bar(b_idx, under_construction_mw, b_width, bottom=service_ready_mw, label="Under Construction / Retrofit (MW)", color="#ff7f0e", alpha=0.85, edgecolor="#333333")
+
+    ax2.set_xticks(b_idx)
+    ax2.set_xticklabels(bldg_names, fontsize=10, fontweight="bold")
+    ax2.set_ylabel("Critical IT Capacity (MW)", fontsize=11, fontweight="bold")
+    ax2.set_title("B. Polaris Forge 1 Phasing: 25% Ready, 75% Uncommissioned", fontsize=12, fontweight="bold", pad=12)
+    ax2.legend(frameon=True, facecolor="white", edgecolor="#cccccc", loc="upper left")
+    ax2.grid(axis="y", linestyle="--", alpha=0.5)
+
+    ax2.text(0, 50, "Service-Ready\n(100 MW)", ha="center", va="center", color="white", fontweight="bold", fontsize=9)
+    ax2.text(1, 75, "Partial / Commissioning\n(150 MW)", ha="center", va="center", color="white", fontweight="bold", fontsize=9)
+    ax2.text(2, 75, "Under Construction\n(150 MW)", ha="center", va="center", color="white", fontweight="bold", fontsize=9)
+
+    plt.tight_layout()
     plt.savefig(FIGURES_DIR / "capital_energization_gap.png", dpi=300)
     plt.close()
 
-    # Figure 2: Temporal Carrying Cost vs Delay Slippage
-    plt.figure(figsize=(9, 5.5))
+    # Figure 2: Temporal Carrying Cost vs Delay Slippage & Resilience Mechanisms
+    fig, ax = plt.subplots(figsize=(10, 6))
+
     scenarios = ["6 Months Delay", "12 Months Delay", "18 Months Delay"]
-    carrying_costs = [slippage_scenarios["6_month_delay"]["carrying_cost_m"],
-                      slippage_scenarios["12_month_delay"]["carrying_cost_m"],
-                      slippage_scenarios["18_month_delay"]["carrying_cost_m"]]
-    lease_delays = [slippage_scenarios["6_month_delay"]["apld_lease_revenue_delayed_m"],
-                    slippage_scenarios["12_month_delay"]["apld_lease_revenue_delayed_m"],
-                    slippage_scenarios["18_month_delay"]["apld_lease_revenue_delayed_m"]]
+    carrying_costs = [slippage_scenarios["6_month_delay"]["apld_debt_carrying_cost_m"],
+                      slippage_scenarios["12_month_delay"]["apld_debt_carrying_cost_m"],
+                      slippage_scenarios["18_month_delay"]["apld_debt_carrying_cost_m"]]
+    lease_delays = [slippage_scenarios["6_month_delay"]["phased_uncommissioned_lease_delayed_m"],
+                    slippage_scenarios["12_month_delay"]["phased_uncommissioned_lease_delayed_m"],
+                    slippage_scenarios["18_month_delay"]["phased_uncommissioned_lease_delayed_m"]]
+    iren_coupon_eq = [slippage_scenarios["6_month_delay"]["iren_full_capacity_coupon_equivalent_m"],
+                      slippage_scenarios["12_month_delay"]["iren_full_capacity_coupon_equivalent_m"],
+                      slippage_scenarios["18_month_delay"]["iren_full_capacity_coupon_equivalent_m"]]
 
     idx = np.arange(len(scenarios))
-    w = 0.35
+    w = 0.25
 
-    plt.bar(idx - w/2, carrying_costs, w, label="Cumulative Debt Carrying Cost ($M)", color="#e41a1c", alpha=0.85)
-    plt.bar(idx + w/2, lease_delays, w, label="Delayed APLD Lease Revenue ($M)", color="#377eb8", alpha=0.85)
+    rects1 = ax.bar(idx - w, carrying_costs, w, label="APLD Project Debt Carrying Cost ($M)", color="#d95f02", alpha=0.9, edgecolor="#333333")
+    rects2 = ax.bar(idx, lease_delays, w, label="Delayed APLD Lease Revenue (75% Uncommissioned, $M)", color="#377eb8", alpha=0.9, edgecolor="#333333")
+    rects3 = ax.bar(idx + w, iren_coupon_eq, w, label="IREN Mackenzie Full-Capacity Coupon Eq. ($M)", color="#7570b3", alpha=0.7, edgecolor="#333333", linestyle="--")
 
     for i in range(len(scenarios)):
-        plt.text(idx[i] - w/2, carrying_costs[i] + 15, f"${carrying_costs[i]:,.1f}M", ha="center", va="bottom", fontsize=9, fontweight="bold")
-        plt.text(idx[i] + w/2, lease_delays[i] + 25, f"${lease_delays[i]:,.1f}M", ha="center", va="bottom", fontsize=9, fontweight="bold")
+        ax.text(idx[i] - w, carrying_costs[i] + 12, f"${carrying_costs[i]:,.1f}M", ha="center", va="bottom", fontsize=9, fontweight="bold")
+        ax.text(idx[i], lease_delays[i] + 12, f"${lease_delays[i]:,.1f}M", ha="center", va="bottom", fontsize=9, fontweight="bold")
+        ax.text(idx[i] + w, iren_coupon_eq[i] + 12, f"${iren_coupon_eq[i]:,.1f}M", ha="center", va="bottom", fontsize=8, color="#555555")
 
-    plt.xticks(idx, scenarios, fontsize=10, fontweight="bold")
-    plt.ylabel("Financial Impact ($ Millions)", fontsize=11, fontweight="bold")
-    plt.title("Substation & Equipment Delivery Slippage: Cash Flow & Carrying Stress", fontsize=12, fontweight="bold", pad=12)
-    plt.legend(frameon=True, facecolor="white", edgecolor="#e0e0e0")
-    plt.grid(axis="y", linestyle="--", alpha=0.5)
-    plt.tight_layout()
+    ax.set_xticks(idx)
+    ax.set_xticklabels(scenarios, fontsize=11, fontweight="bold")
+    ax.set_ylabel("Financial Carrying Stress ($ Millions)", fontsize=11, fontweight="bold")
+    ax.set_title("Substation & Equipment Delivery Slippage: Cash Flow Carrying Stress\n(Modeled Hypotheses vs Synchronization Resilience)", fontsize=12, fontweight="bold", pad=14)
+    ax.legend(frameon=True, facecolor="white", edgecolor="#cccccc", loc="upper left")
+    ax.grid(axis="y", linestyle="--", alpha=0.5)
+
+    # Footnote highlighting synchronization mechanisms
+    fig.text(0.5, 0.01, "Resilience Mechanisms: PF2 escrow ($2.15B released Jun 18, 2026), IREN staged drawdowns (cliff Dec 31, 2026), CoreWeave completion indemnities (ELN-02/03).",
+             ha="center", fontsize=8.5, style="italic", color="#444444")
+
+    plt.tight_layout(rect=[0, 0.03, 1, 0.97])
     plt.savefig(FIGURES_DIR / "temporal_mismatch_timeline.png", dpi=300)
     plt.close()
 
-    print("=== Energization-at-Risk Analysis Completed ===")
-    print(f"Total Facility-Attributable Funded Debt: ${total_attributable_debt:,.1f}M")
-    print(f"Capital-at-Risk Before Service: ${capital_at_risk_before_service:,.1f}M (100.0%)")
-    print(f"Total Customer/Lease Commitments Linked: ${total_customer_commitments:,.1f}M")
-    print(f"Unallocated Corporate Debt Held Separate: ${total_unallocated_corp_debt:,.1f}M")
-    print(f"Annual Debt Carrying Cost on Incomplete Capacity: ${total_at_risk_annual_interest:,.2f}M/yr")
+    print("=== Energization-at-Risk Analysis Completed (ADR-021.1) ===")
+    print(f"Total Facility-Attributable Funded Debt: ${total_funded_debt:,.1f}M ($6.090B, APLD only)")
+    print(f"Committed Equipment Financing Capacity: ${total_committed_cap:,.1f}M ($2.400B, IREN Mackenzie)")
+    print(f"Active Corporate Unallocated Debt: ${total_active_corp_debt:,.2f}M ($39.358B)")
+    print(f"APLD Annual Project Interest Carry: ${apld_annual_carrying_cost:,.3f}M/yr")
+    print(f"IREN Full-Capacity Coupon Equivalent: ${iren_coupon_equivalent:,.3f}M/yr")
+    print(f"Phased Lease Revenue at Risk (75% uncommissioned): ${annual_uncommissioned_lease_delay:,.3f}M/yr")
 
 if __name__ == "__main__":
     run_energization_analysis()

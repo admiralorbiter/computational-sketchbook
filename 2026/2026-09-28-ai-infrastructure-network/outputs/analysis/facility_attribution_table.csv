@@ -1,15 +1,15 @@
-facility_id,facility_name,operator_entity_id,attributable_funded_debt_m,customer_lease_commitment_m,contracted_mw,measured_energized_mw,unenergized_mw,energization_gap_ratio,next_milestone,evidence_completeness
-FAC-APLD-POLARIS-FORGE-1,Polaris Forge 1 Campus,APLD,3940.0,11000.0,400.0,60.0,340.0,0.85,Bldg 2 completion & Bldg 3/4 commissioning (2026-2027),"Class A (10-K, 8-K, Ex 10.1 & 10.2)"
-FAC-CORZ-DENTON,Denton Data Center,CORZ,0.0,0.0,270.0,100.0,170.0,0.6296296296296297,Colocation fit-out across multi-building campus,"Class A (10-K, 8-K Note Denton Lease)"
-FAC-CORZ-DALTON,Dalton Data Center,CORZ,0.0,0.0,195.0,,,,HPC infrastructure retrofit from mining,Class A (10-K Colocation table)
-FAC-CORZ-MUSKOGEE,Muskogee Data Center,CORZ,0.0,0.0,100.0,,,,HPC infrastructure retrofit from mining,Class A (10-K Colocation table)
-FAC-CORZ-MARBLE,Marble Data Center,CORZ,0.0,0.0,117.0,,,,HPC infrastructure retrofit from mining,Class A (10-K Colocation table)
-FAC-CORZ-AUSTIN,Austin Data Center,CORZ,0.0,0.0,20.0,,,,HPC infrastructure retrofit from mining,Class A (10-K Colocation table)
-FAC-WULF-LAKE-MARINER,Lake Mariner Campus,WULF,0.0,0.0,90.0,226.0,0.0,0.0,500 MW planned expansion engineering,Class A (10-K NYPA allocation)
-FAC-IREN-CHILDRESS,Childress Data Center,IREN,0.0,0.0,750.0,650.0,100.0,0.13333333333333333,Final 100 MW substation expansion to 750 MW,Class A (10-K Item 1 & Note 7)
-FAC-IREN-SWEETWATER-1,Sweetwater 1 Campus,IREN,0.0,0.0,1400.0,0.0,1400.0,1.0,"Interconnection substation construction (1,400 MW)",Class A (10-K Item 1)
-FAC-IREN-SWEETWATER-2,Sweetwater 2 Campus,IREN,0.0,0.0,600.0,0.0,600.0,1.0,AEP Texas 600 MW substation engineering,Class A (10-K Item 1)
-FAC-NBIS-MANTSALA,Mäntsälä Supercomputing Center,NBIS,0.0,0.0,75.0,75.0,0.0,0.0,Commercial operational service / heat recovery,Class A (10-K & Utility Primary Source)
-FAC-NBIS-LAPPEENRANTA,Lappeenranta AI Factory,NBIS,0.0,0.0,310.0,0.0,310.0,1.0,Pending grid interconnection & engineering review,Class B (10-K development announcement)
-FAC-IREN-MACKENZIE,Mackenzie Data Center Campus,IREN,2400.0,0.0,80.0,0.0,80.0,1.0,"GPU server staged deliveries through Dec 31, 2026",Class A (10-K Note August 2026 Financing)
-FAC-APLD-POLARIS-FORGE-2,Polaris Forge 2 Campus,APLD,2150.0,0.0,200.0,0.0,200.0,1.0,Initial capacity H2 2026; full 200 MW early 2027,Class A (10-K Item 1 & Note 10)
+facility_id,facility_name,operator_entity_id,attributable_funded_debt_m,committed_financing_capacity_m,customer_lease_commitment_m,utility_service_capacity_mw,utility_load_online_mw,critical_it_contracted_mw,service_ready_it_mw,gpu_equipment_deployment_state,gpu_compute_operational_mw,next_milestone,evidence_completeness
+FAC-APLD-POLARIS-FORGE-1,Polaris Forge 1 Campus,APLD,3940.0,0.0,11000.0,350.0,60.0,400.0,100.0,Tenant (CoreWeave) cluster commissioning & fit-out,,Building 2 full tenant occupancy & Building 3 commissioning (2026-2027),"Class A (10-K, 8-K, Ex 10.1 & 10.2)"
+FAC-CORZ-DENTON,Denton Data Center,CORZ,0.0,0.0,0.0,394.0,100.0,270.0,100.0,Tenant fit-out / ongoing colocation conversion,,Colocation fit-out across multi-building campus,"Class A (10-K, 8-K Note Denton Lease)"
+FAC-CORZ-DALTON,Dalton Data Center,CORZ,0.0,0.0,0.0,195.0,,,,HPC infrastructure retrofit from mining,,HPC infrastructure retrofit from mining,Class A (10-K Colocation table)
+FAC-CORZ-MUSKOGEE,Muskogee Data Center,CORZ,0.0,0.0,0.0,100.0,,,,HPC infrastructure retrofit from mining,,HPC infrastructure retrofit from mining,Class A (10-K Colocation table)
+FAC-CORZ-MARBLE,Marble Data Center,CORZ,0.0,0.0,0.0,117.0,,,,HPC infrastructure retrofit from mining,,HPC infrastructure retrofit from mining,Class A (10-K Colocation table)
+FAC-CORZ-AUSTIN,Austin Data Center,CORZ,0.0,0.0,0.0,20.0,,,,HPC infrastructure retrofit from mining,,HPC infrastructure retrofit from mining,Class A (10-K Colocation table)
+FAC-WULF-LAKE-MARINER,Lake Mariner Campus,WULF,0.0,0.0,0.0,226.0,226.0,,226.0,Operational mining / 500 MW expansion engineering,,500 MW planned expansion engineering,Class A (10-K NYPA allocation)
+FAC-IREN-CHILDRESS,Childress Data Center,IREN,0.0,0.0,0.0,750.0,650.0,,650.0,Operating mining & cloud pilot,,Final 100 MW substation expansion to 750 MW,Class A (10-K Item 1 & Note 7)
+FAC-IREN-SWEETWATER-1,Sweetwater 1 Campus,IREN,0.0,0.0,0.0,1400.0,,,0.0,Substation procurement & interconnection construction,,"Interconnection substation construction (1,400 MW)",Class A (10-K Item 1)
+FAC-IREN-SWEETWATER-2,Sweetwater 2 Campus,IREN,0.0,0.0,0.0,600.0,,,0.0,AEP Texas substation engineering,,AEP Texas 600 MW substation engineering,Class A (10-K Item 1)
+FAC-NBIS-MANTSALA,Mäntsälä Supercomputing Center,NBIS,0.0,0.0,0.0,75.0,75.0,75.0,75.0,Fully operational GPU cluster operations,75.0,Commercial operational service / heat recovery,Class A (10-K & Utility Primary Source)
+FAC-NBIS-LAPPEENRANTA,Lappeenranta AI Factory,NBIS,0.0,0.0,0.0,310.0,,,0.0,Engineering design / pre-construction,,Pending grid interconnection & engineering review,Class B (10-K development announcement)
+FAC-IREN-MACKENZIE,Mackenzie Data Center Campus,IREN,0.0,2400.0,0.0,80.0,80.0,80.0,80.0,"Staged GPU server delivery & acceptance through Dec 31, 2026",,"GPU server staged delivery & acceptance through Dec 31, 2026",Class A (10-K Note August 2026 Financing)
+FAC-APLD-POLARIS-FORGE-2,Polaris Forge 2 Campus,APLD,2150.0,0.0,0.0,,,200.0,0.0,Civil / electrical shell construction,,Initial capacity H2 2026; full 200 MW early 2027,Class A (10-K Item 1 & Note 10)

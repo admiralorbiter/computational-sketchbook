@@ -29,10 +29,11 @@ EVT-CRWV-COBORROWER-DDTL3-CREATED,OBL-CRWV-COBORROWER-DDTL3,created,2025-07-28,2
 EVT-MSFT-CRWV-REV-CREATED,REL-MSFT-CRWV-REVENUE-CONCENTRATION,created,2025-01-01,2026-03-02,,CLM-CRWV-003,"Recognition of FY25 customer revenue concentration ($3.438B recognized revenue, 67% share)"
 EVT-SMCI-COMMIT-CREATED,OBL-SMCI-SUPPLIER-COMMIT,created,2025-07-01,2026-08-31,,CLM-SMCI-001,Execution of non-cancelable hardware purchase commitments ($34.2B over next 12 months)
 EVT-NVDA-CRWV-EQUITY-CREATED,OBL-NVDA-CRWV-EQUITY,created,2026-01-15,2026-05-08,,CLM-NVDA-CRWV-001,NVIDIA $2.0B Series C preferred stock strategic equity placement in CoreWeave
-EVT-APLD-DEBT-PF1-CREATED,OBL-APLD-DEBT-PF1,created,2024-06-14,2024-06-17,,CLM-APLD-010,"APLD ComputeCo LLC private offering of $2,350.0M 9.25% Senior Secured Notes due 2030"
-EVT-APLD-DEBT-PF2-CREATED,OBL-APLD-DEBT-PF2,created,2025-01-24,2025-02-12,,CLM-APLD-011,"APLD ComputeCo 2 LLC offering of $2,150.0M 6.75% Senior Notes due 2031"
-EVT-APLD-DEBT-CONV-CREATED,OBL-APLD-DEBT-CONV,created,2024-11-20,2024-12-02,,CLM-APLD-012,Applied Digital Corporation offering of $450.0M 2.75% Convertible Senior Notes due 2030
-EVT-APLD-DEBT-BRIDGE-CREATED,OBL-APLD-DEBT-BRIDGE,created,2026-05-01,2026-05-05,,CLM-APLD-013,"Entry into $300.0M floating-rate Bridge Credit Facility due April 30, 2027"
+EVT-APLD-DEBT-PF1-CREATED,OBL-APLD-DEBT-PF1,created,2025-11-20,2026-01-08,,CLM-APLD-010,"APLD ComputeCo LLC private offering of $2,350.0M 9.250% Senior Secured Notes due 2030"
+EVT-APLD-DEBT-PF2-CREATED,OBL-APLD-DEBT-PF2,created,2026-03-10,2026-03-04,,CLM-APLD-011,"APLD ComputeCo 2 LLC offering of $2,150.0M 6.750% Senior Notes due 2031"
+EVT-APLD-DEBT-PF2-ESCROW,OBL-APLD-DEBT-PF2,escrow_release,2026-06-18,2026-07-29,,CLM-APLD-014,Satisfaction of electric service agreement condition precedent and release of $2.15B gross proceeds from segregated escrow to project accounts
+EVT-APLD-DEBT-CONV-CREATED,OBL-APLD-DEBT-CONV,created,2024-11-04,2024-11-05,,CLM-APLD-012,Applied Digital Corporation offering of $450.0M 2.75% Convertible Senior Notes due 2030
+EVT-APLD-DEBT-BRIDGE-CREATED,OBL-APLD-DEBT-BRIDGE,created,2026-05-01,2026-07-29,,CLM-APLD-013,"Entry into $300.0M floating-rate Bridge Credit Facility due April 30, 2027"
 EVT-APLD-DEBT-BRIDGE-SUPERSEDED,OBL-APLD-DEBT-BRIDGE,superseded,2026-06-16,2026-06-16,OBL-APLD-DEBT-7PCT-2026,CLM-APLD-008,Repayment in full and termination of $300.0M Bridge Credit Facility from proceeds of $1.59B 7.00% Senior Secured Notes
 EVT-APLD-DEBT-7PCT-CREATED,OBL-APLD-DEBT-7PCT-2026,created,2026-06-16,2026-06-16,OBL-APLD-DEBT-BRIDGE,CLM-APLD-008,"APLD ComputeCo 3 LLC issuance of $1,590.0M 7.00% Senior Secured Notes due 2031"
 EVT-APLD-DEBT-OTHER-CREATED,OBL-APLD-DEBT-OTHER,created,2026-05-31,2026-07-29,,CLM-APLD-003,"Aggregate residual debt ($56.68M) reconciling gross contractual principal to $5,306.68M"

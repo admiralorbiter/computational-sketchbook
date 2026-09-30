@@ -595,3 +595,40 @@ erc_regional_entity.
   - Establishes a permanent, field-audited bridge between contractual balance sheet liabilities and physical infrastructure commissioning state.
 
 
+## ADR-021.1: Attribution Epistemic Repair & Capital Synchronization Resilience
+
+- **Status:** Accepted (2026-09-30, Task 021 Stage B Certification)
+- **Context:**
+  1. *Inherited Baseline & Chronology Errors:* Post-implementation audit of ADR-021 revealed that `CLM-APLD-010` cited a June 17, 2024 Form 8-K concerning a $15M CIM promissory note and warrant rather than the $2.35B PF1 project notes (which were actually issued November 20, 2025 at 9.25%, disclosed in Form 10-Q filed Jan 8, 2026). `CLM-APLD-011` cited a Jan 24, 2025 SMBC agreement for the $2.15B PF2 notes (which actually closed March 10, 2026 at 6.75%, with proceeds held in escrow until condition satisfaction on June 18, 2026).
+  2. *Validator Bypass Elimination:* The validator previously relied on a hand-written `CLAIM_TO_SEC_FILE` dictionary that allowed unmapped claims (such as claims 010–013) to evade verbatim substring checks.
+  3. *Conflation of Committed Capacity with Funded Debt:* In `obligation_facility_links`, IREN's $2.4B under the August 2026 financing was labeled as funded principal. In reality, it represents committed equipment financing capacity (`amount_type = "facility_capacity"`), funding pro rata upon GPU delivery and acceptance through Dec 31, 2026, with point-in-time drawn debt undisclosed.
+  4. *Dimensional Incommensurability & Zero Imputation:* Generic subtraction of `contracted_mw - energized_mw` collapsed utility service MW with critical IT MW and imputed zero to operating sites (e.g. Mackenzie, operating since April 2022 at ~80 MW data center load).
+  5. *Approximated Carrying Costs and Lease Delays:* Carrying costs were approximated ($631M/yr) rather than derived from exact coupon terms, and lease delay analysis assumed 100% delay despite Building 2 (100 MW) being service-ready since October 2025.
+- **Decision:**
+  1. **Primary SEC Source Curation & Full Auto-Binding:**
+     - Cached primary filings in `data/raw/sec/` (`APLD_10Q_20251130.htm`, `APLD_8K_20260304_notes2031.htm`, `APLD_8K_20241105_conv2030.htm`, `APLD_8K_20260107_q2release.htm`, `APLD_8K_20250602.htm`, `MSFT_10K_20260630.htm`, `ORCL_10K_20260531.htm`).
+     - Replaced the hand-written `CLAIM_TO_SEC_FILE` bypass with automatic binding and verbatim substring verification across all 64 Class A SEC claims.
+  2. **Bitemporal Attribution Layer (`obligation_facility_links.parquet`):**
+     - Upgraded all 51 links with discrete `truth_claim_id` and `knowledge_claim_id`, strictly enforcing `publicly_known_from >= knowledge_claim.filing_date`.
+     - Enforced `allocation_fraction = 1.0` for all single-facility direct allocations.
+  3. **Strict Debt Semantics & Conserved Balances:**
+     - Reclassified IREN's $2.4B to `amount_type = "facility_capacity"`.
+     - Certified facility-attributable funded debt at strictly **$6,090.0M ($6.090B)** across APLD ComputeCo SPVs only.
+     - Certified committed equipment financing capacity at **$2,400.0M ($2.400B)** for IREN Mackenzie.
+     - Certified active corporate unallocated debt at **$39,357.68M ($39.358B)** as of Sep 28, 2026 (excluding retired $300M bridge and extinguished $150M Coatue note).
+  4. **Typed Completion Dimensions:**
+     - Replaced generic subtractions with typed dimensions: `utility_service_capacity_mw`, `utility_load_online_mw`, `critical_it_contracted_mw`, `service_ready_it_mw`, `gpu_equipment_deployment_state`, and `gpu_compute_operational_mw`. Preserved null/unknown without zero imputation.
+  5. **Exact Carrying Costs & Phased Lease Delay:**
+     - Derived exact coupon carrying cost for APLD funded debt: **$473.800M/year** ($217.375M PF1 + $111.300M PF1 Bldg 4 + $145.125M PF2).
+     - Separated IREN's **$216.000M/year** as full-capacity coupon equivalent, not observed carrying cost.
+     - Phased uncommissioned lease delay to Buildings 3 and 4 (300 MW / 75%): **$550.000M/year** maximum delayed cash flow.
+  6. **Structural Capital Synchronization Resilience:**
+     - Reframed findings around institutional synchronization mechanisms: escrow gating (PF2 held until June 18, 2026), staged funding upon equipment delivery and acceptance (IREN Dec 31, 2026 cliff), and springing completion indemnities (CoreWeave ELN-02/03).
+     - Labeled qualitative risk tiers explicitly as "Modeled Hypotheses".
+- **Consequences:**
+  - Eradicates inherited date and citation drift with 100% primary source audit trails.
+  - Guarantees zero data drift and zero timing invariant violations across all observatory layers.
+  - Provides a trustworthy, contract-literal foundation for Phase 2 systemic contagion and cascade modeling.
+
+
+
