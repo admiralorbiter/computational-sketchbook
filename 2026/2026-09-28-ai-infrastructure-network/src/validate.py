@@ -2204,6 +2204,88 @@ def validate_observatory():
     else:
         print("  [OK] Task 024.2: Algorithmic Typed Traversal & Honest Preregistration Invariants verified (12 paths verified in G_join, 0 in single layers, Denton audited at 270 MW IT, C04 springing guaranty marked not_established, ERCOT p=0.0060, CoreWeave p=0.816, Criterion 3 failed as preregistered).")
 
+    # =========================================================================
+    # 12. Validating Task 025 Out-of-Sample Project Jupiter Validation Invariants
+    # =========================================================================
+    print("\n--- 12. Validating Task 025 Out-of-Sample Project Jupiter Validation Invariants ---")
+    sub_err = []
+
+    # 12.1: Pre-event dataset files existence and structure
+    t025_dir = PROCESSED_DIR / "task025"
+    if not t025_dir.exists():
+        sub_err.append("Task 025: task025 directory missing in data/processed")
+    else:
+        req_tables = [
+            "jupiter_entities_pre_event.parquet",
+            "jupiter_facilities_pre_event.parquet",
+            "jupiter_obligations_pre_event.parquet",
+            "jupiter_power_pre_event.parquet",
+            "jupiter_evidence_claims_pre_event.parquet"
+        ]
+        for tbl in req_tables:
+            if not (t025_dir / tbl).exists():
+                sub_err.append(f"Task 025: Required pre-event table missing: {tbl}")
+
+    # 12.2: Pre-event graph and paths
+    preevent_paths_file = OUTPUTS_DIR / "analysis" / "task025_preevent_paths.csv"
+    preevent_graph_file = OUTPUTS_DIR / "analysis" / "task025_preevent_graph.json"
+    if not preevent_paths_file.exists():
+        sub_err.append(f"Task 025: Missing pre-event paths artifact: {preevent_paths_file}")
+    if not preevent_graph_file.exists():
+        sub_err.append(f"Task 025: Missing pre-event graph summary: {preevent_graph_file}")
+    else:
+        with open(preevent_graph_file, "r", encoding="utf-8") as f:
+            pg_data = json.load(f)
+        if pg_data.get("task_id") != "TASK-025B":
+            sub_err.append(f"Task 025: Expected task_id TASK-025B, got: {pg_data.get('task_id')}")
+        if pg_data.get("epistemic_freeze_date") != "2026-09-23T23:59:59Z":
+            sub_err.append(f"Task 025: Epistemic freeze date mismatch: {pg_data.get('epistemic_freeze_date')}")
+        if pg_data.get("total_construction_debt_usd") != 18000000000.0:
+            sub_err.append(f"Task 025: Construction debt mismatch: {pg_data.get('total_construction_debt_usd')}")
+
+    # 12.3: Validation Summary & Empirical Scoring
+    val_sum_file = OUTPUTS_DIR / "analysis" / "task025_validation_summary.json"
+    if not val_sum_file.exists():
+        sub_err.append(f"Task 025: Missing validation summary: {val_sum_file}")
+    else:
+        with open(val_sum_file, "r", encoding="utf-8") as f:
+            vs_data = json.load(f)
+        if vs_data.get("task_id") != "TASK-025C":
+            sub_err.append(f"Task 025: Expected task_id TASK-025C, got: {vs_data.get('task_id')}")
+        if vs_data.get("preregistration_commit") != "6bc951d":
+            sub_err.append(f"Task 025: Preregistration commit mismatch: {vs_data.get('preregistration_commit')}")
+        if vs_data.get("overall_preregistered_verdict") != "NOT FALSIFIED / EMPIRICALLY VALIDATED (OUT-OF-SAMPLE TEST PASSED)":
+            sub_err.append(f"Task 025: Verdict mismatch: {vs_data.get('overall_preregistered_verdict')}")
+        if not vs_data.get("all_criteria_passed"):
+            sub_err.append("Task 025: all_criteria_passed must be True")
+        
+        # Entity scoring
+        ent_score = vs_data.get("metrics", {}).get("entity_scoring", {})
+        if ent_score.get("precision", 0.0) < 0.70 or not ent_score.get("precision_passed"):
+            sub_err.append(f"Task 025: Entity precision failed: {ent_score.get('precision')}")
+        if ent_score.get("recall", 0.0) < 0.80 or not ent_score.get("recall_passed"):
+            sub_err.append(f"Task 025: Entity recall failed: {ent_score.get('recall')}")
+        
+        # Mechanism scoring
+        mech_score = vs_data.get("metrics", {}).get("contractual_mechanism_scoring", {})
+        if mech_score.get("mechanism_coverage", 0.0) < 1.0 or not mech_score.get("mechanism_test_passed"):
+            sub_err.append(f"Task 025: Mechanism coverage failed: {mech_score.get('mechanism_coverage')}")
+
+        # Directional stress scoring
+        dir_score = vs_data.get("metrics", {}).get("directional_stress_scoring", {})
+        if dir_score.get("directional_stress_alignment") != "CONFIRMED" or not dir_score.get("alignment_passed"):
+            sub_err.append(f"Task 025: Directional stress alignment failed: {dir_score}")
+
+    # 12.4: Validation Figure
+    val_fig_file = OUTPUTS_DIR / "figures" / "task025_project_jupiter_validation.png"
+    if not val_fig_file.exists():
+        sub_err.append(f"Task 025: Validation figure missing: {val_fig_file}")
+
+    if sub_err:
+        errors.extend(sub_err)
+    else:
+        print("  [OK] Task 025: Project Jupiter Out-of-Sample Empirical Validation Invariants verified (Pre-event cutoff 2026-09-23, $18.0B debt stack, Recall=100.0%, Precision=90.9%, Mechanism Coverage=3/3, Verdict=NOT FALSIFIED / EMPIRICALLY VALIDATED).")
+
     if errors:
         print("\n[VALIDATION FAILED]")
         for err in errors:

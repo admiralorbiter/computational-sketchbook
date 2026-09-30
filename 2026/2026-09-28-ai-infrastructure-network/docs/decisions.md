@@ -772,5 +772,45 @@ erc_regional_entity.
 - **Scoring Rubric:**
   - Passing thresholds: $\text{Recall}_{\text{entity}} \ge 0.80$, $\text{Precision}_{\text{entity}} \ge 0.70$, Mechanism Coverage $= 3/3$ (100%), Directional Stress Alignment confirmed.
 
+---
+
+## ADR-025B: Pre-Event Reconstruction of Project Jupiter (as-of September 23, 2026)
+
+- **Status:** Accepted (2026-09-30, Task 025B Pre-Event Reconstruction)
+- **Pre-Event Epistemic Cutoff:** September 23, 2026, 23:59:59 UTC
+- **Data Location:** `data/processed/task025/` (isolated from frozen Phase 0/1 baseline tables)
+- **Context:**
+  - In accordance with preregistration ADR-025A, reconstructed the multi-layer knowledge graph $G_{\text{join}}(t \le \text{2026-09-23})$ using only primary sources filed prior to September 24, 2026.
+  - Primary evidence: Oracle Form 10-K (Note 8 commitments: $13.309B power/colocation commitments + $19.0B subsequent commitments), Blue Owl OBDC Form 10-Q (digital infrastructure senior secured debt tranches), Doña Ana County IRB resolutions (Project Jupiter Santa Teresa 1,400-acre site authorization), and New Mexico State Land Office (NMSLO) public orders denying pipeline ROW permits.
+- **Key Pre-Event Exposures:**
+  - Total Construction Debt Stack: **$18.0B** (`OBL-JUPITER-CONSTRUCTION-DEBT`)
+  - Direct BDC Lending Tranche: **$1.25B** (`OBL-OBDC-JUPITER-COMMITMENT`)
+  - Oracle Unconditional Commitment Pool: **$13.309B** (`OBL-ORCL-JUPITER-LEASE`)
+  - Planned Campus Capacity: **2,450 MW** (Phase 1: 1,000 MW; Microgrid at risk: 1,950 MW)
+
+---
+
+## ADR-025C: Out-of-Sample Empirical Validation Scoring & Falsification Verdict
+
+- **Status:** Accepted (2026-09-30, Task 025C Empirical Evaluation)
+- **Observed Event Date:** September 24, 2026
+- **Scoring Engine:** `src/score_project_jupiter_validation.py`
+- **Validation Report:** [`docs/phase1_task025_out_of_sample_validation.md`](phase1_task025_out_of_sample_validation.md)
+- **Certified Results:**
+  1. **Entity Identification Precision & Recall:**
+     - Recall: **100.0%** (10/10 true positives, 0 false negatives) vs threshold $\ge 80.0\%$ $\to$ **PASS**
+     - Precision: **90.91%** (10/11 predicted nodes, 1 false positive `WECC`) vs threshold $\ge 70.0\%$ $\to$ **PASS**
+     - $F_1$ Score: **0.9524**
+  2. **Contractual Mechanism Coverage:**
+     - Coverage: **3 / 3 = 100.0%** (M1: Offtake carry conduit, M2: Construction debt stack, M3: Permitting/power choke-point) vs threshold $100\%$ $\to$ **PASS**
+  3. **Directional Stress Alignment:**
+     - Verified across all 4 channels (tenant carry defense, loan refinancing friction, secondary market debt discounting, BDC investment scrutiny); 0 false inversions $\to$ **PASS**
+- **Overall Preregistered Verdict:**
+  $$\mathbf{NOT\ FALSIFIED\ /\ EMPIRICALLY\ VALIDATED\ (OUT-OF-SAMPLE\ TEST\ PASSED)}$$
+- **Consequences:**
+  - Confirms the predictive validity of the Computational Observatory out-of-sample.
+  - Proves that the "crisis lives in the JOIN" mechanism generalizes beyond the original colocation cohort to hyperscale sponsor/private-credit developments.
+
+
 
 

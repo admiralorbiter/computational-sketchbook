@@ -1,0 +1,2 @@
+facility_id,facility_name,operator_entity_id,owner_entity_id,city,county,state,region,utility_entity_id,grid_operator,status,initial_energization_target,site_acreage,planned_capacity_mw,phase1_critical_it_mw,grid_interconnect_capacity_mw,fuel_cell_microgrid_capacity_mw,valid_from,known_from
+FAC-PROJECT-JUPITER-NM,Project Jupiter Hyperscale Campus (Santa Teresa),STACK_INFRA,PROJECT_JUPITER_SPV,Santa Teresa,Doña Ana County,NM,WECC,PNM,WECC,UNDER_CONSTRUCTION,2028-06-30,1400.0,2450.0,1000.0,500.0,1950.0,2024-03-15,2024-08-15

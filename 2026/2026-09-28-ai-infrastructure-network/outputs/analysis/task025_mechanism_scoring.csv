@@ -1,0 +1,4 @@
+mechanism_id,name,predicted_in_preevent,verified_in_postevent,status,details
+M1,Offtake / Contractual Carry Conduit,True,True,PASSED,"Identified Oracle lease (OBL-ORCL-JUPITER-LEASE) transmitting pre-energization delay into tenant carry cost liability, prompting force-majeure invocation."
+M2,Construction Debt Stack & Private Credit Exposure,True,True,PASSED,Linked Project Jupiter SPV to ~$18.0B syndicated construction debt facility (OBL-JUPITER-CONSTRUCTION-DEBT) and Blue Owl OBDC direct lending tranche.
+M3,Physical Regulatory & Interconnection Choke-Point,True,True,PASSED,Grounded initiating disruption in NMSLO natural gas pipeline right-of-way permit denial and PNM grid interconnection delay.

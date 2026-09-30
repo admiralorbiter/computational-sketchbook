@@ -1,0 +1,4 @@
+relationship_id,from_entity_id,to_facility_id,relationship_type,balancing_authority,voltage_kv,capacity_mw,status,energization_scheduled,regulatory_jurisdiction,valid_from,known_from,evidence_claim_id,to_entity_id
+PWR-JUPITER-PNM-INTERCONNECT,PNM,FAC-PROJECT-JUPITER-NM,grid_interconnection,WECC,345.0,500.0,STUDY_AND_ENGINEERING,2028-06-30,NMPRC,2024-03-15,2024-08-15,CLM-DONAANA-IRB-JUPITER,
+PWR-JUPITER-NMSLO-PERMIT-PIPELINE,NMSLO,FAC-PROJECT-JUPITER-NM,pipeline_right_of_way_permit,STATE_OF_NEW_MEXICO,,1950.0,PERMIT_DENIED,CONTESTED,NMSLO,2026-06-01,2026-07-15,CLM-NMSLO-PERMIT-DENIAL,
+PWR-PNM-WECC-TRANSMISSION,WECC,,rto_grid_backplane,WECC,345.0,10000.0,OPERATIONAL,OPERATIONAL,FERC,2002-04-18,2002-04-18,CLM-DONAANA-IRB-JUPITER,PNM

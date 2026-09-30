@@ -1,0 +1,62 @@
+{
+  "task_id": "TASK-025C",
+  "description": "Out-of-sample empirical validation scoring of Project Jupiter force-majeure shock",
+  "preregistration_commit": "6bc951d",
+  "preregistration_protocol_path": "docs/task025_prespecification.md",
+  "epistemic_pre_event_cutoff": "2026-09-23T23:59:59Z",
+  "observed_event_date": "2026-09-24",
+  "overall_preregistered_verdict": "NOT FALSIFIED / EMPIRICALLY VALIDATED (OUT-OF-SAMPLE TEST PASSED)",
+  "all_criteria_passed": true,
+  "metrics": {
+    "entity_scoring": {
+      "true_positives_count": 10,
+      "false_positives_count": 1,
+      "false_negatives_count": 0,
+      "precision": 0.9091,
+      "recall": 1.0,
+      "f1_score": 0.9524,
+      "preregistered_recall_threshold": 0.8,
+      "preregistered_precision_threshold": 0.7,
+      "precision_passed": true,
+      "recall_passed": true,
+      "entity_test_passed": true,
+      "true_positives": [
+        "BLUE_OWL",
+        "BLUE_OWL_OBDC",
+        "BORDERPLEX",
+        "CONSTRUCTION_LENDER_SYNDICATE",
+        "FAC-PROJECT-JUPITER-NM",
+        "NMSLO",
+        "ORCL",
+        "PNM",
+        "PROJECT_JUPITER_SPV",
+        "STACK_INFRA"
+      ],
+      "false_positives": [
+        "WECC"
+      ],
+      "false_negatives": []
+    },
+    "contractual_mechanism_scoring": {
+      "mechanisms_passed": 3,
+      "total_mechanisms": 3,
+      "mechanism_coverage": 1.0,
+      "preregistered_coverage_threshold": 1.0,
+      "mechanism_test_passed": true
+    },
+    "directional_stress_scoring": {
+      "predicted_stress_channels_count": 4,
+      "verified_stress_channels_count": 4,
+      "false_inversions_count": 0,
+      "directional_stress_alignment": "CONFIRMED",
+      "alignment_passed": true
+    }
+  },
+  "exposure_summary": {
+    "attributed_construction_debt_usd": 18000000000.0,
+    "oracle_commitments_pool_usd": 13309000000.0,
+    "planned_facility_capacity_mw": 2450.0,
+    "fuel_cell_microgrid_mw_at_risk": 1950.0,
+    "grid_interconnect_capacity_mw": 500.0
+  }
+}
