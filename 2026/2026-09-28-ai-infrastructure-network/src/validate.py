@@ -1887,19 +1887,24 @@ def validate_observatory():
     ent_df = pd.read_parquet(PROCESSED_DIR / "entities.parquet")
 
     # 10.1: 45 contract inceptions + 2 periodic measurements (47 total)
+    sub_err = []
     periodic_ids = {"REL-MSFT-CRWV-REVENUE-CONCENTRATION", "OBL-SMCI-SUPPLIER-COMMIT"}
     contract_inceptions_df = ob_df[~ob_df["obligation_id"].isin(periodic_ids)]
     periodic_df = ob_df[ob_df["obligation_id"].isin(periodic_ids)]
 
     if len(ob_df) != 47:
-        errors.append(f"Task 023.1: Expected 47 obligations, found {len(ob_df)}")
+        sub_err.append(f"Task 023.1: Expected 47 obligations, found {len(ob_df)}")
     if len(contract_inceptions_df) != 45:
-        errors.append(f"Task 023.1: Expected 45 contract inceptions, found {len(contract_inceptions_df)}")
+        sub_err.append(f"Task 023.1: Expected 45 contract inceptions, found {len(contract_inceptions_df)}")
     if len(periodic_df) != 2:
-        errors.append(f"Task 023.1: Expected 2 periodic measurements, found {len(periodic_df)}")
-    print("  [OK] Task 023.1: 45 contract inceptions + 2 periodic measurements verified (47 total).")
+        sub_err.append(f"Task 023.1: Expected 2 periodic measurements, found {len(periodic_df)}")
+    if sub_err:
+        errors.extend(sub_err)
+    else:
+        print("  [OK] Task 023.1: 45 contract inceptions + 2 periodic measurements verified (47 total).")
 
-    # 10.2: 14 public 144A notes sum to $25.682B ($25,682M)
+    # 10.2: 14 public 144A notes sum to $25.682B ($25,682,000,000 exact)
+    sub_err = []
     public_note_ids = [
         "OBL-CRWV-DEBT-NOTES-2030", "OBL-CRWV-DEBT-NOTES-2031-900", "OBL-CRWV-DEBT-NOTES-2031-975",
         "OBL-CRWV-DEBT-NOTES-2032-9625", "OBL-CRWV-DEBT-NOTES-2032-EUR", "OBL-CRWV-DEBT-CONV-2031",
@@ -1908,13 +1913,17 @@ def validate_observatory():
     ]
     public_notes = ob_df[ob_df["obligation_id"].isin(public_note_ids)]
     if len(public_notes) != 14:
-        errors.append(f"Task 023.1: Expected 14 public 144A notes, found {len(public_notes)}")
+        sub_err.append(f"Task 023.1: Expected 14 public 144A notes, found {len(public_notes)}")
     public_notes_sum = public_notes["amount"].sum()
-    if abs(public_notes_sum - 25.682e9) > 1e6:
-        errors.append(f"Task 023.1: Public notes sum drift: parsed ${public_notes_sum/1e9:.4f}B vs expected $25.6820B")
-    print(f"  [OK] Task 023.1: 14 public 144A notes sum verified at $25.682B.")
+    if abs(public_notes_sum - 25.682e9) > 0.01:
+        sub_err.append(f"Task 023.1: Public notes sum drift: parsed ${public_notes_sum/1e9:.4f}B vs expected $25.6820B")
+    if sub_err:
+        errors.extend(sub_err)
+    else:
+        print(f"  [OK] Task 023.1: 14 public 144A notes sum verified at $25.682B (exact cent precision).")
 
     # 10.3: July 1, 2026 Debt & Residual Arithmetic ($44.616B - $25.682B = $18.934B / 42.44%)
+    sub_err = []
     from src.graph import ObligationNetwork
     net = ObligationNetwork(entities_df=ent_df, obligations_df=ob_df, facts_df=facts_df, events_df=events_df)
     eco_jul1 = net.economic_as_of("2026-07-01")
@@ -1923,41 +1932,50 @@ def validate_observatory():
         for _, _, _, data in eco_jul1.graph.edges(keys=True, data=True)
         if data.get("obligation_type") == "debt_facility"
     )
-    if abs(eco_jul1_debt - 44.616e9) > 1e6:
-        errors.append(f"Task 023.1: Economic debt July 1 drift: ${eco_jul1_debt/1e9:.4f}B vs expected $44.6160B")
+    if abs(eco_jul1_debt - 44.616e9) > 0.01:
+        sub_err.append(f"Task 023.1: Economic debt July 1 drift: ${eco_jul1_debt/1e9:.4f}B vs expected $44.6160B")
 
     residual_gap = eco_jul1_debt - public_notes_sum
-    if abs(residual_gap - 18.934e9) > 1e6:
-        errors.append(f"Task 023.1: Residual gap drift: ${residual_gap/1e9:.4f}B vs expected $18.9340B")
+    if abs(residual_gap - 18.934e9) > 0.01:
+        sub_err.append(f"Task 023.1: Residual gap drift: ${residual_gap/1e9:.4f}B vs expected $18.9340B")
 
     opacity_pct = (residual_gap / eco_jul1_debt) * 100.0
-    if abs(opacity_pct - 42.44) > 0.05:
-        errors.append(f"Task 023.1: Opacity pct drift: {opacity_pct:.2f}% vs expected 42.44%")
+    if abs(opacity_pct - 42.44) > 0.01:
+        sub_err.append(f"Task 023.1: Opacity pct drift: {opacity_pct:.2f}% vs expected 42.44%")
+    if sub_err:
+        errors.extend(sub_err)
+    else:
+        print(f"  [OK] Task 023.1: July 1, 2026 arithmetic verified: $44.616B - $25.682B = $18.934B (42.44%).")
 
     # 10.4: Decomposition of the $18.934B residual (CoreWeave non-public-note principal)
+    sub_err = []
     crwv_ddtl_ids = [
         "OBL-CRWV-DEBT-DDTL1", "OBL-CRWV-DEBT-DDTL2", "OBL-CRWV-DEBT-DDTL2-1",
         "OBL-CRWV-DEBT-DDTL3", "OBL-CRWV-DEBT-DDTL4", "OBL-CRWV-DEBT-DDTL5"
     ]
     crwv_ddtls_sum = ob_df[ob_df["obligation_id"].isin(crwv_ddtl_ids)]["amount"].sum()
-    if abs(crwv_ddtls_sum - 13.643e9) > 1e6:
-        errors.append(f"Task 023.1: CRWV DDTLs sum drift: ${crwv_ddtls_sum/1e9:.4f}B vs expected $13.6430B")
+    if abs(crwv_ddtls_sum - 13.643e9) > 0.01:
+        sub_err.append(f"Task 023.1: CRWV DDTLs sum drift: ${crwv_ddtls_sum/1e9:.4f}B vs expected $13.6430B")
 
     crwv_oem_ids = ["OBL-CRWV-DEBT-OEM", "OBL-CRWV-DEBT-OEM-NR"]
     crwv_oem_sum = ob_df[ob_df["obligation_id"].isin(crwv_oem_ids)]["amount"].sum()
-    if abs(crwv_oem_sum - 5.102e9) > 1e6:
-        errors.append(f"Task 023.1: CRWV OEM financing sum drift: ${crwv_oem_sum/1e9:.4f}B vs expected $5.1020B")
+    if abs(crwv_oem_sum - 5.102e9) > 0.01:
+        sub_err.append(f"Task 023.1: CRWV OEM financing sum drift: ${crwv_oem_sum/1e9:.4f}B vs expected $5.1020B")
 
     crwv_mag_sum = ob_df[ob_df["obligation_id"] == "OBL-CRWV-DEBT-MAGNETAR"]["amount"].sum()
-    if abs(crwv_mag_sum - 0.189e9) > 1e6:
-        errors.append(f"Task 023.1: CRWV Magnetar debt drift: ${crwv_mag_sum/1e9:.4f}B vs expected $0.1890B")
+    if abs(crwv_mag_sum - 0.189e9) > 0.01:
+        sub_err.append(f"Task 023.1: CRWV Magnetar debt drift: ${crwv_mag_sum/1e9:.4f}B vs expected $0.1890B")
 
     crwv_non_note_total = crwv_ddtls_sum + crwv_oem_sum + crwv_mag_sum
-    if abs(crwv_non_note_total - 18.934e9) > 1e6:
-        errors.append(f"Task 023.1: CRWV non-note total drift: ${crwv_non_note_total/1e9:.4f}B vs expected $18.9340B")
-    print(f"  [OK] Task 023.1: $18.934B residual decomposition verified ($13.643B DDTLs + $5.102B OEM + $0.189B Magnetar).")
+    if abs(crwv_non_note_total - 18.934e9) > 0.01:
+        sub_err.append(f"Task 023.1: CRWV non-note total drift: ${crwv_non_note_total/1e9:.4f}B vs expected $18.9340B")
+    if sub_err:
+        errors.extend(sub_err)
+    else:
+        print(f"  [OK] Task 023.1: $18.934B residual decomposition verified ($13.643B DDTLs + $5.102B OEM + $0.189B Magnetar).")
 
     # 10.5: March 1, 2025 modeled topology labels
+    sub_err = []
     eco_mar25 = net.economic_as_of("2025-03-01")
     kno_mar25 = net.known_as_of("2025-03-01")
 
@@ -1966,7 +1984,7 @@ def validate_observatory():
         [(u, v, k) for u, v, k in eco_mar25.graph.in_edges("CRWV", keys=True)]
     )
     if len(crwv_eco_edges) != 6:
-        errors.append(f"Task 023.1: March 1, 2025 CRWV economic legal edges: found {len(crwv_eco_edges)} vs expected 6")
+        sub_err.append(f"Task 023.1: March 1, 2025 CRWV economic legal edges: found {len(crwv_eco_edges)} vs expected 6")
 
     eco_mar25_root_cps = set()
     for u, v, _ in crwv_eco_edges:
@@ -1977,7 +1995,7 @@ def validate_observatory():
 
     expected_eco_cps = {"BLACKSTONE_MAGNETAR_SYN", "CORZ", "MSFT", "OEM_FINANCING_PARTNERS"}
     if eco_mar25_root_cps != expected_eco_cps:
-        errors.append(f"Task 023.1: March 1, 2025 CRWV root counterparties mismatch: found {eco_mar25_root_cps} vs expected {expected_eco_cps}")
+        sub_err.append(f"Task 023.1: March 1, 2025 CRWV root counterparties mismatch: found {eco_mar25_root_cps} vs expected {expected_eco_cps}")
 
     crwv_kno_edges = (
         [(u, v, k) for u, v, k in kno_mar25.graph.edges("CRWV", keys=True)] +
@@ -1992,9 +2010,48 @@ def validate_observatory():
 
     expected_kno_cps = {"CORZ"}
     if kno_mar25_root_cps != expected_kno_cps:
-        errors.append(f"Task 023.1: March 1, 2025 CRWV known root counterparties mismatch: found {kno_mar25_root_cps} vs expected {expected_kno_cps}")
+        sub_err.append(f"Task 023.1: March 1, 2025 CRWV known root counterparties mismatch: found {kno_mar25_root_cps} vs expected {expected_kno_cps}")
+    if sub_err:
+        errors.extend(sub_err)
+    else:
+        print("  [OK] Task 023.1: March 1, 2025 modeled topology verified (6 legal edges -> 4 root nodes: BLACKSTONE_MAGNETAR_SYN, CORZ, MSFT, OEM_FINANCING_PARTNERS vs 1 known: CORZ).")
 
-    print("  [OK] Task 023.1: March 1, 2025 modeled topology verified (6 legal edges -> 4 root nodes: BLACKSTONE_MAGNETAR_SYN, CORZ, MSFT, OEM_FINANCING_PARTNERS vs 1 known: CORZ).")
+    # 10.6: Regression test for missing-data / coverage semantics (None -> 0 bug prevention)
+    sub_err = []
+    # Graph-level check on March 1, 2025: 5 of 7 debt edges unmeasured in fact ledger
+    mar25_unmeasured = sum(1 for _, _, _, dt in eco_mar25.graph.edges(keys=True, data=True) if dt.get("obligation_type") == "debt_facility" and dt.get("amount") is None)
+    mar25_total_debt = sum(1 for _, _, _, dt in eco_mar25.graph.edges(keys=True, data=True) if dt.get("obligation_type") == "debt_facility")
+    if mar25_unmeasured != 5 or mar25_total_debt != 7:
+        sub_err.append(f"Task 023.1: Expected 5/7 unmeasured debt edges on 2025-03-01, found {mar25_unmeasured}/{mar25_total_debt}")
+
+    # Graph-level check on July 1, 2026: 0 of 23 debt edges unmeasured (100% complete coverage)
+    jul26_unmeasured = sum(1 for _, _, _, dt in eco_jul1.graph.edges(keys=True, data=True) if dt.get("obligation_type") == "debt_facility" and dt.get("amount") is None)
+    jul26_total_debt = sum(1 for _, _, _, dt in eco_jul1.graph.edges(keys=True, data=True) if dt.get("obligation_type") == "debt_facility")
+    if jul26_unmeasured != 0 or jul26_total_debt != 23:
+        sub_err.append(f"Task 023.1: Expected 0/23 unmeasured debt edges on 2026-07-01, found {jul26_unmeasured}/{jul26_total_debt}")
+
+    # CSV trajectory output check: confirms simulation explicitly models unknown as NaN/null
+    traj_path = OUTPUTS_DIR / "analysis" / "bitemporal_monthly_trajectory.csv"
+    if traj_path.exists():
+        traj_df = pd.read_csv(traj_path)
+        mar25_row = traj_df[traj_df["date"] == "2025-03-01"].iloc[0]
+        if mar25_row["unmeasured_debt_edges"] != 5 or mar25_row["principal_coverage_complete"] != False:
+            sub_err.append(f"Task 023.1: Trajectory 2025-03-01 coverage flags incorrect: unmeasured={mar25_row['unmeasured_debt_edges']}, complete={mar25_row['principal_coverage_complete']}")
+        if pd.notna(mar25_row["eco_funded_debt_b"]) or pd.notna(mar25_row["unresolved_principal_gap_b"]) or pd.notna(mar25_row["calibrated_opacity_pct"]):
+            sub_err.append(f"Task 023.1: Regression! 2025-03-01 manufactured debt numbers when coverage incomplete: eco_debt={mar25_row['eco_funded_debt_b']}")
+
+        jul26_row = traj_df[traj_df["date"] == "2026-07-01"].iloc[0]
+        if jul26_row["unmeasured_debt_edges"] != 0 or jul26_row["principal_coverage_complete"] != True:
+            sub_err.append(f"Task 023.1: Trajectory 2026-07-01 coverage flags incorrect: unmeasured={jul26_row['unmeasured_debt_edges']}, complete={jul26_row['principal_coverage_complete']}")
+        if abs(jul26_row["eco_funded_debt_b"] - 44.616) > 0.001 or abs(jul26_row["unresolved_principal_gap_b"] - 18.934) > 0.001 or abs(jul26_row["calibrated_opacity_pct"] - 42.44) > 0.01:
+            sub_err.append(f"Task 023.1: Trajectory 2026-07-01 values drift: eco={jul26_row['eco_funded_debt_b']}, gap={jul26_row['unresolved_principal_gap_b']}, opacity={jul26_row['calibrated_opacity_pct']}")
+    else:
+        sub_err.append(f"Task 023.1: Missing trajectory file at {traj_path}")
+
+    if sub_err:
+        errors.extend(sub_err)
+    else:
+        print("  [OK] Task 023.1: Missing-data semantics regression test passed (March 2025 incomplete coverage declines aggregation; July 2026 complete coverage certifies $44.616B / $18.934B / 42.44%).")
 
     if errors:
         print("\n[VALIDATION FAILED]")

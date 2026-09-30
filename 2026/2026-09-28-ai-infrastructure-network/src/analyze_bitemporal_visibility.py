@@ -428,8 +428,8 @@ def generate_calibrated_figures(df_monthly: pd.DataFrame, contract_inceptions: p
     # Fill for Capacity Visibility Lag (The Incubation Cloak)
     ax1.fill_between(dates, df_monthly["eco_facility_capacity_b"], df_monthly["kno_facility_capacity_b"], color="#ffe0b2", alpha=0.45, label="Committed Capacity Visibility Lag ($9.9B Incubation Cloak)")
 
-    # Shaded band for unmeasured historical drawn principal period (pre-June 2026)
-    ax1.axvspan(pd.to_datetime("2024-01-01"), pd.to_datetime("2026-05-15"), color="#eceff1", alpha=0.55, hatch="//", label="Historical Principal Unmeasured in Fact Ledger (Facilities Active at Capacity)")
+    # Shaded band for unmeasured historical drawn principal period (pre-July 2026)
+    ax1.axvspan(pd.to_datetime("2024-01-01"), pd.to_datetime("2026-06-30"), color="#eceff1", alpha=0.55, hatch="//", label="Historical Principal Unmeasured in Fact Ledger (Facilities Active at Capacity)")
 
     # Certified Complete Balance Window (Summer 2026)
     valid_eco_debt = df_monthly.dropna(subset=["eco_funded_debt_b"])
