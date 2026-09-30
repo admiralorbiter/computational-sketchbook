@@ -252,6 +252,62 @@ This log records the durable architectural, methodological, and data design choi
 - **Consequences:**
   Achieves Phase 0 Epistemic Certification with zero hallucinations, 100% verified primary SEC EDGAR citations, contract-literal discrete debt tranches with verified borrower SPVs and guarantee perimeters, and complete temporal consistency across both obligation graph and financial balance sheet dimensions.
 
+---
+
+### ADR-016: Phase 0 Epistemic Certification Freeze: Primary SEC Exhibit Substring Binding, Customary Bad-Acts Carve-Out Guaranty Edge, Joint Co-Borrower Entities, and Exact Contractual Maturity Semantics
+- **Status:** Accepted (2026-09-29, Phase 0 Epistemic Certification)
+- **Context:**
+  Following review of commit `b1f9c77` and `0ef593b`, four final calibration issues were identified to achieve complete epistemic observatory certification and eliminate all remaining look-ahead leaks and semantic ambiguities:
+  1. *SEC Exhibit Substring Binding:* `validate_sec_html_content()` in `src/validate.py` previously searched cached HTML files globally, creating a potential false-positive match path across unrelated documents. Every verifiable claim must be explicitly mapped to its specific cited file (`CLAIM_TO_SEC_FILE`), verifying that the normalized quote is 100% an exact contiguous verbatim substring strictly inside that specific document.
+  2. *DDTL 4.0 Limited Parent Guarantee:* DDTL 4.0 was previously modeled as having zero parent guarantee. Form 8-K Exhibit 10.2 explicitly establishes that CoreWeave, Inc. executes a Limited Guarantee covering specified customary non-recourse carve-out obligations (bad acts, fraud, environmental indemnities). Modeled as `OBL-CRWV-GUARANTY-DDTL4` (`recourse = "limited_bad_acts"`, `amount = None`, `reference_exposure_estimate = 2837000000.0`, `reference_exposure_class = "Class C (Underlying Principal Reference)"`).
+  3. *DDTL 3.0 Joint Co-Borrower Entity:* Form 8-K (July 28, 2025) establishes that both `CRWV CCAC VII LLC` and `CRWV CCAC V LLC` were co-borrowers under DDTL 3.0. Added entity `CRWV_CCAC_V` and edge `OBL-CRWV-COBORROWER-DDTL3` (`obligation_type = "joint_co_borrower"`, `amount = None`), capturing the true legal perimeter without duplicating the $2.215B debt edge.
+  4. *Contractual Draw-Level Maturity Semantics for DDTL 2.0 & 2.1:* Replaced static 5-year facility dates with contractual draw-level maturity semantics (`maturity_rule = "funding_date + 5 years"`), reported facility balloons (August 2030 for DDTL 2.0, March 2031 for DDTL 2.1), and corrected DDTL 2.1 execution to September 29, 2025 (Fifth Amendment) and Form 8-K filing to October 2, 2025 (`CLM-CRWV-010`, accession `0001193125-25-227562`, `d910811d8k.htm`).
+  5. *9.75% Notes Add-On Decomposition:* Split into initial April 14, 2026 issuance ($1.750B, `EVT-CRWV-DEBT-NOTES-2031-975-CREATED`) and April 21, 2026 add-on amendment ($1.000B, `EVT-CRWV-DEBT-NOTES-2031-975-ADDON`). Verified bitemporal queries resolve to $1.750B on April 15 and $2.750B on April 22 under `known_as_of()`.
+  6. *Zero-Lookahead Stress Engine Hardening:* Eliminated metric and narrative leaks across `simulate_anchor_customer_trim()` (debt service derived dynamically; returns `None` in `known` mode on June 30), `simulate_grid_energization_delay()` (returns `None` prior to July 29, 2026 APLD Form 10-K), `simulate_oem_purchase_commitment_markdown()` (stripped `($34.2B)` narrative leak), and `simulate_gpu_collateral_haircut()` (dynamic contractual caveat).
+  7. *SEC Note Citation Alignment:* Updated CoreWeave June 30, 2026 Form 10-Q note numbers in claims metadata from Note 7 to Note 10 (Debt) and Note 3 (Derivative Instruments).
+- **Decision:**
+  1. Bind all 29 primary SEC claims to their cited files in `validate_sec_html_content()`.
+  2. Add `OBL-CRWV-GUARANTY-DDTL4` and `OBL-CRWV-COBORROWER-DDTL3` to `obligations.parquet` (35 rows).
+  3. Expand `obligation_events.parquet` to 37 rows and `obligation_facts.parquet` to 45 rows.
+  4. Fully freeze Phase 0 at commit `dc9ddc5` / `f4ff3bd` with zero data drift across all 27 entities, 35 obligations, 37 lifecycle events, 45 facts, and 37 claims.
+- **Consequences:**
+  Achieves mathematically certified, 100% verified Phase 0 baseline with zero hallucinations, complete bitemporal fidelity, and zero narrative or metric look-ahead leakage.
+
+---
+
+### ADR-017: Phase 1 Boundary-Crossing Architecture, Multi-Modal Ingestion Ontology, and Discovery-Driven Universe Expansion
+- **Status:** Accepted (2026-09-29, Phase 1 Architecture)
+- **Context:**
+  Phase 0 validated the structural, bitemporal, and epistemic machinery across a 5-company pilot and its immediate counterparties. Moving to Phase 1 requires expanding the observatory across the broader AI compute supply chain. However, a naive expansion strategy suffers from four foundational architectural traps:
+  1. *Pipeline Monolith Trap (Conflating Ingestion Modality with Universe Membership):* A preliminary 30-entity expansion proposal mixed domestic public filers, foreign private issuers, private companies, asset management parents, and grid operators into a single nominal list. The automated SEC XBRL pipeline (`sec_ingest.py`) cannot ingest foreign 20-F/6-K filers, cannot tolerate missing balance sheets for private companies, and fails to handle non-company infrastructure nodes.
+  2. *Lender Identity Trap (Conflating Asset Manager Corporate Debt with Managed Fund Loans):* Entities such as `BLACKSTONE`, `BLUE_OWL`, `ARES`, `APOLLO`, `MUFG`, and `MORGAN_STANLEY` are critical capital providers. However, treating the asset manager parent's corporate 10-K balance sheet as the lender exposure is conceptually wrong: Apollo corporate debt is corporate debt, whereas Apollo-managed private credit funds or bank syndicates hold the loan asset. The borrower's credit agreement exhibits are the primary source for exposure mapping.
+  3. *Infrastructure Taxonomy Trap (Treating Grid Operators as Corporates):* Regional transmission organizations (`PJM_INTERCONNECTION`, `ERCOT_GRID`) are non-profit grid operators governing interconnection queues and energization delays, not operating companies with balance sheets. Regulated electric utilities (`AEP`) are corporate utilities. Meanwhile, physical supply chain bottleneck vendors (`Vertiv`, `Eaton`, `GE Vernova`) represent physical transformer and gas turbine equipment constraints that force data center developers to turn to behind-the-meter generation.
+  4. *Static Roster Trap (Framing Expansion as a Fixed Company List):* The core research objective of Phase 1 is **boundary-crossing edge expansion**, not accumulating 25–30 disconnected balance sheets. Companies are merely entry points. Every primary filing analyzed must be authorized to spawn borrower SPVs, project vehicles, lender funds, equipment vendors, and anchor customer relationships outside the nominal list.
+- **Decision:**
+  1. **Define Five Formal Ingestion & Source Classes:**
+     - `public_us_xbrl`: US domestic reporting companies filing Form 10-K/10-Q with structured XBRL. Ingested via automated `data.sec.gov` pipeline.
+     - `foreign_private_issuer`: Foreign private issuers using Form 20-F and Form 6-K (`NBIS` Nebius Group). Ingested via specialized 20-F/6-K parsing adapter. Note that `IREN` (Iris Energy), while Australian-incorporated, files US Form 10-K/10-Q and is ingested via `public_us_xbrl`.
+     - `private_evidence_only`: Unregistered private operating companies (`LAMBDA`, `CRUSOE`, `TOGETHER`). Ingested via relationship-first / evidence-ledger mechanisms (Form D filings, official credit announcements, verified contract disclosures). Explicitly tolerated with `financials.parquet` accounting baseline omitted/set to `None`.
+     - `capital_provider`: Asset managers, private credit fund sponsors, and bank syndicates (`BLACKSTONE`, `BLUE_OWL`, `ARES`, `APOLLO`, `MUFG`, `MORGAN_STANLEY`). Identity rule: `manager_parent` $\to$ `fund/lender vehicle / administrative agent` $\to$ `borrower`. Exposure mapping derives primarily from borrower credit agreement disclosures, not manager parent corporate balance sheets.
+     - `infrastructure_operator`: Independent System Operators / Regional Transmission Organizations (`PJM_INTERCONNECTION`, `ERCOT_GRID`) classified under `category: iso_rto / grid_operator`. Regulated electric utilities (`AEP`) classified as `category: corporate_utility`. Physical electrical equipment bottleneck vendors (`VRT`, `ETN`, `GEV`) classified as `public_us_xbrl` under `category: physical_equipment_bottleneck`.
+  2. **Classify and Reconcile Proposed Universe (30 Entities):**
+     Explicitly correct the proposed universe count from 28 to 30 entities, classifying every proposed node by ingestion mode and role.
+  3. **Establish Discovery-Driven Entity Creation Protocol:**
+     Every primary filing is authorized to dynamically spawn:
+     - Borrower SPVs (`borrower_spv`)
+     - Holding SPVs (`holding_spv`)
+     - Dedicated Lender Funds & Syndicates (`lender_spv`, `debt_syndicate`)
+     - Physical Facilities & Campuses (`campus_facility`)
+     - Unmodelled Commercial Customers & Suppliers
+  4. **Phase 1 Wave 1 Manifest (Prioritizing by Cross-Layer Join Density):**
+     Prioritize 12 initial entities maximized for cross-layer join density:
+     `NBIS`, `IREN`, `CORZ`, `WULF`, `HUT`, `DELL`, `HPE`, `AMD`, `META`, `AMZN`, `GOOGL`, and `BLUE_OWL`.
+     Strict rule: Do not ingest raw XBRL or expand datasets until ADR-017 is codified and the Wave 1 manifest is established.
+  5. **Engine Refinement Sequencing:**
+     Execute the two Phase 1 backlog items (Generic Pre-Disclosure Guard and Contractual Facility-Level Coupon Engine) prior to running analytical Phase 1 stress/reachability notebooks, ensuring the expanded network maintains mathematical and epistemic zero-lookahead rigor without bespoke conditionals.
+- **Consequences:**
+  Establishes an epistemically sound, scalable architecture for network expansion; eliminates false balance-sheet conflations; handles private and foreign entities natively; and focuses observatory research on repeated cross-boundary structural joins and systemic fragility.
+
 
 
 
