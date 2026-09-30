@@ -554,3 +554,44 @@ erc_regional_entity.
   - Eliminates all textual arithmetic discrepancies.
   - Solidifies the structural ERCOT invariant as an empirical foundation for Task 021.
 
+---
+
+### ADR-021: Capital-to-Physical Attribution Layer & Energization-at-Risk Framework
+- **Status:** Accepted (2026-09-30, Task 021 Stage A & Stage B Implementation)
+- **Context:**
+  1. *Residual Power-Data Cleanup (ADR-020.1b):* Auditing `power_relationships` revealed several fields that outran their evidence: specifically `effective_date`, `term_years`, `tariff_structure`, and generic `curtailment_rights`. For Core Scientific, 12-year terms had been inherited from CoreWeave colocation contracts rather than utility ESAs; dates such as 2024-06-04 and 2024-10-23 reflected CoreWeave option dates rather than utility inception. These unproven fields risked contaminating timing clocks in Task 021.
+  2. *The Fallacy of Synthetic Dollar/MW Ratios:* Attempting to calculate "corporate debt ÷ energized MW" (e.g. APLD $6.597B total debt ÷ 60 MW MDU incremental load at Ellendale, or IREN $2.4B Blue Owl/PIMCO financing ÷ 650 MW Childress load) represents a catastrophic multi-layer JOIN fallacy. APLD's $6.597B includes $2.15B PF2 notes (Harwood, ND), $450M corporate convertibles, $56.68M residual debt, and the retired bridge. Crucially, IREN's $2.4B financing is borrowed by `IE Mackenzie Compute Ltd.` to finance GPUs at the Mackenzie campus in British Columbia, Canada—completely independent of the 650 MW Childress campus in Texas.
+  3. *The Central Empirical Question:* Rather than dividing aggregated corporate debt by partial utility meters, the true structural question is: **How much legally attributable capital and customer obligation depends on MW or compute capacity that has not yet reached productive service?**
+- **Decision:**
+  1. **Residual Power-Data Cleanup:**
+     - Nulled all unproven `effective_date`, `term_years`, `tariff_structure`, and unproven generic `curtailment_rights` across `power_relationships.parquet`. Retained only audited, claim-backed attributes (e.g. Denton EEA alert curtailment via `CLM-PWR-CORZ-002`, Childress voluntary price response via `CLM-PWR-IREN-002`).
+  2. **Expanded Physical Facilities Roster (14 Campuses):**
+     - Added `FAC-IREN-MACKENZIE`: 80 MW campus in British Columbia, Canada (`CA-BC`) housing GPU servers financed under the August 2026 Blue Owl / PIMCO agreements.
+     - Added `FAC-APLD-POLARIS-FORGE-2`: 200 MW critical IT campus in Harwood, ND (`US-ND`) financed by $2.15B APLD ComputeCo 2 6.750% Senior Secured Notes.
+  3. **Stage A: Attribution Layer (`obligation_facility_links.parquet` / `.csv`):**
+     - Established 51 granular attribution links across all 47 decomposed financial obligations.
+     - Enforced the **Universal Attribution Rule:** No facility-level dollar allocation unless the dollar obligation is demonstrably attributable to that facility.
+     - Corporate debt remains `corporate_unallocated` with null `facility_id` and null `allocated_amount` ($39.808B across CoreWeave corporate/SPV debt, APLD corporate convertibles/residual debt, WULF convertibles, HUT convertible, NBIS credit facility, and SMCI purchase commitments).
+     - Multi-facility contracts (`OBL-CRWV-CORZ-COLOCATION-2024` reserving 590 MW across 5 Core Scientific campuses) maintain discrete topological links to each facility with `allocated_amount = None` to prevent synthetic pro-ration.
+  4. **Stage B: Energization-at-Risk Quantitative Findings:**
+     - **Facility-Attributable Funded Debt:** Exactly **$8,490.0M ($8.490B)** across 3 campuses:
+       - Polaris Forge 1 (`FAC-APLD-POLARIS-FORGE-1`): **$3,940.0M** ($2.35B PF1 Notes + $1.59B 7% Notes).
+       - Polaris Forge 2 (`FAC-APLD-POLARIS-FORGE-2`): **$2,150.0M** (PF2 Notes).
+       - Mackenzie (`FAC-IREN-MACKENZIE`): **$2,400.0M** ($1.2B MFSA + $1.2B Notes).
+     - **Capital-at-Risk Before Service:** Exactly **$8,490.0M (100.0% of attributable debt)** is anchored to incomplete facilities where operational capacity is below contracted capacity:
+       - Polaris Forge 1: 60 MW measured energized vs 400 MW contracted lease (**85.0% energization gap**).
+       - Polaris Forge 2: 0 MW measured energized vs 200 MW contracted lease (**100.0% energization gap**).
+       - Mackenzie: Staged deliveries through Dec 31, 2026 (**100.0% energization gap** prior to full cluster acceptance).
+     - **Customer / Lease Commitments Dependent on Incomplete Capacity:** **$11,000.0M ($11.0B)** 15-year CoreWeave lease on Polaris Forge 1 plus uncapped ELN-02/03 completion indemnities ($4.125B Class C reference proxy).
+     - **Annual Debt Carrying Cost on Incomplete Capacity:** **$631.02M/year** ($415.0M/yr APLD project interest + $216.0M/yr IREN equipment interest).
+  5. **Temporal Mismatch & Slippage Sensitivity:**
+     - Modeled 6-, 12-, and 18-month substation and GPU delivery delays:
+       - **6-Month Delay:** $315.5M carrying cost, $366.7M delayed APLD lease revenue; IREN availability window risk.
+       - **12-Month Delay:** $631.0M carrying cost, $733.3M delayed APLD lease revenue; cash flow deficits require dilutive equity or liquidity draws.
+       - **18-Month Delay:** $946.5M carrying cost, $1,100.0M delayed lease revenue; consumes 60% of IREN's 30-month loan term, posing severe debt service restructuring risk.
+- **Consequences:**
+  - Prevents bad JOINs between unallocated corporate debt and partial utility meters.
+  - Successfully tests the core thesis: *Financial commitments are crystallizing significantly earlier than productive physical capacity.*
+  - Establishes a permanent, field-audited bridge between contractual balance sheet liabilities and physical infrastructure commissioning state.
+
+

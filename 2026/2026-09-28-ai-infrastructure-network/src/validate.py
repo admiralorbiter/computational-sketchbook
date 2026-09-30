@@ -347,11 +347,12 @@ def validate_observatory():
         "obligation_terms.parquet": 44,
         "assumptions.parquet": 7,
         "evidence_claims.parquet": 54,
-        "facilities.parquet": 12,
+        "facilities.parquet": 14,
         "power_relationships.parquet": 13,
         "power_facts.parquet": 29,
         "power_terms.parquet": 27,
         "power_claims.parquet": 9,
+        "obligation_facility_links.parquet": 51,
     }
     for rf, expected_rows in required_files.items():
         p = PROCESSED_DIR / rf
@@ -556,9 +557,70 @@ def validate_observatory():
     print(f"  [OK] Power Backplane verified: {len(fac_df)} facilities, {len(pwr_rel_df)} power contracts, {len(pwr_facts_df)} typed MW facts, {len(pwr_terms_df)} terms (26 Class A, 1 Class B), {len(pwr_claims_df)} primary claims.")
 
     # ---------------------------------------------------------
+    # 1B. Validate Attribution Layer (ADR-021 / Task 021 Stage A)
+    # ---------------------------------------------------------
+    lnk_df = pd.read_parquet(PROCESSED_DIR / "obligation_facility_links.parquet")
+    obl_df = pd.read_parquet(PROCESSED_DIR / "obligations.parquet")
+    valid_obl_ids = set(obl_df["obligation_id"])
+    valid_fac_ids = set(fac_df["facility_id"])
+    valid_link_types = {
+        "direct_project_financing",
+        "direct_equipment_financing",
+        "direct_customer_contract",
+        "direct_lease",
+        "completion_support",
+        "parent_guarantee",
+        "portfolio_or_corporate",
+        "proceeds_partially_allocated",
+        "unknown"
+    }
+    valid_alloc_scopes = {"single_facility", "multi_facility", "corporate_unallocated", "unknown"}
+
+    # Invariant 1: All 47 obligations must be linked
+    linked_obls = set(lnk_df["obligation_id"])
+    if linked_obls != valid_obl_ids:
+        missing_obls = valid_obl_ids - linked_obls
+        extra_obls = linked_obls - valid_obl_ids
+        if missing_obls:
+            errors.append(f"Attribution layer missing obligations: {missing_obls}")
+        if extra_obls:
+            errors.append(f"Attribution layer contains unknown obligations: {extra_obls}")
+
+    # Invariant 2: Link type and allocation scope validation
+    for _, r in lnk_df.iterrows():
+        lid = r["link_id"]
+        lt = r["link_type"]
+        asc = r["allocation_scope"]
+        fid = r["facility_id"]
+        amt = r["allocated_amount"]
+
+        if lt not in valid_link_types:
+            errors.append(f"Link {lid} has invalid link_type: {lt}")
+        if asc not in valid_alloc_scopes:
+            errors.append(f"Link {lid} has invalid allocation_scope: {asc}")
+
+        if pd.notna(fid) and fid not in valid_fac_ids:
+            errors.append(f"Link {lid} references unknown facility_id: {fid}")
+
+        # The Critical Rule: No facility-level dollar allocation unless demonstrably attributable
+        if asc == "single_facility":
+            if lt in {"direct_project_financing", "direct_equipment_financing", "direct_lease"}:
+                if pd.isna(amt) or amt <= 0:
+                    errors.append(f"Link {lid} is {lt} single_facility but has invalid allocated_amount: {amt}")
+        elif asc == "corporate_unallocated":
+            if pd.notna(fid):
+                errors.append(f"Link {lid} is corporate_unallocated but specifies facility_id: {fid}")
+            if pd.notna(amt):
+                errors.append(f"Link {lid} is corporate_unallocated but specifies allocated_amount: {amt}")
+        elif asc == "multi_facility":
+            if pd.notna(amt):
+                errors.append(f"Link {lid} is multi_facility but specifies synthetic allocated_amount: {amt} (must be None)")
+
+    print(f"  [OK] Attribution Layer verified: {len(lnk_df)} links across all 47 obligations, zero synthetic facility pro-rations.")
+
+    # ---------------------------------------------------------
     # 2. Validate CoreWeave & Applied Digital Exact Debt Decomposition
     # ---------------------------------------------------------
-    obl_df = pd.read_parquet(PROCESSED_DIR / "obligations.parquet")
     crwv_borrowers = [
         "CRWV", "CRWV_CCAC_II", "CRWV_CCAC_IV", "CRWV_CCAC_VII", "CRWV_SPV_VIII", "CRWV_FINANCING_DDTL_V"
     ]

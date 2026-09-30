@@ -11,3 +11,5 @@ FAC-IREN-SWEETWATER-1,Sweetwater 1 Campus,IREN,,,Sweetwater,Nolan County,US-TX,u
 FAC-IREN-SWEETWATER-2,Sweetwater 2 Campus,IREN,,,Sweetwater,Nolan County,US-TX,under_construction,ERCOT,600 MW planned development with executed AEP Texas grid-connection agreement in ERCOT.
 FAC-NBIS-MANTSALA,Mäntsälä Supercomputing Center,NBIS,,,Mäntsälä,Uusimaa,FI,operational,FINGRID,75 MW proprietary supercomputing facility served by Nivos with Fingrid transmission.
 FAC-NBIS-LAPPEENRANTA,Lappeenranta AI Factory,NBIS,,,Lappeenranta,South Karelia,FI,announced,,Announced 310 MW AI supercomputing factory development in Finland.
+FAC-IREN-MACKENZIE,Mackenzie Data Center Campus,IREN,IREN_MACKENZIE_COMPUTE,,Mackenzie,Fraser-Fort George,CA-BC,operational_and_expanding,,"80 MW data center campus in British Columbia, Canada hosting GPU servers financed under the August 2026 Blue Owl / PIMCO agreements."
+FAC-APLD-POLARIS-FORGE-2,Polaris Forge 2 Campus,APLD,APLD_COMPUTECO2,,Harwood,Cass County,US-ND,under_construction,MISO,"200 MW critical IT campus under construction near Harwood, ND financed by $2.15B APLD ComputeCo 2 6.750% Senior Secured Notes."

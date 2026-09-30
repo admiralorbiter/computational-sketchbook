@@ -1,0 +1,841 @@
+"""
+Stage A: Attribution Layer Curation (ADR-021)
+Builds obligation_facility_links.parquet and obligation_facility_links.csv.
+
+Enforces strict attribution invariants:
+1. No facility-level dollar/MW ratio unless the dollar obligation is demonstrably attributable to that facility.
+2. Corporate debt stays corporate. Portfolio financing stays portfolio.
+3. Multi-facility commitments have allocation_scope='multi_facility' and allocated_amount=None (no fake pro-ration).
+4. All 47 obligations in obligations.parquet are explicitly accounted for.
+"""
+
+from pathlib import Path
+import pandas as pd
+import numpy as np
+
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+PROCESSED_DIR = DATA_DIR / "processed"
+
+def build_obligation_facility_links() -> pd.DataFrame:
+    obl_df = pd.read_parquet(PROCESSED_DIR / "obligations.parquet")
+    all_obl_ids = set(obl_df["obligation_id"])
+    assert len(all_obl_ids) == 47, f"Expected 47 obligations, found {len(all_obl_ids)}"
+
+    links = [
+        # =====================================================================
+        # 1. APPLIED DIGITAL (APLD) & COREWEAVE LEASES AT POLARIS FORGE
+        # =====================================================================
+        {
+            "link_id": "LNK-CRWV-APLD-LEASE",
+            "obligation_id": "OBL-CRWV-APLD-LEASE",
+            "facility_id": "FAC-APLD-POLARIS-FORGE-1",
+            "link_type": "direct_lease",
+            "allocation_scope": "single_facility",
+            "allocated_amount": 11000000000.0,
+            "allocation_fraction": 1.0,
+            "amount_type": "lease_commitment",
+            "evidence_class": "A",
+            "claim_id": "CLM-APLD-001",
+            "economic_from": "2025-05-28",
+            "publicly_known_from": "2025-05-28",
+            "notes": "15-year master lease agreement for 400 MW critical IT capacity across Buildings 2, 3, and 4 at Polaris Forge 1."
+        },
+        {
+            "link_id": "LNK-CRWV-APLD-GUARANTY-ELN02",
+            "obligation_id": "OBL-CRWV-APLD-GUARANTY-ELN02",
+            "facility_id": "FAC-APLD-POLARIS-FORGE-1",
+            "link_type": "completion_support",
+            "allocation_scope": "single_facility",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "contingent_indemnity",
+            "evidence_class": "A",
+            "claim_id": "CLM-APLD-005",
+            "economic_from": "2026-03-30",
+            "publicly_known_from": "2026-04-03",
+            "notes": "Uncapped legal indemnity by CoreWeave for Phase 2/4 Space (Building 2) at Polaris Forge 1."
+        },
+        {
+            "link_id": "LNK-CRWV-APLD-GUARANTY-ELN03",
+            "obligation_id": "OBL-CRWV-APLD-GUARANTY-ELN03",
+            "facility_id": "FAC-APLD-POLARIS-FORGE-1",
+            "link_type": "completion_support",
+            "allocation_scope": "single_facility",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "contingent_indemnity",
+            "evidence_class": "A",
+            "claim_id": "CLM-APLD-006",
+            "economic_from": "2026-03-30",
+            "publicly_known_from": "2026-04-03",
+            "notes": "Uncapped legal indemnity by CoreWeave for Building 3 (150 MW) at Polaris Forge 1 ($4.125B Class C reference proxy)."
+        },
+        {
+            "link_id": "LNK-APLD-DEBT-PF1",
+            "obligation_id": "OBL-APLD-DEBT-PF1",
+            "facility_id": "FAC-APLD-POLARIS-FORGE-1",
+            "link_type": "direct_project_financing",
+            "allocation_scope": "single_facility",
+            "allocated_amount": 2350000000.0,
+            "allocation_fraction": 1.0,
+            "amount_type": "funded_principal",
+            "evidence_class": "A",
+            "claim_id": "CLM-APLD-001",
+            "economic_from": "2024-06-14",
+            "publicly_known_from": "2024-06-14",
+            "notes": "6.750% Senior Secured Notes due 2031 issued by APLD ComputeCo LLC to finance Polaris Forge 1 initial buildout."
+        },
+        {
+            "link_id": "LNK-APLD-DEBT-PF2",
+            "obligation_id": "OBL-APLD-DEBT-PF2",
+            "facility_id": "FAC-APLD-POLARIS-FORGE-2",
+            "link_type": "direct_project_financing",
+            "allocation_scope": "single_facility",
+            "allocated_amount": 2150000000.0,
+            "allocation_fraction": 1.0,
+            "amount_type": "funded_principal",
+            "evidence_class": "A",
+            "claim_id": "CLM-APLD-011",
+            "economic_from": "2025-01-24",
+            "publicly_known_from": "2025-01-24",
+            "notes": "6.750% Senior Secured Notes due 2031 issued by APLD ComputeCo 2 LLC to finance Polaris Forge 2 (Harwood, ND)."
+        },
+        {
+            "link_id": "LNK-APLD-DEBT-7PCT-2026",
+            "obligation_id": "OBL-APLD-DEBT-7PCT-2026",
+            "facility_id": "FAC-APLD-POLARIS-FORGE-1",
+            "link_type": "direct_project_financing",
+            "allocation_scope": "single_facility",
+            "allocated_amount": 1590000000.0,
+            "allocation_fraction": 1.0,
+            "amount_type": "funded_principal",
+            "evidence_class": "A",
+            "claim_id": "CLM-APLD-008",
+            "economic_from": "2026-06-16",
+            "publicly_known_from": "2026-06-16",
+            "notes": "7.00% Senior Secured Notes due 2031 issued by APLD ComputeCo 3 LLC to finance Polaris Forge 1 Building 4 (150 MW)."
+        },
+        {
+            "link_id": "LNK-APLD-DEBT-BRIDGE",
+            "obligation_id": "OBL-APLD-DEBT-BRIDGE",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-APLD-003",
+            "economic_from": "2026-05-01",
+            "publicly_known_from": "2026-05-01",
+            "notes": "Corporate transitional bridge credit facility ($300M, retired 2026-06-16 upon 7% Notes issuance)."
+        },
+        {
+            "link_id": "LNK-APLD-DEBT-CONV",
+            "obligation_id": "OBL-APLD-DEBT-CONV",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-APLD-003",
+            "economic_from": "2024-11-20",
+            "publicly_known_from": "2024-11-20",
+            "notes": "2.75% Convertible Senior Notes due 2030 ($450M) issued by parent Applied Digital Corporation."
+        },
+        {
+            "link_id": "LNK-APLD-DEBT-OTHER",
+            "obligation_id": "OBL-APLD-DEBT-OTHER",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-APLD-003",
+            "economic_from": "2026-05-31",
+            "publicly_known_from": "2026-08-12",
+            "notes": "Residual corporate debt across equipment loans, promissory notes, and lines of credit ($56.68M)."
+        },
+
+        # =====================================================================
+        # 2. IRIS ENERGY (IREN) MACKENZIE GPU FINANCING & CHILDRESS ISOLATION
+        # =====================================================================
+        {
+            "link_id": "LNK-IREN-DEBT-MFSA-2026",
+            "obligation_id": "OBL-IREN-DEBT-MFSA-2026",
+            "facility_id": "FAC-IREN-MACKENZIE",
+            "link_type": "direct_equipment_financing",
+            "allocation_scope": "single_facility",
+            "allocated_amount": 1200000000.0,
+            "allocation_fraction": 0.50,
+            "amount_type": "funded_principal",
+            "evidence_class": "A",
+            "claim_id": "CLM-IREN-001",
+            "economic_from": "2026-08-25",
+            "publicly_known_from": "2026-08-27",
+            "notes": "Master Financing Services Agreement (MFSA) borrowed by IE Mackenzie Compute Ltd. to finance GPU servers and equipment at Mackenzie, BC data center."
+        },
+        {
+            "link_id": "LNK-IREN-DEBT-NOTES-2026",
+            "obligation_id": "OBL-IREN-DEBT-NOTES-2026",
+            "facility_id": "FAC-IREN-MACKENZIE",
+            "link_type": "direct_equipment_financing",
+            "allocation_scope": "single_facility",
+            "allocated_amount": 1200000000.0,
+            "allocation_fraction": 0.50,
+            "amount_type": "funded_principal",
+            "evidence_class": "A",
+            "claim_id": "CLM-IREN-001",
+            "economic_from": "2026-08-25",
+            "publicly_known_from": "2026-08-27",
+            "notes": "Senior Notes pursuant to Note Purchase Agreement borrowed by IE Mackenzie Compute Ltd. to finance GPU servers and equipment at Mackenzie, BC."
+        },
+        {
+            "link_id": "LNK-IREN-GUARANTY-2026",
+            "obligation_id": "OBL-IREN-GUARANTY-2026",
+            "facility_id": "FAC-IREN-MACKENZIE",
+            "link_type": "parent_guarantee",
+            "allocation_scope": "single_facility",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "guarantee_recourse",
+            "evidence_class": "A",
+            "claim_id": "CLM-IREN-001",
+            "economic_from": "2026-08-25",
+            "publicly_known_from": "2026-08-27",
+            "notes": "Unconditional parent guarantee by IREN Limited for IE Mackenzie Compute Ltd. payment obligations under August 2026 Financing Agreements."
+        },
+
+        # =====================================================================
+        # 3. CORE SCIENTIFIC (CORZ) & COREWEAVE COLOCATION CONTRACTS
+        # =====================================================================
+        {
+            "link_id": "LNK-CRWV-CORZ-COLO-DENTON",
+            "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024",
+            "facility_id": "FAC-CORZ-DENTON",
+            "link_type": "direct_customer_contract",
+            "allocation_scope": "multi_facility",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "capacity_reservation",
+            "evidence_class": "A",
+            "claim_id": "CLM-CORZ-001",
+            "economic_from": "2024-06-03",
+            "publicly_known_from": "2024-06-03",
+            "notes": "CoreWeave 590 MW colocation reservation across 5 Core Scientific sites (270 MW leased at Denton; no facility dollar breakdown disclosed)."
+        },
+        {
+            "link_id": "LNK-CRWV-CORZ-COLO-DALTON",
+            "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024",
+            "facility_id": "FAC-CORZ-DALTON",
+            "link_type": "direct_customer_contract",
+            "allocation_scope": "multi_facility",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "capacity_reservation",
+            "evidence_class": "A",
+            "claim_id": "CLM-CORZ-001",
+            "economic_from": "2024-06-03",
+            "publicly_known_from": "2024-06-03",
+            "notes": "CoreWeave colocation contract allocation at Dalton campus (195 MW gross utility capacity)."
+        },
+        {
+            "link_id": "LNK-CRWV-CORZ-COLO-MUSKOGEE",
+            "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024",
+            "facility_id": "FAC-CORZ-MUSKOGEE",
+            "link_type": "direct_customer_contract",
+            "allocation_scope": "multi_facility",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "capacity_reservation",
+            "evidence_class": "A",
+            "claim_id": "CLM-CORZ-001",
+            "economic_from": "2024-06-03",
+            "publicly_known_from": "2024-06-03",
+            "notes": "CoreWeave colocation contract allocation at Muskogee campus (100 MW gross utility capacity)."
+        },
+        {
+            "link_id": "LNK-CRWV-CORZ-COLO-MARBLE",
+            "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024",
+            "facility_id": "FAC-CORZ-MARBLE",
+            "link_type": "direct_customer_contract",
+            "allocation_scope": "multi_facility",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "capacity_reservation",
+            "evidence_class": "A",
+            "claim_id": "CLM-CORZ-001",
+            "economic_from": "2024-06-03",
+            "publicly_known_from": "2024-06-03",
+            "notes": "CoreWeave colocation contract allocation at Marble campus (117 MW gross utility capacity)."
+        },
+        {
+            "link_id": "LNK-CRWV-CORZ-COLO-AUSTIN",
+            "obligation_id": "OBL-CRWV-CORZ-COLOCATION-2024",
+            "facility_id": "FAC-CORZ-AUSTIN",
+            "link_type": "direct_customer_contract",
+            "allocation_scope": "multi_facility",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "capacity_reservation",
+            "evidence_class": "A",
+            "claim_id": "CLM-CORZ-001",
+            "economic_from": "2024-06-03",
+            "publicly_known_from": "2024-06-03",
+            "notes": "CoreWeave colocation contract allocation at Austin campus (20 MW gross utility capacity)."
+        },
+
+        # =====================================================================
+        # 4. COREWEAVE PORTFOLIO DEBT, NOTES, REVOLVERS, & GUARANTEES
+        # =====================================================================
+        {
+            "link_id": "LNK-CRWV-DEBT-DDTL1",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL1",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2023-07-30",
+            "publicly_known_from": "2026-08-12",
+            "notes": "CoreWeave CCAC II DDTL 1.0 facility ($1.300B) for nationwide GPU fleet procurement."
+        },
+        {
+            "link_id": "LNK-CRWV-DEBT-DDTL2",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL2",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2024-05-16",
+            "publicly_known_from": "2026-08-12",
+            "notes": "CoreWeave CCAC IV DDTL 2.0 facility ($3.190B) for nationwide GPU fleet procurement."
+        },
+        {
+            "link_id": "LNK-CRWV-DEBT-DDTL2-1",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL2-1",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2025-09-29",
+            "publicly_known_from": "2026-08-12",
+            "notes": "CoreWeave CCAC IV DDTL 2.1 facility ($3.000B) for nationwide GPU fleet procurement."
+        },
+        {
+            "link_id": "LNK-CRWV-DEBT-DDTL3",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL3",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2025-07-28",
+            "publicly_known_from": "2026-08-12",
+            "notes": "CoreWeave CCAC VII DDTL 3.0 facility ($2.215B) for European compute expansion."
+        },
+        {
+            "link_id": "LNK-CRWV-DEBT-DDTL4",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL4",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2026-03-30",
+            "publicly_known_from": "2026-08-12",
+            "notes": "CoreWeave SPV VIII DDTL 4.0 facility ($2.837B) non-recourse project financing."
+        },
+        {
+            "link_id": "LNK-CRWV-DEBT-DDTL5",
+            "obligation_id": "OBL-CRWV-DEBT-DDTL5",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2026-05-15",
+            "publicly_known_from": "2026-08-12",
+            "notes": "CoreWeave Financing DDTL V facility ($1.101B) Morgan Stanley syndicate."
+        },
+        {
+            "link_id": "LNK-CRWV-DEBT-NOTES-2030",
+            "obligation_id": "OBL-CRWV-DEBT-NOTES-2030",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2025-05-27",
+            "publicly_known_from": "2025-05-27",
+            "notes": "9.125% Senior Notes due 2030 ($2.000B) corporate unsecured bonds."
+        },
+        {
+            "link_id": "LNK-CRWV-DEBT-NOTES-2031-900",
+            "obligation_id": "OBL-CRWV-DEBT-NOTES-2031-900",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2025-07-25",
+            "publicly_known_from": "2025-07-25",
+            "notes": "9.000% Senior Notes due 2031 ($1.750B) corporate unsecured bonds."
+        },
+        {
+            "link_id": "LNK-CRWV-DEBT-NOTES-2031-975",
+            "obligation_id": "OBL-CRWV-DEBT-NOTES-2031-975",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2026-04-14",
+            "publicly_known_from": "2026-04-14",
+            "notes": "9.750% Senior Notes due 2031 ($2.750B) corporate unsecured bonds."
+        },
+        {
+            "link_id": "LNK-CRWV-DEBT-NOTES-2032-9625",
+            "obligation_id": "OBL-CRWV-DEBT-NOTES-2032-9625",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2026-06-18",
+            "publicly_known_from": "2026-06-18",
+            "notes": "9.625% Senior Notes due 2032 ($1.250B) corporate unsecured bonds."
+        },
+        {
+            "link_id": "LNK-CRWV-DEBT-NOTES-2032-EUR",
+            "obligation_id": "OBL-CRWV-DEBT-NOTES-2032-EUR",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2026-06-18",
+            "publicly_known_from": "2026-06-18",
+            "notes": "8.750% Senior Euro Notes due 2032 (EUR 2.1B / $2.279B) corporate unsecured bonds."
+        },
+        {
+            "link_id": "LNK-CRWV-DEBT-CONV-2031",
+            "obligation_id": "OBL-CRWV-DEBT-CONV-2031",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2025-12-11",
+            "publicly_known_from": "2025-12-11",
+            "notes": "0.00% Convertible Senior Notes due 2031 ($2.588B) parent convertibles."
+        },
+        {
+            "link_id": "LNK-CRWV-DEBT-CONV-2032",
+            "obligation_id": "OBL-CRWV-DEBT-CONV-2032",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2026-04-14",
+            "publicly_known_from": "2026-04-14",
+            "notes": "1.500% Convertible Senior Notes due 2032 ($4.000B) parent convertibles."
+        },
+        {
+            "link_id": "LNK-CRWV-DEBT-OEM",
+            "obligation_id": "OBL-CRWV-DEBT-OEM",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2025-01-01",
+            "publicly_known_from": "2026-08-12",
+            "notes": "CoreWeave OEM Financing Facilities ($4.220B) for server procurement."
+        },
+        {
+            "link_id": "LNK-CRWV-DEBT-OEM-NR",
+            "obligation_id": "OBL-CRWV-DEBT-OEM-NR",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2025-06-01",
+            "publicly_known_from": "2026-08-12",
+            "notes": "CoreWeave Non-Recourse OEM Equipment Facility ($882M)."
+        },
+        {
+            "link_id": "LNK-CRWV-DEBT-MAGNETAR",
+            "obligation_id": "OBL-CRWV-DEBT-MAGNETAR",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2024-01-15",
+            "publicly_known_from": "2026-08-12",
+            "notes": "Magnetar / Blackstone delayed draw promissory note ($189M)."
+        },
+        {
+            "link_id": "LNK-CRWV-GUARANTY-DDTL1",
+            "obligation_id": "OBL-CRWV-GUARANTY-DDTL1",
+            "facility_id": None,
+            "link_type": "parent_guarantee",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "guarantee_recourse",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2023-07-30",
+            "publicly_known_from": "2026-08-12",
+            "notes": "Full parent guarantee by CoreWeave Inc. for DDTL 1.0."
+        },
+        {
+            "link_id": "LNK-CRWV-GUARANTY-DDTL2",
+            "obligation_id": "OBL-CRWV-GUARANTY-DDTL2",
+            "facility_id": None,
+            "link_type": "parent_guarantee",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "guarantee_recourse",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2024-05-16",
+            "publicly_known_from": "2026-08-12",
+            "notes": "Full parent guarantee by CoreWeave Inc. for DDTL 2.0."
+        },
+        {
+            "link_id": "LNK-CRWV-GUARANTY-DDTL2-1",
+            "obligation_id": "OBL-CRWV-GUARANTY-DDTL2-1",
+            "facility_id": None,
+            "link_type": "parent_guarantee",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "guarantee_recourse",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2025-09-29",
+            "publicly_known_from": "2026-08-12",
+            "notes": "Full parent guarantee by CoreWeave Inc. for DDTL 2.1."
+        },
+        {
+            "link_id": "LNK-CRWV-GUARANTY-DDTL3",
+            "obligation_id": "OBL-CRWV-GUARANTY-DDTL3",
+            "facility_id": None,
+            "link_type": "parent_guarantee",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "guarantee_recourse",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2025-07-28",
+            "publicly_known_from": "2026-08-12",
+            "notes": "Full parent guarantee by CoreWeave Inc. for DDTL 3.0."
+        },
+        {
+            "link_id": "LNK-CRWV-GUARANTY-DDTL4",
+            "obligation_id": "OBL-CRWV-GUARANTY-DDTL4",
+            "facility_id": None,
+            "link_type": "parent_guarantee",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "guarantee_recourse",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-004",
+            "economic_from": "2026-03-30",
+            "publicly_known_from": "2026-08-12",
+            "notes": "Limited bad-acts carve-out guarantee by CoreWeave Inc. for DDTL 4.0."
+        },
+        {
+            "link_id": "LNK-CRWV-GUARANTY-DDTL5",
+            "obligation_id": "OBL-CRWV-GUARANTY-DDTL5",
+            "facility_id": None,
+            "link_type": "parent_guarantee",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "guarantee_recourse",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2026-05-15",
+            "publicly_known_from": "2026-08-12",
+            "notes": "Full parent guarantee by CoreWeave Inc. for DDTL 5.0."
+        },
+        {
+            "link_id": "LNK-CRWV-COBORROWER-DDTL3",
+            "obligation_id": "OBL-CRWV-COBORROWER-DDTL3",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "joint_co_borrower",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-001",
+            "economic_from": "2025-07-28",
+            "publicly_known_from": "2026-08-12",
+            "notes": "Joint co-borrower status of CRWV CCAC V LLC under DDTL 3.0."
+        },
+
+        # =====================================================================
+        # 5. TERAWULF (WULF) CORPORATE CONVERTIBLE NOTES
+        # =====================================================================
+        {
+            "link_id": "LNK-WULF-DEBT-CONV-2030",
+            "obligation_id": "OBL-WULF-DEBT-CONV-2030",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-WULF-001",
+            "economic_from": "2024-10-25",
+            "publicly_known_from": "2024-10-25",
+            "notes": "2.75% Convertible Senior Notes due 2030 ($500M) issued by TeraWulf Inc. parent."
+        },
+        {
+            "link_id": "LNK-WULF-DEBT-CONV-2031",
+            "obligation_id": "OBL-WULF-DEBT-CONV-2031",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-WULF-001",
+            "economic_from": "2025-08-20",
+            "publicly_known_from": "2025-08-20",
+            "notes": "1.00% Convertible Senior Notes due 2031 ($1,000M) issued by TeraWulf Inc. parent."
+        },
+        {
+            "link_id": "LNK-WULF-DEBT-CONV-2032",
+            "obligation_id": "OBL-WULF-DEBT-CONV-2032",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-WULF-001",
+            "economic_from": "2025-10-31",
+            "publicly_known_from": "2025-10-31",
+            "notes": "0.00% Convertible Senior Notes due 2032 ($1,025M) issued by TeraWulf Inc. parent."
+        },
+
+        # =====================================================================
+        # 6. HUT 8 (HUT) CONVERTIBLE NOTE
+        # =====================================================================
+        {
+            "link_id": "LNK-HUT-DEBT-COATUE-CONV-2024",
+            "obligation_id": "OBL-HUT-DEBT-COATUE-CONV-2024",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-HUT-001",
+            "economic_from": "2024-06-28",
+            "publicly_known_from": "2024-06-24",
+            "notes": "8.00% Convertible Senior Notes due 2029 ($150M) issued by Hut 8 Corp. to Coatue."
+        },
+
+        # =====================================================================
+        # 7. NEBIUS (NBIS) FINANCING & CUSTOMER CONTRACTS
+        # =====================================================================
+        {
+            "link_id": "LNK-NBIS-DEBT-MUFG-2026",
+            "obligation_id": "OBL-NBIS-DEBT-MUFG-2026",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-NBIS-001",
+            "economic_from": "2026-07-10",
+            "publicly_known_from": "2026-07-10",
+            "notes": "Nebius ComputeCo II LLC term loan facility ($775M) for European AI infrastructure expansion."
+        },
+        {
+            "link_id": "LNK-NBIS-COBORROWER-MUFG-2026",
+            "obligation_id": "OBL-NBIS-COBORROWER-MUFG-2026",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "joint_co_borrower",
+            "evidence_class": "A",
+            "claim_id": "CLM-NBIS-001",
+            "economic_from": "2026-07-10",
+            "publicly_known_from": "2026-07-10",
+            "notes": "Nebius ComputeCo II Oy Finnish co-borrower under MUFG facility."
+        },
+        {
+            "link_id": "LNK-NBIS-GUARANTY-MUFG-2026",
+            "obligation_id": "OBL-NBIS-GUARANTY-MUFG-2026",
+            "facility_id": None,
+            "link_type": "parent_guarantee",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "guarantee_recourse",
+            "evidence_class": "A",
+            "claim_id": "CLM-NBIS-001",
+            "economic_from": "2026-07-10",
+            "publicly_known_from": "2026-07-10",
+            "notes": "Parent guarantee by Nebius Group N.V. under MUFG facility."
+        },
+        {
+            "link_id": "LNK-NBIS-META-OFFTAKE-2026",
+            "obligation_id": "OBL-NBIS-META-OFFTAKE-2026",
+            "facility_id": None,
+            "link_type": "direct_customer_contract",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "customer_commitment",
+            "evidence_class": "A",
+            "claim_id": "CLM-NBIS-002",
+            "economic_from": "2026-03-13",
+            "publicly_known_from": "2026-03-13",
+            "notes": "Meta 5-year AI compute capacity reservation ($27.0B) with Nebius Inc."
+        },
+
+        # =====================================================================
+        # 8. OTHER CORPORATE / SUPPLY CHAIN COMMITMENTS
+        # =====================================================================
+        {
+            "link_id": "LNK-REL-MSFT-CRWV-REVENUE",
+            "obligation_id": "REL-MSFT-CRWV-REVENUE-CONCENTRATION",
+            "facility_id": None,
+            "link_type": "direct_customer_contract",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "customer_concentration",
+            "evidence_class": "A",
+            "claim_id": "CLM-CRWV-003",
+            "economic_from": "2025-01-01",
+            "publicly_known_from": "2026-03-03",
+            "notes": "Microsoft FY25 revenue concentration disclosure ($3.438B / 68% of CoreWeave revenue)."
+        },
+        {
+            "link_id": "LNK-SMCI-SUPPLIER-COMMIT",
+            "obligation_id": "OBL-SMCI-SUPPLIER-COMMIT",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "unallocated_debt",
+            "evidence_class": "A",
+            "claim_id": "CLM-SMCI-001",
+            "economic_from": "2025-07-01",
+            "publicly_known_from": "2025-08-29",
+            "notes": "Supermicro off-balance sheet purchase commitments ($34.2B) for inventory and components."
+        },
+        {
+            "link_id": "LNK-NVDA-CRWV-EQUITY",
+            "obligation_id": "OBL-NVDA-CRWV-EQUITY",
+            "facility_id": None,
+            "link_type": "portfolio_or_corporate",
+            "allocation_scope": "corporate_unallocated",
+            "allocated_amount": None,
+            "allocation_fraction": None,
+            "amount_type": "equity_investment",
+            "evidence_class": "A",
+            "claim_id": "CLM-NVDA-CRWV-001",
+            "economic_from": "2026-01-15",
+            "publicly_known_from": "2026-01-15",
+            "notes": "NVIDIA strategic convertible preferred equity investment ($2.0B) in CoreWeave."
+        }
+    ]
+
+    df = pd.DataFrame(links)
+
+    # Invariant Verification
+    linked_obls = set(df["obligation_id"])
+    missing = all_obl_ids - linked_obls
+    assert not missing, f"Missing obligations in attribution layer: {missing}"
+    assert len(linked_obls) == 47, f"Expected 47 distinct obligations linked, found {len(linked_obls)}"
+
+    # Save to data/processed
+    df.to_parquet(PROCESSED_DIR / "obligation_facility_links.parquet", index=False)
+    df.to_csv(PROCESSED_DIR / "obligation_facility_links.csv", index=False)
+    return df
+
+if __name__ == "__main__":
+    df = build_obligation_facility_links()
+    print(f"Attribution Layer built successfully: {len(df)} link rows across 47 obligations.")
+    print("Facility-attributed funded debt rows:")
+    funded = df[df["link_type"].isin(["direct_project_financing", "direct_equipment_financing"])]
+    print(funded[["link_id", "obligation_id", "facility_id", "allocated_amount"]])

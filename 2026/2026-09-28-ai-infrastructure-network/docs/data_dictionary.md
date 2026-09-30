@@ -279,3 +279,26 @@ Tracks 9 primary evidence claims: 8 primary SEC EDGAR submissions validated via 
 | `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted), `C` (Inferred). | `A` |
 | `extraction_method` | String | No | Audit protocol used to extract disclosure (`SEC Form 10-Q direct audit`, `Utility Press Disclosure direct audit`). | `SEC Form 10-Q direct audit` |
 | `verifier_notes` | String | Yes | Analytical context on physical power connectivity and grid boundary. | *Text* |
+
+---
+
+## 15. Obligation-to-Facility Attribution Ledger (`obligation_facility_links.parquet` / `obligation_facility_links.csv`)
+
+Tracks 51 granular attribution links across all 47 decomposed financial obligations, enforcing the ADR-021 Invariant: **No facility-level dollar allocation unless demonstrably attributable to that facility.** Corporate debt remains corporate; portfolio credit remains portfolio; multi-facility contracts maintain discrete topological links with null allocated amounts to avoid synthetic pro-ration.
+
+| Column Name | Data Type | Nullable | Description / Controlled Vocabulary | Example |
+| :--- | :--- | :--- | :--- | :--- |
+| `link_id` | String | No | Primary Key: `LNK-{OBLIGATION_ID}` or `LNK-{OBLIGATION_ID}-{CAMPUS}`. | `LNK-APLD-DEBT-PF1` |
+| `obligation_id` | String | No | Foreign Key referencing `obligations.obligation_id`. | `OBL-APLD-DEBT-PF1` |
+| `facility_id` | String | Yes | Foreign Key referencing `facilities.facility_id`; null for unallocated corporate/portfolio obligations. | `FAC-APLD-POLARIS-FORGE-1` |
+| `link_type` | String | No | Taxonomy: `direct_project_financing`, `direct_equipment_financing`, `direct_customer_contract`, `direct_lease`, `completion_support`, `parent_guarantee`, `portfolio_or_corporate`, `proceeds_partially_allocated`, `unknown`. | `direct_project_financing` |
+| `allocation_scope` | String | No | Scope taxonomy: `single_facility`, `multi_facility`, `corporate_unallocated`, `unknown`. | `single_facility` |
+| `allocated_amount` | Float | Yes | Disclosed funded principal, lease commitment, or contract value in USD; null for multi-facility, uncapped, or corporate unallocated. | `2350000000.0` |
+| `allocation_fraction`| Float | Yes | Disclosed proportion of obligation allocated (e.g. `1.0`, `0.5`); null otherwise. | `1.0` |
+| `amount_type` | String | No | Taxonomy: `funded_principal`, `lease_commitment`, `contingent_indemnity`, `guarantee_recourse`, `unallocated_debt`, `capacity_reservation`, `equity_investment`. | `funded_principal` |
+| `evidence_class` | String | No | Trust classification: `A` (Filed), `B` (Asserted), `C` (Inferred). | `A` |
+| `claim_id` | String | No | Foreign Key referencing `evidence_claims.claim_id` or `power_claims.claim_id`. | `CLM-APLD-001` |
+| `economic_from` | Date (str)| No | Effective date in economic reality (`YYYY-MM-DD`). | `2024-06-14` |
+| `publicly_known_from`| Date (str)| No | Earliest date publicly disclosed (`YYYY-MM-DD`). | `2024-06-14` |
+| `notes` | String | Yes | Detailed provenance and boundary documentation. | *Text* |
+
