@@ -1,0 +1,304 @@
+{
+  "analysis_sprint": "Analysis Sprint 2: Hidden Dependency & Protection Independence",
+  "date": "2026-09-30",
+  "falsification_standard": {
+    "concentration_threshold_pir": "< 0.50",
+    "resilience_threshold_pir": ">= 0.75",
+    "empirical_finding": "PF2 and CoreWeave DDTLs exhibit severe reconvergence (PIR = 0.50), while Mackenzie and Nebius exhibit true structural independence (PIR = 1.00)."
+  },
+  "structures_summary": [
+    {
+      "structure_id": "PF1",
+      "name": "Applied Digital PF1 (Ellendale Bldgs 2-4)",
+      "category": "Data Center Project Debt",
+      "capital_volume_b": 3.94,
+      "active_carry_m_yr": 328.675,
+      "mw_capacity": 400.0,
+      "n_protections": 6,
+      "n_terminal_nodes": 4,
+      "protection_independence_ratio": 0.6667,
+      "convergence_index": 0.3333,
+      "classification": "Concentration Supported (Moderate Reconvergence)",
+      "terminal_nodes": [
+        "ANCHOR_CUSTOMER_DEMAND",
+        "APLD_PARENT_LIQUIDITY",
+        "CRWV_ENTERPRISE_LIQUIDITY",
+        "POWER_GRID_ENERGIZATION"
+      ]
+    },
+    {
+      "structure_id": "PF2",
+      "name": "Applied Digital PF2 (Polaris Forge 2)",
+      "category": "Data Center Project Debt",
+      "capital_volume_b": 2.15,
+      "active_carry_m_yr": 145.125,
+      "mw_capacity": 200.0,
+      "n_protections": 4,
+      "n_terminal_nodes": 2,
+      "protection_independence_ratio": 0.5,
+      "convergence_index": 0.5,
+      "classification": "Concentration Supported (Moderate Reconvergence)",
+      "terminal_nodes": [
+        "APLD_PARENT_LIQUIDITY",
+        "POWER_GRID_ENERGIZATION"
+      ]
+    },
+    {
+      "structure_id": "MACKENZIE",
+      "name": "IREN Mackenzie (GPU Equipment Financing)",
+      "category": "Equipment Facility",
+      "capital_volume_b": 2.4,
+      "active_carry_m_yr": 216.0,
+      "mw_capacity": 80.0,
+      "n_protections": 4,
+      "n_terminal_nodes": 4,
+      "protection_independence_ratio": 1.0,
+      "convergence_index": 0.0,
+      "classification": "Resilience Supported (High Independence)",
+      "terminal_nodes": [
+        "GPU_SECONDARY_COLLATERAL",
+        "IREN_PARENT_LIQUIDITY",
+        "PRIVATE_CREDIT_REFINANCING",
+        "VENDOR_SUPPLY_CHAIN"
+      ]
+    },
+    {
+      "structure_id": "CRWV_DDTL",
+      "name": "CoreWeave DDTLs (DDTL 1.0 - 5.0)",
+      "category": "Equipment Facility",
+      "capital_volume_b": 10.643,
+      "active_carry_m_yr": 957.87,
+      "mw_capacity": 590.0,
+      "n_protections": 6,
+      "n_terminal_nodes": 3,
+      "protection_independence_ratio": 0.5,
+      "convergence_index": 0.5,
+      "classification": "Concentration Supported (Moderate Reconvergence)",
+      "terminal_nodes": [
+        "ANCHOR_CUSTOMER_DEMAND",
+        "CRWV_ENTERPRISE_LIQUIDITY",
+        "GPU_SECONDARY_COLLATERAL"
+      ]
+    },
+    {
+      "structure_id": "NBIS_MUFG",
+      "name": "Nebius Term Loan (M\u00e4nts\u00e4l\u00e4 DC & GPUs)",
+      "category": "Datacenter / GPU Term Loan",
+      "capital_volume_b": 0.775,
+      "active_carry_m_yr": 65.875,
+      "mw_capacity": 75.0,
+      "n_protections": 3,
+      "n_terminal_nodes": 3,
+      "protection_independence_ratio": 1.0,
+      "convergence_index": 0.0,
+      "classification": "Resilience Supported (High Independence)",
+      "terminal_nodes": [
+        "GPU_SECONDARY_COLLATERAL",
+        "NEBIUS_TREASURY_CASH",
+        "POWER_GRID_ENERGIZATION"
+      ]
+    }
+  ],
+  "minimum_failure_sets": [
+    {
+      "set_id": "MFS-01",
+      "name": "Anchor Customer Contraction + Power Energization Delay",
+      "assumptions": [
+        "A005",
+        "A004"
+      ],
+      "category": "Commercial & Physical Shock",
+      "mechanism": "Hyperscaler offload slows (A005) while regional substation construction slips (A004). Data halls sit idle while CoreWeave springing lease guarantees remain dormant. APLD parent must service project debt carry ($473.8M/yr) without receiving tenant lease cash flows.",
+      "touched_structures": [
+        "PF1",
+        "PF2",
+        "CRWV_DDTL"
+      ],
+      "touched_debt_volume_b": 16.733,
+      "touched_mw_capacity": 1190.0,
+      "affected_protections_compromised": [
+        "PF1-P4 (Take-or-Pay Lease)",
+        "PF1-P5 (Springing Guaranty ELN02)",
+        "PF1-P6 (Springing Guaranty ELN03)",
+        "PF2-P1 (Escrow Grid Gating)",
+        "CRWV-P6 (Customer Offtake Assignment)"
+      ],
+      "systemic_outcome": "Catastrophic sponsor liquidity drain; tenant springing guaranties cannot be triggered; SPV default risk escalates."
+    },
+    {
+      "set_id": "MFS-02",
+      "name": "GPU Collateral Haircut + Refinancing Freeze",
+      "assumptions": [
+        "A001",
+        "A002"
+      ],
+      "category": "Capital Markets & Technology Shock",
+      "mechanism": "Technological obsolescence (B200 ramp / demand pause) drops secondary GPU clearing prices 40% (A001), breaching advance rates across borrowing bases. Simultaneously, credit spreads widen +300 bps (A002), preventing neoclouds from refinancing maturing DDTLs or funding margin calls.",
+      "touched_structures": [
+        "CRWV_DDTL",
+        "MACKENZIE",
+        "NBIS_MUFG"
+      ],
+      "touched_debt_volume_b": 13.818,
+      "touched_mw_capacity": 745.0,
+      "affected_protections_compromised": [
+        "DDTL-P1 (Borrowing Base Advance)",
+        "MAC-P2 (Equipment Collateral Lien)",
+        "NBIS-P1 (DC & Compute Security)",
+        "MAC-P4 (Availability Window Cliff)"
+      ],
+      "systemic_outcome": "Equipment lenders face immediate collateral under-recovery; mandatory prepayments triggered without market exit."
+    },
+    {
+      "set_id": "MFS-03",
+      "name": "Sponsor Parent Liquidity Shock + Construction Delay",
+      "assumptions": [
+        "A002",
+        "A004"
+      ],
+      "category": "Sponsor Credit & Execution Shock",
+      "mechanism": "Civil and electrical energization delays exceed 12 months (A004), exhausting project DSRAs. APLD parent balance sheet faces equity dilution or debt market exclusion (A002), preventing parent from fulfilling mandatory construction shortfall funding.",
+      "touched_structures": [
+        "PF1",
+        "PF2"
+      ],
+      "touched_debt_volume_b": 6.09,
+      "touched_mw_capacity": 600.0,
+      "affected_protections_compromised": [
+        "PF1-P1 (DSRA Reserve)",
+        "PF1-P2 (APLD Completion Guarantee)",
+        "PF2-P2 (Project DSRA)",
+        "PF2-P3 (APLD Completion Support)"
+      ],
+      "systemic_outcome": "Indenture default acceleration; noteholders forced to foreclose on uncompleted substation/datacenter shells."
+    },
+    {
+      "set_id": "MFS-04",
+      "name": "ERCOT Grid Disruption + Refinancing Freeze",
+      "assumptions": [
+        "A004",
+        "A002"
+      ],
+      "category": "Regional Infrastructure & Liquidity Shock",
+      "mechanism": "Transmission interconnection delays or extreme weather curtailment freeze capacity expansion in Texas (A004). Simultaneous private credit rollover freeze (A002) blocks capital access for multi-gigawatt pipeline.",
+      "touched_structures": [
+        "PF1",
+        "PF2",
+        "MACKENZIE"
+      ],
+      "touched_debt_volume_b": 8.49,
+      "touched_mw_capacity": 2750.0,
+      "affected_protections_compromised": [
+        "PF1-P3 (Substation Mortgage)",
+        "PF2-P4 (Project Liens)",
+        "MAC-P4 (Availability Window Cliff)"
+      ],
+      "systemic_outcome": "Massive pipeline stranding; unenergized sites fail to generate EBITDA to cover corporate overhead."
+    },
+    {
+      "set_id": "MFS-05",
+      "name": "Hyperscaler Capex Digestion + GPU Secondary Haircut",
+      "assumptions": [
+        "A006",
+        "A001"
+      ],
+      "category": "Macro Capex & Technology Shock",
+      "mechanism": "Big 4 hyperscalers decelerate external hosting capex growth to 0-5% (A006), dumping older clusters onto the secondary market and precipitating a collateral crash (A001).",
+      "touched_structures": [
+        "CRWV_DDTL",
+        "MACKENZIE"
+      ],
+      "touched_debt_volume_b": 13.043,
+      "touched_mw_capacity": 670.0,
+      "affected_protections_compromised": [
+        "DDTL-P1 (Borrowing Base Advance)",
+        "MAC-P1 (Staged Drawdown Condition)",
+        "MAC-P2 (Equipment Collateral Lien)"
+      ],
+      "systemic_outcome": "Staged hardware financing freezes; uncalled capital evaporates; existing debt suffers immediate coverage deficit."
+    }
+  ],
+  "lenders_profile": [
+    {
+      "lender_name": "Blackstone & Magnetar Syndicate",
+      "role": "Private Credit Syndicate",
+      "facilities": [
+        "CRWV DDTL 1.0",
+        "CRWV DDTL 2.0",
+        "CRWV DDTL 2.1"
+      ],
+      "exposure_b": 7.49,
+      "type": "Asset-Backed Private Credit"
+    },
+    {
+      "lender_name": "MUFG Bank Syndicate",
+      "role": "Commercial & Investment Bank Syndicate",
+      "facilities": [
+        "CRWV DDTL 3.0",
+        "CRWV DDTL 4.0",
+        "NBIS Term Loan"
+      ],
+      "exposure_b": 5.827,
+      "type": "Syndicated Bank Facility"
+    },
+    {
+      "lender_name": "Morgan Stanley Syndicate",
+      "role": "Investment Bank Syndicate",
+      "facilities": [
+        "CRWV DDTL 5.0"
+      ],
+      "exposure_b": 1.101,
+      "type": "Syndicated Bank Facility"
+    },
+    {
+      "lender_name": "Blue Owl (including OBDC)",
+      "role": "Direct Lending BDC / Fund",
+      "facilities": [
+        "IREN Mackenzie MFSA"
+      ],
+      "exposure_b": 1.2,
+      "type": "Direct Equipment Financing"
+    },
+    {
+      "lender_name": "PIMCO",
+      "role": "Institutional Credit Fund",
+      "facilities": [
+        "IREN Mackenzie Senior Notes"
+      ],
+      "exposure_b": 1.2,
+      "type": "Equipment Secured Notes"
+    },
+    {
+      "lender_name": "Goldman Sachs",
+      "role": "Escrow Agent / Placement Agent",
+      "facilities": [
+        "APLD PF2 Escrow"
+      ],
+      "exposure_b": 2.15,
+      "type": "Escrow & Placement"
+    },
+    {
+      "lender_name": "Institutional High-Yield Bondholders",
+      "role": "Public / 144A Bond Market",
+      "facilities": [
+        "CRWV 2030-2032 Notes",
+        "CRWV Convertibles",
+        "APLD PF1 Notes",
+        "APLD PF2 Notes",
+        "APLD 7% Notes",
+        "WULF Convertibles"
+      ],
+      "exposure_b": 28.53,
+      "type": "Broad Capital Markets"
+    },
+    {
+      "lender_name": "Coatue Management",
+      "role": "Growth / Crossover Investor",
+      "facilities": [
+        "HUT Convertible Note"
+      ],
+      "exposure_b": 0.15,
+      "type": "Convertible Credit"
+    }
+  ]
+}

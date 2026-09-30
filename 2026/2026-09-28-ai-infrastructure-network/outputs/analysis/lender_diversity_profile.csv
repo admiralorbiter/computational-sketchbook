@@ -1,0 +1,9 @@
+lender_name,role,facilities,exposure_b,type
+Blackstone & Magnetar Syndicate,Private Credit Syndicate,"['CRWV DDTL 1.0', 'CRWV DDTL 2.0', 'CRWV DDTL 2.1']",7.49,Asset-Backed Private Credit
+MUFG Bank Syndicate,Commercial & Investment Bank Syndicate,"['CRWV DDTL 3.0', 'CRWV DDTL 4.0', 'NBIS Term Loan']",5.827,Syndicated Bank Facility
+Morgan Stanley Syndicate,Investment Bank Syndicate,['CRWV DDTL 5.0'],1.101,Syndicated Bank Facility
+Blue Owl (including OBDC),Direct Lending BDC / Fund,['IREN Mackenzie MFSA'],1.2,Direct Equipment Financing
+PIMCO,Institutional Credit Fund,['IREN Mackenzie Senior Notes'],1.2,Equipment Secured Notes
+Goldman Sachs,Escrow Agent / Placement Agent,['APLD PF2 Escrow'],2.15,Escrow & Placement
+Institutional High-Yield Bondholders,Public / 144A Bond Market,"['CRWV 2030-2032 Notes', 'CRWV Convertibles', 'APLD PF1 Notes', 'APLD PF2 Notes', 'APLD 7% Notes', 'WULF Convertibles']",28.53,Broad Capital Markets
+Coatue Management,Growth / Crossover Investor,['HUT Convertible Note'],0.15,Convertible Credit

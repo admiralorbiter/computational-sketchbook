@@ -1,0 +1,6 @@
+structure_id,name,category,capital_volume_b,active_carry_m_yr,mw_capacity,n_protections,n_terminal_nodes,protection_independence_ratio,convergence_index,classification,terminal_nodes
+PF1,Applied Digital PF1 (Ellendale Bldgs 2-4),Data Center Project Debt,3.94,328.675,400.0,6,4,0.6667,0.3333,Concentration Supported (Moderate Reconvergence),"['ANCHOR_CUSTOMER_DEMAND', 'APLD_PARENT_LIQUIDITY', 'CRWV_ENTERPRISE_LIQUIDITY', 'POWER_GRID_ENERGIZATION']"
+PF2,Applied Digital PF2 (Polaris Forge 2),Data Center Project Debt,2.15,145.125,200.0,4,2,0.5,0.5,Concentration Supported (Moderate Reconvergence),"['APLD_PARENT_LIQUIDITY', 'POWER_GRID_ENERGIZATION']"
+MACKENZIE,IREN Mackenzie (GPU Equipment Financing),Equipment Facility,2.4,216.0,80.0,4,4,1.0,0.0,Resilience Supported (High Independence),"['GPU_SECONDARY_COLLATERAL', 'IREN_PARENT_LIQUIDITY', 'PRIVATE_CREDIT_REFINANCING', 'VENDOR_SUPPLY_CHAIN']"
+CRWV_DDTL,CoreWeave DDTLs (DDTL 1.0 - 5.0),Equipment Facility,10.643,957.87,590.0,6,3,0.5,0.5,Concentration Supported (Moderate Reconvergence),"['ANCHOR_CUSTOMER_DEMAND', 'CRWV_ENTERPRISE_LIQUIDITY', 'GPU_SECONDARY_COLLATERAL']"
+NBIS_MUFG,Nebius Term Loan (Mäntsälä DC & GPUs),Datacenter / GPU Term Loan,0.775,65.875,75.0,3,3,1.0,0.0,Resilience Supported (High Independence),"['GPU_SECONDARY_COLLATERAL', 'NEBIUS_TREASURY_CASH', 'POWER_GRID_ENERGIZATION']"
