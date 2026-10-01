@@ -1,9 +1,13 @@
-# Phase 5 Raw Source Extracts & Documented Headcount Registry
+# Frozen Evidence Extracts and Documented-Headcount Registry
 
-This directory preserves frozen, hashed extracts of documented staffing headcounts, board authorizations,
+This directory preserves structured, normalized evidence extracts of documented staffing headcounts, board authorizations,
 and departmental staffing rosters for the 18 direct-count coordinator positions across the six focal school districts.
-These extracts decouple the empirical foundation of documented_count (244.80 FTE / 64.4% of sample) from live web URLs,
-ensuring independent institutional reproducibility.
+These files capture the specific headcount claims, source citations, URLs, page references, and confidence scores
+that underpin the `documented_count` partition (244.80 FTE / 64.4% of the reconstructed sample) in `coordinator_role_reconstruction.csv`.
+
+> [!NOTE]
+> **Provenance & Epistemic Scope:** These JSON files represent frozen, normalized evidence records rather than complete archival copies of the original primary source documents (e.g., full board packets, PDF rosters). For archival-grade auditability, future research preservation work can archive verbatim primary documents alongside these normalized extracts.
+
 
 ## Registry of Frozen Source Extracts
 
