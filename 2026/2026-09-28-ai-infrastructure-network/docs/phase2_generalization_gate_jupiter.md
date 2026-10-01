@@ -2,7 +2,7 @@
 
 **Document ID:** GATE-PHASE2-GENERALIZATION-JUPITER  
 **Status:** Certified Epistemic Audit & Comparative Architectural Gate  
-**Reference Commit:** [`fe3b88e`](https://github.com/admiralorbiter/computational-sketchbook/commit/fe3b88e)  
+**Reference Commit:** [`deedc8a`](https://github.com/admiralorbiter/computational-sketchbook/commit/deedc8a)  
 **Date:** September 30, 2026  
 **Projects Compared:**  
 1. **Polaris Forge 1 (PF1):** $3.94B Dual-Silo 144A Project Notes (Ellendale, ND)  
@@ -24,7 +24,8 @@ Rather than testing Polaris Forge 2 (`PF2`)—which shares Applied Digital, bank
 
        Project 1: Polaris Forge 1                       Project 2: Project Jupiter
 ─────────────────────────────────────────      ─────────────────────────────────────────
-Capital:    $3.94B Dual-Silo Fixed Notes       Capital:    ~$18.0B Syndicated Credit Stack
+Capital:    $3.94B Dual-Silo Fixed Notes       Capital:    ~$18.0B Syndicated Bank Facility
+                                                           (SOFR + 250 bps, 4-yr + 2-yr ext)
 Physical:   Electric Grid Substation           Physical:   Bloom Fuel Cells + Gas Pipeline ROW
 Clock 1:    Civil / Shell Construction         Clock 1:    State Land Regulatory Permitting
 Clock 2:    Utility Energization (MDU)         Clock 2:    Pipeline ROW -> Fuel Availability
@@ -35,8 +36,8 @@ Real Shock: Synthetic Delay Permutations       Real Shock: Documented July 2026 
 ```
 
 ### The Core Research Question:
-> **Does the same synchronization framework explain Jupiter when the operative clocks are:**
-> $$\text{Gas Pipeline Permitting (NMSLO)} \longrightarrow \text{Physical Fuel Availability} \longrightarrow \text{Offtake Cash-Flow State (FM)} \longrightarrow \text{Construction Debt Carry} \longrightarrow \text{Sponsor / Syndicate Exposure}$$
+> **Does the same synchronization framework explain Jupiter when the operative sequence is:**
+> $$\text{Physical State (Permit / Pipeline)} \longrightarrow \text{Contract State (FM)} \longrightarrow \text{Cash-Flow State (Carry vs Rent)} \longrightarrow \text{Financing Runway}$$
 > **rather than PF1's:**
 > $$\text{Construction Burn} \longrightarrow \text{Commencement} \longrightarrow \text{Tenant Rent} \longrightarrow \text{State-Dependent Amortization} \longrightarrow \text{DSRA / Completion Support}?$$
 
@@ -44,19 +45,19 @@ Real Shock: Synthetic Delay Permutations       Real Shock: Documented July 2026 
 
 ## 2. Project Jupiter 10-Dimension Data-Sufficiency Audit
 
-Before writing engine code, we audit public evidence availability for Project Jupiter under the observatory's two-field epistemic standard (`source_status` and `model_treatment`):
+Before writing engine code, we audit public evidence availability for Project Jupiter under the observatory's two-field epistemic standard (`source_status` and `model_treatment`), integrating fresh reporting from the Financial Times and Reuters:
 
-| # | Dimension | Empirical Value / Parameter in Repo Corpus | `source_status` | `model_treatment` | Generalization & Portability Assessment |
+| # | Dimension | Empirical Value / Parameter in Repo Corpus & Press | `source_status` | `model_treatment` | Generalization & Portability Assessment |
 | :-: | :--- | :--- | :---: | :---: | :--- |
-| **1** | **Exact Debt Principal / Facilities** | **~$18.0B** aggregate syndicated construction debt facility (`OBL-JUPITER-CONSTRUCTION-DEBT`) | `MARKET / FINANCIAL_PRESS` | `INTERVAL` | **Partially Disclosed:** Reported by Reuters/FT on Sept 18, 2026; individual bank/private credit tranche commitments are unfiled on EDGAR (unlike PF1's exact $2.35B and $1.59B 144A indentures). Requires interval parameterization around $18B. |
-| **2** | **Rate & Payment Dates** | Benchmark: `FLOATING_SOFR_MARGIN` (~8.25% initial modeled estimate: ~5.25% SOFR + 300 bps); monthly/quarterly payment cycle | `UNOBSERVED` | `ANALYST_SCENARIO` | **Analyst Modeled Assumption:** Unlike PF1's fixed 9.25% and 7.00% coupons, Jupiter's detailed facility credit agreement is unfiled on EDGAR. Rates and reset intervals in the repository are analyst scenario inputs, not certified contract terms. |
-| **3** | **Amortization / Maturity Rules** | Construction-period interest-only; conversion to permanent term financing gated upon Commercial Operations Date (COD); ~5-year facility term (2024–2029) | `UNOBSERVED` | `ANALYST_SCENARIO` | **Milestone Conversion Gating:** No contractual amortization schedule is active during construction; conversion terms to permanent debt are confidential syndicate covenants rather than public facts. |
-| **4** | **Reserve Accounts** | Construction Interest Reserve funded out of facility proceeds; post-completion DSRA unstated | `UNOBSERVED` | `CONDITIONAL` | **Standard Construction Mechanic:** Construction facilities rely on capitalized interest reserves rather than operating cash flow. Specific sizing is unobserved and requires conditional surface treatment. |
-| **5** | **Rent / Lease Commencement Mechanics** | Anchor tenant colocation lease (`OBL-ORCL-JUPITER-LEASE`) for up to 2,450 MW; facility-specific rent unstated | `PRIMARY_DISCLOSED` (Parent) / `UNOBSERVED` (Facility) | `CONDITIONAL` | **Facility Stated Amount Unstated at $t_0$:** Parent Oracle Form 10-K discloses $13.309B company-wide power commitments, but does not break out Jupiter. Commercial rent commencement is gated by operational availability. |
-| **6** | **Force-Majeure Rent Mechanics** | Formal notice issued Sept 24, 2026 citing NMSLO gas pipeline permit denial to defer higher operational rent and extend development-stage payments | `PRIMARY_DISCLOSED` (Post-Event Press) | `EXACT` (Event) / `CONDITIONAL` (Terms) | **Offtake State Modifier (Not Zero Cash):** Reuters reports Oracle sought to delay higher operational rent if targets are missed, extending lower development-stage rent. FT reports Oracle is obligated to cover project carry costs (interest + equity returns) for up to 3 years even without power. Blue Owl stated financial commitments remain unaltered. |
+| **1** | **Exact Debt Principal / Facilities** | **~$18.0B** construction debt syndicate led by 20+ commercial banks (BNP Paribas, Goldman Sachs, MUFG, SMBC) | `MARKET / FINANCIAL_PRESS` | `INTERVAL` | **Disclosed Aggregate Stack:** Reported by FT and Reuters. Unlike PF1's exact $2.35B and $1.59B 144A indentures, individual tranche commitments and drawn vs. undrawn splits are unfiled on EDGAR. Requires interval parameterization around $18B. |
+| **2** | **Rate & Payment Dates** | Pricing: **SOFR + 250 bps** (FT reported deal terms); payment/reset frequency unobserved (monthly vs. quarterly) | `MARKET / FINANCIAL_PRESS` (Spread) / `UNOBSERVED` (Cycle) | `EXACT` (Reported Spread) / `CONDITIONAL` (Reset) | **Floating Benchmark Exposure:** FT confirms deal pricing at SOFR + 250 bps (replacing earlier analyst estimates of SOFR + 300 bps / 8.25%). Payment frequency is conditionally parameterized. |
+| **3** | **Amortization / Maturity Rules** | **Four-year construction debt facility with an optional two-year extension** | `MARKET / FINANCIAL_PRESS` (Term) / `UNOBSERVED` (Extension Terms) | `EXACT` (Facility Term) / `CONDITIONAL` (Extension Conditions) | **Maturity & Extension Mechanics:** FT confirms the four-year term + two-year extension structure. Extension conditions, covenants, and post-construction amortization schedules are unobserved. |
+| **4** | **Reserve Accounts** | Debt-service liquidity structure (capitalized interest reserve or DSRA) unstated | `UNOBSERVED` | `CONDITIONAL` | **Generalized Liquidity State:** Sizing and account restrictions for debt service are unobserved in public filings and require conditional surface treatment. |
+| **5** | **Rent / Lease Commencement Mechanics** | Anchor tenant colocation lease (`OBL-ORCL-JUPITER-LEASE`) for up to 2,450 MW; facility-specific rent unstated | `PRIMARY_DISCLOSED` (Parent) / `UNOBSERVED` (Facility) | `CONDITIONAL` | **Parent vs. Facility Disclosures:** Oracle Form 10-K discloses $13.309B company-wide power commitments, but does not isolate Jupiter. Full operational rent commences upon commercial readiness. |
+| **6** | **Force-Majeure Rent Mechanics** | Formal notice issued Sept 24, 2026 citing NMSLO gas pipeline permit denial to extend lower development-stage rent and delay operational rent | `PRIMARY_DISCLOSED` (Post-Event Press) | `EXACT` (Notice Event) / `CONDITIONAL` (Payment Formula) | **Offtake State Modifier (Not Zero Cash):** Reuters confirms Oracle cannot terminate lease, securing power is Oracle's responsibility, and FM extends lower development rent. FT reports Oracle must pay project carry costs (interest + equity returns) for up to 3 years even without power. Blue Owl confirmed commitments remain unaltered. |
 | **7** | **Construction Cash & Remaining Capex** | Multi-gigawatt development budget across 1,400 acres; monthly burn rate unstated in public filings | `UNOBSERVED` | `ANALYST_SCENARIO` | **Scenario Bounded:** Similar to PF1, remaining capex burn is an analyst scenario parameter, not a certified EDGAR disclosure. |
-| **8** | **Sponsor Support / Recourse** | Joint venture developers: `STACK_INFRA` (lead operator) and `BLUE_OWL` (co-sponsor/asset manager); `BORDERPLEX` regional partner | `PRIMARY_DISCLOSED` (Corporate) / `UNOBSERVED` (Recourse Terms) | `CONDITIONAL` | **Private Credit Recourse:** Construction loans in digital infrastructure are typically limited recourse, backed by completion guarantees, equity commitment letters, or springing indemnities whose exact terms remain confidential. |
-| **9** | **Physical Milestone Gating Cash Flow** | **NMSLO Natural Gas Pipeline Right-of-Way (ROW) Permitting** across 0.6-mile state land segment feeding 2,450 MW Bloom Energy microgrid | `PRIMARY_DISCLOSED` (Regulatory Order) | `EXACT` | **Route Impairment & Availability Risk:** Denied by NMSLO on July 15, 2026. Denies a 0.6-mile segment of a 17-mile pipeline route, creating route impairment, fuel availability risk, and commissioning uncertainty, while permitting potential rerouting or litigation. |
+| **8** | **Sponsor Support / Recourse** | Joint venture developers: `STACK_INFRA` (lead operator) and `BLUE_OWL` (co-sponsor/asset manager); `BORDERPLEX` regional partner | `PRIMARY_DISCLOSED` (Corporate) / `UNOBSERVED` (Recourse Terms) | `UNOBSERVED` | **Recourse Unobserved:** Specific sponsor completion guarantees, equity commitment letters, or cost-overrun indemnities are confidential private JV terms. |
+| **9** | **Physical Milestone Gating Cash Flow** | **NMSLO Natural Gas Pipeline Right-of-Way (ROW) Permitting** across 0.6-mile state land segment feeding 2,450 MW Bloom Energy microgrid | `PRIMARY_DISCLOSED` (Regulatory Order) | `EXACT` | **Route Impairment & Availability Risk:** Denied by NMSLO on July 15, 2026 for a 0.6-mile segment of a 17-mile pipeline across state trust land. Creates route impairment, fuel availability risk, and commissioning uncertainty, while permitting potential rerouting, litigation, or alternate rights-of-way. |
 | **10** | **Payment or Suspension Outcome upon Failure** | Secondary debt trading under pressure at 89–91c (Sept 18 baseline); syndicate reviews conversion milestones; legal dispute over development carry vs operational rent | `PRIMARY_DISCLOSED` (Reporting) | `EXACT` | **Pre-Event Market Stress & Legal Dispute:** Debt discounting was already present on Sept 18 ($t_0$ baseline). No actual contractual payment shortfall or debt default has been empirically observed in the historical record. |
 
 ---
@@ -70,17 +71,18 @@ To determine whether the architecture generalizes without ad-hoc project-specifi
                                             │
         ┌───────────────────┬───────────────┴───────────────┬───────────────────┐
         ▼                   ▼                               ▼                   ▼
-1. Isolated Cash     2. Physical-Commercial         3. Contractual       4. Contractual Cash-Flow   5. Absorbing
-   Accounts             Milestone Clocks               Payment Grid         & Protection States        Shortfall Boundary
+1. Segregated Financial 2. Physical-Commercial      3. Contractual       4. Contractual Cash-Flow   5. Absorbing
+   Liquidity States        Milestone Clocks            Payment Grid         & Protection States        Shortfall Boundary
 ```
 
-### Object 1: Isolated Cash Accounts
+### Object 1: Segregated Financial Liquidity States
 - **PF1 Implementation:** `AccountState(construction_cash, dsra_cash, operating_cash)`.
-- **Project Jupiter Mapping:**
-  - *Construction Facility Cash:* Capitalized disbursements from the ~$18.0B facility earmarked for physical equipment and civil works.
-  - *Interest Reserve:* Capitalized loan balance reserved to service monthly floating interest carry during construction.
-  - *Operating Account:* Tenant cash rent proceeds (distinguishing development carry from operational rent).
-- **Audit Verdict: CLEAN GENERALIZATION.** The tripartite segregation of construction cash, debt service reserve, and operating cash naturally represents Jupiter's SPV account structure without modifications.
+- **Project Jupiter Generalization:**
+  $$\text{FinancialState} = \{\text{ConstructionLiquidity},\; \text{DebtServiceLiquidity},\; \text{TenantPaymentCash}\}$$
+  - *ConstructionLiquidity:* Capitalized disbursements from the ~$18.0B facility earmarked for physical equipment and civil works.
+  - *DebtServiceLiquidity:* Liquidity reserved or available to service monthly floating interest carry during construction (e.g. an interest reserve or cash cushion).
+  - *TenantPaymentCash:* Tenant inflows categorized by contractual state (development carry vs. operational rent).
+- **Audit Verdict: CLEAN GENERALIZATION OF SEGREGATED LIQUIDITY STATES; JUPITER-SPECIFIC ACCOUNT SEGMENTATION NOT PUBLICLY VERIFIED.** The tripartite division of liquidity functions survives naturally, but should be modeled as functional liquidity states rather than asserting the existence of a literal segregated account named "interest reserve" until evidence confirms it.
 
 ### Object 2: Physical-Commercial Milestone Clocks
 - **PF1 Implementation:** Scalar schedule delay $\Delta t$ shifting commercial commencement:
@@ -95,11 +97,11 @@ To determine whether the architecture generalizes without ad-hoc project-specifi
 ### Object 3: Contractual Payment Calendar
 - **PF1 Implementation:** Semiannual fixed payment dates (Months 6, 12, 18, 24...) with fixed coupon arithmetic.
 - **Project Jupiter Mapping:**
-  - Syndicated construction facilities typically operate on **monthly or quarterly interest cycles** pegged to floating benchmark rates (Term SOFR + spread).
-  - Debt service is variable carry:
-    $$\text{InterestDue}(t) = P_{\text{drawn}}(t) \times \frac{\text{SOFR}_t + \text{Margin}}{12}$$
-  - **Epistemic Caution:** While `payment_frequency` supports monthly/quarterly cycles, the specific margin (e.g. 300 bps) and drawn balances are *analyst scenario inputs*, not certified contract facts.
-- **Audit Verdict: PARAMETERIZATION EXTENSION (CONDITIONAL SCENARIO).** Moving from fixed coupons to floating benchmark debt carry is straightforward using the Phase 1 benchmark trajectory engine, but must be explicitly labeled as an analyst scenario rather than a literal contract extraction.
+  - The syndicated construction facility operates on **monthly or quarterly interest cycles** pegged to floating benchmark rates.
+  - Deal terms reported by the Financial Times: **SOFR + 250 bps** on a **four-year construction facility with an optional two-year extension**:
+    $$\text{InterestDue}(t) = P_{\text{drawn}}(t) \times \frac{\text{SOFR}_t + 250\ \text{bps}}{12}$$
+  - Replaces earlier modeled assumptions of SOFR + 300 bps and 5-year terms. Extension mechanics replace hypothetical permanent debt conversion covenants.
+- **Audit Verdict: CLEAN PARAMETERIZATION EXTENSION.** Incorporating floating benchmark legs and four-year + two-year extension boundaries uses the benchmark trajectory engine already proven in Phase 1.
 
 ### Object 4: Contractual Cash-Flow & Protection States (The Fundamental Falsification Finding)
 - **PF1 Implementation:** Binary on/off commercial cash flow:
@@ -108,9 +110,9 @@ To determine whether the architecture generalizes without ad-hoc project-specifi
 - **Project Jupiter Mapping:**
   - In Jupiter, the offtake lease agreement between Oracle and the SPV features a **multi-state pre-operational cash-flow regime**.
   - **What Current Evidence Actually Discloses:**
-    - Reuters reports that Oracle's force-majeure notice sought to delay higher payments if the project missed targets, **extending the period of lower development-stage rent**, rather than setting payments to zero.
-    - Financial Times reports that Oracle is obligated under contract to cover project **carry costs** (including interest and equity returns) for up to three years even if the site lacks power.
-    - Blue Owl publicly stated that the force-majeure notice does not alter the parties' financial commitments.
+    - Reuters reports that Oracle cannot terminate the lease, securing power is Oracle's responsibility under the contract, and the force-majeure notice sought to delay higher payments if targets are missed, **extending the period of lower development-stage rent**, rather than setting payments to zero.
+    - Financial Times reports that Oracle is obligated under contract to cover project **carry costs** (including debt interest in full plus a specified equity return) for up to three years even if the site lacks power.
+    - Blue Owl publicly stated that the force-majeure notice does not alter the parties' underlying financial commitments.
   - **The Generalized Mathematical Formulation:**
     Commercial cash flow is not a binary switch ($\text{FM} = 0/1 \implies \text{Rent} = 0$). It is a **contractual payment state transition**:
     $$\text{TenantPayment}_t = f\left(\text{development-stage payment},\; \text{operational rent},\; \text{carry obligation},\; \text{FM state}\right)$$
@@ -121,7 +123,7 @@ To determine whether the architecture generalizes without ad-hoc project-specifi
 - **PF1 Implementation:** Silo enters `POST_SHORTFALL_ABSORBED` upon unfunded debt payment shortfall ($T_{\text{payment\_shortfall}}$), censoring subsequent unmodeled continuation support.
 - **Project Jupiter Mapping:**
   - The September 18 debt trading at 89–91 cents on the dollar was an established **pre-event baseline condition at $t_0$**, reflecting market syndication friction and power availability concerns prior to Oracle's September 24 notice.
-  - There is **no observed event in the historical record** showing an actual contractual payment shortfall: interest reserves were not reported exhausted, scheduled debt service was not missed, and no loan acceleration or formal restructuring took place.
+  - There is **no observed event in the historical record** showing an actual contractual payment shortfall: debt-service liquidity was not reported exhausted, scheduled debt service was not missed, and no loan acceleration or formal restructuring took place.
 - **Audit Verdict: CLEAN CONCEPTUAL GENERALIZATION; NOT EMPIRICALLY TRIGGERED.** The absorbing boundary concept holds as an indispensable model constraint (preventing unmodeled post-default continuation), but it must be clearly stated that the observed Jupiter episode has **not** empirically triggered this boundary.
 
 ---
@@ -148,7 +150,7 @@ The structural comparison clarifies how contractual terms alter the topology of 
                                                      ▼                                               ▼
                                          [Tenant Development Cash]                       [SPV Carry Cash Flow]
                                          (Ongoing carry obligation                   (Debt service covered vs
-                                          for up to 3 years)                          reserve drain depending on
+                                          for up to 3 years)                          liquidity drain depending on
                                                                                       dispute resolution)
                                                                                              │
                                                                                              ▼
@@ -157,7 +159,7 @@ The structural comparison clarifies how contractual terms alter the topology of 
                                                                                   conversion milestone review)
 ```
 
-In PF1, the sponsor acts as a **unilateral liquidity injector** to fund remaining capex. In Jupiter, legal risk allocation determines **which cash-flow regime applies during physical delay**: whether the tenant continues paying full carry costs, extends development-stage payments, or whether an unresolved gap forces interest reserve depletion and sponsor equity cures.
+In PF1, the sponsor acts as a **unilateral liquidity injector** to fund remaining capex. In Jupiter, legal risk allocation determines **which cash-flow regime applies during physical delay**: whether the tenant continues paying full carry costs, extends development-stage payments, or whether an unresolved gap forces debt-service liquidity depletion and external support $\text{ExternalSupport}_t$.
 
 ---
 
@@ -166,14 +168,14 @@ In PF1, the sponsor acts as a **unilateral liquidity injector** to fund remainin
 | Dimension | Polaris Forge 1 (`PF1`) | Project Jupiter | IREN Mackenzie (`Preview`) |
 | :--- | :--- | :--- | :--- |
 | **Asset Location** | Ellendale, North Dakota | Santa Teresa, New Mexico | Mackenzie, British Columbia |
-| **Capital Stack** | $3.94B Dual-Silo 144A Fixed Notes ($2.35B @ 9.25%, $1.59B @ 7.00%) | ~$18.0B Syndicated Credit Facility (SOFR + margin; details unobserved) | Up-to-$2.4B Staged Equipment Financing Facility |
+| **Capital Stack** | $3.94B Dual-Silo 144A Fixed Notes ($2.35B @ 9.25%, $1.59B @ 7.00%) | ~$18.0B Syndicated Bank Facility (SOFR + 250 bps, 4-yr term + 2-yr opt ext; 20+ banks) | Up-to-$2.4B Staged Equipment Financing Facility |
 | **Physical Infrastructure** | 400 MW campus; utility grid interconnect (MDU) | 2,450 MW campus; Bloom Energy fuel-cell microgrid | ~80 MW operating site retrofitted for GPU clusters |
 | **Operative Physical Clock** | Civil construction $\to$ substation energization $\to$ commissioning | Gas pipeline ROW permitting (NMSLO) $\to$ fuel delivery $\to$ fuel cells | Hardware procurement $\to$ GPU delivery $\to$ acceptance testing |
 | **Gating Milestone** | Commercial Commencement Date per building | Fuel pipeline operational availability & microgrid energization | Pro-rata equipment acceptance testing by customer |
 | **Contractual Revenue Clock** | Long-term colocation rent begins post-commencement | Multi-state: development carry $\to$ operational rent | GPU cloud revenue generated as equipment clusters are accepted |
 | **Protective Legal Shield** | None on tenant side; parent completion guarantee on sponsor side | **Tenant Force-Majeure Clause** (disputes rent step-up / carry timing) | Staged funding tied to equipment delivery (undrawn funds not at risk) |
-| **Maturity / Cliff Hazard** | Fixed bullet maturities (Dec 2030 / June 2031); state-dependent Silo 2 amortization | Construction loan conversion milestone to permanent term debt | **Hard December 31, 2026 Facility Availability Window Expiration** |
-| **Sponsor Support Structure** | Formal parent completion guarantees (Applied Digital) | Private credit completion guarantees / equity commitment letters | Parent performance and payment guaranty (IREN) |
+| **Maturity / Cliff Hazard** | Fixed bullet maturities (Dec 2030 / June 2031); state-dependent Silo 2 amortization | Four-year maturity with optional two-year extension (extension conditions unobserved) | **Hard December 31, 2026 Facility Availability Window Expiration** |
+| **Sponsor Support Structure** | Formal parent completion guarantees (Applied Digital) | Sponsor recourse / support unobserved in public record | Parent performance and payment guaranty (IREN) |
 | **Observed Real-World Stress** | Construction schedule slippage; parent cash constraints | **July 15 NMSLO permit denial; Sept 18 debt discount (89-91c); Sept 24 force majeure** | Hardware delivery logistics and acceptance window synchronization |
 
 ---
@@ -186,22 +188,26 @@ $$\mathbf{JUPITER\text{-}SPECIFIC\ FINANCIAL\ PARAMETERIZATION\ NOT\ YET\ DATA\t
 
 ### Findings of the Audit:
 1. **The 5 Core Abstractions Generalize Structurally:**
-   - Segregated financial state accounts
+   - Segregated financial liquidity states: $\{\text{ConstructionLiquidity},\; \text{DebtServiceLiquidity},\; \text{TenantPaymentCash}\}$
    - Physical/commercial milestone clocks
    - Contractual payment calendars
    - Contractual cash-flow and protection state transitions
    - Absorbing modeled-boundary semantics
-2. **The Falsification Discovery:**
-   - PF1's binary on/off commercial cash flow assumption does **not** generalize to complex hyperscale offtake agreements. Offtake contracts feature richer pre-operational payment regimes (`development carry`, `FM-adjusted carry`, `operational rent`).
+2. **Three Structural Archetypes of the State Machine:**
+   - **PF1:** $\text{pre-commencement rent} = 0 \longrightarrow \text{commencement} \longrightarrow \text{operational rent}$
+   - **Jupiter:** $\text{development carry} \longrightarrow \text{disputed / FM-adjusted carry} \longrightarrow \text{operational rent}$
+   - **Mackenzie:** $\text{undrawn commitment} \longrightarrow \text{equipment acceptance} \longrightarrow \text{funded debt} \longrightarrow \text{revenue}$
+   All three share the same unified skeleton:
+   $$\text{Liquidity States} + \text{Physical Milestone States} + \text{Contractual Payment States} + \text{Protection Predicates} + \text{Terminal Boundaries}$$
 3. **Epistemic Discipline:**
    - We **will not write** an ostensibly "contract-literal" `phase2_jupiter_engine.py` using synthetic assumptions masquerading as Jupiter loan facts.
 
 ### Next Bounded Task: Jupiter Contract-Mechanics Recovery Pass
 Before any simulation code is written, execute a targeted investigative pass focused strictly on three empirical unknowns:
-1. **Tenant Pre-Operational Obligations:** What exact payment obligations does Oracle bear prior to commercial operations, and what carry costs (interest, equity returns) are contractually mandated?
-2. **The Force-Majeure Dispute Scope:** Exactly what payment obligations does the September 24 force-majeure notice seek to suspend or extend versus what remains payable?
-3. **Syndicated Debt Terms:** What public SEC, municipal bond, or docket evidence exists for the ~$18.0B loan's actual benchmark margin, interest reset frequency, reserve structure, conversion covenants, and sponsor recourse?
+1. **The Exact Development-Stage / Carry Payment Formula:** What exact dollar amount or rate formula defines Oracle's pre-operational carry obligation (debt interest + equity return)?
+2. **The Legal Effect of Force Majeure on That Formula:** What specific payment obligation does the force-majeure notice seek to suspend or extend versus what remains payable under contract?
+3. **Restricted Debt-Service Liquidity & Sponsor Recourse:** What public SEC, municipal bond, or docket evidence exists for actual debt-service reserves, liquidity covenants, or sponsor support obligations?
 
 If these parameters remain confidential in the public record, Jupiter Level 1 will be formulated explicitly as a **conditional mechanism surface**:
-$$T_{\text{runway}} = f\left(R_{\text{interest reserve}},\; P_{\text{development carry}},\; P_{\text{FM-adjusted carry}},\; r_{\text{debt}},\; \Delta t\right)$$
+$$T_{\text{runway}} = f\left(R_{\text{debt-service liquidity}},\; P_{\text{development carry}},\; P_{\text{FM-adjusted carry}},\; r_{\text{debt}},\; \Delta t\right)$$
 mapping the sensitivity of debt carry to offtake dispute outcomes, maintaining the rigorous epistemic standard established in Phase 2.1.
