@@ -55,14 +55,23 @@ SILO2_MATURITY_DATE = "2031-06-15"      # June 16, 2026 Form 8-K: June 15, 2031
 
 
 def _date_to_month_index(sim_start: pd.Timestamp, target_date_str: str) -> int:
-    """Computes the 1-indexed simulation month index for a target date relative to sim_start."""
+    """Computes the 1-indexed simulation month index for a target date relative to sim_start.
+    
+    Robustness requirement: sim_start must be normalized to the first day of a calendar month
+    (e.g. 'YYYY-MM-01') to prevent ambiguous intra-month rounding.
+    """
+    if sim_start.day != 1:
+        raise ValueError(
+            f"Simulation start date must be the first day of a month (e.g. 'YYYY-MM-01'), "
+            f"received: {sim_start.strftime('%Y-%m-%d')}"
+        )
     target = pd.to_datetime(target_date_str)
-    months = (target.year - sim_start.year) * 12 + (target.month - sim_start.month) + 1
-    if months <= 0:
+    if sim_start >= target:
         raise ValueError(
             f"Simulation start date {sim_start.strftime('%Y-%m-%d')} is on or after "
             f"contractual milestone date {target_date_str}"
         )
+    months = (target.year - sim_start.year) * 12 + (target.month - sim_start.month) + 1
     return months
 
 
@@ -341,6 +350,8 @@ class DeterministicDelayEngine:
                     milestones.t_coverage = m
 
             # --- Operating Cash Account Waterfall ---
+            # Track cash available before operating uses to evaluate exhaustion as an economic event
+            c_oper_available_before_uses = c_oper + tenant_rent
             # 1. Add tenant rent to operating cash
             c_oper += tenant_rent
 
@@ -366,8 +377,11 @@ class DeterministicDelayEngine:
                 opex_payable = total_opex_due - opex_paid
 
             # Operating Account Exhaustion Milestone:
-            # Fires in the first month that operating cash balance reaches zero (whether from opex or debt)
-            if c_oper == 0.0 and milestones.t_operating_exhaustion is None:
+            # Defined as an economic transition/event, not a static state:
+            # Fires in the first month where available operating cash (beginning balance + rent)
+            # was positive, and cash uses reduced the balance to zero.
+            # An account initialized at zero with no cash inflow or drain is NOT considered exhausted.
+            if c_oper_available_before_uses > 0 and c_oper == 0.0 and milestones.t_operating_exhaustion is None:
                 milestones.t_operating_exhaustion = m
 
             # 4. If operating cash is exhausted, draw on DSRA for remaining debt service
@@ -603,9 +617,9 @@ def compute_delay_tolerance_surface(
     silo2_initial_construction_cash: float,
     silo1_initial_operating_cash: float,
     silo2_initial_operating_cash: float,
-    silo1_remaining_capex_total: Optional[float] = None,
-    silo2_remaining_capex_total: Optional[float] = None,
-    waterfall_priority: str = "opex_first",
+    silo1_remaining_capex_total: Optional[float],
+    silo2_remaining_capex_total: Optional[float],
+    waterfall_priority: str,
 ) -> pd.DataFrame:
     """Computes the Contract-Bounded Milestone Surface across a grid of reserves and delays.
     

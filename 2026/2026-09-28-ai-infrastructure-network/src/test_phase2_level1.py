@@ -1,4 +1,4 @@
-"""Test Suite for Phase 2 Level 1 Deterministic Delay Engine (Hardened 2.1.2).
+"""Test Suite for Phase 2 Level 1 Deterministic Delay Engine (Hardened 2.1.3).
 
 Verifies core contractual, legal, financial, and accounting invariants:
 1. Strict Silo Isolation: Zero cash transfer or dependency between Silo 1 and Silo 2.
@@ -19,14 +19,17 @@ Verifies core contractual, legal, financial, and accounting invariants:
     months are marked with is_post_shortfall=True and economic_status='POST_SHORTFALL_ABSORBED'.
 13. Cash Coverage Definition: T_coverage compares actual monthly tenant cash rent against actual monthly cash
     obligations (opex + debt service due).
-14. Operating Account Depletion: T_operating_exhaustion fires when operating cash reaches zero,
-    including from opex alone without any debt service due.
-15. Explicit Waterfall Priority: Evaluates behavior under 'opex_first' vs 'debt_service_first'.
-16. Dynamic Date Mapping: Contractual month indexes derive dynamically from simulation start date.
+14. Operating Account Depletion as Transition:
+    - Initial-zero operating cash without cash flow is NOT exhaustion (stays None).
+    - Positive cash depleted to zero via opex alone triggers T_operating_exhaustion.
+15. Explicit Waterfall Priority: Demonstrably allocates cash differently between opex and senior debt.
+16. Dynamic Date Mapping & Month-Start Normalization: Contractual month indexes derive dynamically,
+    requiring start_date to be normalized to the first day of a month.
 17. Final Maturity Balloon: Remaining principal matures as a bullet balloon at final maturity
     (Month 54 for Silo 1 / Dec 15, 2030; Month 60 for Silo 2 / June 15, 2031).
 18. Bounded Cumulative Capex: remaining_capex_total caps total cumulative construction outlays.
-19. Zero Silent Priors in Surface API: Every unobserved financial input is mandatory.
+19. Zero Silent Priors in Surface API: Every unobserved financial input, including waterfall_priority
+    and capex totals, must be explicitly supplied.
 """
 
 import pytest
@@ -285,7 +288,7 @@ def test_delay_defers_amortization_under_positive_amortization_scenario(engine, 
 
 
 # =========================================================================
-# P0 / P1 / P2 ACCOUNTING & ROBUSTNESS REGRESSION TESTS
+# P0 / P1 / P2 ACCOUNTING & ROBUSTNESS REGRESSION TESTS (PATCH 2.1.3)
 # =========================================================================
 
 def test_unpaid_principal_remains_outstanding(engine):
@@ -349,10 +352,34 @@ def test_unpaid_opex_becomes_arrears_and_is_cured_by_future_cash(engine, standar
     assert np.isclose(m3["operating_cash_balance"], 5_000_000.0)
 
 
-def test_opex_alone_exhausts_operating_cash_triggers_t_operating_exhaustion(engine):
-    """P1 Fix: Opex alone depleting positive operating cash triggers T_operating_exhaustion.
+def test_initial_zero_operating_cash_is_not_exhaustion(engine):
+    """P1 Fix 2.1.3: An account initialized at zero without cash flow is NOT exhausted.
     
-    Cash is positive at month start -> opex alone exhausts account -> T_operating_exhaustion = that month,
+    Exhaustion is an economic transition/event requiring cash to have been available before uses.
+    """
+    s2_terms = SiloTerms(
+        silo_id="SILO_2_ZERO",
+        name="ComputeCo 3 Zero Cash",
+        principal_initial_usd=1_590_000_000.0,
+        annual_coupon_rate=0.0700,
+        amortization_start_rule="post_commencement",
+        final_maturity_month=60,
+    )
+    s2_init = AccountState(construction_cash=100_000_000.0, dsra_cash=50_000_000.0, operating_cash=0.0)
+    s2_const = ConstructionScenario(scheduled_commencement_month=12, delay_months=0, monthly_capex_burn=0.0)
+    s2_rent = RentScenario(monthly_base_rent=0.0, monthly_opex=1_000_000.0)
+    zero_amort = AmortizationScenario(schedule_type="zero_amort_scenario")
+
+    df, milestones = engine.run_silo_waterfall(s2_terms, s2_init, s2_const, s2_rent, zero_amort)
+
+    # In Month 1, account started at $0 and had $0 rent -> no positive cash was exhausted
+    assert milestones.t_operating_exhaustion is None
+
+
+def test_positive_cash_to_zero_via_opex_alone_triggers_exhaustion(engine):
+    """P1 Fix 2.1.3: Positive operating cash drained to zero via opex alone triggers T_operating_exhaustion.
+    
+    Cash positive at month start -> opex alone exhausts account -> T_operating_exhaustion = that month,
     even when total debt service due is 0.
     """
     s1_terms, _ = create_default_pf1_silos()
@@ -373,38 +400,62 @@ def test_opex_alone_exhausts_operating_cash_triggers_t_operating_exhaustion(engi
     assert milestones.t_operating_exhaustion == 1
 
 
-def test_waterfall_priority_opex_first_vs_debt_first(engine):
-    """P1 Fix: Evaluates difference between opex_first and debt_service_first priority."""
-    s1_terms, _ = create_default_pf1_silos()
-    # In month 6, coupon due is $108.6875M ($2,350M * 9.25% / 2).
-    # Provide operating cash of exactly $50M, zero DSRA, zero rent, and opex of $50M.
-    s1_init = AccountState(construction_cash=0.0, dsra_cash=0.0, operating_cash=50_000_000.0)
-    s1_const = ConstructionScenario(scheduled_commencement_month=12, delay_months=0, monthly_capex_burn=0.0)
-    s1_rent = RentScenario(monthly_base_rent=0.0, monthly_opex=50_000_000.0)
+def test_waterfall_priority_produces_demonstrably_different_arrears_allocation(engine):
+    """P1 Fix 2.1.3: Waterfall priority demonstrably allocates scarce cash between opex and debt.
+    
+    Under simultaneous coupon and opex obligations with scarce cash:
+    - opex_first: opex gets paid first, more coupon becomes arrears.
+    - debt_service_first: coupon gets available cash first, more opex becomes payable.
+    Verifies:
+      interest_payable_debt_first < interest_payable_opex_first
+      opex_payable_debt_first > opex_payable_opex_first
+    """
+    # Create test silo with monthly coupon payments so month 1 has coupon due
+    test_terms = SiloTerms(
+        silo_id="TEST_PRIORITY",
+        name="Test Priority Silo",
+        principal_initial_usd=100_000_000.0,
+        annual_coupon_rate=0.12,  # $1.0M monthly coupon
+        payment_frequency="monthly",
+        amortization_start_rule="fixed_date",
+        fixed_amort_start_month=12,
+        final_maturity_month=60,
+    )
+    # Available cash = $1.0M, Rent = $0, DSRA = $0
+    # Demands in month 1: Opex = $1.0M, Coupon = $1.0M. Total demand = $2.0M against $1.0M cash!
+    test_init = AccountState(construction_cash=0.0, dsra_cash=0.0, operating_cash=1_000_000.0)
+    test_const = ConstructionScenario(scheduled_commencement_month=6, delay_months=0, monthly_capex_burn=0.0)
+    test_rent = RentScenario(monthly_base_rent=0.0, monthly_opex=1_000_000.0)
     zero_amort = AmortizationScenario(schedule_type="zero_amort_scenario")
 
-    # Case A: opex_first (standard project finance)
-    # Month 1: opex gets $50M, operating cash becomes 0
+    # Run opex_first
     df_opex, _ = engine.run_silo_waterfall(
-        s1_terms, s1_init, s1_const, s1_rent, zero_amort, waterfall_priority="opex_first"
+        test_terms, test_init, test_const, test_rent, zero_amort, waterfall_priority="opex_first"
     )
-    assert df_opex[df_opex["month"] == 1]["opex_paid"].iloc[0] == 50_000_000.0
-    assert df_opex[df_opex["month"] == 1]["opex_payable"].iloc[0] == 0.0
-
-    # Case B: debt_service_first in month 6 when coupon is due
-    # Provide $50M operating cash entering Month 6 with $50M opex and $108.6875M coupon
-    s1_init_m6 = AccountState(construction_cash=0.0, dsra_cash=0.0, operating_cash=50_000_000.0)
-    s1_const_m6 = ConstructionScenario(scheduled_commencement_month=6, delay_months=0, monthly_capex_burn=0.0)
-    s1_rent_m6 = RentScenario(monthly_base_rent=0.0, monthly_opex=0.0)  # No opex in months 1-5
-    # In month 6, set opex to $50M via custom rent scenario
-    # Under debt_service_first, available cash pays coupon first
+    # Run debt_service_first
     df_debt, _ = engine.run_silo_waterfall(
-        s1_terms, s1_init_m6, s1_const_m6, RentScenario(monthly_base_rent=0.0, monthly_opex=50_000_000.0),
-        zero_amort, waterfall_priority="debt_service_first"
+        test_terms, test_init, test_const, test_rent, zero_amort, waterfall_priority="debt_service_first"
     )
-    # In month 1 with zero coupon, debt_service_first pays $0 to debt and leaves cash for opex
-    # In month 6, debt service takes all $50M if cash remained
-    assert df_debt["date"].iloc[0] == "2026-07"
+
+    # In month 1:
+    m1_opex = df_opex.iloc[0]
+    m1_debt = df_debt.iloc[0]
+
+    # Under opex_first: opex gets the $1M, coupon gets $0
+    assert m1_opex["opex_paid"] == 1_000_000.0
+    assert m1_opex["opex_payable"] == 0.0
+    assert m1_opex["coupon_cash_paid"] == 0.0
+    assert m1_opex["interest_payable"] == 1_000_000.0
+
+    # Under debt_service_first: coupon gets the $1M, opex gets $0
+    assert m1_debt["coupon_cash_paid"] == 1_000_000.0
+    assert m1_debt["interest_payable"] == 0.0
+    assert m1_debt["opex_paid"] == 0.0
+    assert m1_debt["opex_payable"] == 1_000_000.0
+
+    # Economic differentiation assertions
+    assert m1_debt["interest_payable"] < m1_opex["interest_payable"]
+    assert m1_debt["opex_payable"] > m1_opex["opex_payable"]
 
 
 def test_payment_shortfall_absorbing_boundary_and_arrears(engine):
@@ -454,7 +505,7 @@ def test_cash_coverage_definition(engine, standard_s1_amort):
 
 
 def test_dynamic_start_date_calendar_mapping():
-    """Robustness Fix: Contractual month indexes derive dynamically from simulation start date."""
+    """Robustness Fix: Contractual month indexes derive dynamically from normalized simulation start date."""
     # Canonical start: July 1, 2026
     s1_canon, s2_canon = create_default_pf1_silos("2026-07-01")
     assert s1_canon.fixed_amort_start_month == 18  # Dec 2027
@@ -466,6 +517,10 @@ def test_dynamic_start_date_calendar_mapping():
     assert s1_june.fixed_amort_start_month == 19
     assert s1_june.final_maturity_month == 55
     assert s2_june.final_maturity_month == 61
+
+    # Non-first-of-month start date raises ValueError
+    with pytest.raises(ValueError, match="must be the first day of a month"):
+        create_default_pf1_silos("2026-07-15")
 
     # Start date on or after milestone date raises ValueError
     with pytest.raises(ValueError, match="is on or after contractual milestone date"):
@@ -542,8 +597,63 @@ def test_missing_amortization_scenario_raises_error(engine):
         engine.run_silo_waterfall(s1_terms, s1_init, s1_const, s1_rent, amortization=None)
 
 
+def test_surface_api_requires_explicit_waterfall_priority_and_capex_totals(standard_s1_amort, standard_s2_amort):
+    """P0 Fix 2.1.3: Surface API enforces zero silent priors for capex bounds and waterfall priority."""
+    s1_rent = RentScenario(monthly_base_rent=15_275_000.0, monthly_opex=1_000_000.0)
+    s2_rent = RentScenario(monthly_base_rent=9_166_667.0, monthly_opex=1_000_000.0)
+
+    # Omitting waterfall_priority or remaining capex totals raises TypeError (no silent defaults)
+    with pytest.raises(TypeError):
+        compute_delay_tolerance_surface(
+            reserve_grid_silo1=[100_000_000.0],
+            reserve_grid_silo2=[50_000_000.0],
+            capex_burn_grid_silo1=[10_000_000.0],
+            capex_burn_grid_silo2=[15_000_000.0],
+            scheduled_commencement_month_silo1=12,
+            scheduled_commencement_month_silo2=18,
+            delay_grid_silo1=[0],
+            delay_grid_silo2=[0],
+            shared_campus_delay_mode=False,
+            silo1_rent_scenario=s1_rent,
+            silo2_rent_scenario=s2_rent,
+            silo1_amort_scenario=standard_s1_amort,
+            silo2_amort_scenario=standard_s2_amort,
+            silo1_initial_construction_cash=50_000_000.0,
+            silo2_initial_construction_cash=50_000_000.0,
+            silo1_initial_operating_cash=20_000_000.0,
+            silo2_initial_operating_cash=0.0,
+            # Omits remaining capex totals and waterfall_priority
+        )
+
+    # Explicitly passing None for capex totals and 'debt_service_first' runs cleanly
+    surface = compute_delay_tolerance_surface(
+        reserve_grid_silo1=[100_000_000.0],
+        reserve_grid_silo2=[50_000_000.0],
+        capex_burn_grid_silo1=[10_000_000.0],
+        capex_burn_grid_silo2=[15_000_000.0],
+        scheduled_commencement_month_silo1=12,
+        scheduled_commencement_month_silo2=18,
+        delay_grid_silo1=[0],
+        delay_grid_silo2=[0],
+        shared_campus_delay_mode=False,
+        silo1_rent_scenario=s1_rent,
+        silo2_rent_scenario=s2_rent,
+        silo1_amort_scenario=standard_s1_amort,
+        silo2_amort_scenario=standard_s2_amort,
+        silo1_initial_construction_cash=50_000_000.0,
+        silo2_initial_construction_cash=50_000_000.0,
+        silo1_initial_operating_cash=20_000_000.0,
+        silo2_initial_operating_cash=0.0,
+        silo1_remaining_capex_total=None,
+        silo2_remaining_capex_total=None,
+        waterfall_priority="debt_service_first",
+    )
+    assert len(surface) == 1
+    assert surface["waterfall_priority"].iloc[0] == "debt_service_first"
+
+
 def test_delay_tolerance_surface_execution(standard_s1_amort, standard_s2_amort):
-    """Verifies that compute_delay_tolerance_surface executes cleanly without silent priors."""
+    """Verifies that compute_delay_tolerance_surface executes cleanly when all inputs are explicitly supplied."""
     s1_rent = RentScenario(monthly_base_rent=15_275_000.0, monthly_opex=1_000_000.0)
     s2_rent = RentScenario(monthly_base_rent=9_166_667.0, monthly_opex=1_000_000.0)
 
@@ -568,6 +678,7 @@ def test_delay_tolerance_surface_execution(standard_s1_amort, standard_s2_amort)
         silo2_initial_operating_cash=0.0,
         silo1_remaining_capex_total=100_000_000.0,
         silo2_remaining_capex_total=150_000_000.0,
+        waterfall_priority="opex_first",
     )
 
     assert len(surface_decoupled) == 4
@@ -596,6 +707,9 @@ def test_delay_tolerance_surface_execution(standard_s1_amort, standard_s2_amort)
         silo2_initial_construction_cash=50_000_000.0,
         silo1_initial_operating_cash=20_000_000.0,
         silo2_initial_operating_cash=0.0,
+        silo1_remaining_capex_total=100_000_000.0,
+        silo2_remaining_capex_total=150_000_000.0,
+        waterfall_priority="opex_first",
     )
     assert len(surface_shared) == 2
     for _, row in surface_shared.iterrows():
@@ -621,6 +735,9 @@ def test_delay_tolerance_surface_execution(standard_s1_amort, standard_s2_amort)
             silo2_initial_construction_cash=50_000_000.0,
             silo1_initial_operating_cash=20_000_000.0,
             silo2_initial_operating_cash=0.0,
+            silo1_remaining_capex_total=None,
+            silo2_remaining_capex_total=None,
+            waterfall_priority="opex_first",
         )
 
     # 4. Verify helper demo_pf1_analyst_scenario runs cleanly
