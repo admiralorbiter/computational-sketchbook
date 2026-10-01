@@ -1,0 +1,20 @@
+# Authored Canonical Claims Register for the Infrastructure Stress Observatory
+# Verified primary sources, regulatory orders, corporate disclosures, and reporting citations.
+
+- claim_id: CLM-WULF-005
+  entity_id: WULF
+  source_type: CORPORATE_EARNINGS_RELEASE
+  filing_date: "2026-08-10"
+  document_url: "https://investors.terawulf.com/news-events/press-releases/detail/144/terawulf-reports-second-quarter-2026-results"
+  section_locator: "Q2 2026 Operational Highlights - Lake Mariner"
+  exact_quote: "TeraWulf reported 102 MW of operational infrastructure at Lake Mariner by July 2026, with an additional 336 MW under active construction across CB-4 (expected phase-in H2 2026) and CB-5 (early 2027), while pursuing an incremental 250 MW of power subject to large-load interconnection approval."
+  verified_by: "HUMAN_AUDITOR"
+
+- claim_id: CLM-CORZ-007
+  entity_id: CORZ
+  source_type: SEC_PRESENTATION_EX99_2
+  filing_date: "2026-09-10"
+  document_url: "https://www.sec.gov/Archives/edgar/data/1839341/000183934126000012/q2fy26earningsdeck728am.htm"
+  section_locator: "Slide 14 - Denton Power & Capacity Status"
+  exact_quote: "Denton facility power status: 297 MW of existing operational load plus an additional 74 MW validated in ERCOT's 2025 Regional Transmission Plan (RTP) cases and exempt from ERCOT's Batch Zero process."
+  verified_by: "HUMAN_AUDITOR"

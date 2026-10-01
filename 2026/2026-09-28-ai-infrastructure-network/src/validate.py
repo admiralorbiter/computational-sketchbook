@@ -2306,6 +2306,31 @@ def validate_observatory():
     print("\n--- 13. Validating Observatory Canonical Datasets & Monitoring Invariants ---")
     sub_err = []
 
+    # Gather all verified evidence claim IDs across repo
+    verified_claim_ids = set()
+    core_claims_file = PROCESSED_DIR / "evidence_claims.parquet"
+    if core_claims_file.exists():
+        df_core = pd.read_parquet(core_claims_file)
+        if "claim_id" in df_core.columns:
+            verified_claim_ids.update(df_core["claim_id"].dropna().tolist())
+    pwr_claims_file = PROCESSED_DIR / "power_claims.parquet"
+    if pwr_claims_file.exists():
+        df_pwr = pd.read_parquet(pwr_claims_file)
+        if "claim_id" in df_pwr.columns:
+            verified_claim_ids.update(df_pwr["claim_id"].dropna().tolist())
+    task025_dir = PROCESSED_DIR / "task025"
+    if task025_dir.exists():
+        for p in task025_dir.glob("*.parquet"):
+            if "claims" in p.name or "postevent" in p.name:
+                df_t = pd.read_parquet(p)
+                if "claim_id" in df_t.columns:
+                    verified_claim_ids.update(df_t["claim_id"].dropna().tolist())
+    obs_claims_file = PROCESSED_DIR / "observatory_claims.parquet"
+    if obs_claims_file.exists():
+        df_oc = pd.read_parquet(obs_claims_file)
+        if "claim_id" in df_oc.columns:
+            verified_claim_ids.update(df_oc["claim_id"].dropna().tolist())
+
     # 13.1 Scenarios Table
     scen_pq = PROCESSED_DIR / "observatory_scenarios.parquet"
     if not scen_pq.exists():
@@ -2320,6 +2345,12 @@ def validate_observatory():
             sub_err.append(f"Scenarios table missing columns: {missing_cols}")
         if df_scen["scenario_id"].isnull().any():
             sub_err.append("Null scenario_id found in observatory_scenarios")
+        # Foreign-key claim check
+        for _, row in df_scen.iterrows():
+            refs = [c.strip() for c in str(row["evidence_claim_ids"]).split(",") if c.strip()]
+            for r in refs:
+                if r not in verified_claim_ids:
+                    sub_err.append(f"Scenario {row['scenario_id']} references unverified claim: {r}")
 
     # 13.2 Indicators Table
     ind_pq = PROCESSED_DIR / "observatory_indicators.parquet"
@@ -2327,9 +2358,9 @@ def validate_observatory():
         sub_err.append(f"Missing canonical indicators parquet: {ind_pq}")
     else:
         df_ind = pd.read_parquet(ind_pq)
-        if len(df_ind) != 8:
-            sub_err.append(f"Expected 8 canonical indicators, got: {len(df_ind)}")
-        expected_ind_cols = {"indicator_id", "project_id", "archetype", "signal_role", "observability", "affected_clock", "threatened_boundary", "lead_time_status", "valid_from", "known_from"}
+        if len(df_ind) != 13:
+            sub_err.append(f"Expected 13 canonical indicators (5 projects), got: {len(df_ind)}")
+        expected_ind_cols = {"indicator_id", "project_id", "archetype", "signal_role", "observability", "affected_clock", "threatened_boundary", "lead_time_status", "valid_from", "known_from", "expected_observation_date"}
         missing_ind_cols = expected_ind_cols - set(df_ind.columns)
         if missing_ind_cols:
             sub_err.append(f"Indicators table missing columns: {missing_ind_cols}")
@@ -2345,7 +2376,14 @@ def validate_observatory():
         if jup_row.empty or jup_row.iloc[0]["lead_time_days_min"] != 65.0 or jup_row.iloc[0]["lead_time_status"] != "OBSERVED":
             sub_err.append(f"IND-JUP-001 invalid lead time or status: {jup_row}")
 
-    # 13.3 Observations Table & Bitemporal Invariants
+        # Foreign-key claim check
+        for _, row in df_ind.iterrows():
+            refs = [c.strip() for c in str(row["evidence_claim_ids"]).split(",") if c.strip()]
+            for r in refs:
+                if r not in verified_claim_ids:
+                    sub_err.append(f"Indicator {row['indicator_id']} references unverified claim: {r}")
+
+    # 13.3 Observations Table & Empirical Scoreboard Verification
     obs_pq = PROCESSED_DIR / "observatory_observations.parquet"
     if not obs_pq.exists():
         sub_err.append(f"Missing canonical observations parquet: {obs_pq}")
@@ -2358,11 +2396,30 @@ def validate_observatory():
                 sub_err.append(f"Bitemporal inversion at row {idx}: source_event_date {row['source_event_date']} > first_publicly_observable_date {row['first_publicly_observable_date']}")
             if str(row["first_publicly_observable_date"]) > str(row["ingestion_date"]):
                 sub_err.append(f"Ingestion lookahead at row {idx}: first_publicly_observable_date {row['first_publicly_observable_date']} > ingestion_date {row['ingestion_date']}")
+            cid = str(row.get("evidence_claim_id", ""))
+            if cid and cid != "None" and cid not in verified_claim_ids:
+                sub_err.append(f"Observation {row['observation_id']} references unverified claim: {cid}")
+
+        # Verify exact empirical scoreboard metrics
+        try:
+            from observatory_monitor import ObservatoryMonitor
+            mon = ObservatoryMonitor(str(obs_pq))
+            board = mon.compute_empirical_scoreboard()
+            if board.get("observed_early_warning_sample_count") != 1:
+                sub_err.append(f"Scoreboard early warning count mismatch: expected 1, got {board.get('observed_early_warning_sample_count')}")
+            if board.get("exact_early_warning_lead_days") != 65.0:
+                sub_err.append(f"Scoreboard exact early warning lead mismatch: expected 65.0, got {board.get('exact_early_warning_lead_days')}")
+            if board.get("observed_propagation_lag_days") != 71.0:
+                sub_err.append(f"Scoreboard propagation lag mismatch: expected 71.0, got {board.get('observed_propagation_lag_days')}")
+            if board.get("right_censored_disclosure_lag_days") != 77.0:
+                sub_err.append(f"Scoreboard right-censored lag mismatch: expected 77.0, got {board.get('right_censored_disclosure_lag_days')}")
+        except Exception as e:
+            sub_err.append(f"Scoreboard evaluation error: {e}")
 
     if sub_err:
         errors.extend(sub_err)
     else:
-        print("  [OK] Task 026.1: Observatory Canonical Datasets verified (6 Scenarios, 8 Indicators, >=5 Observations, Bitemporal ordering verified, 0 nulls, signal_role and observability validated).")
+        print("  [OK] Task 026.1: Observatory Canonical Datasets verified (6 Scenarios, 13 Indicators across 5 projects, >=5 Observations, Foreign-Key Claim Invariants 100% verified, Exact 65d Lead / 71d Lag / 77d Censored Scoreboard verified).")
 
     if errors:
         print("\n[VALIDATION FAILED]")

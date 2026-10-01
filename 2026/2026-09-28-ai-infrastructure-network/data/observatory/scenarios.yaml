@@ -1,0 +1,104 @@
+# Authored Canonical Failure Scenarios (Scenario Library)
+# 6 reusable failure archetypes where physical, contract, financial, and support clocks collide.
+
+- scenario_id: SCN-ARCH-001
+  title: "Physical Milestone Misses Financial Payment Date"
+  archetype_exemplar: BINARY_RENT_STEPUP
+  project_exemplar: "Polaris Forge 1"
+  physical_clock_event: "Utility substation energization delayed past target commercial operation date"
+  contract_clock_event: "Commercial rent commencement blocked (tenant cash rent stays at $0)"
+  financial_clock_event: "Semiannual coupon payment date arrives (Months 6, 12, 18)"
+  support_clock_event: "DSRA / debt-service reserve drains toward zero"
+  binding_collision_condition: "T_energize > T_coupon_date AND DSRA_cash < InterestDue"
+  reconverging_entity: "Project SPV -> Bondholders (direct monetary payment default)"
+  subordinate_boundary_mechanic: "Discrete semiannual interest shortfall boundary; DSRA tier exhaustion threshold"
+  source_status: DERIVED_DETERMINISTIC
+  model_treatment: EXACT
+  valid_from: "2026-06-16"
+  known_from: "2026-06-16"
+  evidence_claim_ids: "CLM-APLD-008"
+
+- scenario_id: SCN-ARCH-002
+  title: "Contract Cash-Flow State Step-Down (Force-Majeure Dispute)"
+  archetype_exemplar: MULTI_STATE_OFFTAKE_CARRY
+  project_exemplar: "Project Jupiter"
+  physical_clock_event: "Pipeline ROW permit denied or delayed, impairing fuel delivery to microgrid"
+  contract_clock_event: "Tenant declares force majeure, disputing rent step-up and extending lower development-stage carry"
+  financial_clock_event: "Floating SOFR + 250 bps debt interest carry accrues on drawn loan (payment/reset frequency unobserved)"
+  support_clock_event: "Carry cash covers interest only if dev carry payment >= debt carry liability (up to 3-year obligation)"
+  binding_collision_condition: "T_permit_delay > T_carry_obligation_limit (3 years) OR DevCarry < DebtInterestDue"
+  reconverging_entity: "Project SPV -> Syndicated Bank Consortium (loan trading discount at 89-91c)"
+  subordinate_boundary_mechanic: "Monthly debt-service runway: T_runway = f(Liquidity, DevCarry, DebtService)"
+  source_status: PRIMARY_DISCLOSED
+  model_treatment: CONDITIONAL
+  valid_from: "2026-07-15"
+  known_from: "2026-09-24"
+  evidence_claim_ids: "CLM-PRE-NMSLO-DENIAL-JUL15,CLM-POST-REUTERS-SEP24-FM"
+
+- scenario_id: SCN-ARCH-003
+  title: "Reserve / Liquidity Exhaustion Before Commercial Operation"
+  archetype_exemplar: BINARY_RENT_STEPUP
+  project_exemplar: "Polaris Forge 1 (Silo 2)"
+  physical_clock_event: "Continuous physical commissioning slippage"
+  contract_clock_event: "Pre-operational period extended prior to Ready-for-Service"
+  financial_clock_event: "Reserve tier exhausted (e.g. 6-month or 12-month DSRA exhausted at coupon date)"
+  support_clock_event: "Operating cash drains to $0 via opex and debt service waterfall"
+  binding_collision_condition: "CumulativePreOperationalInterest > InitialReserves + OperatingCashInflows"
+  reconverging_entity: "Project SPV -> Bondholder Workout / Debt Acceleration Boundary (post-shortfall continuation unmodeled)"
+  subordinate_boundary_mechanic: "Exact cents-level reserve exhaustion milestone T_reserve_exhaustion"
+  source_status: DERIVED_DETERMINISTIC
+  model_treatment: EXACT
+  valid_from: "2026-06-16"
+  known_from: "2026-06-16"
+  evidence_claim_ids: "CLM-APLD-008"
+
+- scenario_id: SCN-ARCH-004
+  title: "Financing Availability Window Expiration Cliff"
+  archetype_exemplar: STAGED_EQUIPMENT_ACCEPTANCE_CLIFF
+  project_exemplar: "IREN Mackenzie"
+  physical_clock_event: "GPU hardware delivery, cluster commissioning, or customer qualification testing delayed"
+  contract_clock_event: "Equipment acceptance unachieved prior to December 31, 2026"
+  financial_clock_event: "Hard December 31, 2026 credit facility availability period ends (undrawn principal incurs no 9% coupon)"
+  support_clock_event: "Unaccepted equipment loses loan draw eligibility permanently"
+  binding_collision_condition: "T_acceptance > December 31, 2026 AND HardwareCommitted > DrawnPrincipal"
+  reconverging_entity: "Project SPV -> Borrower Capital Gap (replacement-funding requirement; unfinanced hardware capex exceeds committed debt capacity)"
+  subordinate_boundary_mechanic: "Date-boundary slack: acceptance_slack_days = Dec 31, 2026 - T_acceptance; financing_capacity_at_risk calculated when unaccepted equipment value disclosed"
+  source_status: PRIMARY_DISCLOSED
+  model_treatment: EXACT
+  valid_from: "2026-08-25"
+  known_from: "2026-08-28"
+  evidence_claim_ids: "CLM-IREN-001"
+
+- scenario_id: SCN-ARCH-005
+  title: "Shared Sponsor / Parent Support Reconvergence"
+  archetype_exemplar: SHARED_SPONSOR_RECONVERGENCE
+  project_exemplar: "Polaris Forge 1 (Dual Silos)"
+  physical_clock_event: "Independent construction cost overruns across multiple legal silos"
+  contract_clock_event: "Completion guarantees triggered across both silos simultaneously"
+  financial_clock_event: "Separate project debt remains non-recourse, but parent balance sheet absorbs capex shortfalls"
+  support_clock_event: "Parent unrestricted corporate cash depleted by simultaneous capex cash calls"
+  binding_collision_condition: "Sum(Silo_i_CapexDeficit) > ParentCorporateCashAvailable"
+  reconverging_entity: "Independent Project SPVs -> Single Parent Sponsor (Applied Digital capex completion support)"
+  subordinate_boundary_mechanic: "Multi-silo capex deficit summation and pre-shortfall cash relief analysis"
+  source_status: PRIMARY_DISCLOSED
+  model_treatment: CONDITIONAL
+  valid_from: "2026-06-16"
+  known_from: "2026-06-16"
+  evidence_claim_ids: "CLM-APLD-005,CLM-APLD-006,CLM-APLD-007"
+
+- scenario_id: SCN-ARCH-006
+  title: "Refinancing / Maturity Collision in Dislocated Capital Markets"
+  archetype_exemplar: MULTI_STATE_OFFTAKE_CARRY
+  project_exemplar: "Project Jupiter / Polaris Forge 1"
+  physical_clock_event: "Delayed commissioning or prolonged dispute unresolved at facility maturity"
+  contract_clock_event: "Extension conditions (e.g. operational hurdles) unfulfilled"
+  financial_clock_event: "Four-year construction loan maturity (Jupiter) or 2030/2031 bullet maturity (PF1)"
+  support_clock_event: "Refinancing window blocked by debt market discount or rate environment"
+  binding_collision_condition: "T_refinance_date arrives WHILE SecondaryDiscount > Threshold OR RateSpike"
+  reconverging_entity: "Borrower SPV -> Debt Restructuring / Syndicate Workout"
+  subordinate_boundary_mechanic: "Maturity cliff evaluation vs debt yield and extension covenants"
+  source_status: MARKET
+  model_treatment: CONDITIONAL
+  valid_from: "2026-07-01"
+  known_from: "2026-07-01"
+  evidence_claim_ids: "CLM-PRE-REUTERS-SEP18-DEBT,CLM-POST-FT-SEP25-SYNDICATE"

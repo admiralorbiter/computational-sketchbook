@@ -91,6 +91,7 @@ class ObservableIndicator:
     model_treatment: str
     valid_from: str
     known_from: str
+    expected_observation_date: str
     evidence_claim_ids: str
 
     def to_dict(self) -> Dict[str, Any]:
@@ -114,6 +115,7 @@ class ObservableIndicator:
             "model_treatment": self.model_treatment,
             "valid_from": self.valid_from,
             "known_from": self.known_from,
+            "expected_observation_date": self.expected_observation_date,
             "evidence_claim_ids": self.evidence_claim_ids,
         }
 
@@ -214,6 +216,7 @@ def load_canonical_indicators(parquet_path: str = INDICATORS_PARQUET) -> List[Ob
             model_treatment=str(row["model_treatment"]),
             valid_from=str(row["valid_from"]),
             known_from=str(row["known_from"]),
+            expected_observation_date=str(row["expected_observation_date"]),
             evidence_claim_ids=str(row["evidence_claim_ids"]),
         ))
     return indicators

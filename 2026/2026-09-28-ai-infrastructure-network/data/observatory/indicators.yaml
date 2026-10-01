@@ -1,0 +1,288 @@
+# Authored Canonical Indicators Catalog
+# Cross-project early-warning signals, confirmation markers, and financial recognition events.
+
+- indicator_id: IND-JUP-001
+  project_id: PROJECT_JUPITER
+  archetype: MULTI_STATE_OFFTAKE_CARRY
+  name: "State Trust Land Pipeline Right-of-Way Denial"
+  layer: REGULATORY
+  signal_role: EARLY_WARNING
+  observability: PUBLIC
+  source_description: "New Mexico State Land Office (NMSLO) formal denial order and press release"
+  trigger_event: "Denial of ROW permit for 0.6-mile segment of 17-mile natural gas pipeline across state trust land"
+  affected_clock: PHYSICAL
+  threatened_boundary: "Fuel availability and operational energization date of 2,450 MW Bloom Energy microgrid"
+  lead_time_status: OBSERVED
+  lead_time_days_min: 65.0
+  lead_time_days_max: 65.0
+  lead_time_notes: "July 15, 2026 (NMSLO denial) -> September 18, 2026 (syndicated loan trading discount at 89-91c) = 65-day early warning lead"
+  source_status: PRIMARY_DISCLOSED
+  model_treatment: EXACT
+  valid_from: "2026-07-15"
+  known_from: "2026-07-15"
+  expected_observation_date: "2026-07-15"
+  evidence_claim_ids: "CLM-PRE-NMSLO-DENIAL-JUL15"
+
+- indicator_id: IND-JUP-002
+  project_id: PROJECT_JUPITER
+  archetype: MULTI_STATE_OFFTAKE_CARRY
+  name: "Tenant Offtake Force-Majeure Declaration"
+  layer: CONTRACT_LEGAL
+  signal_role: CONFIRMATION
+  observability: PUBLIC
+  source_description: "Oracle formal legal notice citing pipeline permitting impasse"
+  trigger_event: "Notice invoking force majeure to extend development-stage carry and delay full operational rent"
+  affected_clock: CONTRACT
+  threatened_boundary: "Transition from development-stage carry to higher operational rent"
+  lead_time_status: OBSERVED
+  lead_time_days_min: -6.0
+  lead_time_days_max: -6.0
+  lead_time_notes: "Contract confirmation / downstream consequence. Occurred 6 days after Sept 18 debt mark (-6d lead); 71-day event-propagation lag from July 15 physical shock."
+  source_status: PRIMARY_DISCLOSED
+  model_treatment: EXACT
+  valid_from: "2026-09-24"
+  known_from: "2026-09-24"
+  expected_observation_date: "2026-09-24"
+  evidence_claim_ids: "CLM-POST-REUTERS-SEP24-FM"
+
+- indicator_id: IND-JUP-003
+  project_id: PROJECT_JUPITER
+  archetype: MULTI_STATE_OFFTAKE_CARRY
+  name: "SEC EDGAR Public Corporate Disclosure Lag"
+  layer: EDGAR_FILING
+  signal_role: CONFIRMATION
+  observability: PUBLIC
+  source_description: "SEC Form 8-K / 10-Q filings by public sponsors (ORCL, OBDC)"
+  trigger_event: "Material disclosure of project permitting bottleneck or loan valuation impairment on EDGAR"
+  affected_clock: FINANCIAL
+  threatened_boundary: "Public market awareness of project distress and credit discount"
+  lead_time_status: RIGHT_CENSORED_OBSERVED
+  lead_time_days_min: 77.0
+  lead_time_days_max: 77.0
+  lead_time_notes: "July 15, 2026 (NMSLO denial) -> September 30, 2026 censor date (0 filings on EDGAR; right-censored >= 77 days)"
+  source_status: PRIMARY_DISCLOSED
+  model_treatment: EXACT
+  valid_from: "2026-07-15"
+  known_from: "2026-09-30"
+  expected_observation_date: "2026-09-30"
+  evidence_claim_ids: "CLM-PRE-NMSLO-DENIAL-JUL15"
+
+- indicator_id: IND-JUP-004
+  project_id: PROJECT_JUPITER
+  archetype: MULTI_STATE_OFFTAKE_CARRY
+  name: "Syndicated Loan Secondary Trading Discount"
+  layer: DEBT_MARKET
+  signal_role: FINANCIAL_RECOGNITION
+  observability: COMMERCIAL_DATA
+  source_description: "Private credit & syndicated loan secondary trading quotes (Financial Times reporting)"
+  trigger_event: "Syndicated bank facility quotes drop to 89-91 cents on the dollar prior to public lease notice"
+  affected_clock: FINANCIAL
+  threatened_boundary: "Secondary market loan valuation; syndication extension willingness"
+  lead_time_status: OBSERVED
+  lead_time_days_min: 0.0
+  lead_time_days_max: 0.0
+  lead_time_notes: "September 18, 2026 baseline financial recognition mark (establishes the 65d early warning lead from July 15)"
+  source_status: MARKET
+  model_treatment: INTERVAL
+  valid_from: "2026-09-18"
+  known_from: "2026-09-18"
+  expected_observation_date: "2026-09-18"
+  evidence_claim_ids: "CLM-PRE-REUTERS-SEP18-DEBT"
+
+- indicator_id: IND-PF1-001
+  project_id: POLARIS_FORGE_1
+  archetype: BINARY_RENT_STEPUP
+  name: "Electric Utility Substation Interconnection Queue Filing"
+  layer: UTILITY_DOCKET
+  signal_role: EARLY_WARNING
+  observability: PUBLIC
+  source_description: "Montana-Dakota Utilities (MDU) / Otter Tail Power public regulatory dockets"
+  trigger_event: "Interconnection study report detailing transmission upgrade schedules or energization delays"
+  affected_clock: PHYSICAL
+  threatened_boundary: "Commercial operation date gating Silo 1 / Silo 2 tenant operational rent"
+  lead_time_status: MONITORING_WINDOW
+  lead_time_days_min: 90.0
+  lead_time_days_max: 180.0
+  lead_time_notes: "Standard utility RTO interconnection study and filing revision cycle window"
+  source_status: PRIMARY_DISCLOSED
+  model_treatment: CONDITIONAL
+  valid_from: "2026-01-01"
+  known_from: "2026-01-01"
+  expected_observation_date: "2026-06-30"
+  evidence_claim_ids: "CLM-APLD-009"
+
+- indicator_id: IND-PF1-002
+  project_id: POLARIS_FORGE_1
+  archetype: BINARY_RENT_STEPUP
+  name: "Sponsor Balance Sheet Liquidity Depletion"
+  layer: EDGAR_FILING
+  signal_role: CONFIRMATION
+  observability: PUBLIC
+  source_description: "Applied Digital (APLD) SEC Form 10-Q / 8-K cash & capital disclosures"
+  trigger_event: "Emergency convertible debt issuance, ATM equity offerings, or parent revolver exhaustion"
+  affected_clock: SUPPORT
+  threatened_boundary: "Parent cash capacity to fund completion guarantees across dual silos"
+  lead_time_status: HYPOTHESIZED_WINDOW
+  lead_time_days_min: 30.0
+  lead_time_days_max: 90.0
+  lead_time_notes: "Corporate liquidity burn trajectory preceding parent balance sheet exhaustion"
+  source_status: PRIMARY_DISCLOSED
+  model_treatment: CONDITIONAL
+  valid_from: "2026-06-16"
+  known_from: "2026-06-16"
+  expected_observation_date: "2026-09-30"
+  evidence_claim_ids: "CLM-APLD-007"
+
+- indicator_id: IND-MAC-001
+  project_id: IREN_MACKENZIE
+  archetype: STAGED_EQUIPMENT_ACCEPTANCE_CLIFF
+  name: "GPU Equipment Delivery Manifests & Qualification Logs"
+  layer: PHYSICAL_LOGISTICS
+  signal_role: EARLY_WARNING
+  observability: PRIVATE_OR_UNAVAILABLE
+  source_description: "Hardware delivery manifests, customer acceptance testing logs, cloud RFS press releases"
+  trigger_event: "Hardware delivery slippage or customer qualification testing delays approaching December 31, 2026"
+  affected_clock: PHYSICAL
+  threatened_boundary: "Hard December 31, 2026 facility availability window expiration cliff"
+  lead_time_status: MONITORING_WINDOW
+  lead_time_days_min: 30.0
+  lead_time_days_max: 60.0
+  lead_time_notes: "Internal equipment delivery and qualification logs preceding December 31, 2026 facility expiration"
+  source_status: UNOBSERVED
+  model_treatment: CONDITIONAL
+  valid_from: "2026-08-25"
+  known_from: "2026-08-28"
+  expected_observation_date: "2026-12-01"
+  evidence_claim_ids: "CLM-IREN-001"
+
+- indicator_id: IND-MAC-002
+  project_id: IREN_MACKENZIE
+  archetype: STAGED_EQUIPMENT_ACCEPTANCE_CLIFF
+  name: "Quarterly Debt Draw Exhibit Disclosure"
+  layer: EDGAR_FILING
+  signal_role: FINANCIAL_RECOGNITION
+  observability: PUBLIC
+  source_description: "IREN Limited SEC Form 10-Q Note on August 2026 Financing Agreements"
+  trigger_event: "Disclosed cumulative drawn borrowings under MFSA and Notes relative to $2.4B capacity"
+  affected_clock: FINANCIAL
+  threatened_boundary: "Unused commitment expiration and replacement-funding requirement"
+  lead_time_status: MONITORING_WINDOW
+  lead_time_days_min: 45.0
+  lead_time_days_max: 60.0
+  lead_time_notes: "Q1 FY27 Form 10-Q filing window (period ended Sept 30, 2026, expected filing Nov 2026)"
+  source_status: PRIMARY_DISCLOSED
+  model_treatment: EXACT
+  valid_from: "2026-08-28"
+  known_from: "2026-08-28"
+  expected_observation_date: "2026-11-15"
+  evidence_claim_ids: "CLM-IREN-001"
+
+- indicator_id: IND-MAC-003
+  project_id: IREN_MACKENZIE
+  archetype: STAGED_EQUIPMENT_ACCEPTANCE_CLIFF
+  name: "Facility Financing Agreement & Dec 31 Cliff Public Disclosure"
+  layer: EDGAR_FILING
+  signal_role: CONFIRMATION
+  observability: PUBLIC
+  source_description: "IREN Limited SEC Form 10-K Note 24 Subsequent Events"
+  trigger_event: "Public disclosure of August 25, 2026 financing agreements establishing up-to-$2.4B capacity and Dec 31, 2026 availability period"
+  affected_clock: FINANCIAL
+  threatened_boundary: "Establishment of facility availability expiration cliff and 30-month tranche maturity rules"
+  lead_time_status: OBSERVED
+  lead_time_days_min: 0.0
+  lead_time_days_max: 0.0
+  lead_time_notes: "Public disclosure of the financing contract baseline"
+  source_status: PRIMARY_DISCLOSED
+  model_treatment: EXACT
+  valid_from: "2026-08-25"
+  known_from: "2026-08-28"
+  expected_observation_date: "2026-08-28"
+  evidence_claim_ids: "CLM-IREN-001"
+
+- indicator_id: IND-WULF-001
+  project_id: TERAWULF_LAKE_MARINER
+  archetype: BINARY_RENT_STEPUP
+  name: "Lake Mariner CB-4 & CB-5 Construction & Phase-In Status"
+  layer: PHYSICAL_LOGISTICS
+  signal_role: EARLY_WARNING
+  observability: PUBLIC
+  source_description: "TeraWulf corporate earnings releases, quarterly shareholder letters, and construction updates"
+  trigger_event: "Milestone status on 336 MW HPC expansion across CB-4 (targeted H2 2026) and CB-5 (targeted early 2027)"
+  affected_clock: PHYSICAL
+  threatened_boundary: "Phased in-service date gating contracted high-density colocation hosting revenue"
+  lead_time_status: MONITORING_WINDOW
+  lead_time_days_min: 60.0
+  lead_time_days_max: 120.0
+  lead_time_notes: "Quarterly construction phase-in monitoring cycle frozen as of 2026-10-01"
+  source_status: PRIMARY_DISCLOSED
+  model_treatment: INTERVAL
+  valid_from: "2026-10-01"
+  known_from: "2026-10-01"
+  expected_observation_date: "2026-11-15"
+  evidence_claim_ids: "CLM-WULF-005"
+
+- indicator_id: IND-WULF-002
+  project_id: TERAWULF_LAKE_MARINER
+  archetype: BINARY_RENT_STEPUP
+  name: "Lake Mariner 250 MW Interconnection Approval Docket"
+  layer: REGULATORY
+  signal_role: EARLY_WARNING
+  observability: PUBLIC
+  source_description: "NYISO interconnection study queue dockets and local utility transmission filings"
+  trigger_event: "Interconnection study results or approval for incremental 250 MW large-load power allocation"
+  affected_clock: PHYSICAL
+  threatened_boundary: "Expansion power capacity envelope beyond existing 500 MW site infrastructure"
+  lead_time_status: MONITORING_WINDOW
+  lead_time_days_min: 90.0
+  lead_time_days_max: 180.0
+  lead_time_notes: "NYISO system reliability study cycle frozen prospectively as of 2026-10-01"
+  source_status: PRIMARY_DISCLOSED
+  model_treatment: CONDITIONAL
+  valid_from: "2026-10-01"
+  known_from: "2026-10-01"
+  expected_observation_date: "2026-12-31"
+  evidence_claim_ids: "CLM-WULF-005"
+
+- indicator_id: IND-CORZ-001
+  project_id: CORE_SCIENTIFIC_DENTON
+  archetype: BINARY_RENT_STEPUP
+  name: "Denton 260 MW Critical IT Completion & Customer Acceptance"
+  layer: PHYSICAL_LOGISTICS
+  signal_role: EARLY_WARNING
+  observability: PUBLIC
+  source_description: "Core Scientific earnings presentations and CoreWeave hosting progress announcements"
+  trigger_event: "Final completion and customer acceptance testing on ~260 MW Denton buildout"
+  affected_clock: PHYSICAL
+  threatened_boundary: "CoreWeave 12-year contract phase-in gating full monthly billable colocation revenue"
+  lead_time_status: MONITORING_WINDOW
+  lead_time_days_min: 30.0
+  lead_time_days_max: 90.0
+  lead_time_notes: "Final data hall fit-out and customer qualification testing frozen prospectively as of 2026-10-01"
+  source_status: PRIMARY_DISCLOSED
+  model_treatment: EXACT
+  valid_from: "2026-10-01"
+  known_from: "2026-10-01"
+  expected_observation_date: "2026-11-10"
+  evidence_claim_ids: "CLM-CORZ-006"
+
+- indicator_id: IND-CORZ-002
+  project_id: CORE_SCIENTIFIC_DENTON
+  archetype: BINARY_RENT_STEPUP
+  name: "ERCOT 2025 RTP Case Validation & Batch Zero Exemption"
+  layer: UTILITY_DOCKET
+  signal_role: EARLY_WARNING
+  observability: PUBLIC
+  source_description: "ERCOT Regional Transmission Plan (RTP) filings and Core Scientific SEC presentations"
+  trigger_event: "Regulatory confirmation of 74 MW incremental load validation exempt from Batch Zero interconnection review"
+  affected_clock: PHYSICAL
+  threatened_boundary: "Grid interconnection energization schedule for incremental 74 MW expansion"
+  lead_time_status: MONITORING_WINDOW
+  lead_time_days_min: 90.0
+  lead_time_days_max: 180.0
+  lead_time_notes: "ERCOT 2025 RTP review cycle frozen prospectively as of 2026-10-01"
+  source_status: PRIMARY_DISCLOSED
+  model_treatment: EXACT
+  valid_from: "2026-10-01"
+  known_from: "2026-10-01"
+  expected_observation_date: "2026-12-15"
+  evidence_claim_ids: "CLM-CORZ-007"

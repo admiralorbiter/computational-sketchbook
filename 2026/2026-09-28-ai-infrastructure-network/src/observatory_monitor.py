@@ -7,14 +7,16 @@ Bitemporal Pipeline:
     source_event_date -> first_publicly_observable_date -> ingestion_date
     project_id -> clock_affected -> threatened_boundary -> signal_role -> observability
 
-Empirical Scoreboard Metrics:
-    1. Detection Lead Time:
+Epistemic Scoreboard Metrics:
+    1. Early Warning Detection Lead:
        Delta_t_lead = t_financial_recognition - t_earliest_observable_indicator
-    2. Boundary Identification:
-       Whether the observatory correctly identified the binding clock/boundary.
-    3. Incremental Information Gain:
-       Whether the cross-layer JOIN uncovered dependencies not recoverable from
-       corporate filings alone.
+       (Strictly evaluated on EARLY_WARNING signals preceding financial recognition).
+    2. Event Propagation Lag:
+       Delta_t_prop = t_contractual_response - t_upstream_physical_shock
+       (Downstream contractual consequences and confirmations).
+    3. Right-Censored Information Lag:
+       Delta_t_censored = t_censor - t_reference_event
+       (Absence of corporate disclosures on SEC EDGAR).
 """
 
 from dataclasses import dataclass
@@ -48,8 +50,13 @@ class MonitoredObservation:
     observability: Observability
     headline_text: str
     raw_source_uri: str
-    lead_time_days_to_financial_recognition: Optional[float]
-    lead_time_status: LeadTimeStatus
+    evidence_claim_id: str
+    lead_time_days_to_financial_recognition: Optional[float] = None
+    propagation_lag_days_from_upstream_signal: Optional[float] = None
+    reference_event_date: Optional[date] = None
+    censor_date: Optional[date] = None
+    censored_lead_days: Optional[float] = None
+    lead_time_status: LeadTimeStatus = LeadTimeStatus.OBSERVED
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -65,7 +72,12 @@ class MonitoredObservation:
             "observability": self.observability.value,
             "headline_text": self.headline_text,
             "raw_source_uri": self.raw_source_uri,
+            "evidence_claim_id": self.evidence_claim_id,
             "lead_time_days_to_financial_recognition": self.lead_time_days_to_financial_recognition,
+            "propagation_lag_days_from_upstream_signal": self.propagation_lag_days_from_upstream_signal,
+            "reference_event_date": self.reference_event_date.isoformat() if self.reference_event_date else None,
+            "censor_date": self.censor_date.isoformat() if self.censor_date else None,
+            "censored_lead_days": self.censored_lead_days,
             "lead_time_status": self.lead_time_status.value,
         }
 
@@ -96,8 +108,17 @@ class ObservatoryMonitor:
             assert src_date <= pub_date, f"Bitemporal leak: source_date {src_date} > pub_date {pub_date}"
             assert pub_date <= ing_date, f"Ingestion lookahead: pub_date {pub_date} > ing_date {ing_date}"
 
-            lt_days = row["lead_time_days_to_financial_recognition"]
+            lt_days = row.get("lead_time_days_to_financial_recognition")
             lt_val = float(lt_days) if pd.notna(lt_days) else None
+
+            prop_days = row.get("propagation_lag_days_from_upstream_signal")
+            prop_val = float(prop_days) if pd.notna(prop_days) else None
+
+            cens_days = row.get("censored_lead_days")
+            cens_val = float(cens_days) if pd.notna(cens_days) else None
+
+            ref_date = date.fromisoformat(str(row["reference_event_date"])) if pd.notna(row.get("reference_event_date")) and str(row.get("reference_event_date")).strip() != "" and str(row.get("reference_event_date")) != "None" else None
+            censor_dt = date.fromisoformat(str(row["censor_date"])) if pd.notna(row.get("censor_date")) and str(row.get("censor_date")).strip() != "" and str(row.get("censor_date")) != "None" else None
 
             obs_list.append(MonitoredObservation(
                 observation_id=str(row["observation_id"]),
@@ -112,7 +133,12 @@ class ObservatoryMonitor:
                 observability=Observability(str(row["observability"])),
                 headline_text=str(row["headline_text"]),
                 raw_source_uri=str(row["raw_source_uri"]),
+                evidence_claim_id=str(row.get("evidence_claim_id", "")),
                 lead_time_days_to_financial_recognition=lt_val,
+                propagation_lag_days_from_upstream_signal=prop_val,
+                reference_event_date=ref_date,
+                censor_date=censor_dt,
+                censored_lead_days=cens_val,
                 lead_time_status=LeadTimeStatus(str(row["lead_time_status"])),
             ))
         self.observations = obs_list
@@ -131,7 +157,12 @@ class ObservatoryMonitor:
         observability: Observability,
         headline_text: str,
         raw_source_uri: str,
+        evidence_claim_id: str,
         lead_time_days_to_financial_recognition: Optional[float] = None,
+        propagation_lag_days_from_upstream_signal: Optional[float] = None,
+        reference_event_date: Optional[date] = None,
+        censor_date: Optional[date] = None,
+        censored_lead_days: Optional[float] = None,
         lead_time_status: LeadTimeStatus = LeadTimeStatus.MONITORING_WINDOW,
     ) -> MonitoredObservation:
         """Adds and persists a new verified observation."""
@@ -151,7 +182,12 @@ class ObservatoryMonitor:
             observability=observability,
             headline_text=headline_text,
             raw_source_uri=raw_source_uri,
+            evidence_claim_id=evidence_claim_id,
             lead_time_days_to_financial_recognition=lead_time_days_to_financial_recognition,
+            propagation_lag_days_from_upstream_signal=propagation_lag_days_from_upstream_signal,
+            reference_event_date=reference_event_date,
+            censor_date=censor_date,
+            censored_lead_days=censored_lead_days,
             lead_time_status=lead_time_status,
         )
         self.observations.append(new_obs)
@@ -166,29 +202,32 @@ class ObservatoryMonitor:
         df.to_csv(csv_path, index=False)
 
     def compute_empirical_scoreboard(self) -> Dict[str, Any]:
-        """Calculates current scorecard across all tracked observations."""
+        """Calculates exact empirical scoreboard metrics across all tracked observations."""
         df = pd.DataFrame([obs.to_dict() for obs in self.observations])
         if df.empty:
             return {"total_observations": 0}
 
-        observed_df = df[df["lead_time_status"] == LeadTimeStatus.OBSERVED.value]
-        early_warning_observed = observed_df[observed_df["signal_role"] == SignalRole.EARLY_WARNING.value]
-        
-        # Lead times of early warnings against financial recognition
-        ew_leads = early_warning_observed["lead_time_days_to_financial_recognition"].dropna().tolist()
-        
-        # Right censored counts
+        # 1. Early warning detection lead sample: strictly EARLY_WARNING signals preceding financial recognition
+        ew_mask = (df["lead_time_status"] == LeadTimeStatus.OBSERVED.value) & (df["signal_role"] == SignalRole.EARLY_WARNING.value)
+        ew_df = df[ew_mask]
+        ew_leads = [float(x) for x in ew_df["lead_time_days_to_financial_recognition"].dropna() if float(x) > 0]
+
+        # 2. Event propagation lag sample: downstream contractual response times
+        prop_lags = [float(x) for x in df["propagation_lag_days_from_upstream_signal"].dropna() if float(x) > 0]
+
+        # 3. Right-censored disclosure lag sample
         rc_df = df[df["lead_time_status"] == LeadTimeStatus.RIGHT_CENSORED_OBSERVED.value]
+        rc_days = [float(x) for x in rc_df["censored_lead_days"].dropna()]
 
         return {
             "total_observations_logged": len(df),
             "projects_monitored": sorted(df["project_id"].unique().tolist()),
-            "observed_natural_experiments_count": len(observed_df),
-            "early_warning_signals_observed": len(early_warning_observed),
-            "median_lead_time_days": float(pd.Series(ew_leads).median()) if ew_leads else None,
-            "max_lead_time_days": float(max(ew_leads)) if ew_leads else None,
-            "min_lead_time_days": float(min(ew_leads)) if ew_leads else None,
+            "observed_early_warning_sample_count": len(ew_leads),
+            "exact_early_warning_lead_days": ew_leads[0] if len(ew_leads) == 1 else None,
+            "median_early_warning_lead_days": float(pd.Series(ew_leads).median()) if ew_leads else None,
+            "max_early_warning_lead_days": float(max(ew_leads)) if ew_leads else None,
+            "observed_propagation_lag_days": prop_lags[0] if len(prop_lags) == 1 else (max(prop_lags) if prop_lags else None),
             "right_censored_signals_count": len(rc_df),
-            "monitoring_window_signals_count": len(df[df["lead_time_status"] == LeadTimeStatus.MONITORING_WINDOW.value]),
+            "right_censored_disclosure_lag_days": rc_days[0] if rc_days else None,
             "cross_layer_join_information_gain": "DEMONSTRATED (July 15 NMSLO Order -> Sept 18 Loan Mark = 65d Lead)",
         }

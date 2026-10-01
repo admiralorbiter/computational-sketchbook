@@ -63,7 +63,7 @@ def test_load_canonical_scenarios():
 def test_load_canonical_indicators():
     """Verify loading certified indicators with SignalRole and Observability."""
     indicators = obs.load_canonical_indicators()
-    assert len(indicators) == 8
+    assert len(indicators) == 13
 
     # Verify NMSLO pipeline denial: EARLY_WARNING, PUBLIC, OBSERVED 65d
     jup_permit = next(i for i in indicators if i.indicator_id == "IND-JUP-001")
@@ -86,6 +86,13 @@ def test_load_canonical_indicators():
     mac_10q = next(i for i in indicators if i.indicator_id == "IND-MAC-002")
     assert mac_10q.signal_role == obs.SignalRole.FINANCIAL_RECOGNITION
     assert mac_10q.observability == obs.Observability.PUBLIC
+
+    # Verify TeraWulf Lake Mariner & Core Scientific Denton indicators loaded
+    wulf_ind = next(i for i in indicators if i.indicator_id == "IND-WULF-001")
+    assert wulf_ind.project_id == "TERAWULF_LAKE_MARINER"
+    corz_ind = next(i for i in indicators if i.indicator_id == "IND-CORZ-002")
+    assert corz_ind.project_id == "CORE_SCIENTIFIC_DENTON"
+    assert corz_ind.layer == "UTILITY_DOCKET"
 
 
 def test_evaluate_mackenzie_date_boundary():
@@ -120,6 +127,7 @@ def test_observatory_monitor_and_scoreboard():
     assert scorecard["total_observations_logged"] >= 5
     assert "PROJECT_JUPITER" in scorecard["projects_monitored"]
     assert "IREN_MACKENZIE" in scorecard["projects_monitored"]
-    assert scorecard["observed_natural_experiments_count"] >= 3
-    assert scorecard["median_lead_time_days"] is not None
-    assert scorecard["median_lead_time_days"] > 0
+    assert scorecard["observed_early_warning_sample_count"] == 1
+    assert scorecard["exact_early_warning_lead_days"] == 65.0
+    assert scorecard["observed_propagation_lag_days"] == 71.0
+    assert scorecard["right_censored_disclosure_lag_days"] == 77.0
