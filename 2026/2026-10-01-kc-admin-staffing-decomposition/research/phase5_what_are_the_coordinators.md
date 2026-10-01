@@ -13,10 +13,10 @@ Phase 5 marks a deliberate methodological shift: **transitioning from econometri
 
 ## 2. Four Guiding Research Questions
 
-1. **Role-Level Crosswalk:** What specific job titles, functional responsibilities, and administrative loci comprise the aggregate NCES CCD `CORSUP` reporting line?
+1. **Role-Level Reconstruction:** How can we plausibly allocate observed CCD `CORSUP` totals across institutionally documented job titles and functional families, and what is the epistemic basis for each allocation?
 2. **Reconstructed Staffing Architectures:** How do school systems organize the supervisory layer between classroom teachers and central executives across distinct institutional archetypes?
-3. **Funding Provenance:** What combinations of local operating tax receipts, federal categorical grants (Title I, Title II, Title III, IDEA), and emergency relief funds (ESSER I, II, III) enabled districts to create these positions?
-4. **Post-ESSER Survival (2024–25 to 2026–27):** Which parts of the instructional-support infrastructure became permanent features of district organization, and which were genuinely temporary grant-funded expansions that were eliminated or restructured when COVID-19 relief expired?
+3. **Funding Provenance:** What combinations of local operating tax receipts, federal categorical grants (Title I, Title II, Title III, IDEA), and emergency relief funds (ESSER I, II, III) enabled districts to support these positions?
+4. **Post-ESSER Staffing Survival:** How did coordinator staffing change between 2023–24 and 2024–25 in observed federal counts, and what subsequent governance and budget signals emerge from 2025–2027 district follow-up?
 
 ---
 
@@ -38,14 +38,14 @@ Phase 5 marks a deliberate methodological shift: **transitioning from econometri
 ### 3.2 District Primary Filings & Board Documents
 - **Shawnee Mission USD 512:**
   - *2019–2024 Strategic Plan:* Established personalized learning and coaching framework.
-  - *ESSER Allocation Plan (August 2021):* Authorized ~$10M in ESSER funding to hire ~50 instructional coaches, social workers, and building substitutes.
-  - *March 2026 Board of Education Budget Workshop:* Superintendent Dr. Michael Schumacher announced the denial of all 113.3 FTE staffing requests (freezing instructional coaching, interventionist, and IT expansions).
+  - *ESSER Allocation Plan (August 2021):* Authorized ~$10M in federal ESSER relief to hire ~50 new team members across instructional coaches, elementary classroom teachers (lowering class size), social workers, and building substitutes.
+  - *March 2026 Board of Education Budget Workshop:* Superintendent Dr. Michael Schumacher announced the denial of all 113.3 FTE staffing requests submitted through building needs assessments (including 79.3 FTE general staffing requests and a 34 FTE counselor proposal). The district cited multiple converging fiscal pressures—declining enrollment, reduced at-risk funding, special education underfunding, formula uncertainty, and preserving fund balance—placing a de facto freeze on further instructional coaching additions.
 - **Kansas City USD 500 (KCKPS):**
   - *Leadership & Learning Department Organizational Framework:* Directs curriculum, Diploma+ initiatives, and professional learning.
   - *Title I Schoolwide Plans & At-Risk Expenditure Filings:* Documents 36+ school-based Title I reading/math coaches and 22+ MTSS academic intervention specialists.
   - *2023–2024 Performance Accountability & Better Every Day Reports:* Establishes rationale for adding assistant principals and deans of students to address acute chronic absenteeism and post-pandemic climate disruptions.
 - **Olathe USD 233:**
-  - *Board of Education Budget Profiles (FY 2024 to FY 2027):* Documents post-ESSER budget realignment, including the reduction of ~23.6 coordinator FTE in 2024–25 (from 85.55 to 61.95 FTE) and reassignment back to classroom vacancies.
+  - *Board of Education Budget Profiles (FY 2024 to FY 2027):* Documents post-ESSER budget realignment, including the reduction of ~23.6 coordinator FTE in 2024–25 (from 85.55 to 61.95 FTE). District explanations emphasize right-sizing amid enrollment loss and special education shortfalls, with public reporting indicating coaches returned to classroom vacancies.
   - *Kansas Through-Year Curriculum-Directed (TYCD) Assessment Implementation Plans:* Maps instructional learning facilitators supporting state-aligned assessment modules.
 - **North Kansas City 74:**
   - *Comprehensive School Improvement Plan (CSIP) & Finance Reports:* Details the absorption of discipline-specific content coordinators and 10 instructional tech coaches into local property tax funds (59% local revenue share).
@@ -64,40 +64,49 @@ Our analysis reconstructs the non-classroom supervisory architecture across six 
 ```mermaid
 graph TD
     subgraph Kansas City USD 500 (KCKPS)
-        KCK_HQ[Lean Central Line: 6.0 FTE] --> KCK_SCH[Dense Building Admins: 141.0 FTE<br>3.28 per school - Direct Authority]
-        KCK_SCH --> KCK_CO[106.8 FTE Coordinators & Interventionists<br>Title I, At-Risk, Bilingual Categoricals]
+        KCK_HQ["Lean Central Line: 6.0 FTE (-3.0 below peer exp)"] --> KCK_SCH["Dense Building Administration: 141.0 FTE<br>3.28 admins/school (+55.2 FTE above peers)<br>Formal Disciplinary & Evaluative Authority"]
+        KCK_SCH --> KCK_CO["106.8 FTE Coordinators & Interventionists<br>Funded via permanent Title I, III, & At-Risk Categoricals"]
     end
 
     subgraph Shawnee Mission USD 512 (SMSD)
-        SMSD_HQ[Central Line: 13.0 FTE] --> SMSD_SCH[Building Admins: 95.5 FTE<br>2.12 per school]
-        SMSD_HQ --> SMSD_DEP[Curriculum Department]
-        SMSD_DEP --> SMSD_CO[123.7 FTE Coaching Overlay<br>~50 Non-Evaluative Building Coaches<br>ESSER III + Local Tax Transition]
+        SMSD_HQ["Central Line: 13.0 FTE (peer expected)"] --> SMSD_SCH["Building Admins: 95.5 FTE (2.12/school)"]
+        SMSD_HQ --> SMSD_DEP["Curriculum & Instruction Division"]
+        SMSD_DEP --> SMSD_CO["123.7 FTE Coaching Overlay (+59.0 FTE above peers)<br>~50 Non-Evaluative Building Coaches<br>Scaled via ESSER III -> Facing Local Operating Freeze"]
     end
 ```
 
 ### 4.1 Shawnee Mission USD 512 — The Specialized Coaching Overlay
 - **Structural Philosophy:** The district layered a dense instructional coaching and technology integration overlay on top of classroom teachers without altering traditional administrative command structures.
-- **Authority Dynamics:** Instructional coaches operate outside the administrative evaluation hierarchy. They do not evaluate teachers or issue disciplinary reprimands; their role is strictly collegial and pedagogic (planning, model teaching, data analysis).
-- **Vulnerability:** Because ~50 coaching positions were scaled using temporary federal ESSER III grants, the district faced a severe local absorption hurdle upon grant expiration in 2024. Although initially absorbed, it triggered a complete hiring and expansion freeze by March 2026.
+- **Authority Dynamics:** Instructional coaches operate outside the administrative evaluation hierarchy. They do not evaluate teachers or issue disciplinary reprimands; their role is strictly collegial and pedagogical (planning, model teaching, data analysis).
+- **Vulnerability:** After scaling coaches with ESSER III relief, SMSD initially absorbed positions into local operating funds for 2024–25 (116.04 FTE). However, broader districtwide fiscal pressures (enrollment decline, special education shortfalls, and fund balance preservation) led the district in March 2026 to deny all proposed staffing additions, placing an attrition freeze on coaching.
 
 ### 4.2 Kansas City USD 500 (KCKPS) — Distributed School Supervision
 - **Structural Philosophy:** Rather than keeping authority at headquarters or creating an advisory coaching layer, KCKPS pushed administrative authority directly into school buildings. It created the densest building-level supervisory architecture in the region (141.0 FTE / 3.28 admins per school across 43 schools).
 - **Authority Dynamics:** Assistant Principals and Deans of Students exercise direct evaluative, disciplinary, and operational authority to address urgent attendance, behavioral, and student trauma challenges on-site.
-- **Vulnerability:** Because KCKPS financed its 100+ coordinator footprint through permanent federal Title I, Title III, IDEA, and Kansas State At-Risk headcount weightings, it experienced zero post-ESSER contraction. Coordinator FTE held at 120.96 FTE in 2024–25.
+- **Vulnerability:** Because KCKPS has supported its 100+ coordinator footprint through permanent federal Title I, Title III, IDEA, and Kansas State At-Risk headcount weightings across the entire decade, it experienced zero post-ESSER contraction. Coordinator FTE held at 120.96 FTE in 2024–25 (+13.3%).
 
-### 4.3 Summary Matrix of the Six Archetypes
-1. **Shawnee Mission USD 512 (KS):** *Specialized Coaching Overlay* (Peak 123.7 FTE CORSUP; absorbed with budget freeze).
-2. **Kansas City USD 500 (KS):** *Distributed School Supervision* (106.8 FTE CORSUP + 141.0 FTE SCHADM; permanent formula funding).
-3. **Olathe USD 233 (KS):** *Suburban Scaling & Retrenchment* (Peak 85.6 FTE $\to$ cut to 62.0 FTE post-ESSER; coaches returned to classrooms).
-4. **North Kansas City 74 (MO):** *Rapid Growth Departmental Hierarchy* (36.6 FTE $\to$ 37.9 FTE; absorbed locally via enrollment and property tax growth).
-5. **Raytown C-2 (MO):** *Layered Curriculum Leadership* (16.8 FTE; inelastic central hierarchy retained despite enrollment loss).
-6. **Lee's Summit R-VII (MO):** *Lean Comparator / Department Chair Model* (11.0 FTE; resisted coaching expansion, zero post-ESSER disruption).
+### 4.3 Functional vs. Locus Breakdown
+- **Functional Definition:**
+  - Instructional Coaching: 135.75 FTE (35.7%)
+  - Intervention / MTSS: 22.00 FTE (5.8%)
+  - Combined Coaching + MTSS: **157.75 FTE (41.5%)**
+  - SPED / EL Program Management: 93.10 FTE (24.5%)
+  - Curriculum / Content: 73.80 FTE (19.4%)
+  - Instructional Technology: 35.00 FTE (9.2%)
+  - Data / Assessment: 14.71 FTE (3.9%)
+  - Federal Programs: 6.00 FTE (1.6%)
+- **Administrative Locus Definition:**
+  - Pure School Building: **175.75 FTE (46.2%)**
+  - Hybrid School / Central: **51.00 FTE (13.4%)**
+  - Pure Central Office: **153.61 FTE (40.4%)**
+  - Under a 50/50 hybrid allocation ($175.75 + 0.5 \times 51.0 = 201.25$ FTE), approximately **52.9%** of coordinator capacity is school-sited and **47.1%** is central-office sited.
 
 ---
 
 ## 5. Canonical Data Artifacts Generated in Phase 5
 
-1. [`data/processed/coordinator_role_crosswalk.csv`](../data/processed/coordinator_role_crosswalk.csv): Detailed mapping of 29 discrete job titles across the 6 focal districts, specifying estimated FTE, function, locus, and funding stream.
-2. [`data/processed/district_staffing_architectures_6archetypes.csv`](../data/processed/district_staffing_architectures_6archetypes.csv): Comparative institutional matrix detailing student scale, school counts, supervisory ratios, authority models, and post-ESSER trajectories.
-3. [`data/processed/post_esser_coordinator_survival.csv`](../data/processed/post_esser_coordinator_survival.csv): Longitudinal tracking of coordinator headcount from 2023–24 peak into 2024–25, classifying disposition into Retrenched, Absorbed, or Formula Permanent.
-4. [`outputs/tables/coordinator_functional_decomposition_report.md`](../outputs/tables/coordinator_functional_decomposition_report.md): Final research synthesis and institutional report.
+1. [`data/processed/coordinator_role_reconstruction.csv`](../data/processed/coordinator_role_reconstruction.csv): Canonical evidence-aware reconstruction of 29 discrete job titles across the 6 focal districts, specifying `fte_basis` (`documented_count`, `inferred_allocation`, `residual_allocation`), source document, URL, year, page/item, evidence type, and confidence score.
+2. [`data/processed/coordinator_role_crosswalk.csv`](../data/processed/coordinator_role_crosswalk.csv): Exact mirror of the reconstruction file for backwards compatibility.
+3. [`data/processed/district_staffing_architectures_6archetypes.csv`](../data/processed/district_staffing_architectures_6archetypes.csv): Comparative institutional matrix detailing student scale, school counts, supervisory ratios, canonical K–12 teacher FTE (`teachers_k12_fte`), authority models, and post-ESSER trajectories.
+4. [`data/processed/post_esser_coordinator_survival.csv`](../data/processed/post_esser_coordinator_survival.csv): Longitudinal tracking of coordinator headcount comparing observed 2023–24 and 2024–25 CCD counts, alongside documented 2025–2027 institutional follow-up context and mechanism confidence scores.
+5. [`outputs/tables/coordinator_functional_decomposition_report.md`](../outputs/tables/coordinator_functional_decomposition_report.md): Final research synthesis and institutional report.

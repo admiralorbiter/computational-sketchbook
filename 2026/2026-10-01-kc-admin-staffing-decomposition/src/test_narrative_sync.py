@@ -6,6 +6,7 @@ reported across README.md, econometric_decomposition_report.md, fiscal_materiali
 and board_document_audit_report.md match the canonical CSV files with 100% precision.
 """
 
+import hashlib
 from pathlib import Path
 import re
 import pandas as pd
@@ -305,25 +306,80 @@ def test_markdown_link_and_retraction_hygiene():
 
 
 def test_phase5_coordinator_functional_decomposition():
+    recon_path = DATA_DIR / "processed" / "coordinator_role_reconstruction.csv"
     crosswalk_path = DATA_DIR / "processed" / "coordinator_role_crosswalk.csv"
     arch_path = DATA_DIR / "processed" / "district_staffing_architectures_6archetypes.csv"
     post_path = DATA_DIR / "processed" / "post_esser_coordinator_survival.csv"
     report_path = OUTPUTS_DIR / "coordinator_functional_decomposition_report.md"
 
+    assert recon_path.exists(), f"Missing {recon_path}"
     assert crosswalk_path.exists(), f"Missing {crosswalk_path}"
     assert arch_path.exists(), f"Missing {arch_path}"
     assert post_path.exists(), f"Missing {post_path}"
     assert report_path.exists(), f"Missing {report_path}"
 
+    df_recon = pd.read_csv(recon_path)
     df_cross = pd.read_csv(crosswalk_path)
     df_arch = pd.read_csv(arch_path)
     df_post = pd.read_csv(post_path)
     report_text = report_path.read_text(encoding="utf-8")
 
-    # Verify counts
+    # Verify counts and parity between reconstruction and crosswalk mirror
+    assert len(df_recon) == 29
     assert len(df_cross) == 29
     assert len(df_arch) == 6
     assert len(df_post) == 6
+    assert (df_recon["estimated_fte_2023_24"] == df_cross["estimated_fte_2023_24"]).all()
+
+    # Verify epistemic basis requirements across all 29 rows
+    valid_basis = {"documented_count", "inferred_allocation", "residual_allocation"}
+    assert set(df_recon["fte_basis"].unique()).issubset(valid_basis)
+    assert (df_recon["fte_basis"] == "residual_allocation").sum() == 4
+    for col in ["source_document", "source_url", "source_year", "page_or_item", "evidence_type", "confidence"]:
+        assert col in df_recon.columns
+        assert df_recon[col].notna().all()
+
+    # Verify functional category sums (Total sample: 380.36 FTE)
+    func_sums = df_recon.groupby("functional_category")["estimated_fte_2023_24"].sum().round(2).to_dict()
+    assert abs(func_sums["Instructional Coaching"] - 135.75) < 0.01
+    assert abs(func_sums["SPED/EL Program Management"] - 93.10) < 0.01
+    assert abs(func_sums["Curriculum/Content"] - 73.80) < 0.01
+    assert abs(func_sums["Instructional Technology"] - 35.00) < 0.01
+    assert abs(func_sums["Intervention/MTSS"] - 22.00) < 0.01
+    assert abs(func_sums["Data/Assessment"] - 14.71) < 0.01
+    assert abs(func_sums["Federal Programs"] - 6.00) < 0.01
+    assert abs(sum(func_sums.values()) - 380.36) < 0.01
+
+    # Combined Coaching + MTSS = 157.75 FTE (41.5%)
+    coaching_mtss = func_sums["Instructional Coaching"] + func_sums["Intervention/MTSS"]
+    assert abs(coaching_mtss - 157.75) < 0.01
+    assert abs(coaching_mtss / 380.36 - 0.4147) < 0.001
+
+    # Verify locus sums and 50/50 hybrid allocation (52.9% school-sited)
+    tot = df_recon["estimated_fte_2023_24"].sum()
+    pure_school = df_recon[df_recon["work_location"] == "School Building"]["estimated_fte_2023_24"].sum()
+    hybrid = df_recon[df_recon["work_location"] == "School Building / Central"]["estimated_fte_2023_24"].sum()
+    central = tot - pure_school - hybrid
+    school_5050 = pure_school + 0.5 * hybrid
+
+    assert abs(pure_school - 175.75) < 0.01
+    assert abs(hybrid - 51.00) < 0.01
+    assert abs(central - 153.61) < 0.01
+    assert abs(school_5050 - 201.25) < 0.01
+    assert abs(school_5050 / tot - 0.5291) < 0.001
+
+    # Verify canonical K-12 teacher FTE scale (and total reported teachers w/ Pre-K)
+    k12_teachers = dict(zip(df_arch["district_name"], df_arch["teachers_k12_fte_2023_24"]))
+    assert abs(k12_teachers["Shawnee Mission USD 512"] - 1867.29) < 0.01
+    assert abs(k12_teachers["Kansas City USD 500"] - 1348.35) < 0.01
+    assert abs(k12_teachers["Olathe USD 233"] - 2136.60) < 0.01
+    assert abs(k12_teachers["North Kansas City 74"] - 1454.54) < 0.01
+    assert abs(k12_teachers["Raytown C-2"] - 554.60) < 0.01
+    assert abs(k12_teachers["Lee's Summit R-VII"] - 1190.17) < 0.01
+
+    tot_teachers = dict(zip(df_arch["district_name"], df_arch["teachers_total_reported_fte_2023_24"]))
+    assert abs(tot_teachers["Shawnee Mission USD 512"] - 1900.29) < 0.01
+    assert abs(tot_teachers["Kansas City USD 500"] - 1411.95) < 0.01
 
     # Verify exact crosswalk summation to reported CCD CORSUP
     corsup_by_dist = df_cross.groupby("district_name")["estimated_fte_2023_24"].sum().round(2).to_dict()
@@ -342,6 +398,27 @@ def test_phase5_coordinator_functional_decomposition():
     assert "2.12" in report_text
     assert "Specialized Instructional Coaching Overlay" in report_text
     assert "Decentralized School-Level Supervisory Dispersion" in report_text
+    assert "1,867.29" in report_text
+    assert "1,348.35" in report_text
+    assert "52.9%" in report_text
+    assert "41.5%" in report_text
+
+
+def test_manifest_provenance_and_checksums():
+    manifest_path = DATA_DIR / "manifest.csv"
+    assert manifest_path.exists(), f"Missing {manifest_path}"
+    manifest_df = pd.read_csv(manifest_path)
+    
+    assert len(manifest_df) >= 19, f"Expected at least 19 datasets in manifest, found {len(manifest_df)}"
+    for _, row in manifest_df.iterrows():
+        fpath = ROOT / row["relative_path"]
+        assert fpath.exists(), f"Manifest file missing on disk: {fpath}"
+        actual_sha = hashlib.sha256(fpath.read_bytes()).hexdigest()
+        expected_sha = row["sha256"]
+        assert actual_sha == expected_sha, (
+            f"SHA256 mismatch for {row['dataset_name']} ({row['relative_path']}): "
+            f"actual {actual_sha} != manifest {expected_sha}"
+        )
 
 
 if __name__ == "__main__":
@@ -364,6 +441,8 @@ if __name__ == "__main__":
     print("[PASS] Trajectory and peer summary aggregations validated.")
     test_phase5_coordinator_functional_decomposition()
     print("[PASS] Phase 5 coordinator functional decomposition & archetypes validated.")
+    test_manifest_provenance_and_checksums()
+    print("[PASS] Dataset manifest provenance and SHA256 checksums validated.")
     test_markdown_link_and_retraction_hygiene()
     print("[PASS] Markdown link and retraction hygiene validated.")
     print("\nALL NARRATIVE AND DATA SYNCHRONIZATION CHECKS PASSED (100% MATCH).")
