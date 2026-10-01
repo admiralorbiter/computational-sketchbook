@@ -8,9 +8,11 @@ Generates calibrated mechanical non-teaching staffing decompositions for:
 4. Individual Major District Ledgers across both Kansas and Missouri.
 
 Explicitly accounts for:
-- Kansas 2024-25 Assistant Principal exclusion break in SCHADM.
+- Kansas 2024-25 Assistant Principal & Central Director exclusion break in SCHADM & LEAADM.
 - Missouri 2014-15 LEAADM -> CORSUP title reclassifications.
+- Kansas 2006-2009 unmodeled reporting void (downgrading 20-year combined series to AMBER).
 - Retraction of the student-support +253% artifact, replacing it with the clean Counselors series.
+- Correction of the 89.5% coordinator share claim to the true 48.5% share of broad supervisory growth.
 """
 
 import sys
@@ -24,15 +26,26 @@ OUTPUTS_DIR = PROJECT_ROOT / "outputs" / "tables"
 
 
 def decompose_pair(df_start: pd.DataFrame, df_end: pd.DataFrame, group_col: str = None):
-    """Compute mechanical decomposition between two cross-sections."""
+    """
+    Compute mechanical decomposition between two cross-sections.
+    Preserves categorical metadata (like state) and prevents silent NaN masking.
+    """
     if group_col:
-        s0 = df_start.groupby(group_col).sum(numeric_only=True)
-        s1 = df_end.groupby(group_col).sum(numeric_only=True)
+        s0 = df_start.groupby(group_col).sum(numeric_only=True, min_count=1)
+        s1 = df_end.groupby(group_col).sum(numeric_only=True, min_count=1)
         keys = sorted(list(set(s0.index).intersection(set(s1.index))))
+        state_map = {}
+        if "state" in df_start.columns:
+            st_map0 = df_start.groupby(group_col)["state"].first().to_dict()
+            st_map1 = df_end.groupby(group_col)["state"].first().to_dict()
+            state_map = {k: st_map1.get(k, st_map0.get(k, "N/A")) for k in keys}
+        elif group_col == "state":
+            state_map = {k: k for k in keys}
     else:
-        s0 = pd.DataFrame([df_start.sum(numeric_only=True)], index=["Total"])
-        s1 = pd.DataFrame([df_end.sum(numeric_only=True)], index=["Total"])
+        s0 = pd.DataFrame([df_start.sum(numeric_only=True, min_count=1)], index=["Total"])
+        s1 = pd.DataFrame([df_end.sum(numeric_only=True, min_count=1)], index=["Total"])
         keys = ["Total"]
+        state_map = {"Total": "KC Metro"}
 
     rows = []
     for k in keys:
@@ -60,6 +73,7 @@ def decompose_pair(df_start: pd.DataFrame, df_end: pd.DataFrame, group_col: str 
 
         rows.append({
             "group": k,
+            "state": state_map.get(k, "N/A"),
             "enrollment_start": e0,
             "enrollment_end": e1,
             "delta_enrollment": e1 - e0,
@@ -127,26 +141,30 @@ def main():
     OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
 
     # 1. Balanced Regular Cohort (55 Districts)
-    df_bal = df[df["is_balanced_regular_cohort_55"]].copy()
+    df_bal = df[df["is_balanced_presence_cohort_55"]].copy()
     b14 = df_bal[df_bal["school_year"] == "2014-2015"]
     b23 = df_bal[df_bal["school_year"] == "2023-2024"]
     b24 = df_bal[df_bal["school_year"] == "2024-2025"]
     b04 = df_bal[df_bal["school_year"] == "2004-2005"]
 
+    assert len(b14) == 55, f"Expected 55 districts in 2014-15 balanced cohort, got {len(b14)}"
+    assert len(b23) == 55, f"Expected 55 districts in 2023-24 balanced cohort, got {len(b23)}"
+    assert len(b24) == 55, f"Expected 55 districts in 2024-25 balanced cohort, got {len(b24)}"
+
     print("Calculating Balanced Regular Cohort Decompositions...")
-    # 2014-15 to 2024-25 (10-Year Benchmark)
-    decomp_bal_10 = decompose_pair(b14, b24)
-    decomp_bal_10["cohort_label"] = "Balanced 55 Regular Districts (2014-15 to 2024-25)"
-    
-    # 2014-15 to 2023-24 (Pre-KS SCHADM Break Benchmark)
+    # 2014-15 to 2023-24 (Primary Clean Pre-Break Benchmark)
     decomp_bal_pre_break = decompose_pair(b14, b23)
-    decomp_bal_pre_break["cohort_label"] = "Balanced 55 Regular Districts (2014-15 to 2023-24 [Pre-KS-Break])"
+    decomp_bal_pre_break["cohort_label"] = "Balanced 55 Regular Districts (2014-15 to 2023-24 [Clean Pre-Break Benchmark])"
 
-    # 2004-05 to 2024-25 (20-Year Long-Run)
+    # 2014-15 to 2024-25 (10-Year Horizon with KS 2024-25 Break)
+    decomp_bal_10 = decompose_pair(b14, b24)
+    decomp_bal_10["cohort_label"] = "Balanced 55 Regular Districts (2014-15 to 2024-25 [Subject to KS Break])"
+
+    # 2004-05 to 2024-25 (20-Year Long-Run [AMBER due to KS 2006-09 Void])
     decomp_bal_20 = decompose_pair(b04, b24)
-    decomp_bal_20["cohort_label"] = "Balanced 55 Regular Districts (2004-05 to 2024-25)"
+    decomp_bal_20["cohort_label"] = "Balanced 55 Regular Districts (2004-05 to 2024-25 [AMBER: KS 2006-09 Void])"
 
-    decomp_bal_summary = pd.concat([decomp_bal_10, decomp_bal_pre_break, decomp_bal_20], ignore_index=True)
+    decomp_bal_summary = pd.concat([decomp_bal_pre_break, decomp_bal_10, decomp_bal_20], ignore_index=True)
     decomp_bal_summary.to_csv(OUTPUTS_DIR / "kc_balanced_cohort_decomposition.csv", index=False)
 
     # 2. Dynamic Regional Universe (All LEAs including charters)
@@ -156,20 +174,20 @@ def main():
     u24 = df[df["school_year"] == "2024-2025"]
     u04 = df[df["school_year"] == "2004-2005"]
 
+    decomp_dyn_pre = decompose_pair(u14, u23)
+    decomp_dyn_pre["cohort_label"] = "Dynamic Universe All LEAs (2014-15 to 2023-24 [Pre-Break])"
     decomp_dyn_10 = decompose_pair(u14, u24)
     decomp_dyn_10["cohort_label"] = "Dynamic Universe All LEAs (2014-15 to 2024-25)"
-    decomp_dyn_pre = decompose_pair(u14, u23)
-    decomp_dyn_pre["cohort_label"] = "Dynamic Universe All LEAs (2014-15 to 2023-24)"
-    decomp_dyn_summary = pd.concat([decomp_dyn_10, decomp_dyn_pre], ignore_index=True)
+    decomp_dyn_summary = pd.concat([decomp_dyn_pre, decomp_dyn_10], ignore_index=True)
     decomp_dyn_summary.to_csv(OUTPUTS_DIR / "kc_dynamic_universe_decomposition.csv", index=False)
 
-    # 3. Balanced Cohort State-Level Decomposition (2014-15 to 2024-25 & 2014-15 to 2023-24)
+    # 3. Balanced Cohort State-Level Decomposition (2014-15 to 2023-24 & 2014-15 to 2024-25)
     print("Calculating Balanced Cohort State-Level Decompositions...")
-    decomp_bal_state_10 = decompose_pair(b14, b24, group_col="state")
-    decomp_bal_state_10.to_csv(OUTPUTS_DIR / "kc_balanced_state_10yr_decomposition.csv", index=False)
-
     decomp_bal_state_pre = decompose_pair(b14, b23, group_col="state")
     decomp_bal_state_pre.to_csv(OUTPUTS_DIR / "kc_balanced_state_prebreak_decomposition.csv", index=False)
+
+    decomp_bal_state_10 = decompose_pair(b14, b24, group_col="state")
+    decomp_bal_state_10.to_csv(OUTPUTS_DIR / "kc_balanced_state_10yr_decomposition.csv", index=False)
 
     # 4. District-by-District Decomposition (Major Districts in Balanced Cohort)
     print("Calculating District-by-District Major Ledgers...")
@@ -196,7 +214,12 @@ def main():
         return pd.DataFrame(rows)
 
     m14 = get_district_slice(b14, major_districts)
+    m23 = get_district_slice(b23, major_districts)
     m24 = get_district_slice(b24, major_districts)
+
+    decomp_major_pre = decompose_pair(m14, m23, group_col="canonical_name")
+    decomp_major_pre.to_csv(OUTPUTS_DIR / "kc_major_districts_2014_2023_decomposition.csv", index=False)
+
     decomp_major_10 = decompose_pair(m14, m24, group_col="canonical_name")
     decomp_major_10.to_csv(OUTPUTS_DIR / "kc_major_districts_2014_2024_decomposition.csv", index=False)
 
@@ -224,19 +247,19 @@ def main():
                 "central_mgmt_coord_per_1000": r["central_mgmt_coord_per_1000_students"],
                 "admin_per_100_teachers": r["total_admin_coord_per_100_teachers"],
                 "principals_per_school": r["school_admin_per_school"],
-                "flag_schadm_underreported": r["flag_schadm_underreported_2425"],
+                "flag_ks_admin_break": r["flag_ks_admin_reporting_break_2425"],
             })
     df_multi = pd.DataFrame(multi_denom_rows)
     df_multi.to_csv(OUTPUTS_DIR / "multi_denominator_comparison.csv", index=False)
 
     # 6. Generate Markdown Synthesis Report
     print("Generating Comprehensive Calibrated Markdown Report...")
-    generate_markdown_report(decomp_bal_summary, decomp_dyn_summary, decomp_bal_state_10, decomp_bal_state_pre, decomp_major_10)
+    generate_markdown_report(decomp_bal_summary, decomp_dyn_summary, decomp_bal_state_10, decomp_bal_state_pre, decomp_major_pre)
     print(f"All calibrated outputs successfully written to {OUTPUTS_DIR}")
 
 
 def generate_markdown_report(bal_summary, dyn_summary, state_10, state_pre, major_dist):
-    md = """# Kansas City Administrative Staffing Intensity Decomposition
+    md = r"""# Kansas City Administrative Staffing Intensity Decomposition
 ## Phase 1.1 Semantic Calibration & Calibrated Decomposition Report
 
 **Geographic Universe:** 9-County Mid-America Regional Council (MARC) Metropolitan Area  
@@ -248,36 +271,53 @@ def generate_markdown_report(bal_summary, dyn_summary, state_10, state_pre, majo
 ## 1. Executive Summary: The Calibrated Findings
 
 Build 1 revealed a striking phenomenon that survives rigorous measurement calibration:
-**The primary driver of non-classroom workforce expansion in Kansas City–area public schools has NOT been traditional central-office administration, but a dramatic, disproportionate expansion in instructional coordination, curriculum supervision, and instructional coaching capacity.**
 
-In the matched cohort of 55 regular school districts present across the entire modern CCD reporting era:
-* **Enrollment:** 320,611 → 316,617 (**-1.2%**, -3,994 pupils)
-* **Classroom Teachers:** 20,801.0 → 22,247.9 (**+7.0%**, +1,446.9 FTE)
-* **District Central Administrators (LEAADM):** 175.8 → 177.7 (**+1.1%**, +1.9 FTE — virtually flat)
-* **Instructional Coordinators & Coaches (CORSUP):** 501.3 → 751.2 (**+49.8%**, +249.9 FTE — massive expansion)
-* **Combined Broad Administration (SCHADM + LEAADM + CORSUP):** 1,732.2 → 2,011.3 (**+16.1%**, +279.1 FTE)
-* **Broad Administrative Intensity per 1,000 Pupils:** 5.40 → 6.35 (**+17.6%**)
+**The primary driver of non-classroom workforce expansion in Kansas City–area public schools has NOT been traditional central-office line administration, but a dramatic, disproportionate expansion in instructional coordination, curriculum supervision, and instructional coaching capacity.**
 
-Instructional coordinators accounted for **89.5% of all net administrative and supervisory FTE growth** across the balanced regular district cohort between 2014–15 and 2024–25.
+### 1.1 Primary Benchmark: Clean Pre-Break Modern Era (2014–15 → 2023–24)
+Using the clean 10-year pre-break benchmark across the matched cohort of 55 regular school districts present throughout the modern CCD reporting era:
+* **Enrollment:** 320,611 → 316,841 (**-1.2%**, -3,770 pupils — virtually flat)
+* **Classroom Teachers:** 20,801.0 → 22,365.7 (**+7.5%**, +1,564.7 FTE)
+* **District Central Administrators (`LEAADM`):** 175.8 → 197.7 (**+12.5%**, +22.0 FTE)
+* **School Building Administrators (`SCHADM`):** 1,055.1 → 1,305.0 (**+23.7%**, +249.8 FTE — scaling with school facilities)
+* **Instructional Coordinators & Coaches (`CORSUP`):** 501.3 → 756.8 (**+51.0%**, +255.5 FTE — massive expansion)
+* **Broad Supervisory Workforce (`SCHADM + LEAADM + CORSUP`):** 1,732.2 → 2,259.5 (**+30.4%**, +527.3 FTE)
+* **Supervisory Intensity per 1,000 Pupils:** 5.40 → 7.13 (**+32.0%**)
+
+### 1.2 Core Substantive Takeaways
+1. **Instructional Coordinators Grew at 4x the Rate of Central Administration:**
+   Coordinator staffing increased by **+51.0%**, compared to **+12.5%** for district central administrators.
+2. **Coordinators Drove ~48.5% of Total Net Supervisory Growth:**
+   Of the +527.33 net FTE added to the broad supervisory workforce between 2014–15 and 2023–24, coordinators accounted for **48.45%** (+255.52 FTE), approximately tied with building administration (+249.83 FTE, **47.38%**). Traditional central administration accounted for only **4.17%** (+21.98 FTE).
+   *(Note: The initial Build 1 claim that coordinators accounted for 89.5% was an artifact of using the broken 2024–25 Kansas endpoint in the denominator and has been formally retracted.)*
+3. **The Divergence is Central Coordination vs. Line Administration:**
+   School building administration grew at +23.7% (tracking school reorganizations and student safety demands), while district-level line leadership grew at +12.5%. The standout growth occurred specifically in instructional coordination, coaching, and program supervision.
 
 ---
 
-## 2. Measurement Audits & Retractions (Phase 1.1 Calibration)
+## 2. Measurement Audits, Anomaly Isolations, & Retractions
 
-### 2.1 Retraction of the Student-Support (+253%) Finding
-* **The Flaw in Build 1:** In early CCD releases (2004–2013), broader student support was unpopulated in federal extracts, leading the build script to fall back to `counselors_fte` (`student_support_staff_fte.fillna(counselors_fte)`). In 2014–15, the broader field was populated with all student support staff, creating a phantom jump from 737 to 2,353. Furthermore, in 2016–17 through 2018–19, NCES extracts recorded exactly `0.0` for student support across both states despite active counseling forces.
-* **The Correction:** The +253% claim is formally **retracted**. Student support staff is classified as **NOT longitudinally comparable** across the 20-year span due to reporting voids.
-* **The Clean Pupil Support Benchmark:** Guidance Counselors (`counselors_fte`), which was stably reported across all 21 years, grew from 755.0 to 909.0 FTE (**+20.4%**) over 20 years, and from 779.8 to 909.0 FTE (**+16.6%**) over 10 years, tracking student population shifts without explosive distortion.
+### 2.1 Kansas 2024–25 Systematic Reporting Break (Affects BOTH SCHADM and LEAADM)
+* **The Break:** In Kansas, between 2023–24 and 2024–25, reported school building administrators fell by **-36.8%** (611.6 → 386.7 FTE) and district central administrators fell by **-32.0%** (77.0 → 52.4 FTE), while instructional coordinators remained stable (462.3 → 455.9 FTE, -1.4%).
+* **The Mechanism:** Cross-validation against Kansas State Department of Education (KSDE) official SO66 licensed personnel totals reveals that statewide superintendent FTE was unchanged (262.5 FTE), assistant superintendents were virtually flat (97.3 → 97.0 FTE), head principals grew (1,229.3 → 1,232.4 FTE), and assistant principals grew (752.2 → 758.2 FTE). There was **zero underlying personnel collapse**. Kansas CCD line 059 omitted assistant principals and certain central directors in 2024–25.
+* **Analytical Treatment:** Tagged as `flag_ks_admin_reporting_break_2425`. The clean pre-break window (**2014–15 to 2023–24**) serves as the primary benchmark. All primary Phase 2 models exclude Kansas 2024–25 from `SCHADM` and `LEAADM` estimation.
 
-### 2.2 The 2024–25 Kansas School Administrator (SCHADM) Discontinuity
-* **The Break:** Kansas school administrator FTE dropped from 611.6 in 2023–24 to 386.7 in 2024–25 (-36.8% statewide).
-* **The Mechanism:** Cross-validation against KSDE SO66 reports and statewide CCD tables confirms that in 2024–25, Kansas reported **only Head Principals** under the NCES "School administrators" category, omitting Assistant Principals (who had been included in all prior years).
-* **The Analytical Guardrail:** We provide both the 2014–15 to 2024–25 benchmark and the pre-break 2014–15 to 2023–24 benchmark (where SCHADM grew +23.7%, scaling with building additions). All downstream regressions must include state × year fixed effects or sensitivity exclusions for Kansas in 2024–25.
+### 2.2 Retraction of the Student-Support (+253%) Artifact
+* **The Flaw in Build 1:** In early CCD years (2004–2013), broader student support was unpopulated in federal extracts, leading the build script to fall back to `counselors_fte`. In 2014–15, the broader category was populated, creating a phantom jump from 737 to 2,353. Furthermore, in 2016–17 through 2018–19, NCES extracts recorded exactly `0.0` for student support across both states despite active counseling forces.
+* **The Correction:** The +253% claim is formally **retracted**. Broader student support is classified as **FAIL (STOPPING RULE)** for 20-year modeling.
+* **The Clean Pupil Support Benchmark:** Guidance Counselors (`counselors_fte`), which was stably reported across all 21 years:
+  - Balanced 55 cohort (2014–15 → 2023–24): 743.9 → 871.1 FTE (**+17.1%**, +127.2 FTE).
+  - Dynamic universe (2014–15 → 2024–25): 779.8 → 909.0 FTE (**+16.6%**, +129.2 FTE).
+  - Counselors tracked student population needs steadily without explosive distortion.
 
 ### 2.3 Missouri LEAADM vs. CORSUP Reclassification (2013–14 to 2014–15)
 * In Missouri, between 2013–14 and 2014–15, district administrators fell by -102.8 FTE while instructional coordinators rose by +64.9 FTE.
 * Combined Central Management + Coordination (`LEAADM + CORSUP`) remained steady (455.0 → 417.2 FTE, -8.3%).
-* **Rule:** For 20-year longitudinal analyses, `LEAADM + CORSUP` is the only robust, reclassification-proof central aggregate.
+* **Rule:** For cross-era comparisons across 2014, `LEAADM + CORSUP` is the only robust aggregate.
+
+### 2.4 Kansas 2006–2009 Discontinuity Downgrades 20-Year Combined Series to AMBER
+* In Kansas, combined `LEAADM + CORSUP` dropped from 286 FTE in 2005–06 to 88, 93, and 95 FTE in 2006–07 through 2008–09 before jumping back to 314 FTE in 2009–10.
+* A whole reporting tier went unrecorded in Kansas for three years. Therefore, the 20-year combined series (`central_mgmt_and_coordinators_fte`) is downgraded from GREEN to **AMBER**, requiring reconciliation before 2004–2024 panel modeling.
 
 ---
 
@@ -300,32 +340,13 @@ Instructional coordinators accounted for **89.5% of all net administrative and s
             f"| **{r['pct_delta_admin_per_1000']:+.1f}%** |\n"
         )
 
-    md += """
+    md += r"""
 ---
 
 ## 4. Balanced Cohort State-Level Decompositions
 
-### 4.1 Ten-Year Period (2014–15 to 2024–25)
-*Note: Kansas 2024–25 SCHADM reflects assistant principal omission.*
-
-| State | Enrollment $\Delta$ | Teachers $\Delta$ | Principals $\Delta$ | Central Admin $\Delta$ | Coordinators $\Delta$ | Admin/1k Start | Admin/1k End |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-"""
-    for _, r in state_10.iterrows():
-        md += (
-            f"| **{r['group']}** "
-            f"| {r['enrollment_start']:,.0f} → {r['enrollment_end']:,.0f} ({r['pct_delta_enrollment']:+.1f}%) "
-            f"| {r['teachers_start']:,.1f} → {r['teachers_end']:,.1f} ({r['pct_delta_teachers']:+.1f}%) "
-            f"| {r['principals_start']:,.1f} → {r['principals_end']:,.1f} ({r['delta_principals']:+.1f}) "
-            f"| {r['central_admin_start']:,.1f} → {r['central_admin_end']:,.1f} ({r['delta_central_admin']:+.1f}) "
-            f"| **{r['coordinators_start']:,.1f} → {r['coordinators_end']:,.1f} ({r['delta_coordinators']:+.1f}, {r['pct_delta_coordinators']:+.1f}%)** "
-            f"| {r['admin_per_1000_pupils_start']:.2f} "
-            f"| **{r['admin_per_1000_pupils_end']:.2f}** |\n"
-        )
-
-    md += """
-### 4.2 Pre-Break Period (2014–15 to 2023–24)
-*Reflects complete reporting before the Kansas SCHADM reporting break.*
+### 4.1 Pre-Break Primary Benchmark (2014–15 to 2023–24)
+*Reflects complete reporting before the Kansas 2024–25 reporting break.*
 
 | State | Enrollment $\Delta$ | Teachers $\Delta$ | Principals $\Delta$ | Central Admin $\Delta$ | Coordinators $\Delta$ | Admin/1k Start | Admin/1k End |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -342,15 +363,34 @@ Instructional coordinators accounted for **89.5% of all net administrative and s
             f"| **{r['admin_per_1000_pupils_end']:.2f}** |\n"
         )
 
-    md += """
+    md += r"""
+### 4.2 Ten-Year Horizon (2014–15 to 2024–25)
+*Note: Kansas 2024–25 reflects assistant principal & central director omissions.*
+
+| State | Enrollment $\Delta$ | Teachers $\Delta$ | Principals $\Delta$ | Central Admin $\Delta$ | Coordinators $\Delta$ | Admin/1k Start | Admin/1k End |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+"""
+    for _, r in state_10.iterrows():
+        md += (
+            f"| **{r['group']}** "
+            f"| {r['enrollment_start']:,.0f} → {r['enrollment_end']:,.0f} ({r['pct_delta_enrollment']:+.1f}%) "
+            f"| {r['teachers_start']:,.1f} → {r['teachers_end']:,.1f} ({r['pct_delta_teachers']:+.1f}%) "
+            f"| {r['principals_start']:,.1f} → {r['principals_end']:,.1f} ({r['delta_principals']:+.1f}) "
+            f"| {r['central_admin_start']:,.1f} → {r['central_admin_end']:,.1f} ({r['delta_central_admin']:+.1f}) "
+            f"| **{r['coordinators_start']:,.1f} → {r['coordinators_end']:,.1f} ({r['delta_coordinators']:+.1f}, {r['pct_delta_coordinators']:+.1f}%)** "
+            f"| {r['admin_per_1000_pupils_start']:.2f} "
+            f"| **{r['admin_per_1000_pupils_end']:.2f}** |\n"
+        )
+
+    md += r"""
 ---
 
-## 5. Major District Mechanical Ledger (2014–15 to 2024–25)
+## 5. Major District Mechanical Ledger (Pre-Break: 2014–15 to 2023–24)
 
-$$\\Delta \\text{Total Non-Teaching} = \\Delta \\text{Principals} + \\Delta \\text{Central Admin} + \\Delta \\text{Coordinators} + \\Delta \\text{Counselors} + \\Delta \\text{Paras} + \\Delta \\text{Other}$$
+$$\Delta \text{Total Non-Teaching} = \Delta \text{Principals} + \Delta \text{Central Admin} + \Delta \text{Coordinators} + \Delta \text{Counselors} + \Delta \text{Paras} + \Delta \text{Other}$$
 
 | District | State | Enrollment $\Delta$ | Teachers $\Delta$ | $\Delta$ Principals | $\Delta$ Central | $\Delta$ Coord | $\Delta$ Counselors | $\Delta$ Paras | Admin/1k Start | Admin/1k End |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 """
     for _, r in major_dist.iterrows():
         md += (

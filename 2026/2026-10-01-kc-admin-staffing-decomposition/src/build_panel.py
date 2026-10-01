@@ -6,12 +6,11 @@ with harmonized historical CCD files (2004-05 through 2013-14)
 across all public school districts in the 9-county Kansas City MARC region.
 
 Phase 1.1 Semantic Calibration Enhancements:
-- Removes artificial counselor-to-student-support fallback.
-- Preserves raw observations while attaching explicit data quality and comparability flags.
-- Flags suspicious all-zero student-support state-years (2016–2018).
-- Flags the Kansas 2024–25 assistant-principal omission break.
-- Adds balanced-cohort membership flags (55 continuous regular districts).
-- Attaches categorical comparability regimes for central office and coordination roles.
+- Replaces year-only regimes with state-year specific comparability regimes.
+- Distinguishes balanced_presence_cohort (55) from complete_outcome_cohort (53).
+- Flags Kansas 2024-25 systemic break across BOTH SCHADM (-36.8%) and LEAADM (-32.0%).
+- Removes unsafe total-staff fallback; stores partial sum separately as partial_staff_sum_fte.
+- Attaches machine-enforced outcome eligibility boolean columns.
 """
 
 import sys
@@ -28,6 +27,7 @@ import requests
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 from taxonomy import sanitize_negative_codes, compute_derived_metrics
+from comparability import COMPARABILITY_REGISTRY
 
 DATA_DIR = PROJECT_ROOT / "data"
 RAW_DIR = DATA_DIR / "raw"
@@ -162,9 +162,9 @@ def fetch_historical_slice(target_leas: set) -> pd.DataFrame:
 
 
 def main():
-    print("=" * 70)
+    print("=" * 75)
     print("BUILDING CALIBRATED DISTRICT-STAFF-YEAR PANEL (2004–2024)")
-    print("=" * 70)
+    print("=" * 75)
 
     # 1. Load verified 2014-15 through 2024-25 baseline LEA panel
     baseline_path = PROJECT_ROOT.parent / "2026-09-23-kc-education-capacity" / "data" / "processed" / "kc_lea_capacity_long_2014_15_2024_25.csv"
@@ -217,12 +217,9 @@ def main():
     for col in num_cols:
         df_combined[col] = df_combined[col].apply(sanitize_negative_codes)
 
-    # IMPORTANT: Phase 1.1 calibration:
-    # Do NOT fillna student_support_staff_fte with counselors_fte.
-    # Preserve counselors_fte as the clean longitudinal series and keep student_support_staff_fte as-reported.
-
-    # If total_staff_fte is unpopulated (common in early 2000s), construct structural sum
-    calc_total_staff = (
+    # Calculate partial staff sum separately WITHOUT overwriting total_staff_fte
+    # Protects admin share of total staff from downward denominator bias
+    calc_partial_staff = (
         df_combined["teachers_k12_fte"].fillna(0)
         + df_combined["paraprofessionals_fte"].fillna(0)
         + df_combined["school_administrators_fte"].fillna(0)
@@ -233,8 +230,7 @@ def main():
         + df_combined["lea_admin_support_fte"].fillna(0)
         + df_combined["other_support_staff_fte"].fillna(0)
     )
-    calc_series = pd.Series(np.where(calc_total_staff > 0, calc_total_staff, np.nan), index=df_combined.index)
-    df_combined["total_staff_fte"] = df_combined["total_staff_fte"].fillna(calc_series)
+    df_combined["partial_staff_sum_fte"] = np.where(calc_partial_staff > 0, calc_partial_staff, np.nan)
 
     # 4. Attach typology and governance categories
     groups = []
@@ -246,63 +242,94 @@ def main():
     df_combined["agency_type_group"] = groups
     df_combined["typology"] = typos
 
-    # 5. Attach Phase 1.1 Semantic Comparability & Integrity Flags
-    print("Attaching Phase 1.1 semantic comparability flags...")
-    
-    # 5a. Identify the 55 balanced regular districts present at both 2014-15 and 2024-25
+    # 5. Attach Balanced Cohort Definitions
+    # 5a: balanced_presence_cohort_55: in all 11 years (2014-15 to 2024-25) as regular district
     d14 = set(df_combined[(df_combined["school_year"] == "2014-2015") & (df_combined["agency_type_group"] == "Regular Public District")]["nces_lea_id"])
     d24 = set(df_combined[(df_combined["school_year"] == "2024-2025") & (df_combined["agency_type_group"] == "Regular Public District")]["nces_lea_id"])
     balanced_55 = d14.intersection(d24)
-    print(f"Verified Balanced Regular District Cohort: {len(balanced_55)} districts")
-    df_combined["is_balanced_regular_cohort_55"] = df_combined["nces_lea_id"].isin(balanced_55) & (df_combined["agency_type_group"] == "Regular Public District")
+    df_combined["is_balanced_presence_cohort_55"] = df_combined["nces_lea_id"].isin(balanced_55) & (df_combined["agency_type_group"] == "Regular Public District")
+    df_combined["is_balanced_regular_cohort_55"] = df_combined["is_balanced_presence_cohort_55"]
 
-    # 5b. Flag suspicious all-zero student-support state-years (2016-17 to 2018-19)
-    # When district enrollment > 500 and reported student_support == 0.0
+    # 5b: complete_outcome_cohort_53: balanced 55 minus district-years with missing core staffing (Olathe & Gardner Edgerton 2015-16)
+    # Count non-missing years per district in 2014-2024
+    modern_df = df_combined[(df_combined["school_year"] >= "2014-2015") & df_combined["is_balanced_presence_cohort_55"]]
+    has_full_core = (
+        modern_df["teachers_k12_fte"].notna() &
+        modern_df["school_administrators_fte"].notna() &
+        modern_df["lea_administrators_fte"].notna() &
+        modern_df["instructional_coordinators_fte"].notna()
+    )
+    complete_leas = modern_df[has_full_core].groupby("nces_lea_id")["school_year"].count()
+    complete_53 = set(complete_leas[complete_leas == 11].index)
+    print(f"Balanced Presence Cohort: {len(balanced_55)} districts")
+    print(f"Complete Outcome Cohort (all 11 years non-null): {len(complete_53)} districts (excludes Olathe & Gardner Edgerton 2015-16)")
+    df_combined["is_complete_outcome_cohort_53"] = df_combined["nces_lea_id"].isin(complete_53)
+
+    # 6. Attach Explicit Anomaly Flags
+    # 6a: Kansas 2024-25 reporting break across BOTH SCHADM and LEAADM
+    df_combined["flag_ks_admin_reporting_break_2425"] = (
+        (df_combined["school_year"] == "2024-2025") & (df_combined["state"] == "KS")
+    )
+    # Retain backward compatibility flag alias
+    df_combined["flag_schadm_underreported_2425"] = df_combined["flag_ks_admin_reporting_break_2425"]
+
+    # 6b: Suspicious zero student support
     df_combined["flag_zero_student_support"] = (
         (df_combined["student_support_staff_fte"] == 0.0) & (df_combined["enrollment_total"] > 500)
     )
 
-    # 5c. Flag Kansas 2024–25 assistant-principal omission in CCD line 059
-    df_combined["flag_schadm_underreported_2425"] = (
-        (df_combined["school_year"] == "2024-2025") & (df_combined["state"] == "KS")
-    )
-
-    # 5d. Flag district-years with missing core staffing data
+    # 6c: Missing core staff
     df_combined["flag_missing_key_staff"] = (
         df_combined["teachers_k12_fte"].isna() |
         df_combined["school_administrators_fte"].isna() |
         df_combined["lea_administrators_fte"].isna()
     )
 
-    # 5e. Flag central admin reclassification periods
-    # MO prior to 2014-15 (LEAADM high, CORSUP low)
-    # KS prior to 2009-10 (CORSUP unpopulated)
-    df_combined["flag_reclassified_central_admin"] = (
-        ((df_combined["state"] == "MO") & (df_combined["school_year"] < "2014-2015")) |
-        ((df_combined["state"] == "KS") & (df_combined["school_year"] < "2009-2010"))
+    # 6d: State-Year Specific Comparability Regime
+    def assign_state_year_regime(row) -> str:
+        st, sy = row["state"], row["school_year"]
+        if st == "KS":
+            if sy < "2009-2010":
+                return "KS_CORSUP_Unreported_LEAADM_Void"
+            elif sy == "2024-2025":
+                return "KS_Admin_Reporting_Break_2024"
+            else:
+                return "KS_Modern_Harmonized"
+        else:  # MO
+            if sy < "2014-2015":
+                return "MO_Pre_Reclassification"
+            else:
+                return "MO_Modern_Harmonized"
+
+    df_combined["comparability_regime_state_year"] = df_combined.apply(assign_state_year_regime, axis=1)
+
+    # 7. Attach Machine-Enforced Outcome Eligibility Flags
+    # Allows downstream econometric code to filter reliably
+    df_combined["eligible_corsup_10yr"] = (
+        (df_combined["school_year"] >= "2014-2015") &
+        (df_combined["school_year"] <= "2024-2025") &
+        df_combined["instructional_coordinators_fte"].notna()
     )
+    df_combined["eligible_leaadm_primary"] = (
+        (df_combined["school_year"] >= "2014-2015") &
+        (df_combined["school_year"] <= "2023-2024") &
+        df_combined["lea_administrators_fte"].notna()
+    )
+    df_combined["eligible_schadm_primary"] = (
+        (df_combined["school_year"] >= "2014-2015") &
+        (df_combined["school_year"] <= "2023-2024") &
+        df_combined["school_administrators_fte"].notna()
+    )
+    df_combined["eligible_counselors_20yr"] = df_combined["counselors_fte"].notna()
 
-    # 5f. Categorical comparability regime
-    def assign_regime(sy: str) -> str:
-        if sy < "2009-2010":
-            return "KS_CORSUP_Unreported"
-        elif sy < "2014-2015":
-            return "Pre_MO_Reclassification"
-        elif sy < "2024-2025":
-            return "Modern_Harmonized_CCD"
-        else:
-            return "KS_SCHADM_Discontinuity"
-
-    df_combined["comparability_regime_central"] = df_combined["school_year"].apply(assign_regime)
-
-    # 6. Compute derived multi-denominator intensity metrics
+    # 8. Compute derived multi-denominator intensity metrics
     print("Computing calibrated multi-denominator intensity metrics...")
     df_final = compute_derived_metrics(df_combined)
 
     # Sort canonically
     df_final = df_final.sort_values(["school_year", "state", "district_name"]).reset_index(drop=True)
 
-    # 7. Save processed outputs
+    # 9. Save processed outputs
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     csv_out = PROCESSED_DIR / "district_staff_year.csv"
     parquet_out = PROCESSED_DIR / "district_staff_year.parquet"
@@ -311,7 +338,7 @@ def main():
     print(f"Saved calibrated CSV to: {csv_out} ({len(df_final)} rows, {len(df_final.columns)} cols)")
     print(f"Saved calibrated Parquet to: {parquet_out}")
 
-    # 8. Generate data manifest
+    # 10. Generate data manifest
     sha256 = hashlib.sha256(csv_out.read_bytes()).hexdigest()
     manifest_row = {
         "dataset_name": "district_staff_year",
@@ -320,17 +347,15 @@ def main():
         "columns_count": len(df_final.columns),
         "years_covered": f"{df_final['school_year'].min()} to {df_final['school_year'].max()}",
         "district_count": df_final["nces_lea_id"].nunique(),
-        "balanced_cohort_55_count": len(balanced_55),
+        "balanced_presence_cohort_55": len(balanced_55),
+        "complete_outcome_cohort_53": len(complete_53),
         "sha256": sha256,
-        "calibration_phase": "Phase 1.1 Semantic Calibration",
+        "calibration_phase": "Phase 1.1 Final Calibrated Patch",
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
     }
     manifest_df = pd.DataFrame([manifest_row])
     manifest_df.to_csv(DATA_DIR / "manifest.csv", index=False)
     print(f"Updated manifest at {DATA_DIR / 'manifest.csv'}")
-
-    print("\nSummary of records by school year:")
-    print(df_final.groupby("school_year")["nces_lea_id"].count())
 
 
 if __name__ == "__main__":

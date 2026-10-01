@@ -1,4 +1,4 @@
-school_year,district_name,state,enrollment,schools,teachers_k12_fte,principals_fte,lea_admin_fte,coordinators_fte,central_plus_coord_fte,total_admin_coord_fte,counselors_fte,admin_per_1000_students,coordinators_per_1000_students,central_mgmt_coord_per_1000,admin_per_100_teachers,principals_per_school,flag_schadm_underreported
+school_year,district_name,state,enrollment,schools,teachers_k12_fte,principals_fte,lea_admin_fte,coordinators_fte,central_plus_coord_fte,total_admin_coord_fte,counselors_fte,admin_per_1000_students,coordinators_per_1000_students,central_mgmt_coord_per_1000,admin_per_100_teachers,principals_per_school,flag_ks_admin_break
 2004-2005,Shawnee Mission Pub Sch,KS,28958.0,49.0,1792.0,74.0,20.0,7.0,27.0,101.0,47.0,3.487809931625112,0.2417294012017404,0.9323848332067132,5.636160714285714,1.510204081632653,False
 2004-2005,Blue Valley,KS,19489.0,30.0,1262.0,51.0,40.0,8.0,48.0,99.0,53.0,5.079788598696701,0.4104879675714505,2.462927805428704,7.844690966719494,1.7,False
 2004-2005,Olathe,KS,23608.0,42.0,1676.0,72.0,39.0,7.0,46.0,118.0,62.0,4.998305659098611,0.2965096577431379,1.9484920365977636,7.040572792362769,1.7142857142857142,False

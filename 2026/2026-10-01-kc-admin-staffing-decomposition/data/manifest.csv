@@ -1,2 +1,2 @@
-dataset_name,relative_path,record_count,columns_count,years_covered,district_count,balanced_cohort_55_count,sha256,calibration_phase,created_at_utc
-district_staff_year,data/processed/district_staff_year.csv,1629,63,2004-2005 to 2024-2025,84,55,2df6257f1de767701b321870f922667b9f1c9a113a9dd19b3806f8fb2040d524,Phase 1.1 Semantic Calibration,2026-10-01T17:33:28.325203+00:00
+dataset_name,relative_path,record_count,columns_count,years_covered,district_count,balanced_presence_cohort_55,complete_outcome_cohort_53,sha256,calibration_phase,created_at_utc
+district_staff_year,data/processed/district_staff_year.csv,1629,70,2004-2005 to 2024-2025,84,55,53,3c870180a435f5c82c9b4b5639d92c7c3bc09b5490928456b154951fba3563b1,Phase 1.1 Final Calibrated Patch,2026-10-01T17:49:27.945024+00:00
