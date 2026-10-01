@@ -1,0 +1,61 @@
+# Signal Observatory Inquiry: KCKPS (USD 500) Public Sentiment & Community Discourse
+#
+# Investigates public perception, community controversies, parent feedback,
+# and leadership issues surrounding Kansas City, Kansas Public Schools (USD 500).
+
+inquiry:
+  id: "2026-09-kckps-public-sentiment"
+  question: >
+    What are parents, staff, students, and community members in Kansas City, Kansas
+    saying about KCKPS (USD 500)? What controversies, praise, friction points,
+    and governance issues currently dominate public perception of the district?
+  mode: investigate
+
+  scope:
+    time:
+      since: "2025-01-01"
+      until: "2026-12-31"
+    geography:
+      - "Kansas City, Kansas"
+      - "Wyandotte County"
+      - "KCK"
+    languages:
+      - "en"
+      - "es"
+
+  seeds:
+    terms:
+      - "KCKPS"
+      - "Kansas City Kansas Public Schools"
+      - "USD 500"
+      - "KCK school board"
+      - "KCKPS Spanish"
+      - "KCKPS lawsuit"
+      - "KCKPS superintendent"
+      - "Sumner Academy"
+      - "Wyandotte High School"
+    hashtags:
+      - "#KCKPS"
+      - "#USD500"
+      - "#Wyandotte"
+    accounts:
+      - "KCKPS"
+    subreddits:
+      - "kansascity"
+    urls: []
+
+  platforms:
+    - youtube
+
+  budget:
+    max_queries: 15
+    max_artifacts: 60
+    max_media_downloads: 10
+
+  preservation: candidates
+
+  analysis:
+    cluster_narratives: true
+    track_media_spread: true
+    identify_firsthand_sources: true
+    find_contradictions: true

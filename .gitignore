@@ -1,6 +1,7 @@
 # Project directory junction
 kc_education_capacity
 ai_infrastructure_network
+signal_observatory
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -18,5 +19,10 @@ Thumbs.db
 .venv
 env/
 venv/
-# Large raw video binaries (>50MB)
+
+# Large media binaries and database files
+*.mp4
+*.mov
+*.duckdb
+*.duckdb.wal
 *transcript_review_tutorial.pdf

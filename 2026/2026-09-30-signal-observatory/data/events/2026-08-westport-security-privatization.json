@@ -1,0 +1,59 @@
+{
+  "id": "2026-08-westport-security-privatization",
+  "title": "Westport Security Privatization & Weapon Detection Conflict",
+  "category": "public_safety",
+  "location": "Westport, Kansas City, MO",
+  "summary": "Ongoing tension in Kansas City's historic entertainment district over pedestrian sidewalk privatization, weapon detection screening gates, cover charges, and violent confrontations between private security guards and patrons.",
+  "date_start": "2021-06-04",
+  "date_end": null,
+  "status": "active",
+  "milestones": [
+    {
+      "timestamp": "2021-06-04 18:00",
+      "headline": "City Approves Weekend Sidewalk Privatization & Metal Detectors",
+      "description": "Westport Community Improvement District institutes perimeter metal detectors on weekend nights from 11 PM to 3 AM.",
+      "author": "andres-gutierrez",
+      "platform": "facebook",
+      "source_url": "https://www.facebook.com/andres.gutierrez/videos/666012690803",
+      "media_path": "C:/Users/admir/Desktop/videos/2021-06-04_facebook_andres-gutierrez_starting-this-weekend-those-who-plan-to-visit_666012690803.mp4",
+      "artifact_id": null
+    },
+    {
+      "timestamp": "2026-02-21 07:57",
+      "headline": "Morning Westport Corridor Police Shooting",
+      "description": "Early morning gunfire incident along the bar strip documented by local creators.",
+      "author": "cvbudd",
+      "platform": "tiktok",
+      "source_url": "https://www.tiktok.com/@cvbudd/video/7612297628537064735",
+      "media_path": null,
+      "artifact_id": null
+    },
+    {
+      "timestamp": "2026-08-11 02:30",
+      "headline": "Viral 'War Zone' Backlash & Late-Night Disorder",
+      "description": "TikTok creator @kansascitydrill uploads viral video alleging overnight chaos and deteriorating safety within the district.",
+      "author": "kansascitydrill",
+      "platform": "tiktok",
+      "source_url": "https://www.tiktok.com/@kansascitydrill/video/577130163487",
+      "media_path": "C:/Users/admir/Desktop/videos/2026-08-11_tiktok_kansascitydrill_westport-kansas-city-turnt-into-a-warzone-ove_577130163487.mp4",
+      "artifact_id": null
+    },
+    {
+      "timestamp": "2026-08-28 23:45",
+      "headline": "Private Security Guard Brawls Caught on Camera",
+      "description": "Eyewitness footage surfaces showing physical brawls involving contracted district security guards outside bar entrances.",
+      "author": "Trash Media Group",
+      "platform": "facebook",
+      "source_url": "https://www.facebook.com/TrashMediaGroup/videos/699868198332317",
+      "media_path": null,
+      "artifact_id": null
+    }
+  ],
+  "artifact_ids": [],
+  "media_files": [
+    "C:/Users/admir/Desktop/videos/2021-06-04_facebook_andres-gutierrez_starting-this-weekend-those-who-plan-to-visit_666012690803.mp4",
+    "C:/Users/admir/Desktop/videos/2026-08-11_tiktok_kansascitydrill_westport-kansas-city-turnt-into-a-warzone-ove_577130163487.mp4"
+  ],
+  "created_at": "2026-10-01T00:28:10.219762+00:00",
+  "updated_at": "2026-10-01T00:28:10.222273+00:00"
+}

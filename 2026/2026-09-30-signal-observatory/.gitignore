@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg
+.venv/
+venv/
+
+# Environment
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Data (raw data tracked selectively)
+data/raw/*
+!data/raw/.gitkeep
+data/media/*
+!data/media/.gitkeep
+data/normalized/*
+!data/normalized/.gitkeep
+data/derived/*
+!data/derived/.gitkeep
+data/indexes/*
+!data/indexes/.gitkeep
+
+# Runs contain potentially large outputs
+runs/*/
+!runs/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
+
+# DuckDB
+*.duckdb
+*.duckdb.wal
+
+# uv
+uv.lock

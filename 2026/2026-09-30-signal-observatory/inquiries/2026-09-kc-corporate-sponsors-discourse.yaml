@@ -1,0 +1,48 @@
+inquiry:
+  id: "2026-09-kc-corporate-sponsors-discourse"
+  question: >
+    What public sentiment, controversy, civic debate, and resident discourse
+    surround major corporate entities attending the KCPS State of the Schools breakfast:
+    Evergy, Honeywell / KCNSC, JE Dunn Construction, and the Kansas City Royals?
+  mode: investigate
+
+  scope:
+    time:
+      since: "2023-01-01T00:00:00Z"
+      until: "2026-09-30T23:59:59Z"
+    geography:
+      - "Kansas City"
+      - "Kansas City MO"
+      - "Jackson County MO"
+    languages: ["en"]
+
+  seeds:
+    terms:
+      - "Evergy rate hike Kansas City"
+      - "Evergy public service commission Missouri"
+      - "Kansas City National Security Campus Honeywell expansion"
+      - "PeaceWorks KC Honeywell KCNSC protest"
+      - "JE Dunn Kansas City construction bond"
+      - "Kansas City Royals stadium tax Crossroads Crown Center"
+    hashtags: []
+    accounts: []
+    subreddits:
+      - "kansascity"
+
+  platforms:
+    - youtube
+    - reddit
+    - web
+
+  budget:
+    max_queries: 15
+    max_artifacts: 150
+    max_media_downloads: 10
+
+  preservation: candidates
+
+  analysis:
+    cluster_narratives: true
+    track_media_spread: false
+    identify_firsthand_sources: true
+    find_contradictions: true

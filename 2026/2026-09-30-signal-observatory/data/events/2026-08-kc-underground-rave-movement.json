@@ -1,0 +1,61 @@
+{
+  "id": "2026-08-kc-underground-rave-movement",
+  "title": "Kansas City Underground Rave & Latin Electronic Decentralization",
+  "category": "cultural",
+  "location": "West Bottoms & East Crossroads, Kansas City, MO",
+  "summary": "Following the closure of legacy clubs, KC's underground dance community decentralizes into industrial warehouse raves, open-air block parties (NOMADA / Barraca), sub-basement DIY spaces (Farewell, Nighthawk), and a surging Latin rave movement.",
+  "date_start": "2025-11-28",
+  "date_end": null,
+  "status": "active",
+  "milestones": [
+    {
+      "timestamp": "2025-11-28 22:00",
+      "headline": "El Desmadre Launches 'Midwest's Biggest Latin Rave' in KC",
+      "description": "Latin EDM and hard reggaeton rave movement packs halls across KC, fusing tech-house and tribal beats.",
+      "author": "eldesmadreparty",
+      "platform": "tiktok",
+      "source_url": "https://www.tiktok.com/@eldesmadreparty/video/7577831125704363319",
+      "media_path": "C:/Users/admir/Desktop/videos/2025-11-28_tiktok_eldesmadreparty_kansas-city-tomorrow-the-midwests-biggest-lat_125704363319.mp4",
+      "artifact_id": null
+    },
+    {
+      "timestamp": "2026-03-02 21:30",
+      "headline": "Ravers Document Subcultural Surge Post-Riot Room",
+      "description": "Eyewitness raver video confirms booming underground attendance: 'In case u didn't know the rave scene in KC is very much alive.'",
+      "author": "xhvlinax",
+      "platform": "tiktok",
+      "source_url": "https://www.tiktok.com/@xhvlinax/video/7612500426209889566",
+      "media_path": "C:/Users/admir/Desktop/videos/2026-03-02_tiktok_xhvlinax_incase-u-didnt-know-the-rave-scene-in-kc-is-v_426209889566.mp4",
+      "artifact_id": null
+    },
+    {
+      "timestamp": "2026-07-29 23:00",
+      "headline": "NOMADA Block Party: Azzecca Live Set",
+      "description": "Over 1,000 ravers fill the industrial corridor for a 1-hour underground set by international selector Azzecca.",
+      "author": "NOMADA",
+      "platform": "youtube",
+      "source_url": "https://www.youtube.com/watch?v=uyRJ5L-xIJg",
+      "media_path": "C:/Users/admir/Desktop/videos/2026-07-29_youtube_nomada_azzecca-live-from-the-nomada-block-party-kans_uyRJ5L-xIJg.mp4",
+      "artifact_id": null
+    },
+    {
+      "timestamp": "2026-08-15 23:30",
+      "headline": "Barraca Recap: Osunlade Industrial Warehouse Set",
+      "description": "Deep house pioneer Osunlade headlines Barraca in KC with full custom sound and visual rigging.",
+      "author": "NOMADA",
+      "platform": "youtube",
+      "source_url": "https://www.youtube.com/watch?v=747X9bVoFys",
+      "media_path": "C:/Users/admir/Desktop/videos/2026-09-09_youtube_nomada_barraca-recap-osunlade-august-2026-kansas-cit_747X9bVoFys.mp4",
+      "artifact_id": null
+    }
+  ],
+  "artifact_ids": [],
+  "media_files": [
+    "C:/Users/admir/Desktop/videos/2025-11-28_tiktok_eldesmadreparty_kansas-city-tomorrow-the-midwests-biggest-lat_125704363319.mp4",
+    "C:/Users/admir/Desktop/videos/2026-03-02_tiktok_xhvlinax_incase-u-didnt-know-the-rave-scene-in-kc-is-v_426209889566.mp4",
+    "C:/Users/admir/Desktop/videos/2026-07-29_youtube_nomada_azzecca-live-from-the-nomada-block-party-kans_uyRJ5L-xIJg.mp4",
+    "C:/Users/admir/Desktop/videos/2026-09-09_youtube_nomada_barraca-recap-osunlade-august-2026-kansas-cit_747X9bVoFys.mp4"
+  ],
+  "created_at": "2026-10-01T00:28:10.222273+00:00",
+  "updated_at": "2026-10-01T00:28:10.223279+00:00"
+}

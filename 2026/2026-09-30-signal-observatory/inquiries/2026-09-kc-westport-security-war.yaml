@@ -1,0 +1,53 @@
+inquiry:
+  id: "2026-09-kc-westport-security-war"
+  question: >
+    What firsthand experiences, security conflicts, weapon screening disputes,
+    bouncer altercations, and resident grievances exist around the late-night
+    pedestrian security checkpoints, metal detectors, and curfew enforcement
+    in Westport, Kansas City?
+  mode: investigate
+
+  scope:
+    time:
+      since: "2023-01-01T00:00:00Z"
+      until: "2026-09-30T23:59:59Z"
+    geography:
+      - "Westport Kansas City"
+      - "Midtown Kansas City"
+      - "Westport Rd and Pennsylvania Ave"
+    languages: ["en"]
+
+  seeds:
+    terms:
+      - "Westport security checkpoint Kansas City"
+      - "Westport metal detectors pedestrian"
+      - "Westport Kansas City bouncers"
+      - "Westport late night curfew violence"
+      - "Westport screening fee"
+      - "Westport Kansas City fight"
+      - "Kelly's Westport security"
+      - "Buzzard Beach Westport drama"
+    hashtags: []
+    accounts: []
+    subreddits:
+      - "kansascity"
+
+  platforms:
+    - citizen
+    - reviews
+    - reddit
+    - youtube
+    - web
+
+  budget:
+    max_queries: 12
+    max_artifacts: 100
+    max_media_downloads: 3
+
+  preservation: candidates
+
+  analysis:
+    cluster_narratives: true
+    track_media_spread: true
+    identify_firsthand_sources: true
+    find_contradictions: true
