@@ -17,7 +17,7 @@ flowchart TD
         CCD_Mem["NCES CCD LEA Membership (FS052)"]
         Census_F33["Census / NCES F-33 School District Finance Survey"]
         SAIPE["Census SAIPE School District Child Poverty"]
-        EDFacts["EDFacts IDEA (FS002) & EL (FS141)"]
+        CRDC["Civil Rights Data Collection (CRDC) IDEA & LEP"]
     end
 
     subgraph State["State Administrative Registries"]
@@ -39,7 +39,7 @@ flowchart TD
 
     Census_F33 --> Demand_Panel
     SAIPE --> Demand_Panel
-    EDFacts --> Demand_Panel
+    CRDC --> Demand_Panel
 ```
 
 ---
@@ -97,6 +97,8 @@ Rigorous inspection of the 21-year panel identified three major measurement disc
 | **2015–2016** | KS | Gardner Edgerton USD 231 | `2006420` | All staffing lines unpopulated | Tagged `flag_missing_key_staff` |
 | **2016–2019** | KS & MO | All Metro LEAs | Multiple | `student_support_staff_fte` = 0.0 | Tagged `flag_zero_student_support` |
 | **2024–2025** | KS | All Kansas LEAs | Multiple | Assistant Principals omitted from SCHADM | Tagged `flag_schadm_underreported_2425` |
+
+*Note on 2015–16 Missing Staffing Reconstruction:* For cumulative 10-year fiscal counterfactual trajectories (Phase 4), 2015–16 staffing for Olathe and Gardner Edgerton is linearly interpolated between clean CCD endpoints and validated against state personnel records (saved as an auditable artifact in `data/processed/kansas_2015_16_reconstruction.csv`). Un-interpolated 9-year totals are also reported.
 
 ---
 

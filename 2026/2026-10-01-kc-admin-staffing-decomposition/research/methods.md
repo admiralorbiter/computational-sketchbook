@@ -58,13 +58,13 @@ $$\Delta CORSUP_i = \alpha + \beta_1 \Delta \text{Teachers}_{100, i} + \beta_2 \
 - **Estimation:** Models 10-year growth directly between 2014–15 and 2023–24 clean endpoints ($N = 55$).
 - **Inference:** Reports both classical OLS standard errors and HC3 heteroskedasticity-robust standard errors.
 - **Sensitivity Suite:**
-  - *Model A (Baseline Count Model):* Absolute count changes (/ 100 students).
-  - *Model B (Baseline Capacity Added):* Adds 2014 initial coordinator FTE (`base_corsup_fte`) to test convergence / regression to the mean ($\beta_{\text{base}} = -0.401$).
-  - *Model C (Demographic Share / Rate Changes):* Replaces count changes with percentage-point rate changes ($\Delta \text{PovertyRatePct}, \Delta \text{IDEAShare}, \Delta \text{LEPShare}$). Demographic rates are statistically indistinguishable from zero ($p > 0.30, R^2 = 0.317$), proving that baseline count models captured suburban scale sorting rather than student need composition shifts.
-  - *Model D (Observed CRDC Endpoints 2015–2023, $N=53$):* Evaluates growth directly from the observed 2015–16 CRDC wave without backward interpolation.
-  - *Model E (Post-2017 CRDC Wave 2017–2023, $N=55$):* Evaluates growth across the modern 6-year federal reporting regime.
+  - *Model A (Baseline Count Model):* Absolute count changes (/ 100 students). Teacher growth is directionally positive ($\beta = +11.12$, classic $p < 0.0001$, HC3 robust $p = 0.107$).
+  - *Model B (Baseline Capacity Added):* Adds 2014 initial coordinator FTE (`base_corsup_fte`) to test convergence ($\beta_{\text{base}} = -0.401$, classic $p = 0.052$). Under HC3 robust inference, SE is 0.641 ($p = 0.531$, 95% CI [-1.66, +0.85]), consistent with convergence but not robustly distinguishable from zero.
+  - *Model C (Demographic Share / Rate Changes):* Replaces count changes with percentage-point rate changes ($\Delta \text{PovertyRatePct}, \Delta \text{IDEAShare}, \Delta \text{LEPShare}$). Demographic rates show no detectable independent effect ($p > 0.30$, $R^2 = 0.317$), indicating that baseline count models captured geographic scale sorting rather than student need composition shifts.
+  - *Model D (Observed CRDC Endpoints 2015–2023, $N=53$):* Evaluates growth directly from observed 2015–16 CRDC wave without backward projection ($R^2 = 0.748$; teacher coefficient is sensitive to start year: $\beta = +1.15, p = 0.814$).
+  - *Model E (Post-2017 CRDC Wave 2017–2023, $N=55$):* Evaluates growth across modern post-2017 federal reporting regime ($R^2 = 0.654, \beta = +10.84, p = 0.055$).
 - **Leave-One-District-Out (LODO) Influence Diagnostics:** Refits Model A omitting each district in turn to quantify leverage (identifying Shawnee Mission, KCKPS, and Olathe as key suburban/urban drivers).
-- **Grouped Shapley Accounting with 500-Draw Bootstrap:** Decomposes $R^2$ into Teacher Scale Growth (27.7% [95% CI: 5.0%, 53.3%]), Student Need Shifts (66.2% [95% CI: 37.3%, 88.0%]), and State Jurisdiction (6.1% [95% CI: 2.2%, 28.2%]).
+- **Grouped Shapley Accounting with 500-Draw Bootstrap:** Decomposes $R^2$ into Teacher Scale Growth (27.7% [95% CI: 5.0%, 53.3%]), Student Need Shifts (66.2% [95% CI: 37.3%, 88.0%]), and State Jurisdiction (6.1% [95% CI: 2.2%, 28.2%]). In the 4-group specification, Baseline Capacity accounts for 6.8% [95% CI: 1.0%, 27.4%].
 
 ### Perspective C: Peer Expected-Level Model & Outlier Sampling
 $$\hat{Y}_{it}^{\text{peer}} = \hat{\mu} + \hat{\gamma}_{\text{state} \times \text{year}} + \mathbf{X}_{it}' \hat{\boldsymbol{\beta}}_{\text{peer}}$$
@@ -73,7 +73,7 @@ $$\hat{Y}_{it}^{\text{peer}} = \hat{\mu} + \hat{\gamma}_{\text{state} \times \te
 - **Model 3 (CORSUP):** Conditioned on `teachers_100`.
 - **Model 4 (Combined Footprint):** Conditioned on `teachers_100`.
 - **Diagnostics:** Computes **externally studentized residuals** ($t_i$) and scale-normalized residual intensities (FTE per 100 teachers, per school, and per 1,000 pupils).
-- **Priority Outlier Threshold:** Identified as districts with $t_{it} > +1.5$ for $\ge 3$ consecutive school years.
+- **Priority Outlier Threshold:** Identified as districts with $t_{it} > +1.5$ for $\ge 3$ school years (6 unique districts detected, 4 prioritized for qualitative board audit).
 
 ---
 
@@ -84,16 +84,16 @@ To determine whether non-classroom staffing shifts are financially material, Pha
 ### Parameter Matrix (FY 2024 State Filings)
 - **Kansas:** Sourced from KSDE SO66 reports. Total coordinator compensation = **$99,450.00** ($76,500 base + 30.0% benefits). Mandatory employer marginal fringe on raises = **21.22%** (KPERS retirement 12.57% + Death & Disability 1.00% + FICA/Medicare 7.65%; divisor = 1.2122).
 - **Missouri:** Sourced from MO DESE Core Data / MOSIS. Total coordinator compensation = **$93,600.00** ($72,000 base + 30.0% benefits). Mandatory employer marginal fringe on raises = **15.95%** (PSRS retirement 14.50% + Medicare 1.45%; divisor = 1.1595).
-- **Reconstruction:** Kansas 2015–16 reporting omissions (Olathe USD 233 and Gardner Edgerton USD 231) are reconstructed via linear interpolation documented in `data/processed/kansas_2015_16_reconstruction.csv`.
+- **Reconstruction:** Kansas 2015–16 reporting omissions (Olathe USD 233 and Gardner Edgerton USD 231) are linearly interpolated between clean CCD endpoints and validated against state personnel records (documented in `data/processed/kansas_2015_16_reconstruction.csv`).
 
 ### Counterfactual Scenarios
 1. **Counterfactual 1 (Coordinator Intensity Rollback):**
    - Evaluates the annual expenditure released if coordinator intensity were maintained at the 2014–15 regional baseline (2.41 per 100 teachers).
    - Applied state-specifically: Releases **$21,645,003.97 annually** in 2023–24 (217.81 FTE).
-   - 10-year cumulative absorption: **$73,295,927.92** (725.86 FTE-years); 9-year clean un-interpolated sum: **$68,630,927.50** (679.39 FTE-years).
+   - 10-year cumulative absorption: **$72,296,352.01** (725.86 FTE-years); 9-year clean un-interpolated sum: **$67,674,988.62** (679.39 FTE-years). Baseline expenditure savings in 2014–15 and 2018–19 are strictly $0.00.
 2. **Counterfactual 2 (Positive Peer Deviation Trimming):**
    - Evaluates hypothetical savings from trimming positive residuals down to regression conditional means ($Y_{it} > \hat{Y}_{it}^{\text{peer}}$).
    - Releases **$41,737,693.51 annually** across 360.87 FTE in 2023–24.
 3. **Counterfactual 3 (Reallocation into Classroom Teacher Pay):**
    - Distinguishes **Gross Employer Compensation Equivalent** ($\text{Savings} / N_{\text{teachers}}$) from **Feasible Base Salary Raise** ($\text{Savings} / [N_{\text{teachers}} \times (1 + \text{MarginalFringe})]$).
-   - Demonstrates that for intensive coaching districts like Shawnee Mission USD 512, coordinator rollback funds a **+$4,117.30 base salary raise (+7.7% on base pay)** per teacher or **97.4 additional classroom teachers**.
+   - Demonstrates that for intensive coaching districts like Shawnee Mission USD 512, coordinator rollback funds a **+$4,117.30 base salary raise (+7.7% on base pay)** per teacher or **136.0 additional classroom teachers** funded at total compensation ($68,514).

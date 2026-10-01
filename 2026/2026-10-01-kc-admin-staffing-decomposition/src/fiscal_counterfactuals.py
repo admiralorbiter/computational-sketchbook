@@ -139,6 +139,7 @@ def simulate_counterfactual_1_rollback(
 
         target_tot = t_tot * base_ratio_overall
         surplus_tot = c_tot - target_tot
+        s_reg = max(0.0, surplus_tot)
 
         target_ks = t_ks * base_ratio_overall
         target_mo = t_mo * base_ratio_overall
@@ -146,10 +147,19 @@ def simulate_counterfactual_1_rollback(
         surplus_ks = c_ks - target_ks
         surplus_mo = c_mo - target_mo
 
-        # Exact state-specific pricing
-        savings_ks = surplus_ks * comp_ks
-        savings_mo = surplus_mo * comp_mo
-        net_cohort_savings = max(0.0, savings_ks + savings_mo)
+        pos_ks = max(0.0, surplus_ks)
+        pos_mo = max(0.0, surplus_mo)
+        denom = pos_ks + pos_mo
+
+        # Proportional allocation of actual net regional reductions to states with positive surplus
+        if s_reg > 1e-6 and denom > 0:
+            red_ks = s_reg * (pos_ks / denom)
+            red_mo = s_reg * (pos_mo / denom)
+        else:
+            red_ks = 0.0
+            red_mo = 0.0
+
+        net_cohort_savings = red_ks * comp_ks + red_mo * comp_mo
 
         # Gross asymmetric trimming savings (sum of positive district deviations)
         gross_trimmed_savings = 0.0
@@ -168,8 +178,8 @@ def simulate_counterfactual_1_rollback(
             "actual_coordinators_fte": round(c_tot, 2),
             "baseline_target_coordinators_fte": round(target_tot, 2),
             "net_surplus_coordinators_fte": round(surplus_tot, 2),
-            "ks_surplus_coordinators_fte": round(surplus_ks, 2),
-            "mo_surplus_coordinators_fte": round(surplus_mo, 2),
+            "reduction_ks_fte": round(red_ks, 2),
+            "reduction_mo_fte": round(red_mo, 2),
             "net_cohort_annual_cost_savings": round(net_cohort_savings, 2),
             "gross_trimmed_annual_cost_savings": round(gross_trimmed_savings, 2),
             "flag_reconstructed_ks_2015_16": is_reconstructed
@@ -493,12 +503,12 @@ This report investigates the fiscal stakes of non-classroom workforce expansion:
 The empirical answer is **yes, with profound geographic concentration**:
 1. **At the Metropolitan Scale:**
    - Rolling back coordinator intensity to its 2014 per-teacher ratio (2.41 per 100 teachers) releases **${latest_net_savings:,.2f} annually** across the 55 regular districts, representing **{latest_surplus_fte:.2f} FTE positions** in {latest_sy}.
-   - Cumulatively over the 2014–2024 decade (with 2015–16 reconstructed from state records in `data/processed/kansas_2015_16_reconstruction.csv`), above-baseline coordinator staffing absorbed **{cum_surplus_fte:.2f} FTE-years** and **${cum_net_savings:,.2f}** in operating expenditures (or **{clean_9yr_fte:.2f} FTE-years** and **${clean_9yr_savings:,.2f}** across the 9 un-interpolated clean school years).
+   - Cumulatively over the 2014–2024 decade (with 2015–16 linearly interpolated between clean CCD endpoints and validated against state personnel records in `data/processed/kansas_2015_16_reconstruction.csv`), above-baseline coordinator staffing absorbed **{cum_surplus_fte:.2f} FTE-years** and **${cum_net_savings:,.2f}** in operating expenditures (or **{clean_9yr_fte:.2f} FTE-years** and **${clean_9yr_savings:,.2f}** across the 9 un-interpolated clean school years).
    - Hypothetically capping all supervisory categories (building principals, central administrators, and instructional coordinators) at regression-predicted peer conditional means releases **${tot_peer_savings:,.2f} annually** ({tot_peer_fte:.2f} FTE).
 2. **At the District Level (The Asymmetric Realities):**
-   - For an average district, coordinator growth is modest (~0.5% to 1.5% of budget).
-   - However, for the **top quartile of administrative and coaching intensifiers**, alternative staffing allocations are **financially monumental**:
-     - In **Shawnee Mission Public Schools (USD 512)**, rolling back coordinators to its own 2014 baseline releases **${smsd['cf1_own_rollback_savings']:,.2f} annually**—equivalent to a gross employer compensation investment of **${smsd['cf1_own_gross_comp_equiv']:,.2f} per teacher**, which supports a **feasible base salary raise of +${smsd['cf1_own_feasible_base_raise']:,.2f} per teacher (+{smsd['cf1_own_pct_raise_on_base']:.1f}% on base pay)** after paying mandatory employer pension (KPERS 12.57% + D&D 1.00%) and FICA/Medicare taxes (7.65%). Alternatively, that payroll could fund **{smsd['cf1_own_teachers_funded']:.1f} additional classroom teachers** at the Kansas state average compensation.
+   - For many stable or exurban districts, coordinator staffing remained flat or minimal.
+   - However, for **selected high-intensity districts**, alternative staffing allocations are **financially monumental**:
+     - In **Shawnee Mission Public Schools (USD 512)**, rolling back coordinators to its own 2014 baseline releases **${smsd['cf1_own_rollback_savings']:,.2f} annually**—equivalent to a gross employer compensation investment of **${smsd['cf1_own_gross_comp_equiv']:,.2f} per teacher**, which supports a **feasible base salary raise of +${smsd['cf1_own_feasible_base_raise']:,.2f} per teacher (+{smsd['cf1_own_pct_raise_on_base']:.1f}% on base pay)** after paying mandatory employer pension (KPERS 12.57% + D&D 1.00%) and FICA/Medicare taxes (7.65%). Alternatively, that payroll could fund **{smsd['cf1_own_teachers_funded']:.1f} additional classroom teachers** at the Kansas state average teacher total compensation ($68,514).
      - In **Kansas City Public Schools USD 500 (KCKPS)**, trimming positive building administrative deviations to peer expectations frees **${kck['cf2_all_supervisory_savings']:,.2f} annually**, equivalent to a gross compensation investment of **${kck['cf2_all_gross_comp_equiv']:,.2f} per teacher** and a feasible base raise of **+${kck['cf2_all_feasible_base_raise']:,.2f} (+{kck['cf2_all_pct_raise_on_base']:.1f}%)**.
      - In **Fort Osage R-I (MO)**, trimming positive central executive administration deviations to peer expectations releases **${fo['cf2_all_supervisory_savings']:,.2f} annually**, providing a feasible base salary raise of **+${fo['cf2_all_feasible_base_raise']:,.2f} (+{fo['cf2_all_pct_raise_on_base']:.1f}%)**.
      - In **Raytown C-2 (MO)**, trimming positive coordinator and central administrative deviations releases **${ray['cf2_all_supervisory_savings']:,.2f} annually**, providing a feasible base salary raise of **+${ray['cf2_all_feasible_base_raise']:,.2f} (+{ray['cf2_all_pct_raise_on_base']:.1f}%)**.
@@ -534,7 +544,7 @@ Salary parameters are derived from official state filings documented in `data/pr
 
 In 2014–15, the balanced cohort employed **501.30 coordinators** across **20,801.04 classroom teachers** (2.41 per 100 teachers). By 2023–24, coordinators reached **756.82 FTE** (+51.0%), while classroom teachers grew to **22,365.68 FTE** (+7.5%). Had coordinator intensity remained at 2.41 per 100 teachers, the cohort would have employed **539.01 coordinators** in 2023–24.
 
-Pricing is performed state-specifically: **$99,450.00** for Kansas positions and **$93,600.00** for Missouri positions.
+Pricing is performed state-specifically: **$99,450.00** for Kansas positions and **$93,600.00** for Missouri positions. When net regional surplus is positive, reductions are allocated proportionally among states exhibiting positive deviations above the regional intensity ratio, guaranteeing that baseline expenditure savings are strictly $0 in years with zero or negative regional surplus.
 
 ### Table 2: Annual Trajectory of Coordinator Rollback Counterfactual
 

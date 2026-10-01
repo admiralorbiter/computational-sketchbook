@@ -22,11 +22,12 @@ Our Phase 2 econometric panel modeling addresses **why** this growth occurred by
    - Central administration exhibits near-zero elasticity with respect to within-district enrollment and school construction ($R^2_{\text{within}} = 0.019$).
    - District-level executive line management represents a rigid organizational structure that neither expands rapidly during growth nor contracts during enrollment decline.
 3. **Instructional Coordinators (`CORSUP`) Scale with Classroom Teachers:**
-   - Within districts, coordinator staffing has a strong, positive relationship with teacher staffing: for every 100 classroom teachers added, districts add approximately **+5.12 coordinators** ($p = 0.0027, 95\% \text{ CI } [1.79, 8.45]$).
-   - In the 10-year long-difference growth model, teacher growth is strongly predictive ($\beta = +11.12, p < 0.0001$; HC3 robust SE: 6.90, $p = 0.107$), while student demographic count changes (poverty, IDEA, LEP) are negatively correlated with coordinator expansion ($\beta_{\text{poverty}} = -0.96, p = 0.0000$).
+   - Within districts, coordinator staffing exhibits a strong and statistically significant relationship with teacher staffing: for every 100 classroom teachers added, districts add approximately **+5.12 coordinators** ($p = 0.0027, 95\% \text{ CI } [1.79, 8.45]$).
+   - In the 10-year long-difference growth model, teacher growth is directionally positive ($\beta = +11.12$), though less precise under HC3 heteroskedasticity-robust inference ($p = 0.107$) and sensitive to start year (Model D 2015–2023: $\beta = +1.15, p = 0.814$; Model E 2017–2023: $\beta = +10.84, p = 0.055$). Student demographic count changes (poverty, IDEA, LEP) are negatively correlated with coordinator expansion in the count specification ($\beta_{\text{poverty}} = -0.96, p = 0.0000$).
 4. **Substantive Growth Interpretation (Count Sorting vs. Demographic Rates):**
    - In the baseline count model, **66.2% of explained variance** is attributed to the Student Need Shifts group. However, our sensitivity family reveals that this variance reflects **geographic student count sorting** (rapid enrollment and teacher expansion in suburban Johnson and Clay county districts while urban core districts like KCKPS and KCPS already operated high baseline coordinator structures in 2014) rather than increases in student need rates.
-   - When demographic changes are specified as **percentage-point share/rate changes** (Model C), the demographic variables have **near-zero predictive power** ($p > 0.30$), and $R^2$ collapses from 0.692 to 0.317. Demographic composition shifts did not drive coordinator expansion; hiring scaled with classroom teacher volume and suburban expansion.
+   - When demographic changes are specified as **percentage-point share/rate changes** (Model C), the demographic variables show **no detectable independent effect** ($p > 0.30$: poverty $p = 0.336$, IDEA $p = 0.849$, LEP $p = 0.601$), and $R^2$ drops from 0.692 to 0.317. While this does not definitively prove student need has zero impact, it demonstrates that demographic composition shifts cannot explain the coordinator expansion; hiring scaled primarily with classroom teacher volume and suburban expansion.
+   - Baseline capacity in Model B exhibits a negative point estimate ($\beta = -0.401$), consistent with convergence, but is not robustly distinguishable from zero under HC3 inference ($p = 0.531$).
    - Bootstrap resampling (500 draws) reveals wide confidence intervals on Shapley shares: Teacher Scale Growth accounts for **27.7% [95% CI: 5.0%, 53.3%]**, Student Need Shifts account for **66.2% [95% CI: 37.3%, 88.0%]**, and State Jurisdiction accounts for **6.1% [95% CI: 2.2%, 28.2%]**.
 
 ---
@@ -82,11 +83,11 @@ To evaluate structural stability, we test five distinct formulations across spec
 
 | Model Specification | Key Regressors | $R^2$ | $N$ | Substantive Diagnostic |
 | :--- | :--- | :---: | :---: | :--- |
-| **Model A: Baseline Count Model** | $\Delta \text{Teachers}_{100}, \Delta \text{Poverty}_{100}, \Delta \text{IDEA}_{100}, \Delta \text{LEP}_{100}, \text{KS}$ | 0.692 | 55 | Scale & geographic sorting capture 69% of variance; HC3 SE on teachers = 6.90. |
-| **Model B: Baseline 2014 Capacity** | Model A + `base_corsup_fte` (2014 initial coordinators) | 0.764 | 55 | Demonstrates convergence ($\beta_{\text{base}} = -0.401, p = 0.052$): early intensifiers added fewer net positions. |
-| **Model C: Demographic Rates (% pts)** | $\Delta \text{Teachers}_{100}, \Delta \text{PovertyRate}, \Delta \text{IDEAShare}, \Delta \text{LEPShare}, \text{Base}$ | 0.317 | 55 | Demographic rate changes are statistically indistinguishable from zero ($p > 0.30$), proving sorting drove counts. |
-| **Model D: Observed CRDC Endpoints** | Model B estimated on 2015–16 $\to$ 2023–24 observed CRDC wave | 0.748 | 53 | High stability without backward projection of special populations. |
-| **Model E: Post-2017 CRDC Wave** | Model B estimated on 2017–18 $\to$ 2023–24 observed CRDC wave | 0.814 | 55 | Robust across modern post-2017 federal reporting regime. |
+| **Model A: Baseline Count Model** | $\Delta \text{Teachers}_{100}, \Delta \text{Poverty}_{100}, \Delta \text{IDEA}_{100}, \Delta \text{LEP}_{100}, \text{KS}$ | 0.692 | 55 | Scale & geographic sorting capture 69% of variance; HC3 SE on teachers = 6.90 ($p = 0.107$). |
+| **Model B: Baseline 2014 Capacity** | Model A + `base_corsup_fte` (2014 initial coordinators) | 0.764 | 55 | Point estimate consistent with convergence ($\beta_{\text{base}} = -0.401$), but HC3 robust SE is 0.641 ($p = 0.531$, 95% CI [-1.66, 0.85]). |
+| **Model C: Demographic Rates (% pts)** | $\Delta \text{Teachers}_{100}, \Delta \text{PovertyRate}, \Delta \text{IDEAShare}, \Delta \text{LEPShare}, \text{Base}$ | 0.317 | 55 | Demographic rate changes show no detectable independent effect ($p > 0.30$: poverty $p = 0.336$, IDEA $p = 0.849$, LEP $p = 0.601$), while teacher scaling remains directionally positive. |
+| **Model D: Observed CRDC Endpoints** | Model B estimated on 2015–16 $\to$ 2023–24 observed CRDC wave | 0.748 | 53 | Un-interpolated federal wave endpoints; teacher coefficient is sensitive to start year ($\beta = 1.15, p = 0.814$). |
+| **Model E: Post-2017 CRDC Wave** | Model B estimated on 2017–18 $\to$ 2023–24 observed CRDC wave | 0.654 | 55 | Modern post-2017 federal reporting regime ($R^2 = 0.654$); teacher scaling coefficient is positive and marginally significant ($\beta = +10.84, p = 0.055$). |
 
 ### 3.3 Leave-One-District-Out (LODO) Influence Analysis (Top 5 Districts)
 
@@ -110,7 +111,7 @@ Decomposing the $R^2$ across covariate families with 500-draw bootstrap confiden
 | **Teacher Scale Growth** | `d_teachers_100` | **0.1919** | **27.7%** | [5.0%, 53.3%] | Core instructional scale expansion |
 | **State Jurisdiction** | `is_ks` | **0.0420** | **6.1%** | [2.2%, 28.2%] | Bi-state institutional/statutory divergence |
 
-*In the 4-group specification including Baseline Capacity ($R^2 = 0.764$), Baseline Capacity accounts for **6.8% [95% CI: 0.9%, 26.5%]**, confirming mean reversion among early intensifiers.*
+*In the 4-group specification including Baseline Capacity ($R^2 = 0.764$), Baseline Capacity accounts for **6.8% [95% CI: 1.0%, 27.4%]**, consistent with convergence among early intensifiers.*
 
 ---
 
@@ -128,7 +129,11 @@ $$\hat{Y}_{it}^{\text{peer}} = \hat{\mu} + \hat{\gamma}_{\text{state} \times \te
 Outliers are identified using **externally studentized residuals** ($t_i$) and scale-normalized residual intensities:
 
 ### Audit Selection Criterion:
-A district is classified as a **High-Priority Board Audit Target** if its externally studentized residual exceeds $+1.5$ standard deviations above peer expectation for three or more consecutive school years ($t_{it} > +1.5, \ge 3 \text{ consecutive years}$).
+A district is classified as a persistent outlier if its externally studentized residual exceeds $+1.5$ standard deviations above peer expectation for three or more school years ($t_{it} > +1.5, \ge 3 \text{ years}$).
+
+Across all four peer models, **6 unique districts** met this persistent outlier rule: Kansas City USD 500, Shawnee Mission USD 512, Fort Osage R-I, Raytown C-2, Belton 124, and Independence 30. From these detected outliers, **four priority districts** were selected for in-depth Phase 3 document and board audit: Shawnee Mission USD 512 (large suburban coordinator expansion), Kansas City USD 500 (extraordinary building-level administrative and coordinator intensity), Fort Osage R-I (persistent central line overhead), and Raytown C-2 (persistent central line overhead and layered curriculum supervision).
+
+Notably, **Kansas City USD 500 (KCKPS)** emerges as an extraordinary multi-dimensional outlier: in addition to building administration ($t_{\text{max}} = 10.11$, +1.28 admins/school), KCKPS is an enormous persistent instructional coordinator outlier in Model 3, maintaining a mean unexplained deviation of **+56.3 FTE coordinators** above peer expectations ($t_{\text{max}} = 6.98$, +3.79 coordinators per 100 teachers) across **10 out of 10 panel years**. KCKPS thus operates with the highest combined supervisory intensity in the metropolitan area.
 
 | Model Outcome | District Name | State | Mean Actual FTE | Mean Peer Expected FTE | Unexplained Deviation ($\Delta$ FTE) | Max Studentized $z$ | Mean Residual Rate | High-Deviation Years | Audit Priority |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -147,5 +152,5 @@ A district is classified as a **High-Priority Board Audit Target** if its extern
 
 ## 5. Summary & Hand-off to Phase 3 and Phase 4
 
-1. **Phase 3 Qualitative Audit:** Investigates board minutes and organizational charts for the persistent peer outliers identified above (Shawnee Mission USD 512, Kansas City USD 500, Raytown C-2, Fort Osage R-I).
+1. **Phase 3 Qualitative Audit:** Investigates board minutes and organizational charts for the four prioritized persistent peer outliers (Shawnee Mission USD 512, Kansas City USD 500, Raytown C-2, Fort Osage R-I) from among the 6 detected outlier districts.
 2. **Phase 4 Fiscal Simulation:** Evaluates the dollar stakes of coordinator rollback and peer-expected capping, applying exact state-specific compensation pricing ($99,450 for KS, $93,600 for MO) and statutory employer marginal fringe benefit loads (21.22% for KS, 15.95% for MO).

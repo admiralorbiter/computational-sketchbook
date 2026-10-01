@@ -47,12 +47,12 @@ def test_phase3_claim_evidence_integrity():
     claims_path = OUTPUTS_DIR / "phase3_claim_evidence.csv"
     assert claims_path.exists(), f"Missing {claims_path}"
     df = pd.read_csv(claims_path)
-    assert len(df) == 15, f"Expected 15 qualitative claims, got {len(df)}"
+    assert len(df) == 16, f"Expected 16 qualitative claims, got {len(df)}"
     
     # Check claim IDs
     expected_ids = {
         "SMSD-01", "SMSD-02", "SMSD-03", "SMSD-04",
-        "KCK-01", "KCK-02", "KCK-03", "KCK-04", "KCK-05",
+        "KCK-01", "KCK-02", "KCK-03", "KCK-04", "KCK-05", "KCK-06",
         "RAY-01", "RAY-02", "RAY-03",
         "FO-01", "FO-02", "FO-03"
     }
@@ -115,6 +115,13 @@ def test_sensitivity_family_and_lodo_diagnostics():
         d_row = mod_c[mod_c["variable"] == demog_var].iloc[0]
         assert d_row["robust_p_value_hc3"] > 0.30, f"{demog_var} p-value {d_row['robust_p_value_hc3']} <= 0.30"
 
+    # Verify every sensitivity model's R2 appears dynamically in Table 3.2 of econometric report
+    econ_report = (OUTPUTS_DIR / "econometric_decomposition_report.md").read_text(encoding="utf-8")
+    for spec, grp in df_sens.groupby("specification"):
+        r2_val = grp["r2"].iloc[0]
+        r2_str = f"{r2_val:.3f}"
+        assert r2_str in econ_report, f"R2 {r2_str} for {spec} not found in econometric report Table 3.2"
+
     # LODO diagnostics
     lodo_path = OUTPUTS_DIR / "long_difference_lodo_diagnostics.csv"
     assert lodo_path.exists(), f"Missing {lodo_path}"
@@ -153,18 +160,25 @@ def test_studentized_residuals_and_outliers():
     assert outliers_path.exists(), f"Missing {outliers_path}"
     df = pd.read_csv(outliers_path)
     
-    # Check KCKPS (Model 1 SCHADM)
+    # Check KCKPS (Model 1 SCHADM & Model 3 CORSUP)
     kck_sch = df[(df["nces_lea_id"].astype(str) == "2007950") & (df["model"] == "Model 1: SCHADM (Peer)")].iloc[0]
     assert abs(kck_sch["max_stud_resid"] - 10.11) < 0.1
+    kck_cor = df[(df["nces_lea_id"].astype(str) == "2007950") & (df["model"] == "Model 3: CORSUP (Peer)")].iloc[0]
+    assert abs(kck_cor["max_stud_resid"] - 6.98) < 0.1
+    assert abs(kck_cor["mean_unexplained_deviation_fte"] - 56.3) < 0.2
     
     # Check SMSD (Model 3 CORSUP)
     smsd_cor = df[(df["nces_lea_id"].astype(str) == "2011640") & (df["model"] == "Model 3: CORSUP (Peer)")].iloc[0]
     assert abs(smsd_cor["max_stud_resid"] - 5.46) < 0.1
 
-    # Check Fort Osage (Model 2 LEAADM)
+    # Check Fort Osage (Model 2 LEAADM) - verify 2.65 in table and report
     fo_lea = df[(df["nces_lea_id"].astype(str) == "2912290") & (df["model"] == "Model 2: LEAADM (Peer)")].iloc[0]
-    assert abs(fo_lea["max_stud_resid"] - 2.65) < 0.1
+    assert abs(fo_lea["max_stud_resid"] - 2.65) < 0.01
     assert fo_lea["high_deviation_years_count"] == 10
+    
+    audit_text = (OUTPUTS_DIR / "board_document_audit_report.md").read_text(encoding="utf-8")
+    assert "2.65" in audit_text
+    assert "3.78" not in audit_text, "Found stale 3.78 residual for Fort Osage in audit report"
 
     # Check Raytown (Model 2 LEAADM)
     ray_lea = df[(df["nces_lea_id"].astype(str) == "2926070") & (df["model"] == "Model 2: LEAADM (Peer)")].iloc[0]
@@ -204,6 +218,7 @@ def test_fiscal_counterfactuals_sync():
     # Verify these exact dollar strings in fiscal_materiality_report.md and README.md
     fiscal_report = (OUTPUTS_DIR / "fiscal_materiality_report.md").read_text(encoding="utf-8")
     readme_text = (ROOT / "README.md").read_text(encoding="utf-8")
+    methods_text = (ROOT / "research" / "methods.md").read_text(encoding="utf-8")
     
     assert "$9,319,621.35" in fiscal_report and "$9,319,621.35" in readme_text
     assert "$13,077,668.38" in fiscal_report and "$13,077,668.38" in readme_text
@@ -215,12 +230,25 @@ def test_fiscal_counterfactuals_sync():
     assert "+$1,861.09" in fiscal_report and "+$1,861.09" in readme_text
     assert "+$744.00" in fiscal_report and "+$744.00" in readme_text
 
+    # Assert 136.0 teachers funded across all docs, and stale 97.4 is absent
+    for doc_name, doc_text in [("fiscal_materiality_report.md", fiscal_report),
+                               ("README.md", readme_text),
+                               ("methods.md", methods_text)]:
+        assert "136.0" in doc_text, f"136.0 teachers not found in {doc_name}"
+        assert "97.4" not in doc_text, f"Stale 97.4 teachers found in {doc_name}"
+
 
 def test_annual_trajectory_and_peer_summary_sync():
     traj_path = OUTPUTS_DIR / "fiscal_materiality_annual_trajectory.csv"
     assert traj_path.exists(), f"Missing {traj_path}"
     df_traj = pd.read_csv(traj_path)
     
+    # 2014-15 and 2018-19 strictly $0.00
+    row_15 = df_traj[df_traj["school_year"] == "2014-2015"].iloc[0]
+    assert row_15["net_cohort_annual_cost_savings"] == 0.0
+    row_19 = df_traj[df_traj["school_year"] == "2018-2019"].iloc[0]
+    assert row_19["net_cohort_annual_cost_savings"] == 0.0
+
     # 2023-24 row (exact state pricing: KS 215.00 * 99450 + MO 2.81 * 93600 = $21,645,003.97)
     row_24 = df_traj[df_traj["school_year"] == "2023-2024"].iloc[0]
     assert abs(row_24["net_surplus_coordinators_fte"] - 217.81) < 0.1
@@ -231,7 +259,8 @@ def test_annual_trajectory_and_peer_summary_sync():
     readme_text = (ROOT / "README.md").read_text(encoding="utf-8")
     
     assert "$21,645,003.97" in traj_text and "$21,645,003.97" in readme_text
-    assert "$73,295,927.92" in traj_text and "$73,295,927.92" in readme_text
+    assert "$72,296,352.01" in traj_text and "$72,296,352.01" in readme_text
+    assert "$67,674,988.62" in traj_text and "$67,674,988.62" in readme_text
     assert "725.86 FTE-years" in traj_text or "725.86 FTE-Yrs" in traj_text
     assert "725.86 FTE-years" in readme_text
     

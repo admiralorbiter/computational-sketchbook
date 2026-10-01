@@ -15,12 +15,12 @@ This report investigates the fiscal stakes of non-classroom workforce expansion:
 The empirical answer is **yes, with profound geographic concentration**:
 1. **At the Metropolitan Scale:**
    - Rolling back coordinator intensity to its 2014 per-teacher ratio (2.41 per 100 teachers) releases **$21,645,003.97 annually** across the 55 regular districts, representing **217.81 FTE positions** in 2023-2024.
-   - Cumulatively over the 2014–2024 decade (with 2015–16 reconstructed from state records in `data/processed/kansas_2015_16_reconstruction.csv`), above-baseline coordinator staffing absorbed **725.86 FTE-years** and **$73,295,927.92** in operating expenditures (or **679.39 FTE-years** and **$68,630,927.50** across the 9 un-interpolated clean school years).
+   - Cumulatively over the 2014–2024 decade (with 2015–16 linearly interpolated between clean CCD endpoints and validated against state personnel records in `data/processed/kansas_2015_16_reconstruction.csv`), above-baseline coordinator staffing absorbed **725.86 FTE-years** and **$72,296,352.01** in operating expenditures (or **679.39 FTE-years** and **$67,674,988.62** across the 9 un-interpolated clean school years).
    - Hypothetically capping all supervisory categories (building principals, central administrators, and instructional coordinators) at regression-predicted peer conditional means releases **$41,737,693.51 annually** (360.87 FTE).
 2. **At the District Level (The Asymmetric Realities):**
-   - For an average district, coordinator growth is modest (~0.5% to 1.5% of budget).
-   - However, for the **top quartile of administrative and coaching intensifiers**, alternative staffing allocations are **financially monumental**:
-     - In **Shawnee Mission Public Schools (USD 512)**, rolling back coordinators to its own 2014 baseline releases **$9,319,621.35 annually**—equivalent to a gross employer compensation investment of **$4,990.99 per teacher**, which supports a **feasible base salary raise of +$4,117.30 per teacher (+7.7% on base pay)** after paying mandatory employer pension (KPERS 12.57% + D&D 1.00%) and FICA/Medicare taxes (7.65%). Alternatively, that payroll could fund **136.0 additional classroom teachers** at the Kansas state average compensation.
+   - For many stable or exurban districts, coordinator staffing remained flat or minimal.
+   - However, for **selected high-intensity districts**, alternative staffing allocations are **financially monumental**:
+     - In **Shawnee Mission Public Schools (USD 512)**, rolling back coordinators to its own 2014 baseline releases **$9,319,621.35 annually**—equivalent to a gross employer compensation investment of **$4,990.99 per teacher**, which supports a **feasible base salary raise of +$4,117.30 per teacher (+7.7% on base pay)** after paying mandatory employer pension (KPERS 12.57% + D&D 1.00%) and FICA/Medicare taxes (7.65%). Alternatively, that payroll could fund **136.0 additional classroom teachers** at the Kansas state average teacher total compensation ($68,514).
      - In **Kansas City Public Schools USD 500 (KCKPS)**, trimming positive building administrative deviations to peer expectations frees **$13,077,668.38 annually**, equivalent to a gross compensation investment of **$9,699.02 per teacher** and a feasible base raise of **+$8,001.17 (+15.0%)**.
      - In **Fort Osage R-I (MO)**, trimming positive central executive administration deviations to peer expectations releases **$748,351.13 annually**, providing a feasible base salary raise of **+$1,861.09 (+3.8%)**.
      - In **Raytown C-2 (MO)**, trimming positive coordinator and central administrative deviations releases **$478,434.88 annually**, providing a feasible base salary raise of **+$744.00 (+1.5%)**.
@@ -56,23 +56,23 @@ Salary parameters are derived from official state filings documented in `data/pr
 
 In 2014–15, the balanced cohort employed **501.30 coordinators** across **20,801.04 classroom teachers** (2.41 per 100 teachers). By 2023–24, coordinators reached **756.82 FTE** (+51.0%), while classroom teachers grew to **22,365.68 FTE** (+7.5%). Had coordinator intensity remained at 2.41 per 100 teachers, the cohort would have employed **539.01 coordinators** in 2023–24.
 
-Pricing is performed state-specifically: **$99,450.00** for Kansas positions and **$93,600.00** for Missouri positions.
+Pricing is performed state-specifically: **$99,450.00** for Kansas positions and **$93,600.00** for Missouri positions. When net regional surplus is positive, reductions are allocated proportionally among states exhibiting positive deviations above the regional intensity ratio, guaranteeing that baseline expenditure savings are strictly $0 in years with zero or negative regional surplus.
 
 ### Table 2: Annual Trajectory of Coordinator Rollback Counterfactual
 
 | School Year | Classroom Teachers (FTE) | Actual Coordinators (FTE) | Target Coordinators (FTE) | Net Surplus Coordinators (FTE) | Net Cohort Cost Savings | Reconstructed Flag |
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|
-| **2014-2015** | 20,801.04 | 501.30 | 501.30 | **+0.00** | **$149,144.31** | Clean |
-| **2015-2016** | 20,926.80 | 550.80 | 504.33 | **+46.47** | **$4,665,000.42** | *(Reconstructed)* |
-| **2016-2017** | 21,105.42 | 530.98 | 508.64 | **+22.34** | **$2,340,252.62** | Clean |
-| **2017-2018** | 21,635.08 | 543.15 | 521.40 | **+21.75** | **$2,304,434.66** | Clean |
-| **2018-2019** | 21,788.12 | 523.64 | 525.09 | **+-1.45** | **$105,772.14** | Clean |
-| **2019-2020** | 22,068.06 | 598.70 | 531.83 | **+66.87** | **$6,799,515.90** | Clean |
+| **2014-2015** | 20,801.04 | 501.30 | 501.30 | **+0.00** | **$0.00** | Clean |
+| **2015-2016** | 20,926.80 | 550.80 | 504.33 | **+46.47** | **$4,621,363.39** | *(Reconstructed)* |
+| **2016-2017** | 21,105.42 | 530.98 | 508.64 | **+22.34** | **$2,222,162.13** | Clean |
+| **2017-2018** | 21,635.08 | 543.15 | 521.40 | **+21.75** | **$2,163,021.49** | Clean |
+| **2018-2019** | 21,788.12 | 523.64 | 525.09 | **+-1.45** | **$0.00** | Clean |
+| **2019-2020** | 22,068.06 | 598.70 | 531.83 | **+66.87** | **$6,649,736.83** | Clean |
 | **2020-2021** | 22,191.68 | 641.39 | 534.81 | **+106.58** | **$10,580,683.69** | Clean |
-| **2021-2022** | 22,318.42 | 647.79 | 537.87 | **+109.92** | **$11,139,262.07** | Clean |
-| **2022-2023** | 22,665.27 | 681.80 | 546.23 | **+135.57** | **$13,566,858.14** | Clean |
+| **2021-2022** | 22,318.42 | 647.79 | 537.87 | **+109.92** | **$10,931,694.31** | Clean |
+| **2022-2023** | 22,665.27 | 681.80 | 546.23 | **+135.57** | **$13,482,686.20** | Clean |
 | **2023-2024** | 22,365.68 | 756.82 | 539.01 | **+217.81** | **$21,645,003.97** | Clean |
-| **10-Year Cumulative** | — | — | — | **+725.86 FTE-Yrs** | **$73,295,927.92** | *(9-Yr Clean: 679.39 FTE-Yrs / $68,630,927.50)* |
+| **10-Year Cumulative** | — | — | — | **+725.86 FTE-Yrs** | **$72,296,352.01** | *(9-Yr Clean: 679.39 FTE-Yrs / $67,674,988.62)* |
 
 ---
 

@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA_PATH = ROOT / "data" / "processed" / "district_demand_year.parquet"
 df = pd.read_parquet(DATA_PATH)
 
-def test_peer_model(dep_var, indep_vars, model_name, start_year="2014-2015", end_year="2023-2024"):
+def run_peer_model(dep_var, indep_vars, model_name, start_year="2014-2015", end_year="2023-2024"):
     sub = df[(df["school_year"] >= start_year) & (df["school_year"] <= end_year) & (df["is_balanced_presence_cohort_55"] == 1)].copy()
     sub["enrollment_1k"] = sub["enrollment_total"] / 1000.0
     sub["teachers_100"] = sub["teachers_k12_fte"] / 100.0
@@ -60,7 +60,8 @@ def test_peer_model(dep_var, indep_vars, model_name, start_year="2014-2015", end
         mean_rate = sub_dist["resid_rate"].mean()
         print(f"  {r['lea_name'][:25]:25s} ({r['state']}): {r['high_years']} yrs, mean_res={mean_res:+5.1f} FTE, max_stud_z={max_stud:+5.2f}, mean_rate={mean_rate:+5.2f} {rate_name}")
 
-test_peer_model("school_administrators_fte", ["operating_schools_count", "enrollment_1k"], "Model 1: SCHADM (Peer)")
-test_peer_model("lea_administrators_fte", ["enrollment_1k", "operating_schools_count"], "Model 2: LEAADM (Peer)")
-test_peer_model("instructional_coordinators_fte", ["teachers_100"], "Model 3: CORSUP (Peer)")
-test_peer_model("central_mgmt_and_coordinators_fte", ["teachers_100"], "Model 4: Combined (Peer)")
+run_peer_model("school_administrators_fte", ["operating_schools_count", "enrollment_1k"], "Model 1: SCHADM (Peer)")
+run_peer_model("lea_administrators_fte", ["enrollment_1k", "operating_schools_count"], "Model 2: LEAADM (Peer)")
+run_peer_model("instructional_coordinators_fte", ["teachers_100"], "Model 3: CORSUP (Peer)")
+run_peer_model("central_mgmt_and_coordinators_fte", ["teachers_100"], "Model 4: Combined (Peer)")
+
