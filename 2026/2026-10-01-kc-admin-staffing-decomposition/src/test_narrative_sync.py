@@ -261,8 +261,15 @@ def test_annual_trajectory_and_peer_summary_sync():
     assert "$21,645,003.97" in traj_text and "$21,645,003.97" in readme_text
     assert "$72,296,352.01" in traj_text and "$72,296,352.01" in readme_text
     assert "$67,674,988.62" in traj_text and "$67,674,988.62" in readme_text
-    assert "725.86 FTE-years" in traj_text or "725.86 FTE-Yrs" in traj_text
-    assert "725.86 FTE-years" in readme_text
+    assert "727.31" in traj_text and "727.31" in readme_text
+    assert "680.84" in traj_text and "680.84" in readme_text
+    assert "725.86" in traj_text and "725.86" in readme_text
+    assert "679.39" in traj_text and "679.39" in readme_text
+
+    # Softened demographic composition narrative
+    econ_report = (OUTPUTS_DIR / "econometric_decomposition_report.md").read_text(encoding="utf-8")
+    assert "Changes in demographic composition show no detectable independent association" in econ_report
+    assert "Changes in demographic composition show no detectable independent association" in readme_text
     
     # Peer summary
     peer_sum_path = OUTPUTS_DIR / "fiscal_materiality_peer_summary.csv"

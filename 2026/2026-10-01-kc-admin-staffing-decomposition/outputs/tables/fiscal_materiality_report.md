@@ -15,7 +15,7 @@ This report investigates the fiscal stakes of non-classroom workforce expansion:
 The empirical answer is **yes, with profound geographic concentration**:
 1. **At the Metropolitan Scale:**
    - Rolling back coordinator intensity to its 2014 per-teacher ratio (2.41 per 100 teachers) releases **$21,645,003.97 annually** across the 55 regular districts, representing **217.81 FTE positions** in 2023-2024.
-   - Cumulatively over the 2014–2024 decade (with 2015–16 linearly interpolated between clean CCD endpoints and validated against state personnel records in `data/processed/kansas_2015_16_reconstruction.csv`), above-baseline coordinator staffing absorbed **725.86 FTE-years** and **$72,296,352.01** in operating expenditures (or **679.39 FTE-years** and **$67,674,988.62** across the 9 un-interpolated clean school years).
+   - Cumulatively over the 2014–2024 decade (with 2015–16 linearly interpolated between clean CCD endpoints and validated against state personnel records in `data/processed/kansas_2015_16_reconstruction.csv`), above-baseline coordinator staffing represented **727.31 rollback-eligible FTE-years** and **$72,296,352.01** in operating expenditures (or **680.84 rollback-eligible FTE-years** and **$67,674,988.62** across the 9 un-interpolated clean school years; net cumulative deviation from baseline was 725.86 FTE-years).
    - Hypothetically capping all supervisory categories (building principals, central administrators, and instructional coordinators) at regression-predicted peer conditional means releases **$41,737,693.51 annually** (360.87 FTE).
 2. **At the District Level (The Asymmetric Realities):**
    - For many stable or exurban districts, coordinator staffing remained flat or minimal.
@@ -72,7 +72,9 @@ Pricing is performed state-specifically: **$99,450.00** for Kansas positions and
 | **2021-2022** | 22,318.42 | 647.79 | 537.87 | **+109.92** | **$10,931,694.31** | Clean |
 | **2022-2023** | 22,665.27 | 681.80 | 546.23 | **+135.57** | **$13,482,686.20** | Clean |
 | **2023-2024** | 22,365.68 | 756.82 | 539.01 | **+217.81** | **$21,645,003.97** | Clean |
-| **10-Year Cumulative** | — | — | — | **+725.86 FTE-Yrs** | **$72,296,352.01** | *(9-Yr Clean: 679.39 FTE-Yrs / $67,674,988.62)* |
+| **10-Year Cumulative** | — | — | — | **+727.31 FTE-Yrs** | **$72,296,352.01** | *(9-Yr Clean: 680.84 FTE-Yrs / $67,674,988.62)* |
+
+*Note on Cumulative FTE Accounting:* Cumulative rollback-eligible FTE-years (+727.31 reconstructed, +680.84 clean 9-year) pairs directly with the fiscal savings calculation, truncating zero/negative surplus years at $0. Net cumulative deviation from baseline across all 10 years (subtracting the -1.45 FTE deficit in 2018–19) was +725.86 FTE-years (+679.39 clean).
 
 ---
 

@@ -444,12 +444,14 @@ def generate_synthesis_report(
     latest_sy = df_annual_rollback.iloc[-1]["school_year"]
     latest_surplus_fte = df_annual_rollback.iloc[-1]["net_surplus_coordinators_fte"]
     latest_net_savings = df_annual_rollback.iloc[-1]["net_cohort_annual_cost_savings"]
-    cum_surplus_fte = df_annual_rollback["net_surplus_coordinators_fte"].sum()
+    cum_rollback_fte = (df_annual_rollback["reduction_ks_fte"] + df_annual_rollback["reduction_mo_fte"]).sum()
+    cum_net_surplus_fte = df_annual_rollback["net_surplus_coordinators_fte"].sum()
     cum_net_savings = df_annual_rollback["net_cohort_annual_cost_savings"].sum()
 
     # 9-year clean sum omitting 2015-16
     df_clean_9yr = df_annual_rollback[df_annual_rollback["school_year"] != "2015-2016"]
-    clean_9yr_fte = df_clean_9yr["net_surplus_coordinators_fte"].sum()
+    clean_9yr_rollback_fte = (df_clean_9yr["reduction_ks_fte"] + df_clean_9yr["reduction_mo_fte"]).sum()
+    clean_9yr_net_surplus_fte = df_clean_9yr["net_surplus_coordinators_fte"].sum()
     clean_9yr_savings = df_clean_9yr["net_cohort_annual_cost_savings"].sum()
 
     # Peer summary numbers
@@ -503,7 +505,7 @@ This report investigates the fiscal stakes of non-classroom workforce expansion:
 The empirical answer is **yes, with profound geographic concentration**:
 1. **At the Metropolitan Scale:**
    - Rolling back coordinator intensity to its 2014 per-teacher ratio (2.41 per 100 teachers) releases **${latest_net_savings:,.2f} annually** across the 55 regular districts, representing **{latest_surplus_fte:.2f} FTE positions** in {latest_sy}.
-   - Cumulatively over the 2014–2024 decade (with 2015–16 linearly interpolated between clean CCD endpoints and validated against state personnel records in `data/processed/kansas_2015_16_reconstruction.csv`), above-baseline coordinator staffing absorbed **{cum_surplus_fte:.2f} FTE-years** and **${cum_net_savings:,.2f}** in operating expenditures (or **{clean_9yr_fte:.2f} FTE-years** and **${clean_9yr_savings:,.2f}** across the 9 un-interpolated clean school years).
+   - Cumulatively over the 2014–2024 decade (with 2015–16 linearly interpolated between clean CCD endpoints and validated against state personnel records in `data/processed/kansas_2015_16_reconstruction.csv`), above-baseline coordinator staffing represented **{cum_rollback_fte:.2f} rollback-eligible FTE-years** and **${cum_net_savings:,.2f}** in operating expenditures (or **{clean_9yr_rollback_fte:.2f} rollback-eligible FTE-years** and **${clean_9yr_savings:,.2f}** across the 9 un-interpolated clean school years; net cumulative deviation from baseline was {cum_net_surplus_fte:.2f} FTE-years).
    - Hypothetically capping all supervisory categories (building principals, central administrators, and instructional coordinators) at regression-predicted peer conditional means releases **${tot_peer_savings:,.2f} annually** ({tot_peer_fte:.2f} FTE).
 2. **At the District Level (The Asymmetric Realities):**
    - For many stable or exurban districts, coordinator staffing remained flat or minimal.
@@ -559,7 +561,9 @@ Pricing is performed state-specifically: **$99,450.00** for Kansas positions and
             f"| **${r['net_cohort_annual_cost_savings']:,.2f}** | {rec_tag} |\n"
         )
 
-    report += f"""| **10-Year Cumulative** | — | — | — | **+{cum_surplus_fte:,.2f} FTE-Yrs** | **${cum_net_savings:,.2f}** | *(9-Yr Clean: {clean_9yr_fte:.2f} FTE-Yrs / ${clean_9yr_savings:,.2f})* |
+    report += f"""| **10-Year Cumulative** | — | — | — | **+{cum_rollback_fte:,.2f} FTE-Yrs** | **${cum_net_savings:,.2f}** | *(9-Yr Clean: {clean_9yr_rollback_fte:.2f} FTE-Yrs / ${clean_9yr_savings:,.2f})* |
+
+*Note on Cumulative FTE Accounting:* Cumulative rollback-eligible FTE-years (+{cum_rollback_fte:,.2f} reconstructed, +{clean_9yr_rollback_fte:,.2f} clean 9-year) pairs directly with the fiscal savings calculation, truncating zero/negative surplus years at $0. Net cumulative deviation from baseline across all 10 years (subtracting the -1.45 FTE deficit in 2018–19) was +{cum_net_surplus_fte:,.2f} FTE-years (+{clean_9yr_net_surplus_fte:,.2f} clean).
 
 ---
 

@@ -90,7 +90,7 @@ To determine whether non-classroom staffing shifts are financially material, Pha
 1. **Counterfactual 1 (Coordinator Intensity Rollback):**
    - Evaluates the annual expenditure released if coordinator intensity were maintained at the 2014–15 regional baseline (2.41 per 100 teachers).
    - Applied state-specifically: Releases **$21,645,003.97 annually** in 2023–24 (217.81 FTE).
-   - 10-year cumulative absorption: **$72,296,352.01** (725.86 FTE-years); 9-year clean un-interpolated sum: **$67,674,988.62** (679.39 FTE-years). Baseline expenditure savings in 2014–15 and 2018–19 are strictly $0.00.
+   - 10-year cumulative absorption: **$72,296,352.01** (727.31 rollback-eligible FTE-years; net cumulative deviation: 725.86 FTE-years); 9-year clean un-interpolated sum: **$67,674,988.62** (680.84 rollback-eligible FTE-years; net clean deviation: 679.39 FTE-years). Baseline expenditure savings in 2014–15 and 2018–19 are strictly $0.00.
 2. **Counterfactual 2 (Positive Peer Deviation Trimming):**
    - Evaluates hypothetical savings from trimming positive residuals down to regression conditional means ($Y_{it} > \hat{Y}_{it}^{\text{peer}}$).
    - Releases **$41,737,693.51 annually** across 360.87 FTE in 2023–24.
