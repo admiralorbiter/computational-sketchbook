@@ -65,25 +65,26 @@ Our analysis reconstructs the non-classroom supervisory architecture across six 
 graph TD
     subgraph Kansas City USD 500 (KCKPS)
         KCK_HQ["Lean Central Line: 6.0 FTE (-3.0 below peer exp)"] --> KCK_SCH["Dense Building Administration: 141.0 FTE<br>3.28 admins/school (+55.2 FTE above peers)<br>Formal Disciplinary & Evaluative Authority"]
-        KCK_SCH --> KCK_CO["106.8 FTE Coordinators & Interventionists<br>Funded via permanent Title I, III, & At-Risk Categoricals"]
+        KCK_SCH --> KCK_CO["106.8 FTE Coordinators & Interventionists<br>(+57.9 FTE above peers in 2023–24; 10-yr mean +56.3 FTE)<br>Supported via Title I, III, & At-Risk Categoricals"]
     end
 
     subgraph Shawnee Mission USD 512 (SMSD)
         SMSD_HQ["Central Line: 13.0 FTE (peer expected)"] --> SMSD_SCH["Building Admins: 95.5 FTE (2.12/school)"]
         SMSD_HQ --> SMSD_DEP["Curriculum & Instruction Division"]
-        SMSD_DEP --> SMSD_CO["123.7 FTE Coaching Overlay (+59.0 FTE above peers)<br>~50 Non-Evaluative Building Coaches<br>Scaled via ESSER III -> Facing Local Operating Freeze"]
+        SMSD_DEP --> SMSD_CO["123.7 FTE Coaching Overlay<br>(+59.0 FTE above peers in 2023–24; 10-yr mean +17.9 FTE)<br>~50 Non-Evaluative Building Coaches<br>Scaled via ESSER III -> Local Operating Freeze"]
     end
 ```
 
 ### 4.1 Shawnee Mission USD 512 — The Specialized Coaching Overlay
 - **Structural Philosophy:** The district layered a dense instructional coaching and technology integration overlay on top of classroom teachers without altering traditional administrative command structures.
 - **Authority Dynamics:** Instructional coaches operate outside the administrative evaluation hierarchy. They do not evaluate teachers or issue disciplinary reprimands; their role is strictly collegial and pedagogical (planning, model teaching, data analysis).
-- **Vulnerability:** After scaling coaches with ESSER III relief, SMSD initially absorbed positions into local operating funds for 2024–25 (116.04 FTE). However, broader districtwide fiscal pressures (enrollment decline, special education shortfalls, and fund balance preservation) led the district in March 2026 to deny all proposed staffing additions, placing an attrition freeze on coaching.
+- **Vulnerability & Staffing Trajectory:** After scaling coaches with ESSER III relief, SMSD initially absorbed positions into local operating funds for 2024–25 (116.04 FTE). However, broader districtwide fiscal pressures (enrollment decline, special education shortfalls, and fund balance preservation) led the district in March 2026 to deny all proposed staffing additions, placing an attrition freeze on coaching.
 
 ### 4.2 Kansas City USD 500 (KCKPS) — Distributed School Supervision
 - **Structural Philosophy:** Rather than keeping authority at headquarters or creating an advisory coaching layer, KCKPS pushed administrative authority directly into school buildings. It created the densest building-level supervisory architecture in the region (141.0 FTE / 3.28 admins per school across 43 schools).
 - **Authority Dynamics:** Assistant Principals and Deans of Students exercise direct evaluative, disciplinary, and operational authority to address urgent attendance, behavioral, and student trauma challenges on-site.
-- **Vulnerability:** Because KCKPS has supported its 100+ coordinator footprint through permanent federal Title I, Title III, IDEA, and Kansas State At-Risk headcount weightings across the entire decade, it experienced zero post-ESSER contraction. Coordinator FTE held at 120.96 FTE in 2024–25 (+13.3%).
+- **Institutional Persistence:** In the focal cases, structures supported by ongoing categorical or local funding were more persistent after ESSER, while districts with larger temporary-relief-supported expansions showed greater retrenchment or fiscal constraint. Funding mechanism remains an institutional explanation rather than a causal estimate. In KCKPS, where 90–120 coordinator FTE had been maintained across the decade under Title I, Title III, IDEA, and State At-Risk categoricals, observed staffing rose from 106.80 to 120.96 FTE (+13.3%) in 2024–25.
+
 
 ### 4.3 Functional vs. Locus Breakdown
 - **Functional Definition:**

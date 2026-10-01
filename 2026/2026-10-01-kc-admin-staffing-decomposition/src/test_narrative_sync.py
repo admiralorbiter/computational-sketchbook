@@ -333,8 +333,25 @@ def test_phase5_coordinator_functional_decomposition():
 
     # Verify epistemic basis requirements across all 29 rows
     valid_basis = {"documented_count", "inferred_allocation", "residual_allocation"}
-    assert set(df_recon["fte_basis"].unique()).issubset(valid_basis)
-    assert (df_recon["fte_basis"] == "residual_allocation").sum() == 4
+    assert set(df_recon["fte_basis"].unique()) == valid_basis
+
+    basis_counts = df_recon["fte_basis"].value_counts().to_dict()
+    basis_fte = df_recon.groupby("fte_basis")["estimated_fte_2023_24"].sum().round(2).to_dict()
+
+    assert basis_counts["documented_count"] == 18
+    assert basis_counts["inferred_allocation"] == 7
+    assert basis_counts["residual_allocation"] == 4
+
+    assert abs(basis_fte["documented_count"] - 244.80) < 0.01
+    assert abs(basis_fte["inferred_allocation"] - 105.00) < 0.01
+    assert abs(basis_fte["residual_allocation"] - 30.56) < 0.01
+
+    tot_sample_fte = df_recon["estimated_fte_2023_24"].sum()
+    assert abs(tot_sample_fte - 380.36) < 0.01
+    assert abs(basis_fte["documented_count"] / tot_sample_fte - 0.6436) < 0.001
+    assert abs(basis_fte["inferred_allocation"] / tot_sample_fte - 0.2761) < 0.001
+    assert abs(basis_fte["residual_allocation"] / tot_sample_fte - 0.0803) < 0.001
+
     for col in ["source_document", "source_url", "source_year", "page_or_item", "evidence_type", "confidence"]:
         assert col in df_recon.columns
         assert df_recon[col].notna().all()
@@ -390,7 +407,34 @@ def test_phase5_coordinator_functional_decomposition():
     assert abs(corsup_by_dist["Raytown C-2"] - 16.75) < 0.01
     assert abs(corsup_by_dist["Lee's Summit R-VII"] - 11.00) < 0.01
 
-    # Verify key architectural metrics in report text
+    # Verify apples-to-apples Model 3 peer residuals (2023-24)
+    res_path = OUTPUTS_DIR / "peer_expected_staffing_residuals.csv"
+    assert res_path.exists(), f"Missing {res_path}"
+    df_res = pd.read_csv(res_path)
+    m3_24 = df_res[(df_res["school_year"] == "2023-2024") & (df_res["model_name"] == "Model 3: CORSUP (Peer)")]
+    smsd_m3 = m3_24[m3_24["nces_lea_id"].astype(str) == "2011640"].iloc[0]
+    kck_m3 = m3_24[m3_24["nces_lea_id"].astype(str) == "2007950"].iloc[0]
+
+    assert abs(smsd_m3["residual_peer"] - 58.98) < 0.05
+    assert abs(smsd_m3["stud_resid"] - 5.46) < 0.05
+    assert abs(kck_m3["residual_peer"] - 57.86) < 0.05
+    assert abs(kck_m3["stud_resid"] - 5.32) < 0.05
+
+    # Verify 10-year longitudinal persistence (persistent_peer_outliers.csv)
+    outliers_path = OUTPUTS_DIR / "persistent_peer_outliers.csv"
+    df_out = pd.read_csv(outliers_path)
+    smsd_out = df_out[(df_out["nces_lea_id"].astype(str) == "2011640") & (df_out["model"] == "Model 3: CORSUP (Peer)")].iloc[0]
+    kck_out = df_out[(df_out["nces_lea_id"].astype(str) == "2007950") & (df_out["model"] == "Model 3: CORSUP (Peer)")].iloc[0]
+
+    assert abs(smsd_out["mean_unexplained_deviation_fte"] - 17.9) < 0.1
+    assert smsd_out["high_deviation_years_count"] == 5
+    assert abs(smsd_out["max_stud_resid"] - 5.46) < 0.05
+
+    assert abs(kck_out["mean_unexplained_deviation_fte"] - 56.3) < 0.1
+    assert kck_out["high_deviation_years_count"] == 10
+    assert abs(kck_out["max_stud_resid"] - 6.98) < 0.05
+
+    # Verify key architectural metrics and nuanced institutional text in report
     assert "123.7" in report_text
     assert "106.8" in report_text
     assert "141.0" in report_text
@@ -402,6 +446,12 @@ def test_phase5_coordinator_functional_decomposition():
     assert "1,348.35" in report_text
     assert "52.9%" in report_text
     assert "41.5%" in report_text
+    assert "+58.98 FTE" in report_text
+    assert "+57.86 FTE" in report_text
+    assert "5.32" in report_text
+    assert "17.9 FTE" in report_text
+    assert "Funding mechanism remains an institutional explanation rather than a causal estimate" in report_text
+
 
 
 def test_manifest_provenance_and_checksums():

@@ -1,0 +1,57 @@
+{
+  "district_name": "Olathe USD 233",
+  "state": "KS",
+  "nces_lea_id": 2010140,
+  "total_documented_fte": 64.0,
+  "roles_count": 3,
+  "extracted_roles": [
+    {
+      "job_title": "Instructional Learning Facilitator",
+      "functional_category": "Instructional Coaching",
+      "work_location": "School Building",
+      "estimated_fte_2023_24": 38.0,
+      "fte_basis": "documented_count",
+      "primary_funding_source": "ESSER II/III & Local Operating",
+      "funding_mechanism": "Federal Relief & General Fund",
+      "source_document": "Olathe BOE Staffing Presentations & Title II-A / ESSER Allocations",
+      "source_url": "https://www.olatheschools.org/discover-olathe/board-of-education",
+      "source_year": "2022-2024",
+      "page_or_item": "Building Instructional Learning Facilitators across 36 elementary and 10 middle schools",
+      "evidence_type": "Board Minutes / Budget Profile",
+      "confidence": "MEDIUM-HIGH",
+      "role_description": "Building coaches providing professional development, peer observation, and coaching cycles to classroom teachers across 52 schools."
+    },
+    {
+      "job_title": "Curriculum & Assessment Coordinator",
+      "functional_category": "Curriculum/Content",
+      "work_location": "Central Office",
+      "estimated_fte_2023_24": 18.0,
+      "fte_basis": "documented_count",
+      "primary_funding_source": "Local Operating",
+      "funding_mechanism": "General Operating Fund",
+      "source_document": "Olathe Learning Services Department Directory",
+      "source_url": "https://www.olatheschools.org/departments/learning-services",
+      "source_year": "2023-2024",
+      "page_or_item": "K-12 Subject Area Curriculum Coordinators & TYCD Testing Leads",
+      "evidence_type": "District Staff Directory",
+      "confidence": "HIGH",
+      "role_description": "Content-area specialists managing K-12 curriculum adoption, Kansas Through-Year Assessment alignment, and course frameworks."
+    },
+    {
+      "job_title": "Special Services Instructional Facilitator",
+      "functional_category": "SPED/EL Program Management",
+      "work_location": "Central Office",
+      "estimated_fte_2023_24": 8.0,
+      "fte_basis": "documented_count",
+      "primary_funding_source": "IDEA Part B / State SPED",
+      "funding_mechanism": "Federal Special Ed Grant",
+      "source_document": "Olathe Special Services Department Staffing Roster",
+      "source_url": "https://www.olatheschools.org/departments/special-services",
+      "source_year": "2023-2024",
+      "page_or_item": "Special Education Instructional Facilitators",
+      "evidence_type": "District Staff Directory",
+      "confidence": "HIGH",
+      "role_description": "Facilitators supporting autism programs, behavioral specialists, and specialized resource classrooms."
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "district_name": "Lee's Summit R-VII",
+  "state": "MO",
+  "nces_lea_id": 2918300,
+  "total_documented_fte": 11.0,
+  "roles_count": 3,
+  "extracted_roles": [
+    {
+      "job_title": "District Curriculum Coordinator",
+      "functional_category": "Curriculum/Content",
+      "work_location": "Central Office",
+      "estimated_fte_2023_24": 5.0,
+      "fte_basis": "documented_count",
+      "primary_funding_source": "Local Operating",
+      "funding_mechanism": "General Operating Budget",
+      "source_document": "LSR7 Curriculum & Instruction Department Staff Directory",
+      "source_url": "https://www.lsr7.org/departments/curriculum-instruction",
+      "source_year": "2023-2024",
+      "page_or_item": "Lean Central Team (Elementary Curriculum, Secondary STEM, Secondary Humanities, Special Programs)",
+      "evidence_type": "District Staff Directory",
+      "confidence": "HIGH",
+      "role_description": "Lean central curriculum team setting district frameworks without building coach layer."
+    },
+    {
+      "job_title": "Data & Assessment Specialist",
+      "functional_category": "Data/Assessment",
+      "work_location": "Central Office",
+      "estimated_fte_2023_24": 3.0,
+      "fte_basis": "documented_count",
+      "primary_funding_source": "Local Operating",
+      "funding_mechanism": "General Operating Budget",
+      "source_document": "LSR7 Assessment Department Staffing",
+      "source_url": "https://www.lsr7.org/departments/assessment",
+      "source_year": "2023-2024",
+      "page_or_item": "Assessment Specialists managing state testing and diagnostic data",
+      "evidence_type": "District Staff Directory",
+      "confidence": "HIGH",
+      "role_description": "Central specialists running assessment software, state reporting, and building accountability data."
+    },
+    {
+      "job_title": "Special Education Process Coordinator",
+      "functional_category": "SPED/EL Program Management",
+      "work_location": "Central / Multi-School",
+      "estimated_fte_2023_24": 3.0,
+      "fte_basis": "documented_count",
+      "primary_funding_source": "IDEA Part B",
+      "funding_mechanism": "Federal Special Ed Grant",
+      "source_document": "LSR7 Special Education Department Roster",
+      "source_url": "https://www.lsr7.org/departments/special-services",
+      "source_year": "2023-2024",
+      "page_or_item": "Special Education Compliance Process Coordinators",
+      "evidence_type": "District Staff Directory",
+      "confidence": "HIGH",
+      "role_description": "Compliance coordinators managing special education evaluation paperwork and legal placement reviews."
+    }
+  ]
+}
