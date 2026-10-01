@@ -5,9 +5,9 @@ school_year,model_name,outcome_variable,region,peer_excess_fte,districts_above_p
 2023-2024,Model 2: LEAADM (Peer),lea_administrators_fte,KS,13.37,10,19,2345943.88
 2023-2024,Model 2: LEAADM (Peer),lea_administrators_fte,MO,23.51,15,36,4033735.86
 2023-2024,Model 2: LEAADM (Peer),lea_administrators_fte,METRO,36.87,25,55,6379679.73
-2023-2024,Model 3: CORSUP (Peer),instructional_coordinators_fte,KS,97.94,6,19,9740471.48
-2023-2024,Model 3: CORSUP (Peer),instructional_coordinators_fte,MO,66.03,17,36,6180554.08
-2023-2024,Model 3: CORSUP (Peer),instructional_coordinators_fte,METRO,163.97,23,55,15921025.56
-2023-2024,Model 4: Central+Coord Footprint (Peer),central_mgmt_and_coordinators_fte,KS,103.86,5,19,10328489.37
-2023-2024,Model 4: Central+Coord Footprint (Peer),central_mgmt_and_coordinators_fte,MO,70.35,16,36,6584431.08
-2023-2024,Model 4: Central+Coord Footprint (Peer),central_mgmt_and_coordinators_fte,METRO,174.2,21,55,16912920.45
+2023-2024,Model 3: CORSUP (Peer),instructional_coordinators_fte,KS,129.81,4,19,12909241.54
+2023-2024,Model 3: CORSUP (Peer),instructional_coordinators_fte,MO,77.68,28,36,7270472.95
+2023-2024,Model 3: CORSUP (Peer),instructional_coordinators_fte,METRO,207.48,32,55,20179714.49
+2023-2024,Model 4: Central+Coord Footprint (Peer),central_mgmt_and_coordinators_fte,KS,132.44,4,19,13170934.53
+2023-2024,Model 4: Central+Coord Footprint (Peer),central_mgmt_and_coordinators_fte,MO,67.29,27,36,6298719.96
+2023-2024,Model 4: Central+Coord Footprint (Peer),central_mgmt_and_coordinators_fte,METRO,199.73,31,55,19469654.48

@@ -90,66 +90,73 @@ Rather than estimating a single aggregate administrative regression, we formulat
    *(Note: AverageSchoolSize is excluded as a collinear mechanical derivative).*
 2. **District Central Administrators (`LEAADM`) — *Primary Window: 2014–15 to 2023–24*:**
    $$\text{LEAADM}_{it} = \alpha_i + \gamma_{\text{state} \times \text{year}} + \beta_1 \text{Enrollment}_{it} + \beta_2 \text{Schools}_{it} + \varepsilon_{it}$$
-3. **Instructional Coordinators (`CORSUP`) — *Primary Growth Locus (2014–15 to 2024–25)*:**
-   $$\text{CORSUP}_{it} = \alpha_i + \gamma_{\text{state} \times \text{year}} + \beta_1 \text{Teachers}_{it} + \beta_2 \text{IEPCount}_{it} + \beta_3 \text{ELCount}_{it} + \beta_4 \text{SAIPEPovertyCount}_{it} + \sum_k \theta_k \text{CategoricalRevenue}_{it}^k + \varepsilon_{it}$$
+3. **Instructional Coordinators (`CORSUP`) — *Primary Growth Locus (2014–15 to 2023–24)*:**
+   $$\text{CORSUP}_{it} = \alpha_i + \gamma_{\text{state} \times \text{year}} + \beta_1 \text{Teachers}_{it} + \beta_2 \text{IDEA}_{it} + \beta_3 \text{LEP}_{it} + \beta_4 \text{Poverty}_{it} + \varepsilon_{it}$$
 4. **Broad Supervisory Footprint (`SCHADM + LEAADM + CORSUP`):**
    Robust aggregate ensuring that title substitution between directors and coordinators does not bias estimates.
 
-### Two Complementary Econometric Perspectives
-- **Within-District Fixed Effects Model:** Answers: *When a district's scale, student needs, or funding changed, did its staffing intensity change?* Common state-wide accountability and mandate shifts are captured in $\gamma_{\text{state} \times \text{year}}$.
-- **Peer Expected-Level Model (Hierarchical / Between-District):** Answers: *Which districts consistently maintain staffing levels above or below otherwise similar peers?*
-- **Audit Sampling Rule:** Persistent positive residuals from the peer model ($\varepsilon_{it} > +1.5 \text{ SD}$ across 3+ consecutive years) are routed to Phase 3 qualitative board-document audits.
-- **Grouped Shapley Decomposition:** Decomposes predicted coordinator growth into four covariate families (Scale & Structure, Student Need, Categorical Program Funding Load, General Operational Factors) as an explanatory accounting rather than a causal claim.
+### Demand Panel Data Documentation
+- **Poverty (`poverty_count`):** Drawn annually from the Census Small Area Income and Poverty Estimates (SAIPE).
+- **Special Populations (`crdc_interpolated_idea`, `crdc_interpolated_lep`):** Sourced from the biennial federal Civil Rights Data Collection (CRDC) with linear interpolation between survey years (covering 49.8% directly observed years), not annual EDFacts collections.
+- **Categorical Revenues:** Drawn from the Census/NCES F-33 Annual Survey of School System Finances (FY 2015 to FY 2021).
+
+### Three Complementary Econometric Perspectives
+- **Perspective A (Within-District Fixed Effects):** Answers: *When a district's scale, student demographics, or facility counts changed, did its staffing intensity change?* Clustered at the district level with State $\times$ Year fixed effects.
+- **Perspective B (10-Year Long-Difference Growth & Shapley Accounting):** Answers: *Which structural and demographic factors account for the variation in net coordinator growth ($\Delta CORSUP_i^{2014 \to 2023}$) across the balanced 55-district cohort?*
+- **Perspective C (Peer Expected-Level Model):** Answers: *Which districts consistently maintain staffing levels above or below otherwise similar peers?* Residuals ($\hat{\eta}_{it} > +1.5 \text{ SD}$ across 3+ consecutive years) define Phase 3 qualitative board-audit targets.
 
 ---
 
----
+## 5. Phase 2 Econometric Modeling & Growth Decomposition
 
-## 5. Phase 2 Econometric Modeling & Grouped Shapley Accounting
-
-To explain *why* coordinator capacity expanded while central administration remained inelastic, Phase 2 estimated four tailored structural regressions and performed a **Grouped Shapley Variance Decomposition**:
+To explain *why* coordinator capacity expanded while central administration remained inelastic, Phase 2 estimated within-district panel regressions, a 10-year long-difference growth model, and a **Grouped Shapley Variance Decomposition**:
 
 ### 5.1 Within-District Fixed Effects Regressions (Entity FE + State $\times$ Year FE, Clustered SEs)
-- **Model 1: Building Administrators (`SCHADM`):** Scales almost exclusively with physical facilities: each additional operating school adds **+1.91 administrators** ($p = 0.085$, 1 principal + ~1 AP). Enrollment scale has no independent marginal effect ($\beta = -0.86, p = 0.718$).
-- **Model 2: Central Line Administrators (`LEAADM`):** Highly inelastic ($R^2_{\text{within}} = 0.016$). Functions as rigid organizational overhead unaffected by enrollment or school counts.
-- **Model 3: Instructional Coordinators (`CORSUP`):** Scales directly with classroom teachers ($\beta = +5.12$ per 100 teachers, $p = 0.0027$; $\beta = +3.34, p = 0.0001$ with categorical controls).
-- **Model 4: Combined Footprint (`Central + CORSUP`):** Scales with teachers ($\beta = +5.63, p = 0.0033$).
+- **Model 1: Building Administrators (`SCHADM`):** Scales primarily with physical facilities: each additional operating school building adds approximately **+1.91 administrators** ($p = 0.085, 95\% \text{ CI } [-0.26, 4.07]$), suggestive of ~1 principal plus ~1 AP per school, though with marginal significance and wide confidence intervals. Marginal enrollment scale has no independent effect ($\beta = -0.86, p = 0.718$).
+- **Model 2: Central Line Administrators (`LEAADM`):** Highly inelastic ($R^2_{\text{within}} = 0.019$, $p > 0.25$ for enrollment and school counts). Functions as rigid organizational overhead unaffected by marginal changes.
+- **Model 3: Instructional Coordinators (`CORSUP`):** Scales directly with classroom teachers: districts add **+5.12 coordinators per 100 teachers** ($p = 0.0027, 95\% \text{ CI } [1.79, 8.45]$). Controlling for student demographics, demographic coefficients (poverty, IDEA, LEP) are individually statistically indistinguishable from zero ($p = 0.40, 0.18, 0.63$).
+- **Model 4: Combined Footprint (`Central + CORSUP`):** Scales strongly with classroom teachers ($\beta = +5.63 \text{ per 100 teachers}, p = 0.0033$).
 
-### 5.2 Grouped Shapley Decomposition of Coordinator Growth
-Decomposing predicted coordinator variance reveals that growth was driven primarily by macro-level instructional model shifts rather than demographic divergence:
-- **Common Temporal & State Mandates ($\gamma_{\text{state} \times \text{year}}$):** **44.6%** of explained variance.
-- **Scale & Teacher Load ($\text{Teachers}_{it}$):** **38.8%** of explained variance.
-- **Student Demographic Need (Poverty, IDEA, LEP):** **11.5%** of explained variance.
-- **Categorical Federal Revenues (Title I, IDEA):** **5.1%** of explained variance.
+### 5.2 Long-Difference Growth Model & Grouped Shapley Accounting ($N = 55, R^2 = 0.692$)
+$$\Delta CORSUP_i = -0.40 + 11.12 \Delta Teachers_{100, i} - 0.96 \Delta Poverty_{100, i} - 0.65 \Delta IDEA_{100, i} - 3.63 \Delta LEP_{100, i} + 1.50 \mathbb{I}(\text{KS})_i$$
+
+- **Teacher Scale Expansion:** Strongly predictive of coordinator growth ($\beta = +11.12, p < 0.0001$).
+- **Demographic Growth Negative Correlation:** Changes in student poverty and English learner shares exhibit statistically significant negative coefficients ($\beta_{\text{poverty}} = -0.96, p < 0.0001; \beta_{\text{lep}} = -3.63, p < 0.0001$).
+- **Substantive Mechanism:** Coordinator expansion was heavily concentrated in growing suburban districts (Shawnee Mission, Olathe, North Kansas City) that experienced falling or lower poverty and LEP shares, whereas high-need urban core districts already operated with high coordinator capacity at the 2014 baseline.
+- **Grouped Shapley Growth Variance Shares:**
+  - **Student Demographic Shifts ($\Delta Poverty, \Delta IDEA, \Delta LEP$):** **66.2%** of explained growth variance (reflecting the strong empirical sorting between demographic shifts and suburban coaching adoption).
+  - **Classroom Teacher Scale ($\Delta Teachers$):** **27.7%** of explained growth variance.
+  - **State Jurisdiction ($\mathbb{I}(\text{KS})$):** **6.1%** of explained growth variance.
+- *Methodological Note:* The Shapley decomposition provides an empirical accounting of variation in 10-year coordinator growth across districts, not a causal claim that demographic shifts or teacher counts drove that exact proportion of aggregate growth.
 
 ---
 
 ## 6. Phase 3 Board-Document Qualitative Audit for Priority Outliers
 
-Our cross-sectional **Peer Expected-Level Model** identified four persistent multi-year outliers ($z > 1.5 \text{ to } 9.0 \text{ SD}$ across 3+ consecutive years). Qualitative board-document investigations revealed:
+Our cross-sectional **Peer Expected-Level Model** identified four persistent multi-year outliers ($z > 1.5 \text{ to } 9.0 \text{ SD}$ across 3+ consecutive years). To verify the institutional mechanisms driving these statistical anomalies, all findings were registered in our structured evidence ledger ([`outputs/tables/phase3_claim_evidence.csv`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-01-kc-admin-staffing-decomposition/outputs/tables/phase3_claim_evidence.csv)), distinguishing direct administrative receipts from inferred institutional mechanisms:
 
-1. **Shawnee Mission USD 512 (KS) — The ESSER Coaching Cliff:** Peaked at **$+8.71 \text{ SD}$** (+65.2 FTE above peers). Following its 2019 Strategic Plan, SMSD utilized federal COVID relief (ESSER) in 2021 to fund ~50 new building instructional coaches, quadrupling coordinators from 27.6 to 123.7 FTE. Facing the expiration of ESSER, the district must absorb ~\$12.3M in annual coaching payroll or restructure.
-2. **Kansas City USD 500 (KS) — Decentralized Building Supervision:** Reached **$+9.09 \text{ SD}$** in building administrators (+55.2 FTE above peers, 141.0 FTE across 43 schools). KCKPS deployed assistant principals across elementary and middle schools to manage post-pandemic behavioral challenges, while maintaining an exceptionally lean central line office (6.0 FTE, -3.0 FTE below peer expectation).
-3. **Raytown C-2 (MO) — The Layered Curriculum Bureaucracy:** Maintained a persistent coordinator surplus of **$+2.23 \text{ SD}$** (+14.0 FTE) for 7 consecutive years. Raytown constructed a hyper-specialized division featuring dual Assistant Superintendents (Elementary vs. Secondary), 5 central Directors, 7 discipline-specific K–12 subject coordinators, and on-site building coaches.
-4. **Fort Osage R-I (MO) — The Top-Heavy Executive Cabinet:** Maintained an unexplained central line surplus of **$+2.65 \text{ SD}$** (+3.4 FTE) in **all 10 consecutive years**. For ~4,800 students, Fort Osage maintains 1 Superintendent, 3 Assistant Superintendents, and 3 Executive Directors, offset by operating with below-average building-level administrators.
+1. **Shawnee Mission USD 512 (KS) — The ESSER Coaching Cliff:** Peaked at **$+8.71 \text{ SD}$** (+65.2 FTE above peers, +93.7 FTE net growth) `[SMSD-03]`. Following its *2019–2024 Strategic Plan* coaching framework `[SMSD-01]`, SMSD utilized federal COVID relief (ESSER III) in 2021 to fund ~50 new building instructional coaches `[SMSD-02]`, quadrupling coordinators from 27.6 to 123.7 FTE. Facing the September 2024 expiration of ESSER, the district must absorb ~\$12.3M in annual coaching payroll or restructure `[SMSD-04]`.
+2. **Kansas City USD 500 (KS) — Decentralized Building Supervision:** Reached **$+9.09 \text{ SD}$** in building administrators (+55.2 FTE above peers, 141.0 FTE across 43 schools) `[KCK-01]`. KCKPS deployed assistant principals and deans across elementary and middle schools `[KCK-02]` to address post-pandemic attendance and behavioral challenges `[KCK-03]`, while maintaining an exceptionally lean central line office (6.0 FTE, -3.0 FTE below peer expectation) `[KCK-04]`. State SO66 audits confirm that the preliminary 2024–25 drop was an administrative reporting break, not staff cuts `[KCK-05]`.
+3. **Raytown C-2 (MO) — The Layered Curriculum Bureaucracy:** Maintained a persistent coordinator surplus of **$+2.23 \text{ SD}$** (+14.0 FTE) for 7 consecutive years `[RAY-03]`. Raytown constructed a hyper-specialized division featuring dual Assistant Superintendents (Elementary vs. Secondary) `[RAY-01]`, 5 central Directors, 7 discipline-specific K–12 subject coordinators `[RAY-02]`, and on-site building coaches.
+4. **Fort Osage R-I (MO) — The Top-Heavy Executive Cabinet:** Maintained an unexplained central line surplus of **$+2.65 \text{ SD}$** (+3.4 FTE) in **all 10 consecutive years** `[FO-02]`, `[FO-03]`. For ~4,800 students, Fort Osage maintains 1 Superintendent, 3 Assistant Superintendents, and 3 Executive Directors `[FO-01]` coded under MO DESE position code 10 `[FO-02]`, offset by operating with below-average building-level administrators (1.4/school vs 1.9 peer expected) `[FO-03]`.
 
 ---
 
 ## 7. Phase 4 Fiscal Materiality Counterfactuals & Teacher Salary Potential
 
-To resolve the fiscal question—*Would reducing or reallocating administrative staffing meaningfully change school finances?*—we matched state-specific salary benchmarks (KSDE SO66 and MO DESE Core Data) with empirical fringe benefit loads (30.0%):
+To resolve the fiscal question—*Would reducing or reallocating administrative staffing meaningfully change school finances?*—we matched state-specific salary benchmarks ([`data/processed/compensation_benchmarks.csv`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-01-kc-admin-staffing-decomposition/data/processed/compensation_benchmarks.csv)) with empirical fringe benefit loads (30.0% total compensation load; mandatory employer marginal payroll taxes of 21.22% in KS [KPERS + FICA] and 15.95% in MO [PSRS + Medicare] on base salary raises):
 
 ### 7.1 Regional-Scale Materiality
-- **Metro Coordinator Rollback (2014 Intensity):** Reverting coordinator intensity to the 2014 ratio (2.41 per 100 teachers) releases **\$20.91 Million annually** (**217.81 FTE**) across the 55 regular districts.
-- **Cumulative 10-Year Absorption:** Above-baseline coordinator staffing absorbed **743.7 FTE-years** and **\$71.03 Million** over the decade.
-- **Peer-Model Supervisory Capping:** Trimming positive peer residuals across building admins, central admins, and coordinators in 2023–24 releases **\$37.55 Million annually** (**317.36 FTE**).
+- **Metro Coordinator Rollback (2014 Intensity):** Reverting coordinator intensity to the 2014 ratio (2.41 per 100 teachers) releases **$21,163,879.32 annually** (**217.81 FTE**) across the 55 regular districts in 2023–24.
+- **Cumulative 10-Year Absorption:** Above-baseline coordinator staffing absorbed **725.86 FTE-years** and **$70,553,696.34** in operating expenditures over the decade across the reconstructed series (or **679.39 FTE-years** and **$66,064,840.06** across the 9 clean un-interpolated years).
+- **Hypothetical Peer Trimming:** Capping positive residuals at conditional peer means across building admins, central admins, and coordinators in 2023–24 releases **$41,737,693.51 annually** (**360.87 FTE**; CORSUP: \$20.18M, SCHADM: \$15.18M, LEAADM: \$6.38M). *Note: Positive residuals naturally exist in regression modeling; this represents a costing of peer deviations rather than proof of administrative waste.*
 
-### 7.2 District-Level Teacher Salary Potential (Counterfactual 3)
-While metro-wide savings average +\$935 per teacher (+1.8%), savings are monumental in high-intensity districts:
-- **Shawnee Mission USD 512:** Rolling back coordinators to its own 2014 baseline frees **\$9.32 Million annually**, enabling an immediate **+\$4,991 annual salary raise (+9.3%)** for all 1,867 classroom teachers (or hiring +94 teachers).
-- **Kansas City USD 500 (KCKPS):** Trimming supervisory excess to peer expectation frees **\$8.22 Million annually**, enabling a **+\$6,097 salary raise (+11.4%)** for all 1,348 classroom teachers.
-- **Fort Osage R-I:** Trimming executive central administration to peer expectations frees **\$748,320 annually**, yielding a **+\$2,158 raise (+4.5%)** per teacher.
-- **Raytown C-2:** Trimming coordinator and central excess frees **\$1.07 Million annually**, yielding a **+\$1,930 raise (+4.0%)** per teacher.
+### 7.2 District-Level Teacher Salary Potential (Gross Comp vs. Feasible Base Pay)
+While metro-wide coordinator rollback averages +$1,239.68 gross compensation per teacher (+2.1%), the fiscal impact is heavily concentrated in high-intensity districts:
+- **Shawnee Mission USD 512:** Rolling back coordinators to its own 2014 baseline frees **$9,319,621.35 annually** (+93.71 FTE). Gross compensation equivalent is **+$4,990.99 per teacher**, yielding a **feasible base salary raise of +$4,117.30 (+7.7% on base pay)** across all 1,867.29 classroom teachers after covering mandatory KPERS and FICA taxes. Alternatively, this payroll could fund **136.0 additional classroom teachers** at Kansas average compensation (\$68,514). Capping all supervisory positions to peer expectations frees **$6,611,380.78 annually** (+5.5% base pay raise).
+- **Kansas City USD 500 (KCKPS):** Trimming all supervisory positions to peer expectations frees **$13,077,668.38 annually** (building administration + coordinators). Gross compensation equivalent is **+$9,699.02 per teacher**, yielding a **feasible base salary raise of +$8,001.17 (+15.0%)** across all 1,348.35 classroom teachers. (Looking strictly at building administration, trimming SCHADM alone frees **$8,221,247.40 annually**, yielding **+$6,097.27** gross and **+$5,029.92** base, **+9.4%**).
+- **Fort Osage R-I (MO):** Trimming executive central administration to peer expectations frees **$748,351.13 annually** (+4.36 FTE), yielding a gross compensation equivalent of **+$2,157.94** and a **feasible base salary raise of +$1,861.09 (+3.8%)** across 346.79 teachers.
+- **Raytown C-2 (MO):** Trimming coordinator and central excess to peer expectations frees **$478,434.88 annually** (+3.67 FTE), yielding a gross compensation equivalent of **+$862.67** and a **feasible base salary raise of +$744.00 (+1.5%)** across 554.60 teachers.
 
 ---
 
@@ -171,6 +178,7 @@ While metro-wide savings average +\$935 per teacher (+1.8%), savings are monumen
 │   │       ├── f33_finance_raw.parquet        # Census/NCES F-33 school finance panel (FY15-FY23)
 │   │       └── saipe_raw.parquet              # Census SAIPE child poverty (2014-2024)
 │   ├── processed/
+│   │   ├── compensation_benchmarks.csv        # Audited salary & fringe parameter provenance
 │   │   ├── district_staff_year.parquet        # Canonical 21-yr staffing panel (1,629 rows, 70 cols)
 │   │   ├── district_staff_year.csv            # CSV mirror
 │   │   ├── district_demand_year.parquet       # Integrated demand & finance panel (1,629 rows, 104 cols)
@@ -184,28 +192,32 @@ While metro-wide savings average +\$935 per teacher (+1.8%), savings are monumen
 │   ├── descriptive_decomposition.py           # Descriptive mechanical ledger & balanced cohort engine
 │   ├── build_demand_panel.py                  # Phase 2A demand & finance integration pipeline
 │   ├── models.py                              # Phase 2B/2C econometric regressions & Shapley engine
-│   └── fiscal_counterfactuals.py              # Phase 4 fiscal simulation engine
+│   ├── fiscal_counterfactuals.py              # Phase 4 fiscal simulation engine
+│   └── test_narrative_sync.py                 # Automated text-to-data synchronization test suite
 └── outputs/
     └── tables/
         ├── kc_staffing_decomposition_report.md       # Phase 1.1 descriptive report
         ├── econometric_decomposition_report.md       # Phase 2B/2C econometric synthesis report
         ├── board_document_audit_report.md            # Phase 3 qualitative outlier audit report
         ├── fiscal_materiality_report.md              # Phase 4 fiscal materiality synthesis report
+        ├── phase3_claim_evidence.csv                 # Audited qualitative claims & evidence ledger
         ├── model_regression_results.csv              # Within-FE & peer model parameters
+        ├── long_difference_regression_results.csv    # 10-year long-difference growth OLS estimates
         ├── peer_expected_staffing_residuals.csv      # Annual actual vs peer expected residuals
         ├── persistent_peer_outliers.csv              # Multi-year high-deviation audit targets
-        ├── shapley_decomposition_results.csv         # Grouped Shapley variance decomposition
+        ├── shapley_decomposition_results.csv         # Grouped Shapley growth variance decomposition
         ├── fiscal_materiality_counterfactuals.csv     # District-level counterfactual impacts
         ├── fiscal_materiality_annual_trajectory.csv  # 10-year annual rollback trajectory
         └── fiscal_materiality_peer_summary.csv       # Category & state peer trimming summary
 ```
 
 ### Reproducibility Sequence
-To execute the complete 4-phase computational pipeline from scratch:
+To execute the complete 4-phase computational pipeline and automated test suite:
 ```powershell
 python src/audit_panel.py              # 1. Verify semantic gates and data integrity
 python src/descriptive_decomposition.py # 2. Generate Phase 1.1 mechanical decomposition
 python src/build_demand_panel.py       # 3. Compile Phase 2A demand & school finance panel
 python src/models.py                   # 4. Fit Phase 2B regressions & Phase 2C Shapley
 python src/fiscal_counterfactuals.py   # 5. Simulate Phase 4 fiscal materiality counterfactuals
+python src/test_narrative_sync.py      # 6. Verify 100% numerical synchronization
 ```

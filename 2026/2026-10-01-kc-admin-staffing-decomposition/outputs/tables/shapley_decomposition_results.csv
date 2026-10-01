@@ -1,5 +1,4 @@
 covariate_family,variables_in_family,shapley_r2_contribution,pct_of_explained_variance
-Student Demographic Need,"idea_100, lep_100, poverty_100",0.349851580268978,40.15365107120313
-Scale & Staffing Load,teachers_100,0.2587021243532249,29.69211922573529
-Categorical Program Revenues,"title_i_mil, idea_rev_mil",0.2410028072784917,27.660708644508187
-Common Temporal / State Mandates,"KS_2015-2016, KS_2016-2017, KS_2017-2018, KS_2018-2019, KS_2019-2020, KS_2020-2021, MO_2014-2015, MO_2015-2016, MO_2016-2017, MO_2017-2018, MO_2018-2019, MO_2019-2020, MO_2020-2021",0.021725603014827954,2.4935210585533962
+Student Need Shifts,"d_poverty_100, d_idea_100, d_lep_100",0.45779469940428036,66.18751241574665
+Teacher Scale Growth,d_teachers_100,0.19186159919482426,27.73916341831219
+State Jurisdiction,is_ks,0.04200695130325395,6.0733241659411625
