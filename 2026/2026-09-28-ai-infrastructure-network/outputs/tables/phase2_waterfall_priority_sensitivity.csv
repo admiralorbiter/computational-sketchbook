@@ -1,0 +1,13 @@
+waterfall_priority,delay_months,t_oper_exhaustion_silo1,t_dsra_silo1,t_payment_shortfall_silo1,t_oper_exhaustion_silo2,t_dsra_silo2,t_payment_shortfall_silo2,cumulative_parent_support_pre_shortfall_usd
+opex_first,0,6,6,12,18,6,6,65000000.0
+opex_first,3,6,6,12,21,6,6,80000000.0
+opex_first,6,6,6,12,24,6,6,80000000.0
+opex_first,9,6,6,12,27,6,6,80000000.0
+opex_first,12,6,6,12,30,6,6,80000000.0
+opex_first,18,6,6,12,36,6,6,80000000.0
+debt_service_first,0,6,6,12,18,6,6,65000000.0
+debt_service_first,3,6,6,12,21,6,6,80000000.0
+debt_service_first,6,6,6,12,24,6,6,80000000.0
+debt_service_first,9,6,6,12,27,6,6,80000000.0
+debt_service_first,12,6,6,12,30,6,6,80000000.0
+debt_service_first,18,6,6,12,36,6,6,80000000.0
