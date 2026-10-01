@@ -96,39 +96,39 @@ To ensure tractability and prevent premature complexity, Phase 2 is structured i
 
 In project finance, cash is not fungible; dollars are trapped in legally segregated accounts with strict contractual priorities. A project can hold $200M of nominal cash and still default if that cash is restricted to construction disbursements.
 
-### Segregated Account State Vector:
-For any financing silo $k$ at month $t$, the financial state is tracked across distinct accounts:
+### Segregated Account State Vectors (Legal Silo Isolation):
+Because the financing vehicles are legally separate, each silo maintains its own segregated account state vector rather than pooling campus dollars:
 
-$$\mathbf{C}_{k,t} = \begin{bmatrix} C_{\text{construction}, t} \\ C_{\text{DSRA}, t} \\ C_{\text{operating}, t} \\ C_{\text{unrestricted}, t} \end{bmatrix}, \quad \text{plus} \quad \text{SponsorSupportAvailable}_t$$
+$$\mathbf{C}_{\text{silo}, k, t} = \begin{bmatrix} C_{\text{construction}, k, t} \\ C_{\text{DSRA}, k, t} \\ C_{\text{operating}, k, t} \\ C_{\text{unrestricted}, k, t} \end{bmatrix}, \quad \text{for } k \in \{1, 2\}$$
 
-1. **$C_{\text{construction}, t}$ (Construction Account):** Funded from note proceeds/draws; strictly restricted to certified EPC and equipment capex:
-   $$C_{\text{construction}, t+1} = C_{\text{construction}, t} + \Delta C^{\text{draw}}_t - K^{\text{capex}}_t$$
-2. **$C_{\text{DSRA}, t}$ (Debt Service Reserve Account):** Restricted to debt service; typically sized to 6–12 months of coupon carry:
-   $$C_{\text{DSRA}, t+1} = C_{\text{DSRA}, t} - \text{Draw}^{\text{DSRA}}_t + \text{Replenish}^{\text{DSRA}}_t$$
-3. **$C_{\text{operating}, t}$ (Operating Cash Account):** Ingests tenant rent from operational capacity and pays ongoing opex and primary debt service:
-   $$C_{\text{operating}, t+1} = C_{\text{operating}, t} + R^{\text{tenant}}_t - O^{\text{opex}}_t - I^{\text{coupon}}_t - P^{\text{amort}}_t$$
-4. **$\text{SponsorSupportAvailable}_t$:** Corporate parent completion support under Applied Digital's contractual completion guarantees (Nov 20, 2025 and June 16, 2026 Form 8-Ks). Strictly distinct from CoreWeave's tenant-side springing guaranty (Exhibit 10.1).
+1. **$C_{\text{construction}, k, t}$ (Construction Account):** Funded from note proceeds/draws; strictly restricted to certified EPC and equipment capex for that specific silo:
+   $$C_{\text{construction}, k, t+1} = C_{\text{construction}, k, t} + \Delta C^{\text{draw}}_{k, t} - K^{\text{capex}}_{k, t}$$
+2. **$C_{\text{DSRA}, k, t}$ (Debt Service Reserve Account):** Restricted to debt service for that silo's notes; balance parameterized by unobserved initial reserve $R_{0, k}$:
+   $$C_{\text{DSRA}, k, t+1} = C_{\text{DSRA}, k, t} - \text{Draw}^{\text{DSRA}}_{k, t} + \text{Replenish}^{\text{DSRA}}_{k, t}$$
+3. **$C_{\text{operating}, k, t}$ (Operating Cash Account):** Ingests tenant rent from operational capacity allocated to that silo and pays ongoing silo opex, coupon interest, and scheduled amortization:
+   $$C_{\text{operating}, k, t+1} = C_{\text{operating}, k, t} + R^{\text{tenant}}_{k, t} - O^{\text{opex}}_{k, t} - I^{\text{coupon}}_{k, t} - P^{\text{amort}}_{k, t}$$
+4. **$\text{SponsorSupportAvailable}_t$ (Campus Parent Overlay):** Applied Digital corporate liquidity available to fund contractual completion guarantees across both silos (Nov 20, 2025 and June 16, 2026 Form 8-Ks). Strictly distinct from CoreWeave's tenant-side springing guaranty (Exhibit 10.1).
 
 ---
 
-### Tiered Failure Boundaries: The 6-Milestone Staircase
-Rather than a single binary failure condition ($L_t < 0$), the Level 1 engine tracks a **6-milestone contractual staircase**:
+### Tiered Failure Boundaries: The 6-Milestone Staircase (Per Silo)
+Rather than a single binary failure condition ($L < 0$), each financing silo tracks a **6-milestone contractual staircase**, separating construction funding failure from debt payment default:
 
 ```
-[Normal Operations] ──> [T_coverage: Operating Cash Flow Deficit] 
+[Normal Operations] ──> [T_coverage: Operating Flow Deficit] 
                     ──> [T_operating_exhaustion: Operating Account Depletion] 
                     ──> [T_DSRA: Debt Service Reserve Draw] 
                     ──> [T_completion_support: Parent Completion Guarantee Economically Required] 
-                    ──> [T_default: Uncured Contractual Payment Default] 
+                    ──> [T_payment_default: Uncured Contractual Payment Failure] 
                     ──> [T_refi: Final Maturity / Refinancing Boundary]
 ```
 
-1. **$T_{\text{coverage}}$ (Operating Flow Deficit):** First month recurring operating cash inflows do not cover recurring uses ($R^{\text{tenant}}_t < I^{\text{coupon}}_t + P^{\text{amort}}_t + O^{\text{opex}}_t$). The project enters a cash burn state, though prior operating cash reserves may still buffer payments.
-2. **$T_{\text{operating\_exhaustion}}$ (Operating Account Depletion):** First month the operating cash account balance reaches its contractual floor or zero ($C_{\text{operating}, t} = 0$).
-3. **$T_{\text{DSRA}}$ (Debt Service Reserve Draw):** Operating cash is fully depleted, forcing the project SPV to execute its first draw on the capitalized Debt Service Reserve Account ($C_{\text{DSRA}, t} < C_{\text{DSRA}, 0}$).
-4. **$T_{\text{completion\_support}}$ (Parent Completion Funding Required):** First month when remaining eligible project funds are insufficient to fund the remaining construction capex necessary to achieve the contractual commencement/completion milestone. Under the November 20, 2025 (Silo 1) and June 16, 2026 (Silo 2) Form 8-Ks, this activates Applied Digital's mandatory parent completion funding obligations before the Outside Completion Date.
-5. **$T_{\text{default}}$ (Contractual Payment Default):** DSRA is fully exhausted and parent cure capacity is insufficient or refused, triggering an Event of Default under the applicable indenture.
-6. **$T_{\text{refi}}$ (Final Maturity / Refinancing Boundary):** Final bullet maturity dates (2030 for 9.25% notes, 2031 for 7.00% notes) where remaining principal must be repaid or refinanced under prevailing credit spreads.
+1. **$T_{\text{coverage}, k}$ (Operating Flow Deficit):** First month recurring operating cash inflows do not cover recurring uses ($R^{\text{tenant}}_{k, t} < I^{\text{coupon}}_{k, t} + P^{\text{amort}}_{k, t} + O^{\text{opex}}_{k, t}$). The silo enters a cash burn state, buffered by accumulated operating cash.
+2. **$T_{\text{operating\_exhaustion}, k}$ (Operating Account Depletion):** First month the silo's operating cash account balance reaches zero ($C_{\text{operating}, k, t} = 0$).
+3. **$T_{\text{DSRA}, k}$ (Debt Service Reserve Draw):** Operating cash is fully depleted, forcing the silo to execute its first draw on its capitalized Debt Service Reserve Account ($C_{\text{DSRA}, k, t} < R_{0, k}$).
+4. **$T_{\text{completion\_support}, k}$ (Parent Completion Funding Required):** First point at which available eligible construction funds are insufficient to fund the remaining capex necessary to achieve the contractual Commencement Date milestone. Under the November 20, 2025 (Silo 1) and June 16, 2026 (Silo 2) Form 8-Ks, Applied Digital becomes legally obligated to fund the construction shortfall before the Outside Completion Date.
+5. **$T_{\text{payment\_default}, k}$ (Contractual Debt Payment Default):** First contractual payment date on which required coupon or principal amortization cannot be paid from legally permitted silo cash sources and applicable reserve accounts, after any documented contractual grace/cure periods. *(Note: Applied Digital's completion guarantee is a construction funding obligation, not an unconditional debt-service guaranty; debt payment default occurs when the silo's own payment reserves and permitted cure resources are exhausted).*
+6. **$T_{\text{refi}, k}$ (Final Maturity / Refinancing Boundary):** Final maturity dates (2030 for Silo 1 9.25% notes, 2031 for Silo 2 7.00% notes) where remaining principal must be repaid or refinanced under prevailing market credit spreads.
 
 ---
 
@@ -172,19 +172,22 @@ Polaris Forge 1 does not possess a single fungible debt stack; it contains two l
   │
   ├── [Silo 1: APLD_COMPUTECO / HPC_HOLDINGS] ──> $2.350B 9.25% Senior Notes (due 2030)
   │    Financing: Building 2 (100 MW operational) & Building 3 (150 MW partially operational)
-  │    Annual Coupon Carry: $217.375M/yr ($2.350B × 9.25%)
-  │    Scheduled Amortization: Semiannual principal amortization begins December 15, 2027
+  │    Initial Annual Coupon Carry: $217.375M/yr ($2.350B × 9.25%)
+  │    Amortization Start Rule: Semiannual principal amortization begins December 15, 2027
+  │    Amortization Amounts: In amounts set forth in Indenture (Unobserved)
   │    Final Maturity: 2030
   │
   └── [Silo 2: APLD_COMPUTECO3] ────────────────> $1.590B 7.00% Senior Notes (due 2031)
        Financing: Building 4 (150 MW under construction)
-       Annual Coupon Carry: $111.300M/yr ($1.590B × 7.00%)
-       Scheduled Amortization: Semiannual principal amortization begins first payment date
-                               after the final Commencement Date (State-Dependent)
+       Initial Annual Coupon Carry: $111.300M/yr ($1.590B × 7.00%)
+       Amortization Start Rule: Semiannual principal amortization begins first payment date
+                                following final Commencement Date (State-Dependent)
+       Amortization Amounts: In amounts set forth in Indenture (Unobserved)
        Final Maturity: 2031
 ```
 
-- **Combined Annual Coupon Carry:** **$328.675M/year** ($217.375M + $111.300M).
+- **Initial Annualized Coupon Carry:** **$328.675M/year** ($217.375M + $111.300M).
+  *(Note: This is the initial annualized coupon carry. As scheduled principal amortization occurs, coupon cash requirements decline with remaining principal: $I_{k,t} = P_{k,t} \times r_k$).*
 - **State-Dependent Principal Amortization (Structural Offset):**
   - In Silo 2, scheduled principal amortization begins on the *first payment date following the final Commencement Date*.
   - This introduces a **non-monotonic interaction with delay**: a construction delay postpones tenant commercial rent commencement and burns interest carry, but simultaneously **defers scheduled principal amortization cash outflows**. The Level 1 engine explicitly models this contractual interaction rather than assuming bullet-only debt.
@@ -199,39 +202,50 @@ Before writing simulation code, we evaluate public data availability under the t
 | Parameter / Variable | Model Role | Value in Frozen Corpus | `source_status` | `model_treatment` | Impact on Delay Tolerance ($T^*$) |
 | :--- | :---: | :---: | :---: | :---: | :--- |
 | **Silo 1 Principal** | Required | **$2,350.0M** | `PRIMARY_DISCLOSED` | `EXACT` | Pinned baseline |
-| **Silo 1 Coupon** | Required | **9.25%** | `PRIMARY_DISCLOSED` | `EXACT` | Exact: $217.375M/yr carry |
-| **Silo 1 Amortization** | Required | Semiannual from Dec 15, 2027 | `PRIMARY_DISCLOSED` | `EXACT` | Exact contractual schedule |
+| **Silo 1 Coupon** | Required | **9.25%** | `PRIMARY_DISCLOSED` | `EXACT` | Initial carry: $217.375M/yr |
+| **Silo 1 Amortization Start Rule** | Required | Semiannual from Dec 15, 2027 | `PRIMARY_DISCLOSED` | `EXACT` | Pinned start date |
+| **Silo 1 Amortization Schedule** | Required | "Amounts set forth in Indenture"| `UNOBSERVED` | `CONDITIONAL` | **Requires amortization parameter** |
 | **Silo 2 Principal** | Required | **$1,590.0M** | `PRIMARY_DISCLOSED` | `EXACT` | Pinned baseline |
-| **Silo 2 Coupon** | Required | **7.00%** | `PRIMARY_DISCLOSED` | `EXACT` | Exact: $111.300M/yr carry |
-| **Silo 2 Amortization** | Required | Semiannual post-Commencement | `PRIMARY_DISCLOSED` | `EXACT` | State-dependent schedule |
+| **Silo 2 Coupon** | Required | **7.00%** | `PRIMARY_DISCLOSED` | `EXACT` | Initial carry: $111.300M/yr |
+| **Silo 2 Amortization Start Rule** | Required | Semiannual post-Commencement | `PRIMARY_DISCLOSED` | `EXACT` | State-dependent start date |
+| **Silo 2 Amortization Schedule** | Required | "Amounts set forth in Indenture"| `UNOBSERVED` | `CONDITIONAL` | **Requires amortization parameter** |
 | **Final Maturities** | Required | **2030 / 2031** | `PRIMARY_DISCLOSED` | `EXACT` | Refinancing horizons |
-| **Initial DSRA Balances** | Required | Disclosed as existing; balance unstated | `UNOBSERVED` | `CONDITIONAL` | **Requires surface parameter $R_0$** |
-| **Remaining Construction Account** | Required | Unstated in SEC 10-Q | `UNOBSERVED` | `CONDITIONAL` | **Requires surface parameter $C_{\text{capex}}$** |
-| **Building 2 Literal Cash Rent** | Required | Contract: $11B / 15yr / 400MW | `PRIMARY_DISCLOSED` | `CONDITIONAL` | **Requires surface parameter $R_{\text{B2}}$** *(Proportional proxy = $183.3M/yr)* |
-| **Building 3 Operational MW** | Physical | 150 MW shell; live MW unstated | `PRIMARY_DISCLOSED` | `INTERVAL` | **Interval $[0\ \text{MW}, 150\ \text{MW}]$** *(Campus load = 60 MW)* |
-| **Remaining B3/B4 Capex Burn**| Required | Unstated month-by-month | `UNOBSERVED` | `ANALYST_SCENARIO` | **Requires scenario parameter $K_{\text{burn}}$** |
+| **Initial DSRA Balances ($R_{0,1}, R_{0,2}$)** | Required | Disclosed as existing; balances unstated | `UNOBSERVED` | `CONDITIONAL` | **Requires silo surface parameters** |
+| **Remaining Construction Funds ($C_{\text{capex}, k}$)** | Required | Unstated in SEC 10-Q | `UNOBSERVED` | `CONDITIONAL` | **Requires silo surface parameters** |
+| **Building 2 Literal Cash Rent ($R_{\text{B2}}$)** | Required | Contract: $11B / 15yr / 400MW | `PRIMARY_DISCLOSED` | `CONDITIONAL` | **Requires surface parameter** *(Proportional proxy = $183.3M/yr)* |
+| **Building 3 Operational MW ($\text{MW}_{\text{B3}}$)**| Physical | 150 MW shell; live MW unstated | `PRIMARY_DISCLOSED` | `INTERVAL` | **Strictly $(0, 150\ \text{MW})$; $[0, 150\ \text{MW}]$ envelope** *(Campus metered load = 60 MW)* |
+| **Remaining Capex Burn ($K_{\text{burn}, 1}, K_{\text{burn}, 2}$)**| Required | Unstated month-by-month | `UNOBSERVED` | `ANALYST_SCENARIO` | **Requires silo burn rate parameters** |
 | **Parent Completion Support** | Support | Nov 20, 2025 & June 16, 2026 8-Ks | `PRIMARY_DISCLOSED` | `EXACT` | Insufficiency trigger certified |
 
 ---
 
-### Architectural Decision: Outputting Milestone Boundary Surfaces
-Because initial DSRA balances, exact monthly construction burn, and literal building-level rent cash flows are **UNOBSERVED in public SEC filings**, Level 1 does not output a single fragile scalar (e.g. $T^* = 13\ \text{months}$).
+### Architectural Decision: Outputting Siloed Milestone Surfaces & Parent Reconvergence
 
-Instead, Level 1 computes the **Contract-Bounded Milestone Surfaces**:
+Because boundary-critical parameters are **UNOBSERVED in public SEC filings**, Level 1 computes independent **Contract-Bounded Milestone Surfaces** for each legal silo:
 
-$$\mathcal{T}_{\text{milestone}} = \left\{ T_{\text{coverage}},\; T_{\text{operating\_exhaustion}},\; T_{\text{DSRA}},\; T_{\text{completion\_support}},\; T_{\text{default}},\; T_{\text{refi}} \right\} = f(R_0,\; K_{\text{burn}},\; R_{\text{B2}},\; \text{MW}_{\text{B3}})$$
+$$\mathcal{T}_{\text{silo}, 1} = \left\{ T_{\text{coverage}, 1},\; T_{\text{operating\_exhaustion}, 1},\; T_{\text{DSRA}, 1},\; T_{\text{completion\_support}, 1},\; T_{\text{payment\_default}, 1},\; T_{\text{refi}, 1} \right\} = f(R_{0,1},\; K_{\text{burn}, 1},\; R_{\text{B2}},\; \text{MW}_{\text{B3}})$$
 
-This maintains complete epistemic fidelity: it evaluates how contractual protections, reserve accounts, and state-dependent amortization interact under physical delay without fabricating undisclosed balance sheet figures.
+$$\mathcal{T}_{\text{silo}, 2} = \left\{ T_{\text{coverage}, 2},\; T_{\text{operating\_exhaustion}, 2},\; T_{\text{DSRA}, 2},\; T_{\text{completion\_support}, 2},\; T_{\text{payment\_default}, 2},\; T_{\text{refi}, 2} \right\} = f(R_{0,2},\; K_{\text{burn}, 2},\; \text{CommencementDate}_2)$$
+
+#### The Campus Overlay: Parent Equity Reconvergence
+Crucially, while each project financing silo is legally bankruptcy-remote, both completion guarantees reconverge economically onto Applied Digital's parent balance sheet:
+
+$$\text{ParentEquityRequired}(t) = \text{Support}_{\text{silo}, 1}(t) + \text{Support}_{\text{silo}, 2}(t)$$
+
+This generates the foundational output of Phase 2:
+$$\mathbf{\Delta t_{\text{delay}} \longrightarrow \text{Cumulative Parent Equity Required}}$$
+revealing the exact point at which an ostensibly non-recourse project structure re-links to corporate solvency.
 
 ---
 
 ## 6. Pre-Implementation Roadmap
 
 ```
-[Gate 2.0: Sufficiency Audit] ──> Data sufficiency verified (Two-field schema locked).
+[Gate 2.0: Sufficiency Audit] ──> Data sufficiency verified (Two-field schema & silo separation locked).
 [Phase 2.1: Level 1 POC]      ──> Build deterministic cash waterfall for PF1 (Silo 1 vs Silo 2).
-[Phase 2.2: Surface Engine]   ──> Map the 6-milestone staircase across reserve and delay intervals.
+[Phase 2.2: Surface Engine]   ──> Map the 6-milestone staircase and parent equity demand surfaces.
 [Phase 2.3: Hazard Engine]    ──> Implement duration-dependent semi-Markov transitions for Level 2.
 [Phase 2.4: Graph Exposure]   ──> Couple project state machines to multi-layer graph factor model.
 ```
+
 
