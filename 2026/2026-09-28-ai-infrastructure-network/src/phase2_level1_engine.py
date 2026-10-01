@@ -1,4 +1,4 @@
-"""Phase 2 Level 1 Deterministic Project Delay-Tolerance Engine (Hardened 2.1.1).
+"""Phase 2 Level 1 Deterministic Project Delay-Tolerance Engine (Hardened 2.1.2).
 
 Implements the contract-bounded project finance cash waterfall for Polaris Forge 1
 across two legally segregated financing silos (APLD ComputeCo Silo 1 and ComputeCo 3 Silo 2)
@@ -18,27 +18,52 @@ Core Invariants Enforced:
    and construction tracks (T_completion_support is not downstream of T_DSRA).
 8. Cash Coverage Milestone: T_coverage marks the first month where tenant cash rent is strictly
    less than actual monthly cash obligations (opex + cash debt service).
-9. Paid-Only Principal Reduction: Outstanding principal is reduced strictly by paid principal,
-   never by unpaid scheduled amortization installments: P_t = P_{t-1} - principal_amort_paid.
-10. Complete Arrears Accounting: Unpaid obligations do not disappear into thin air.
+9. Operating Account Exhaustion Milestone: T_operating_exhaustion fires in the first month that
+   the operating cash balance reaches zero, whether from operating expenses or debt service.
+10. Explicit Waterfall Priority: Payment priority between opex and debt service is explicitly
+    parameterized ('opex_first' vs 'debt_service_first') with documented epistemic provenance.
+11. Paid-Only Principal Reduction: Outstanding principal is reduced strictly by paid principal,
+    never by unpaid scheduled amortization installments: P_t = P_{t-1} - principal_amort_paid.
+12. Complete Arrears Accounting: Unpaid obligations do not disappear into thin air.
     opex_payable, interest_payable, and principal_arrears are tracked and carried forward.
-11. Absorbing Boundary Semantics: Once T_payment_shortfall occurs, the silo enters default.
+13. Absorbing Boundary Semantics: Once T_payment_shortfall occurs, the silo enters default.
     Subsequent ledger months are marked as is_post_shortfall=True and economic_status='POST_SHORTFALL_ABSORBED'.
-12. Final Maturity Balloon: Remaining principal matures as a bullet balloon at final maturity
+14. Final Maturity Balloon: Remaining principal matures as a bullet balloon at final maturity
     (Month 54 for Silo 1 / Dec 15, 2030; Month 60 for Silo 2 / June 15, 2031).
-13. Bounded Capex Spend: remaining_capex_total caps total cumulative construction outlays.
-14. Explicit Parameterization: Zero silent priors in surface generation. Scheduled commencement
-    months and delay grids are passed explicitly for each silo.
-15. Parent Reconvergence Overlay: Parent support sums across silos strictly after each silo's
+15. Dynamic Date Derivation: Month indexes for contractual dates are dynamically computed from
+    simulation start date, preventing silent calendar corruption.
+16. Zero Silent Priors in Surface API: Every unobserved financial input is mandatory in
+    compute_delay_tolerance_surface(); illustrative defaults are restricted to demo_pf1_analyst_scenario().
+17. Bounded Capex Spend: remaining_capex_total caps total cumulative construction outlays.
+18. Parent Reconvergence Overlay: Parent support sums across silos strictly after each silo's
     waterfall is computed independently.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 import pandas as pd
 import numpy as np
+
+
+# Certified Contractual Dates from Primary SEC Filings
+CANONICAL_PF1_START_DATE = "2026-07-01"
+SILO1_AMORT_START_DATE = "2027-12-15"   # Nov 20, 2025 Form 8-K: Dec 15, 2027
+SILO1_MATURITY_DATE = "2030-12-15"      # Nov 20, 2025 Form 8-K: Dec 15, 2030
+SILO2_MATURITY_DATE = "2031-06-15"      # June 16, 2026 Form 8-K: June 15, 2031
+
+
+def _date_to_month_index(sim_start: pd.Timestamp, target_date_str: str) -> int:
+    """Computes the 1-indexed simulation month index for a target date relative to sim_start."""
+    target = pd.to_datetime(target_date_str)
+    months = (target.year - sim_start.year) * 12 + (target.month - sim_start.month) + 1
+    if months <= 0:
+        raise ValueError(
+            f"Simulation start date {sim_start.strftime('%Y-%m-%d')} is on or after "
+            f"contractual milestone date {target_date_str}"
+        )
+    return months
 
 
 @dataclass(frozen=True)
@@ -63,7 +88,7 @@ class SiloTerms:
     annual_coupon_rate: float
     amortization_start_rule: str  # 'fixed_date' or 'post_commencement'
     fixed_amort_start_month: Optional[int] = None  # 1-indexed month relative to sim start
-    final_maturity_month: int = 54  # Month index of maturity (Silo 1: Dec 2030 = month 54)
+    final_maturity_month: int = 54  # Month index of maturity (Silo 1: Dec 2030 = month 54 from July 2026)
     payment_frequency: str = "semiannual"  # "semiannual" or "monthly"
     payment_months: Tuple[int, ...] = (6, 12)  # Calendar months for payments if semiannual
 
@@ -114,24 +139,27 @@ class EngineResult:
     invariants_passed: bool
 
 
-def create_default_pf1_silos(start_date: str = "2026-07-01") -> Tuple[SiloTerms, SiloTerms]:
-    """Creates the contractual SiloTerms for Polaris Forge 1.
+def create_default_pf1_silos(start_date: str = CANONICAL_PF1_START_DATE) -> Tuple[SiloTerms, SiloTerms]:
+    """Creates the contractual SiloTerms for Polaris Forge 1 dynamically anchored to start_date.
     
-    Silo 1: APLD_COMPUTECO / HPC_HOLDINGS ($2,350.0M 9.25% Senior Notes due Dec 15, 2030)
-            Amortization begins Dec 15, 2027 (Month 18 relative to July 2026).
-            Final maturity Dec 15, 2030 (Month 54 relative to July 2026).
-    Silo 2: APLD_COMPUTECO3 ($1,590.0M 7.00% Senior Notes due June 15, 2031)
-            Amortization begins on first payment date following final Commencement Date.
-            Final maturity June 15, 2031 (Month 60 relative to July 2026).
+    Derives milestone month indexes dynamically from certified contractual dates:
+    - Silo 1 Amortization: Dec 15, 2027 (Month 18 relative to July 2026)
+    - Silo 1 Maturity: Dec 15, 2030 (Month 54 relative to July 2026)
+    - Silo 2 Maturity: June 15, 2031 (Month 60 relative to July 2026)
     """
+    sim_start = pd.to_datetime(start_date)
+    s1_amort_month = _date_to_month_index(sim_start, SILO1_AMORT_START_DATE)
+    s1_maturity_month = _date_to_month_index(sim_start, SILO1_MATURITY_DATE)
+    s2_maturity_month = _date_to_month_index(sim_start, SILO2_MATURITY_DATE)
+
     silo1 = SiloTerms(
         silo_id="SILO_1",
         name="APLD ComputeCo (Buildings 2 & 3)",
         principal_initial_usd=2_350_000_000.0,
         annual_coupon_rate=0.0925,
         amortization_start_rule="fixed_date",
-        fixed_amort_start_month=18,  # Dec 2027
-        final_maturity_month=54,    # Dec 15, 2030 (54 months from July 2026)
+        fixed_amort_start_month=s1_amort_month,
+        final_maturity_month=s1_maturity_month,
         payment_frequency="semiannual",
         payment_months=(6, 12),
     )
@@ -143,7 +171,7 @@ def create_default_pf1_silos(start_date: str = "2026-07-01") -> Tuple[SiloTerms,
         annual_coupon_rate=0.0700,
         amortization_start_rule="post_commencement",
         fixed_amort_start_month=None,
-        final_maturity_month=60,    # June 15, 2031 (60 months from July 2026)
+        final_maturity_month=s2_maturity_month,
         payment_frequency="semiannual",
         payment_months=(6, 12),
     )
@@ -153,7 +181,7 @@ def create_default_pf1_silos(start_date: str = "2026-07-01") -> Tuple[SiloTerms,
 class DeterministicDelayEngine:
     """Simulates monthly cash waterfalls across legally segregated project finance silos."""
 
-    def __init__(self, simulation_months: int = 60, start_date: str = "2026-07-01"):
+    def __init__(self, simulation_months: int = 60, start_date: str = CANONICAL_PF1_START_DATE):
         self.simulation_months = simulation_months
         self.start_date = pd.to_datetime(start_date)
         self.dates = [self.start_date + pd.DateOffset(months=m) for m in range(simulation_months)]
@@ -165,13 +193,26 @@ class DeterministicDelayEngine:
         construction: ConstructionScenario,
         rent: RentScenario,
         amortization: AmortizationScenario,
+        waterfall_priority: str = "opex_first",
     ) -> Tuple[pd.DataFrame, MilestoneRecord]:
-        """Executes the monthly cash waterfall for a single, isolated financing silo."""
+        """Executes the monthly cash waterfall for a single, isolated financing silo.
+        
+        Epistemic Provenance:
+        - waterfall_priority: Indenture payment priority between project operating expenses
+          and senior debt service is UNOBSERVED in public SEC filings.
+          Classified under two-field schema as:
+          source_status='UNOBSERVED', model_treatment='ANALYST_SCENARIO'.
+          Options:
+          - 'opex_first': standard project finance convention (preserve asset as going concern)
+          - 'debt_service_first': senior lender revenue lien priority
+        """
         if amortization is None or not isinstance(amortization, AmortizationScenario):
             raise ValueError(
                 f"Silo {terms.silo_id}: Amortization installment amounts are UNOBSERVED in public filings. "
                 "An explicit AmortizationScenario must be provided; default straight-line assumptions are prohibited."
             )
+        if waterfall_priority not in ("opex_first", "debt_service_first"):
+            raise ValueError(f"Unknown waterfall_priority: {waterfall_priority}. Must be 'opex_first' or 'debt_service_first'.")
 
         records = []
         milestones = MilestoneRecord()
@@ -300,20 +341,33 @@ class DeterministicDelayEngine:
                     milestones.t_coverage = m
 
             # --- Operating Cash Account Waterfall ---
-            # 1. Add tenant rent
+            # 1. Add tenant rent to operating cash
             c_oper += tenant_rent
 
-            # 2. Subtract opex (current + payable) directly from operating cash
-            opex_paid = min(c_oper, total_opex_due)
-            c_oper -= opex_paid
-            opex_payable = total_opex_due - opex_paid
+            if waterfall_priority == "opex_first":
+                # 2. Subtract opex (current + payable) directly from operating cash
+                opex_paid = min(c_oper, total_opex_due)
+                c_oper -= opex_paid
+                opex_payable = total_opex_due - opex_paid
 
-            # 3. Pay debt service from remaining operating cash
-            paid_from_oper = min(c_oper, total_debt_service_due)
-            c_oper -= paid_from_oper
-            debt_service_shortfall = total_debt_service_due - paid_from_oper
+                # 3. Pay debt service from remaining operating cash
+                paid_from_oper = min(c_oper, total_debt_service_due)
+                c_oper -= paid_from_oper
+                debt_service_shortfall = total_debt_service_due - paid_from_oper
+            else:  # debt_service_first
+                # 2. Pay debt service first
+                paid_from_oper = min(c_oper, total_debt_service_due)
+                c_oper -= paid_from_oper
+                debt_service_shortfall = total_debt_service_due - paid_from_oper
 
-            if c_oper == 0.0 and milestones.t_operating_exhaustion is None and total_debt_service_due > 0:
+                # 3. Pay opex from remaining operating cash
+                opex_paid = min(c_oper, total_opex_due)
+                c_oper -= opex_paid
+                opex_payable = total_opex_due - opex_paid
+
+            # Operating Account Exhaustion Milestone:
+            # Fires in the first month that operating cash balance reaches zero (whether from opex or debt)
+            if c_oper == 0.0 and milestones.t_operating_exhaustion is None:
                 milestones.t_operating_exhaustion = m
 
             # 4. If operating cash is exhausted, draw on DSRA for remaining debt service
@@ -395,13 +449,18 @@ class DeterministicDelayEngine:
         silo2_rent: RentScenario,
         silo1_amort: AmortizationScenario,
         silo2_amort: AmortizationScenario,
+        waterfall_priority: str = "opex_first",
     ) -> EngineResult:
         """Executes parallel waterfalls for Silo 1 and Silo 2, then computes campus parent overlay."""
         silo1_terms, silo2_terms = create_default_pf1_silos(self.start_date.strftime("%Y-%m-%d"))
 
         # Run each silo in strict isolation
-        df_silo1, m_silo1 = self.run_silo_waterfall(silo1_terms, silo1_initial, silo1_construction, silo1_rent, silo1_amort)
-        df_silo2, m_silo2 = self.run_silo_waterfall(silo2_terms, silo2_initial, silo2_construction, silo2_rent, silo2_amort)
+        df_silo1, m_silo1 = self.run_silo_waterfall(
+            silo1_terms, silo1_initial, silo1_construction, silo1_rent, silo1_amort, waterfall_priority
+        )
+        df_silo2, m_silo2 = self.run_silo_waterfall(
+            silo2_terms, silo2_initial, silo2_construction, silo2_rent, silo2_amort, waterfall_priority
+        )
 
         # Merge for campus ledger
         combined_df = pd.merge(
@@ -463,7 +522,7 @@ class DeterministicDelayEngine:
             expected_accrual = (row["principal_remaining"] + row["principal_amort_paid"]) * (terms1.annual_coupon_rate / 12.0)
             assert np.isclose(row["monthly_interest_accrual"], expected_accrual, atol=1e-2)
 
-        # 3. Silo 1 Amortization Boundary: Cannot amortize prior to month 18 (Dec 2027)
+        # 3. Silo 1 Amortization Boundary: Cannot amortize prior to month 18 (Dec 2027 from July 2026)
         pre_18_amort = df1[df1["month"] < terms1.fixed_amort_start_month]["principal_amort_due"].sum()
         assert pre_18_amort == 0.0, f"Silo 1 amortized before month 18: {pre_18_amort}"
 
@@ -494,6 +553,38 @@ class DeterministicDelayEngine:
         return True
 
 
+def demo_pf1_analyst_scenario() -> Dict[str, Any]:
+    """Provides an illustrative reference scenario parameter set for Polaris Forge 1.
+    
+    EPISTEMIC GOVERNANCE WARNING:
+    These values represent ANALYST SCENARIO assumptions for parameters that are
+    UNOBSERVED in public SEC filings. They must never be treated as contractual facts.
+    - source_status: UNOBSERVED
+    - model_treatment: ANALYST_SCENARIO
+    """
+    return {
+        "scheduled_commencement_month_silo1": 12,
+        "scheduled_commencement_month_silo2": 18,
+        "silo1_rent_scenario": RentScenario(monthly_base_rent=15_275_000.0, monthly_opex=1_000_000.0),
+        "silo2_rent_scenario": RentScenario(monthly_base_rent=9_166_667.0, monthly_opex=1_000_000.0),
+        "silo1_amort_scenario": AmortizationScenario(
+            schedule_type="equal_semiannual_scenario",
+            semiannual_amount=2_350_000_000.0 / 6.0,
+        ),
+        "silo2_amort_scenario": AmortizationScenario(
+            schedule_type="equal_semiannual_scenario",
+            semiannual_amount=1_590_000_000.0 / 7.0,
+        ),
+        "silo1_initial_construction_cash": 100_000_000.0,
+        "silo2_initial_construction_cash": 150_000_000.0,
+        "silo1_initial_operating_cash": 25_000_000.0,
+        "silo2_initial_operating_cash": 0.0,
+        "silo1_remaining_capex_total": 200_000_000.0,
+        "silo2_remaining_capex_total": 300_000_000.0,
+        "waterfall_priority": "opex_first",
+    }
+
+
 def compute_delay_tolerance_surface(
     reserve_grid_silo1: List[float],
     reserve_grid_silo2: List[float],
@@ -502,26 +593,25 @@ def compute_delay_tolerance_surface(
     scheduled_commencement_month_silo1: int,
     scheduled_commencement_month_silo2: int,
     delay_grid_silo1: List[int],
-    delay_grid_silo2: Optional[List[int]] = None,
-    shared_campus_delay_mode: bool = False,
-    silo1_rent_scenario: RentScenario = RentScenario(monthly_base_rent=15_275_000.0, monthly_opex=1_000_000.0),
-    silo2_rent_scenario: RentScenario = RentScenario(monthly_base_rent=9_166_667.0, monthly_opex=1_000_000.0),
-    silo1_amort_scenario: AmortizationScenario = AmortizationScenario(schedule_type="zero_amort_scenario"),
-    silo2_amort_scenario: AmortizationScenario = AmortizationScenario(schedule_type="zero_amort_scenario"),
-    silo1_initial_construction_cash: float = 100_000_000.0,
-    silo2_initial_construction_cash: float = 150_000_000.0,
-    silo1_initial_operating_cash: float = 25_000_000.0,
-    silo2_initial_operating_cash: float = 0.0,
+    delay_grid_silo2: Optional[List[int]],
+    shared_campus_delay_mode: bool,
+    silo1_rent_scenario: RentScenario,
+    silo2_rent_scenario: RentScenario,
+    silo1_amort_scenario: AmortizationScenario,
+    silo2_amort_scenario: AmortizationScenario,
+    silo1_initial_construction_cash: float,
+    silo2_initial_construction_cash: float,
+    silo1_initial_operating_cash: float,
+    silo2_initial_operating_cash: float,
     silo1_remaining_capex_total: Optional[float] = None,
     silo2_remaining_capex_total: Optional[float] = None,
+    waterfall_priority: str = "opex_first",
 ) -> pd.DataFrame:
     """Computes the Contract-Bounded Milestone Surface across a grid of reserves and delays.
     
-    Zero hardcoded synthetic schedule priors:
-    - Scheduled commencement months are passed explicitly for each silo.
-    - Decoupled delay grids (delay_grid_silo1 and delay_grid_silo2) are explored independently,
-      or synchronized via explicit shared_campus_delay_mode=True.
-    - Zero silent defaults for amortization schedules or capex caps.
+    Zero silent priors:
+    Every unobserved parameter must be explicitly passed by the caller.
+    Defaults are strictly prohibited to prevent accidental synthetic surfaces.
     """
     if shared_campus_delay_mode:
         delay_pairs = [(d, d) for d in delay_grid_silo1]
@@ -571,6 +661,7 @@ def compute_delay_tolerance_surface(
                             silo1_const, silo2_const,
                             silo1_rent_scenario, silo2_rent_scenario,
                             silo1_amort_scenario, silo2_amort_scenario,
+                            waterfall_priority=waterfall_priority,
                         )
 
                         max_parent_support = result.monthly_ledger["cumulative_parent_support_funding_required"].iloc[-1]
@@ -585,6 +676,7 @@ def compute_delay_tolerance_surface(
                             "delay_months_silo1": delay_s1,
                             "delay_months_silo2": delay_s2,
                             "shared_campus_delay_mode": shared_campus_delay_mode,
+                            "waterfall_priority": waterfall_priority,
                             "t_coverage_silo1": result.silo1_milestones.t_coverage,
                             "t_oper_exhaustion_silo1": result.silo1_milestones.t_operating_exhaustion,
                             "t_dsra_silo1": result.silo1_milestones.t_dsra,
@@ -602,24 +694,40 @@ def compute_delay_tolerance_surface(
 
 
 if __name__ == "__main__":
-    print("Testing Hardened 2.1.1 DeterministicDelayEngine baseline run...")
+    print("Testing Hardened 2.1.2 DeterministicDelayEngine baseline run...")
     engine = DeterministicDelayEngine(simulation_months=60)
     
-    # Explicit scenario declaration
-    s1_init = AccountState(construction_cash=100_000_000.0, dsra_cash=150_000_000.0, operating_cash=25_000_000.0)
-    s2_init = AccountState(construction_cash=150_000_000.0, dsra_cash=100_000_000.0, operating_cash=0.0)
+    # Use explicit demo scenario
+    p = demo_pf1_analyst_scenario()
+    s1_init = AccountState(
+        construction_cash=p["silo1_initial_construction_cash"],
+        dsra_cash=150_000_000.0,
+        operating_cash=p["silo1_initial_operating_cash"],
+    )
+    s2_init = AccountState(
+        construction_cash=p["silo2_initial_construction_cash"],
+        dsra_cash=100_000_000.0,
+        operating_cash=p["silo2_initial_operating_cash"],
+    )
+    s1_const = ConstructionScenario(
+        scheduled_commencement_month=p["scheduled_commencement_month_silo1"],
+        delay_months=6,
+        monthly_capex_burn=15_000_000.0,
+        remaining_capex_total=p["silo1_remaining_capex_total"],
+    )
+    s2_const = ConstructionScenario(
+        scheduled_commencement_month=p["scheduled_commencement_month_silo2"],
+        delay_months=6,
+        monthly_capex_burn=20_000_000.0,
+        remaining_capex_total=p["silo2_remaining_capex_total"],
+    )
     
-    s1_const = ConstructionScenario(scheduled_commencement_month=12, delay_months=6, monthly_capex_burn=15_000_000.0, remaining_capex_total=200_000_000.0)
-    s2_const = ConstructionScenario(scheduled_commencement_month=18, delay_months=6, monthly_capex_burn=20_000_000.0, remaining_capex_total=300_000_000.0)
-    
-    s1_rent = RentScenario(monthly_base_rent=15_275_000.0, monthly_opex=1_000_000.0)
-    s2_rent = RentScenario(monthly_base_rent=9_166_667.0, monthly_opex=1_000_000.0)
-
-    # Explicit amortization scenarios (e.g. 6 equal installments for Silo 1 = $391.67M; 7 equal for Silo 2 = $227.14M)
-    s1_amort = AmortizationScenario(schedule_type="equal_semiannual_scenario", semiannual_amount=2_350_000_000.0 / 6.0)
-    s2_amort = AmortizationScenario(schedule_type="equal_semiannual_scenario", semiannual_amount=1_590_000_000.0 / 7.0)
-    
-    res = engine.run_pf1_simulation(s1_init, s2_init, s1_const, s2_const, s1_rent, s2_rent, s1_amort, s2_amort)
+    res = engine.run_pf1_simulation(
+        s1_init, s2_init, s1_const, s2_const,
+        p["silo1_rent_scenario"], p["silo2_rent_scenario"],
+        p["silo1_amort_scenario"], p["silo2_amort_scenario"],
+        waterfall_priority=p["waterfall_priority"],
+    )
     print("Engine simulation completed successfully!")
     print(f"Silo 1 Milestones: {res.silo1_milestones}")
     print(f"Silo 2 Milestones: {res.silo2_milestones}")

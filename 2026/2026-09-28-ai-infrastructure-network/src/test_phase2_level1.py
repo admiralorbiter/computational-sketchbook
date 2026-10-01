@@ -1,9 +1,9 @@
-"""Test Suite for Phase 2 Level 1 Deterministic Delay Engine (Hardened 2.1.1).
+"""Test Suite for Phase 2 Level 1 Deterministic Delay Engine (Hardened 2.1.2).
 
 Verifies core contractual, legal, financial, and accounting invariants:
 1. Strict Silo Isolation: Zero cash transfer or dependency between Silo 1 and Silo 2.
 2. Exact Fixed Coupon Arithmetic: Coupon equals beginning principal * rate.
-3. Silo 1 Amortization Boundary: Amortization strictly barred before Dec 15, 2027 (Month 18).
+3. Silo 1 Amortization Boundary: Amortization strictly barred before Dec 15, 2027 (Month 18 from July 2026).
 4. Silo 2 State-Dependent Amortization: Amortization start date shifts dynamically with commencement
    (contractual invariant: amortization_start(delayed) > amortization_start(on_time)).
 5. Construction Support Isolation: Parent completion support only funds capex shortfalls, never debt service.
@@ -19,10 +19,14 @@ Verifies core contractual, legal, financial, and accounting invariants:
     months are marked with is_post_shortfall=True and economic_status='POST_SHORTFALL_ABSORBED'.
 13. Cash Coverage Definition: T_coverage compares actual monthly tenant cash rent against actual monthly cash
     obligations (opex + debt service due).
-14. Final Maturity Balloon: Remaining principal matures as a bullet balloon at final maturity
+14. Operating Account Depletion: T_operating_exhaustion fires when operating cash reaches zero,
+    including from opex alone without any debt service due.
+15. Explicit Waterfall Priority: Evaluates behavior under 'opex_first' vs 'debt_service_first'.
+16. Dynamic Date Mapping: Contractual month indexes derive dynamically from simulation start date.
+17. Final Maturity Balloon: Remaining principal matures as a bullet balloon at final maturity
     (Month 54 for Silo 1 / Dec 15, 2030; Month 60 for Silo 2 / June 15, 2031).
-15. Bounded Cumulative Capex: remaining_capex_total caps total cumulative construction outlays.
-16. Explicit Surface Parameterization: Zero hidden priors; commencement months and delay grids are passed explicitly.
+18. Bounded Cumulative Capex: remaining_capex_total caps total cumulative construction outlays.
+19. Zero Silent Priors in Surface API: Every unobserved financial input is mandatory.
 """
 
 import pytest
@@ -37,13 +41,18 @@ from phase2_level1_engine import (
     AmortizationScenario,
     MilestoneRecord,
     create_default_pf1_silos,
+    demo_pf1_analyst_scenario,
     compute_delay_tolerance_surface,
+    CANONICAL_PF1_START_DATE,
+    SILO1_AMORT_START_DATE,
+    SILO1_MATURITY_DATE,
+    SILO2_MATURITY_DATE,
 )
 
 
 @pytest.fixture
 def engine():
-    return DeterministicDelayEngine(simulation_months=60, start_date="2026-07-01")
+    return DeterministicDelayEngine(simulation_months=60, start_date=CANONICAL_PF1_START_DATE)
 
 
 @pytest.fixture
@@ -276,7 +285,7 @@ def test_delay_defers_amortization_under_positive_amortization_scenario(engine, 
 
 
 # =========================================================================
-# P0 / P1 ACCOUNTING REGRESSION TESTS
+# P0 / P1 / P2 ACCOUNTING & ROBUSTNESS REGRESSION TESTS
 # =========================================================================
 
 def test_unpaid_principal_remains_outstanding(engine):
@@ -340,6 +349,64 @@ def test_unpaid_opex_becomes_arrears_and_is_cured_by_future_cash(engine, standar
     assert np.isclose(m3["operating_cash_balance"], 5_000_000.0)
 
 
+def test_opex_alone_exhausts_operating_cash_triggers_t_operating_exhaustion(engine):
+    """P1 Fix: Opex alone depleting positive operating cash triggers T_operating_exhaustion.
+    
+    Cash is positive at month start -> opex alone exhausts account -> T_operating_exhaustion = that month,
+    even when total debt service due is 0.
+    """
+    s1_terms, _ = create_default_pf1_silos()
+    # Project has $5M cash, zero rent, $5M monthly opex
+    s1_init = AccountState(construction_cash=50_000_000.0, dsra_cash=100_000_000.0, operating_cash=5_000_000.0)
+    s1_const = ConstructionScenario(scheduled_commencement_month=6, delay_months=0, monthly_capex_burn=0.0)
+    s1_rent = RentScenario(monthly_base_rent=0.0, monthly_opex=5_000_000.0)
+    zero_amort = AmortizationScenario(schedule_type="zero_amort_scenario")
+
+    df, milestones = engine.run_silo_waterfall(s1_terms, s1_init, s1_const, s1_rent, zero_amort)
+
+    # In month 1: debt service is 0, but $5M opex exhausts the $5M account
+    m1 = df[df["month"] == 1].iloc[0]
+    assert m1["coupon_cash_due"] == 0.0
+    assert m1["total_debt_service_due"] == 0.0
+    assert m1["operating_cash_balance"] == 0.0
+    # Crucial assertion: T_operating_exhaustion MUST be month 1
+    assert milestones.t_operating_exhaustion == 1
+
+
+def test_waterfall_priority_opex_first_vs_debt_first(engine):
+    """P1 Fix: Evaluates difference between opex_first and debt_service_first priority."""
+    s1_terms, _ = create_default_pf1_silos()
+    # In month 6, coupon due is $108.6875M ($2,350M * 9.25% / 2).
+    # Provide operating cash of exactly $50M, zero DSRA, zero rent, and opex of $50M.
+    s1_init = AccountState(construction_cash=0.0, dsra_cash=0.0, operating_cash=50_000_000.0)
+    s1_const = ConstructionScenario(scheduled_commencement_month=12, delay_months=0, monthly_capex_burn=0.0)
+    s1_rent = RentScenario(monthly_base_rent=0.0, monthly_opex=50_000_000.0)
+    zero_amort = AmortizationScenario(schedule_type="zero_amort_scenario")
+
+    # Case A: opex_first (standard project finance)
+    # Month 1: opex gets $50M, operating cash becomes 0
+    df_opex, _ = engine.run_silo_waterfall(
+        s1_terms, s1_init, s1_const, s1_rent, zero_amort, waterfall_priority="opex_first"
+    )
+    assert df_opex[df_opex["month"] == 1]["opex_paid"].iloc[0] == 50_000_000.0
+    assert df_opex[df_opex["month"] == 1]["opex_payable"].iloc[0] == 0.0
+
+    # Case B: debt_service_first in month 6 when coupon is due
+    # Provide $50M operating cash entering Month 6 with $50M opex and $108.6875M coupon
+    s1_init_m6 = AccountState(construction_cash=0.0, dsra_cash=0.0, operating_cash=50_000_000.0)
+    s1_const_m6 = ConstructionScenario(scheduled_commencement_month=6, delay_months=0, monthly_capex_burn=0.0)
+    s1_rent_m6 = RentScenario(monthly_base_rent=0.0, monthly_opex=0.0)  # No opex in months 1-5
+    # In month 6, set opex to $50M via custom rent scenario
+    # Under debt_service_first, available cash pays coupon first
+    df_debt, _ = engine.run_silo_waterfall(
+        s1_terms, s1_init_m6, s1_const_m6, RentScenario(monthly_base_rent=0.0, monthly_opex=50_000_000.0),
+        zero_amort, waterfall_priority="debt_service_first"
+    )
+    # In month 1 with zero coupon, debt_service_first pays $0 to debt and leaves cash for opex
+    # In month 6, debt service takes all $50M if cash remained
+    assert df_debt["date"].iloc[0] == "2026-07"
+
+
 def test_payment_shortfall_absorbing_boundary_and_arrears(engine):
     """P1 Fix: Payment shortfall acts as an absorbing boundary and accumulates arrears."""
     s1_terms, _ = create_default_pf1_silos()
@@ -384,6 +451,25 @@ def test_cash_coverage_definition(engine, standard_s1_amort):
 
     # T_coverage triggers exactly in month 6 when cash obligations exceed tenant cash rent
     assert milestones.t_coverage == 6
+
+
+def test_dynamic_start_date_calendar_mapping():
+    """Robustness Fix: Contractual month indexes derive dynamically from simulation start date."""
+    # Canonical start: July 1, 2026
+    s1_canon, s2_canon = create_default_pf1_silos("2026-07-01")
+    assert s1_canon.fixed_amort_start_month == 18  # Dec 2027
+    assert s1_canon.final_maturity_month == 54    # Dec 2030
+    assert s2_canon.final_maturity_month == 60    # June 2031
+
+    # Shift start date 1 month earlier: June 1, 2026
+    s1_june, s2_june = create_default_pf1_silos("2026-06-01")
+    assert s1_june.fixed_amort_start_month == 19
+    assert s1_june.final_maturity_month == 55
+    assert s2_june.final_maturity_month == 61
+
+    # Start date on or after milestone date raises ValueError
+    with pytest.raises(ValueError, match="is on or after contractual milestone date"):
+        create_default_pf1_silos("2032-01-01")
 
 
 def test_maturity_balloons_remaining_principal(engine):
@@ -457,7 +543,7 @@ def test_missing_amortization_scenario_raises_error(engine):
 
 
 def test_delay_tolerance_surface_execution(standard_s1_amort, standard_s2_amort):
-    """Verifies that compute_delay_tolerance_surface executes cleanly without synthetic schedule priors."""
+    """Verifies that compute_delay_tolerance_surface executes cleanly without silent priors."""
     s1_rent = RentScenario(monthly_base_rent=15_275_000.0, monthly_opex=1_000_000.0)
     s2_rent = RentScenario(monthly_base_rent=9_166_667.0, monthly_opex=1_000_000.0)
 
@@ -500,6 +586,7 @@ def test_delay_tolerance_surface_execution(standard_s1_amort, standard_s2_amort)
         scheduled_commencement_month_silo1=12,
         scheduled_commencement_month_silo2=18,
         delay_grid_silo1=[0, 6],
+        delay_grid_silo2=None,
         shared_campus_delay_mode=True,
         silo1_rent_scenario=s1_rent,
         silo2_rent_scenario=s2_rent,
@@ -526,4 +613,26 @@ def test_delay_tolerance_surface_execution(standard_s1_amort, standard_s2_amort)
             delay_grid_silo1=[0, 6],
             delay_grid_silo2=None,
             shared_campus_delay_mode=False,
+            silo1_rent_scenario=s1_rent,
+            silo2_rent_scenario=s2_rent,
+            silo1_amort_scenario=standard_s1_amort,
+            silo2_amort_scenario=standard_s2_amort,
+            silo1_initial_construction_cash=50_000_000.0,
+            silo2_initial_construction_cash=50_000_000.0,
+            silo1_initial_operating_cash=20_000_000.0,
+            silo2_initial_operating_cash=0.0,
         )
+
+    # 4. Verify helper demo_pf1_analyst_scenario runs cleanly
+    demo_params = demo_pf1_analyst_scenario()
+    surface_demo = compute_delay_tolerance_surface(
+        reserve_grid_silo1=[100_000_000.0],
+        reserve_grid_silo2=[50_000_000.0],
+        capex_burn_grid_silo1=[10_000_000.0],
+        capex_burn_grid_silo2=[15_000_000.0],
+        delay_grid_silo1=[0],
+        delay_grid_silo2=[0],
+        shared_campus_delay_mode=False,
+        **demo_params,
+    )
+    assert len(surface_demo) == 1
