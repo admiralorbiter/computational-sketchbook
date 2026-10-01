@@ -161,7 +161,43 @@ While metro-wide coordinator rollback averages +$1,239.68 gross compensation per
 
 ---
 
-## 8. Directory Structure & Execution Pipeline
+## 8. Phase 5: "What Are the Coordinators?" — Functional Institutional Decomposition
+
+Having certified and frozen the econometric and fiscal core, Phase 5 transitions from *measuring* supervisory growth to conducting an in-depth **institutional and descriptive decomposition** of the instructional coordinator workforce (`CORSUP`):
+
+### 8.1 Role-Level Crosswalk & Functional Distribution
+State reporting manuals (**Kansas KSDE SO66** and **Missouri DESE Core Data MOSIS Position Code 30**) aggregate highly heterogeneous non-classroom professionals into federal line `CORSUP`. Our 29-role canonical crosswalk ([`data/processed/coordinator_role_crosswalk.csv`](data/processed/coordinator_role_crosswalk.csv)) decomposes this workforce into 7 functional categories across the 6 focal districts:
+- **Building Instructional Coaching (38.4% of sample):** Non-evaluative coaches embedded directly in school buildings to support pedagogy, curriculum fidelity, and peer modeling.
+- **Curriculum & Content Coordination (19.4% of sample):** Central subject-matter specialists (ELA, Math, Science, CTE) establishing district scope, sequence, and pacing.
+- **Special Education & EL Program Management (19.1% of sample):** Process coordinators and language acquisition specialists managing IEP and bilingual compliance.
+- **Instructional Technology (9.4% of sample):** Building/central facilitators supporting 1:1 hardware/software devices and digital LMS platforms.
+- **Intervention & MTSS (7.2% of sample):** School-site leaders coordinating Tier 2/3 academic and behavioral remediation.
+- **Data & Assessment (4.8% of sample):** Central psychometricians managing state standardized tests (KAP/MAP) and diagnostic screeners.
+- **Federal Programs & Compliance (1.7% of sample):** Central officers managing Title I/II/III grant budgeting and state audits.
+
+> [!IMPORTANT]
+> **Key Institutional Insight:** Over **52% of the coordinator workforce** consists of non-evaluative coaching and intervention personnel stationed directly inside school buildings, rather than central-office bureaucrats.
+
+### 8.2 Six Representative Institutional Archetypes
+Rather than treating districts as statistical outliers along a single dimension, Phase 5 reconstructs the complete organizational staffing models across six representative systems ([`data/processed/district_staffing_architectures_6archetypes.csv`](data/processed/district_staffing_architectures_6archetypes.csv)):
+1. **Shawnee Mission USD 512 (KS) — Specialized Coaching Overlay:** Standard building admin (2.12/school, 95.5 FTE) and central line (13.0 FTE), with a massive coaching overlay (123.7 FTE, +59.0 FTE above peers) adding ~50 non-evaluative coaches layered on top of teachers.
+2. **Kansas City USD 500 / KCKPS (KS) — Distributed School Supervision:** Lean central line (6.0 FTE, -3.0 FTE below peers), with dense school-level administration (141.0 FTE, **3.28 admins/school**, +55.2 FTE above peers) and permanent coordinator capacity (106.8 FTE, +56.3 FTE above peers) managing student climate, attendance, and Tier 2/3 interventions.
+3. **Olathe USD 233 (KS) — Suburban Scaling & Retrenchment:** Rapid suburban scale with pandemic coaching surge (85.6 FTE), followed by post-ESSER retrenchment cutting 23.6 FTE in 2024–25 to reassign staff back to classroom vacancies.
+4. **North Kansas City 74 (MO) — Rapid Growth Departmental Hierarchy:** Scaled discipline-specific content coordinators and 10 tech coaches (36.6 FTE) to match rapid enrollment growth (+1,390 students), absorbed permanently via robust local property taxes (59% local share).
+5. **Raytown C-2 (MO) — Layered Curriculum Leadership:** Codified dual Assistant Superintendents and 7 K-12 subject coordinators under CSIP Goal 1; maintained high central density despite enrollment decline (-12.7%).
+6. **Lee's Summit R-VII (MO) — Lean Comparator / Department Chair Model:** Resisted the coordinator expansion (11.0 FTE in 2023–24, falling to 9.75 FTE in 2024–25); anchors instructional leadership in classroom Department Chairs (stipends/course release) and building assistant principals (66.5 FTE), experiencing zero post-ESSER fiscal dislocation.
+
+### 8.3 Post-ESSER Longitudinal Survival (2024–25 to 2026–27)
+Longitudinal tracking ([`data/processed/post_esser_coordinator_survival.csv`](data/processed/post_esser_coordinator_survival.csv)) reveals three distinct post-relief survival trajectories:
+- **Sharp Retrenchment (Olathe):** Cut 23.6 FTE (-27.6%) upon ESSER expiration to resolve general fund deficits.
+- **Local Absorption with Budget Freeze (Shawnee Mission):** Absorbed ~50 coaches into operating funds in 2024–25 (116.0 FTE), but March 2026 board action denied all 113.3 FTE staffing requests and froze further coaching expansions.
+- **Formula-Driven Permanence (KCKPS & North KC):** KCKPS expanded slightly (to 120.96 FTE) because its positions are funded through permanent formulaic Title I, Title III, and State At-Risk categoricals rather than emergency grants; North KC absorbed positions through student enrollment and local property tax growth.
+
+Detailed qualitative documentation and full institutional narrative are provided in [`research/phase5_what_are_the_coordinators.md`](research/phase5_what_are_the_coordinators.md) and [`outputs/tables/coordinator_functional_decomposition_report.md`](outputs/tables/coordinator_functional_decomposition_report.md).
+
+---
+
+## 9. Directory Structure & Execution Pipeline
 
 ```text
 2026-10-01-kc-admin-staffing-decomposition/
@@ -171,7 +207,8 @@ While metro-wide coordinator rollback averages +$1,239.68 gross compensation per
 │   ├── taxonomy.md                            # Frozen 7-bucket staff taxonomy & safe composites
 │   ├── methods.md                             # Certified econometric & fiscal methodology
 │   ├── questions_original_design.md           # Archival original research questions & framework
-│   └── provenance_ledger.md                   # Break reconciliations & survey mechanics
+│   ├── provenance_ledger.md                   # Break reconciliations & survey mechanics
+│   └── phase5_what_are_the_coordinators.md    # Phase 5 institutional evidence & state reporting analysis
 ├── data/
 │   ├── raw/                                   # Pointers to original federal/state extracts
 │   ├── interim/
@@ -185,7 +222,10 @@ While metro-wide coordinator rollback averages +$1,239.68 gross compensation per
 │   │   ├── district_staff_year.parquet        # Canonical 21-yr staffing panel (1,629 rows, 70 cols)
 │   │   ├── district_staff_year.csv            # CSV mirror
 │   │   ├── district_demand_year.parquet       # Integrated demand & finance panel (1,629 rows, 104 cols)
-│   │   └── district_demand_year.csv           # CSV mirror
+│   │   ├── district_demand_year.csv           # CSV mirror
+│   │   ├── coordinator_role_crosswalk.csv     # Phase 5 role-level crosswalk (29 discrete positions)
+│   │   ├── district_staffing_architectures_6archetypes.csv # Phase 5 institutional staffing profiles
+│   │   └── post_esser_coordinator_survival.csv# Phase 5 post-ESSER longitudinal survival tracking
 │   └── manifest.csv                           # Immutable audit ledger with SHA256 hashes
 ├── src/
 │   ├── taxonomy.py                            # Taxonomy registry, safe composites & missingness rules
@@ -196,6 +236,7 @@ While metro-wide coordinator rollback averages +$1,239.68 gross compensation per
 │   ├── build_demand_panel.py                  # Phase 2A demand & finance integration pipeline
 │   ├── models.py                              # Phase 2B/2C econometric regressions & Shapley engine
 │   ├── fiscal_counterfactuals.py              # Phase 4 fiscal simulation engine
+│   ├── coordinator_crosswalk.py               # Phase 5 role crosswalk & post-ESSER tracking engine
 │   └── test_narrative_sync.py                 # Automated text-to-data synchronization test suite
 └── outputs/
     └── tables/
@@ -203,6 +244,7 @@ While metro-wide coordinator rollback averages +$1,239.68 gross compensation per
         ├── econometric_decomposition_report.md       # Phase 2B/2C econometric synthesis report
         ├── board_document_audit_report.md            # Phase 3 qualitative outlier audit report
         ├── fiscal_materiality_report.md              # Phase 4 fiscal materiality synthesis report
+        ├── coordinator_functional_decomposition_report.md # Phase 5 coordinator functional report
         ├── phase3_claim_evidence.csv                 # Audited qualitative claims & evidence ledger
         ├── model_regression_results.csv              # Within-FE & peer model parameters
         ├── long_difference_regression_results.csv    # 10-year long-difference growth OLS estimates
@@ -215,12 +257,13 @@ While metro-wide coordinator rollback averages +$1,239.68 gross compensation per
 ```
 
 ### Reproducibility Sequence
-To execute the complete 4-phase computational pipeline and automated test suite:
+To execute the complete 5-phase computational pipeline and automated test suite:
 ```powershell
 python src/audit_panel.py              # 1. Verify semantic gates and data integrity
 python src/descriptive_decomposition.py # 2. Generate Phase 1.1 mechanical decomposition
 python src/build_demand_panel.py       # 3. Compile Phase 2A demand & school finance panel
 python src/models.py                   # 4. Fit Phase 2B regressions & Phase 2C Shapley
 python src/fiscal_counterfactuals.py   # 5. Simulate Phase 4 fiscal materiality counterfactuals
-python src/test_narrative_sync.py      # 6. Verify 100% numerical synchronization
+python src/coordinator_crosswalk.py    # 6. Build Phase 5 role crosswalk & post-ESSER tracking
+python src/test_narrative_sync.py      # 7. Verify 100% numerical synchronization
 ```

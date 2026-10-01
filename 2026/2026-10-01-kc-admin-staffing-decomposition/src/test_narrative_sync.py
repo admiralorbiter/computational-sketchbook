@@ -304,6 +304,46 @@ def test_markdown_link_and_retraction_hygiene():
                 f"Found unretracted/unclarified 89.5% claim in {f.relative_to(ROOT)}"
 
 
+def test_phase5_coordinator_functional_decomposition():
+    crosswalk_path = DATA_DIR / "processed" / "coordinator_role_crosswalk.csv"
+    arch_path = DATA_DIR / "processed" / "district_staffing_architectures_6archetypes.csv"
+    post_path = DATA_DIR / "processed" / "post_esser_coordinator_survival.csv"
+    report_path = OUTPUTS_DIR / "coordinator_functional_decomposition_report.md"
+
+    assert crosswalk_path.exists(), f"Missing {crosswalk_path}"
+    assert arch_path.exists(), f"Missing {arch_path}"
+    assert post_path.exists(), f"Missing {post_path}"
+    assert report_path.exists(), f"Missing {report_path}"
+
+    df_cross = pd.read_csv(crosswalk_path)
+    df_arch = pd.read_csv(arch_path)
+    df_post = pd.read_csv(post_path)
+    report_text = report_path.read_text(encoding="utf-8")
+
+    # Verify counts
+    assert len(df_cross) == 29
+    assert len(df_arch) == 6
+    assert len(df_post) == 6
+
+    # Verify exact crosswalk summation to reported CCD CORSUP
+    corsup_by_dist = df_cross.groupby("district_name")["estimated_fte_2023_24"].sum().round(2).to_dict()
+    assert abs(corsup_by_dist["Shawnee Mission USD 512"] - 123.71) < 0.01
+    assert abs(corsup_by_dist["Kansas City USD 500"] - 106.80) < 0.01
+    assert abs(corsup_by_dist["Olathe USD 233"] - 85.55) < 0.01
+    assert abs(corsup_by_dist["North Kansas City 74"] - 36.55) < 0.01
+    assert abs(corsup_by_dist["Raytown C-2"] - 16.75) < 0.01
+    assert abs(corsup_by_dist["Lee's Summit R-VII"] - 11.00) < 0.01
+
+    # Verify key architectural metrics in report text
+    assert "123.7" in report_text
+    assert "106.8" in report_text
+    assert "141.0" in report_text
+    assert "3.28" in report_text
+    assert "2.12" in report_text
+    assert "Specialized Instructional Coaching Overlay" in report_text
+    assert "Decentralized School-Level Supervisory Dispersion" in report_text
+
+
 if __name__ == "__main__":
     print("Running automated synchronization checks...")
     test_compensation_benchmarks_and_reconstruction_valid()
@@ -322,6 +362,8 @@ if __name__ == "__main__":
     print("[PASS] District-level fiscal counterfactuals and feasible base raises validated.")
     test_annual_trajectory_and_peer_summary_sync()
     print("[PASS] Trajectory and peer summary aggregations validated.")
+    test_phase5_coordinator_functional_decomposition()
+    print("[PASS] Phase 5 coordinator functional decomposition & archetypes validated.")
     test_markdown_link_and_retraction_hygiene()
     print("[PASS] Markdown link and retraction hygiene validated.")
     print("\nALL NARRATIVE AND DATA SYNCHRONIZATION CHECKS PASSED (100% MATCH).")
