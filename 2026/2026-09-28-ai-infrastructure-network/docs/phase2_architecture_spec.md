@@ -111,22 +111,29 @@ $$\mathbf{C}_{\text{silo}, k, t} = \begin{bmatrix} C_{\text{construction}, k, t}
 
 ---
 
-### Tiered Failure Boundaries: The 6-Milestone Staircase (Per Silo)
-Rather than a single binary failure condition ($L < 0$), each financing silo tracks a **6-milestone contractual staircase**, separating construction funding failure from debt payment default:
+### Dual-Track Milestone Detection: Independently Detected Milestone Sets (Per Silo)
+Rather than assuming a mandatory sequential staircase, the Level 1 engine models **two interacting, parallel tracks** detected independently:
 
 ```
-[Normal Operations] ──> [T_coverage: Operating Flow Deficit] 
-                    ──> [T_operating_exhaustion: Operating Account Depletion] 
-                    ──> [T_DSRA: Debt Service Reserve Draw] 
-                    ──> [T_completion_support: Parent Completion Guarantee Economically Required] 
-                    ──> [T_payment_default: Uncured Contractual Payment Failure] 
-                    ──> [T_refi: Final Maturity / Refinancing Boundary]
+[Track A: Debt-Service Track]
+  T_coverage ──> T_operating_exhaustion ──> T_DSRA ──> T_payment_default
+                                                            │
+  (T_refi arrives independently as a calendar boundary) ────┘
+
+[Track B: Construction-Funding Track]
+  Eligible Construction Funds Depleted ──> T_completion_support (Parent Guarantee Activated)
 ```
+
+Crucially, **$T_{\text{completion\_support}}$ is not downstream of $T_{\text{DSRA}}$**:
+- The parent completion guarantee can become economically required while the Debt Service Reserve Account is still 100% intact. The DSRA is legally restricted to debt service (coupons/amortization), whereas the completion guarantee funds the remaining physical construction capex necessary to achieve commercial commencement.
+- Consequently, the milestone set $\mathcal{T}_k$ is evaluated as **independently detected milestone times**, not an enforced sequential state progression:
+
+$$\mathcal{T}_k = \left\{ T_{\text{coverage}, k},\; T_{\text{operating\_exhaustion}, k},\; T_{\text{DSRA}, k},\; T_{\text{completion\_support}, k},\; T_{\text{payment\_default}, k},\; T_{\text{refi}, k} \right\}$$
 
 1. **$T_{\text{coverage}, k}$ (Operating Flow Deficit):** First month recurring operating cash inflows do not cover recurring uses ($R^{\text{tenant}}_{k, t} < I^{\text{coupon}}_{k, t} + P^{\text{amort}}_{k, t} + O^{\text{opex}}_{k, t}$). The silo enters a cash burn state, buffered by accumulated operating cash.
 2. **$T_{\text{operating\_exhaustion}, k}$ (Operating Account Depletion):** First month the silo's operating cash account balance reaches zero ($C_{\text{operating}, k, t} = 0$).
 3. **$T_{\text{DSRA}, k}$ (Debt Service Reserve Draw):** Operating cash is fully depleted, forcing the silo to execute its first draw on its capitalized Debt Service Reserve Account ($C_{\text{DSRA}, k, t} < R_{0, k}$).
-4. **$T_{\text{completion\_support}, k}$ (Parent Completion Funding Required):** First point at which available eligible construction funds are insufficient to fund the remaining capex necessary to achieve the contractual Commencement Date milestone. Under the November 20, 2025 (Silo 1) and June 16, 2026 (Silo 2) Form 8-Ks, Applied Digital becomes legally obligated to fund the construction shortfall before the Outside Completion Date.
+4. **$T_{\text{completion\_support}, k}$ (Parent Completion Funding Required):** First point at which available eligible construction funds ($C_{\text{construction}, k, t}$) are insufficient to fund the remaining capex necessary to achieve the contractual Commencement Date milestone. Under the November 20, 2025 (Silo 1) and June 16, 2026 (Silo 2) Form 8-Ks, Applied Digital becomes legally obligated to fund the construction shortfall before the Outside Completion Date.
 5. **$T_{\text{payment\_default}, k}$ (Contractual Debt Payment Default):** First contractual payment date on which required coupon or principal amortization cannot be paid from legally permitted silo cash sources and applicable reserve accounts, after any documented contractual grace/cure periods. *(Note: Applied Digital's completion guarantee is a construction funding obligation, not an unconditional debt-service guaranty; debt payment default occurs when the silo's own payment reserves and permitted cure resources are exhausted).*
 6. **$T_{\text{refi}, k}$ (Final Maturity / Refinancing Boundary):** Final maturity dates (2030 for Silo 1 9.25% notes, 2031 for Silo 2 7.00% notes) where remaining principal must be repaid or refinanced under prevailing market credit spreads.
 
@@ -227,14 +234,14 @@ $$\mathcal{T}_{\text{silo}, 1} = \left\{ T_{\text{coverage}, 1},\; T_{\text{oper
 
 $$\mathcal{T}_{\text{silo}, 2} = \left\{ T_{\text{coverage}, 2},\; T_{\text{operating\_exhaustion}, 2},\; T_{\text{DSRA}, 2},\; T_{\text{completion\_support}, 2},\; T_{\text{payment\_default}, 2},\; T_{\text{refi}, 2} \right\} = f(R_{0,2},\; K_{\text{burn}, 2},\; \text{CommencementDate}_2)$$
 
-#### The Campus Overlay: Parent Equity Reconvergence
+#### The Campus Overlay: Parent Support Funding Reconvergence
 Crucially, while each project financing silo is legally bankruptcy-remote, both completion guarantees reconverge economically onto Applied Digital's parent balance sheet:
 
-$$\text{ParentEquityRequired}(t) = \text{Support}_{\text{silo}, 1}(t) + \text{Support}_{\text{silo}, 2}(t)$$
+$$\text{ParentSupportFundingRequired}(t) = \text{Support}_{\text{silo}, 1}(t) + \text{Support}_{\text{silo}, 2}(t)$$
 
 This generates the foundational output of Phase 2:
-$$\mathbf{\Delta t_{\text{delay}} \longrightarrow \text{Cumulative Parent Equity Required}}$$
-revealing the exact point at which an ostensibly non-recourse project structure re-links to corporate solvency.
+$$\mathbf{\Delta t_{\text{delay}} \longrightarrow \text{Cumulative Parent Support Funding Required}}$$
+revealing the exact point at which an ostensibly non-recourse project structure re-links to parent liquidity and funding capacity.
 
 ---
 
