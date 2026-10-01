@@ -1,0 +1,2 @@
+dataset_name,relative_path,record_count,columns_count,years_covered,district_count,sha256,created_at_utc
+district_staff_year,data/processed/district_staff_year.csv,1629,53,2004-2005 to 2024-2025,84,952c94d7a04906e873f5d1d1d255fec4077cc5601b1573fde4900c9f5defdc32,2026-10-01T17:04:05.576925+00:00
