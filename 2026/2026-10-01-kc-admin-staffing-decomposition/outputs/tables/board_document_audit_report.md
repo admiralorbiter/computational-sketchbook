@@ -9,14 +9,14 @@
 
 ## Executive Summary: Ground-Truthing Econometric Outliers
 
-In Phase 2B, our cross-sectional **Peer Expected-Level Models** identified four persistent multi-year staffing outliers across the Kansas City metropolitan area. These districts exhibited actual staffing levels that deviated by more than $1.5 \text{ to } 9.0 \text{ standard deviations}$ from peer districts of comparable enrollment, facility count, student poverty, special education (IDEA), and English learner (LEP) populations:
+In Phase 2B, our cross-sectional **Peer Expected-Level Models** identified four persistent multi-year staffing outliers across the Kansas City metropolitan area. These districts exhibited actual staffing levels that deviated by more than $1.5 \text{ to } 10.1 \text{ standard deviations}$ from peer districts conditioned on operating school facilities, teacher headcount, and pupil enrollment:
 
-1. **Shawnee Mission Public Schools (USD 512, KS):** Peer coordinator residual peaked at **$+8.71 \text{ SD}$** (+65.2 FTE above peers, +93.7 FTE net growth).
-2. **Kansas City Kansas Public Schools (USD 500, KS):** School building administrator residual reached **$+9.09 \text{ SD}$** (+55.2 FTE above peers, 141.0 FTE across 43 schools).
-3. **Raytown C-2 School District (MO):** Persistent coordinator surplus of **$+2.23 \text{ SD}$** (+14.0 FTE above peers) for 7 consecutive years.
-4. **Fort Osage R-I School District (MO):** Persistent central line administrator surplus of **$+2.65 \text{ SD}$** (+3.4 FTE above peers) in all 10 consecutive years.
+1. **Shawnee Mission Public Schools (USD 512, KS):** Peer coordinator residual peaked at **$+5.46 \text{ studentized SD}$** (+59.00 FTE above peers in 2023–24, +3.16 coordinators per 100 teachers).
+2. **Kansas City Kansas Public Schools (USD 500, KS):** School building administrator residual reached **$+10.11 \text{ studentized SD}$** (+55.20 FTE above peers, averaging 3.28 administrators across 43 schools, +1.28 admins per school above peer expectations).
+3. **Raytown C-2 School District (MO):** Persistent central executive administrator surplus of **$+2.54 \text{ studentized SD}$** (+2.4 FTE above peers) and central+coordinator surplus of $+16.5 \text{ FTE}$ ($z = +2.51$).
+4. **Fort Osage R-I School District (MO):** Persistent central executive administrator surplus of **$+2.65 \text{ studentized SD}$** (+3.4 FTE above peers, +0.69 admins per 1k pupils) across all 10 consecutive years.
 
-This qualitative audit interrogates board minutes, organizational charts, strategic plans, and state reporting documentation (KSDE SO66 and MO DESE Core Data) to determine the administrative mechanisms driving these statistical anomalies. To maintain strict research integrity, all qualitative findings are registered in our structured evidence ledger ([`outputs/tables/phase3_claim_evidence.csv`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-01-kc-admin-staffing-decomposition/outputs/tables/phase3_claim_evidence.csv)), explicitly distinguishing **direct administrative receipts** (primary board minutes, grant filings, staffing directories, and statutory personnel registers) from **inferred institutional mechanisms** (policy intentions, behavioral drivers, and fiscal absorption pressures).
+This qualitative audit interrogates primary board minutes, organizational charts, Comprehensive School Improvement Plans (CSIP), and state reporting documentation (KSDE SO66 and MO DESE Core Data) to determine the administrative mechanisms driving these statistical anomalies. To maintain strict research integrity, all qualitative findings are registered in our structured evidence ledger ([`outputs/tables/phase3_claim_evidence.csv`](phase3_claim_evidence.csv)), explicitly distinguishing **direct administrative receipts** (primary board minutes, grant filings, staffing directories, and statutory personnel registers) from **inferred institutional mechanisms** (policy intentions, behavioral drivers, and fiscal absorption pressures).
 
 ---
 
@@ -26,12 +26,12 @@ This qualitative audit interrogates board minutes, organizational charts, strate
 - **NCES LEA ID:** `2011640`
 - **2023–24 Scale:** 26,464 Students | 45 Operating Schools | 1,867.29 Classroom Teachers
 - **Coordinator Trajectory `[SMSD-03]` (Direct Administrative Data):**
-  - 2014–15: 27.60 FTE (1.61 coordinators per 100 teachers)
-  - 2018–19: 46.50 FTE (2.13 coordinators per 100 teachers)
-  - 2019–20: 78.00 FTE (4.34 coordinators per 100 teachers)
-  - 2020–21: 105.00 FTE (5.86 coordinators per 100 teachers)
-  - 2023–24: 123.71 FTE (6.62 coordinators per 100 teachers)
-- **Model 3 (CORSUP Peer) Residual `[SMSD-03]`:** $+65.20 \text{ FTE}$ ($z = +8.71$, direct econometric residual)
+  - 2014–15: 27.60 FTE (1.48 coordinators per 100 teachers)
+  - 2018–19: 46.50 FTE (2.50 coordinators per 100 teachers)
+  - 2019–20: 78.00 FTE (4.26 coordinators per 100 teachers)
+  - 2020–21: 105.00 FTE (5.74 coordinators per 100 teachers)
+  - 2023–24: 123.71 FTE (6.63 coordinators per 100 teachers)
+- **Model 3 (CORSUP Peer) Residual `[SMSD-03]`:** $+59.00 \text{ FTE}$ ($z = +5.23$, studentized $z = +5.46$, +3.16 coordinators per 100 teachers, direct econometric residual)
 
 ```mermaid
 graph LR
@@ -65,7 +65,7 @@ graph LR
   - 2021–22: 90.00 FTE (2.09 administrators per school)
   - 2022–23: 124.00 FTE (2.88 administrators per school)
   - 2023–24: 141.00 FTE (3.28 administrators per school)
-- **Model 1 (SCHADM Peer) Residual `[KCK-01]`:** $+55.23 \text{ FTE}$ ($z = +9.09$)
+- **Model 1 (SCHADM Peer) Residual `[KCK-01]`:** $+55.20 \text{ FTE}$ ($z = +9.09$, studentized $z = +10.11$, +1.28 administrators per school)
 
 ### 2. Qualitative Findings: Decentralized Building Supervision vs. Lean Central Line
 - **De-Concentration of Central Management `[KCK-04]` (Direct Administrative Data):** KCKPS presents a striking architectural contrast: while its building-level administration reached **141.0 FTE** (averaging 3.28 administrators across 43 schools), its district central administration (`LEAADM`) remained at only **6.0 FTE** (operating $-3.0 \text{ FTE}$ below its peer-predicted expectation of 9.07 FTE). This demonstrates a deliberate institutional choice to place supervisory personnel in school buildings rather than central headquarters.
@@ -80,16 +80,16 @@ graph LR
 - **NCES LEA ID:** `2926070`
 - **2023–24 Scale:** 7,953 Students | 20 Operating Schools | 554.60 Classroom Teachers
 - **Multi-Year Residual Pattern `[RAY-03]` (Direct Econometric Residuals):**
-  - Model 3 (CORSUP Peer): $+14.0 \text{ FTE}$ mean residual ($z = +2.23$, positive outlier in 7 of 8 years)
-  - Model 2 (LEAADM Peer): $+2.4 \text{ FTE}$ mean residual ($z = +2.53$, positive outlier in 5 years)
+  - Model 2 (LEAADM Peer): $+2.4 \text{ FTE}$ mean residual ($z = +2.53$, studentized $z = +2.54$, positive outlier in 5 years)
   - Model 4 (Central+Coord Footprint): $+16.5 \text{ FTE}$ mean residual ($z = +2.51$, positive outlier in 7 years)
+  - Model 3 (CORSUP Peer): $+8.6 \text{ FTE}$ mean residual across panel ($z = +1.89$, positive outlier in 6 years)
 
-### 2. Qualitative Findings: A Hyper-Specialized Central & Coaching Bureaucracy
-- **Dual-Assistant Superintendent Structure `[RAY-01]` (Direct District Portal):** For a mid-sized district of ~8,000 students, Raytown divides instructional leadership into two separate cabinet-level positions:
+### 2. Qualitative Findings: Layered Curriculum Leadership & Central Coordination
+- **Contemporaneous Dual-Assistant Superintendent Structure `[RAY-01]` (Direct CSIP Receipt):** Within its *2017–2022 Comprehensive School Improvement Plan (CSIP Goal 1)*, Raytown codified a divided instructional executive structure, establishing two distinct cabinet-level assistant superintendencies:
   1. *Assistant Superintendent of Instructional Leadership – Elementary*
   2. *Assistant Superintendent of Instructional Leadership – Secondary*
-- **Five-Director Central Overhead & Seven Subject Coordinators `[RAY-02]` (Direct Staff Directory):** Beneath these assistant superintendents, Raytown's Curriculum & Instruction leadership roster confirms five central directorships (Curriculum/Assessment, Student Support, Special Services, Student Programs, Technology) alongside seven discipline-specific full-time K–12 coordinators (Science, ELA, Math, Technology, SPED Programming, SPED, and Belonging).
-- **Layered Supervisory Structure:** In addition to this central coordinator layer, Raytown stations secondary instructional technology specialists and building coaches on campus. This layered bureaucracy explains why Raytown maintains **21 to 23 coordinator FTE** where peer districts of similar size employ only 6 to 8 FTE.
+- **Five-Director Central Overhead & Seven Subject Coordinators `[RAY-02]` (Direct Staff Directory & State Filings):** Contemporaneous staffing rosters and DESE Core Data filings confirm five central directorships (Curriculum/Assessment, Student Support, Special Services, Student Programs, Technology) alongside seven discipline-specific full-time K–12 coordinators (Science, ELA, Math, Technology, SPED Programming, SPED, and Belonging).
+- **Layered Supervisory Structure:** In addition to this central coordinator layer, Raytown stations secondary instructional technology specialists and building coaches on campus. This layered organizational design explains why Raytown maintains **21 to 23 coordinator FTE** where peer districts of similar size employ only 6 to 8 FTE.
 
 ---
 
@@ -101,23 +101,23 @@ graph LR
 - **Central Administration (LEAADM) Trajectory `[FO-02]` & `[FO-03]` (Direct Administrative Data):**
   - 2014–15: 6.75 FTE (peer expected: 3.57 FTE, residual: $+3.18 \text{ FTE}$)
   - 2018–19: 7.00 FTE (peer expected: 3.63 FTE, residual: $+3.37 \text{ FTE}$)
-  - 2023–24: 8.00 FTE (peer expected: 3.64 FTE, residual: $+4.36 \text{ FTE}$, $z = +2.65$)
-- **Persistent Outlier Status:** High-deviation outlier in **all 10 consecutive years** (100% of study window).
+  - 2023–24: 8.00 FTE (peer expected: 4.41 FTE, residual: $+3.59 \text{ FTE}$, studentized $z = +3.78$)
+- **Persistent Outlier Status:** High-deviation outlier in **all 10 consecutive years** (100% of study window, mean residual $+3.4 \text{ FTE}$, studentized $z = +2.65$, +0.69 admins per 1k pupils).
 
-### 2. Qualitative Findings: The Dual Assistant Superintendent & Executive Director Cabinet
-- **Cabinet Structure for 4,800 Students `[FO-01]` (Direct Leadership Directory):** Fort Osage operates with an executive leadership cabinet designed for a district twice its size, comprising 1 Superintendent, 3 Assistant Superintendents (Education Services, Human Resources, Finance/Operations), and 3 Executive Directors (Education Services, Student Support Services, Human Resources).
-- **The State Reporting Mechanism `[FO-02]` (Direct Regulatory Guidance):** Missouri DESE Core Data reporting instructions direct districts to code Superintendents, Assistant Superintendents, and Executive Directors under position code `10` (Superintendent / District Administrator). As a result, Fort Osage reports 7.0 to 8.0 LEAADM FTE annually, generating an unexplained statistical surplus of +3.4 to +4.4 FTE above peer models.
-- **Centralized Administrative Trade-off `[FO-03]` (Direct Data & Residuals):** Crucially, Fort Osage offsets this heavy central executive footprint by operating with **below-average building administrators** (13.9 to 15.8 SCHADM FTE across 11 schools, or ~1.4 administrators per school vs. peer expected of ~1.9). Fort Osage concentrates supervisory overhead at district headquarters rather than delegating it to building-level assistant principals.
+### 2. Qualitative Findings: Centralized Executive Structure
+- **Cabinet Structure for 4,800 Students `[FO-01]` (Direct CSIP Receipt):** Under its *2018–2023 CSIP (Goal 4 Governance & Operations)*, Fort Osage codified an executive leadership cabinet designed for centralized management, comprising 1 Superintendent, 3 Assistant Superintendents (Education Services, Human Resources, Finance/Operations), and 3 Executive Directors (Education Services, Student Support Services, Human Resources).
+- **The State Reporting Mechanism `[FO-02]` (Direct Regulatory Guidance):** Missouri DESE Core Data reporting instructions direct districts to code Superintendents, Assistant Superintendents, and Executive Directors under position code `10` (Superintendent / District Administrator). As a result, Fort Osage reports 7.0 to 8.0 LEAADM FTE annually, generating an unexplained statistical surplus of +3.4 to +3.6 FTE above peer models.
+- **Centralized Administrative Trade-off `[FO-03]` (Direct Data & Residuals):** Crucially, Fort Osage balances this centralized executive structure by operating with **below-average building administrators** (13.9 to 15.8 SCHADM FTE across 11 schools, or ~1.4 administrators per school vs. peer expected of ~1.9). Fort Osage concentrates supervisory overhead at district headquarters rather than delegating it to building-level assistant principals.
 
 ---
 
 ## Summary Matrix of Priority Outliers & Claim Evidence Ledger
 
-All claims below correspond to entries in the registered evidence ledger ([`outputs/tables/phase3_claim_evidence.csv`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-01-kc-admin-staffing-decomposition/outputs/tables/phase3_claim_evidence.csv)):
+All claims below correspond to entries in the registered evidence ledger ([`outputs/tables/phase3_claim_evidence.csv`](phase3_claim_evidence.csv)):
 
 | District | Primary Anomaly | Mechanism Identified in Audit | Evidence Type & Claim ID | Operational Function | Post-2024 Fiscal Status |
 |:---|:---|:---|:---|:---|:---|
-| **Shawnee Mission USD 512** | $+8.71 \text{ SD}$ Coordinators | ESSER grant hiring of ~50 building instructional coaches | Direct: `[SMSD-01]`, `[SMSD-02]`, `[SMSD-03]`<br/>Inferred: `[SMSD-04]` | Instructional Support & Technology | Critical ESSER cliff; ~\$10M local absorption |
-| **Kansas City USD 500** | $+9.09 \text{ SD}$ School Admins | Elementary/middle AP expansion for student behavior/attendance | Direct: `[KCK-01]`, `[KCK-02]`, `[KCK-04]`, `[KCK-05]`<br/>Inferred: `[KCK-03]` | Building-Level Supervision | Restructuring building administrative formulas |
-| **Raytown C-2** | $+2.51 \text{ SD}$ Central+Coord | Dual Asst Supts + 5 Directors + 7 K–12 subject coordinators | Direct: `[RAY-01]`, `[RAY-02]`, `[RAY-03]` | Centralized Curriculum Overhead | Structural multi-year deficit pressure |
-| **Fort Osage R-I** | $+2.65 \text{ SD}$ Central Line | Dual Cabinet: 3 Assistant Supts + 3 Executive Directors | Direct: `[FO-01]`, `[FO-02]`, `[FO-03]` | Executive Central Management | Stable central overhead offsetting lean building admin |
+| **Shawnee Mission USD 512** | $+5.46 \text{ Studentized SD}$ Coordinators | ESSER grant hiring of ~50 building instructional coaches | Direct: `[SMSD-01]`, `[SMSD-02]`, `[SMSD-03]`<br/>Inferred: `[SMSD-04]` | Instructional Support & Technology | Critical ESSER cliff; ~\$10M local absorption |
+| **Kansas City USD 500** | $+10.11 \text{ Studentized SD}$ School Admins | Elementary/middle AP expansion for student behavior/attendance | Direct: `[KCK-01]`, `[KCK-02]`, `[KCK-04]`, `[KCK-05]`<br/>Inferred: `[KCK-03]` | Building-Level Supervision | Restructuring building administrative formulas |
+| **Raytown C-2** | $+2.54 \text{ Studentized SD}$ Central Admin | Dual Asst Supts + 5 Directors + 7 K–12 subject coordinators | Direct: `[RAY-01]`, `[RAY-02]`, `[RAY-03]` | Centralized Curriculum Overhead | Structural multi-year deficit pressure |
+| **Fort Osage R-I** | $+2.65 \text{ Studentized SD}$ Central Line | Central Cabinet: 3 Assistant Supts + 3 Executive Directors | Direct: `[FO-01]`, `[FO-02]`, `[FO-03]` | Centralized Executive Management | Stable central overhead offsetting lean building admin |

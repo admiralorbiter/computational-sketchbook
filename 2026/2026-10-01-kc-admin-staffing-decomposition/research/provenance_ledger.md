@@ -107,10 +107,9 @@ To explain administrative and coordination intensity, Phase 2A constructs `distr
 1. **Physical Scale & Structure:**
    - NCES CCD Directory (FS029): `operating_schools_count`, `regular_schools_count`.
    - Structural ratios: `average_school_size = enrollment / operating_schools`.
-2. **Student Need (EDFacts & Census SAIPE):**
-   - **IDEA School-Age Children:** EDFacts FS002 (special education child count).
-   - **English Learners:** EDFacts FS141 (LEP/EL student count).
-   - **Child Poverty:** Annual Census Small Area Income and Poverty Estimates (SAIPE) school district estimates (ages 5–17 in poverty). Free and Reduced-Price Lunch (FRPL) is excluded as the primary poverty covariate due to direct-certification and Community Eligibility Provision (CEP) comparability breaks.
+2. **Student Need (CRDC Interpolation & Census SAIPE):**
+   - **Special Populations (IDEA & LEP):** Sourced from Civil Rights Data Collection (CRDC) school-level complexity surveys with linear interpolation between biennial waves, harmonized to district totals.
+   - **Child Poverty:** Annual U.S. Census Bureau Small Area Income and Poverty Estimates (SAIPE) school district estimates (ages 5–17 in poverty). Free and Reduced-Price Lunch (FRPL) is excluded as the primary poverty covariate due to direct-certification and Community Eligibility Provision (CEP) comparability breaks.
 3. **Program & Categorical Funding Load (Census F-33 Survey):**
    - Title I Part A grant revenue (`rev_fed_state_title_i`).
    - IDEA Part B special education revenue (`rev_fed_state_idea`).

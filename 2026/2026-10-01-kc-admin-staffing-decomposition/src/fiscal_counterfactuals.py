@@ -4,14 +4,17 @@ Fiscal Materiality Counterfactual Engine (Phase 4).
 Simulates annual and cumulative operating expenditure impacts under alternative
 administrative and coordinator staffing counterfactuals:
 1. Counterfactual 1: Rollback coordinator intensity to 2014 baseline per-teacher ratio.
-   (Evaluates regional net cohort reallocation and district-specific baselines).
+   (Evaluates regional net cohort reallocation and district-specific baselines, with
+   exact state-specific pricing: $99,450 for KS, $93,600 for MO, and auditable 2015-16 reconstruction).
 2. Counterfactual 2: Hypothetical expenditure associated with capping staffing at conditional peer expected levels.
    (Trimming positive residuals to the regression conditional mean).
 3. Counterfactual 3: Reallocate coordinator and administrative savings into classroom teacher compensation.
    (Distinguishes gross employer-compensation equivalent from feasible base salary raises
-   accounting for mandatory employer marginal fringe loads).
+   accounting for mandatory employer marginal fringe loads: 21.22% in KS [KPERS 12.57% + D&D 1.00% + FICA 7.65%],
+   15.95% in MO [PSRS 14.50% + Medicare 1.45%]).
 
-Integrates empirical compensation benchmarks from data/processed/compensation_benchmarks.csv.
+Integrates empirical compensation benchmarks from data/processed/compensation_benchmarks.csv
+and auditable reconstruction data from data/processed/kansas_2015_16_reconstruction.csv.
 """
 
 import sys
@@ -27,11 +30,12 @@ OUTPUTS_DIR = PROJECT_ROOT / "outputs" / "tables"
 OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def load_data() -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    """Load demand panel, peer residual panel, and compensation benchmarks."""
+def load_data() -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Load demand panel, peer residual panel, compensation benchmarks, and reconstruction data."""
     demand_path = DATA_DIR / "district_demand_year.parquet"
     res_path = OUTPUTS_DIR / "peer_expected_staffing_residuals.csv"
     comp_path = DATA_DIR / "compensation_benchmarks.csv"
+    recon_path = DATA_DIR / "kansas_2015_16_reconstruction.csv"
 
     if not demand_path.exists():
         raise FileNotFoundError(f"Missing {demand_path}")
@@ -39,16 +43,20 @@ def load_data() -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
         raise FileNotFoundError(f"Missing {res_path}")
     if not comp_path.exists():
         raise FileNotFoundError(f"Missing {comp_path}")
+    if not recon_path.exists():
+        raise FileNotFoundError(f"Missing {recon_path}")
 
     df_demand = pd.read_parquet(demand_path)
     df_res = pd.read_csv(res_path)
     df_comp = pd.read_csv(comp_path)
+    df_recon = pd.read_csv(recon_path)
 
     # Standardize LEA ID as string
     df_demand["nces_lea_id"] = df_demand["nces_lea_id"].astype(str).str.zfill(7)
     df_res["nces_lea_id"] = df_res["nces_lea_id"].astype(str).str.zfill(7)
+    df_recon["nces_lea_id"] = df_recon["nces_lea_id"].astype(str).str.zfill(7)
 
-    return df_demand, df_res, df_comp
+    return df_demand, df_res, df_comp, df_recon
 
 
 def get_compensation_dict(df_comp: pd.DataFrame) -> Dict[str, Dict[str, float]]:
@@ -66,13 +74,14 @@ def get_compensation_dict(df_comp: pd.DataFrame) -> Dict[str, Dict[str, float]]:
 
 def simulate_counterfactual_1_rollback(
     df_demand: pd.DataFrame,
+    df_recon: pd.DataFrame,
     comp_dict: Dict[str, Dict[str, float]]
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Counterfactual 1: Rollback coordinator intensity to 2014 baseline per-teacher ratio.
     Evaluates both 10-year cumulative annual trajectory and 2023-24 cross-sectional district distribution.
-    Handles the 2015-16 Kansas reporting hole by providing both reconstructed 55-cohort
-    and 53-district complete-cohort trajectories.
+    Applies exact state-specific pricing ($99,450 for KS, $93,600 for MO) and dynamic reconstruction
+    from kansas_2015_16_reconstruction.csv.
     """
     b55 = df_demand[
         (df_demand["is_balanced_presence_cohort_55"] == 1) &
@@ -92,38 +101,55 @@ def simulate_counterfactual_1_rollback(
         c = row["instructional_coordinators_fte"]
         own_base_ratios[lea_id] = (c / t) if t > 0 else base_ratio_overall
 
-    # 1. Macro annual trajectory (with explicit 2015-16 Kansas reconstruction)
-    # Reconstructed 2015-16: Olathe (2,018.42 teachers, 34.82 coord) + Gardner (329.00 teachers, 3.90 coord)
-    OLATHE_2015_T, OLATHE_2015_C = 2018.42, 34.82
-    GARDNER_2015_T, GARDNER_2015_C = 329.00, 3.90
+    # Map reconstructed 2015-16 Kansas values dynamically from CSV
+    recon_2015 = {}
+    for _, r in df_recon[df_recon["school_year"] == "2015-2016"].iterrows():
+        recon_2015[str(r["nces_lea_id"]).zfill(7)] = {
+            "teachers_k12_fte": float(r["teachers_k12_fte"]),
+            "instructional_coordinators_fte": float(r["instructional_coordinators_fte"])
+        }
+
+    # 1. Macro annual trajectory with state-specific pricing
+    comp_ks = comp_dict["KS"]["instructional_coordinators_fte_total_comp"]
+    comp_mo = comp_dict["MO"]["instructional_coordinators_fte_total_comp"]
 
     annual_records = []
-    for sy, grp in b55.groupby("school_year"):
-        t_tot = grp["teachers_k12_fte"].sum()
-        c_tot = grp["instructional_coordinators_fte"].sum()
+    sy_list = sorted(b55["school_year"].unique())
+
+    for sy in sy_list:
+        grp = b55[b55["school_year"] == sy].copy()
         is_reconstructed = False
 
         if sy == "2015-2016":
-            t_tot += (OLATHE_2015_T + GARDNER_2015_T)
-            c_tot += (OLATHE_2015_C + GARDNER_2015_C)
             is_reconstructed = True
+            for lea_id, rvals in recon_2015.items():
+                grp.loc[grp["nces_lea_id"] == lea_id, "teachers_k12_fte"] = rvals["teachers_k12_fte"]
+                grp.loc[grp["nces_lea_id"] == lea_id, "instructional_coordinators_fte"] = rvals["instructional_coordinators_fte"]
 
-        target_c = t_tot * base_ratio_overall
-        surplus_c = c_tot - target_c
+        grp_ks = grp[grp["state"] == "KS"]
+        grp_mo = grp[grp["state"] == "MO"]
 
-        # State breakdown of coordinators
-        c_ks = grp[grp["state"] == "KS"]["instructional_coordinators_fte"].sum()
-        c_mo = grp[grp["state"] == "MO"]["instructional_coordinators_fte"].sum()
-        if sy == "2015-2016":
-            c_ks += (OLATHE_2015_C + GARDNER_2015_C)
+        t_ks = grp_ks["teachers_k12_fte"].sum()
+        t_mo = grp_mo["teachers_k12_fte"].sum()
+        t_tot = t_ks + t_mo
 
-        weighted_comp = (
-            (c_ks * comp_dict["KS"]["instructional_coordinators_fte_total_comp"] +
-             c_mo * comp_dict["MO"]["instructional_coordinators_fte_total_comp"]) / c_tot
-        ) if c_tot > 0 else comp_dict["MO"]["instructional_coordinators_fte_total_comp"]
+        c_ks = grp_ks["instructional_coordinators_fte"].sum()
+        c_mo = grp_mo["instructional_coordinators_fte"].sum()
+        c_tot = c_ks + c_mo
 
-        # Net cohort savings
-        net_cohort_savings = max(0.0, surplus_c) * weighted_comp
+        target_tot = t_tot * base_ratio_overall
+        surplus_tot = c_tot - target_tot
+
+        target_ks = t_ks * base_ratio_overall
+        target_mo = t_mo * base_ratio_overall
+
+        surplus_ks = c_ks - target_ks
+        surplus_mo = c_mo - target_mo
+
+        # Exact state-specific pricing
+        savings_ks = surplus_ks * comp_ks
+        savings_mo = surplus_mo * comp_mo
+        net_cohort_savings = max(0.0, savings_ks + savings_mo)
 
         # Gross asymmetric trimming savings (sum of positive district deviations)
         gross_trimmed_savings = 0.0
@@ -136,18 +162,14 @@ def simulate_counterfactual_1_rollback(
             comp = comp_dict[st]["instructional_coordinators_fte_total_comp"]
             gross_trimmed_savings += surplus_d * comp
 
-        if sy == "2015-2016":
-            # Add reconstructed Olathe and Gardner to gross trimming
-            surplus_olathe = max(0.0, OLATHE_2015_C - OLATHE_2015_T * base_ratio_overall)
-            surplus_gardner = max(0.0, GARDNER_2015_C - GARDNER_2015_T * base_ratio_overall)
-            gross_trimmed_savings += (surplus_olathe + surplus_gardner) * comp_dict["KS"]["instructional_coordinators_fte_total_comp"]
-
         annual_records.append({
             "school_year": sy,
             "teachers_total_fte": round(t_tot, 2),
             "actual_coordinators_fte": round(c_tot, 2),
-            "baseline_target_coordinators_fte": round(target_c, 2),
-            "net_surplus_coordinators_fte": round(surplus_c, 2),
+            "baseline_target_coordinators_fte": round(target_tot, 2),
+            "net_surplus_coordinators_fte": round(surplus_tot, 2),
+            "ks_surplus_coordinators_fte": round(surplus_ks, 2),
+            "mo_surplus_coordinators_fte": round(surplus_mo, 2),
             "net_cohort_annual_cost_savings": round(net_cohort_savings, 2),
             "gross_trimmed_annual_cost_savings": round(gross_trimmed_savings, 2),
             "flag_reconstructed_ks_2015_16": is_reconstructed
@@ -204,6 +226,7 @@ def simulate_counterfactual_2_peer_cap(
     """
     Counterfactual 2: Hypothetical expenditure associated with capping staffing at conditional peer expected levels.
     Trims positive peer residuals (actual > peer-predicted level) by category.
+    Uses neutral terminology: 'positive_peer_deviation_fte'.
     """
     sub2324 = df_res[df_res["school_year"] == "2023-2024"].copy()
 
@@ -239,14 +262,15 @@ def simulate_counterfactual_2_peer_cap(
                 "model_name": model_name,
                 "outcome_variable": dep_var,
                 "region": st,
-                "peer_excess_fte": round(excess_fte, 2),
+                "positive_peer_deviation_fte": round(excess_fte, 2),
+                "peer_excess_fte": round(excess_fte, 2),  # Backward-compatible alias
                 "districts_above_peer": int(excess_districts),
                 "total_districts": len(st_grp),
                 "estimated_expenditure_savings": round(savings, 2)
             })
     df_peer_summary_2324 = pd.DataFrame(records_2324)
 
-    # 2. Cumulative excess by model
+    # 2. Cumulative positive peer deviation by model
     cum_records = []
     for model_name, grp in df_res.groupby("model_name"):
         dep_var = grp["dep_var_name"].iloc[0]
@@ -273,7 +297,8 @@ def simulate_counterfactual_2_peer_cap(
             "model_name": model_name,
             "outcome_variable": dep_var,
             "years_covered": grp["school_year"].nunique(),
-            "cumulative_excess_fte_years": round(cum_fte, 2),
+            "cumulative_positive_peer_deviation_fte_years": round(cum_fte, 2),
+            "cumulative_excess_fte_years": round(cum_fte, 2),  # Backward-compatible alias
             "cumulative_expenditure_savings": round(cum_savings, 2)
         })
     df_peer_cumulative = pd.DataFrame(cum_records)
@@ -422,15 +447,23 @@ def generate_synthesis_report(
     peer_lea = df_peer_summary_2324[(df_peer_summary_2324["model_name"] == "Model 2: LEAADM (Peer)") & (df_peer_summary_2324["region"] == "METRO")].iloc[0]
     peer_cor = df_peer_summary_2324[(df_peer_summary_2324["model_name"] == "Model 3: CORSUP (Peer)") & (df_peer_summary_2324["region"] == "METRO")].iloc[0]
 
-    tot_peer_fte = peer_sch["peer_excess_fte"] + peer_lea["peer_excess_fte"] + peer_cor["peer_excess_fte"]
+    # State peer breakdowns
+    cor_ks = df_peer_summary_2324[(df_peer_summary_2324["model_name"] == "Model 3: CORSUP (Peer)") & (df_peer_summary_2324["region"] == "KS")].iloc[0]
+    cor_mo = df_peer_summary_2324[(df_peer_summary_2324["model_name"] == "Model 3: CORSUP (Peer)") & (df_peer_summary_2324["region"] == "MO")].iloc[0]
+    sch_ks = df_peer_summary_2324[(df_peer_summary_2324["model_name"] == "Model 1: SCHADM (Peer)") & (df_peer_summary_2324["region"] == "KS")].iloc[0]
+    sch_mo = df_peer_summary_2324[(df_peer_summary_2324["model_name"] == "Model 1: SCHADM (Peer)") & (df_peer_summary_2324["region"] == "MO")].iloc[0]
+    lea_ks = df_peer_summary_2324[(df_peer_summary_2324["model_name"] == "Model 2: LEAADM (Peer)") & (df_peer_summary_2324["region"] == "KS")].iloc[0]
+    lea_mo = df_peer_summary_2324[(df_peer_summary_2324["model_name"] == "Model 2: LEAADM (Peer)") & (df_peer_summary_2324["region"] == "MO")].iloc[0]
+
+    tot_peer_fte = peer_sch["positive_peer_deviation_fte"] + peer_lea["positive_peer_deviation_fte"] + peer_cor["positive_peer_deviation_fte"]
     tot_peer_savings = peer_sch["estimated_expenditure_savings"] + peer_lea["estimated_expenditure_savings"] + peer_cor["estimated_expenditure_savings"]
 
     # Metro teacher averages
     total_teachers = df_raises["teachers_k12_fte"].sum()
     metro_cf1_own_savings = df_raises["cf1_own_rollback_savings"].sum()
     metro_gross_comp = metro_cf1_own_savings / total_teachers
-    # Weighted marginal fringe
-    metro_feasible_base = metro_gross_comp / 1.185  # Approximate weighted marginal load
+    # Weighted marginal fringe (approx 1.185)
+    metro_feasible_base = metro_gross_comp / 1.185
     metro_pct_base = (metro_feasible_base / 51000.0) * 100.0
 
     # Focus districts by exact LEA ID
@@ -460,15 +493,15 @@ This report investigates the fiscal stakes of non-classroom workforce expansion:
 The empirical answer is **yes, with profound geographic concentration**:
 1. **At the Metropolitan Scale:**
    - Rolling back coordinator intensity to its 2014 per-teacher ratio (2.41 per 100 teachers) releases **${latest_net_savings:,.2f} annually** across the 55 regular districts, representing **{latest_surplus_fte:.2f} FTE positions** in {latest_sy}.
-   - Cumulatively over the 2014–2024 decade (with 2015–16 reconstructed from state records), above-baseline coordinator staffing absorbed **{cum_surplus_fte:.2f} FTE-years** and **${cum_net_savings:,.2f}** in operating expenditures (or **{clean_9yr_fte:.2f} FTE-years** and **${clean_9yr_savings:,.2f}** across the 9 un-interpolated clean school years).
+   - Cumulatively over the 2014–2024 decade (with 2015–16 reconstructed from state records in `data/processed/kansas_2015_16_reconstruction.csv`), above-baseline coordinator staffing absorbed **{cum_surplus_fte:.2f} FTE-years** and **${cum_net_savings:,.2f}** in operating expenditures (or **{clean_9yr_fte:.2f} FTE-years** and **${clean_9yr_savings:,.2f}** across the 9 un-interpolated clean school years).
    - Hypothetically capping all supervisory categories (building principals, central administrators, and instructional coordinators) at regression-predicted peer conditional means releases **${tot_peer_savings:,.2f} annually** ({tot_peer_fte:.2f} FTE).
 2. **At the District Level (The Asymmetric Realities):**
    - For an average district, coordinator growth is modest (~0.5% to 1.5% of budget).
    - However, for the **top quartile of administrative and coaching intensifiers**, alternative staffing allocations are **financially monumental**:
-     - In **Shawnee Mission Public Schools (USD 512)**, rolling back coordinators to its own 2014 baseline releases **${smsd['cf1_own_rollback_savings']:,.2f} annually**—equivalent to a gross employer compensation investment of **${smsd['cf1_own_gross_comp_equiv']:,.2f} per teacher**, which supports a **feasible base salary raise of +${smsd['cf1_own_feasible_base_raise']:,.2f} per teacher (+{smsd['cf1_own_pct_raise_on_base']:.1f}% on base pay)** after paying mandatory employer pension (KPERS) and FICA taxes. Alternatively, that payroll could fund **{smsd['cf1_own_teachers_funded']:.1f} additional classroom teachers** at the Kansas state average compensation.
-     - In **Kansas City Public Schools USD 500 (KCKPS)**, trimming building administrative overhead to peer expectations frees **${kck['cf2_all_supervisory_savings']:,.2f} annually**, equivalent to a gross compensation investment of **${kck['cf2_all_gross_comp_equiv']:,.2f} per teacher** and a feasible base raise of **+${kck['cf2_all_feasible_base_raise']:,.2f} (+{kck['cf2_all_pct_raise_on_base']:.1f}%)**.
-     - In **Fort Osage R-I (MO)**, trimming executive central administration to peer expectations releases **${fo['cf2_all_supervisory_savings']:,.2f} annually**, providing a feasible base salary raise of **+${fo['cf2_all_feasible_base_raise']:,.2f} (+{fo['cf2_all_pct_raise_on_base']:.1f}%)**.
-     - In **Raytown C-2 (MO)**, trimming coordinator and central administrative excess releases **${ray['cf2_all_supervisory_savings']:,.2f} annually**, providing a feasible base salary raise of **+${ray['cf2_all_feasible_base_raise']:,.2f} (+{ray['cf2_all_pct_raise_on_base']:.1f}%)**.
+     - In **Shawnee Mission Public Schools (USD 512)**, rolling back coordinators to its own 2014 baseline releases **${smsd['cf1_own_rollback_savings']:,.2f} annually**—equivalent to a gross employer compensation investment of **${smsd['cf1_own_gross_comp_equiv']:,.2f} per teacher**, which supports a **feasible base salary raise of +${smsd['cf1_own_feasible_base_raise']:,.2f} per teacher (+{smsd['cf1_own_pct_raise_on_base']:.1f}% on base pay)** after paying mandatory employer pension (KPERS 12.57% + D&D 1.00%) and FICA/Medicare taxes (7.65%). Alternatively, that payroll could fund **{smsd['cf1_own_teachers_funded']:.1f} additional classroom teachers** at the Kansas state average compensation.
+     - In **Kansas City Public Schools USD 500 (KCKPS)**, trimming positive building administrative deviations to peer expectations frees **${kck['cf2_all_supervisory_savings']:,.2f} annually**, equivalent to a gross compensation investment of **${kck['cf2_all_gross_comp_equiv']:,.2f} per teacher** and a feasible base raise of **+${kck['cf2_all_feasible_base_raise']:,.2f} (+{kck['cf2_all_pct_raise_on_base']:.1f}%)**.
+     - In **Fort Osage R-I (MO)**, trimming positive central executive administration deviations to peer expectations releases **${fo['cf2_all_supervisory_savings']:,.2f} annually**, providing a feasible base salary raise of **+${fo['cf2_all_feasible_base_raise']:,.2f} (+{fo['cf2_all_pct_raise_on_base']:.1f}%)**.
+     - In **Raytown C-2 (MO)**, trimming positive coordinator and central administrative deviations releases **${ray['cf2_all_supervisory_savings']:,.2f} annually**, providing a feasible base salary raise of **+${ray['cf2_all_feasible_base_raise']:,.2f} (+{ray['cf2_all_pct_raise_on_base']:.1f}%)**.
 
 ---
 
@@ -479,8 +512,8 @@ Salary parameters are derived from official state filings documented in `data/pr
 - **Missouri:** Sourced from Missouri Department of Elementary and Secondary Education (DESE) **Core Data / MOSIS**, filtered to the KC metropolitan counties.
 - **Fringe Rates:** Standard total employer compensation includes a **30.0%** benefit load (pension, health insurance, FICA/Medicare).
 - **Marginal Payroll Load on Raises:** When reallocating employer savings into base salary, employers must cover mandatory marginal payroll taxes:
-  - Kansas (KPERS 13.57% + FICA/Medicare 7.65%): **21.22% marginal load** (divisor = 1.2122).
-  - Missouri (PSRS 14.50% + Medicare 1.45%): **15.95% marginal load** (divisor = 1.1595).
+  - Kansas (KPERS retirement 12.57% + Death & Disability 1.00% + FICA/Medicare 7.65%): **21.22% marginal load** (divisor = 1.2122).
+  - Missouri (PSRS retirement 14.50% + Medicare 1.45%): **15.95% marginal load** (divisor = 1.1595).
 
 ### Table 1: Analysis Compensation Assumptions Matrix (FY 2024)
 
@@ -501,6 +534,8 @@ Salary parameters are derived from official state filings documented in `data/pr
 
 In 2014–15, the balanced cohort employed **501.30 coordinators** across **20,801.04 classroom teachers** (2.41 per 100 teachers). By 2023–24, coordinators reached **756.82 FTE** (+51.0%), while classroom teachers grew to **22,365.68 FTE** (+7.5%). Had coordinator intensity remained at 2.41 per 100 teachers, the cohort would have employed **539.01 coordinators** in 2023–24.
 
+Pricing is performed state-specifically: **$99,450.00** for Kansas positions and **$93,600.00** for Missouri positions.
+
 ### Table 2: Annual Trajectory of Coordinator Rollback Counterfactual
 
 | School Year | Classroom Teachers (FTE) | Actual Coordinators (FTE) | Target Coordinators (FTE) | Net Surplus Coordinators (FTE) | Net Cohort Cost Savings | Reconstructed Flag |
@@ -520,15 +555,15 @@ In 2014–15, the balanced cohort employed **501.30 coordinators** across **20,8
 
 ## 3. Counterfactual 2: Capping Staffing at Conditional Peer Expectations
 
-*Methodological Note:* Because ordinary least squares regressions estimate conditional means, approximately half of all districts will naturally sit above the regression line. This scenario estimates the **hypothetical gross expenditure** associated with bringing above-average staffing down to the peer expected level, rather than an empirical finding of waste.
+*Methodological Note:* Because ordinary least squares regressions estimate conditional means, approximately half of all districts will naturally sit above the regression line. This scenario estimates the **hypothetical gross expenditure** associated with bringing positive deviations down to the peer expected level, rather than an empirical finding of waste.
 
-### Table 3: Cross-Sectional Peer Trimming in 2023–2024
+### Table 3: Cross-Sectional Positive Peer Deviations in 2023–2024
 
-| Staffing Function | Model Specification | Metro Excess FTE | Districts Above Peer | KS Excess FTE | MO Excess FTE | Metro Hypothetical Savings |
+| Staffing Function | Model Specification | Metro Positive Deviation FTE | Districts Above Peer | KS Positive Deviation FTE | MO Positive Deviation FTE | Metro Hypothetical Savings |
 |:---|:---|:---:|:---:|:---:|:---:|:---:|
-| **Instructional Coordinators** | Model 3: CORSUP (Peer) | **{peer_cor['peer_excess_fte']:.2f} FTE** | {int(peer_cor['districts_above_peer'])} of 55 | 97.94 FTE | 66.03 FTE | **${peer_cor['estimated_expenditure_savings']:,.2f}** |
-| **Building Administrators** | Model 1: SCHADM (Peer) | **{peer_sch['peer_excess_fte']:.2f} FTE** | {int(peer_sch['districts_above_peer'])} of 55 | 64.05 FTE | 52.48 FTE | **${peer_sch['estimated_expenditure_savings']:,.2f}** |
-| **District Central Admins** | Model 2: LEAADM (Peer) | **{peer_lea['peer_excess_fte']:.2f} FTE** | {int(peer_lea['districts_above_peer'])} of 55 | 13.37 FTE | 23.51 FTE | **${peer_lea['estimated_expenditure_savings']:,.2f}** |
+| **Instructional Coordinators** | Model 3: CORSUP (Peer) | **{peer_cor['positive_peer_deviation_fte']:.2f} FTE** | {int(peer_cor['districts_above_peer'])} of 55 | {cor_ks['positive_peer_deviation_fte']:.2f} FTE | {cor_mo['positive_peer_deviation_fte']:.2f} FTE | **${peer_cor['estimated_expenditure_savings']:,.2f}** |
+| **Building Administrators** | Model 1: SCHADM (Peer) | **{peer_sch['positive_peer_deviation_fte']:.2f} FTE** | {int(peer_sch['districts_above_peer'])} of 55 | {sch_ks['positive_peer_deviation_fte']:.2f} FTE | {sch_mo['positive_peer_deviation_fte']:.2f} FTE | **${peer_sch['estimated_expenditure_savings']:,.2f}** |
+| **District Central Admins** | Model 2: LEAADM (Peer) | **{peer_lea['positive_peer_deviation_fte']:.2f} FTE** | {int(peer_lea['districts_above_peer'])} of 55 | {lea_ks['positive_peer_deviation_fte']:.2f} FTE | {lea_mo['positive_peer_deviation_fte']:.2f} FTE | **${peer_lea['estimated_expenditure_savings']:,.2f}** |
 | **Total Supervisory Footprint** | Sum of 3 Functions | **{tot_peer_fte:.2f} FTE** | — | — | — | **${tot_peer_savings:,.2f}** |
 
 ---
@@ -562,12 +597,12 @@ def main():
     print("CALIBRATING FISCAL MATERIALITY ENGINE (PHASE 4)")
     print("=" * 75)
 
-    df_demand, df_res, df_comp = load_data()
+    df_demand, df_res, df_comp, df_recon = load_data()
     comp_dict = get_compensation_dict(df_comp)
 
     # Counterfactual 1: Coordinator Rollback
-    print("\nSimulating Counterfactual 1 (Coordinator Rollback)...")
-    df_annual_rollback, df_district_rollback = simulate_counterfactual_1_rollback(df_demand, comp_dict)
+    print("\nSimulating Counterfactual 1 (Coordinator Rollback with State-Specific Pricing)...")
+    df_annual_rollback, df_district_rollback = simulate_counterfactual_1_rollback(df_demand, df_recon, comp_dict)
     latest_r = df_annual_rollback.iloc[-1]
     print(f"2023-24 Rollback Net Surplus: {latest_r['net_surplus_coordinators_fte']} FTE")
     print(f"2023-24 Rollback Net Cohort Savings: ${latest_r['net_cohort_annual_cost_savings']:,.2f}")

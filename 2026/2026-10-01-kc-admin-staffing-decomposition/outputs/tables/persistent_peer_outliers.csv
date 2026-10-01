@@ -1,9 +1,11 @@
-model,outcome,nces_lea_id,district_name,state,mean_actual_fte,mean_peer_expected_fte,mean_unexplained_deviation_fte,max_z_score,high_deviation_years_count,audit_priority_rank
-Model 1: SCHADM (Peer),school_administrators_fte,2007950,Kansas City,KS,103.4,84.5,18.9,9.09,8,HIGH
-Model 4: Central+Coord Footprint (Peer),central_mgmt_and_coordinators_fte,2007950,Kansas City,KS,110.4,55.1,55.3,6.96,10,HIGH
-Model 3: CORSUP (Peer),instructional_coordinators_fte,2007950,Kansas City,KS,103.6,47.3,56.3,6.58,10,HIGH
-Model 4: Central+Coord Footprint (Peer),central_mgmt_and_coordinators_fte,2011640,Shawnee Mission Pub Sch,KS,84.5,65.4,19.1,5.34,5,HIGH
-Model 3: CORSUP (Peer),instructional_coordinators_fte,2011640,Shawnee Mission Pub Sch,KS,74.1,56.2,17.9,5.23,5,HIGH
-Model 2: LEAADM (Peer),lea_administrators_fte,2912290,FORT OSAGE R-I,MO,7.0,3.6,3.4,2.65,10,HIGH
-Model 2: LEAADM (Peer),lea_administrators_fte,2926070,RAYTOWN C-2,MO,7.5,5.1,2.4,2.53,5,HIGH
-Model 2: LEAADM (Peer),lea_administrators_fte,2011640,Shawnee Mission Pub Sch,KS,10.4,9.0,1.4,2.18,5,HIGH
+model,outcome,nces_lea_id,district_name,state,mean_actual_fte,mean_peer_expected_fte,mean_unexplained_deviation_fte,max_raw_z,max_stud_resid,mean_resid_rate,resid_rate_unit,high_deviation_years_count,audit_priority_rank
+Model 1: SCHADM (Peer),school_administrators_fte,2007950,Kansas City,KS,103.4,84.5,18.9,9.09,10.11,0.44,per school,8,HIGH
+Model 4: Central+Coord Footprint (Peer),central_mgmt_and_coordinators_fte,2007950,Kansas City,KS,110.4,55.1,55.3,6.96,7.43,3.72,per 100 teachers,10,HIGH
+Model 3: CORSUP (Peer),instructional_coordinators_fte,2007950,Kansas City,KS,103.6,47.3,56.3,6.58,6.98,3.79,per 100 teachers,10,HIGH
+Model 4: Central+Coord Footprint (Peer),central_mgmt_and_coordinators_fte,2011640,Shawnee Mission Pub Sch,KS,84.5,65.4,19.1,5.34,5.58,1.02,per 100 teachers,5,HIGH
+Model 3: CORSUP (Peer),instructional_coordinators_fte,2011640,Shawnee Mission Pub Sch,KS,74.1,56.2,17.9,5.23,5.46,0.95,per 100 teachers,5,HIGH
+Model 2: LEAADM (Peer),lea_administrators_fte,2912290,FORT OSAGE R-I,MO,7.0,3.6,3.4,2.65,2.65,0.69,per 1k pupils,10,HIGH
+Model 2: LEAADM (Peer),lea_administrators_fte,2926070,RAYTOWN C-2,MO,7.5,5.1,2.4,2.53,2.54,0.28,per 1k pupils,5,HIGH
+Model 2: LEAADM (Peer),lea_administrators_fte,2904620,BELTON 124,MO,5.5,3.1,2.4,2.27,2.27,0.52,per 1k pupils,5,HIGH
+Model 2: LEAADM (Peer),lea_administrators_fte,2011640,Shawnee Mission Pub Sch,KS,10.4,9.0,1.4,2.18,2.22,0.05,per 1k pupils,5,HIGH
+Model 2: LEAADM (Peer),lea_administrators_fte,2915480,INDEPENDENCE 30,MO,9.1,7.1,2.0,1.79,1.8,0.14,per 1k pupils,3,HIGH

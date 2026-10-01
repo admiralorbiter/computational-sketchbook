@@ -2,8 +2,8 @@
 Automated Narrative and Econometric Data Synchronization Test Suite.
 
 Verifies that all narrative claims, statistical estimates, and fiscal counterfactual figures
-reported across README.md, econometric_decomposition_report.md, and fiscal_materiality_report.md
-match the canonical CSV files with 100% precision.
+reported across README.md, econometric_decomposition_report.md, fiscal_materiality_report.md,
+and board_document_audit_report.md match the canonical CSV files with 100% precision.
 """
 
 from pathlib import Path
@@ -16,7 +16,7 @@ DATA_DIR = ROOT / "data"
 OUTPUTS_DIR = ROOT / "outputs" / "tables"
 
 
-def test_compensation_benchmarks_exist_and_valid():
+def test_compensation_benchmarks_and_reconstruction_valid():
     benchmarks_path = DATA_DIR / "processed" / "compensation_benchmarks.csv"
     assert benchmarks_path.exists(), f"Missing {benchmarks_path}"
     df = pd.read_csv(benchmarks_path)
@@ -27,6 +27,20 @@ def test_compensation_benchmarks_exist_and_valid():
     mo_rates = df[df["state"] == "MO"]["marginal_fringe_rate"].unique()
     assert len(ks_rates) == 1 and abs(ks_rates[0] - 0.2122) < 1e-4
     assert len(mo_rates) == 1 and abs(mo_rates[0] - 0.1595) < 1e-4
+
+    # Check auditable Kansas 2015-16 reconstruction artifact
+    recon_path = DATA_DIR / "processed" / "kansas_2015_16_reconstruction.csv"
+    assert recon_path.exists(), f"Missing {recon_path}"
+    df_recon = pd.read_csv(recon_path)
+    assert len(df_recon) == 2, f"Expected 2 reconstructed districts, got {len(df_recon)}"
+    
+    olathe = df_recon[df_recon["nces_lea_id"].astype(str) == "2010140"].iloc[0]
+    assert abs(olathe["teachers_k12_fte"] - 2018.42) < 0.01
+    assert abs(olathe["instructional_coordinators_fte"] - 34.82) < 0.01
+    
+    gardner = df_recon[df_recon["nces_lea_id"].astype(str) == "2006420"].iloc[0]
+    assert abs(gardner["teachers_k12_fte"] - 329.00) < 0.01
+    assert abs(gardner["instructional_coordinators_fte"] - 3.90) < 0.01
 
 
 def test_phase3_claim_evidence_integrity():
@@ -68,6 +82,11 @@ def test_long_difference_regression_sync():
     assert abs(coeffs["d_lep_100"] - (-3.634)) < 0.01
     assert abs(coeffs["is_ks"] - 1.502) < 0.01
 
+    # Verify HC3 robust SE column exists
+    assert "robust_std_error_hc3" in df.columns
+    t_row = df[df["variable"] == "d_teachers_100"].iloc[0]
+    assert abs(t_row["robust_std_error_hc3"] - 6.90) < 0.05
+
     # Verify presence in econometric report
     econ_report = (OUTPUTS_DIR / "econometric_decomposition_report.md").read_text(encoding="utf-8")
     assert "11.118" in econ_report
@@ -75,21 +94,81 @@ def test_long_difference_regression_sync():
     assert "0.692" in econ_report
 
 
+def test_sensitivity_family_and_lodo_diagnostics():
+    sens_path = OUTPUTS_DIR / "long_difference_sensitivity_family.csv"
+    assert sens_path.exists(), f"Missing {sens_path}"
+    df_sens = pd.read_csv(sens_path)
+    
+    specs = df_sens["specification"].unique()
+    assert len(specs) == 5, f"Expected 5 sensitivity models, found {len(specs)}"
+    
+    # Model B baseline capacity coefficient
+    mod_b = df_sens[df_sens["specification"] == "Model B: Baseline 2014 Capacity Added"]
+    base_row = mod_b[mod_b["variable"] == "base_corsup_fte"].iloc[0]
+    assert abs(base_row["coefficient"] - (-0.401)) < 0.01
+    assert abs(mod_b.iloc[0]["r2"] - 0.764) < 0.005
+
+    # Model C demographic rate changes
+    mod_c = df_sens[df_sens["specification"] == "Model C: Demographic Share/Rate Changes (% pts)"]
+    assert abs(mod_c.iloc[0]["r2"] - 0.317) < 0.005
+    for demog_var in ["d_poverty_rate_pct", "d_idea_rate_pct", "d_lep_rate_pct"]:
+        d_row = mod_c[mod_c["variable"] == demog_var].iloc[0]
+        assert d_row["robust_p_value_hc3"] > 0.30, f"{demog_var} p-value {d_row['robust_p_value_hc3']} <= 0.30"
+
+    # LODO diagnostics
+    lodo_path = OUTPUTS_DIR / "long_difference_lodo_diagnostics.csv"
+    assert lodo_path.exists(), f"Missing {lodo_path}"
+    df_lodo = pd.read_csv(lodo_path)
+    assert len(df_lodo) == 55
+    top3_ids = set(df_lodo.head(3)["excluded_nces_lea_id"].astype(str))
+    expected_top3 = {"2011640", "2007950", "2010140"}
+    assert top3_ids == expected_top3, f"Unexpected top leverage districts: {top3_ids}"
+
+
 def test_shapley_decomposition_sync():
     shapley_path = OUTPUTS_DIR / "shapley_decomposition_results.csv"
     assert shapley_path.exists(), f"Missing {shapley_path}"
     df = pd.read_csv(shapley_path)
     
-    shares = dict(zip(df["covariate_family"], df["pct_of_explained_variance"]))
+    df_base = df[df["specification"] == "Baseline 3-Group Model"]
+    shares = dict(zip(df_base["covariate_family"], df_base["pct_of_explained_variance"]))
     assert abs(shares["Student Need Shifts"] - 66.2) < 0.2
     assert abs(shares["Teacher Scale Growth"] - 27.7) < 0.2
     assert abs(shares["State Jurisdiction"] - 6.1) < 0.2
+
+    # Check bootstrap intervals exist
+    assert "boot_ci_95_lower" in df.columns and "boot_ci_95_upper" in df.columns
+    t_scale = df_base[df_base["covariate_family"] == "Teacher Scale Growth"].iloc[0]
+    assert t_scale["boot_ci_95_lower"] < 10.0 and t_scale["boot_ci_95_upper"] > 40.0
     
     # Verify presence in README.md and econometric report
     readme_text = (ROOT / "README.md").read_text(encoding="utf-8")
     assert "66.2%" in readme_text
     assert "27.7%" in readme_text
     assert "6.1%" in readme_text
+
+
+def test_studentized_residuals_and_outliers():
+    outliers_path = OUTPUTS_DIR / "persistent_peer_outliers.csv"
+    assert outliers_path.exists(), f"Missing {outliers_path}"
+    df = pd.read_csv(outliers_path)
+    
+    # Check KCKPS (Model 1 SCHADM)
+    kck_sch = df[(df["nces_lea_id"].astype(str) == "2007950") & (df["model"] == "Model 1: SCHADM (Peer)")].iloc[0]
+    assert abs(kck_sch["max_stud_resid"] - 10.11) < 0.1
+    
+    # Check SMSD (Model 3 CORSUP)
+    smsd_cor = df[(df["nces_lea_id"].astype(str) == "2011640") & (df["model"] == "Model 3: CORSUP (Peer)")].iloc[0]
+    assert abs(smsd_cor["max_stud_resid"] - 5.46) < 0.1
+
+    # Check Fort Osage (Model 2 LEAADM)
+    fo_lea = df[(df["nces_lea_id"].astype(str) == "2912290") & (df["model"] == "Model 2: LEAADM (Peer)")].iloc[0]
+    assert abs(fo_lea["max_stud_resid"] - 2.65) < 0.1
+    assert fo_lea["high_deviation_years_count"] == 10
+
+    # Check Raytown (Model 2 LEAADM)
+    ray_lea = df[(df["nces_lea_id"].astype(str) == "2926070") & (df["model"] == "Model 2: LEAADM (Peer)")].iloc[0]
+    assert abs(ray_lea["max_stud_resid"] - 2.54) < 0.1
 
 
 def test_fiscal_counterfactuals_sync():
@@ -142,16 +221,17 @@ def test_annual_trajectory_and_peer_summary_sync():
     assert traj_path.exists(), f"Missing {traj_path}"
     df_traj = pd.read_csv(traj_path)
     
-    # 2023-24 row
+    # 2023-24 row (exact state pricing: KS 215.00 * 99450 + MO 2.81 * 93600 = $21,645,003.97)
     row_24 = df_traj[df_traj["school_year"] == "2023-2024"].iloc[0]
     assert abs(row_24["net_surplus_coordinators_fte"] - 217.81) < 0.1
-    assert abs(row_24["net_cohort_annual_cost_savings"] - 21163879.32) < 1.0
+    assert abs(row_24["net_cohort_annual_cost_savings"] - 21645003.97) < 1.0
     
     # Cumulative trajectory values
     traj_text = (OUTPUTS_DIR / "fiscal_materiality_report.md").read_text(encoding="utf-8")
     readme_text = (ROOT / "README.md").read_text(encoding="utf-8")
-    assert "$21,163,879.32" in traj_text and "$21,163,879.32" in readme_text
-    assert "$70,553,696.34" in traj_text and "$70,553,696.34" in readme_text
+    
+    assert "$21,645,003.97" in traj_text and "$21,645,003.97" in readme_text
+    assert "$73,295,927.92" in traj_text and "$73,295,927.92" in readme_text
     assert "725.86 FTE-years" in traj_text or "725.86 FTE-Yrs" in traj_text
     assert "725.86 FTE-years" in readme_text
     
@@ -159,10 +239,12 @@ def test_annual_trajectory_and_peer_summary_sync():
     peer_sum_path = OUTPUTS_DIR / "fiscal_materiality_peer_summary.csv"
     assert peer_sum_path.exists(), f"Missing {peer_sum_path}"
     df_peer = pd.read_csv(peer_sum_path)
+    assert "positive_peer_deviation_fte" in df_peer.columns
+    
     core_models = ['Model 1: SCHADM (Peer)', 'Model 2: LEAADM (Peer)', 'Model 3: CORSUP (Peer)']
     metro_core = df_peer[(df_peer["region"] == "METRO") & (df_peer["model_name"].isin(core_models))]
     total_savings = metro_core["estimated_expenditure_savings"].sum()
-    total_fte = metro_core["peer_excess_fte"].sum()
+    total_fte = metro_core["positive_peer_deviation_fte"].sum()
     assert abs(total_savings - 41737693.51) < 1.0
     assert abs(total_fte - 360.87) < 0.1
     
@@ -170,18 +252,40 @@ def test_annual_trajectory_and_peer_summary_sync():
     assert "360.87 FTE" in traj_text and "360.87 FTE" in readme_text
 
 
+def test_markdown_link_and_retraction_hygiene():
+    """Verify absence of local Windows file links and retracted claims across all markdown files."""
+    md_files = list(ROOT.glob("**/*.md"))
+    assert len(md_files) > 0
+    
+    for f in md_files:
+        text = f.read_text(encoding="utf-8")
+        # Check no file:///c: or file:///C:
+        assert not re.search(r"file:///[cC]:", text), f"Found local file link in {f.relative_to(ROOT)}"
+        
+        # Check no unretracted 89.5%
+        if "89.5%" in text:
+            assert ("retracted" in text.lower() or "preliminary" in text.lower()), \
+                f"Found unretracted/unclarified 89.5% claim in {f.relative_to(ROOT)}"
+
+
 if __name__ == "__main__":
     print("Running automated synchronization checks...")
-    test_compensation_benchmarks_exist_and_valid()
-    print("[PASS] Compensation benchmarks validated.")
+    test_compensation_benchmarks_and_reconstruction_valid()
+    print("[PASS] Compensation benchmarks & reconstruction artifact validated.")
     test_phase3_claim_evidence_integrity()
     print("[PASS] Phase 3 qualitative evidence ledger validated.")
     test_long_difference_regression_sync()
     print("[PASS] Long-difference growth model estimates validated.")
+    test_sensitivity_family_and_lodo_diagnostics()
+    print("[PASS] Growth sensitivity family & LODO diagnostics validated.")
     test_shapley_decomposition_sync()
     print("[PASS] Grouped Shapley growth decomposition validated.")
+    test_studentized_residuals_and_outliers()
+    print("[PASS] Externally studentized residuals & peer outliers validated.")
     test_fiscal_counterfactuals_sync()
     print("[PASS] District-level fiscal counterfactuals and feasible base raises validated.")
     test_annual_trajectory_and_peer_summary_sync()
     print("[PASS] Trajectory and peer summary aggregations validated.")
+    test_markdown_link_and_retraction_hygiene()
+    print("[PASS] Markdown link and retraction hygiene validated.")
     print("\nALL NARRATIVE AND DATA SYNCHRONIZATION CHECKS PASSED (100% MATCH).")

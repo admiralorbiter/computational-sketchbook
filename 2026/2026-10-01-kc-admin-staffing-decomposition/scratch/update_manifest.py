@@ -54,6 +54,16 @@ def update_manifest():
             "complete_outcome_cohort_53": "N/A"
         },
         {
+            "dataset_name": "kansas_2015_16_reconstruction",
+            "relative_path": "data/processed/kansas_2015_16_reconstruction.csv",
+            "calibration_phase": "Phase 1.1 / Phase 4 Reconstruction",
+            "format": "csv",
+            "years_covered": "2015-2016",
+            "district_count": 2,
+            "balanced_presence_cohort_55": 2,
+            "complete_outcome_cohort_53": 2
+        },
+        {
             "dataset_name": "phase3_claim_evidence",
             "relative_path": "outputs/tables/phase3_claim_evidence.csv",
             "calibration_phase": "Phase 3 Board Qualitative Audit",
@@ -67,6 +77,26 @@ def update_manifest():
             "dataset_name": "long_difference_regression_results",
             "relative_path": "outputs/tables/long_difference_regression_results.csv",
             "calibration_phase": "Phase 2B Long-Difference Growth Model",
+            "format": "csv",
+            "years_covered": "2014-2015 to 2023-2024",
+            "district_count": 55,
+            "balanced_presence_cohort_55": 55,
+            "complete_outcome_cohort_53": 53
+        },
+        {
+            "dataset_name": "long_difference_sensitivity_family",
+            "relative_path": "outputs/tables/long_difference_sensitivity_family.csv",
+            "calibration_phase": "Phase 2B Growth Sensitivity Suite",
+            "format": "csv",
+            "years_covered": "2014-2015 to 2023-2024",
+            "district_count": 55,
+            "balanced_presence_cohort_55": 55,
+            "complete_outcome_cohort_53": 53
+        },
+        {
+            "dataset_name": "long_difference_lodo_diagnostics",
+            "relative_path": "outputs/tables/long_difference_lodo_diagnostics.csv",
+            "calibration_phase": "Phase 2B LODO Influence Diagnostics",
             "format": "csv",
             "years_covered": "2014-2015 to 2023-2024",
             "district_count": 55,

@@ -1,9 +1,12 @@
-# Research Questions & Conceptual Framework (Calibrated)
+# Research Questions & Original Design (Archival Reference)
+
+> [!NOTE]
+> **Historical Design Document:** This document records the initial exploratory research design and preliminary Build 1 scoping. For the certified final econometric framework, stopping rules, and empirical results, consult [`research/methods.md`](methods.md).
 
 **Project:** Kansas City Administrative Staffing Intensity Decomposition  
-**Status:** Methodological Framework (Phase 1.1 Calibrated)  
+**Status:** Archival Research Design (Superseded by `research/methods.md`)  
 **Date:** October 1, 2026  
-**Scope:** Bi-State Kansas City Metropolitan Area (9 MARC Counties: Jackson, Clay, Platte, Cass, Ray [MO]; Johnson, Wyandotte, Leavenworth, Miami [KS])
+**Scope:** Bi-State Kansas City Metropolitan Area (9 MARC Counties)
 
 ---
 
@@ -44,7 +47,7 @@ In the balanced cohort of 55 regular school districts present across the modern 
 * District central administrators (LEAADM) grew **+1.1%** (+1.9 FTE — virtually flat)
 * **Instructional coordinators (CORSUP) grew +49.8% (+249.9 FTE)**
 
-Instructional coordinators accounted for **89.5% of all net administrative/supervisory growth** across the balanced regular cohort.
+Instructional coordinators accounted for **89.5% of all net administrative/supervisory growth** across the balanced regular cohort *(preliminary estimate using the uncorrected 2024-25 endpoint; reconciled in Phase 1.1 to 48.5% across the clean 2014–2023 window)*.
 
 ---
 

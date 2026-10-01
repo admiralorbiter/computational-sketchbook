@@ -1,4 +1,8 @@
-covariate_family,variables_in_family,shapley_r2_contribution,pct_of_explained_variance
-Student Need Shifts,"d_poverty_100, d_idea_100, d_lep_100",0.45779469940428036,66.18751241574665
-Teacher Scale Growth,d_teachers_100,0.19186159919482426,27.73916341831219
-State Jurisdiction,is_ks,0.04200695130325395,6.0733241659411625
+specification,covariate_family,variables_in_family,shapley_r2_contribution,pct_of_explained_variance,boot_ci_95_lower,boot_ci_95_upper
+Baseline 3-Group Model,Teacher Scale Growth,d_teachers_100,0.19186159919482434,27.739163418312195,4.958795221546954,53.33668344028309
+Baseline 3-Group Model,Student Need Shifts,"d_poverty_100, d_idea_100, d_lep_100",0.4577946994042803,66.18751241574662,37.275755409836194,87.97106386026442
+Baseline 3-Group Model,State Jurisdiction,is_ks,0.04200695130325403,6.073324165941171,2.226739179831902,28.179739931067175
+4-Group Model (with Baseline Capacity),Teacher Scale Growth,d_teachers_100,0.17865682271460948,23.39016916200469,4.008404665365034,47.874989215933894
+4-Group Model (with Baseline Capacity),Student Need Shifts,"d_poverty_100, d_idea_100, d_lep_100",0.49128315416191065,64.3199398023921,35.84620675005448,82.46807829523213
+4-Group Model (with Baseline Capacity),Baseline Capacity,base_corsup_fte,0.051795305012400025,6.781162497068167,0.9743448892993875,27.42610929514113
+4-Group Model (with Baseline Capacity),State Jurisdiction,is_ks,0.0420763069764654,5.508728538535037,2.0097550637438073,21.865196791011307
