@@ -87,6 +87,13 @@ def test_load_canonical_indicators():
     assert mac_10q.signal_role == obs.SignalRole.FINANCIAL_RECOGNITION
     assert mac_10q.observability == obs.Observability.PUBLIC
 
+    # Verify IND-JUP-003 right-censored interval representation (min=77, max=unbounded/None)
+    jup_censor = next(i for i in indicators if i.indicator_id == "IND-JUP-003")
+    assert jup_censor.signal_role == obs.SignalRole.CONFIRMATION
+    assert jup_censor.lead_time_status == obs.LeadTimeStatus.RIGHT_CENSORED_OBSERVED
+    assert jup_censor.lead_time_days_min == 77.0
+    assert jup_censor.lead_time_days_max is None
+
     # Verify TeraWulf Lake Mariner & Core Scientific Denton indicators loaded
     wulf_ind = next(i for i in indicators if i.indicator_id == "IND-WULF-001")
     assert wulf_ind.project_id == "TERAWULF_LAKE_MARINER"
@@ -131,3 +138,103 @@ def test_observatory_monitor_and_scoreboard():
     assert scorecard["exact_early_warning_lead_days"] == 65.0
     assert scorecard["observed_propagation_lag_days"] == 71.0
     assert scorecard["right_censored_disclosure_lag_days"] == 77.0
+    assert scorecard["observed_public_early_warning_episodes"] == 1
+    assert scorecard["sec_disclosure_lag_display"] == ">=77 days (right-censored)"
+
+    # Verify save_observations() raises RuntimeError (direct mutation prohibited)
+    with pytest.raises(RuntimeError, match="Direct mutation of derived Parquet/CSV is prohibited"):
+        monitor.save_observations()
+
+
+def test_authored_claims_epistemic_validation(tmp_path):
+    """Verify that newly authored claims must satisfy rigorous validation before admission."""
+    from curate_observatory import validate_authored_claims
+    import yaml
+
+    # Case 1: Valid claim format
+    valid_yaml = tmp_path / "valid_claims.yaml"
+    with open(valid_yaml, "w", encoding="utf-8") as f:
+        yaml.dump([{
+            "claim_id": "CLM-TEST-001",
+            "entity_id": "WULF",
+            "source_type": "CORPORATE_EARNINGS_RELEASE",
+            "filing_date": "2026-08-10",
+            "document_url": "https://investors.terawulf.com/test",
+            "section_locator": "Note 8",
+            "quote_type": "source_excerpt",
+            "exact_quote": "Operational capacity update text",
+            "verified_by": "HUMAN_AUDITOR",
+            "verification_status": "VERIFIED_AUDITED",
+            "verifier_notes": "Cross-verified against Form 10-Q disclosures and investor relations reports.",
+        }], f)
+
+    admitted = validate_authored_claims(valid_yaml)
+    assert "CLM-TEST-001" in admitted
+
+    # Case 2: Claim without quote_type fails validation
+    invalid_yaml = tmp_path / "invalid_claims.yaml"
+    with open(invalid_yaml, "w", encoding="utf-8") as f:
+        yaml.dump([{
+            "claim_id": "CLM-BAD-001",
+            "entity_id": "WULF",
+            "source_type": "CORPORATE_EARNINGS_RELEASE",
+            "filing_date": "2026-08-10",
+            "document_url": "https://investors.terawulf.com/test",
+            "section_locator": "Note 8",
+            "exact_quote": "Missing quote_type",
+            "verified_by": "HUMAN_AUDITOR",
+            "verification_status": "VERIFIED_AUDITED",
+            "verifier_notes": "Some notes here that meet the length check.",
+        }], f)
+
+    with pytest.raises(ValueError, match="missing required verification fields"):
+        validate_authored_claims(invalid_yaml)
+
+
+def test_observatory_monitor_add_observation_hermetic(tmp_path):
+    """Verify that add_observation updates observations.yaml and syncs observations."""
+    import yaml
+    import pandas as pd
+    from observatory_schema import ClockType, SignalRole, Observability, LeadTimeStatus
+
+    tmp_yaml = tmp_path / "obs.yaml"
+    with open(tmp_yaml, "w", encoding="utf-8") as f:
+        yaml.dump([], f)
+    tmp_pq = tmp_path / "obs.parquet"
+    pd.DataFrame(columns=[
+        "observation_id", "indicator_id", "project_id", "source_event_date",
+        "first_publicly_observable_date", "ingestion_date", "clock_affected",
+        "threatened_boundary", "signal_role", "observability", "headline_text",
+        "raw_source_uri", "evidence_claim_id", "lead_time_days_to_financial_recognition",
+        "propagation_lag_days_from_upstream_signal", "reference_event_date",
+        "censor_date", "censored_lead_days", "lead_time_status"
+    ]).to_parquet(tmp_pq)
+
+    monitor = mon.ObservatoryMonitor(parquet_path=str(tmp_pq), authored_obs_yaml=str(tmp_yaml))
+    assert len(monitor.observations) == 0
+
+    obs_res = monitor.add_observation(
+        observation_id="OBS-TEST-001",
+        indicator_id="IND-JUP-001",
+        project_id="PROJECT_JUPITER",
+        source_event_date=date(2026, 7, 15),
+        first_publicly_observable_date=date(2026, 7, 15),
+        ingestion_date=date(2026, 9, 30),
+        clock_affected=ClockType.PHYSICAL,
+        threatened_boundary="Fuel supply boundary",
+        signal_role=SignalRole.EARLY_WARNING,
+        observability=Observability.PUBLIC,
+        headline_text="NMSLO test observation",
+        raw_source_uri="https://nmstatelands.org/test",
+        evidence_claim_id="CLM-PRE-NMSLO-DENIAL-JUL15",
+        lead_time_days_to_financial_recognition=65.0,
+        lead_time_status=LeadTimeStatus.OBSERVED,
+    )
+
+    assert obs_res.observation_id == "OBS-TEST-001"
+    assert len(monitor.observations) == 1
+    # Check that YAML on disk was updated
+    with open(tmp_yaml, "r", encoding="utf-8") as f:
+        loaded_yaml = yaml.safe_load(f)
+    assert len(loaded_yaml) == 1
+    assert loaded_yaml[0]["observation_id"] == "OBS-TEST-001"

@@ -85,7 +85,7 @@ class ObservableIndicator:
     threatened_boundary: str
     lead_time_status: LeadTimeStatus
     lead_time_days_min: float
-    lead_time_days_max: float
+    lead_time_days_max: Optional[float]
     lead_time_notes: str
     source_status: str
     model_treatment: str
@@ -210,7 +210,12 @@ def load_canonical_indicators(parquet_path: str = INDICATORS_PARQUET) -> List[Ob
             threatened_boundary=str(row["threatened_boundary"]),
             lead_time_status=LeadTimeStatus(str(row["lead_time_status"])),
             lead_time_days_min=float(row["lead_time_days_min"]),
-            lead_time_days_max=float(row["lead_time_days_max"]),
+            lead_time_days_max=(
+                float(row["lead_time_days_max"])
+                if pd.notna(row.get("lead_time_days_max"))
+                and str(row.get("lead_time_days_max")).strip() not in {"", "None", "nan"}
+                else None
+            ),
             lead_time_notes=str(row["lead_time_notes"]),
             source_status=str(row["source_status"]),
             model_treatment=str(row["model_treatment"]),

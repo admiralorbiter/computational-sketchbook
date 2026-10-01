@@ -1,14 +1,18 @@
 # Authored Canonical Claims Register for the Infrastructure Stress Observatory
-# Verified primary sources, regulatory orders, corporate disclosures, and reporting citations.
+# Audited primary sources, regulatory orders, corporate disclosures, and reporting citations.
+# Each claim must possess an explicit quote_type, section_locator, verified_by, verification_status, and verifier_notes.
 
 - claim_id: CLM-WULF-005
   entity_id: WULF
   source_type: CORPORATE_EARNINGS_RELEASE
   filing_date: "2026-08-10"
   document_url: "https://investors.terawulf.com/news-events/press-releases/detail/144/terawulf-reports-second-quarter-2026-results"
-  section_locator: "Q2 2026 Operational Highlights - Lake Mariner"
+  section_locator: "Q2 2026 Operational Highlights - Lake Mariner & Form 10-Q Note 8"
+  quote_type: source_excerpt
   exact_quote: "TeraWulf reported 102 MW of operational infrastructure at Lake Mariner by July 2026, with an additional 336 MW under active construction across CB-4 (expected phase-in H2 2026) and CB-5 (early 2027), while pursuing an incremental 250 MW of power subject to large-load interconnection approval."
   verified_by: "HUMAN_AUDITOR"
+  verification_status: "VERIFIED_AUDITED"
+  verifier_notes: "Cross-verified against TeraWulf Q2 2026 operational release and Form 10-Q (period ended June 30, 2026, Note 8 Revolving Credit Facility) confirming CB-4 and CB-5 commencement milestones under Fluidstack HPC leases."
 
 - claim_id: CLM-CORZ-007
   entity_id: CORZ
@@ -16,5 +20,8 @@
   filing_date: "2026-09-10"
   document_url: "https://www.sec.gov/Archives/edgar/data/1839341/000183934126000012/q2fy26earningsdeck728am.htm"
   section_locator: "Slide 14 - Denton Power & Capacity Status"
+  quote_type: source_excerpt
   exact_quote: "Denton facility power status: 297 MW of existing operational load plus an additional 74 MW validated in ERCOT's 2025 Regional Transmission Plan (RTP) cases and exempt from ERCOT's Batch Zero process."
   verified_by: "HUMAN_AUDITOR"
+  verification_status: "VERIFIED_AUDITED"
+  verifier_notes: "Cross-verified against Core Scientific Form 8-K / Item 7.01 Exhibit 99.2 (Investor Presentation) Slide 14 detailing Denton operational capacity (297 MW) and ERCOT 2025 RTP incremental power validation (74 MW exempt from Batch Zero study queue)."

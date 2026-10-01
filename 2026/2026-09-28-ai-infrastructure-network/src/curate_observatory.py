@@ -29,6 +29,88 @@ OBSERVATORY_AUTHORED_DIR = REPO_ROOT / "data" / "observatory"
 PROCESSED_DIR = REPO_ROOT / "data" / "processed"
 
 
+def validate_authored_claims(claims_yaml_path: Path) -> Set[str]:
+    """Validates authored claims against epistemic verification rules before admitting them.
+
+    A newly authored claim does NOT certify itself by presence alone.
+    To be admitted into the verified evidence ledger, each authored claim MUST:
+        1. Possess non-empty fields: claim_id, entity_id, source_type, filing_date,
+           document_url, section_locator, quote_type, exact_quote, verified_by,
+           verification_status, and verifier_notes.
+        2. Explicitly classify quote_type in {'exact_quote', 'source_excerpt', 'analyst_summary'}.
+        3. Possess verification_status in {'VERIFIED', 'VERIFIED_AUDITED'}.
+        4. Anchor to a confirmed tracked entity with local filings in data/raw/sec/ or network registry.
+        5. For 'exact_quote', verify contiguous verbatim substring against local cached document if present.
+        6. For 'source_excerpt' or 'analyst_summary', require substantive verifier_notes documenting
+           cross-references to SEC filings, exhibits, or regulatory orders.
+    """
+    if not claims_yaml_path.exists():
+        return set()
+
+    with open(claims_yaml_path, "r", encoding="utf-8") as f:
+        authored_claims = yaml.safe_load(f) or []
+
+    verified_ids = set()
+    raw_sec_dir = REPO_ROOT / "data" / "raw" / "sec"
+    valid_known_entities = {"WULF", "CORZ", "IREN", "ORCL", "OBDC", "APLD", "CRWV", "SMCI", "NVDA", "MSFT", "MDU"}
+
+    for idx, c in enumerate(authored_claims):
+        cid = c.get("claim_id")
+        if not cid:
+            raise ValueError(f"Authored claim at index {idx} missing 'claim_id'")
+
+        # 1. Required fields
+        required_fields = [
+            "entity_id", "source_type", "filing_date", "document_url",
+            "section_locator", "quote_type", "exact_quote", "verified_by",
+            "verification_status", "verifier_notes"
+        ]
+        missing = [rf for rf in required_fields if not c.get(rf)]
+        if missing:
+            raise ValueError(f"Authored claim {cid} missing required verification fields: {missing}")
+
+        # 2. Explicit quote classification
+        q_type = str(c["quote_type"]).strip()
+        if q_type not in {"exact_quote", "source_excerpt", "analyst_summary"}:
+            raise ValueError(
+                f"Authored claim {cid} has invalid quote_type '{q_type}'. "
+                f"Must be one of: exact_quote, source_excerpt, analyst_summary"
+            )
+
+        # 3. Verification status
+        v_status = str(c["verification_status"]).strip()
+        if v_status not in {"VERIFIED", "VERIFIED_AUDITED"}:
+            raise ValueError(f"Authored claim {cid} has unverified status: '{v_status}'")
+
+        # 4. Entity provenance check
+        ent_id = str(c["entity_id"]).strip()
+        matching_sec = list(raw_sec_dir.glob(f"{ent_id}_submissions_*.json"))
+        if not matching_sec and ent_id not in valid_known_entities:
+            raise ValueError(f"Authored claim {cid} references unconfirmed entity: '{ent_id}'")
+
+        # 5. For exact_quote with local source file, check substring
+        if q_type == "exact_quote":
+            quote_text = str(c["exact_quote"]).strip()
+            doc_url = str(c["document_url"])
+            doc_fname = Path(doc_url).name
+            local_cand = raw_sec_dir / doc_fname
+            if local_cand.exists():
+                with open(local_cand, "r", encoding="utf-8", errors="ignore") as f_src:
+                    src_content = f_src.read()
+                if quote_text not in src_content:
+                    raise ValueError(f"Authored claim {cid} exact_quote not found in local file {doc_fname}")
+
+        # 6. For source_excerpt / analyst_summary, check verifier_notes length
+        if q_type in {"source_excerpt", "analyst_summary"}:
+            notes = str(c["verifier_notes"]).strip()
+            if len(notes) < 20:
+                raise ValueError(f"Authored claim {cid} ({q_type}) requires substantive verifier_notes (got: '{notes}')")
+
+        verified_ids.add(cid)
+
+    return verified_ids
+
+
 def collect_verified_evidence_claim_ids() -> Set[str]:
     """Gathers all verified claim IDs across the repository's immutable ledgers."""
     verified_ids = set()
@@ -59,14 +141,11 @@ def collect_verified_evidence_claim_ids() -> Set[str]:
             if "claim_id" in df_t.columns:
                 verified_ids.update(df_t["claim_id"].dropna().tolist())
 
-    # 4. Authored observatory claims
+    # 4. Authored observatory claims (validated independently)
     claims_yaml_path = OBSERVATORY_AUTHORED_DIR / "claims.yaml"
     if claims_yaml_path.exists():
-        with open(claims_yaml_path, "r", encoding="utf-8") as f:
-            authored_claims = yaml.safe_load(f) or []
-        for c in authored_claims:
-            if "claim_id" in c:
-                verified_ids.add(c["claim_id"])
+        authored_verified = validate_authored_claims(claims_yaml_path)
+        verified_ids.update(authored_verified)
 
     return verified_ids
 

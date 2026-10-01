@@ -58,8 +58,8 @@
   threatened_boundary: "Public market awareness of project distress and credit discount"
   lead_time_status: RIGHT_CENSORED_OBSERVED
   lead_time_days_min: 77.0
-  lead_time_days_max: 77.0
-  lead_time_notes: "July 15, 2026 (NMSLO denial) -> September 30, 2026 censor date (0 filings on EDGAR; right-censored >= 77 days)"
+  lead_time_days_max: null
+  lead_time_notes: "July 15, 2026 (NMSLO denial) -> September 30, 2026 censor date (0 filings on EDGAR; right-censored >= 77 days: lower bound = 77.0d, upper bound = unbounded)"
   source_status: PRIMARY_DISCLOSED
   model_treatment: EXACT
   valid_from: "2026-07-15"

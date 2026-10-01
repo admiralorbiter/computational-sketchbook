@@ -145,7 +145,19 @@ class BaseAdapter(ABC):
 
 
 class EDGARAdapter(BaseAdapter):
-    """Adapter for SEC EDGAR corporate filings (8-K, 10-Q, 10-K, 6-K)."""
+    """High-recall local SEC submissions intake queue for tracked project entities.
+
+    Operational characteristics:
+        - Intake mode: Deliberately broad local-submissions scanner designed for high recall.
+        - Scope: Scans recent filings for tracked entity CIKs across material periodic and event forms
+          (8-K, 10-Q, 10-K, 6-K).
+        - Keywords: The keywords array is stored as reference context / candidate tagging metadata
+          for human and agent review; full-text keyword filtering is deliberately NOT applied to filing
+          bodies at intake to preserve maximum recall across all material definitive agreements.
+        - Network policy: The primary intake pipeline operates deterministically against local cached
+          submissions in data/raw/sec/. An optional live fetch method (fetch_submissions_from_edgar_api)
+          is provided for live queries against data.sec.gov when online refreshes are requested.
+    """
 
     TRACKED_ENTITIES: Dict[str, Dict[str, Any]] = {
         "IREN": {
@@ -196,12 +208,40 @@ class EDGARAdapter(BaseAdapter):
         super().__init__(name="EDGAR")
         self.raw_dir = raw_dir
 
+    def fetch_submissions_from_edgar_api(self, cik: str, ticker: Optional[str] = None, save_to_cache: bool = True) -> Optional[Dict[str, Any]]:
+        """Optional live REST API fetch for company submissions from data.sec.gov.
+
+        Adheres to SEC rate limits (<10 req/s) and provides declaring User-Agent.
+        Falls back cleanly to None if offline or restricted.
+        """
+        import requests
+        cik_padded = str(cik).zfill(10)
+        url = f"https://data.sec.gov/submissions/CIK{cik_padded}.json"
+        headers = {"User-Agent": SEC_USER_AGENT, "Accept-Encoding": "gzip, deflate"}
+        try:
+            resp = requests.get(url, headers=headers, timeout=10)
+            if resp.status_code == 200:
+                data = resp.json()
+                if save_to_cache:
+                    t_str = ticker or next((t for t, m in self.TRACKED_ENTITIES.items() if m["cik"] == cik_padded), f"CIK{cik_padded}")
+                    out_path = self.raw_dir / f"{t_str}_submissions_{cik_padded}.json"
+                    out_path.parent.mkdir(parents=True, exist_ok=True)
+                    with open(out_path, "w", encoding="utf-8") as f:
+                        json.dump(data, f)
+                return data
+            else:
+                logger.warning(f"SEC EDGAR API query returned status {resp.status_code} for CIK {cik_padded}")
+                return None
+        except Exception as e:
+            logger.warning(f"Live EDGAR fetch failed (operating in offline cache mode): {e}")
+            return None
+
     def discover_candidates(
         self,
         target_tickers: Optional[List[str]] = None,
         as_of_date: Optional[date] = None,
     ) -> List[CandidateObservation]:
-        """Scans local SEC submissions files for relevant periodic and material event filings."""
+        """Scans local SEC submissions files for relevant periodic and material event filings (high recall)."""
         candidates = []
         ingest_date = as_of_date or date.today()
         tickers = target_tickers or list(self.TRACKED_ENTITIES.keys())

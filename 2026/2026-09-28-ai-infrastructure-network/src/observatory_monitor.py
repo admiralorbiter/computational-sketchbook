@@ -82,11 +82,17 @@ class MonitoredObservation:
         }
 
 
-class ObservatoryMonitor:
-    """Manages observation ingestion, bitemporal verification, and scoreboard scoring."""
+DEFAULT_AUTHORED_OBS_YAML = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "observatory", "observations.yaml"
+)
 
-    def __init__(self, parquet_path: str = OBSERVATIONS_PARQUET):
+
+class ObservatoryMonitor:
+    """Manages observation evaluation, bitemporal verification, and scoreboard scoring."""
+
+    def __init__(self, parquet_path: str = OBSERVATIONS_PARQUET, authored_obs_yaml: Optional[str] = None):
         self.parquet_path = parquet_path
+        self.authored_obs_yaml = authored_obs_yaml or DEFAULT_AUTHORED_OBS_YAML
         self.observations: List[MonitoredObservation] = []
         self.load_observations()
 
@@ -165,41 +171,70 @@ class ObservatoryMonitor:
         censored_lead_days: Optional[float] = None,
         lead_time_status: LeadTimeStatus = LeadTimeStatus.MONITORING_WINDOW,
     ) -> MonitoredObservation:
-        """Adds and persists a new verified observation."""
-        assert source_event_date <= first_publicly_observable_date
-        assert first_publicly_observable_date <= ingestion_date
+        """Adds a new verified observation by routing directly through canonical observations.yaml and recompiling."""
+        assert source_event_date <= first_publicly_observable_date, f"Bitemporal leak: source {source_event_date} > pub {first_publicly_observable_date}"
+        assert first_publicly_observable_date <= ingestion_date, f"Ingestion lookahead: pub {first_publicly_observable_date} > ingest {ingestion_date}"
 
-        new_obs = MonitoredObservation(
-            observation_id=observation_id,
-            indicator_id=indicator_id,
-            project_id=project_id,
-            source_event_date=source_event_date,
-            first_publicly_observable_date=first_publicly_observable_date,
-            ingestion_date=ingestion_date,
-            clock_affected=clock_affected,
-            threatened_boundary=threatened_boundary,
-            signal_role=signal_role,
-            observability=observability,
-            headline_text=headline_text,
-            raw_source_uri=raw_source_uri,
-            evidence_claim_id=evidence_claim_id,
-            lead_time_days_to_financial_recognition=lead_time_days_to_financial_recognition,
-            propagation_lag_days_from_upstream_signal=propagation_lag_days_from_upstream_signal,
-            reference_event_date=reference_event_date,
-            censor_date=censor_date,
-            censored_lead_days=censored_lead_days,
-            lead_time_status=lead_time_status,
-        )
-        self.observations.append(new_obs)
-        self.save_observations()
-        return new_obs
+        # 1. Foreign-key validation against verified repository claims
+        from curate_observatory import collect_verified_evidence_claim_ids, compile_observatory_datasets
+        import yaml
+
+        verified_claims = collect_verified_evidence_claim_ids()
+        if evidence_claim_id not in verified_claims:
+            raise ValueError(f"Foreign-key error: claim '{evidence_claim_id}' not found in verified evidence ledger.")
+
+        # 2. Append to authored observations.yaml
+        obs_yaml_path = self.authored_obs_yaml
+        with open(obs_yaml_path, "r", encoding="utf-8") as f:
+            authored_obs = yaml.safe_load(f) or []
+
+        existing_ids = {o["observation_id"] for o in authored_obs}
+        if observation_id in existing_ids:
+            raise ValueError(f"Observation ID '{observation_id}' already exists in observations.yaml")
+
+        new_entry = {
+            "observation_id": observation_id,
+            "indicator_id": indicator_id,
+            "project_id": project_id,
+            "source_event_date": source_event_date.isoformat(),
+            "first_publicly_observable_date": first_publicly_observable_date.isoformat(),
+            "ingestion_date": ingestion_date.isoformat(),
+            "clock_affected": clock_affected.value,
+            "threatened_boundary": threatened_boundary,
+            "signal_role": signal_role.value,
+            "observability": observability.value,
+            "headline_text": headline_text,
+            "raw_source_uri": raw_source_uri,
+            "lead_time_days_to_financial_recognition": lead_time_days_to_financial_recognition,
+            "propagation_lag_days_from_upstream_signal": propagation_lag_days_from_upstream_signal,
+            "reference_event_date": reference_event_date.isoformat() if reference_event_date else None,
+            "censor_date": censor_date.isoformat() if censor_date else None,
+            "censored_lead_days": censored_lead_days,
+            "lead_time_status": lead_time_status.value,
+            "evidence_claim_id": evidence_claim_id,
+        }
+        authored_obs.append(new_entry)
+        with open(obs_yaml_path, "w", encoding="utf-8") as f:
+            yaml.dump(authored_obs, f, sort_keys=False, default_flow_style=False)
+
+        # 3. Recompile canonical Parquets and CSVs
+        if os.path.abspath(obs_yaml_path) == os.path.abspath(DEFAULT_AUTHORED_OBS_YAML):
+            compile_observatory_datasets()
+        else:
+            df = pd.DataFrame(authored_obs)
+            df.to_parquet(self.parquet_path, index=False)
+
+        # 4. Reload in-memory observations from compiled storage
+        self.load_observations()
+        return next(o for o in self.observations if o.observation_id == observation_id)
 
     def save_observations(self) -> None:
-        """Persists observations to Parquet and CSV."""
-        df = pd.DataFrame([obs.to_dict() for obs in self.observations])
-        df.to_parquet(self.parquet_path, index=False)
-        csv_path = self.parquet_path.replace(".parquet", ".csv")
-        df.to_csv(csv_path, index=False)
+        """Disabled: Compiled Parquet/CSV is strictly derivative of authored YAML."""
+        raise RuntimeError(
+            "Direct mutation of derived Parquet/CSV is prohibited. "
+            "Authored YAML (data/observatory/observations.yaml) is the sole canonical source of truth. "
+            "Use add_observation() or CandidateStore.promote_to_canonical(), which update observations.yaml and recompile."
+        )
 
     def compute_empirical_scoreboard(self) -> Dict[str, Any]:
         """Calculates exact empirical scoreboard metrics across all tracked observations."""
@@ -230,4 +265,9 @@ class ObservatoryMonitor:
             "right_censored_signals_count": len(rc_df),
             "right_censored_disclosure_lag_days": rc_days[0] if rc_days else None,
             "cross_layer_join_information_gain": "DEMONSTRATED (July 15 NMSLO Order -> Sept 18 Loan Mark = 65d Lead)",
+            # Explicit canonical scoreboard presentation
+            "observed_public_early_warning_episodes": len(ew_leads),
+            "detection_lead_days": ew_leads[0] if len(ew_leads) == 1 else None,
+            "contract_response_propagation_lag_days": prop_lags[0] if len(prop_lags) == 1 else None,
+            "sec_disclosure_lag_display": f">={rc_days[0]:.0f} days (right-censored)" if rc_days else None,
         }

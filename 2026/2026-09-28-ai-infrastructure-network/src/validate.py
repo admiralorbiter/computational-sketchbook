@@ -2328,8 +2328,21 @@ def validate_observatory():
     obs_claims_file = PROCESSED_DIR / "observatory_claims.parquet"
     if obs_claims_file.exists():
         df_oc = pd.read_parquet(obs_claims_file)
-        if "claim_id" in df_oc.columns:
-            verified_claim_ids.update(df_oc["claim_id"].dropna().tolist())
+        valid_qtypes = {"exact_quote", "source_excerpt", "analyst_summary"}
+        valid_vstatus = {"VERIFIED", "VERIFIED_AUDITED"}
+        for _, clm_row in df_oc.iterrows():
+            cid = clm_row.get("claim_id")
+            qt = clm_row.get("quote_type")
+            vs = clm_row.get("verification_status")
+            notes = str(clm_row.get("verifier_notes", "")).strip()
+            if qt not in valid_qtypes:
+                sub_err.append(f"Authored claim {cid} invalid quote_type: '{qt}' (must be in {valid_qtypes})")
+            elif vs not in valid_vstatus:
+                sub_err.append(f"Authored claim {cid} unverified status: '{vs}'")
+            elif len(notes) < 20:
+                sub_err.append(f"Authored claim {cid} missing substantive verifier_notes")
+            else:
+                verified_claim_ids.add(cid)
 
     # 13.1 Scenarios Table
     scen_pq = PROCESSED_DIR / "observatory_scenarios.parquet"
@@ -2376,6 +2389,11 @@ def validate_observatory():
         if jup_row.empty or jup_row.iloc[0]["lead_time_days_min"] != 65.0 or jup_row.iloc[0]["lead_time_status"] != "OBSERVED":
             sub_err.append(f"IND-JUP-001 invalid lead time or status: {jup_row}")
 
+        # Verify IND-JUP-003 right-censored interval representation (min=77, max=unbounded/null)
+        jup3_row = df_ind[df_ind["indicator_id"] == "IND-JUP-003"]
+        if jup3_row.empty or jup3_row.iloc[0]["lead_time_days_min"] != 77.0 or pd.notna(jup3_row.iloc[0]["lead_time_days_max"]):
+            sub_err.append(f"IND-JUP-003 invalid right-censored bounds: expected min=77.0, max=None, got min={jup3_row.iloc[0]['lead_time_days_min']}, max={jup3_row.iloc[0]['lead_time_days_max']}")
+
         # Foreign-key claim check
         for _, row in df_ind.iterrows():
             refs = [c.strip() for c in str(row["evidence_claim_ids"]).split(",") if c.strip()]
@@ -2413,13 +2431,17 @@ def validate_observatory():
                 sub_err.append(f"Scoreboard propagation lag mismatch: expected 71.0, got {board.get('observed_propagation_lag_days')}")
             if board.get("right_censored_disclosure_lag_days") != 77.0:
                 sub_err.append(f"Scoreboard right-censored lag mismatch: expected 77.0, got {board.get('right_censored_disclosure_lag_days')}")
+            if board.get("observed_public_early_warning_episodes") != 1:
+                sub_err.append(f"Scoreboard observed public early warning episodes mismatch: expected 1, got {board.get('observed_public_early_warning_episodes')}")
+            if board.get("sec_disclosure_lag_display") != ">=77 days (right-censored)":
+                sub_err.append(f"Scoreboard SEC disclosure lag display mismatch: got {board.get('sec_disclosure_lag_display')}")
         except Exception as e:
             sub_err.append(f"Scoreboard evaluation error: {e}")
 
     if sub_err:
         errors.extend(sub_err)
     else:
-        print("  [OK] Task 026.1: Observatory Canonical Datasets verified (6 Scenarios, 13 Indicators across 5 projects, >=5 Observations, Foreign-Key Claim Invariants 100% verified, Exact 65d Lead / 71d Lag / 77d Censored Scoreboard verified).")
+        print("  [OK] Task 026.1: Observatory Canonical Datasets certified (Independent Claim Audit verified, 6 Scenarios, 13 Indicators across 5 projects, >=5 Observations, Exact Scoreboard: N=1 Early Warning [65d Lead], 71d Contract Propagation Lag, >=77d Right-Censored SEC Disclosure Lag).")
 
     if errors:
         print("\n[VALIDATION FAILED]")
