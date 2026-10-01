@@ -128,14 +128,14 @@ Crucially, **$T_{\text{completion\_support}}$ is not downstream of $T_{\text{DSR
 - The parent completion guarantee can become economically required while the Debt Service Reserve Account is still 100% intact. The DSRA is legally restricted to debt service (coupons/amortization), whereas the completion guarantee funds the remaining physical construction capex necessary to achieve commercial commencement.
 - Consequently, the milestone set $\mathcal{T}_k$ is evaluated as **independently detected milestone times**, not an enforced sequential state progression:
 
-$$\mathcal{T}_k = \left\{ T_{\text{coverage}, k},\; T_{\text{operating\_exhaustion}, k},\; T_{\text{DSRA}, k},\; T_{\text{completion\_support}, k},\; T_{\text{payment\_default}, k},\; T_{\text{refi}, k} \right\}$$
+$$\mathcal{T}_k = \left\{ T_{\text{coverage}, k},\; T_{\text{operating\_exhaustion}, k},\; T_{\text{DSRA}, k},\; T_{\text{completion\_support}, k},\; T_{\text{payment\_shortfall}, k},\; T_{\text{refi}, k} \right\}$$
 
-1. **$T_{\text{coverage}, k}$ (Operating Flow Deficit):** First month recurring operating cash inflows do not cover recurring uses ($R^{\text{tenant}}_{k, t} < I^{\text{coupon}}_{k, t} + P^{\text{amort}}_{k, t} + O^{\text{opex}}_{k, t}$). The silo enters a cash burn state, buffered by accumulated operating cash.
+1. **$T_{\text{coverage}, k}$ (Cash Coverage Deficit):** First month where tenant cash rent is strictly less than actual monthly cash obligations ($R^{\text{tenant}}_{k, t} < O^{\text{opex}}_{k, t} + I^{\text{coupon\_cash}}_{k, t} + P^{\text{amort}}_{k, t}$ with total obligations $> 0$). The silo enters a cash deficit state, buffered by accumulated operating cash.
 2. **$T_{\text{operating\_exhaustion}, k}$ (Operating Account Depletion):** First month the silo's operating cash account balance reaches zero ($C_{\text{operating}, k, t} = 0$).
 3. **$T_{\text{DSRA}, k}$ (Debt Service Reserve Draw):** Operating cash is fully depleted, forcing the silo to execute its first draw on its capitalized Debt Service Reserve Account ($C_{\text{DSRA}, k, t} < R_{0, k}$).
 4. **$T_{\text{completion\_support}, k}$ (Parent Completion Funding Required):** First point at which available eligible construction funds ($C_{\text{construction}, k, t}$) are insufficient to fund the remaining capex necessary to achieve the contractual Commencement Date milestone. Under the November 20, 2025 (Silo 1) and June 16, 2026 (Silo 2) Form 8-Ks, Applied Digital becomes legally obligated to fund the construction shortfall before the Outside Completion Date.
-5. **$T_{\text{payment\_default}, k}$ (Contractual Debt Payment Default):** First contractual payment date on which required coupon or principal amortization cannot be paid from legally permitted silo cash sources and applicable reserve accounts, after any documented contractual grace/cure periods. *(Note: Applied Digital's completion guarantee is a construction funding obligation, not an unconditional debt-service guaranty; debt payment default occurs when the silo's own payment reserves and permitted cure resources are exhausted).*
-6. **$T_{\text{refi}, k}$ (Final Maturity / Refinancing Boundary):** Final maturity dates (2030 for Silo 1 9.25% notes, 2031 for Silo 2 7.00% notes) where remaining principal must be repaid or refinanced under prevailing market credit spreads.
+5. **$T_{\text{payment\_shortfall}, k}$ (Contractual Debt Payment Shortfall / Absorbing Default Boundary):** First contractual payment date on which required coupon or principal amortization cannot be paid from legally permitted silo cash sources and applicable reserve accounts. Once triggered, the silo enters an absorbing default state (`is_post_shortfall = True`, `economic_status = 'POST_SHORTFALL_ABSORBED'`). Past-due obligations do not vanish; they are tracked as arrears balances (`interest_payable`, `principal_arrears`, and `opex_payable`).
+6. **$T_{\text{refi}, k}$ (Final Maturity / Refinancing Boundary):** Final maturity dates (December 15, 2030 for Silo 1 9.25% notes [Month 54]; June 15, 2031 for Silo 2 7.00% notes [Month 60]) where remaining principal must be repaid or refinanced under prevailing market credit spreads. Balloon principal matures in full at final maturity.
 
 ---
 
@@ -182,22 +182,22 @@ Polaris Forge 1 does not possess a single fungible debt stack; it contains two l
   │    Initial Annual Coupon Carry: $217.375M/yr ($2.350B × 9.25%)
   │    Amortization Start Rule: Semiannual principal amortization begins December 15, 2027
   │    Amortization Amounts: In amounts set forth in Indenture (Unobserved)
-  │    Final Maturity: 2030
+  │    Final Maturity: December 15, 2030 (Month 54)
   │
-  └── [Silo 2: APLD_COMPUTECO3] ────────────────> $1.590B 7.00% Senior Notes (due 2031)
+  └── [Silo 2: APLD_COMPUTECO3] ────────────────> $1.590B 7.00% Senior Notes (due June 15, 2031)
        Financing: Building 4 (150 MW under construction)
        Initial Annual Coupon Carry: $111.300M/yr ($1.590B × 7.00%)
        Amortization Start Rule: Semiannual principal amortization begins first payment date
                                 following final Commencement Date (State-Dependent)
        Amortization Amounts: In amounts set forth in Indenture (Unobserved)
-       Final Maturity: 2031
+       Final Maturity: June 15, 2031 (Month 60)
 ```
 
 - **Initial Annualized Coupon Carry:** **$328.675M/year** ($217.375M + $111.300M).
   *(Note: This is the initial annualized coupon carry. As scheduled principal amortization occurs, coupon cash requirements decline with remaining principal: $I_{k,t} = P_{k,t} \times r_k$).*
 - **State-Dependent Principal Amortization (Structural Offset):**
-  - In Silo 2, scheduled principal amortization begins on the *first payment date following the final Commencement Date*.
-  - This introduces a **non-monotonic interaction with delay**: a construction delay postpones tenant commercial rent commencement and burns interest carry, but simultaneously **defers scheduled principal amortization cash outflows**. The Level 1 engine explicitly models this contractual interaction rather than assuming bullet-only debt.
+  - Contractual Invariant: $\text{amortization\_start}(\text{delayed}) > \text{amortization\_start}(\text{on\_time})$. Delaying commencement postpones the start date of scheduled principal amortization.
+  - Scenario Property: Under positive scheduled amortization scenarios, this introduces a **non-monotonic interaction with delay**: a construction delay postpones tenant commercial rent commencement and burns interest carry, but simultaneously **defers scheduled principal amortization cash outflows**, resulting in lower cash debt service due in early payment months (e.g. Month 18) than the on-time project.
 - **Interest Rate Sensitivity:** Because both note stacks carry fixed coupons, benchmark rate movements (Fed/SOFR) produce **zero immediate cash coupon shock**. Rate risk lives exclusively at final maturity (2030/2031 refinancing).
 
 ---
@@ -216,7 +216,7 @@ Before writing simulation code, we evaluate public data availability under the t
 | **Silo 2 Coupon** | Required | **7.00%** | `PRIMARY_DISCLOSED` | `EXACT` | Initial carry: $111.300M/yr |
 | **Silo 2 Amortization Start Rule** | Required | Semiannual post-Commencement | `PRIMARY_DISCLOSED` | `EXACT` | State-dependent start date |
 | **Silo 2 Amortization Schedule** | Required | "Amounts set forth in Indenture"| `UNOBSERVED` | `CONDITIONAL` | **Requires amortization parameter** |
-| **Final Maturities** | Required | **2030 / 2031** | `PRIMARY_DISCLOSED` | `EXACT` | Refinancing horizons |
+| **Final Maturities** | Required | **Dec 15, 2030 / June 15, 2031** | `PRIMARY_DISCLOSED` | `EXACT` | Refinancing horizons (Months 54 & 60) |
 | **Initial DSRA Balances ($R_{0,1}, R_{0,2}$)** | Required | Disclosed as existing; balances unstated | `UNOBSERVED` | `CONDITIONAL` | **Requires silo surface parameters** |
 | **Remaining Construction Funds ($C_{\text{capex}, k}$)** | Required | Unstated in SEC 10-Q | `UNOBSERVED` | `CONDITIONAL` | **Requires silo surface parameters** |
 | **Building 2 Literal Cash Rent ($R_{\text{B2}}$)** | Required | Contract: $11B / 15yr / 400MW | `PRIMARY_DISCLOSED` | `CONDITIONAL` | **Requires surface parameter** *(Proportional proxy = $183.3M/yr)* |
@@ -228,11 +228,11 @@ Before writing simulation code, we evaluate public data availability under the t
 
 ### Architectural Decision: Outputting Siloed Milestone Surfaces & Parent Reconvergence
 
-Because boundary-critical parameters are **UNOBSERVED in public SEC filings**, Level 1 computes independent **Contract-Bounded Milestone Surfaces** for each legal silo:
+Because boundary-critical parameters are **UNOBSERVED in public SEC filings**, Level 1 computes independent **Contract-Bounded Milestone Surfaces** for each legal silo, with zero hidden schedule priors (commencement months and decoupled delay grids are explicitly parameterized):
 
-$$\mathcal{T}_{\text{silo}, 1} = \left\{ T_{\text{coverage}, 1},\; T_{\text{operating\_exhaustion}, 1},\; T_{\text{DSRA}, 1},\; T_{\text{completion\_support}, 1},\; T_{\text{payment\_default}, 1},\; T_{\text{refi}, 1} \right\} = f(R_{0,1},\; K_{\text{burn}, 1},\; R_{\text{B2}},\; \text{MW}_{\text{B3}})$$
+$$\mathcal{T}_{\text{silo}, 1} = \left\{ T_{\text{coverage}, 1},\; T_{\text{operating\_exhaustion}, 1},\; T_{\text{DSRA}, 1},\; T_{\text{completion\_support}, 1},\; T_{\text{payment\_shortfall}, 1},\; T_{\text{refi}, 1} \right\} = f(R_{0,1},\; K_{\text{burn}, 1},\; \Delta t_1,\; \text{Commencement}_1)$$
 
-$$\mathcal{T}_{\text{silo}, 2} = \left\{ T_{\text{coverage}, 2},\; T_{\text{operating\_exhaustion}, 2},\; T_{\text{DSRA}, 2},\; T_{\text{completion\_support}, 2},\; T_{\text{payment\_default}, 2},\; T_{\text{refi}, 2} \right\} = f(R_{0,2},\; K_{\text{burn}, 2},\; \text{CommencementDate}_2)$$
+$$\mathcal{T}_{\text{silo}, 2} = \left\{ T_{\text{coverage}, 2},\; T_{\text{operating\_exhaustion}, 2},\; T_{\text{DSRA}, 2},\; T_{\text{completion\_support}, 2},\; T_{\text{payment\_shortfall}, 2},\; T_{\text{refi}, 2} \right\} = f(R_{0,2},\; K_{\text{burn}, 2},\; \Delta t_2,\; \text{Commencement}_2)$$
 
 #### The Campus Overlay: Parent Support Funding Reconvergence
 Crucially, while each project financing silo is legally bankruptcy-remote, both completion guarantees reconverge economically onto Applied Digital's parent balance sheet:

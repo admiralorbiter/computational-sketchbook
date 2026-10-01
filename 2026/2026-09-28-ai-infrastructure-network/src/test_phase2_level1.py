@@ -1,20 +1,28 @@
-"""Test Suite for Phase 2 Level 1 Deterministic Delay Engine (Hardened).
+"""Test Suite for Phase 2 Level 1 Deterministic Delay Engine (Hardened 2.1.1).
 
 Verifies core contractual, legal, financial, and accounting invariants:
 1. Strict Silo Isolation: Zero cash transfer or dependency between Silo 1 and Silo 2.
 2. Exact Fixed Coupon Arithmetic: Coupon equals beginning principal * rate.
 3. Silo 1 Amortization Boundary: Amortization strictly barred before Dec 15, 2027 (Month 18).
-4. Silo 2 State-Dependent Amortization: Amortization start date shifts dynamically with commencement.
+4. Silo 2 State-Dependent Amortization: Amortization start date shifts dynamically with commencement
+   (contractual invariant: amortization_start(delayed) > amortization_start(on_time)).
 5. Construction Support Isolation: Parent completion support only funds capex shortfalls, never debt service.
 6. DSRA Restriction: DSRA can only fund permitted debt-service uses, never capex.
 7. Independent Milestones: T_completion_support triggers independently of T_DSRA or T_coverage.
-8. Non-Monotonic Amortization Offset: Delay defers Silo 2 principal amortization, reducing near-term cash drain.
+8. Non-Monotonic Amortization Deferral: Delay defers Silo 2 principal amortization, reducing near-term
+   cash drain under positive amortization scenarios.
 9. Parent Overlay Summation: Parent support sums strictly after independent silo waterfalls.
 10. Paid-Only Principal Reduction: Unpaid scheduled amortization does NOT reduce outstanding principal balance.
-11. Opex Direct Cash Reduction: Opex depletes operating cash account directly even when tenant rent is zero.
-12. Final Maturity Balloon: Remaining principal matures as a bullet balloon at final maturity (Month 54 for Silo 1, Month 60 for Silo 2).
-13. Bounded Cumulative Capex: remaining_capex_total caps total cumulative construction outlays.
-14. Explicit Amortization Requirement: Missing or invalid AmortizationScenario raises an explicit ValueError.
+11. Complete Arrears Accounting: Unpaid opex and debt service are carried forward as arrears balances
+    (opex_payable, interest_payable, principal_arrears) and cured by incoming cash.
+12. Absorbing Default Boundary: Once T_payment_shortfall occurs, the silo enters default and all subsequent
+    months are marked with is_post_shortfall=True and economic_status='POST_SHORTFALL_ABSORBED'.
+13. Cash Coverage Definition: T_coverage compares actual monthly tenant cash rent against actual monthly cash
+    obligations (opex + debt service due).
+14. Final Maturity Balloon: Remaining principal matures as a bullet balloon at final maturity
+    (Month 54 for Silo 1 / Dec 15, 2030; Month 60 for Silo 2 / June 15, 2031).
+15. Bounded Cumulative Capex: remaining_capex_total caps total cumulative construction outlays.
+16. Explicit Surface Parameterization: Zero hidden priors; commencement months and delay grids are passed explicitly.
 """
 
 import pytest
@@ -149,7 +157,7 @@ def test_silo2_state_dependent_amortization(engine, standard_s2_amort):
     amort_delayed_start = df_delayed[df_delayed["principal_amort_due"] > 0]["month"].iloc[0]
     assert amort_delayed_start == 24
 
-    # Verify dynamic postponement of amortization
+    # Contractual invariant: amortization_start(delayed) > amortization_start(on_time)
     assert amort_delayed_start > amort_early_start
 
 
@@ -229,11 +237,15 @@ def test_parent_support_funding_summation(engine, standard_s1_amort, standard_s2
     assert np.allclose(ledger["total_parent_completion_support"], sum_cols)
 
 
-def test_non_monotonic_amortization_offset(engine, standard_s2_amort):
-    """Invariant 8: Delay in Silo 2 defers scheduled principal amortization, moderating near-term cash drain.
+def test_delay_defers_amortization_under_positive_amortization_scenario(engine, standard_s2_amort):
+    """Scenario Property: Delay in Silo 2 defers scheduled principal amortization, moderating near-term cash drain.
     
-    Demonstrates that in month 18, Silo 2 debt service is LOWER under 6 months of delay
-    because principal amortization has been postponed.
+    Demonstrates that under a positive amortization scenario (e.g. 7 equal installments),
+    delaying commencement by 6 months defers the onset of principal amortization from Month 18 to Month 24.
+    Consequently, in Month 18, Silo 2 cash debt service due is LOWER under the delayed scenario.
+    
+    The contractual invariant is amortization_start(delayed) > amortization_start(on_time).
+    The resulting cash relief in Month 18 is a scenario property under positive amortization schedules.
     """
     _, s2_terms = create_default_pf1_silos()
     s2_init = AccountState(construction_cash=100_000_000.0, dsra_cash=100_000_000.0, operating_cash=100_000_000.0)
@@ -249,9 +261,14 @@ def test_non_monotonic_amortization_offset(engine, standard_s2_amort):
     df_delayed, _ = engine.run_silo_waterfall(s2_terms, s2_init, const_delayed, s2_rent, standard_s2_amort)
     debt_service_m18_delayed = df_delayed[df_delayed["month"] == 18]["total_debt_service_due"].iloc[0]
 
-    # Delayed project owes LESS total debt service in month 18 than the on-time project!
+    # Contractual invariant: start date is deferred
+    amort_early_month = df_early[df_early["principal_amort_due"] > 0]["month"].iloc[0]
+    amort_delayed_month = df_delayed[df_delayed["principal_amort_due"] > 0]["month"].iloc[0]
+    assert amort_delayed_month > amort_early_month
+
+    # Scenario finding: Delayed project owes LESS total debt service in month 18 than the on-time project
     assert debt_service_m18_delayed < debt_service_m18_early
-    # The difference is exactly the deferred principal amortization
+    # The difference is exactly the deferred principal amortization installment
     amort_early = df_early[df_early["month"] == 18]["principal_amort_due"].iloc[0]
     amort_delayed = df_delayed[df_delayed["month"] == 18]["principal_amort_due"].iloc[0]
     assert amort_early > 0.0
@@ -259,7 +276,7 @@ def test_non_monotonic_amortization_offset(engine, standard_s2_amort):
 
 
 # =========================================================================
-# P0 ACCOUNTING REGRESSION TESTS
+# P0 / P1 ACCOUNTING REGRESSION TESTS
 # =========================================================================
 
 def test_unpaid_principal_remains_outstanding(engine):
@@ -271,7 +288,6 @@ def test_unpaid_principal_remains_outstanding(engine):
     # Set up Silo 1 with insufficient operating cash and zero DSRA at amortization start (month 18)
     s1_init = AccountState(construction_cash=50_000_000.0, dsra_cash=0.0, operating_cash=50_000_000.0)
     s1_const = ConstructionScenario(scheduled_commencement_month=12, delay_months=0, monthly_capex_burn=0.0)
-    # Rent is $50M/mo, enough for coupon ($108.6875M semiannual) but NOT enough for both coupon + $391.67M principal amort
     s1_rent = RentScenario(monthly_base_rent=50_000_000.0, monthly_opex=0.0)
     
     # Large amortization due of $500M in month 18
@@ -284,7 +300,7 @@ def test_unpaid_principal_remains_outstanding(engine):
 
     m18_row = df[df["month"] == 18].iloc[0]
     assert m18_row["principal_amort_due"] == 500_000_000.0
-    assert m18_row["unpaid_principal_amort"] > 0.0  # Cannot fully pay $500M
+    assert m18_row["principal_arrears"] > 0.0  # Cannot fully pay $500M
     
     # Crucial assertion: principal_remaining is reduced ONLY by principal_amort_paid, NOT principal_amort_due
     prior_principal = df[df["month"] == 17]["principal_remaining"].iloc[0]
@@ -292,34 +308,89 @@ def test_unpaid_principal_remains_outstanding(engine):
     assert m18_row["principal_remaining"] > (prior_principal - m18_row["principal_amort_due"])
 
 
-def test_opex_reduces_cash_when_rent_zero(engine, standard_s1_amort):
-    """P0 Fix 2: Opex reduces operating cash directly even when tenant rent is zero."""
+def test_unpaid_opex_becomes_arrears_and_is_cured_by_future_cash(engine, standard_s1_amort):
+    """P1 Fix: Unpaid opex is preserved as opex_payable arrears and cured by future tenant cash."""
     s1_terms, _ = create_default_pf1_silos()
-    initial_oper = 25_000_000.0
     monthly_opex = 5_000_000.0
-    s1_init = AccountState(construction_cash=100_000_000.0, dsra_cash=100_000_000.0, operating_cash=initial_oper)
-    # Project is under construction through month 12, rent = 0
-    s1_const = ConstructionScenario(scheduled_commencement_month=12, delay_months=0, monthly_capex_burn=0.0)
+    # Zero initial operating cash, zero rent during construction in months 1-2
+    s1_init = AccountState(construction_cash=100_000_000.0, dsra_cash=100_000_000.0, operating_cash=0.0)
+    s1_const = ConstructionScenario(scheduled_commencement_month=3, delay_months=0, monthly_capex_burn=0.0)
+    # Rent starts in month 3 at $20M/mo
     s1_rent = RentScenario(monthly_base_rent=20_000_000.0, monthly_opex=monthly_opex)
 
     df, _ = engine.run_silo_waterfall(s1_terms, s1_init, s1_const, s1_rent, standard_s1_amort)
 
-    # In month 1, operating cash must decrease from $25M to $20M
-    m1_row = df[df["month"] == 1].iloc[0]
-    assert m1_row["tenant_rent"] == 0.0
-    assert m1_row["opex_paid"] == monthly_opex
-    assert np.isclose(m1_row["operating_cash_balance"], initial_oper - monthly_opex)
+    # In month 1: opex is $5M, rent is $0, cash is $0 -> opex_payable becomes $5M
+    m1 = df[df["month"] == 1].iloc[0]
+    assert m1["opex_paid"] == 0.0
+    assert m1["opex_payable"] == 5_000_000.0
 
-    # In month 2, operating cash must decrease to $15M
-    m2_row = df[df["month"] == 2].iloc[0]
-    assert np.isclose(m2_row["operating_cash_balance"], initial_oper - (2 * monthly_opex))
+    # In month 2: additional $5M opex -> opex_payable accumulates to $10M
+    m2 = df[df["month"] == 2].iloc[0]
+    assert m2["opex_paid"] == 0.0
+    assert m2["opex_payable"] == 10_000_000.0
+
+    # In month 3: rent commences at $20M!
+    # Total opex due is $5M current + $10M arrears = $15M.
+    # Operating cash pays full $15M, curing opex_payable to $0, leaving $5M cash balance!
+    m3 = df[df["month"] == 3].iloc[0]
+    assert m3["total_opex_due"] == 15_000_000.0
+    assert m3["opex_paid"] == 15_000_000.0
+    assert m3["opex_payable"] == 0.0
+    assert np.isclose(m3["operating_cash_balance"], 5_000_000.0)
+
+
+def test_payment_shortfall_absorbing_boundary_and_arrears(engine):
+    """P1 Fix: Payment shortfall acts as an absorbing boundary and accumulates arrears."""
+    s1_terms, _ = create_default_pf1_silos()
+    # Zero operating cash, zero DSRA, zero rent
+    s1_init = AccountState(construction_cash=0.0, dsra_cash=0.0, operating_cash=0.0)
+    s1_const = ConstructionScenario(scheduled_commencement_month=1, delay_months=0, monthly_capex_burn=0.0)
+    s1_rent = RentScenario(monthly_base_rent=0.0, monthly_opex=0.0)
+    s1_zero_amort = AmortizationScenario(schedule_type="zero_amort_scenario")
+
+    df, milestones = engine.run_silo_waterfall(s1_terms, s1_init, s1_const, s1_rent, s1_zero_amort)
+
+    # First coupon payment is in month 6 -> shortfall occurs
+    assert milestones.t_payment_shortfall == 6
+
+    # Months 1-5: solvent and valid
+    for m in range(1, 6):
+        row = df[df["month"] == m].iloc[0]
+        assert not row["is_post_shortfall"]
+        assert row["economic_status"] == "VALID"
+
+    # Months 6+: absorbing post-default state, flagged on every row
+    for m in range(6, 13):
+        row = df[df["month"] == m].iloc[0]
+        assert row["is_post_shortfall"]
+        assert row["economic_status"] == "POST_SHORTFALL_ABSORBED"
+        # Month 6 coupon owed carries forward into interest_payable
+        assert row["interest_payable"] > 0.0
+
+
+def test_cash_coverage_definition(engine, standard_s1_amort):
+    """P1/P2 Fix: Cash coverage compares actual tenant cash rent against actual monthly cash obligations."""
+    s1_terms, _ = create_default_pf1_silos()
+    # Operational project from month 1: rent = $20M/mo, opex = $1M/mo.
+    # Months 1-5: cash outflow is $1M/mo, rent is $20M/mo -> cash flow is positive +$19M/mo (covered!).
+    # Month 6: cash coupon due is $2,350M * 9.25% / 2 = $108.6875M.
+    # Total cash obligations = $1M opex + $108.6875M debt service = $109.6875M > rent $20M (deficit!).
+    s1_init = AccountState(construction_cash=0.0, dsra_cash=200_000_000.0, operating_cash=50_000_000.0)
+    s1_const = ConstructionScenario(scheduled_commencement_month=1, delay_months=0, monthly_capex_burn=0.0)
+    s1_rent = RentScenario(monthly_base_rent=20_000_000.0, monthly_opex=1_000_000.0)
+
+    df, milestones = engine.run_silo_waterfall(s1_terms, s1_init, s1_const, s1_rent, standard_s1_amort)
+
+    # T_coverage triggers exactly in month 6 when cash obligations exceed tenant cash rent
+    assert milestones.t_coverage == 6
 
 
 def test_maturity_balloons_remaining_principal(engine):
-    """P0 Fix 3: Remaining principal matures as a bullet balloon at final maturity.
+    """P0 Fix 3 & P2 Date: Remaining principal matures as a bullet balloon at final maturity.
     
     Silo 1 final maturity: Month 54 (Dec 15, 2030)
-    Silo 2 final maturity: Month 60 (June 16, 2031)
+    Silo 2 final maturity: Month 60 (June 15, 2031)
     """
     s1_terms, s2_terms = create_default_pf1_silos()
     assert s1_terms.final_maturity_month == 54
@@ -386,16 +457,21 @@ def test_missing_amortization_scenario_raises_error(engine):
 
 
 def test_delay_tolerance_surface_execution(standard_s1_amort, standard_s2_amort):
-    """Verifies that compute_delay_tolerance_surface executes cleanly without synthetic defaults."""
+    """Verifies that compute_delay_tolerance_surface executes cleanly without synthetic schedule priors."""
     s1_rent = RentScenario(monthly_base_rent=15_275_000.0, monthly_opex=1_000_000.0)
     s2_rent = RentScenario(monthly_base_rent=9_166_667.0, monthly_opex=1_000_000.0)
 
-    surface = compute_delay_tolerance_surface(
+    # 1. Decoupled delay grids mode (Cartesian product: 2 delays x 2 delays = 4 surface points)
+    surface_decoupled = compute_delay_tolerance_surface(
         reserve_grid_silo1=[100_000_000.0],
         reserve_grid_silo2=[50_000_000.0],
         capex_burn_grid_silo1=[10_000_000.0],
         capex_burn_grid_silo2=[15_000_000.0],
-        delay_months_grid=[0, 6],
+        scheduled_commencement_month_silo1=12,
+        scheduled_commencement_month_silo2=18,
+        delay_grid_silo1=[0, 6],
+        delay_grid_silo2=[0, 12],
+        shared_campus_delay_mode=False,
         silo1_rent_scenario=s1_rent,
         silo2_rent_scenario=s2_rent,
         silo1_amort_scenario=standard_s1_amort,
@@ -408,7 +484,46 @@ def test_delay_tolerance_surface_execution(standard_s1_amort, standard_s2_amort)
         silo2_remaining_capex_total=150_000_000.0,
     )
 
-    assert len(surface) == 2
-    assert "t_payment_shortfall_silo1" in surface.columns
-    assert "t_payment_shortfall_silo2" in surface.columns
-    assert "cumulative_parent_support_required_usd" in surface.columns
+    assert len(surface_decoupled) == 4
+    assert set(surface_decoupled["delay_months_silo1"]) == {0, 6}
+    assert set(surface_decoupled["delay_months_silo2"]) == {0, 12}
+    assert "t_payment_shortfall_silo1" in surface_decoupled.columns
+    assert "t_payment_shortfall_silo2" in surface_decoupled.columns
+    assert "cumulative_parent_support_required_usd" in surface_decoupled.columns
+
+    # 2. Shared campus delay mode (Synchronized: 2 points)
+    surface_shared = compute_delay_tolerance_surface(
+        reserve_grid_silo1=[100_000_000.0],
+        reserve_grid_silo2=[50_000_000.0],
+        capex_burn_grid_silo1=[10_000_000.0],
+        capex_burn_grid_silo2=[15_000_000.0],
+        scheduled_commencement_month_silo1=12,
+        scheduled_commencement_month_silo2=18,
+        delay_grid_silo1=[0, 6],
+        shared_campus_delay_mode=True,
+        silo1_rent_scenario=s1_rent,
+        silo2_rent_scenario=s2_rent,
+        silo1_amort_scenario=standard_s1_amort,
+        silo2_amort_scenario=standard_s2_amort,
+        silo1_initial_construction_cash=50_000_000.0,
+        silo2_initial_construction_cash=50_000_000.0,
+        silo1_initial_operating_cash=20_000_000.0,
+        silo2_initial_operating_cash=0.0,
+    )
+    assert len(surface_shared) == 2
+    for _, row in surface_shared.iterrows():
+        assert row["delay_months_silo1"] == row["delay_months_silo2"]
+
+    # 3. Missing delay_grid_silo2 without shared mode raises ValueError
+    with pytest.raises(ValueError, match="delay_grid_silo2 must be provided"):
+        compute_delay_tolerance_surface(
+            reserve_grid_silo1=[100_000_000.0],
+            reserve_grid_silo2=[50_000_000.0],
+            capex_burn_grid_silo1=[10_000_000.0],
+            capex_burn_grid_silo2=[15_000_000.0],
+            scheduled_commencement_month_silo1=12,
+            scheduled_commencement_month_silo2=18,
+            delay_grid_silo1=[0, 6],
+            delay_grid_silo2=None,
+            shared_campus_delay_mode=False,
+        )
