@@ -1,35 +1,43 @@
-"""Unit tests for the Observatory Schema and Clock-Collision Detector."""
+"""Unit tests for the Observatory Schema, Canonical Tables, and Monitoring Pipeline."""
 
-import pytest
-import sys
+from datetime import date
 import os
+import sys
+import pytest
 
-# Add src to path if needed
+# Add src to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 try:
     import observatory_schema as obs
+    import observatory_monitor as mon
 except ImportError:
-    import src.observatory_schema as obs
+    from src import observatory_schema as obs
+    from src import observatory_monitor as mon
 
 
-def test_clock_types_and_statuses():
-    """Verify enum members and values."""
+def test_clock_types_roles_and_observability():
+    """Verify enums including SignalRole and Observability."""
     assert len(obs.ClockType) == 4
     assert obs.ClockType.PHYSICAL == "PHYSICAL"
     assert obs.ClockType.CONTRACT == "CONTRACT"
     assert obs.ClockType.FINANCIAL == "FINANCIAL"
     assert obs.ClockType.SUPPORT == "SUPPORT"
 
-    assert len(obs.LeadTimeStatus) == 4
-    assert obs.LeadTimeStatus.OBSERVED == "OBSERVED"
-    assert obs.LeadTimeStatus.RIGHT_CENSORED_OBSERVED == "RIGHT_CENSORED_OBSERVED"
-    assert obs.LeadTimeStatus.MONITORING_WINDOW == "MONITORING_WINDOW"
-    assert obs.LeadTimeStatus.HYPOTHESIZED_WINDOW == "HYPOTHESIZED_WINDOW"
+    assert len(obs.SignalRole) == 4
+    assert obs.SignalRole.EARLY_WARNING == "EARLY_WARNING"
+    assert obs.SignalRole.CONFIRMATION == "CONFIRMATION"
+    assert obs.SignalRole.FINANCIAL_RECOGNITION == "FINANCIAL_RECOGNITION"
+    assert obs.SignalRole.OUTCOME == "OUTCOME"
+
+    assert len(obs.Observability) == 3
+    assert obs.Observability.PUBLIC == "PUBLIC"
+    assert obs.Observability.COMMERCIAL_DATA == "COMMERCIAL_DATA"
+    assert obs.Observability.PRIVATE_OR_UNAVAILABLE == "PRIVATE_OR_UNAVAILABLE"
 
 
-def test_default_scenario_library():
-    """Verify the 6 certified reusable failure archetypes."""
-    scenarios = obs.get_default_scenario_library()
+def test_load_canonical_scenarios():
+    """Verify loading the 6 certified failure archetypes from Parquet."""
+    scenarios = obs.load_canonical_scenarios()
     assert len(scenarios) == 6
     ids = [s.scenario_id for s in scenarios]
     assert ids == [
@@ -40,67 +48,78 @@ def test_default_scenario_library():
         "SCN-ARCH-005",
         "SCN-ARCH-006",
     ]
-    
-    df = obs.export_scenarios_to_df(scenarios)
-    assert len(df) == 6
-    assert "reconverging_entity" in df.columns
-    assert "subordinate_boundary_mechanic" in df.columns
+
+    # Verify PF1 Scenario 3 workout boundary (not equity cure)
+    scn3 = next(s for s in scenarios if s.scenario_id == "SCN-ARCH-003")
+    assert "Bondholder Workout / Debt Acceleration Boundary" in scn3.reconverging_entity
+    assert "post-shortfall continuation unmodeled" in scn3.reconverging_entity
+
+    # Verify Mackenzie Scenario 4 replacement-funding requirement (not pure equity call)
+    scn4 = next(s for s in scenarios if s.scenario_id == "SCN-ARCH-004")
+    assert "Borrower Capital Gap" in scn4.reconverging_entity
+    assert "replacement-funding requirement" in scn4.reconverging_entity
 
 
-def test_default_indicator_catalog_epistemic_rigor():
-    """Verify that observed lead times are strictly separated from monitoring windows."""
-    indicators = obs.get_default_indicator_catalog()
-    assert len(indicators) >= 7
+def test_load_canonical_indicators():
+    """Verify loading certified indicators with SignalRole and Observability."""
+    indicators = obs.load_canonical_indicators()
+    assert len(indicators) == 8
 
-    df = obs.export_indicators_to_df(indicators)
-    assert len(df) >= 7
+    # Verify NMSLO pipeline denial: EARLY_WARNING, PUBLIC, OBSERVED 65d
+    jup_permit = next(i for i in indicators if i.indicator_id == "IND-JUP-001")
+    assert jup_permit.signal_role == obs.SignalRole.EARLY_WARNING
+    assert jup_permit.observability == obs.Observability.PUBLIC
+    assert jup_permit.lead_time_status == obs.LeadTimeStatus.OBSERVED
+    assert jup_permit.lead_time_days_min == 65.0
 
-    # Jupiter checks: must be OBSERVED or RIGHT_CENSORED_OBSERVED
-    jup_perm = df[df["indicator_id"] == "IND-JUP-001"].iloc[0]
-    assert jup_perm["lead_time_status"] == obs.LeadTimeStatus.OBSERVED.value
-    assert jup_perm["lead_time_days_min"] == 65.0
+    # Verify secondary debt mark: FINANCIAL_RECOGNITION, COMMERCIAL_DATA, 0d
+    jup_loan = next(i for i in indicators if i.indicator_id == "IND-JUP-004")
+    assert jup_loan.signal_role == obs.SignalRole.FINANCIAL_RECOGNITION
+    assert jup_loan.observability == obs.Observability.COMMERCIAL_DATA
 
-    jup_fm = df[df["indicator_id"] == "IND-JUP-002"].iloc[0]
-    assert jup_fm["lead_time_status"] == obs.LeadTimeStatus.OBSERVED.value
-    assert jup_fm["lead_time_days_min"] == 71.0
+    # Verify Mackenzie testing logs: PRIVATE_OR_UNAVAILABLE
+    mac_logs = next(i for i in indicators if i.indicator_id == "IND-MAC-001")
+    assert mac_logs.signal_role == obs.SignalRole.EARLY_WARNING
+    assert mac_logs.observability == obs.Observability.PRIVATE_OR_UNAVAILABLE
 
-    jup_sec = df[df["indicator_id"] == "IND-JUP-003"].iloc[0]
-    assert jup_sec["lead_time_status"] == obs.LeadTimeStatus.RIGHT_CENSORED_OBSERVED.value
-    assert jup_sec["lead_time_days_min"] == 77.0
-
-    # PF1 checks: must NOT be OBSERVED (interconnection is MONITORING_WINDOW; sponsor reconvergence is HYPOTHESIZED_WINDOW)
-    pf1_docket = df[df["indicator_id"] == "IND-PF1-001"].iloc[0]
-    assert pf1_docket["lead_time_status"] == obs.LeadTimeStatus.MONITORING_WINDOW.value
-
-    pf1_sponsor = df[df["indicator_id"] == "IND-PF1-002"].iloc[0]
-    assert pf1_sponsor["lead_time_status"] == obs.LeadTimeStatus.HYPOTHESIZED_WINDOW.value
-
-    # Mackenzie checks: must be MONITORING_WINDOW
-    mac_equip = df[df["indicator_id"] == "IND-MAC-001"].iloc[0]
-    assert mac_equip["lead_time_status"] == obs.LeadTimeStatus.MONITORING_WINDOW.value
+    # Verify Mackenzie 10-Q draws: FINANCIAL_RECOGNITION, PUBLIC
+    mac_10q = next(i for i in indicators if i.indicator_id == "IND-MAC-002")
+    assert mac_10q.signal_role == obs.SignalRole.FINANCIAL_RECOGNITION
+    assert mac_10q.observability == obs.Observability.PUBLIC
 
 
-def test_mackenzie_boundary_collision_evaluation():
-    """Verify deterministic boundary calculation for Mackenzie availability cliff."""
-    # Scenario A: On-time delivery within the 128-day window (~4.2 months)
-    res_ontime = obs.evaluate_mackenzie_availability_collision(
-        current_month=0.0,
-        expected_acceptance_month=3.0,
-        total_committed_capex_usd=2_400_000_000.0,
-        capex_per_month_usd=600_000_000.0,
+def test_evaluate_mackenzie_date_boundary():
+    """Verify minimal, assumption-free date boundary calculator for Mackenzie."""
+    # Case 1: Expected acceptance Dec 18, 2026 -> 13 days of slack
+    res_ontime = obs.evaluate_mackenzie_date_boundary(
+        expected_acceptance_date=date(2026, 12, 18),
+        cliff_date=date(2026, 12, 31),
     )
-    assert res_ontime.binding_clock == obs.ClockType.PHYSICAL
-    assert res_ontime.margin_months > 0.0
-    assert "on track" in res_ontime.interpretation
+    assert not res_ontime.is_collision
+    assert res_ontime.acceptance_slack_days == 13
+    assert "13 days of slack" in res_ontime.interpretation
 
-    # Scenario B: Delayed acceptance past Dec 31, 2026 cliff
-    res_delayed = obs.evaluate_mackenzie_availability_collision(
-        current_month=0.0,
-        expected_acceptance_month=6.0,
-        total_committed_capex_usd=2_400_000_000.0,
-        capex_per_month_usd=600_000_000.0,
+    # Case 2: Expected acceptance Jan 20, 2027 -> 20 days late collision
+    res_late = obs.evaluate_mackenzie_date_boundary(
+        expected_acceptance_date=date(2027, 1, 20),
+        cliff_date=date(2026, 12, 31),
+        eligible_financing_capacity_usd=500_000_000.0,
     )
-    assert res_delayed.binding_clock == obs.ClockType.FINANCIAL
-    assert res_delayed.secondary_clock == obs.ClockType.PHYSICAL
-    assert "CLOCK COLLISION" in res_delayed.interpretation
-    assert "unfinanced capex calls on IREN Limited equity" in res_delayed.interpretation
+    assert res_late.is_collision
+    assert res_late.acceptance_slack_days == -20
+    assert "precedes equipment acceptance by 20 days" in res_late.interpretation
+    assert "Unfinanced capacity at risk: $500.0M (replacement-funding requirement)" in res_late.interpretation
+
+
+def test_observatory_monitor_and_scoreboard():
+    """Verify the prospective monitoring pipeline and empirical scoreboard."""
+    monitor = mon.ObservatoryMonitor()
+    assert len(monitor.observations) >= 5
+
+    scorecard = monitor.compute_empirical_scoreboard()
+    assert scorecard["total_observations_logged"] >= 5
+    assert "PROJECT_JUPITER" in scorecard["projects_monitored"]
+    assert "IREN_MACKENZIE" in scorecard["projects_monitored"]
+    assert scorecard["observed_natural_experiments_count"] >= 3
+    assert scorecard["median_lead_time_days"] is not None
+    assert scorecard["median_lead_time_days"] > 0

@@ -98,21 +98,21 @@ Across all three projects, distress manifests through six recurring failure arch
 - **Mechanism:** Upstream permitting or infrastructure bottleneck prevents commercial operation; the anchor tenant declares force majeure or invokes dispute provisions, refusing to step up to full operational rent and extending lower development-stage carry.
 - **Collision Condition:**
   $$T_{\text{permit\_resolution}} > T_{\text{carry\_term}} \quad \text{OR} \quad \text{DevelopmentCarry} < \text{DebtServiceDue}$$
-- **Reconverging Entity:** Project SPV $\to$ Syndicated Bank Consortium (loan trading discounts, milestone renegotiations).
+- **Reconverging Entity:** Project SPV $\to$ Syndicated Bank Consortium (loan trading discount at 89–91c).
 
 ### Scenario 3: Reserve / Liquidity Exhaustion Before Commercial Operation
 - **Exemplar:** Polaris Forge 1 (Silo 2).
 - **Mechanism:** Continuous pre-operational delay burns available debt-service reserves and operating cash to zero before commercial revenue arrives.
 - **Collision Condition:**
   $$\sum_{t=1}^{T_{\text{commence}}} \text{InterestDue}_t > \text{InitialReserves} + \sum \text{OperatingCashInflows}$$
-- **Reconverging Entity:** Project SPV $\to$ External Liquidity Providers / Parent Equity Cure.
+- **Reconverging Entity:** Project SPV $\to$ Bondholder Workout / Debt Acceleration Boundary (post-shortfall continuation unmodeled).
 
 ### Scenario 4: Financing Availability Window Expiration Cliff
 - **Exemplar:** IREN Mackenzie.
 - **Mechanism:** Hardware delivery, customs clearance, or customer qualification testing delays push equipment acceptance past a hard contractual facility availability deadline (December 31, 2026). Undrawn commitments vanish permanently.
 - **Collision Condition:**
   $$T_{\text{acceptance}} > \text{AvailabilityDeadline} \quad \text{AND} \quad \text{HardwareCommitted} > \text{DrawnPrincipal}$$
-- **Reconverging Entity:** Project SPV $\to$ Parent Corporate Balance Sheet (unfinanced hardware capex calls on parent equity).
+- **Reconverging Entity:** Project SPV $\to$ Borrower Capital Gap (replacement-funding requirement; unfinanced hardware capex exceeds committed debt capacity).
 
 ### Scenario 5: Shared Sponsor / Support Reconvergence
 - **Exemplar:** Polaris Forge 1 (Dual Silos).
@@ -126,23 +126,24 @@ Across all three projects, distress manifests through six recurring failure arch
 - **Mechanism:** Short- or medium-term construction debt reaches maturity (e.g. 4-year term for Jupiter, 2030/2031 bullets for PF1) while physical delays or legal disputes prevent permanent takeout financing or loan extension.
 - **Collision Condition:**
   $$T_{\text{maturity}} \text{ arrives WHILE } \text{SecondaryLoanDiscount} > \text{Threshold} \quad \text{OR} \quad \text{CreditSpread} \gg \text{Target}$$
-- **Reconverging Entity:** Borrower SPV $\to$ Debt Restructuring / Sponsor Dilution.
+- **Reconverging Entity:** Borrower SPV $\to$ Debt Restructuring / Syndicate Workout.
 
 ---
 
 ## 4. The Cross-Project Early-Warning Indicator Catalog
 
-The indicator catalog establishes the empirical core of the observatory, rigorously separating **observed historical lead times** from **monitoring windows** and **hypothesized intervals**:
+The indicator catalog establishes the empirical core of the observatory, classifying each indicator by **Signal Role** (`EARLY_WARNING`, `CONFIRMATION`, `FINANCIAL_RECOGNITION`, `OUTCOME`) and **Observability** (`PUBLIC`, `COMMERCIAL_DATA`, `PRIVATE_OR_UNAVAILABLE`), while strictly separating **observed historical lead times** from **monitoring windows** and **hypothesized intervals**:
 
-| Indicator ID | Project | Layer | Leading Indicator Event | Threatened Boundary | Lead-Time Status | Quantified Lead Time | Primary Source / Evidentiary Basis |
-| :--- | :--- | :--- | :--- | :--- | :---: | :---: | :--- |
-| **`IND-JUP-001`** | Project Jupiter | **`REGULATORY`** | NMSLO denial order for 0.6-mile natural gas pipeline ROW across state trust land | Fuel availability for Bloom Energy microgrid; debt secondary valuation | **`OBSERVED`** | **65 Calendar Days** | July 15, 2026 (NMSLO Order) $\to$ September 18, 2026 (debt trades at 89–91c) |
-| **`IND-JUP-002`** | Project Jupiter | **`CONTRACT_LEGAL`** | Oracle formal force-majeure notice citing pipeline permitting impasse | Step-up from development carry to full operational rent | **`OBSERVED`** | **71 Calendar Days** | July 15, 2026 (NMSLO Order) $\to$ September 24, 2026 (Oracle public notice) |
-| **`IND-JUP-003`** | Project Jupiter | **`EDGAR_FILING`** | Corporate disclosure of permitting impasse or loan valuation discount on EDGAR | Public market awareness of project distress and credit discount | **`RIGHT_CENSORED_OBSERVED`** | **$\ge 77$ Calendar Days** | July 15, 2026 $\to$ September 30, 2026 (0 filings on EDGAR by ORCL or OBDC) |
-| **`IND-PF1-001`** | Polaris Forge 1 | **`UTILITY_DOCKET`** | MDU / Otter Tail Power public regulatory filings and interconnection queue studies | Commercial operation date gating Silo 1 / Silo 2 tenant operational rent | **`MONITORING_WINDOW`** | **90–180 Calendar Days** | Standard RTO / utility transmission study revision and filing cycles |
-| **`IND-PF1-002`** | Polaris Forge 1 | **`EDGAR_FILING`** | Parent capital raises, convertible notes, ATM equity offerings, or revolver draws | Parent cash capacity to fund completion guarantees across dual silos | **`HYPOTHESIZED_WINDOW`** | **30–90 Calendar Days** | Corporate cash burn rate preceding parent balance sheet exhaustion |
-| **`IND-MAC-001`** | IREN Mackenzie | **`PHYSICAL_LOGISTICS`** | GPU server shipping manifests, customs clearance, and customer acceptance testing logs | Hard December 31, 2026 facility availability expiration cliff | **`MONITORING_WINDOW`** | **30–60 Calendar Days** | Final hardware delivery and cluster qualification window preceding cliff |
-| **`IND-MAC-002`** | IREN Mackenzie | **`EDGAR_FILING`** | SEC Form 10-Q note detailing drawn vs. undrawn borrowings under MFSA and Notes | Loss of undrawn debt capacity; unfunded capex calls on parent equity | **`MONITORING_WINDOW`** | **45–60 Calendar Days** | Q1 FY27 Form 10-Q filing window (quarter ended Sept 30, 2026, filed Nov 2026) |
+| Indicator ID | Project | Layer | Signal Role | Observability | Leading Indicator Event | Threatened Boundary | Lead-Time Status | Quantified Lead Time | Primary Source / Basis |
+| :--- | :--- | :--- | :---: | :---: | :--- | :--- | :---: | :---: | :--- |
+| **`IND-JUP-001`** | Project Jupiter | **`REGULATORY`** | **`EARLY_WARNING`** | **`PUBLIC`** | NMSLO denial order for 0.6-mile pipeline ROW across state trust land | Fuel availability for Bloom microgrid; loan valuation | **`OBSERVED`** | **65 Calendar Days** | July 15, 2026 (NMSLO Order) $\to$ Sept 18, 2026 (loan discount @ 89–91c) |
+| **`IND-JUP-002`** | Project Jupiter | **`CONTRACT_LEGAL`** | **`EARLY_WARNING`** | **`PUBLIC`** | Oracle formal force-majeure notice citing pipeline permitting impasse | Step-up from development carry to full operational rent | **`OBSERVED`** | **71 Calendar Days** | July 15, 2026 (NMSLO Order) $\to$ Sept 24, 2026 (Oracle notice) |
+| **`IND-JUP-003`** | Project Jupiter | **`EDGAR_FILING`** | **`CONFIRMATION`** | **`PUBLIC`** | Corporate disclosure of permitting impasse or loan valuation discount on EDGAR | Public market awareness of project distress and credit discount | **`RIGHT_CENSORED_OBSERVED`** | **$\ge 77$ Calendar Days** | July 15, 2026 $\to$ Sept 30, 2026 (0 filings on EDGAR by ORCL or OBDC) |
+| **`IND-JUP-004`** | Project Jupiter | **`DEBT_MARKET`** | **`FINANCIAL_RECOGNITION`** | **`COMMERCIAL_DATA`** | Project Jupiter syndicated loan trades down to 89–91 cents on the dollar | Secondary market loan valuation; syndication extension willingness | **`OBSERVED`** | **0 Calendar Days** | Sept 18, 2026 baseline mark establishing the 65d early warning lead |
+| **`IND-PF1-001`** | Polaris Forge 1 | **`UTILITY_DOCKET`** | **`EARLY_WARNING`** | **`PUBLIC`** | MDU / Otter Tail Power public regulatory filings and interconnection queue studies | Commercial operation date gating Silo 1 / Silo 2 tenant operational rent | **`MONITORING_WINDOW`** | **90–180 Calendar Days** | Standard RTO / utility transmission study revision cycles |
+| **`IND-PF1-002`** | Polaris Forge 1 | **`EDGAR_FILING`** | **`CONFIRMATION`** | **`PUBLIC`** | Parent capital raises, convertible notes, ATM equity offerings, or revolver draws | Parent cash capacity to fund completion guarantees across dual silos | **`HYPOTHESIZED_WINDOW`** | **30–90 Calendar Days** | Corporate cash burn rate preceding parent balance sheet exhaustion |
+| **`IND-MAC-001`** | IREN Mackenzie | **`PHYSICAL_LOGISTICS`** | **`EARLY_WARNING`** | **`PRIVATE_OR_UNAVAILABLE`** | GPU server shipping manifests, customs clearance, and customer acceptance testing logs | Hard December 31, 2026 facility availability expiration cliff | **`MONITORING_WINDOW`** | **30–60 Calendar Days** | Final hardware delivery and qualification window preceding cliff |
+| **`IND-MAC-002`** | IREN Mackenzie | **`EDGAR_FILING`** | **`FINANCIAL_RECOGNITION`** | **`PUBLIC`** | SEC Form 10-Q note detailing drawn vs. undrawn borrowings under MFSA and Notes | Loss of undrawn debt capacity; replacement-funding requirement | **`MONITORING_WINDOW`** | **45–60 Calendar Days** | Q1 FY27 Form 10-Q filing window (quarter ended Sept 30, 2026, filed Nov 2026) |
 
 ---
 
@@ -155,9 +156,9 @@ The deterministic engine is retained, but strictly subordinated to the observato
           │
           ▼
 [Update Estimated Milestone] ───> [Boundary Calculator] ───> [Actionable Interpretation]
-e.g. GPU Acceptance Delay         Calculates:                "Acceptance slips 1.3 months
-     approaches Dec 31, 2026      Unfunded Capex Call         past cliff: $776.8M unfinanced
-                                  = $776.8M                   capex falls on parent equity"
+e.g. Expected Acceptance Date     Calculates:                "Expected acceptance Jan 20:
+     approaches Dec 31, 2026      AcceptanceSlackDays = -20   availability boundary precedes
+                                  (Date boundary collision)   acceptance by 20 days."
 ```
 
 ### Certified Functional Boundaries:
@@ -166,14 +167,18 @@ e.g. GPU Acceptance Delay         Calculates:                "Acceptance slips 1
    $$C_{\text{parent\_support}} = f_{\text{pre-shortfall}}\left(\text{CapexBurn},\; \Delta t\right)$$
 2. **Project Jupiter (Conditional Mechanism Specification):**
    $$T_{\text{runway}} = f\left(R_{\text{debt-service liquidity}},\; P_{\text{dev carry}},\; P_{\text{FM carry}},\; r_{\text{debt}},\; \Delta t\right)$$
-3. **IREN Mackenzie (Availability Expiration Boundary):**
-   $$\text{UnfundedCapexCall}(\Delta t) = \max\left(0,\; \text{CommittedHardware}(\Delta t > \text{Dec 31, 2026}) \times \text{CapexPerUnit}\right)$$
+3. **IREN Mackenzie (Minimal Date Boundary Slack Calculator):**
+   $$\text{AcceptanceSlackDays} = \text{Dec 31, 2026} - T_{\text{acceptance}}$$
+   - $\text{AcceptanceSlackDays} \ge 0$: Equipment accepted prior to cliff (on track).
+   - $\text{AcceptanceSlackDays} < 0$: Availability boundary precedes acceptance by $|\text{AcceptanceSlackDays}|$ days.
+   - If explicit remaining eligible financing / equipment value is disclosed:
+     $$\text{FinancingCapacityAtRisk} = \text{UnacceptedEligibleEquipmentValue} \quad (\text{replacement-funding requirement})$$
 
 ---
 
 ## 6. The Empirical Scoreboard
 
-The observatory is evaluated across historical backtests and prospective monitoring cases using three objective criteria:
+The observatory is evaluated across historical natural experiments and prospective monitoring cases using three objective criteria:
 
 1. **Detection Lead Time:**
    $$\Delta t_{\text{lead}} = t_{\text{financial recognition}} - t_{\text{earliest observable indicator}}$$

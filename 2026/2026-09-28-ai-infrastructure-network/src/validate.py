@@ -2300,6 +2300,70 @@ def validate_observatory():
     else:
         print("  [OK] Task 025.2: Project Jupiter Calibrated Retrospective Backtest Invariants verified (Pre-event cutoff 2026-09-23, $18.0B debt baseline, Strict Recall=71.4%, Tree Precision=87.5%/Recall=100%, Mechanism Coverage=3/3, H4 Lead Time=71d / SEC >=77d right-censored, Verdict=SUPPORTED RETROSPECTIVE TEMPORAL BACKTEST).")
 
+    # =========================================================================
+    # 13. Validating Observatory Canonical Datasets & Monitoring Invariants
+    # =========================================================================
+    print("\n--- 13. Validating Observatory Canonical Datasets & Monitoring Invariants ---")
+    sub_err = []
+
+    # 13.1 Scenarios Table
+    scen_pq = PROCESSED_DIR / "observatory_scenarios.parquet"
+    if not scen_pq.exists():
+        sub_err.append(f"Missing canonical scenarios parquet: {scen_pq}")
+    else:
+        df_scen = pd.read_parquet(scen_pq)
+        if len(df_scen) != 6:
+            sub_err.append(f"Expected 6 canonical scenarios, got: {len(df_scen)}")
+        expected_cols = {"scenario_id", "title", "archetype_exemplar", "binding_collision_condition", "reconverging_entity", "subordinate_boundary_mechanic", "valid_from", "known_from", "evidence_claim_ids"}
+        missing_cols = expected_cols - set(df_scen.columns)
+        if missing_cols:
+            sub_err.append(f"Scenarios table missing columns: {missing_cols}")
+        if df_scen["scenario_id"].isnull().any():
+            sub_err.append("Null scenario_id found in observatory_scenarios")
+
+    # 13.2 Indicators Table
+    ind_pq = PROCESSED_DIR / "observatory_indicators.parquet"
+    if not ind_pq.exists():
+        sub_err.append(f"Missing canonical indicators parquet: {ind_pq}")
+    else:
+        df_ind = pd.read_parquet(ind_pq)
+        if len(df_ind) != 8:
+            sub_err.append(f"Expected 8 canonical indicators, got: {len(df_ind)}")
+        expected_ind_cols = {"indicator_id", "project_id", "archetype", "signal_role", "observability", "affected_clock", "threatened_boundary", "lead_time_status", "valid_from", "known_from"}
+        missing_ind_cols = expected_ind_cols - set(df_ind.columns)
+        if missing_ind_cols:
+            sub_err.append(f"Indicators table missing columns: {missing_ind_cols}")
+        valid_roles = {"EARLY_WARNING", "CONFIRMATION", "FINANCIAL_RECOGNITION", "OUTCOME"}
+        if not set(df_ind["signal_role"]).issubset(valid_roles):
+            sub_err.append(f"Invalid signal_role values found: {set(df_ind['signal_role']) - valid_roles}")
+        valid_observability = {"PUBLIC", "COMMERCIAL_DATA", "PRIVATE_OR_UNAVAILABLE"}
+        if not set(df_ind["observability"]).issubset(valid_observability):
+            sub_err.append(f"Invalid observability values found: {set(df_ind['observability']) - valid_observability}")
+        
+        # Verify NMSLO permit denial lead time
+        jup_row = df_ind[df_ind["indicator_id"] == "IND-JUP-001"]
+        if jup_row.empty or jup_row.iloc[0]["lead_time_days_min"] != 65.0 or jup_row.iloc[0]["lead_time_status"] != "OBSERVED":
+            sub_err.append(f"IND-JUP-001 invalid lead time or status: {jup_row}")
+
+    # 13.3 Observations Table & Bitemporal Invariants
+    obs_pq = PROCESSED_DIR / "observatory_observations.parquet"
+    if not obs_pq.exists():
+        sub_err.append(f"Missing canonical observations parquet: {obs_pq}")
+    else:
+        df_obs = pd.read_parquet(obs_pq)
+        if len(df_obs) < 5:
+            sub_err.append(f"Expected >= 5 observations, got: {len(df_obs)}")
+        for idx, row in df_obs.iterrows():
+            if str(row["source_event_date"]) > str(row["first_publicly_observable_date"]):
+                sub_err.append(f"Bitemporal inversion at row {idx}: source_event_date {row['source_event_date']} > first_publicly_observable_date {row['first_publicly_observable_date']}")
+            if str(row["first_publicly_observable_date"]) > str(row["ingestion_date"]):
+                sub_err.append(f"Ingestion lookahead at row {idx}: first_publicly_observable_date {row['first_publicly_observable_date']} > ingestion_date {row['ingestion_date']}")
+
+    if sub_err:
+        errors.extend(sub_err)
+    else:
+        print("  [OK] Task 026.1: Observatory Canonical Datasets verified (6 Scenarios, 8 Indicators, >=5 Observations, Bitemporal ordering verified, 0 nulls, signal_role and observability validated).")
+
     if errors:
         print("\n[VALIDATION FAILED]")
         for err in errors:
