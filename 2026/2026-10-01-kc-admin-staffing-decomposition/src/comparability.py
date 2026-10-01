@@ -87,7 +87,18 @@ COMPARABILITY_REGISTRY: Dict[str, OutcomeComparabilityRule] = {
         excluded_state_years={("KS", "2024-2025")},
         analytical_rationale="Kansas omitted assistant principals (SCHADM -36.8%) and central directors (LEAADM -32.0%)."
     ),
-    # 6. Combined Central Management + Coordinators (20-Year)
+    # 6a. Combined Central Management + Coordinators (Modern Era: 2014-15 to 2023-24)
+    "central_mgmt_and_coordinators_modern": OutcomeComparabilityRule(
+        outcome_variable="central_mgmt_and_coordinators_fte",
+        valid_period=("2014-2015", "2023-2024"),
+        valid_states={"KS", "MO"},
+        status=ComparabilityStatus.GREEN,
+        allow_isolated_modeling=True,
+        requires_state_year_fe=True,
+        excluded_state_years={("KS", "2024-2025")},
+        analytical_rationale="Clean modern supervisory footprint; safe against title substitutions between LEAADM and CORSUP."
+    ),
+    # 6b. Combined Central Management + Coordinators (20-Year Horizon)
     "central_mgmt_and_coordinators_20yr": OutcomeComparabilityRule(
         outcome_variable="central_mgmt_and_coordinators_fte",
         valid_period=("2004-2005", "2024-2025"),
@@ -133,15 +144,20 @@ def assert_outcome_eligible(
     """
     Enforcement gate. Returns (is_eligible, reason).
     Raises ValueError if a model is invoked on a disallowed outcome series.
+    Matches the most specific valid rule for the specified period.
     """
-    # Match rule
-    matched_rule = None
+    candidates = []
     for rule in COMPARABILITY_REGISTRY.values():
         if rule.outcome_variable == outcome_var:
             r_start, r_end = rule.valid_period
             if start_year >= r_start and end_year <= r_end:
-                matched_rule = rule
-                break
+                span = int(r_end[:4]) - int(r_start[:4])
+                candidates.append((span, rule))
+
+    matched_rule = None
+    if candidates:
+        candidates.sort(key=lambda x: x[0])
+        matched_rule = candidates[0][1]
 
     if not matched_rule:
         msg = f"STOPPING RULE: No certified comparability rule found for outcome '{outcome_var}' from {start_year} to {end_year}."

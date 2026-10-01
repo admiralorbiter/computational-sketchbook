@@ -1,0 +1,9 @@
+model,outcome,nces_lea_id,district_name,state,mean_actual_fte,mean_peer_expected_fte,mean_unexplained_deviation_fte,max_z_score,high_deviation_years_count,audit_priority_rank
+Model 1: SCHADM (Peer),school_administrators_fte,2007950,Kansas City,KS,103.4,84.5,18.9,9.09,8,HIGH
+Model 4: Central+Coord Footprint (Peer),central_mgmt_and_coordinators_fte,2926070,RAYTOWN C-2,MO,29.5,12.9,16.5,2.51,7,HIGH
+Model 3: CORSUP (Peer),instructional_coordinators_fte,2926070,RAYTOWN C-2,MO,21.7,7.7,14.0,2.23,7,HIGH
+Model 4: Central+Coord Footprint (Peer),central_mgmt_and_coordinators_fte,2011640,Shawnee Mission Pub Sch,KS,76.7,66.5,10.2,8.45,3,HIGH
+Model 3: CORSUP (Peer),instructional_coordinators_fte,2011640,Shawnee Mission Pub Sch,KS,66.9,58.3,8.6,8.71,3,HIGH
+Model 2: LEAADM (Peer),lea_administrators_fte,2912290,FORT OSAGE R-I,MO,7.0,3.6,3.4,2.65,10,HIGH
+Model 2: LEAADM (Peer),lea_administrators_fte,2926070,RAYTOWN C-2,MO,7.5,5.1,2.4,2.53,5,HIGH
+Model 2: LEAADM (Peer),lea_administrators_fte,2011640,Shawnee Mission Pub Sch,KS,10.4,9.0,1.4,2.18,5,HIGH
