@@ -11,6 +11,7 @@ Design principles:
 - DuckDB reads Parquet directly — no import step needed
 """
 
+import hashlib
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -81,9 +82,15 @@ class CorpusStore:
 
         # Convert to records
         records = []
+        eng_snapshots = []
         for a in artifacts:
             record = a.model_dump(mode="json")
             record["artifact_id"] = a.artifact_id
+            record["published_at_quality"] = (
+                a.published_at_quality.value
+                if hasattr(a, "published_at_quality")
+                else "unknown"
+            )
             # Flatten engagement for Parquet compatibility
             eng = record.pop("engagement", None) or {}
             record["engagement_likes"] = eng.get("likes", 0)
@@ -91,6 +98,26 @@ class CorpusStore:
             record["engagement_replies"] = eng.get("replies", 0)
             record["engagement_views"] = eng.get("views")
             records.append(record)
+
+            if a.engagement is not None:
+                snap_id = hashlib.sha256(
+                    f"{a.artifact_id}:{a.engagement.observed_at.isoformat()}".encode()
+                ).hexdigest()[:16]
+                eng_snapshots.append(
+                    {
+                        "snapshot_id": snap_id,
+                        "artifact_id": a.artifact_id,
+                        "platform": a.platform.value,
+                        "observed_at": a.engagement.observed_at.isoformat(),
+                        "likes": a.engagement.likes,
+                        "reposts": a.engagement.reposts,
+                        "replies": a.engagement.replies,
+                        "views": a.engagement.views,
+                    }
+                )
+
+        if eng_snapshots:
+            self.store_engagement_snapshots(eng_snapshots)
 
         new_df = pl.DataFrame(records)
 
@@ -110,6 +137,87 @@ class CorpusStore:
         else:
             new_df.write_parquet(artifacts_path, compression="zstd")
             return new_df.height
+
+    def store_engagement_snapshots(self, records: list[dict[str, Any]]) -> int:
+        """Append point-in-time engagement observations to snapshots Parquet.
+
+        Args:
+            records: List of raw snapshot record dictionaries.
+
+        Returns:
+            Number of snapshots recorded.
+        """
+        if not records:
+            return 0
+
+        new_df = pl.DataFrame(records)
+        snap_path = self.settings.normalized_dir / "engagement_snapshots.parquet"
+
+        if snap_path.exists():
+            existing_df = pl.read_parquet(snap_path)
+            existing_ids = set(existing_df["snapshot_id"].to_list())
+            new_df = new_df.filter(~pl.col("snapshot_id").is_in(existing_ids))
+            if new_df.height == 0:
+                return 0
+            combined = pl.concat([existing_df, new_df], how="diagonal_relaxed")
+            combined.write_parquet(snap_path, compression="zstd")
+            return new_df.height
+        else:
+            new_df.write_parquet(snap_path, compression="zstd")
+            return new_df.height
+
+    def calculate_virality_physics(self, artifact_id: str) -> dict[str, Any]:
+        """Compute engagement velocity and acceleration for an artifact.
+
+        Velocity: v(t) = Delta engagement / Delta t (hours)
+        Acceleration: a(t) = Delta v / Delta t
+        """
+        snap_path = self.settings.normalized_dir / "engagement_snapshots.parquet"
+        if not snap_path.exists():
+            return {"artifact_id": artifact_id, "snapshots": 0}
+
+        df = pl.read_parquet(snap_path)
+        filtered = df.filter(pl.col("artifact_id") == artifact_id).sort("observed_at")
+        if filtered.height == 0:
+            return {"artifact_id": artifact_id, "snapshots": 0}
+
+        records = filtered.to_dicts()
+        if len(records) == 1:
+            return {
+                "artifact_id": artifact_id,
+                "snapshots": 1,
+                "current_likes": records[0]["likes"],
+                "current_views": records[0]["views"],
+                "velocity_engagement_per_hour": 0.0,
+                "acceleration_engagement": 0.0,
+            }
+
+        velocities = []
+        for i in range(1, len(records)):
+            t0 = datetime.fromisoformat(records[i - 1]["observed_at"])
+            t1 = datetime.fromisoformat(records[i]["observed_at"])
+            dt_hours = max((t1 - t0).total_seconds() / 3600.0, 0.001)
+
+            v0 = records[i - 1].get("views") or records[i - 1].get("likes") or 0
+            v1 = records[i].get("views") or records[i].get("likes") or 0
+            vel = (v1 - v0) / dt_hours
+            velocities.append((dt_hours, vel))
+
+        latest_vel = velocities[-1][1]
+        accel = 0.0
+        if len(velocities) >= 2:
+            dt = velocities[-1][0]
+            accel = (velocities[-1][1] - velocities[-2][1]) / dt
+
+        return {
+            "artifact_id": artifact_id,
+            "snapshots": len(records),
+            "current_likes": records[-1]["likes"],
+            "current_views": records[-1]["views"],
+            "velocity_engagement_per_hour": round(latest_vel, 2),
+            "acceleration_engagement": round(accel, 2),
+            "history": records,
+        }
 
     def store_annotations(self, annotations: list[Annotation]) -> int:
         """Append annotations to the annotations Parquet file.

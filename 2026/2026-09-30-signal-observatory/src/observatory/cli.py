@@ -53,8 +53,11 @@ from observatory.collectors.snapchat import SnapchatCollector
 from observatory.collectors.web import WebCollector
 from observatory.collectors.youtube import YouTubeCollector
 from observatory.config import get_settings
+from observatory.culture_graph import CultureMigrationAnalyzer
 from observatory.events import EventLedger, EventMilestone
 from observatory.media import download_media_footage
+from observatory.models import Platform, SignalConfidence, SignalStatus
+from observatory.signals import SignalTournamentStore
 from observatory.store.corpus import CorpusStore
 
 app = typer.Typer(
@@ -676,6 +679,300 @@ def event_timeline(
     ledger = EventLedger()
     md = ledger.generate_timeline_markdown(event_id)
     console.print(md)
+
+
+# ---------------------------------------------------------------------------
+# Signal Tournament Engine
+# ---------------------------------------------------------------------------
+
+signal_app = typer.Typer(
+    name="signal",
+    help="Signal Tournament — prospective weak signal freezing and scorecard calibration.",
+)
+app.add_typer(signal_app, name="signal")
+
+
+@signal_app.command("freeze")
+def signal_freeze(
+    phenomenon: str = typer.Option(
+        ..., "--phenomenon", "-p", help="What trend or event is emerging"
+    ),
+    observation: str = typer.Option(
+        ..., "--observation", "-o", help="Empirical observation across sources"
+    ),
+    hypothesis: str = typer.Option(
+        ..., "--hypothesis", "-y", help="Falsifiable prediction to test"
+    ),
+    evidence: str = typer.Option(
+        ..., "--evidence", "-e", help="Comma-separated artifact IDs providing grounding"
+    ),
+    creators: int = typer.Option(1, "--creators", "-c", help="Independent creators observed"),
+    platform: str = typer.Option(
+        "", "--platform", help="Comma-separated platforms (e.g. reddit,tiktok)"
+    ),
+    confidence: str = typer.Option(
+        "moderate", "--confidence", help="Confidence tier: low, moderate, high"
+    ),
+    days: int = typer.Option(14, "--days", "-d", help="Verification window in days"),
+    signal_id: str | None = typer.Option(None, "--id", help="Optional explicit signal ID"),
+) -> None:
+    """Freeze a prospective weak signal immutably into the tournament."""
+    store = SignalTournamentStore()
+    evidence_ids = [e.strip() for e in evidence.split(",") if e.strip()]
+    platforms_list = []
+    if platform:
+        for p in platform.split(","):
+            try:
+                platforms_list.append(Platform(p.strip().lower()))
+            except ValueError:
+                pass
+
+    try:
+        conf_tier = SignalConfidence(confidence.lower())
+    except ValueError:
+        conf_tier = SignalConfidence.MODERATE
+
+    sig = store.freeze_signal(
+        phenomenon=phenomenon,
+        observation=observation,
+        hypothesis=hypothesis,
+        evidence_artifact_ids=evidence_ids,
+        creator_count=creators,
+        platforms=platforms_list,
+        confidence=conf_tier,
+        verification_days=days,
+        signal_id=signal_id,
+    )
+    console.print(f"[bold green]✓ Frozen prospective signal:[/bold green] {sig.signal_id}")
+    console.print(f"  [cyan]Phenomenon:[/cyan] {sig.phenomenon}")
+    console.print(f"  [yellow]Confidence:[/yellow] {sig.confidence.value.upper()}")
+    console.print(f"  [magenta]Verification Deadline:[/magenta] {sig.verification_deadline}")
+    console.print(f"  [dim]Tamper-Evident SHA-256: {sig.freeze_hash}[/dim]")
+
+
+@signal_app.command("list")
+def signal_list(
+    status: str | None = typer.Option(
+        None, "--status", "-s", help="Filter by status (pending, hit, miss, partial)"
+    ),
+) -> None:
+    """List all frozen signals in the tournament."""
+    store = SignalTournamentStore()
+    filter_status = None
+    if status:
+        try:
+            filter_status = SignalStatus(status.lower())
+        except ValueError:
+            pass
+
+    signals = store.list_signals(status=filter_status)
+    if not signals:
+        console.print("[dim]No signals found matching criteria.[/dim]")
+        return
+
+    table = Table(title="Signal Tournament — Prospective Weak Signals", show_lines=True)
+    table.add_column("Signal ID", style="cyan", width=18)
+    table.add_column("Status", width=12)
+    table.add_column("Confidence", width=12)
+    table.add_column("Phenomenon", style="bold white", width=30)
+    table.add_column("Frozen Date", width=16)
+    table.add_column("Deadline", width=16)
+
+    for s in signals:
+        if s.status == SignalStatus.PENDING:
+            status_style = "yellow"
+        elif s.status == SignalStatus.HIT:
+            status_style = "green"
+        else:
+            status_style = "red"
+
+        deadline_str = (
+            s.verification_deadline.strftime("%Y-%m-%d")
+            if s.verification_deadline
+            else "N/A"
+        )
+        table.add_row(
+            s.signal_id,
+            f"[{status_style}]{s.status.value.upper()}[/{status_style}]",
+            s.confidence.value.upper(),
+            s.phenomenon,
+            s.frozen_at.strftime("%Y-%m-%d"),
+            deadline_str,
+        )
+    console.print(table)
+
+
+@signal_app.command("resolve")
+def signal_resolve(
+    signal_id: str = typer.Argument(help="Signal ID to resolve (e.g. SIGNAL-2026-0001)"),
+    status: str = typer.Option(
+        ..., "--status", "-s", help="Outcome: hit, miss, partial, unverifiable"
+    ),
+    notes: str = typer.Option(
+        ..., "--notes", "-n", help="Empirical verification notes or justification"
+    ),
+    verifying_ids: str = typer.Option(
+        "", "--verifying-id", "-v", help="Comma-separated artifact IDs of official confirmation"
+    ),
+) -> None:
+    """Resolve a frozen signal with empirical outcome."""
+    store = SignalTournamentStore()
+    try:
+        resolved_status = SignalStatus(status.lower())
+    except ValueError:
+        console.print(
+            f"[bold red]✗ Invalid status: '{status}'.[/bold red] "
+            "Must be hit, miss, partial, or unverifiable."
+        )
+        raise typer.Exit(1) from None
+
+    v_list = [v.strip() for v in verifying_ids.split(",") if v.strip()] if verifying_ids else []
+
+    try:
+        sig = store.resolve_signal(
+            signal_id=signal_id,
+            status=resolved_status,
+            notes=notes,
+            verifying_artifact_ids=v_list,
+        )
+        console.print(
+            f"[bold green]✓ Resolved signal {sig.signal_id}:[/bold green] "
+            f"{sig.status.value.upper()}"
+        )
+        console.print(f"  [dim]{sig.resolution_notes}[/dim]")
+    except Exception as e:
+        console.print(f"[bold red]✗ Failed to resolve signal:[/bold red] {e}")
+        raise typer.Exit(1) from None
+
+
+@signal_app.command("scorecard")
+def signal_scorecard() -> None:
+    """Display the Signal Tournament calibration scorecard."""
+    store = SignalTournamentStore()
+    sc = store.scorecard()
+
+    console.print("\n[bold cyan]─── SIGNAL TOURNAMENT SCORECARD ───[/bold cyan]\n")
+
+    table = Table(title="Overall Tournament Standing", show_lines=True)
+    table.add_column("Total Frozen", justify="right")
+    table.add_column("Pending", justify="right", style="yellow")
+    table.add_column("Evaluated", justify="right", style="cyan")
+    table.add_column("Hits", justify="right", style="green")
+    table.add_column("Partials", justify="right", style="magenta")
+    table.add_column("Misses", justify="right", style="red")
+    table.add_column("Hit Rate", justify="right", style="bold white")
+    table.add_column("Brier Score", justify="right", style="bold green")
+
+    brier_display = f"{sc['brier_score']:.4f}" if sc["brier_score"] is not None else "N/A"
+    table.add_row(
+        str(sc["total_frozen"]),
+        str(sc["pending"]),
+        str(sc["evaluated"]),
+        str(sc["hits"]),
+        str(sc["partials"]),
+        str(sc["misses"]),
+        f"{sc['hit_rate'] * 100:.1f}%",
+        brier_display,
+    )
+    console.print(table)
+
+    if sc["confidence_breakdown"]:
+        c_table = Table(title="Calibration by Confidence Tier", show_lines=True)
+        c_table.add_column("Tier", style="cyan")
+        c_table.add_column("Nominated", justify="right")
+        c_table.add_column("Evaluated", justify="right")
+        c_table.add_column("Hits", justify="right", style="green")
+        c_table.add_column("Misses", justify="right", style="red")
+        c_table.add_column("Hit Rate", justify="right", style="bold white")
+
+        for tier, data in sc["confidence_breakdown"].items():
+            c_table.add_row(
+                tier.upper(),
+                str(data["total"]),
+                str(data["evaluated"]),
+                str(data["hits"]),
+                str(data["misses"]),
+                f"{data['hit_rate'] * 100:.1f}%",
+            )
+        console.print(c_table)
+
+    if sc["mean_lead_time_hours"] is not None:
+        console.print(
+            f"\n[bold green]Mean Lead Time (Hits):[/bold green] "
+            f"{sc['mean_lead_time_hours']:.1f} hours "
+            f"({sc['mean_lead_time_hours'] / 24.0:.1f} days)\n"
+        )
+
+
+# ---------------------------------------------------------------------------
+# Culture Migration Graph
+# ---------------------------------------------------------------------------
+
+culture_app = typer.Typer(
+    name="culture-graph",
+    help="Culture Migration Graph — trace cross-platform hops, latency, and lexical mutation.",
+)
+app.add_typer(culture_app, name="culture-graph")
+
+
+@culture_app.command("trace")
+def culture_trace(
+    query: str = typer.Argument(help="Trend, slang term, or phenomenon to trace"),
+) -> None:
+    """Trace how a cultural object moved across platforms."""
+    analyzer = CultureMigrationAnalyzer()
+    graph = analyzer.trace(query)
+    md = graph.summary_markdown()
+    console.print(md)
+
+
+# ---------------------------------------------------------------------------
+# Virality Physics
+# ---------------------------------------------------------------------------
+
+
+@app.command("virality")
+def virality_physics(
+    artifact_id: str = typer.Argument(
+        help="Artifact ID to inspect engagement velocity and acceleration"
+    ),
+) -> None:
+    """Compute point-in-time velocity and acceleration of engagement for an artifact."""
+    store = CorpusStore()
+    physics = store.calculate_virality_physics(artifact_id)
+
+    if physics.get("snapshots", 0) == 0:
+        console.print(f"[dim]No engagement snapshots recorded for {artifact_id}.[/dim]")
+        return
+
+    console.print(f"\n[bold cyan]Virality Physics for Artifact:[/bold cyan] {artifact_id}")
+    console.print(f"- Total Snapshots: {physics['snapshots']}")
+    console.print(f"- Latest Likes: {physics.get('current_likes')}")
+    console.print(f"- Latest Views: {physics.get('current_views')}")
+    vel = physics.get("velocity_engagement_per_hour", 0.0)
+    acc = physics.get("acceleration_engagement", 0.0)
+    console.print(f"- Velocity: [bold green]{vel} eng/hr[/bold green]")
+    console.print(f"- Acceleration: [bold yellow]{acc} eng/hr²[/bold yellow]\n")
+
+    history = physics.get("history", [])
+    if history:
+        table = Table(title="Engagement Observation History", show_lines=True)
+        table.add_column("Observed At (UTC)", width=24)
+        table.add_column("Likes", justify="right", style="green")
+        table.add_column("Reposts", justify="right", style="cyan")
+        table.add_column("Replies", justify="right", style="magenta")
+        table.add_column("Views", justify="right", style="yellow")
+
+        for row in history:
+            views_str = str(row["views"]) if row.get("views") is not None else "-"
+            table.add_row(
+                row["observed_at"],
+                str(row.get("likes", 0)),
+                str(row.get("reposts", 0)),
+                str(row.get("replies", 0)),
+                views_str,
+            )
+        console.print(table)
 
 
 if __name__ == "__main__":

@@ -85,6 +85,35 @@ class AnnotationType(StrEnum):
     FRICTION = "friction"
 
 
+class TimestampQuality(StrEnum):
+    """Epistemic quality and precision of an artifact's publication timestamp."""
+
+    SOURCE_EXACT = "source_exact"  # Native API or post ISO datetime with seconds
+    SOURCE_DATE_ONLY = "source_date_only"  # YYYY-MM-DD from article or upload date
+    SEARCH_INDEX = "search_index"  # Search engine index/cache date
+    INFERRED = "inferred"  # Parsed from relative text ("3 weeks ago")
+    COLLECTION_FALLBACK = "collection_fallback"  # Fallback to collection time when date absent
+    UNKNOWN = "unknown"
+
+
+class SignalStatus(StrEnum):
+    """Resolution status of a frozen prospective weak signal."""
+
+    PENDING = "pending"
+    HIT = "hit"
+    MISS = "miss"
+    PARTIAL = "partial"
+    UNVERIFIABLE = "unverifiable"
+
+
+class SignalConfidence(StrEnum):
+    """Subjective confidence tier assigned when freezing a signal."""
+
+    LOW = "low"
+    MODERATE = "moderate"
+    HIGH = "high"
+
+
 # ---------------------------------------------------------------------------
 # Core Models
 # ---------------------------------------------------------------------------
@@ -122,6 +151,20 @@ class EngagementSnapshot(BaseModel):
     extra: dict[str, Any] = Field(default_factory=dict)
 
 
+class EngagementRecord(BaseModel):
+    """An append-only observation of engagement for an artifact over time."""
+
+    snapshot_id: str
+    artifact_id: str
+    platform: Platform
+    observed_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    likes: int = 0
+    reposts: int = 0
+    replies: int = 0
+    views: int | None = None
+    extra: dict[str, Any] = Field(default_factory=dict)
+
+
 class Artifact(BaseModel):
     """A single piece of collected evidence.
 
@@ -139,6 +182,7 @@ class Artifact(BaseModel):
     author_handle: str | None = None
     author_platform_id: str | None = None
     published_at: datetime | None = None
+    published_at_quality: TimestampQuality = TimestampQuality.UNKNOWN
     observed_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     language: str | None = None
 
@@ -266,3 +310,37 @@ class RunManifest(BaseModel):
     total_media: int = 0
     platforms_searched: list[str] = Field(default_factory=list)
     notes: str = ""
+
+
+class FrozenSignal(BaseModel):
+    """An immutable, prospectively frozen weak signal candidate in the tournament."""
+
+    signal_id: str  # Format: SIGNAL-YYYY-NNNN
+    phenomenon: str
+    observation: str
+    evidence_artifact_ids: list[str] = Field(default_factory=list)
+    creator_count: int = 1
+    platforms: list[Platform] = Field(default_factory=list)
+    hypothesis: str
+    confidence: SignalConfidence = SignalConfidence.MODERATE
+    verification_days: int = 14
+    detected_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    frozen_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    verification_deadline: datetime | None = None
+    freeze_hash: str = ""
+
+    # Resolution fields
+    status: SignalStatus = SignalStatus.PENDING
+    resolved_at: datetime | None = None
+    resolution_notes: str | None = None
+    verifying_artifact_ids: list[str] = Field(default_factory=list)
+
+    def compute_freeze_hash(self) -> str:
+        """Compute tamper-evident SHA-256 hash of immutable frozen attributes."""
+        frozen_data = (
+            f"{self.signal_id}|{self.phenomenon}|{self.observation}|"
+            f"{self.hypothesis}|{self.confidence.value}|"
+            f"{','.join(sorted(self.evidence_artifact_ids))}|"
+            f"{self.frozen_at.isoformat()}"
+        )
+        return hashlib.sha256(frozen_data.encode()).hexdigest()

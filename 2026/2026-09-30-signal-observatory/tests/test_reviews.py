@@ -1,7 +1,7 @@
 """Tests for ReviewsCollector."""
 
 from observatory.collectors.reviews import ReviewsCollector
-from observatory.models import ContentType, Platform
+from observatory.models import ContentType, Platform, TimestampQuality
 
 
 class TestReviewsCollector:
@@ -34,3 +34,20 @@ class TestReviewsCollector:
         assert artifact.engagement.likes == 5
         assert artifact.engagement.extra["business"] == "In-A-Tub"
         assert artifact.canonical_url == url
+        assert artifact.published_at is not None
+        assert artifact.published_at_quality == TimestampQuality.COLLECTION_FALLBACK
+
+    def test_date_parsing_qualities(self) -> None:
+        collector = ReviewsCollector()
+        dt1, q1 = collector._parse_review_date("2023-10-15", "review_directory")
+        assert dt1.year == 2023 and dt1.month == 10 and dt1.day == 15
+        assert q1 == TimestampQuality.SOURCE_DATE_ONLY
+
+        dt2, q2 = collector._parse_review_date("2024-01-10T14:30:00Z", "review_directory")
+        assert q2 == TimestampQuality.SOURCE_EXACT
+
+        dt3, q3 = collector._parse_review_date("2 weeks ago", "review_directory")
+        assert q3 == TimestampQuality.INFERRED
+
+        dt4, q4 = collector._parse_review_date("Jan 12, 2024", "web_review_index")
+        assert q4 == TimestampQuality.SEARCH_INDEX

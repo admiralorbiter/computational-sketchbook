@@ -7,12 +7,13 @@ Google/Yelp review indexes, and community boards.
 
 import hashlib
 import re
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import orjson
 from bs4 import BeautifulSoup
 from curl_cffi import requests
+from dateutil.parser import parse as parse_date
 from ddgs import DDGS
 
 from observatory.collectors.base import BaseCollector, CollectorCapabilities
@@ -22,9 +23,10 @@ from observatory.models import (
     DiscoveryMethod,
     EngagementSnapshot,
     Platform,
+    TimestampQuality,
 )
 
-COLLECTOR_VERSION = "reviews-collector-0.1.0"
+COLLECTOR_VERSION = "reviews-collector-0.2.0"
 
 
 class ReviewsCollector(BaseCollector):
@@ -144,11 +146,35 @@ class ReviewsCollector(BaseCollector):
                 if any(r.get("text") == text for r in raw_records):
                     continue
 
+                # Date extraction
+                raw_date_str = None
+                date_el = b.find(class_=re.compile("date|time|published|created|post-date", re.I))
+                if not date_el:
+                    date_el = b.find("time")
+                if date_el:
+                    raw_date_str = (
+                        date_el.get("datetime")
+                        or date_el.get("title")
+                        or date_el.get_text(strip=True)
+                    )
+
+                if not raw_date_str:
+                    date_pat = (
+                        r"(\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)"
+                        r"[a-z]* \d{1,2},? \d{4}\b"
+                        r"|\b\d{1,2}/\d{1,2}/\d{2,4}\b|\b\d{4}-\d{2}-\d{2}\b"
+                        r"|\b\d+ (?:days?|weeks?|months?|years?) ago\b)"
+                    )
+                    date_match = re.search(date_pat, text, re.I)
+                    if date_match:
+                        raw_date_str = date_match.group(1)
+
                 record = {
                     "business": query,
                     "author": author,
                     "text": text,
                     "rating": rating,
+                    "date_str": raw_date_str,
                     "source_url": target_url,
                     "scraped_at": datetime.now(UTC).isoformat(),
                     "source_type": "review_directory",
@@ -195,11 +221,25 @@ class ReviewsCollector(BaseCollector):
                 except Exception:
                     pass
 
+            # Detect date in snippet or DDGS result
+            snippet_date = None
+            if r.get("date"):
+                snippet_date = r.get("date")
+            else:
+                snip_pat = (
+                    r"^(\b[A-Z][a-z]{2,8}\s+\d{1,2},\s+\d{4}"
+                    r"|\d{4}-\d{2}-\d{2}|\b\d+\s+(?:days?|weeks?|months?|years?)\s+ago)"
+                )
+                date_m = re.search(snip_pat, body.strip(), re.I)
+                if date_m:
+                    snippet_date = date_m.group(1)
+
             record = {
                 "business": query,
                 "author": "verified_reviewer",
                 "text": f"{title}\n\n{body}" if title else body,
                 "rating": rating,
+                "date_str": snippet_date,
                 "source_url": url,
                 "scraped_at": datetime.now(UTC).isoformat(),
                 "source_type": "web_review_index",
@@ -213,6 +253,56 @@ class ReviewsCollector(BaseCollector):
                 break
 
         return artifacts, raw_records
+
+    @staticmethod
+    def _parse_review_date(
+        date_str: str | None, source_type: str = "review_directory"
+    ) -> tuple[datetime, TimestampQuality]:
+        """Extract a structured publication timestamp and assess epistemic quality."""
+        if not date_str:
+            return datetime.now(UTC), TimestampQuality.COLLECTION_FALLBACK
+
+        text = str(date_str).strip()
+        now = datetime.now(UTC)
+
+        # 1. Check relative date strings
+        rel_match = re.search(
+            r"(\d+)\s+(day|week|month|year)s?\s+ago", text, re.IGNORECASE
+        )
+        if rel_match:
+            amount = int(rel_match.group(1))
+            unit = rel_match.group(2).lower()
+            if unit == "day":
+                dt = now - timedelta(days=amount)
+            elif unit == "week":
+                dt = now - timedelta(weeks=amount)
+            elif unit == "month":
+                dt = now - timedelta(days=amount * 30)
+            elif unit == "year":
+                dt = now - timedelta(days=amount * 365)
+            else:
+                dt = now
+            return dt, TimestampQuality.INFERRED
+
+        if re.search(r"\byesterday\b", text, re.IGNORECASE):
+            return now - timedelta(days=1), TimestampQuality.INFERRED
+
+        # 2. Check absolute dates
+        try:
+            parsed = parse_date(text, fuzzy=True)
+            if parsed.tzinfo is None:
+                parsed = parsed.replace(tzinfo=UTC)
+            else:
+                parsed = parsed.astimezone(UTC)
+
+            if source_type == "web_review_index":
+                return parsed, TimestampQuality.SEARCH_INDEX
+
+            if re.search(r"(\d{1,2}:\d{2}|T\d{2}:)", text):
+                return parsed, TimestampQuality.SOURCE_EXACT
+            return parsed, TimestampQuality.SOURCE_DATE_ONLY
+        except Exception:
+            return now, TimestampQuality.COLLECTION_FALLBACK
 
     def _normalize_review(self, record: dict[str, Any], url: str) -> Artifact:
         """Convert scraped review record into unified Artifact schema."""
@@ -236,13 +326,18 @@ class ReviewsCollector(BaseCollector):
             },
         )
 
+        published_at, quality = self._parse_review_date(
+            record.get("date_str"), record.get("source_type", "review_directory")
+        )
+
         return Artifact(
             platform=Platform.REVIEWS,
             native_id=native_id,
             canonical_url=url,
             content_type=ContentType.REVIEW,
             author_handle=record.get("author"),
-            published_at=datetime.now(UTC),
+            published_at=published_at,
+            published_at_quality=quality,
             text=record.get("text", ""),
             engagement=engagement,
             discovery_method=DiscoveryMethod.SEARCH,

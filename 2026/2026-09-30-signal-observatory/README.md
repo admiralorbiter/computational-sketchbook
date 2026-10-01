@@ -38,61 +38,55 @@ The observatory operates completely without API keys or developer portal registr
 - **YouTube:** `yt-dlp` for search, view counts, likes, and metadata extraction; `youtube-transcript-api` for full video transcripts.
 - **Bluesky:** Real-time AT Protocol public Jetstream WebSocket (`wss://jetstream1.us-east.bsky.network`) for live streaming; public AppView for entity records.
 - **Reddit & Web:** `httpx` + `BeautifulSoup` on public server-rendered pages; `trafilatura` for full text article extraction.
+- **Citizen Footage (TikTok / Facebook / Independent YouTube):** DuckDuckGo video indexing + `curl_cffi` for eyewitness on-the-ground phone video discovery.
+- **Snapchat Public Spotlight:** Next.js `pageProps` scraping with direct CDN unauthenticated media links and LLM vision tag extraction.
+- **Customer Reviews:** Multi-directory aggregator scrapers with regex date parsing and epistemic `TimestampQuality` tagging.
 - **Data Storage:** Compressed Apache Parquet (`.parquet`) for columnar analytics; DuckDB for zero-copy in-process SQL; immutable JSONL for raw receipts.
 
 ---
 
-## Quickstart
+## Epistemic Upgrades & Weak-Signal Research
 
-### 1. Requirements & Setup
-
-- Python 3.12+
-- `uv` package manager
+### 1. The Signal Tournament (Prospective Weak-Signal Freezing)
+Nominate weak signals **before** knowing the outcome. Freeze observation, evidence, hypothesis, and timestamp immutably with cryptographic SHA-256 hashes. Test against a 14- or 30-day verification window without rewriting past embarrassments.
 
 ```bash
-cd signal-observatory
-uv sync
+# Freeze a prospective candidate signal
+uv run observatory signal freeze \
+  --phenomenon "Westport security perimeter expansion" \
+  --observation "Patrons report new weapon scanners at Broadway entrance" \
+  --hypothesis "KCPD or CID will announce expanded checkpoint perimeter within 14 days" \
+  --evidence "art_fb_001,art_rd_002" \
+  --platform "facebook,reddit" \
+  --confidence "moderate" \
+  --days 14
+
+# View tournament scorecard and calibration (Hits/Misses, Brier score, mean lead time)
+uv run observatory signal scorecard
 ```
 
-### 2. Run a Structured Research Inquiry
-
-Execute an end-to-end investigation defined by a YAML inquiry file:
+### 2. Culture Migration Graph
+Trace how emerging cultural objects, memes, slang terms, or local venue scenes migrate across platforms (e.g. TikTok $\to$ Reddit $\to$ YouTube $\to$ Web).
 
 ```bash
-uv run observatory inquire inquiries/2026-09-kc-streetcar-transit.yaml
+# Reconstruct cross-platform hop latency, lexical mutation, and Mermaid diagrams
+uv run observatory culture-graph trace "westport"
 ```
 
-This will:
-1. Initialize `runs/<run-id>/`
-2. Execute the inquiry's search plan across targeted platforms
-3. Record immutable raw responses in `data/raw/`
-4. Deduplicate and append normalized artifacts into `data/normalized/artifacts.parquet`
-5. Automatically extract captions/transcripts for discovered videos
-6. Write a complete run manifest and human-readable `RUN_SUMMARY.md`
+Outputs:
+- **Earliest Observed Platform & Timestamp**
+- **Time to Second Platform & Time to Mainstream/Press** ($\Delta t$ in hours/days)
+- **Independent Creators Before First Crossover**
+- **Hop-by-hop Lexical Mutation** (Jaccard divergence & newly introduced vocabulary)
+- **Rendered Mermaid Flowchart**
 
-### 3. Ad-Hoc Platform Searching
+### 3. Virality Physics (Time-Series Metric Acceleration)
+Rather than deduplicating away subsequent metric checks, `data/normalized/engagement_snapshots.parquet` captures append-only observations across time to compute velocity and acceleration:
 
-```bash
-# Search YouTube videos with view counts and metadata
-uv run observatory search youtube -q "Kansas City streetcar" -n 5
-
-# Fetch video transcript directly into the corpus as an attributed annotation
-uv run observatory transcript BQzXghWWMbE
-```
-
-### 4. Direct SQL Analytics via DuckDB
-
-Run SQL queries directly against Parquet tables on disk with instant execution:
+$$v(t) = \frac{\Delta \text{engagement}}{\Delta t}, \quad a(t) = \frac{\Delta v}{\Delta t}$$
 
 ```bash
-# View corpus statistics
-uv run observatory corpus-stats
-
-# Query top viewed artifacts
-uv run observatory sql "SELECT author_handle, engagement_views, canonical_url FROM artifacts ORDER BY engagement_views DESC LIMIT 5"
-
-# Inspect transcripts
-uv run observatory sql "SELECT artifact_id, value AS transcript FROM annotations WHERE annotation_type = 'transcription'"
+uv run observatory virality <artifact-id>
 ```
 
 ---
@@ -102,11 +96,10 @@ uv run observatory sql "SELECT artifact_id, value AS transcript FROM annotations
 Evidence is segregated into four strictly governed levels:
 
 1. **`data/raw/` (Level 1):** Immutable historical ground truth. Raw API/HTTP responses stored by platform and date.
-2. **`data/normalized/` (Level 2):** Deterministically normalized artifacts with SHA-256 IDs (`sha256(platform + ":" + native_id)`).
-3. **`data/derived/` (Level 3):** Attributed annotations (transcripts, topic clusters, framing tags) generated by models or algorithms.
-4. **`runs/<run-id>/` (Level 4):** Manifests, query logs, and syntheses with citations linked to Level 2 artifacts.
-
-See [`AGENTS.md`](file:///c:/Users/admir/Github/signal-observatory/AGENTS.md) for operational boundaries and [`METHODS.md`](file:///c:/Users/admir/Github/signal-observatory/METHODS.md) for digital trace methodology guidelines.
+2. **`data/normalized/` (Level 2):** Deterministically normalized artifacts with SHA-256 IDs, `TimestampQuality` classification, and append-only `engagement_snapshots.parquet`.
+3. **`data/signals/` (Tournament Store):** Immutable prospective signal cards (`cards/*.md`) and Parquet ledger (`signals.parquet`).
+4. **`data/derived/` (Level 3):** Attributed annotations (transcripts, topic clusters, framing tags) generated by models or algorithms.
+5. **`runs/<run-id>/` (Level 4):** Manifests, query logs, and syntheses with citations linked to Level 2 artifacts.
 
 ---
 
@@ -114,8 +107,8 @@ See [`AGENTS.md`](file:///c:/Users/admir/Github/signal-observatory/AGENTS.md) fo
 
 ```bash
 # Run test suite with coverage
-uv run pytest tests/ -v
+uv run pytest
 
 # Run linter
-uv run ruff check .
+uv run ruff check src tests
 ```
