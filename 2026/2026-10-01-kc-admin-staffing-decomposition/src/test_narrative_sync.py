@@ -454,6 +454,99 @@ def test_phase5_coordinator_functional_decomposition():
 
 
 
+def test_phase6_architecture_and_chronic_absenteeism():
+    """Verify Phase 6 continuous architecture panel, repaired chronic absenteeism panel, and recovery models."""
+    # 1. District Architecture Panel (Continuous coordinates)
+    arch_path = DATA_DIR / "processed" / "district_architecture_panel.csv"
+    assert arch_path.exists(), f"Missing {arch_path}"
+    df_arch = pd.read_csv(arch_path)
+    
+    assert len(df_arch) == 550, f"Expected 550 rows in architecture panel, got {len(df_arch)}"
+    assert df_arch["nces_lea_id"].nunique() == 55
+    assert set(df_arch["school_year"].unique()) == {
+        "2014-2015", "2015-2016", "2016-2017", "2017-2018", "2018-2019",
+        "2019-2020", "2020-2021", "2021-2022", "2022-2023", "2023-2024"
+    }
+
+    # Macro temporal concentration across 55 balanced districts
+    yearly_corsup = df_arch.groupby("school_year")["instructional_coordinators_fte"].sum().round(1).to_dict()
+    assert abs(yearly_corsup["2014-2015"] - 501.3) < 0.2
+    assert abs(yearly_corsup["2018-2019"] - 523.6) < 0.2
+    assert abs(yearly_corsup["2019-2020"] - 598.7) < 0.2  # +75.1 pre-COVID jump
+    assert abs(yearly_corsup["2023-2024"] - 756.8) < 0.2
+    decade_growth = yearly_corsup["2023-2024"] - yearly_corsup["2014-2015"]
+    post_1819_growth = yearly_corsup["2023-2024"] - yearly_corsup["2018-2019"]
+    pct_post_1819 = (post_1819_growth / decade_growth) * 100
+    assert abs(pct_post_1819 - 91.3) < 0.2
+
+    # Pre-COVID Jump in SMSD (2011640)
+    smsd_arch = df_arch[df_arch["nces_lea_id"] == 2011640].set_index("school_year")
+    assert abs(smsd_arch.loc["2018-2019", "instructional_coordinators_fte"] - 46.5) < 0.1
+    assert abs(smsd_arch.loc["2019-2020", "instructional_coordinators_fte"] - 78.0) < 0.1
+    assert abs((smsd_arch.loc["2019-2020", "instructional_coordinators_fte"] - smsd_arch.loc["2018-2019", "instructional_coordinators_fte"]) - 31.5) < 0.1
+
+    # Snapshots quadrant evolution
+    snap_path = OUTPUTS_DIR / "district_architecture_snapshots.csv"
+    assert snap_path.exists(), f"Missing {snap_path}"
+    df_snap = pd.read_csv(snap_path)
+    assert len(df_snap) == 220
+    q_counts = df_snap.groupby(["school_year", "architecture_quadrant"]).size().unstack(fill_value=0)
+    assert q_counts.loc["2014-2015", "Coaching Overlay"] == 10
+    assert q_counts.loc["2018-2019", "Coaching Overlay"] == 20
+    assert q_counts.loc["2023-2024", "Coaching Overlay"] == 25
+    assert q_counts.loc["2014-2015", "Dual-Intensity (Coaching + School Supervision)"] == 22
+    assert q_counts.loc["2023-2024", "Dual-Intensity (Coaching + School Supervision)"] == 7
+
+    # 2. Repaired District Chronic Absenteeism Panel
+    abs_path = DATA_DIR / "processed" / "district_chronic_absenteeism_panel.csv"
+    assert abs_path.exists(), f"Missing {abs_path}"
+    df_abs = pd.read_csv(abs_path)
+    assert len(df_abs) == 216
+    assert (df_abs["chronic_absent_rate_pct"] >= 0.0).all()
+    assert (df_abs["chronic_absent_rate_pct"] <= 100.0).all(), "Found impossible chronic absent rate > 100%"
+
+    # KCKPS repaired values
+    kck_abs = df_abs[df_abs["nces_lea_id"] == 2007950].set_index("school_year")
+    assert kck_abs.loc["2017-2018", "chronic_absent_count"] == 5075
+    assert abs(kck_abs.loc["2017-2018", "chronic_absent_rate_pct"] - 22.16) < 0.05
+    assert kck_abs.loc["2020-2021", "chronic_absent_count"] == 9157
+    assert abs(kck_abs.loc["2020-2021", "chronic_absent_rate_pct"] - 41.36) < 0.05
+    assert kck_abs.loc["2021-2022", "chronic_absent_count"] == 11132
+    assert abs(kck_abs.loc["2021-2022", "chronic_absent_rate_pct"] - 54.34) < 0.05
+    assert kck_abs.loc["2022-2023", "chronic_absent_count"] == 9178
+    assert abs(kck_abs.loc["2022-2023", "chronic_absent_rate_pct"] - 44.00) < 0.05
+
+    # 3. Wide Attendance Recovery Trajectory
+    wide_path = OUTPUTS_DIR / "district_chronic_absenteeism_recovery_wide.csv"
+    assert wide_path.exists(), f"Missing {wide_path}"
+    df_wide = pd.read_csv(wide_path)
+    assert len(df_wide) == 55
+    kck_wide = df_wide[df_wide["nces_lea_id"] == 2007950].iloc[0]
+    assert abs(kck_wide["recovery_delta_2122_to_2223_pct_pts"] - (-10.3)) < 0.05
+    assert abs(kck_wide["net_disruption_delta_pct_pts"] - 21.84) < 0.05
+
+    smsd_wide = df_wide[df_wide["nces_lea_id"] == 2011640].iloc[0]
+    assert abs(smsd_wide["recovery_delta_2122_to_2223_pct_pts"] - 1.4) < 0.05
+    assert abs(smsd_wide["net_disruption_delta_pct_pts"] - 7.27) < 0.05
+
+    # 4. Phase 6 Exploratory Screening Report and Correlations Table
+    corr_path = OUTPUTS_DIR / "phase6_architecture_attendance_recovery_correlations.csv"
+    assert corr_path.exists(), f"Missing {corr_path}"
+    df_corr = pd.read_csv(corr_path).set_index("variable_name")
+    assert abs(df_corr.loc["absent_rate_2021_22_pct", "corr_recovery_delta_2122_to_2223_pct_pts"] - (-0.5300)) < 0.005
+
+    rep_path = OUTPUTS_DIR / "phase6_exploratory_architecture_recovery_report.md"
+    assert rep_path.exists(), f"Missing {rep_path}"
+    rep_text = rep_path.read_text(encoding="utf-8")
+    assert "-10.3 percentage points" in rep_text
+    assert "44.0%" in rep_text
+    assert "54.3%" in rep_text
+    assert "0.521" in rep_text
+    assert "0.720" in rep_text
+    assert "-0.0366" in rep_text
+    assert "-0.1929" in rep_text
+
+
 def test_manifest_provenance_and_checksums():
     manifest_path = DATA_DIR / "manifest.csv"
     assert manifest_path.exists(), f"Missing {manifest_path}"
@@ -491,8 +584,11 @@ if __name__ == "__main__":
     print("[PASS] Trajectory and peer summary aggregations validated.")
     test_phase5_coordinator_functional_decomposition()
     print("[PASS] Phase 5 coordinator functional decomposition & archetypes validated.")
+    test_phase6_architecture_and_chronic_absenteeism()
+    print("[PASS] Phase 6 architecture coordinates & repaired chronic absenteeism validated.")
     test_manifest_provenance_and_checksums()
     print("[PASS] Dataset manifest provenance and SHA256 checksums validated.")
     test_markdown_link_and_retraction_hygiene()
     print("[PASS] Markdown link and retraction hygiene validated.")
     print("\nALL NARRATIVE AND DATA SYNCHRONIZATION CHECKS PASSED (100% MATCH).")
+

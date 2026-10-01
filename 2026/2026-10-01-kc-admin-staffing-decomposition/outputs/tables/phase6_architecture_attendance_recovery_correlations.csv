@@ -1,0 +1,10 @@
+variable_name,variable_label,corr_recovery_delta_2122_to_2223_pct_pts,n_recovery_delta_2122_to_2223_pct_pts,corr_net_disruption_delta_pct_pts,n_net_disruption_delta_pct_pts
+corsup_per_100_teachers_2018_19,CORSUP / 100 Teachers (2018-19),-0.0355,55,0.1869,52
+corsup_resid_rate_2018_19,CORSUP Peer Residual Rate (2018-19),0.0185,55,-0.1362,52
+schadm_per_school_2018_19,SCHADM / School (2018-19),-0.2046,55,0.2418,52
+schadm_resid_rate_2018_19,SCHADM Peer Residual Rate (2018-19),-0.0899,55,0.181,52
+leaadm_per_1000_pupils_2018_19,"LEAADM / 1,000 Pupils (2018-19)",0.0326,55,-0.3044,52
+supervisory_per_100_teachers_2018_19,Supervisory Footprint / 100 Teachers (2018-19),-0.0182,55,-0.0944,52
+absent_rate_2017_18_pct,Baseline Absenteeism % (2017-18),-0.4534,52,-0.3842,52
+absent_rate_2021_22_pct,Peak Shock Absenteeism % (2021-22),-0.53,55,0.4044,52
+saipe_poverty_pct,Census Poverty Rate (2018-19),-0.0297,55,0.5099,52
