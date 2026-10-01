@@ -1,9 +1,9 @@
 """
-Canonical Staffing Taxonomy & Intensity Metrics Specification.
+Canonical Staffing Taxonomy & Intensity Metrics Specification (Calibrated).
 
 Defines mutually exclusive staffing buckets, crosswalk mappings,
-and multi-denominator metric calculations for the Kansas City
-administrative intensity study.
+safe aggregate composites, and multi-denominator metric calculations
+with strict missingness preservation (no unsafe fillna(0) masking).
 """
 
 from enum import Enum
@@ -69,7 +69,7 @@ TAXONOMY_REGISTRY: Dict[str, StaffCategoryDefinition] = {
         code="2A",
         title="Instructional Coordinators & Coaches",
         description="Curriculum directors, instructional supervisors, coaches, trainers, CAI coordinators",
-        is_administrative=True,  # Tracked separately as instructional administration
+        is_administrative=True,
         is_instructional=True,
         is_quarantined_student_support=False,
     ),
@@ -131,7 +131,7 @@ TAXONOMY_REGISTRY: Dict[str, StaffCategoryDefinition] = {
 
 
 def sanitize_negative_codes(val):
-    """Convert NCES exception codes (-1, -2, -9) to np.nan while preserving zero."""
+    """Convert NCES exception codes (-1, -2, -9) to np.nan while preserving true zero."""
     if pd.isna(val):
         return np.nan
     try:
@@ -146,86 +146,147 @@ def sanitize_negative_codes(val):
 def compute_derived_metrics(df: pd.DataFrame) -> pd.DataFrame:
     """
     Compute canonical aggregates and multi-denominator intensity ratios
-    for a district-staff-year panel dataframe.
+    with semantic missingness preservation.
+
+    Rules:
+    - Never fillna(0) across missing components. If a component is NaN,
+      the composite is NaN unless all constituent parts are validly observed.
+    - Compute safe aggregates for reclassification-prone periods:
+      * central_mgmt_and_coordinators_fte = LEAADM + CORSUP
+      * total_admin_and_coordinators_fte = SCHADM + LEAADM + CORSUP
     """
     df = df.copy()
 
-    # Core Management Composite = School Administrators + LEA Administrators
-    df["core_admin_fte"] = df["school_administrators_fte"].fillna(0) + df["lea_administrators_fte"].fillna(0)
-    # Mask to NaN if both components are NaN
-    both_na = df["school_administrators_fte"].isna() & df["lea_administrators_fte"].isna()
-    df.loc[both_na, "core_admin_fte"] = np.nan
+    # 1. Core Management Composite = School Administrators + LEA Administrators
+    # Strict missingness rule: only sum if BOTH components are non-null
+    sch_valid = df["school_administrators_fte"].notna()
+    lea_valid = df["lea_administrators_fte"].notna()
+    coord_valid = df["instructional_coordinators_fte"].notna()
 
-    # Instructional/Program Administration = Instructional Coordinators
+    df["core_admin_fte"] = np.where(
+        sch_valid & lea_valid,
+        df["school_administrators_fte"] + df["lea_administrators_fte"],
+        np.nan
+    )
+
+    # 2. Safe Reclassification-Robust Aggregate: Central Line + Coordinators
+    # Protects against Missouri 2014-15 and Kansas 2006 reclassifications between LEAADM and CORSUP
+    df["central_mgmt_and_coordinators_fte"] = np.where(
+        lea_valid & coord_valid,
+        df["lea_administrators_fte"] + df["instructional_coordinators_fte"],
+        np.nan
+    )
+
+    # 3. Total Broad Administrative & Coordination Footprint
+    # SCHADM + LEAADM + CORSUP (all 3 must be non-null for valid composite)
+    all_admin_valid = sch_valid & lea_valid & coord_valid
+    df["total_admin_and_coordinators_fte"] = np.where(
+        all_admin_valid,
+        df["school_administrators_fte"] + df["lea_administrators_fte"] + df["instructional_coordinators_fte"],
+        np.nan
+    )
+
+    # 4. Instructional Program Administration
     df["instructional_program_admin_fte"] = df["instructional_coordinators_fte"]
 
-    # Total Administration + Coordinators Composite
-    df["total_admin_and_coordinators_fte"] = (
-        df["core_admin_fte"].fillna(0) + df["instructional_program_admin_fte"].fillna(0)
-    )
-    both_na_tot = df["core_admin_fte"].isna() & df["instructional_program_admin_fte"].isna()
-    df.loc[both_na_tot, "total_admin_and_coordinators_fte"] = np.nan
+    # 5. Multi-Denominator Ratios (computed only on valid, positive denominators)
+    valid_enr = (df["enrollment_total"] > 0) & df["enrollment_total"].notna()
+    enr = df["enrollment_total"]
 
-    # Denominator 1: FTE per 1,000 Students
-    valid_enr = df["enrollment_total"] > 0
     df["core_admin_per_1000_students"] = np.where(
-        valid_enr, (df["core_admin_fte"] / df["enrollment_total"]) * 1000.0, np.nan
+        valid_enr & df["core_admin_fte"].notna(),
+        (df["core_admin_fte"] / enr) * 1000.0, np.nan
     )
     df["coordinators_per_1000_students"] = np.where(
-        valid_enr, (df["instructional_coordinators_fte"] / df["enrollment_total"]) * 1000.0, np.nan
+        valid_enr & coord_valid,
+        (df["instructional_coordinators_fte"] / enr) * 1000.0, np.nan
+    )
+    df["central_mgmt_coord_per_1000_students"] = np.where(
+        valid_enr & df["central_mgmt_and_coordinators_fte"].notna(),
+        (df["central_mgmt_and_coordinators_fte"] / enr) * 1000.0, np.nan
     )
     df["total_admin_coord_per_1000_students"] = np.where(
-        valid_enr, (df["total_admin_and_coordinators_fte"] / df["enrollment_total"]) * 1000.0, np.nan
+        valid_enr & df["total_admin_and_coordinators_fte"].notna(),
+        (df["total_admin_and_coordinators_fte"] / enr) * 1000.0, np.nan
     )
+    # Counselors per 1,000 pupils (stable 20-year pupil support metric)
+    df["counselors_per_1000_students"] = np.where(
+        valid_enr & df["counselors_fte"].notna(),
+        (df["counselors_fte"] / enr) * 1000.0, np.nan
+    )
+    # Student support per 1,000 pupils (flagged as non-comparable across breaks)
     df["student_support_per_1000_students"] = np.where(
-        valid_enr, (df["student_support_staff_fte"] / df["enrollment_total"]) * 1000.0, np.nan
+        valid_enr & df["student_support_staff_fte"].notna(),
+        (df["student_support_staff_fte"] / enr) * 1000.0, np.nan
     )
     df["teachers_per_1000_students"] = np.where(
-        valid_enr, (df["teachers_k12_fte"] / df["enrollment_total"]) * 1000.0, np.nan
+        valid_enr & df["teachers_k12_fte"].notna(),
+        (df["teachers_k12_fte"] / enr) * 1000.0, np.nan
     )
 
     # Denominator 2: FTE per 100 Classroom Teachers
-    valid_tch = df["teachers_k12_fte"] > 0
+    valid_tch = (df["teachers_k12_fte"] > 0) & df["teachers_k12_fte"].notna()
+    tch = df["teachers_k12_fte"]
+
     df["core_admin_per_100_teachers"] = np.where(
-        valid_tch, (df["core_admin_fte"] / df["teachers_k12_fte"]) * 100.0, np.nan
+        valid_tch & df["core_admin_fte"].notna(),
+        (df["core_admin_fte"] / tch) * 100.0, np.nan
     )
     df["coordinators_per_100_teachers"] = np.where(
-        valid_tch, (df["instructional_coordinators_fte"] / df["teachers_k12_fte"]) * 100.0, np.nan
+        valid_tch & coord_valid,
+        (df["instructional_coordinators_fte"] / tch) * 100.0, np.nan
+    )
+    df["central_mgmt_coord_per_100_teachers"] = np.where(
+        valid_tch & df["central_mgmt_and_coordinators_fte"].notna(),
+        (df["central_mgmt_and_coordinators_fte"] / tch) * 100.0, np.nan
     )
     df["total_admin_coord_per_100_teachers"] = np.where(
-        valid_tch, (df["total_admin_and_coordinators_fte"] / df["teachers_k12_fte"]) * 100.0, np.nan
+        valid_tch & df["total_admin_and_coordinators_fte"].notna(),
+        (df["total_admin_and_coordinators_fte"] / tch) * 100.0, np.nan
     )
 
     # Denominator 3: Administrative Share of Total District Staff (%)
-    valid_tot_staff = df["total_staff_fte"] > 0
+    valid_tot_staff = (df["total_staff_fte"] > 0) & df["total_staff_fte"].notna()
+    stf = df["total_staff_fte"]
+
     df["core_admin_share_of_total_staff_pct"] = np.where(
-        valid_tot_staff, (df["core_admin_fte"] / df["total_staff_fte"]) * 100.0, np.nan
+        valid_tot_staff & df["core_admin_fte"].notna(),
+        (df["core_admin_fte"] / stf) * 100.0, np.nan
     )
     df["admin_coord_share_of_total_staff_pct"] = np.where(
-        valid_tot_staff, (df["total_admin_and_coordinators_fte"] / df["total_staff_fte"]) * 100.0, np.nan
+        valid_tot_staff & df["total_admin_and_coordinators_fte"].notna(),
+        (df["total_admin_and_coordinators_fte"] / stf) * 100.0, np.nan
     )
     df["teachers_share_of_total_staff_pct"] = np.where(
-        valid_tot_staff, (df["teachers_k12_fte"] / df["total_staff_fte"]) * 100.0, np.nan
+        valid_tot_staff & df["teachers_k12_fte"].notna(),
+        (df["teachers_k12_fte"] / stf) * 100.0, np.nan
     )
 
     # Denominator 4: Administrators per School Building
-    valid_sch = df["operating_schools_count"] > 0
+    valid_sch = (df["operating_schools_count"] > 0) & df["operating_schools_count"].notna()
+    sch = df["operating_schools_count"]
+
     df["school_admin_per_school"] = np.where(
-        valid_sch, df["school_administrators_fte"] / df["operating_schools_count"], np.nan
+        valid_sch & sch_valid,
+        df["school_administrators_fte"] / sch, np.nan
     )
     df["total_admin_per_school"] = np.where(
-        valid_sch, df["total_admin_and_coordinators_fte"] / df["operating_schools_count"], np.nan
+        valid_sch & df["total_admin_and_coordinators_fte"].notna(),
+        df["total_admin_and_coordinators_fte"] / sch, np.nan
     )
 
     # Structural Workload Ratios
     df["students_per_school_admin"] = np.where(
-        df["school_administrators_fte"] > 0, df["enrollment_total"] / df["school_administrators_fte"], np.nan
+        valid_enr & (df["school_administrators_fte"] > 0),
+        enr / df["school_administrators_fte"], np.nan
     )
     df["students_per_lea_admin"] = np.where(
-        df["lea_administrators_fte"] > 0, df["enrollment_total"] / df["lea_administrators_fte"], np.nan
+        valid_enr & (df["lea_administrators_fte"] > 0),
+        enr / df["lea_administrators_fte"], np.nan
     )
     df["teachers_per_school_admin"] = np.where(
-        df["school_administrators_fte"] > 0, df["teachers_k12_fte"] / df["school_administrators_fte"], np.nan
+        valid_tch & (df["school_administrators_fte"] > 0),
+        tch / df["school_administrators_fte"], np.nan
     )
 
     return df
