@@ -30,6 +30,8 @@ Verifies core contractual, legal, financial, and accounting invariants:
 18. Bounded Cumulative Capex: remaining_capex_total caps total cumulative construction outlays.
 19. Zero Silent Priors in Surface API: Every unobserved financial input, including waterfall_priority
     and capex totals, must be explicitly supplied.
+20. Absorbing Shortfall Censorship of Parent Support (Patch 2.1.4): Headline parent completion support ceases
+    accumulating after T_payment_shortfall on a silo-independent basis, censoring unmodeled post-default continuation.
 """
 
 import pytest
@@ -687,6 +689,8 @@ def test_delay_tolerance_surface_execution(standard_s1_amort, standard_s2_amort)
     assert "t_payment_shortfall_silo1" in surface_decoupled.columns
     assert "t_payment_shortfall_silo2" in surface_decoupled.columns
     assert "cumulative_parent_support_required_usd" in surface_decoupled.columns
+    assert "cumulative_parent_support_required_pre_shortfall_usd" in surface_decoupled.columns
+    assert "cumulative_parent_support_unrestricted_diagnostic_usd" in surface_decoupled.columns
 
     # 2. Shared campus delay mode (Synchronized: 2 points)
     surface_shared = compute_delay_tolerance_surface(
@@ -753,3 +757,110 @@ def test_delay_tolerance_surface_execution(standard_s1_amort, standard_s2_amort)
         **demo_params,
     )
     assert len(surface_demo) == 1
+
+
+def test_parent_support_censored_at_payment_shortfall_single_silo(engine):
+    """P0 Regression Test 1 (Patch 2.1.4): Parent completion support ceases accumulating after payment shortfall.
+    
+    When a silo suffers senior debt payment shortfall at month T_payment_shortfall, it enters the absorbing
+    POST_SHORTFALL_ABSORBED state. Subsequent construction capex shortfalls represent unmodeled post-default
+    continuation and MUST NOT accumulate in valid headline parent completion support.
+    
+    Setup:
+    - Silo 1 has scheduled commencement in month 12, burning $10M/month capex.
+    - Zero construction cash, zero DSRA, zero operating cash, zero rent.
+    - Months 1-5: pre-commencement, capex support is required ($10M/mo) and valid (no payment shortfall yet).
+    - Month 6: semiannual coupon is due ($2,350M * 9.25% / 2 = $108.6875M).
+      With $0 cash, debt payment shortfall triggers at Month 6 (T_payment_shortfall = 6).
+      Capex support in Month 6 ($10M) is valid as t <= T_shortfall.
+    - Months 7-11: construction continues to burn $10M/mo. Raw capex support is $10M/mo,
+      but valid parent support is strictly 0.0 (censored post-default continuation).
+    """
+    s1_terms, _ = create_default_pf1_silos()
+    s1_init = AccountState(construction_cash=0.0, dsra_cash=0.0, operating_cash=0.0)
+    s1_const = ConstructionScenario(scheduled_commencement_month=12, delay_months=0, monthly_capex_burn=10_000_000.0)
+    s1_rent = RentScenario(monthly_base_rent=0.0, pre_commencement_rent=0.0, monthly_opex=0.0)
+    zero_amort = AmortizationScenario(schedule_type="zero_amort_scenario")
+
+    df, milestones = engine.run_silo_waterfall(s1_terms, s1_init, s1_const, s1_rent, zero_amort)
+
+    # 1. Payment shortfall triggers exactly at month 6
+    assert milestones.t_payment_shortfall == 6
+
+    # 2. In months 1 to 6 (t <= T_payment_shortfall), parent completion support is valid
+    m1_6 = df[df["month"] <= 6]
+    assert (m1_6["parent_completion_support_required"] == 10_000_000.0).all()
+    assert (m1_6["parent_completion_support_valid"] == 10_000_000.0).all()
+    assert (m1_6["parent_completion_support_censored"] == 0.0).all()
+
+    # 3. In months 7 to 11 (t > T_payment_shortfall, post-default continuation),
+    # valid parent completion support must be strictly 0.0, while raw remains 10_000_000.0
+    m7_11 = df[(df["month"] >= 7) & (df["month"] <= 11)]
+    assert (m7_11["parent_completion_support_required"] == 10_000_000.0).all()
+    assert (m7_11["parent_completion_support_valid"] == 0.0).all()
+    assert (m7_11["parent_completion_support_censored"] == 10_000_000.0).all()
+
+    # 4. Total valid parent support is capped at $60.0M (months 1-6), not $110.0M (months 1-11)
+    total_valid = df["parent_completion_support_valid"].sum()
+    total_raw = df["parent_completion_support_required"].sum()
+    assert np.isclose(total_valid, 60_000_000.0)
+    assert np.isclose(total_raw, 110_000_000.0)
+
+
+def test_parent_support_censorship_silo_independence_two_silo(engine):
+    """P0 Regression Test 2 (Patch 2.1.4): Campus headline sums each silo while it remains in valid regime.
+    
+    If Silo 1 defaults at Month 6 and Silo 2 remains solvent through Month 18:
+    - Silo 1 parent support ceases accumulating after Month 6.
+    - Silo 2 parent support continues accumulating in the valid campus headline through Month 18.
+    - Demonstrates that default in one silo does NOT censor the other still-valid silo.
+    """
+    s1_init = AccountState(construction_cash=0.0, dsra_cash=0.0, operating_cash=0.0)
+    s1_const = ConstructionScenario(scheduled_commencement_month=12, delay_months=0, monthly_capex_burn=10_000_000.0)
+    s1_rent = RentScenario(monthly_base_rent=0.0, pre_commencement_rent=0.0, monthly_opex=0.0)
+    zero_amort = AmortizationScenario(schedule_type="zero_amort_scenario")
+
+    # Silo 2: Well-capitalized, large DSRA, scheduled commencement at month 18, burning $5M/month capex
+    s2_init = AccountState(construction_cash=0.0, dsra_cash=200_000_000.0, operating_cash=50_000_000.0)
+    s2_const = ConstructionScenario(scheduled_commencement_month=18, delay_months=0, monthly_capex_burn=5_000_000.0)
+    s2_rent = RentScenario(monthly_base_rent=15_000_000.0, pre_commencement_rent=0.0, monthly_opex=1_000_000.0)
+
+    res = engine.run_pf1_simulation(
+        s1_init, s2_init,
+        s1_const, s2_const,
+        s1_rent, s2_rent,
+        zero_amort, zero_amort,
+        waterfall_priority="opex_first",
+    )
+    ledger = res.monthly_ledger
+
+    # Milestones verification
+    assert res.silo1_milestones.t_payment_shortfall == 6
+    # Silo 2 remains completely solvent throughout its construction period (months 1-18)
+    # and only shortfalls at final maturity month 60 when the $1.59B bullet balloon matures
+    assert res.silo2_milestones.t_payment_shortfall == 60
+    assert res.silo2_milestones.t_payment_shortfall > 18
+
+    # Silo 1 support is censored for months > 6
+    s1_m7_17 = ledger[ledger["month"] > 6]["parent_completion_support_valid_silo1"]
+    assert (s1_m7_17 == 0.0).all()
+
+    # Silo 2 support is NOT censored and continues through month 17
+    s2_m1_17 = ledger[ledger["month"] <= 17]["parent_completion_support_valid_silo2"]
+    assert (s2_m1_17 == 5_000_000.0).all()
+
+    # In Month 7 (after Silo 1 default):
+    # Total pre-shortfall parent support = Silo 1 ($0) + Silo 2 ($5M) = $5M
+    m7 = ledger[ledger["month"] == 7].iloc[0]
+    assert m7["parent_completion_support_valid_silo1"] == 0.0
+    assert m7["parent_completion_support_valid_silo2"] == 5_000_000.0
+    assert m7["total_parent_completion_support_pre_shortfall"] == 5_000_000.0
+    assert m7["total_parent_completion_support_unrestricted_diagnostic"] == 15_000_000.0
+
+    # At Month 17 (end of construction for Silo 2):
+    # Valid headline cumulative support = Silo 1 (6 * $10M = $60M) + Silo 2 (17 * $5M = $85M) = $145.0M
+    m17 = ledger[ledger["month"] == 17].iloc[0]
+    assert np.isclose(m17["cumulative_parent_support_required_pre_shortfall_usd"], 145_000_000.0)
+    # Diagnostic unrestricted cumulative support = Silo 1 (11 * $10M = $110M) + Silo 2 (17 * $5M = $85M) = $195.0M
+    assert np.isclose(m17["cumulative_parent_support_required_unrestricted_diagnostic_usd"], 195_000_000.0)
+

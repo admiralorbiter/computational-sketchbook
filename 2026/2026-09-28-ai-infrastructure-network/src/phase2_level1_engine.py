@@ -298,6 +298,11 @@ class DeterministicDelayEngine:
                 if milestones.t_completion_support is None:
                     milestones.t_completion_support = m
 
+            # Track valid pre-shortfall parent completion support
+            # Prior shortfall indicates m > T_payment_shortfall (absorbing default boundary)
+            parent_completion_support_valid = 0.0 if is_post_shortfall else parent_completion_support
+            parent_completion_support_censored = parent_completion_support - parent_completion_support_valid
+
             # --- TRACK A: Debt Service Waterfall ---
             # Monthly coupon interest on remaining principal (accrual basis)
             monthly_interest_accrual = principal * (terms.annual_coupon_rate / 12.0)
@@ -443,6 +448,8 @@ class DeterministicDelayEngine:
                 "capex_required": capex_required,
                 "cumulative_capex_spent": cumulative_capex_spent,
                 "parent_completion_support_required": parent_completion_support,
+                "parent_completion_support_valid": parent_completion_support_valid,
+                "parent_completion_support_censored": parent_completion_support_censored,
                 "unfunded_debt_service": unfunded_debt_service,
                 "is_payment_shortfall": is_payment_shortfall,
                 "is_post_shortfall": is_post_shortfall,
@@ -484,23 +491,45 @@ class DeterministicDelayEngine:
             suffixes=("_silo1", "_silo2"),
         )
 
-        # Calculate Campus Overlay: Parent Support Funding Required
-        # Sums across silos STRICTLY AFTER individual silo waterfalls are computed
-        combined_df["total_parent_completion_support"] = (
-            combined_df["parent_completion_support_required_silo1"] +
-            combined_df["parent_completion_support_required_silo2"]
+        # Explicit diagnostic raw aliases for each silo
+        combined_df["parent_completion_support_required_silo1_raw"] = combined_df["parent_completion_support_required_silo1"]
+        combined_df["parent_completion_support_required_silo2_raw"] = combined_df["parent_completion_support_required_silo2"]
+
+        # Calculate Campus Overlay: Valid Pre-Shortfall Parent Support Funding Required
+        # Sums across silos STRICTLY AFTER individual silo waterfalls are computed.
+        # Each silo's contribution is censored after its own T_payment_shortfall (absorbing default boundary).
+        combined_df["total_parent_completion_support_pre_shortfall"] = (
+            combined_df["parent_completion_support_valid_silo1"] +
+            combined_df["parent_completion_support_valid_silo2"]
         )
-        combined_df["cumulative_parent_support_funding_required"] = (
-            combined_df["total_parent_completion_support"].cumsum()
+        combined_df["cumulative_parent_support_required_pre_shortfall_usd"] = (
+            combined_df["total_parent_completion_support_pre_shortfall"].cumsum()
         )
+
+        # Diagnostic Unrestricted Parent Support (Unmodeled Post-Default Continuation)
+        combined_df["total_parent_completion_support_unrestricted_diagnostic"] = (
+            combined_df["parent_completion_support_required_silo1_raw"] +
+            combined_df["parent_completion_support_required_silo2_raw"]
+        )
+        combined_df["cumulative_parent_support_required_unrestricted_diagnostic_usd"] = (
+            combined_df["total_parent_completion_support_unrestricted_diagnostic"].cumsum()
+        )
+
+        # Canonical aliases: default campus headline strictly references valid pre-shortfall support
+        combined_df["total_parent_completion_support"] = combined_df["total_parent_completion_support_pre_shortfall"]
+        combined_df["cumulative_parent_support_funding_required"] = combined_df["cumulative_parent_support_required_pre_shortfall_usd"]
 
         # Parent support summary table
         parent_summary = combined_df[[
             "month", "date",
-            "parent_completion_support_required_silo1",
-            "parent_completion_support_required_silo2",
-            "total_parent_completion_support",
-            "cumulative_parent_support_funding_required",
+            "parent_completion_support_valid_silo1",
+            "parent_completion_support_valid_silo2",
+            "total_parent_completion_support_pre_shortfall",
+            "cumulative_parent_support_required_pre_shortfall_usd",
+            "parent_completion_support_required_silo1_raw",
+            "parent_completion_support_required_silo2_raw",
+            "total_parent_completion_support_unrestricted_diagnostic",
+            "cumulative_parent_support_required_unrestricted_diagnostic_usd",
         ]].copy()
 
         # Invariant checks
@@ -549,6 +578,9 @@ class DeterministicDelayEngine:
         for idx, row in df1.iterrows():
             if row["parent_completion_support_required"] > 0:
                 assert row["capex_required"] > 0
+            if row["parent_completion_support_valid"] > 0:
+                assert row["capex_required"] > 0
+                assert row["parent_completion_support_valid"] <= row["parent_completion_support_required"]
 
         # 6. DSRA Restriction: DSRA is only drawn when operating cash is zero and debt service > 0
         for idx, row in df1.iterrows():
@@ -561,8 +593,21 @@ class DeterministicDelayEngine:
             assert row["principal_amort_paid"] <= row["total_principal_amort_due"]
 
         # 8. Parent Summation strictly post-waterfall
-        expected_sum = combined["parent_completion_support_required_silo1"] + combined["parent_completion_support_required_silo2"]
-        assert np.allclose(combined["total_parent_completion_support"], expected_sum)
+        expected_valid_sum = combined["parent_completion_support_valid_silo1"] + combined["parent_completion_support_valid_silo2"]
+        assert np.allclose(combined["total_parent_completion_support_pre_shortfall"], expected_valid_sum)
+        assert np.allclose(combined["total_parent_completion_support"], expected_valid_sum)
+
+        expected_raw_sum = combined["parent_completion_support_required_silo1_raw"] + combined["parent_completion_support_required_silo2_raw"]
+        assert np.allclose(combined["total_parent_completion_support_unrestricted_diagnostic"], expected_raw_sum)
+
+        # 9. Absorbing Shortfall Censorship Invariant:
+        # If t_payment_shortfall is reached, valid support must be strictly zero for all months > t_payment_shortfall
+        if m1.t_payment_shortfall is not None:
+            post_shortfall_s1 = combined[combined["month"] > m1.t_payment_shortfall]["parent_completion_support_valid_silo1"]
+            assert (post_shortfall_s1 == 0.0).all(), f"Silo 1 accumulated valid support after month {m1.t_payment_shortfall}"
+        if m2.t_payment_shortfall is not None:
+            post_shortfall_s2 = combined[combined["month"] > m2.t_payment_shortfall]["parent_completion_support_valid_silo2"]
+            assert (post_shortfall_s2 == 0.0).all(), f"Silo 2 accumulated valid support after month {m2.t_payment_shortfall}"
 
         return True
 
@@ -678,7 +723,12 @@ def compute_delay_tolerance_surface(
                             waterfall_priority=waterfall_priority,
                         )
 
-                        max_parent_support = result.monthly_ledger["cumulative_parent_support_funding_required"].iloc[-1]
+                        max_parent_support_pre_shortfall = (
+                            result.monthly_ledger["cumulative_parent_support_required_pre_shortfall_usd"].iloc[-1]
+                        )
+                        max_parent_support_unrestricted = (
+                            result.monthly_ledger["cumulative_parent_support_required_unrestricted_diagnostic_usd"].iloc[-1]
+                        )
 
                         surface_rows.append({
                             "dsra_silo1": r_0_s1,
@@ -701,14 +751,16 @@ def compute_delay_tolerance_surface(
                             "t_dsra_silo2": result.silo2_milestones.t_dsra,
                             "t_completion_support_silo2": result.silo2_milestones.t_completion_support,
                             "t_payment_shortfall_silo2": result.silo2_milestones.t_payment_shortfall,
-                            "cumulative_parent_support_required_usd": max_parent_support,
+                            "cumulative_parent_support_required_usd": max_parent_support_pre_shortfall,
+                            "cumulative_parent_support_required_pre_shortfall_usd": max_parent_support_pre_shortfall,
+                            "cumulative_parent_support_unrestricted_diagnostic_usd": max_parent_support_unrestricted,
                         })
 
     return pd.DataFrame(surface_rows)
 
 
 if __name__ == "__main__":
-    print("Testing Hardened 2.1.2 DeterministicDelayEngine baseline run...")
+    print("Testing Hardened 2.1.4 DeterministicDelayEngine baseline run...")
     engine = DeterministicDelayEngine(simulation_months=60)
     
     # Use explicit demo scenario
@@ -745,5 +797,6 @@ if __name__ == "__main__":
     print("Engine simulation completed successfully!")
     print(f"Silo 1 Milestones: {res.silo1_milestones}")
     print(f"Silo 2 Milestones: {res.silo2_milestones}")
-    print(f"Total Cumulative Parent Support Required: ${res.monthly_ledger['cumulative_parent_support_funding_required'].iloc[-1]:,.2f}")
+    print(f"Cumulative Parent Support Required (Pre-Shortfall): ${res.monthly_ledger['cumulative_parent_support_required_pre_shortfall_usd'].iloc[-1]:,.2f}")
+    print(f"Cumulative Parent Support (Unrestricted Diagnostic): ${res.monthly_ledger['cumulative_parent_support_required_unrestricted_diagnostic_usd'].iloc[-1]:,.2f}")
     print(f"Invariants Passed: {res.invariants_passed}")

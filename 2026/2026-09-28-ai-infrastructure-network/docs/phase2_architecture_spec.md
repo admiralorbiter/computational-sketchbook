@@ -235,14 +235,25 @@ $$\mathcal{T}_{\text{silo}, 1} = \left\{ T_{\text{coverage}, 1},\; T_{\text{oper
 
 $$\mathcal{T}_{\text{silo}, 2} = \left\{ T_{\text{coverage}, 2},\; T_{\text{operating\_exhaustion}, 2},\; T_{\text{DSRA}, 2},\; T_{\text{completion\_support}, 2},\; T_{\text{payment\_shortfall}, 2},\; T_{\text{refi}, 2} \right\} = f(R_{0,2},\; K_{\text{burn}, 2},\; \Delta t_2,\; \text{Commencement}_2)$$
 
-#### The Campus Overlay: Parent Support Funding Reconvergence
+#### The Campus Overlay: Parent Support Funding Reconvergence & Absorbing Boundary Censorship
 Crucially, while each project financing silo is legally bankruptcy-remote, both completion guarantees reconverge economically onto Applied Digital's parent balance sheet:
 
-$$\text{ParentSupportFundingRequired}(t) = \text{Support}_{\text{silo}, 1}(t) + \text{Support}_{\text{silo}, 2}(t)$$
+$$\text{ParentSupportFundingRequired}(t) = \text{SupportValid}_{\text{silo}, 1}(t) + \text{SupportValid}_{\text{silo}, 2}(t)$$
+
+where for each silo $k \in \{1, 2\}$:
+
+$$\text{SupportValid}_{k,t} = \begin{cases} \text{Support}_{k,t}, & t \le T_{\text{payment\_shortfall}, k} \\ 0.0 \text{ (censored / unmodeled continuation)}, & t > T_{\text{payment\_shortfall}, k} \end{cases}$$
+
+**Epistemic Rationale for Shortfall Censorship (Patch 2.1.4):**
+Once a project financing silo suffers senior debt payment shortfall ($T_{\text{payment\_shortfall}}$), it crosses an absorbing default boundary (`POST_SHORTFALL_ABSORBED`). Post-default dynamics (debt acceleration, forbearance agreements, judicial or UCC foreclosure, DIP financing, sponsor equity cramdown, or contractual restructuring) are unmodeled in Level 1 deterministic waterfalls. Continuing to accumulate scheduled capex support past senior debt default would produce an economically invalid figure.
+
+Each silo is evaluated independently: if Silo 1 defaults at Month 6 but Silo 2 remains solvent through Month 18, Silo 1 support ceases accumulating after Month 6, while Silo 2 support continues accumulating in the valid campus headline figure.
+- **Published Headline Metric:** `cumulative_parent_support_required_pre_shortfall_usd` (accessible as `cumulative_parent_support_required_usd` in surfaces).
+- **Preserved Diagnostic Metric:** `cumulative_parent_support_required_unrestricted_diagnostic_usd` preserves unmodeled continuation values for analytical transparency.
 
 This generates the foundational output of Phase 2:
-$$\mathbf{\Delta t_{\text{delay}} \longrightarrow \text{Cumulative Parent Support Funding Required}}$$
-revealing the exact point at which an ostensibly non-recourse project structure re-links to parent liquidity and funding capacity.
+$$\mathbf{\Delta t_{\text{delay}} \longrightarrow \text{Cumulative Parent Support Funding Required (Pre-Shortfall)}}$$
+revealing the exact point at which an ostensibly non-recourse project structure re-links to parent liquidity and funding capacity prior to structural default.
 
 ---
 
