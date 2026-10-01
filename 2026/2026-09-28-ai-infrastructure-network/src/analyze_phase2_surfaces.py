@@ -8,9 +8,11 @@ Epistemic Governance & Invariant Enforcement:
   2. Absorbing Default Boundary & Censorship (Patch 2.1.4): Headline parent completion support
      strictly ceases accumulating once a silo reaches T_payment_shortfall. Unmodeled post-default
      continuation is isolated to diagnostic metrics.
-  3. Zero Silent Priors: Every unobserved financial and schedule parameter is explicitly declared.
-  4. State-Dependent Amortization Offset: Silo 2 principal amortization is explicitly tied to
-     actual commencement date.
+  3. Cents-Safe Monetary Precision: Floating-point residues eliminated; exact coupon reserves pay
+     exact integer coupon counts without premature payment shortfall.
+  4. Zero Silent Priors: Every unobserved financial and schedule parameter is explicitly declared.
+  5. State-Dependent Amortization Offset: Silo 2 principal amortization is explicitly tied to
+     actual commencement date and evaluated under a pre-shortfall liquidity-control scenario.
 """
 
 from pathlib import Path
@@ -22,18 +24,34 @@ import matplotlib.ticker as ticker
 import numpy as np
 import pandas as pd
 
-from phase2_level1_engine import (
-    DeterministicDelayEngine,
-    SiloTerms,
-    AccountState,
-    ConstructionScenario,
-    RentScenario,
-    AmortizationScenario,
-    create_default_pf1_silos,
-    demo_pf1_analyst_scenario,
-    compute_delay_tolerance_surface,
-    CANONICAL_PF1_START_DATE,
-)
+try:
+    from src.phase2_level1_engine import (
+        DeterministicDelayEngine,
+        SiloTerms,
+        AccountState,
+        ConstructionScenario,
+        RentScenario,
+        AmortizationScenario,
+        create_default_pf1_silos,
+        demo_pf1_analyst_scenario,
+        compute_delay_tolerance_surface,
+        CANONICAL_PF1_START_DATE,
+        MONETARY_TOLERANCE_USD,
+    )
+except ImportError:
+    from phase2_level1_engine import (
+        DeterministicDelayEngine,
+        SiloTerms,
+        AccountState,
+        ConstructionScenario,
+        RentScenario,
+        AmortizationScenario,
+        create_default_pf1_silos,
+        demo_pf1_analyst_scenario,
+        compute_delay_tolerance_surface,
+        CANONICAL_PF1_START_DATE,
+        MONETARY_TOLERANCE_USD,
+    )
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 OUTPUTS_DIR = PROJECT_ROOT / "outputs"
@@ -55,8 +73,8 @@ def generate_synchronized_delay_surface() -> pd.DataFrame:
     
     Tiers:
       - Tier 1 (Zero Reserves): R_0,1 = $0, R_0,2 = $0
-      - Tier 2 (6-Month Carry Reserve): R_0,1 = $108.6875M, R_0,2 = $55.65M
-      - Tier 3 (12-Month Carry Reserve): R_0,1 = $217.375M, R_0,2 = $111.3M
+      - Tier 2 (6-Month Carry Reserve): R_0,1 = $108.6875M, R_0,2 = $55.65M ($164.3375M campus total)
+      - Tier 3 (12-Month Carry Reserve): R_0,1 = $217.375M, R_0,2 = $111.30M ($328.675M campus total)
     """
     print("  [1/4] Computing Synchronized Delay Milestone Surfaces (3 Reserve Tiers x 13 Delays)...")
     p = demo_pf1_analyst_scenario()
@@ -169,17 +187,34 @@ def generate_decoupled_delay_surface() -> pd.DataFrame:
 
 
 def generate_amortization_offset_trajectory() -> Tuple[pd.DataFrame, pd.DataFrame]:
-    """Computes monthly trajectory for Silo 2 comparing on-time vs delayed commencement."""
-    print("  [3/4] Computing State-Dependent Amortization Offset Trajectory...")
+    """Computes monthly trajectory for Silo 2 comparing on-time vs delayed commencement.
+    
+    Liquidity-Control Scenario (Solvent through Month 30, Zero Arrears):
+    To isolate and quantify the contractual state-dependent amortization offset without
+    post-default arrears contamination, we supply sufficient liquidity (DSRA = $600M,
+    operating cash = $100M) such that both on-time and delayed projects remain strictly
+    in the valid Level 1 economic regime (economic_status == 'VALID', zero arrears)
+    through Month 30.
+    
+    Contractual Mechanic:
+    - Silo 2 Indenture: scheduled semiannual amortization begins on the first payment date
+      strictly following final Commencement Date.
+    - On-Time (commences Month 18): First semiannual payment date after Month 18 is Month 24.
+      Month 24 debt service due = $55.65M coupon + $227.14M principal installment = $282.79M (~$282.8M).
+    - Delayed by 6 Months (commences Month 24): First semiannual payment date after Month 24 is Month 30.
+      Month 24 debt service due = $55.65M coupon + $0.0M principal = $55.65M.
+    ==> Pre-Shortfall Cash Debt Service Relief in Month 24: -$227.14M (-80.3%)!
+    """
+    print("  [3/4] Computing State-Dependent Amortization Offset Trajectory (Liquidity-Control Scenario)...")
     p = demo_pf1_analyst_scenario()
     _, s2_terms = create_default_pf1_silos()
     engine = DeterministicDelayEngine(simulation_months=60)
     
-    # Run Case A: On-time (commencement month 18)
+    # Run Case A: On-time (commencement month 18) - explicitly solvent through Month 30
     s2_init = AccountState(
         construction_cash=p["silo2_initial_construction_cash"],
-        dsra_cash=111_300_000.0,
-        operating_cash=50_000_000.0,
+        dsra_cash=600_000_000.0,
+        operating_cash=100_000_000.0,
     )
     const_ontime = ConstructionScenario(
         scheduled_commencement_month=18,
@@ -191,7 +226,7 @@ def generate_amortization_offset_trajectory() -> Tuple[pd.DataFrame, pd.DataFram
         s2_terms, s2_init, const_ontime, p["silo2_rent_scenario"], p["silo2_amort_scenario"]
     )
     
-    # Run Case B: Delayed by 6 months (commencement month 24)
+    # Run Case B: Delayed by 6 months (commencement month 24) - explicitly solvent through Month 30
     const_delayed = ConstructionScenario(
         scheduled_commencement_month=18,
         delay_months=6,
@@ -206,8 +241,8 @@ def generate_amortization_offset_trajectory() -> Tuple[pd.DataFrame, pd.DataFram
 
 
 def generate_waterfall_priority_comparison() -> pd.DataFrame:
-    """Evaluates arrival of milestones under opex_first vs debt_service_first priority."""
-    print("  [4/4] Evaluating Waterfall Priority Sensitivity (opex_first vs debt_service_first)...")
+    """Evaluates arrival of milestones and arrears allocation under opex_first vs debt_service_first priority."""
+    print("  [4/4] Evaluating Waterfall Priority Arrears Allocation (opex_first vs debt_service_first)...")
     p = demo_pf1_analyst_scenario()
     engine = DeterministicDelayEngine(simulation_months=60)
     delay_grid = [0, 3, 6, 9, 12, 18]
@@ -245,6 +280,7 @@ def generate_waterfall_priority_comparison() -> pd.DataFrame:
                 p["silo1_amort_scenario"], p["silo2_amort_scenario"],
                 waterfall_priority=priority,
             )
+            df = res.monthly_ledger
             
             rows.append({
                 "waterfall_priority": priority,
@@ -252,10 +288,18 @@ def generate_waterfall_priority_comparison() -> pd.DataFrame:
                 "t_oper_exhaustion_silo1": res.silo1_milestones.t_operating_exhaustion,
                 "t_dsra_silo1": res.silo1_milestones.t_dsra,
                 "t_payment_shortfall_silo1": res.silo1_milestones.t_payment_shortfall,
+                "max_opex_payable_silo1_usd": df["opex_payable_silo1"].max(),
+                "max_interest_payable_silo1_usd": df["interest_payable_silo1"].max(),
+                "terminal_opex_payable_silo1_usd": df["opex_payable_silo1"].iloc[-1],
+                "terminal_interest_payable_silo1_usd": df["interest_payable_silo1"].iloc[-1],
                 "t_oper_exhaustion_silo2": res.silo2_milestones.t_operating_exhaustion,
                 "t_dsra_silo2": res.silo2_milestones.t_dsra,
                 "t_payment_shortfall_silo2": res.silo2_milestones.t_payment_shortfall,
-                "cumulative_parent_support_pre_shortfall_usd": res.monthly_ledger["cumulative_parent_support_required_pre_shortfall_usd"].iloc[-1],
+                "max_opex_payable_silo2_usd": df["opex_payable_silo2"].max(),
+                "max_interest_payable_silo2_usd": df["interest_payable_silo2"].max(),
+                "terminal_opex_payable_silo2_usd": df["opex_payable_silo2"].iloc[-1],
+                "terminal_interest_payable_silo2_usd": df["interest_payable_silo2"].iloc[-1],
+                "cumulative_parent_support_pre_shortfall_usd": df["cumulative_parent_support_required_pre_shortfall_usd"].iloc[-1],
             })
             
     df = pd.DataFrame(rows)
@@ -292,7 +336,7 @@ def plot_published_surfaces(
     fig, axes = plt.subplots(2, 2, figsize=(16, 12), dpi=300)
     fig.suptitle(
         "Polaris Forge 1 (PF1) Level 1 Deterministic Milestone Surfaces & Parent Overlay\n"
-        "Strict Silo Isolation, Absorbing Boundary Censorship (Patch 2.1.4), and State-Dependent Amortization",
+        "Strict Silo Isolation, Absorbing Boundary Censorship (Patch 2.1.4), and Cents-Safe Precision",
         fontweight="bold",
         y=0.98,
     )
@@ -305,7 +349,7 @@ def plot_published_surfaces(
     
     colors = {"Zero_Reserve": "#e74c3c", "6Mo_Carry_Reserve": "#2980b9", "12Mo_Carry_Reserve": "#27ae60"}
     labels = {
-        "Zero_Reserve": "Zero DSRA Reserve",
+        "Zero_Reserve": "Zero DSRA Reserve ($0M)",
         "6Mo_Carry_Reserve": "6-Month Carry Reserve ($164.3M total)",
         "12Mo_Carry_Reserve": "12-Month Carry Reserve ($328.7M total)",
     }
@@ -349,15 +393,16 @@ def plot_published_surfaces(
     ax_a.set_xlabel("Synchronized Delay Across Both Silos (Months)")
     ax_a.set_ylabel("Cumulative Parent Support Required ($ Millions)")
     ax_a.grid(True, linestyle=":", alpha=0.6)
-    ax_a.legend(loc="upper left", framealpha=0.9)
+    ax_a.legend(loc="center right", framealpha=0.9)
     ax_a.yaxis.set_major_formatter(ticker.FormatStrFormatter("$%.0fM"))
     ax_a.set_xlim(-0.5, 24.5)
+    ax_a.set_ylim(-10, 275)
     
     # Annotation on absorbing boundary censorship
     ax_a.annotate(
         "Shaded Region:\nUnmodeled Post-Default\nContinuation Censored\nby Patch 2.1.4",
         xy=(15, 250),
-        xytext=(14, 150),
+        xytext=(13, 90),
         arrowprops=dict(facecolor="#34495e", arrowstyle="->", lw=1.2),
         bbox=dict(boxstyle="round,pad=0.3", fc="#f8f9fa", ec="#bdc3c7", lw=1),
         fontsize=8.5,
@@ -384,15 +429,16 @@ def plot_published_surfaces(
     ax_b.set_xlabel("Synchronized Delay Across Both Silos (Months)")
     ax_b.set_ylabel("Milestone Arrival Month (from July 1, 2026)")
     ax_b.grid(True, linestyle=":", alpha=0.6)
-    ax_b.legend(loc="upper left", framealpha=0.9, ncol=2)
-    ax_b.yaxis.set_major_locator(ticker.MultipleLocator(6))
+    ax_b.legend(loc="center right", framealpha=0.9, ncol=2)
+    ax_b.yaxis.set_major_locator(ticker.MultipleLocator(2))
     ax_b.set_xlim(-0.5, 24.5)
+    ax_b.set_ylim(4, 15)
     
     # -------------------------------------------------------------------------
     # Panel C: Decoupled Silo Delay Surface Heatmap: Parent Support ($M)
     # -------------------------------------------------------------------------
     ax_c = axes[1, 0]
-    ax_c.set_title("C. Decoupled Silo Delay Matrix: Valid Parent Support ($M)", fontweight="bold")
+    ax_c.set_title("C. Decoupled Silo Delay Matrix: Valid Parent Support ($M)\n(Budget Saturation at $170M Pre-Shortfall)", fontweight="bold")
     
     pivot_support = decoupled_df.pivot(
         index="delay_months_silo1",
@@ -405,6 +451,8 @@ def plot_published_surfaces(
         origin="lower",
         cmap="YlOrRd",
         aspect="auto",
+        vmin=150,
+        vmax=175,
     )
     cbar = fig.colorbar(im, ax=ax_c)
     cbar.set_label("Cumulative Parent Support Required ($M)")
@@ -421,16 +469,16 @@ def plot_published_surfaces(
     for i in range(len(pivot_support.index)):
         for j in range(len(pivot_support.columns)):
             val = pivot_support.values[i, j]
-            text_color = "white" if val > pivot_support.values.max() * 0.65 else "black"
-            ax_c.text(j, i, f"${val:.0f}M", ha="center", va="center", color=text_color, fontsize=8, fontweight="bold")
+            text_color = "white" if val > 165 else "black"
+            ax_c.text(j, i, f"${val:.0f}M", ha="center", va="center", color=text_color, fontsize=8.5, fontweight="bold")
             
     # -------------------------------------------------------------------------
     # Panel D: State-Dependent Principal Amortization Structural Offset (Silo 2)
     # -------------------------------------------------------------------------
     ax_d = axes[1, 1]
-    ax_d.set_title("D. Silo 2 State-Dependent Principal Amortization Offset", fontweight="bold")
+    ax_d.set_title("D. Silo 2 State-Dependent Principal Amortization Offset\n(Liquidity-Control Scenario: Solvent through Month 30, Zero Arrears)", fontweight="bold")
     
-    m_range = range(1, 40)
+    m_range = range(1, 38)
     sub_ontime = df_ontime[df_ontime["month"].isin(m_range)]
     sub_delayed = df_delayed[df_delayed["month"].isin(m_range)]
     
@@ -466,10 +514,10 @@ def plot_published_surfaces(
     )
     
     ax_d.annotate(
-        f"Month 24 Cash Relief:\nDelayed owes ${m24_delayed_ds:.1f}M coupon,\n"
-        f"saving ${relief_amount:.1f}M principal installment!",
+        f"Month 24 Cash Relief (Pre-Shortfall):\nDelayed owes ${m24_delayed_ds:.1f}M coupon,\n"
+        f"saving ${relief_amount:.1f}M principal installment (-80.3%)!",
         xy=(24, m24_delayed_ds),
-        xytext=(26, 180),
+        xytext=(25.5, 180),
         arrowprops=dict(facecolor="#27ae60", arrowstyle="->", lw=1.5),
         bbox=dict(boxstyle="round,pad=0.3", fc="#eafaf1", ec="#27ae60", lw=1),
         fontsize=8.5,
@@ -480,7 +528,8 @@ def plot_published_surfaces(
     ax_d.grid(True, linestyle=":", alpha=0.6)
     ax_d.legend(loc="upper left", framealpha=0.9)
     ax_d.yaxis.set_major_formatter(ticker.FormatStrFormatter("$%.0fM"))
-    ax_d.set_xlim(12, 38)
+    ax_d.set_xlim(12, 36)
+    ax_d.set_ylim(-10, 320)
     
     plt.tight_layout(rect=[0, 0, 1, 0.94])
     output_path = FIGURES_DIR / "phase2_delay_tolerance_surfaces.png"
@@ -495,7 +544,7 @@ def plot_published_surfaces(
 
 def main():
     print("================================================================================")
-    print("PHASE 2.1 LEVEL 1: PUBLISHED DELAY-TOLERANCE MILESTONE SURFACES")
+    print("PHASE 2.1 LEVEL 1: PUBLISHED DELAY-TOLERANCE MILESTONE SURFACES (HARDENED)")
     print("================================================================================")
     
     # 1. Compute synchronized delay surfaces
@@ -517,7 +566,7 @@ def main():
     # 5. Plot master publication figure
     plot_published_surfaces(sync_df, decoupled_df, df_ontime, df_delayed, priority_df)
     
-    print("\n[SUCCESS] All published parameter surfaces and figures generated successfully.")
+    print("\n[SUCCESS] All published parameter surfaces and figures regenerated successfully.")
 
 
 if __name__ == "__main__":

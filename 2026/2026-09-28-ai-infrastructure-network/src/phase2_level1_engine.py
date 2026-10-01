@@ -53,6 +53,9 @@ SILO1_AMORT_START_DATE = "2027-12-15"   # Nov 20, 2025 Form 8-K: Dec 15, 2027
 SILO1_MATURITY_DATE = "2030-12-15"      # Nov 20, 2025 Form 8-K: Dec 15, 2030
 SILO2_MATURITY_DATE = "2031-06-15"      # June 16, 2026 Form 8-K: June 15, 2031
 
+# Monetary precision tolerance (1 cent = $0.01) to eliminate IEEE 754 floating-point residue
+MONETARY_TOLERANCE_USD = 0.01
+
 
 def _date_to_month_index(sim_start: pd.Timestamp, target_date_str: str) -> int:
     """Computes the 1-indexed simulation month index for a target date relative to sim_start.
@@ -286,26 +289,28 @@ class DeterministicDelayEngine:
 
             # Draw on construction account
             capex_from_account = min(c_const, capex_required)
-            c_const -= capex_from_account
-            cumulative_capex_spent += capex_from_account
-            capex_shortfall = capex_required - capex_from_account
+            c_const = max(0.0, round(c_const - capex_from_account, 2))
+            cumulative_capex_spent = round(cumulative_capex_spent + capex_from_account, 2)
+            capex_shortfall = max(0.0, round(capex_required - capex_from_account, 2))
+            if capex_shortfall <= MONETARY_TOLERANCE_USD:
+                capex_shortfall = 0.0
 
             # Parent completion support triggers when construction funds are insufficient
             parent_completion_support = 0.0
-            if capex_shortfall > 0:
+            if capex_shortfall > MONETARY_TOLERANCE_USD:
                 parent_completion_support = capex_shortfall
-                cumulative_capex_spent += parent_completion_support
+                cumulative_capex_spent = round(cumulative_capex_spent + parent_completion_support, 2)
                 if milestones.t_completion_support is None:
                     milestones.t_completion_support = m
 
             # Track valid pre-shortfall parent completion support
             # Prior shortfall indicates m > T_payment_shortfall (absorbing default boundary)
             parent_completion_support_valid = 0.0 if is_post_shortfall else parent_completion_support
-            parent_completion_support_censored = parent_completion_support - parent_completion_support_valid
+            parent_completion_support_censored = round(parent_completion_support - parent_completion_support_valid, 2)
 
             # --- TRACK A: Debt Service Waterfall ---
             # Monthly coupon interest on remaining principal (accrual basis)
-            monthly_interest_accrual = principal * (terms.annual_coupon_rate / 12.0)
+            monthly_interest_accrual = round(principal * (terms.annual_coupon_rate / 12.0), 2)
             
             # Determine scheduled principal amortization due this month
             principal_amort_due = 0.0
@@ -318,11 +323,11 @@ class DeterministicDelayEngine:
                 if amortization.schedule_type == "equal_semiannual_scenario":
                     if amortization.semiannual_amount is None:
                         raise ValueError(f"Silo {terms.silo_id}: equal_semiannual_scenario requires semiannual_amount")
-                    principal_amort_due = min(principal, amortization.semiannual_amount)
+                    principal_amort_due = round(min(principal, amortization.semiannual_amount), 2)
                 elif amortization.schedule_type == "custom_schedule":
                     if amortization.custom_schedule_by_month is None:
                         raise ValueError(f"Silo {terms.silo_id}: custom_schedule requires custom_schedule_by_month")
-                    principal_amort_due = min(principal, amortization.custom_schedule_by_month.get(m, 0.0))
+                    principal_amort_due = round(min(principal, amortization.custom_schedule_by_month.get(m, 0.0)), 2)
                 elif amortization.schedule_type == "zero_amort_scenario":
                     principal_amort_due = 0.0
                 else:
@@ -332,88 +337,102 @@ class DeterministicDelayEngine:
             coupon_cash_due = 0.0
             if terms.payment_frequency == "semiannual":
                 if is_payment_month or is_final_maturity:
-                    coupon_cash_due = principal * (terms.annual_coupon_rate / 2.0)
+                    coupon_cash_due = round(principal * (terms.annual_coupon_rate / 2.0), 2)
             else:
                 coupon_cash_due = monthly_interest_accrual
 
             # Total obligations due this month including carried arrears
-            total_coupon_due = coupon_cash_due + interest_payable
-            total_principal_amort_due = principal_amort_due + principal_arrears
-            total_debt_service_due = total_coupon_due + total_principal_amort_due
+            total_coupon_due = round(coupon_cash_due + interest_payable, 2)
+            total_principal_amort_due = round(principal_amort_due + principal_arrears, 2)
+            total_debt_service_due = round(total_coupon_due + total_principal_amort_due, 2)
 
             # Operating revenue (tenant rent) and opex
             is_operational = (m >= actual_commencement)
-            tenant_rent = rent.monthly_base_rent if is_operational else rent.pre_commencement_rent
-            opex = rent.monthly_opex
-            total_opex_due = opex + opex_payable
+            tenant_rent = round(rent.monthly_base_rent if is_operational else rent.pre_commencement_rent, 2)
+            opex = round(rent.monthly_opex, 2)
+            total_opex_due = round(opex + opex_payable, 2)
 
             # --- Cash Coverage Milestone Detection ---
             # Compares actual monthly tenant cash rent against actual monthly cash obligations (opex + debt service)
-            total_monthly_cash_obligations = total_opex_due + total_debt_service_due
-            if total_monthly_cash_obligations > 0 and tenant_rent < total_monthly_cash_obligations:
+            total_monthly_cash_obligations = round(total_opex_due + total_debt_service_due, 2)
+            if total_monthly_cash_obligations > MONETARY_TOLERANCE_USD and tenant_rent < total_monthly_cash_obligations:
                 if milestones.t_coverage is None:
                     milestones.t_coverage = m
 
             # --- Operating Cash Account Waterfall ---
             # Track cash available before operating uses to evaluate exhaustion as an economic event
-            c_oper_available_before_uses = c_oper + tenant_rent
+            c_oper_available_before_uses = round(c_oper + tenant_rent, 2)
             # 1. Add tenant rent to operating cash
-            c_oper += tenant_rent
+            c_oper = c_oper_available_before_uses
 
             if waterfall_priority == "opex_first":
                 # 2. Subtract opex (current + payable) directly from operating cash
                 opex_paid = min(c_oper, total_opex_due)
-                c_oper -= opex_paid
-                opex_payable = total_opex_due - opex_paid
+                c_oper = max(0.0, round(c_oper - opex_paid, 2))
+                opex_payable = max(0.0, round(total_opex_due - opex_paid, 2))
+                if opex_payable <= MONETARY_TOLERANCE_USD:
+                    opex_payable = 0.0
 
                 # 3. Pay debt service from remaining operating cash
                 paid_from_oper = min(c_oper, total_debt_service_due)
-                c_oper -= paid_from_oper
-                debt_service_shortfall = total_debt_service_due - paid_from_oper
+                c_oper = max(0.0, round(c_oper - paid_from_oper, 2))
+                debt_service_shortfall = max(0.0, round(total_debt_service_due - paid_from_oper, 2))
+                if debt_service_shortfall <= MONETARY_TOLERANCE_USD:
+                    debt_service_shortfall = 0.0
             else:  # debt_service_first
                 # 2. Pay debt service first
                 paid_from_oper = min(c_oper, total_debt_service_due)
-                c_oper -= paid_from_oper
-                debt_service_shortfall = total_debt_service_due - paid_from_oper
+                c_oper = max(0.0, round(c_oper - paid_from_oper, 2))
+                debt_service_shortfall = max(0.0, round(total_debt_service_due - paid_from_oper, 2))
+                if debt_service_shortfall <= MONETARY_TOLERANCE_USD:
+                    debt_service_shortfall = 0.0
 
                 # 3. Pay opex from remaining operating cash
                 opex_paid = min(c_oper, total_opex_due)
-                c_oper -= opex_paid
-                opex_payable = total_opex_due - opex_paid
+                c_oper = max(0.0, round(c_oper - opex_paid, 2))
+                opex_payable = max(0.0, round(total_opex_due - opex_paid, 2))
+                if opex_payable <= MONETARY_TOLERANCE_USD:
+                    opex_payable = 0.0
 
             # Operating Account Exhaustion Milestone:
             # Defined as an economic transition/event, not a static state:
             # Fires in the first month where available operating cash (beginning balance + rent)
             # was positive, and cash uses reduced the balance to zero.
             # An account initialized at zero with no cash inflow or drain is NOT considered exhausted.
-            if c_oper_available_before_uses > 0 and c_oper == 0.0 and milestones.t_operating_exhaustion is None:
+            if c_oper_available_before_uses > MONETARY_TOLERANCE_USD and c_oper <= MONETARY_TOLERANCE_USD and milestones.t_operating_exhaustion is None:
                 milestones.t_operating_exhaustion = m
 
             # 4. If operating cash is exhausted, draw on DSRA for remaining debt service
             dsra_draw = 0.0
             unfunded_debt_service = 0.0
-            if debt_service_shortfall > 0:
+            if debt_service_shortfall > MONETARY_TOLERANCE_USD:
                 dsra_draw = min(c_dsra, debt_service_shortfall)
-                c_dsra -= dsra_draw
-                unfunded_debt_service = debt_service_shortfall - dsra_draw
+                c_dsra = max(0.0, round(c_dsra - dsra_draw, 2))
+                unfunded_debt_service = max(0.0, round(debt_service_shortfall - dsra_draw, 2))
+                if unfunded_debt_service <= MONETARY_TOLERANCE_USD:
+                    unfunded_debt_service = 0.0
                 
-                if dsra_draw > 0 and milestones.t_dsra is None:
+                if dsra_draw > MONETARY_TOLERANCE_USD and milestones.t_dsra is None:
                     milestones.t_dsra = m
 
             # 5. Apply available debt cash in strict contractual priority (interest before principal)
-            total_cash_for_debt = paid_from_oper + dsra_draw
+            total_cash_for_debt = round(paid_from_oper + dsra_draw, 2)
             coupon_cash_paid = min(total_cash_for_debt, total_coupon_due)
-            interest_payable = total_coupon_due - coupon_cash_paid
+            interest_payable = max(0.0, round(total_coupon_due - coupon_cash_paid, 2))
+            if interest_payable <= MONETARY_TOLERANCE_USD:
+                interest_payable = 0.0
 
-            cash_for_principal = max(0.0, total_cash_for_debt - coupon_cash_paid)
+            cash_for_principal = max(0.0, round(total_cash_for_debt - coupon_cash_paid, 2))
             principal_amort_paid = min(total_principal_amort_due, cash_for_principal)
-            principal_arrears = total_principal_amort_due - principal_amort_paid
+            principal_arrears = max(0.0, round(total_principal_amort_due - principal_amort_paid, 2))
+            if principal_arrears <= MONETARY_TOLERANCE_USD:
+                principal_arrears = 0.0
 
             # 6. Principal balance update: ONLY PAID principal reduces outstanding balance!
-            principal -= principal_amort_paid
+            principal = max(0.0, round(principal - principal_amort_paid, 2))
 
             # 7. Payment Shortfall milestone & Absorbing Default Boundary
-            is_payment_shortfall = (unfunded_debt_service > 0)
+            is_payment_shortfall = (unfunded_debt_service > MONETARY_TOLERANCE_USD)
             if is_payment_shortfall:
                 if milestones.t_payment_shortfall is None:
                     milestones.t_payment_shortfall = m

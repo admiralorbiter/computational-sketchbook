@@ -52,6 +52,7 @@ from phase2_level1_engine import (
     SILO1_AMORT_START_DATE,
     SILO1_MATURITY_DATE,
     SILO2_MATURITY_DATE,
+    MONETARY_TOLERANCE_USD,
 )
 
 
@@ -863,4 +864,48 @@ def test_parent_support_censorship_silo_independence_two_silo(engine):
     assert np.isclose(m17["cumulative_parent_support_required_pre_shortfall_usd"], 145_000_000.0)
     # Diagnostic unrestricted cumulative support = Silo 1 (11 * $10M = $110M) + Silo 2 (17 * $5M = $85M) = $195.0M
     assert np.isclose(m17["cumulative_parent_support_required_unrestricted_diagnostic_usd"], 195_000_000.0)
+
+
+def test_exact_silo2_coupon_reserve_pays_one_coupon_and_two_coupons(engine):
+    """P0 Numerical Regression Test (Patch 2.1.4 Cents Precision Fix):
+    
+    Verifies that cents-safe monetary precision eliminates IEEE 754 floating-point residue:
+    - Silo 2 semiannual coupon is $1,590M * 7% / 2 = $55,650,000.0.
+    - An exact 1-coupon reserve ($55,650,000.0) pays Month 6 coupon with unfunded_debt_service == 0.0,
+      so T_payment_shortfall is NOT triggered in Month 6, but arrives at Month 12.
+    - An exact 2-coupon reserve ($111,300,000.0) pays Month 6 and Month 12 coupons with unfunded_debt_service == 0.0,
+      so T_payment_shortfall arrives at Month 18.
+    """
+    _, s2_terms = create_default_pf1_silos()
+    zero_amort = AmortizationScenario(schedule_type="zero_amort_scenario")
+    zero_rent = RentScenario(monthly_base_rent=0.0, pre_commencement_rent=0.0, monthly_opex=0.0)
+    const = ConstructionScenario(scheduled_commencement_month=18, delay_months=0, monthly_capex_burn=0.0)
+
+    # 1. Exact 1-coupon reserve ($55,650,000.0)
+    s2_1c = AccountState(construction_cash=0.0, dsra_cash=55_650_000.0, operating_cash=0.0)
+    df_1c, m_1c = engine.run_silo_waterfall(s2_terms, s2_1c, const, zero_rent, zero_amort)
+    
+    # Month 6: DSRA drawn fully, unfunded is 0.0, no shortfall
+    m6_row = df_1c[df_1c["month"] == 6].iloc[0]
+    assert m6_row["dsra_draw"] == 55_650_000.0
+    assert m6_row["dsra_balance"] == 0.0
+    assert m6_row["unfunded_debt_service"] == 0.0
+    assert not m6_row["is_payment_shortfall"]
+    assert m6_row["economic_status"] == "VALID"
+    # Month 12: Next coupon due, zero DSRA, payment shortfall occurs
+    assert m_1c.t_payment_shortfall == 12
+
+    # 2. Exact 2-coupon reserve ($111,300,000.0)
+    s2_2c = AccountState(construction_cash=0.0, dsra_cash=111_300_000.0, operating_cash=0.0)
+    df_2c, m_2c = engine.run_silo_waterfall(s2_terms, s2_2c, const, zero_rent, zero_amort)
+    
+    # Month 6 & 12: No shortfall
+    m12_row = df_2c[df_2c["month"] == 12].iloc[0]
+    assert m12_row["dsra_draw"] == 55_650_000.0
+    assert m12_row["dsra_balance"] == 0.0
+    assert m12_row["unfunded_debt_service"] == 0.0
+    assert not m12_row["is_payment_shortfall"]
+    assert m12_row["economic_status"] == "VALID"
+    # Month 18: Payment shortfall occurs
+    assert m_2c.t_payment_shortfall == 18
 
