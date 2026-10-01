@@ -1,0 +1,59 @@
+inquiry:
+  id: "2026-10-us-farmers-grain-margin-standoff"
+  question: >
+    What are American row-crop farmers experiencing at the cab and farmgate level regarding
+    sub-$4 corn and sub-$10 soybean prices, elevated input costs (fertilizer, diesel, seed),
+    high-interest operating loans, equipment debt/repairs, and grain bin storage standoffs?
+  mode: investigate
+
+  scope:
+    time:
+      since: "2024-01-01T00:00:00Z"
+      until: "2026-10-01T23:59:59Z"
+    geography:
+      - "Midwest"
+      - "Iowa"
+      - "Illinois"
+      - "Nebraska"
+      - "Kansas"
+      - "Minnesota"
+      - "Corn Belt"
+    languages: ["en"]
+
+  seeds:
+    terms:
+      - "corn harvest breakeven price acre"
+      - "farm operating loan interest renewal"
+      - "grain bin storage holding corn beans"
+      - "anhydrous ammonia fertilizer cost per acre"
+      - "John Deere tractor repair auction prices"
+      - "farmtok harvest24 corn prices"
+    hashtags:
+      - "farmtok"
+      - "harvest24"
+      - "farming"
+      - "grainbins"
+    accounts: []
+    subreddits:
+      - "farming"
+      - "agriculture"
+
+  platforms:
+    - youtube
+    - reddit
+    - citizen
+    - web
+    - snapchat
+
+  budget:
+    max_queries: 50
+    max_artifacts: 300
+    max_media_downloads: 2
+
+  preservation: candidates
+
+  analysis:
+    cluster_narratives: true
+    track_media_spread: true
+    identify_firsthand_sources: true
+    find_contradictions: true

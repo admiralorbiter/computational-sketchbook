@@ -18,6 +18,7 @@ from observatory.collectors.bluesky import BlueskyCollector
 from observatory.collectors.footage import CitizenFootageCollector
 from observatory.collectors.reddit import RedditCollector
 from observatory.collectors.reviews import ReviewsCollector
+from observatory.collectors.snapchat import SnapchatCollector
 from observatory.collectors.web import WebCollector
 from observatory.collectors.youtube import YouTubeCollector
 from observatory.config import Settings, get_settings
@@ -91,6 +92,8 @@ class InquiryRunner:
                 return WebCollector()
             case Platform.REVIEWS:
                 return ReviewsCollector()
+            case Platform.SNAPCHAT:
+                return SnapchatCollector()
             case Platform.CITIZEN | Platform.TIKTOK | Platform.FACEBOOK:
                 return CitizenFootageCollector()
             case _:
@@ -128,16 +131,22 @@ class InquiryRunner:
                 search_terms.append(hashtag)
 
         # Execute searches across requested platforms
+        max_queries_per_platform = max(
+            3, query_budget // max(1, len(self.inquiry.platforms))
+        )
         for platform in self.inquiry.platforms:
             collector = self._get_collector(platform)
             if not collector:
                 continue
 
             platforms_searched.add(platform.value)
+            platform_queries = 0
 
             try:
                 for term in search_terms:
                     if queries_executed >= query_budget:
+                        break
+                    if platform_queries >= max_queries_per_platform:
                         break
                     if len(collected_artifacts) >= artifact_budget:
                         break
@@ -194,6 +203,7 @@ class InquiryRunner:
                             qf.write(q_record.model_dump_json() + "\n")
 
                         queries_executed += 1
+                        platform_queries += 1
 
                     except Exception as err:
                         # Log error in query record
@@ -208,6 +218,7 @@ class InquiryRunner:
                             }
                             qf.write(json.dumps(error_payload) + "\n")
                         queries_executed += 1
+                        platform_queries += 1
 
             finally:
                 if hasattr(collector, "close"):
@@ -216,6 +227,7 @@ class InquiryRunner:
         # Step 2: Auto-enrich transcripts, raw footage downloads, and user comments
         total_media = 0
         total_comments = 0
+        comments_videos_checked = 0
         max_downloads = getattr(self.inquiry.budget, "max_media_downloads", 0)
         downloaded_count = 0
         run_media_dir = self.run_dir / "media"
@@ -278,24 +290,26 @@ class InquiryRunner:
                         except Exception:
                             pass
 
-                        # 3. Harvest user discussion comments
-                        try:
-                            comments, raw_comments = await yt_collector.fetch_comments(
-                                artifact.native_id, max_comments=25
-                            )
-                            if comments:
-                                for c in comments:
-                                    c.run_id = self.run_id
-                                    c.query_id = artifact.query_id
-                                self.corpus.store_raw(
-                                    raw_comments,
-                                    platform="youtube",
-                                    query_id=f"comments_{artifact.native_id[:8]}",
+                        # 3. Harvest user discussion comments (capped for responsive runs)
+                        if comments_videos_checked < 6 and total_comments < 120:
+                            try:
+                                comments, raw_comments = await yt_collector.fetch_comments(
+                                    artifact.native_id, max_comments=25
                                 )
-                                new_c = self.corpus.store_artifacts(comments)
-                                total_comments += new_c
-                        except Exception:
-                            pass
+                                if comments:
+                                    for c in comments:
+                                        c.run_id = self.run_id
+                                        c.query_id = artifact.query_id
+                                    self.corpus.store_raw(
+                                        raw_comments,
+                                        platform="youtube",
+                                        query_id=f"comments_{artifact.native_id[:8]}",
+                                    )
+                                    new_c = self.corpus.store_artifacts(comments)
+                                    total_comments += new_c
+                                    comments_videos_checked += 1
+                            except Exception:
+                                pass
 
         # Finalize manifest
         manifest.completed_at = datetime.now(UTC)
