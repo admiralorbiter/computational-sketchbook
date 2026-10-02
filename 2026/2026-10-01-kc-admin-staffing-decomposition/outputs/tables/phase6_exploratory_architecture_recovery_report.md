@@ -7,24 +7,27 @@ different regional configurations of **instructional coordination (`CORSUP`)**, 
 and **central administration (`LEAADM`)** are systematically associated with post-pandemic student attendance patterns.
 
 ### Key Exploratory Findings:
-1. **Proportional Mean Reversion Dominates Attendance Recovery:** Across the balanced 55 districts, post-peak recovery
-   (the change in chronic absenteeism from 2021–22 to 2022–23) is overwhelmingly driven by the magnitude of the initial shock
-   (bivariate $r = -0.530$; multivariate robust $t = -2.82$, $p = 0.005$). Districts that absorbed the highest attendance spikes in 2021–22 exhibited the largest point drops.
-2. **State Differences in Attendance Movement:** Kansas districts experienced greater raw post-peak declines in chronic absenteeism (mean -3.9 pts) than Missouri peers (mean +1.5 pts), but in the multivariate specification controlling for peak shock, this gap narrows (coef = -0.80 pts, $t = -0.56$, $p = 0.574$). In net disruption (2017–18 to 2022–23), Kansas saw higher growth in absenteeism (coef = +4.70 pts, $t = 2.15$, $p = 0.032$).
-3. **Null Direct Architecture Association:** Controlling for peak shock, student poverty, and state jurisdiction, neither pre-pandemic
+1. **Conditional Persistence and Convergence in Attendance Movement:** Across the balanced 55 districts, post-peak change
+   (the difference in chronic absenteeism from 2021–22 to 2022–23) is strongly negatively related to the prior peak level
+   (bivariate $r = -0.530$; multivariate robust $t = -2.82$, $p = 0.005$).
+   Because the baseline level appears on both sides of the difference specification, this reflects conditional persistence and convergence rather than an independently identified behavioral mean-reversion mechanism.
+2. **Null Direct Linear Architecture Association:** Controlling for peak shock, student poverty, and state jurisdiction, neither pre-pandemic
    instructional coordinator intensity (robust coef = -0.0366, $t = -0.16$, $p = 0.871$) nor school administrator density (robust coef = -0.1929, $t = -0.10$, $p = 0.923$)
-   exhibits a statistically significant linear association with the speed of post-pandemic attendance recovery across all 55 districts.
-4. **Poverty Anchors Net Long-Term Disruption:** In evaluating net disruption from 2017–18 baseline to 2022–23 ($R^2 = 0.720$),
-   student poverty is the paramount predictor (robust coef = +115.89, $t = +5.26$, $p < 0.001$), completely absorbing supervisory variations.
-5. **The KCKPS vs. SMSD Case Comparison:** Kansas City USD 500 achieved the largest single-district post-peak reduction in chronic absence
+   exhibits a statistically detectable linear association with post-pandemic attendance recovery. Post-peak change is strongly related to the prior peak level,
+   while student poverty and state differences are substantially more pronounced in the longer 2017–18 to 2022–23 net disruption outcome.
+3. **State Differences in Attendance Movement:** In net disruption from 2017–18 baseline to 2022–23 ($R^2 = 0.720$),
+   student poverty is the paramount predictor (robust coef = +115.89, $t = +5.26$, $p < 0.001$), while Kansas saw higher overall growth in absenteeism (coef = +4.70 pts, $t = 2.15$, $p = 0.032$). In the single-year post-peak model, the state gap is not statistically distinguishable after conditioning on peak shock ($p = 0.574$).
+4. **The KCKPS vs. SMSD Case Comparison:** Kansas City USD 500 achieved the largest single-district post-peak reduction in chronic absence
    in the focal cohort (**-10.3 percentage points**, from 54.3% to 44.0%), consistent with intense building-level administrative triage
-   (3.28 admins/school). However, when conditioning on its elevated 54.3% peak baseline, its recovery trajectory is consistent with proportional mean reversion.
+   (3.28 admins/school). However, when conditioning on its elevated 54.3% peak baseline, its recovery trajectory is consistent with conditional convergence across the cohort.
+5. **Data Coverage & Suppression Guardrail:** CRDC 2020–21 data are strictly bounded $[0, 100]\%$, but because suppressed cells were converted to zero before summation, some Missouri districts may be undercounted. The formal 2021–22 $\to$ 2022–23 recovery model uses two unsuppressed EDFacts waves and is unaffected; 2020–21 is retained purely for descriptive context.
 
 ---
 
 ## 1. Continuous Regional Architecture Coordinates (2018–19 Baseline)
 
-Rather than treating organizational design as categorical dummy variables, Phase 6 maps every district into continuous coordinate space:
+Rather than treating organizational design as categorical dummy variables, Phase 6 maps every district into continuous coordinate space.
+(Quadrant classifications provide descriptive shorthand, but continuous peer residuals represent the canonical Phase 6A product):
 - **Instructional Coordination Intensity:** Unexplained coordinator FTE per 100 teachers (`corsup_resid_rate`) from Model 3.
 - **School Supervisory Density:** Unexplained building administrators per operating school (`schadm_resid_rate`) from Model 1.
 - **Central Line Administration:** Unexplained central line directors per 1,000 pupils (`leaadm_resid_rate`) from Model 2.
@@ -95,13 +98,12 @@ Rather than treating organizational design as categorical dummy variables, Phase
 
 ## 4. Methodological Conclusions & Recommended Phase 6 Sequence
 
-1. **Chronic Absenteeism Signal Assessment:** Across the full 55-district sample, student attendance recovery behaves as a broad
-   macro-demographic phenomenon dominated by baseline shock magnitude, poverty concentration, and state jurisdiction. Organizational
-   staffing architectures do not exhibit a large standalone linear association with districtwide attendance recovery rates.
+1. **Chronic Absenteeism Signal Assessment:** Across the full 55-district sample, no direct linear architecture association is detectable.
+   Post-peak change is strongly related to the prior peak level (reflecting conditional persistence/convergence), while student poverty
+   and state differences are substantially more pronounced in the longer 2017–18 to 2022–23 net disruption outcome.
 2. **Implications for SMSD vs. KCKPS:** While KCKPS's building administrative density aligns intuitively with intensive student attendance
-   triage, the quantitative recovery of -10.3 percentage points is statistically commensurate with its elevated 54.3% peak baseline.
-3. **Priority Next Step — Fiscal Substitution (Workstream 6C):** Because attendance recovery is confounded by macro-demographic forces,
-   **purchased-services substitution** represents a considerably cleaner mechanism test. Investigating whether in-house coordinator hiring
-   displaced external consultant expenditures (Object 300/400) provides an unambiguous organizational insourcing test without ecological confounding.
-4. **Achievement Recovery (Workstream 6D):** Evaluating standardized math/ELA scale score recovery (KAP/MAP) remains the intellectual core
-   for assessing instructional coaching efficacy, requiring within-state $\times$ grade $\times$ subject standardization.
+   triage, its post-peak reduction of -10.3 percentage points is statistically consistent with conditional cohort convergence given its 54.3% peak baseline.
+3. **Priority Next Step — Non-Personnel Support Substitution (Workstream 6C):** Rather than broad outcome screening, the core institutional
+   question is whether internal coordinator staffing growth substituted for non-personnel instructional-support expenditures ($E07 - V13 - V14$)
+   or represented an additive organizational layer.
+4. **Achievement Recovery (Workstream 6D):** Standardized math/ELA scale score recovery (KAP/MAP) remains gated behind the fiscal substitution screen.

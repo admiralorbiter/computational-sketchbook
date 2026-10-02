@@ -10,6 +10,7 @@ import hashlib
 from pathlib import Path
 import re
 import pandas as pd
+import numpy as np
 import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -547,6 +548,84 @@ def test_phase6_architecture_and_chronic_absenteeism():
     assert "-0.1929" in rep_text
 
 
+def test_phase6c_fiscal_support_and_substitution():
+    """Verify Gate 6C.0 canonical fiscal support panel and Gate 6C.1 econometric substitution models."""
+    # 1. Panel Dimensions and Identity Checks
+    panel_path = DATA_DIR / "processed" / "district_fiscal_support_panel.csv"
+    assert panel_path.exists(), f"Missing {panel_path}"
+    df_panel = pd.read_csv(panel_path)
+
+    assert len(df_panel) == 495, f"Expected 495 rows, found {len(df_panel)}"
+    assert df_panel["nces_lea_id"].nunique() == 55
+    expected_years = {
+        "2014-2015", "2015-2016", "2016-2017", "2017-2018", "2018-2019",
+        "2019-2020", "2020-2021", "2021-2022", "2022-2023"
+    }
+    assert set(df_panel["school_year"].unique()) == expected_years
+
+    # Exact mathematical identity: E07 - V13 - V14 == instr_support_nonpersonnel
+    np_calc = df_panel["instr_support_total_e07"] - df_panel["instr_support_salary_v13"] - df_panel["instr_support_benefits_v14"]
+    assert np.allclose(df_panel["instr_support_nonpersonnel"], np_calc)
+    assert (df_panel["instr_support_nonpersonnel"] >= 0).all(), "Found negative non-personnel instructional support"
+
+    # Only single documented anomaly in pupil support (-$1,000 in Midway R-I FY 2017)
+    neg_pupil = df_panel[df_panel["pupil_support_nonpersonnel"] < 0]
+    assert len(neg_pupil) == 1
+    assert neg_pupil.iloc[0]["nces_lea_id"] == 2921060
+    assert neg_pupil.iloc[0]["fiscal_year"] == 2017
+    assert neg_pupil.iloc[0]["pupil_support_nonpersonnel"] == -1000.0
+
+    # 2. Focal Archetype Verification
+    # Shawnee Mission USD 512 (Coaching Overlay: partial substitution)
+    smsd = df_panel[df_panel["nces_lea_id"] == 2011640].set_index("school_year")
+    assert abs(smsd.loc["2014-2015", "real_instr_support_nonpersonnel_per_pupil"] - 63.51) < 0.1
+    assert abs(smsd.loc["2018-2019", "real_instr_support_nonpersonnel_per_pupil"] - 54.26) < 0.1
+    assert abs(smsd.loc["2022-2023", "real_instr_support_nonpersonnel_per_pupil"] - 41.59) < 0.1
+    assert abs(smsd.loc["2022-2023", "instr_support_nonpersonnel_share_pct"] - 8.14) < 0.2
+
+    # Lee's Summit R-VII (Lean / Direct School Supervision)
+    ls = df_panel[df_panel["nces_lea_id"] == 2918300].set_index("school_year")
+    assert abs(ls.loc["2022-2023", "real_instr_support_nonpersonnel_per_pupil"] - 185.77) < 0.1
+    assert abs(ls.loc["2022-2023", "instr_support_nonpersonnel_share_pct"] - 36.06) < 0.2
+
+    # North Kansas City 74 (High School Admin)
+    nkc = df_panel[df_panel["nces_lea_id"] == 2922800].set_index("school_year")
+    assert abs(nkc.loc["2022-2023", "real_instr_support_nonpersonnel_per_pupil"] - 436.60) < 0.1
+    assert abs(nkc.loc["2022-2023", "instr_support_nonpersonnel_share_pct"] - 43.95) < 0.2
+
+    # 3. Regression Results Table Checks
+    res_path = OUTPUTS_DIR / "phase6c_fiscal_substitution_regression_results.csv"
+    assert res_path.exists(), f"Missing {res_path}"
+    df_res = pd.read_csv(res_path).set_index("model_name")
+    assert len(df_res) == 9
+
+    # Within-District FE Model 1 (Non-personnel): +11.85, p=0.111
+    assert abs(df_res.loc["FE Model 1: Real Non-Personnel Support / Pupil", "coef"] - 11.8509) < 0.01
+    assert abs(df_res.loc["FE Model 1: Real Non-Personnel Support / Pupil", "t_statistic"] - 1.59) < 0.05
+
+    # Within-District FE Model 2 (Total E07): +19.41, p=0.216
+    assert abs(df_res.loc["FE Model 2: Real Total E07 Support / Pupil", "coef"] - 19.4144) < 0.01
+
+    # Long Difference Model 1 (Delta Real Non-personnel): +14.96, p=0.221
+    assert abs(df_res.loc["Long Difference Model 1: Delta Real Non-Personnel / Pupil", "coef"] - 14.9587) < 0.01
+
+    # Contemporaneous FD: -1.35, p=0.841
+    assert abs(df_res.loc["Contemporaneous FD: Delta Real NP ~ Delta CORSUP", "coef"] - (-1.3478)) < 0.01
+
+    # 4. Synthesis Report Document Checks
+    rep_path = OUTPUTS_DIR / "phase6c_fiscal_substitution_report.md"
+    assert rep_path.exists(), f"Missing {rep_path}"
+    rep_text = rep_path.read_text(encoding="utf-8")
+    assert "$41.59" in rep_text
+    assert "$185.77" in rep_text
+    assert "$436.60" in rep_text
+    assert "+11.85" in rep_text
+    assert "+19.41" in rep_text
+    assert "+14.96" in rep_text
+    assert "Regime 2: Additive Internal Staffing Layer" in rep_text
+    assert "Regime 4: Partial Substitution + Expansion" in rep_text
+
+
 def test_manifest_provenance_and_checksums():
     manifest_path = DATA_DIR / "manifest.csv"
     assert manifest_path.exists(), f"Missing {manifest_path}"
@@ -586,6 +665,8 @@ if __name__ == "__main__":
     print("[PASS] Phase 5 coordinator functional decomposition & archetypes validated.")
     test_phase6_architecture_and_chronic_absenteeism()
     print("[PASS] Phase 6 architecture coordinates & repaired chronic absenteeism validated.")
+    test_phase6c_fiscal_support_and_substitution()
+    print("[PASS] Phase 6C fiscal support panel & substitution models validated.")
     test_manifest_provenance_and_checksums()
     print("[PASS] Dataset manifest provenance and SHA256 checksums validated.")
     test_markdown_link_and_retraction_hygiene()

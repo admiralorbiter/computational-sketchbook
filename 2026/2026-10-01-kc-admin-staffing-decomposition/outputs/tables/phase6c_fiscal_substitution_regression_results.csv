@@ -1,0 +1,10 @@
+model_family,model_name,dependent_variable,sample_n,r_squared,predictor_variable,coef,std_error,t_statistic,p_value,ci_lower_95,ci_upper_95
+Within-District Fixed Effects (2014-15 to 2022-23),FE Model 1: Real Non-Personnel Support / Pupil,real_instr_support_nonpersonnel_per_pupil,492,0.703,corsup_per_100_teachers,11.8509,7.4402,1.59,0.1112,-2.7316,26.4335
+Within-District Fixed Effects (2014-15 to 2022-23),FE Model 2: Real Total E07 Support / Pupil,real_instr_support_total_per_pupil,492,0.7406,corsup_per_100_teachers,19.4144,15.7047,1.24,0.2164,-11.3662,50.1949
+Within-District Fixed Effects (2014-15 to 2022-23),FE Model 3: Real Salary Support / Pupil,real_instr_support_salary_per_pupil,492,0.8094,corsup_per_100_teachers,4.7176,7.753,0.61,0.5429,-10.4779,19.9132
+Long Difference (2014-15 to 2022-23),Long Difference Model 1: Delta Real Non-Personnel / Pupil,delta_real_np_per_pupil,55,0.0593,delta_corsup_rate,14.9587,12.2278,1.22,0.2212,-9.0073,38.9248
+Long Difference (2014-15 to 2022-23),Long Difference Model 2: Delta Real Total E07 / Pupil,delta_real_tot_per_pupil,55,0.0221,delta_corsup_rate,2.9946,16.4023,0.18,0.8551,-29.1534,35.1426
+Long Difference (2014-15 to 2022-23),Long Difference Model 3: Delta Real Salary / Pupil,delta_real_sal_per_pupil,55,0.0122,delta_corsup_rate,-10.2116,9.5909,-1.06,0.287,-29.0095,8.5863
+Dynamic First Differences,Contemporaneous FD: Delta Real NP ~ Delta CORSUP,delta_real_np,434,0.0001,delta_corsup,-1.3478,6.718,-0.2,0.841,-14.5149,11.8194
+Dynamic First Differences,Lead Response: Delta Real NP (t+1) ~ Delta CORSUP (t),lead_delta_np,379,0.005,delta_corsup,10.3643,9.4764,1.09,0.2741,-8.209,28.9377
+Dynamic First Differences,Insourcing Stimulus: Delta CORSUP (t+1) ~ Real NP Level (t),lead_delta_corsup,435,0.0,real_instr_support_nonpersonnel_per_pupil,0.0,0.0002,0.02,0.9842,-0.0004,0.0004
