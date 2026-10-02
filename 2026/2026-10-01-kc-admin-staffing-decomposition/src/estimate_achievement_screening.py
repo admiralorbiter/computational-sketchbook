@@ -247,7 +247,55 @@ def extract_focal_trajectories(wide_df):
     return sub[cols].sort_values("nces_lea_id")
 
 
-def generate_markdown_report(reg_df, focal_df):
+def compute_equivalence_tests(reg_df):
+    """
+    Computes Two One-Sided Tests (TOST) for equivalence against a Smallest Effect
+    Size of Interest (SESOI) of +/-0.20 district-proficiency SDs for a +3.0 CORSUP expansion
+    (equivalent to a slope bound of delta = 0.20 / 3.0 = 0.0666667).
+    """
+    prim = reg_df[reg_df["specification"] == "Spec 1A: Primary Need-Adjusted ANCOVA"]
+    records = []
+    
+    sesoi_effect = 0.20
+    delta = sesoi_effect / 3.0  # 0.06666666666666667
+    
+    for _, row in prim.iterrows():
+        b = row["coef"]
+        se = row["se_hc3"]
+        n_obs = int(row["n_obs"])
+        k_params = 8  # const + 7 predictors
+        df_resid = n_obs - k_params
+        
+        # Test 1: H01: beta <= -delta vs H11: beta > -delta
+        t_lower = (b - (-delta)) / se
+        p_lower = 1.0 - stats.t.cdf(t_lower, df=df_resid)
+        
+        # Test 2: H02: beta >= +delta vs H12: beta < +delta
+        t_upper = (b - delta) / se
+        p_upper = stats.t.cdf(t_upper, df=df_resid)
+        
+        tost_p = max(p_lower, p_upper)
+        equiv_rejected = bool(tost_p < 0.05)
+        
+        records.append({
+            "outcome": row["outcome"],
+            "specification": row["specification"],
+            "target_variable": row["target_variable"],
+            "coef": b,
+            "se_hc3": se,
+            "df_resid": df_resid,
+            "sesoi_effect_for_3_corsup": sesoi_effect,
+            "sesoi_slope_bound": delta,
+            "tost_lower_p": p_lower,
+            "tost_upper_p": p_upper,
+            "tost_p": tost_p,
+            "equivalence_rejected": equiv_rejected,
+        })
+        
+    return pd.DataFrame(records)
+
+
+def generate_markdown_report(reg_df, focal_df, equiv_df):
     """
     Writes the Phase 6D Proficiency Recovery Screening Report.
     """
@@ -285,6 +333,15 @@ def generate_markdown_report(reg_df, focal_df):
     b_ks_exp_c = ks_df.loc[("Combined", "delta_corsup_2019_to_2022"), "coef"]
     p_ks_exp_c = ks_df.loc[("Combined", "delta_corsup_2019_to_2022"), "p_value"]
 
+    # Equivalence row for Combined
+    equiv_row = equiv_df[equiv_df["outcome"] == "Combined"].iloc[0]
+    sesoi_val = equiv_row["sesoi_effect_for_3_corsup"]
+    delta_val = equiv_row["sesoi_slope_bound"]
+    tost_p_val = equiv_row["tost_p"]
+    tost_p_low = equiv_row["tost_lower_p"]
+    tost_p_up = equiv_row["tost_upper_p"]
+    equiv_rejected = equiv_row["equivalence_rejected"]
+
     md = []
     md.append("# Phase 6D: Student Academic Proficiency Recovery Screening (2018–19 to 2023–24)")
     md.append("\n**Kansas City Metropolitan Administrative & Coordinator Staffing Study**")
@@ -304,13 +361,13 @@ def generate_markdown_report(reg_df, focal_df):
     md.append(f"> - **Combined ELA & Math:** $\\beta = {b_comb:+.4f}$ (HC3 SE $= {se_comb:.4f}, p = {p_comb:.3f}, 95% CI [{ci_l_comb:+.3f}, {ci_u_comb:+.3f}], R^2 = {r2_comb:.3f}, N = 53$).")
     md.append(f"> - **Mathematics:** $\\beta = {b_math:+.4f}$ (HC3 SE $= {se_math:.4f}, p = {p_math:.3f}$).")
     md.append(f"> - **English Language Arts:** $\\beta = {b_ela:+.4f}$ (HC3 SE $= {se_ela:.4f}, p = {p_ela:.3f}$).")
-    md.append("> Student poverty strongly predicts post-pandemic recovery headwinds ($\\beta = -5.80, p = .004$), but intermediate coordinator expansion accounts for zero detectable acceleration in learning recovery.")
+    md.append("> Student poverty exhibits a strong conditional association with post-pandemic recovery headwinds ($\\beta = -5.80, p = .004$), but intermediate coordinator expansion accounts for zero detectable acceleration in learning recovery.")
 
     md.append("\n## 2. Inferential Precision & Equivalence Bounds")
     md.append("Because confidence intervals are moderately wide in this 55-district sample, the proper statistical conclusion is **failure to detect an association**, rather than proven zero effect:")
     md.append(f"- For a realistic $+3.0$ coordinator per 100 teacher expansion (such as Shawnee Mission's $+3.34$), the 95% confidence interval permits effects ranging from ${3.34 * ci_l_comb:+.2f}$ to ${3.34 * ci_u_comb:+.2f}$ standard deviations of the state district-proficiency distribution.")
-    md.append("- Testing for statistical equivalence within a Smallest Effect Size of Interest (SESOI) of $\\pm 0.20$ district-proficiency SDs for a $+3.0$ expansion (equivalent to a slope bound $\\delta = \\pm 0.0667$) yields a Two One-Sided Tests (TOST) $p$-value of $p = .328$.")
-    md.append("- Thus, while point estimates are consistently near zero or slightly negative, the sample size does not provide the statistical power required to reject the presence of moderate positive or negative effects.")
+    md.append(f"- Testing for statistical equivalence within a Smallest Effect Size of Interest (SESOI) of $\\pm {sesoi_val:.2f}$ district-proficiency SDs for a $+3.0$ expansion (equivalent to a slope bound $\\delta = \\pm {delta_val:.4f}$) yields a Two One-Sided Tests (TOST) $p$-value of $p = {tost_p_val:.3f}$ ($p_{{\\text{{lower}}}} = {tost_p_low:.3f}, p_{{\\text{{upper}}}} = {tost_p_up:.3f}$).")
+    md.append(f"- Because $p = {tost_p_val:.3f} > .05$, equivalence within the $\\pm {sesoi_val:.2f}$ SD interval is not rejected (`equivalence_rejected = {equiv_rejected}`). Thus, while point estimates are consistently near zero or slightly negative, the sample size does not provide the statistical power required to rule out moderate positive or negative effects.")
 
     md.append("\n## 3. Focal Archetype Trajectory Comparison")
     md.append("\nThe table below examines the recovery trajectories of the six focal archetype districts:")
@@ -354,7 +411,7 @@ def generate_markdown_report(reg_df, focal_df):
     md.append("Stratifying by state reveals one notable nominal divergence that warrants transparent reporting:")
     md.append(f"- In Kansas ($N=19$), baseline coordinator intensity exhibits a nominal negative association with 2024 proficiency for Combined outcomes ($\\beta = {b_ks_base_c:+.4f}, p = {p_ks_base_c:.3f}$) and ELA ($\\beta = {b_ks_base_e:+.4f}, p = {p_ks_base_e:.3f}$).")
     md.append(f"- **Multiple-Testing Correction:** When adjusting for the 15-test state-stratified family using the Benjamini-Hochberg procedure, these nominal signals do **not** survive significance (Combined FDR $q = {q_ks_base_c:.3f}$, ELA FDR $q = {q_ks_base_e:.3f}$).")
-    md.append(f"- **Substantive Context:** This exploratory signal arises in an underpowered $N=19$ subgroup where baseline coordinator staffing was concentrated in urban/high-poverty districts (e.g., KCKPS). Crucially, coordinator **expansion** in Kansas exhibits no negative effect whatsoever (Combined $\\beta = {b_ks_exp_c:+.4f}, p = {p_ks_exp_c:.3f}$).")
+    md.append(f"- **Substantive Context:** The baseline coordinator coefficient in Kansas is negative, but does not survive multiplicity correction across the 15 state-stratified tests. Furthermore, cross-sectional baseline staffing levels are especially vulnerable to endogenous student need. Most importantly for our focal hypothesis, coordinator **expansion** in Kansas exhibits no detectable association with recovery whatsoever (Combined $\\beta = {b_ks_exp_c:+.4f}, p = {p_ks_exp_c:.3f}$).")
 
     strat_rows = reg_df[reg_df["model_family"].str.startswith("State Stratified")]
     md.append("\n| State | Outcome | Target Predictor | Coef ($\\beta$) | HC3 SE | Unadj $p$ | FDR $q$ | $R^2$ | $N$ |")
@@ -392,7 +449,8 @@ def generate_markdown_report(reg_df, focal_df):
     md.append("3. **Outcome Screen:** When screened against frontline educational outcomes:")
     md.append("   - **Chronic Absenteeism (Phase 6B):** Null relationship ($\\beta = -0.062, p = .847$).")
     md.append(f"   - **Proficiency Recovery (Phase 6D):** No detectable association (Combined $\\beta = {b_comb:+.4f}, p = {p_comb:.3f}$; Math $\\beta = {b_math:+.4f}, p = {p_math:.3f}$; ELA $\\beta = {b_ela:+.4f}, p = {p_ela:.3f}$).")
-    md.append("4. **Scientifically Defensible Takeaway:** We find no evidence that districts which entered the pandemic with more intensive coordinator staffing, or expanded coordinator capacity more aggressively during the recovery period, experienced systematically stronger district-level ELA or mathematics proficiency recovery through 2023–24.")
+    md.append("4. **Scientifically Defensible Takeaway:** KC-area school systems substantially increased the organizational infrastructure surrounding classroom instruction. The expansion was real, costly, largely additive, and heterogeneous in form. But at the district level, we do not detect evidence that systems which built that layer more aggressively experienced stronger attendance or proficiency recovery through 2023–24.")
+    md.append("5. **Epistemic Boundaries:** The available evidence is not precise enough to conclude that the infrastructure has no effect, nor does the district-level design measure effects on teacher retention, implementation quality, particular schools, or specific student populations.")
 
     return "\n".join(md)
 
@@ -413,8 +471,14 @@ def main():
     focal_df.to_csv(focal_out, index=False)
     print(f"Saved focal trajectories to {focal_out}")
 
+    print("Computing TOST equivalence tests...")
+    equiv_df = compute_equivalence_tests(reg_df)
+    equiv_out = "outputs/tables/phase6d_equivalence_test.csv"
+    equiv_df.to_csv(equiv_out, index=False)
+    print(f"Saved {len(equiv_df)} equivalence tests to {equiv_out}")
+
     print("Generating Phase 6D screening report...")
-    report_md = generate_markdown_report(reg_df, focal_df)
+    report_md = generate_markdown_report(reg_df, focal_df, equiv_df)
     report_out = "outputs/tables/phase6d_achievement_screening_report.md"
     with open(report_out, "w", encoding="utf-8") as f:
         f.write(report_md)

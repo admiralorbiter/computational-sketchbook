@@ -198,7 +198,64 @@ Detailed qualitative documentation and full institutional narrative are provided
 
 ---
 
-## 9. Directory Structure & Execution Pipeline
+## 9. Phase 6: Frontline Outcome Screening & Mechanism Audits
+
+Having established what the intermediate supervisory layer is (Phase 5), Phase 6 deployed four decoupled empirical screens to test how this infrastructure functioned in practice:
+
+### 9.1 Phase 6A: Temporal Dynamics & Continuous Coordinates
+- **Decade Concentration:** Across the balanced 55 regular districts, **91.3% of net coordinator growth (+233.2 of +255.5 FTE)** occurred after 2018–19 (501.3 FTE in 2014–15 → 523.6 FTE in 2018–19 → 756.8 FTE in 2023–24).
+- **Pre-COVID Structural Jump:** The expansion began *prior* to federal pandemic relief: regional coordinators jumped by **+75.1 FTE in 2019–20** (e.g., Shawnee Mission added **+31.5 FTE** from 46.5 to 78.0 FTE in 2019–20 following its 2019 Strategic Plan).
+- **State Divergence:** Kansas coordinator intensity expanded by **+82.7%** (+160.0 FTE), while Missouri expanded by **+18.8%** (+95.5 FTE).
+
+### 9.2 Phase 6B: Attendance Disruption & Recovery Screen
+- **Absenteeism Panel Repair:** Cleaned historical federal CRDC data and resolved severe multi-year reporting voids (such as KCKPS's omitted counts), establishing a verified 4-year panel ([`data/processed/district_chronic_absenteeism_panel.csv`](data/processed/district_chronic_absenteeism_panel.csv)).
+- **Macroeconometric Null:** Regressing attendance recovery ($\Delta \text{Rate}_{2122 \to 2223}$) on coordinator expansion yields a null coefficient ($\beta = -0.062, p = .847$). Recovery was governed by initial disruption shock severity ($r = -0.530$) and community poverty ($r = 0.521$), showing no detectable association with administrative or supervisory architecture.
+
+### 9.3 Phase 6C: Fiscal Support Panel & State Object-Level Mechanism Audit
+- **Vendor Insourcing Disproven:** Within-district panel FE models across 495 district-years confirm that coordinator growth did **not** displace outside instructional-support contracts (within-FE non-personnel spending: $\beta = +11.85, p = .111$; total Function 2200: $\beta = +19.41, p = .216$).
+- **Object-Level Evidence (Shawnee Mission USD 512):** State Form USD-E actuals reveal that before its coaching buildout, Shawnee Mission had virtually zero Function 2200 contracted vendor expenditure ($0.09/pupil in FY15). By FY23, vendor spending had risen slightly ($4.41/pupil) while internal certified/non-certified salaries expanded by +$99.13/pupil. The intermediate infrastructure represents an **additive internal staffing layer**, not contractor insourcing.
+
+### 9.4 Phase 6D: Student Academic Proficiency Recovery Screening
+- **District Subject-Aggregate Screen:** Analyzed 2018–19 to 2023–24 state report card summative proficiency rates across all tested grades (Kansas KAP and Missouri MAP/EOC), standardized into district-level proficiency-rate distribution $z$-scores ($z^{\text{prof\_dist}}$).
+- **No Detectable Regional Association:** In primary compact student-need adjusted ANCOVA models (controlling for baseline 2019 achievement, Census SAIPE poverty rate, EL share, Special Education share, district scale, and state fixed effects):
+  - **Combined ELA & Math ($N=53$):** $\beta = -0.0303$ (HC3 SE $= 0.0813, p = .710, 95\% \text{ CI } [-0.190, +0.129], R^2 = 0.862$).
+  - **Mathematics ($N=54$):** $\beta = -0.0512$ (HC3 SE $= 0.1188, p = .667, R^2 = 0.763$).
+  - **English Language Arts ($N=53$):** $\beta = -0.0176$ (HC3 SE $= 0.0532, p = .741, R^2 = 0.887$).
+- **Equivalence Bounds (TOST):** Testing for statistical equivalence against a Smallest Effect Size of Interest (SESOI) of $\pm 0.20$ district SDs for a $+3.0$ coordinator expansion yields a TOST $p$-value of $p = .328$ ($p_{\text{lower}} = .328, p_{\text{upper}} = .120$). Non-equivalence cannot be rejected; the sample size provides insufficient power to claim an exact zero effect.
+- **State Multiplicity Correction:** Nominal negative baseline CORSUP signals in Kansas ($p = .048$ Combined, $p = .045$ ELA) do not survive Benjamini-Hochberg FDR correction across 15 state tests ($q = .362$). Coordinator expansion in Kansas is null ($\beta = +0.0113, p = .823$).
+
+---
+
+## 10. Overarching Study Synthesis, Methodological Boundaries & Next-Generation Research Agenda
+
+### 10.1 The Substantive Conclusion
+The totality of evidence assembled across this 20-year computational observatory establishes a clear organizational verdict:
+
+> **Kansas City metropolitan school systems substantially increased the organizational infrastructure surrounding classroom instruction over the past decade. The expansion was real, costly, largely additive, and heterogeneous in form across districts. But at the district level, we do not detect evidence that systems which built that intermediate layer more aggressively experienced stronger attendance or academic proficiency recovery through 2023–24.**
+
+### 10.2 Epistemic Boundaries
+Equally essential to the integrity of this conclusion are its explicit scientific boundaries:
+
+> **The available evidence is not precise enough to conclude that the intermediate infrastructure has no effect, nor does the district-level design measure effects on teacher retention, implementation quality, particular schools, or specific student populations.**
+
+### 10.3 Methodological Boundaries & District Aggregation Limits
+1. **Aggregation Masking:** District-level averages collapse across dozens of schools, potentially diluting targeted building-level interventions.
+2. **Distal Outcome Distance:** Standardized student tests are multiple organizational steps removed from non-evaluative instructional coaching.
+3. **Statistical Power Limits:** With $N=55$ balanced districts, confidence intervals permit moderate recovery effects between $-0.63$ and $+0.43$ district SDs for a $+3.0$ expansion; TOST equivalence is not rejected ($p = .328$).
+4. **Implementation Heterogeneity:** Headcount FTE records title allocations, not contact hours, coaching frameworks, or fidelity.
+
+### 10.4 Next-Generation Research Agenda: Changing the Unit of Analysis
+Future research should transition from cross-district regressions to two promising micro-level avenues:
+1. **Avenue 1: Within-District School-Level Exposure (The Shawnee Mission Model):**
+   Exploiting the staggered rollout of ~50 coaches across SMSD's 34 elementary and secondary schools ($Y_{st} = \alpha_s + \gamma_t + \beta \text{CoachExposure}_{st} + \mathbf{X}_{st}'\boldsymbol{\theta} + \varepsilon_{st}$) to automatically control away district-wide policy, funding shifts, and labor contracts.
+2. **Avenue 2: Proximate Educator Workforce Outcomes (Teacher Retention & Mobility):**
+   Using state educator certification rosters (KSDE SO66 / MO DESE Core Data) to test whether coaching improved novice teacher survival, mitigated burnout, or reduced annual turnover.
+
+Full synthesis and methodological documentation are provided in [`outputs/tables/study_synthesis_and_research_agenda.md`](outputs/tables/study_synthesis_and_research_agenda.md).
+
+---
+
+## 11. Directory Structure & Execution Pipeline
 
 ```text
 2026-10-01-kc-admin-staffing-decomposition/
@@ -211,60 +268,63 @@ Detailed qualitative documentation and full institutional narrative are provided
 │   ├── provenance_ledger.md                   # Break reconciliations & survey mechanics
 │   └── phase5_what_are_the_coordinators.md    # Phase 5 institutional evidence & state reporting analysis
 ├── data/
-│   ├── raw/                                   # Pointers to original federal/state extracts
-│   ├── interim/
-│   │   ├── ccd_lea_historical_2004_2013.parquet  # Harmonized historical CCD extract
-│   │   └── demand/
-│   │       ├── f33_finance_raw.parquet        # Census/NCES F-33 school finance panel (FY15-FY23)
-│   │       └── saipe_raw.parquet              # Census SAIPE child poverty (2014-2024)
+│   ├── raw/                                   # Original federal/state extracts
+│   ├── interim/                               # Cleaned parquet intermediate panels
 │   ├── processed/
 │   │   ├── compensation_benchmarks.csv        # Audited salary & fringe parameter provenance
 │   │   ├── kansas_2015_16_reconstruction.csv  # Audited Olathe & Gardner Edgerton 2015-16 reconstruction
-│   │   ├── district_staff_year.parquet        # Canonical 21-yr staffing panel (1,629 rows, 70 cols)
-│   │   ├── district_staff_year.csv            # CSV mirror
-│   │   ├── district_demand_year.parquet       # Integrated demand & finance panel (1,629 rows, 104 cols)
-│   │   ├── district_demand_year.csv           # CSV mirror
+│   │   ├── district_staff_year.csv            # Canonical 21-yr staffing panel (1,629 rows, 70 cols)
+│   │   ├── district_demand_year.csv           # Integrated demand & finance panel (1,629 rows, 104 cols)
 │   │   ├── coordinator_role_crosswalk.csv     # Phase 5 role-level crosswalk (29 discrete positions)
 │   │   ├── district_staffing_architectures_6archetypes.csv # Phase 5 institutional staffing profiles
-│   │   └── post_esser_coordinator_survival.csv# Phase 5 post-ESSER longitudinal survival tracking
+│   │   ├── post_esser_coordinator_survival.csv# Phase 5 post-ESSER longitudinal survival tracking
+│   │   ├── district_architecture_panel.csv    # Phase 6A continuous architecture coordinates
+│   │   ├── district_chronic_absenteeism_panel.csv # Phase 6B repaired chronic absenteeism panel
+│   │   ├── district_fiscal_support_panel.csv  # Phase 6C canonical fiscal support panel
+│   │   ├── focal_archetype_object_level_support_panel.csv # Phase 6C.2 state object support panel
+│   │   ├── district_achievement_panel.csv     # Phase 6D canonical achievement panel
+│   │   └── district_achievement_recovery_wide.csv # Phase 6D student recovery wide panel
 │   └── manifest.csv                           # Immutable audit ledger with SHA256 hashes
 ├── src/
-│   ├── taxonomy.py                            # Taxonomy registry, safe composites & missingness rules
+│   ├── taxonomy.py                            # Taxonomy registry & safe composites
 │   ├── comparability.py                       # Machine-enforced comparability gates
 │   ├── build_panel.py                         # Longitudinal panel extraction & calibration
 │   ├── audit_panel.py                         # Semantic audit suite (7 integrity tests, stopping rules)
-│   ├── descriptive_decomposition.py           # Descriptive mechanical ledger & balanced cohort engine
-│   ├── build_demand_panel.py                  # Phase 2A demand & finance integration pipeline
+│   ├── descriptive_decomposition.py           # Descriptive mechanical ledger
+│   ├── build_demand_panel.py                  # Phase 2A demand & school finance panel
 │   ├── models.py                              # Phase 2B/2C econometric regressions & Shapley engine
 │   ├── fiscal_counterfactuals.py              # Phase 4 fiscal simulation engine
-│   ├── coordinator_crosswalk.py               # Phase 5 role crosswalk & post-ESSER tracking engine
+│   ├── coordinator_crosswalk.py               # Phase 5 role crosswalk & post-ESSER tracking
+│   ├── build_canonical_achievement_panel.py   # Phase 6D achievement ingestion & panel builder
+│   ├── estimate_achievement_screening.py      # Phase 6D ANCOVA models & TOST equivalence
 │   └── test_narrative_sync.py                 # Automated text-to-data synchronization test suite
 └── outputs/
     └── tables/
+        ├── study_synthesis_and_research_agenda.md # Overarching study synthesis & agenda
         ├── kc_staffing_decomposition_report.md       # Phase 1.1 descriptive report
         ├── econometric_decomposition_report.md       # Phase 2B/2C econometric synthesis report
         ├── board_document_audit_report.md            # Phase 3 qualitative outlier audit report
         ├── fiscal_materiality_report.md              # Phase 4 fiscal materiality synthesis report
         ├── coordinator_functional_decomposition_report.md # Phase 5 coordinator functional report
-        ├── phase3_claim_evidence.csv                 # Audited qualitative claims & evidence ledger
-        ├── model_regression_results.csv              # Within-FE & peer model parameters
-        ├── long_difference_regression_results.csv    # 10-year long-difference growth OLS estimates
-        ├── peer_expected_staffing_residuals.csv      # Annual actual vs peer expected residuals
-        ├── persistent_peer_outliers.csv              # Multi-year high-deviation audit targets
-        ├── shapley_decomposition_results.csv         # Grouped Shapley growth variance decomposition
-        ├── fiscal_materiality_counterfactuals.csv     # District-level counterfactual impacts
-        ├── fiscal_materiality_annual_trajectory.csv  # 10-year annual rollback trajectory
-        └── fiscal_materiality_peer_summary.csv       # Category & state peer trimming summary
+        ├── phase6_exploratory_architecture_recovery_report.md # Phase 6A/6B architecture & attendance
+        ├── phase6c_fiscal_substitution_report.md     # Phase 6C fiscal support & substitution
+        ├── phase6c2_state_object_audit_report.md     # Phase 6C.2 state object-level mechanism audit
+        ├── phase6d_achievement_screening_report.md   # Phase 6D academic recovery screening report
+        ├── phase6d_achievement_regression_results.csv# Phase 6D regression estimates (60 models)
+        ├── phase6d_focal_archetype_recovery_trajectories.csv # Phase 6D focal trajectories
+        └── phase6d_equivalence_test.csv             # Phase 6D TOST equivalence bounds
 ```
 
 ### Reproducibility Sequence
-To execute the complete 5-phase computational pipeline and automated test suite:
+To execute the complete computational pipeline and automated test suite:
 ```powershell
-python src/audit_panel.py              # 1. Verify semantic gates and data integrity
-python src/descriptive_decomposition.py # 2. Generate Phase 1.1 mechanical decomposition
-python src/build_demand_panel.py       # 3. Compile Phase 2A demand & school finance panel
-python src/models.py                   # 4. Fit Phase 2B regressions & Phase 2C Shapley
-python src/fiscal_counterfactuals.py   # 5. Simulate Phase 4 fiscal materiality counterfactuals
-python src/coordinator_crosswalk.py    # 6. Build Phase 5 role crosswalk & post-ESSER tracking
-python src/test_narrative_sync.py      # 7. Verify 100% numerical synchronization
+python src/audit_panel.py                      # 1. Verify semantic gates and data integrity
+python src/descriptive_decomposition.py         # 2. Generate Phase 1.1 mechanical decomposition
+python src/build_demand_panel.py               # 3. Compile Phase 2A demand & school finance panel
+python src/models.py                           # 4. Fit Phase 2B regressions & Phase 2C Shapley
+python src/fiscal_counterfactuals.py           # 5. Simulate Phase 4 fiscal materiality counterfactuals
+python src/coordinator_crosswalk.py            # 6. Build Phase 5 role crosswalk & post-ESSER tracking
+python src/build_canonical_achievement_panel.py # 7. Ingest Phase 6D raw assessments & build wide panel
+python src/estimate_achievement_screening.py   # 8. Estimate Phase 6D ANCOVA models & TOST equivalence
+python src/test_narrative_sync.py              # 9. Verify 100% numerical synchronization (17 tests)
 ```

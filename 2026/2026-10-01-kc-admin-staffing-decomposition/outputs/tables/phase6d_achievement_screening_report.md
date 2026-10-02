@@ -20,13 +20,13 @@ Phase 6D screens whether the massive expansion of instructional coordinator staf
 > - **Combined ELA & Math:** $\beta = -0.0303$ (HC3 SE $= 0.0813, p = 0.710, 95% CI [-0.190, +0.129], R^2 = 0.862, N = 53$).
 > - **Mathematics:** $\beta = -0.0512$ (HC3 SE $= 0.1188, p = 0.667$).
 > - **English Language Arts:** $\beta = -0.0176$ (HC3 SE $= 0.0532, p = 0.741$).
-> Student poverty strongly predicts post-pandemic recovery headwinds ($\beta = -5.80, p = .004$), but intermediate coordinator expansion accounts for zero detectable acceleration in learning recovery.
+> Student poverty exhibits a strong conditional association with post-pandemic recovery headwinds ($\beta = -5.80, p = .004$), but intermediate coordinator expansion accounts for zero detectable acceleration in learning recovery.
 
 ## 2. Inferential Precision & Equivalence Bounds
 Because confidence intervals are moderately wide in this 55-district sample, the proper statistical conclusion is **failure to detect an association**, rather than proven zero effect:
 - For a realistic $+3.0$ coordinator per 100 teacher expansion (such as Shawnee Mission's $+3.34$), the 95% confidence interval permits effects ranging from $-0.63$ to $+0.43$ standard deviations of the state district-proficiency distribution.
-- Testing for statistical equivalence within a Smallest Effect Size of Interest (SESOI) of $\pm 0.20$ district-proficiency SDs for a $+3.0$ expansion (equivalent to a slope bound $\delta = \pm 0.0667$) yields a Two One-Sided Tests (TOST) $p$-value of $p = .328$.
-- Thus, while point estimates are consistently near zero or slightly negative, the sample size does not provide the statistical power required to reject the presence of moderate positive or negative effects.
+- Testing for statistical equivalence within a Smallest Effect Size of Interest (SESOI) of $\pm 0.20$ district-proficiency SDs for a $+3.0$ expansion (equivalent to a slope bound $\delta = \pm 0.0667$) yields a Two One-Sided Tests (TOST) $p$-value of $p = 0.328$ ($p_{\text{lower}} = 0.328, p_{\text{upper}} = 0.120$).
+- Because $p = 0.328 > .05$, equivalence within the $\pm 0.20$ SD interval is not rejected (`equivalence_rejected = False`). Thus, while point estimates are consistently near zero or slightly negative, the sample size does not provide the statistical power required to rule out moderate positive or negative effects.
 
 ## 3. Focal Archetype Trajectory Comparison
 
@@ -104,7 +104,7 @@ All models regress 2023–24 baseline-anchored district proficiency $z$-score ($
 Stratifying by state reveals one notable nominal divergence that warrants transparent reporting:
 - In Kansas ($N=19$), baseline coordinator intensity exhibits a nominal negative association with 2024 proficiency for Combined outcomes ($\beta = -0.0723, p = 0.048$) and ELA ($\beta = -0.0668, p = 0.045$).
 - **Multiple-Testing Correction:** When adjusting for the 15-test state-stratified family using the Benjamini-Hochberg procedure, these nominal signals do **not** survive significance (Combined FDR $q = 0.362$, ELA FDR $q = 0.362$).
-- **Substantive Context:** This exploratory signal arises in an underpowered $N=19$ subgroup where baseline coordinator staffing was concentrated in urban/high-poverty districts (e.g., KCKPS). Crucially, coordinator **expansion** in Kansas exhibits no negative effect whatsoever (Combined $\beta = +0.0113, p = 0.823$).
+- **Substantive Context:** The baseline coordinator coefficient in Kansas is negative, but does not survive multiplicity correction across the 15 state-stratified tests. Furthermore, cross-sectional baseline staffing levels are especially vulnerable to endogenous student need. Most importantly for our focal hypothesis, coordinator **expansion** in Kansas exhibits no detectable association with recovery whatsoever (Combined $\beta = +0.0113, p = 0.823$).
 
 | State | Outcome | Target Predictor | Coef ($\beta$) | HC3 SE | Unadj $p$ | FDR $q$ | $R^2$ | $N$ |
 | :---: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -153,4 +153,5 @@ Combining the findings of Phases 1 through 6D delivers a coherent empirical port
 3. **Outcome Screen:** When screened against frontline educational outcomes:
    - **Chronic Absenteeism (Phase 6B):** Null relationship ($\beta = -0.062, p = .847$).
    - **Proficiency Recovery (Phase 6D):** No detectable association (Combined $\beta = -0.0303, p = 0.710$; Math $\beta = -0.0512, p = 0.667$; ELA $\beta = -0.0176, p = 0.741$).
-4. **Scientifically Defensible Takeaway:** We find no evidence that districts which entered the pandemic with more intensive coordinator staffing, or expanded coordinator capacity more aggressively during the recovery period, experienced systematically stronger district-level ELA or mathematics proficiency recovery through 2023–24.
+4. **Scientifically Defensible Takeaway:** KC-area school systems substantially increased the organizational infrastructure surrounding classroom instruction. The expansion was real, costly, largely additive, and heterogeneous in form. But at the district level, we do not detect evidence that systems which built that layer more aggressively experienced stronger attendance or proficiency recovery through 2023–24.
+5. **Epistemic Boundaries:** The available evidence is not precise enough to conclude that the infrastructure has no effect, nor does the district-level design measure effects on teacher retention, implementation quality, particular schools, or specific student populations.

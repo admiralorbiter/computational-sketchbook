@@ -823,6 +823,17 @@ def test_phase6d_achievement_screening():
     assert abs(weighted_comb["coef"] - (-0.0308)) < 0.001
     assert abs(weighted_comb["p_value"] - 0.705) < 0.005
 
+    # 4b. Equivalence test artifact
+    equiv_path = OUTPUTS_DIR / "phase6d_equivalence_test.csv"
+    assert equiv_path.exists(), f"Missing {equiv_path}"
+    eq_df = pd.read_csv(equiv_path)
+    assert len(eq_df) == 3
+    eq_comb = eq_df[eq_df["outcome"] == "Combined"].iloc[0]
+    assert abs(eq_comb["sesoi_effect_for_3_corsup"] - 0.20) < 1e-4
+    assert abs(eq_comb["sesoi_slope_bound"] - (0.20 / 3.0)) < 1e-4
+    assert abs(eq_comb["tost_p"] - 0.3284) < 0.005
+    assert eq_comb["equivalence_rejected"] == False
+
     # 5. Narrative report synchronization
     rep_path = OUTPUTS_DIR / "phase6d_achievement_screening_report.md"
     assert rep_path.exists(), f"Missing {rep_path}"
@@ -832,9 +843,22 @@ def test_phase6d_achievement_screening():
     assert "Between 2014–15 and 2023–24, the region added +255.5 coordinator FTE" in rep_text
     assert "Shawnee Mission vs. Olathe (Coaching Overlay vs. Retrenchment)" in rep_text
     assert "Lee's Summit (Lean Central Infrastructure)" in rep_text
-    assert "Student poverty strongly predicts post-pandemic recovery headwinds" in rep_text
+    assert "Student poverty exhibits a strong conditional association with post-pandemic recovery headwinds" in rep_text
     assert "Smallest Effect Size of Interest (SESOI)" in rep_text
     assert "Two One-Sided Tests (TOST)" in rep_text
+
+
+def test_study_synthesis_and_research_agenda():
+    """Verify presence and exact wording of the study synthesis and research agenda artifact."""
+    synth_path = OUTPUTS_DIR / "study_synthesis_and_research_agenda.md"
+    assert synth_path.exists(), f"Missing {synth_path}"
+    text = synth_path.read_text(encoding="utf-8")
+
+    assert "Kansas City metropolitan school systems substantially increased the organizational infrastructure" in text
+    assert "The available evidence is not precise enough to conclude that the intermediate infrastructure has no effect" in text
+    assert "Avenue 1: School-Level Exposure Within Districts (The Shawnee Mission Design)" in text
+    assert "Avenue 2: Proximate Educator Outcomes (Teacher Retention & Mobility)" in text
+    assert "Phases 1 through 6 of the Kansas City Administrative Staffing Study are hereby certified and frozen" in text
 
 
 def test_manifest_provenance_and_checksums():
@@ -884,6 +908,8 @@ if __name__ == "__main__":
     print("[PASS] Phase 6C.2 state object-level audit & mechanism deltas validated.")
     test_phase6d_achievement_screening()
     print("[PASS] Phase 6D student academic achievement screening & models validated.")
+    test_study_synthesis_and_research_agenda()
+    print("[PASS] Overarching study synthesis and next-generation research agenda validated.")
     test_manifest_provenance_and_checksums()
     print("[PASS] Dataset manifest provenance and SHA256 checksums validated.")
     test_markdown_link_and_retraction_hygiene()
