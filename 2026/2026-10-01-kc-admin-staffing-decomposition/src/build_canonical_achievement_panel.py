@@ -162,11 +162,35 @@ def build_recovery_wide(panel_df, arch_df):
     wide["delta_pct_prof_ela"] = wide["pct_proficient_or_advanced_ela_2024"] - wide["pct_proficient_or_advanced_ela_2019"]
     wide["delta_pct_prof_combined"] = wide["pct_prof_combined_2024"] - wide["pct_prof_combined_2019"]
 
+    # Tested-N-weighted composite scores
+    n_m_19 = wide["tested_n_math_2019"].fillna(0)
+    n_e_19 = wide["tested_n_ela_2019"].fillna(0)
+    tot_n_19 = n_m_19 + n_e_19
+    w_m_19 = np.where(tot_n_19 > 0, n_m_19 / tot_n_19, 0.5)
+    w_e_19 = np.where(tot_n_19 > 0, n_e_19 / tot_n_19, 0.5)
+
+    n_m_24 = wide["tested_n_math_2024"].fillna(0)
+    n_e_24 = wide["tested_n_ela_2024"].fillna(0)
+    tot_n_24 = n_m_24 + n_e_24
+    w_m_24 = np.where(tot_n_24 > 0, n_m_24 / tot_n_24, 0.5)
+    w_e_24 = np.where(tot_n_24 > 0, n_e_24 / tot_n_24, 0.5)
+
+    wide["z_anchor_weighted_2019"] = w_m_19 * wide["z_anchor_math_2019"] + w_e_19 * wide["z_anchor_ela_2019"]
+    wide["z_anchor_weighted_2024"] = w_m_24 * wide["z_anchor_math_2024"] + w_e_24 * wide["z_anchor_ela_2024"]
+    wide["delta_z_recovery_weighted"] = wide["z_anchor_weighted_2024"] - wide["z_anchor_weighted_2019"]
+
     # Extract architecture predictors from arch_df
     # We need: baseline (2018-2019), expansion (2018-2019 -> 2021-2022), endpoint (2023-2024), and pandemic mean residual
     arch19 = arch_df[arch_df["school_year"] == "2018-2019"].set_index("nces_lea_id")
     arch22 = arch_df[arch_df["school_year"] == "2021-2022"].set_index("nces_lea_id")
     arch24 = arch_df[arch_df["school_year"] == "2023-2024"].set_index("nces_lea_id")
+
+    # Demographic demand controls from district_demand_year.csv (2018-2019 baseline)
+    dem_df = pd.read_csv("data/processed/district_demand_year.csv")
+    dem19 = dem_df[dem_df["school_year"] == "2018-2019"].set_index("nces_lea_id")
+    wide["saipe_poverty_pct_2019"] = dem19["saipe_poverty_pct"]
+    wide["lep_share_2019"] = dem19["lep_share"]
+    wide["idea_share_2019"] = dem19["idea_share"]
 
     # Pandemic residuals (2019-2020, 2020-2021, 2021-2022, 2022-2023)
     pan_years = ["2019-2020", "2020-2021", "2021-2022", "2022-2023"]
@@ -201,10 +225,10 @@ def build_recovery_wide(panel_df, arch_df):
     wide["leaadm_intensity_2019"] = arch19["leaadm_per_1000_pupils"]
     wide["supervisory_intensity_2019"] = arch19["supervisory_per_100_teachers"]
 
-    # Minimum participation rate guardrail flags
+    # Minimum participation rate guardrail flags (strictly requiring valid reported rates)
     wide["min_part_rate_2024"] = wide[["participation_rate_math_2024", "participation_rate_ela_2024"]].min(axis=1)
-    wide["part_ge_90_flag"] = (wide["min_part_rate_2024"] >= 90.0) | wide["min_part_rate_2024"].isna()
-    wide["part_ge_95_flag"] = (wide["min_part_rate_2024"] >= 95.0) | wide["min_part_rate_2024"].isna()
+    wide["part_ge_90_flag"] = (wide["min_part_rate_2024"] >= 90.0) & wide["min_part_rate_2024"].notna()
+    wide["part_ge_95_flag"] = (wide["min_part_rate_2024"] >= 95.0) & wide["min_part_rate_2024"].notna()
 
     return wide.reset_index()
 

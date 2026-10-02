@@ -780,22 +780,61 @@ def test_phase6d_achievement_screening():
     reg_path = OUTPUTS_DIR / "phase6d_achievement_regression_results.csv"
     assert reg_path.exists(), f"Missing {reg_path}"
     r_df = pd.read_csv(reg_path)
-    assert len(r_df) == 57
+    assert len(r_df) == 60
 
-    prim_comb = r_df[(r_df["outcome"] == "Combined") & (r_df["specification"] == "Spec 1C: Primary ANCOVA (+SchAdm)")].set_index("target_variable")
-    assert abs(prim_comb.loc["corsup_intensity_2019", "coef"] - (-0.0034)) < 0.001
-    assert abs(prim_comb.loc["delta_corsup_2019_to_2022", "coef"] - (-0.0216)) < 0.001
-    assert abs(prim_comb.loc["schadm_intensity_2019", "coef"] - (-0.0013)) < 0.001
-    assert abs(prim_comb.loc["corsup_intensity_2019", "r_squared"] - 0.838) < 0.01
+    # Spec 1A: Primary Need-Adjusted ANCOVA
+    prim_comb = r_df[(r_df["outcome"] == "Combined") & (r_df["specification"] == "Spec 1A: Primary Need-Adjusted ANCOVA")].iloc[0]
+    assert abs(prim_comb["coef"] - (-0.0303)) < 0.001
+    assert abs(prim_comb["se_hc3"] - 0.0813) < 0.001
+    assert abs(prim_comb["p_value"] - 0.710) < 0.005
+    assert abs(prim_comb["r_squared"] - 0.862) < 0.005
+    assert prim_comb["n_obs"] == 53
+
+    prim_math = r_df[(r_df["outcome"] == "Math") & (r_df["specification"] == "Spec 1A: Primary Need-Adjusted ANCOVA")].iloc[0]
+    assert abs(prim_math["coef"] - (-0.0512)) < 0.001
+    assert abs(prim_math["se_hc3"] - 0.1188) < 0.001
+    assert abs(prim_math["p_value"] - 0.667) < 0.005
+
+    prim_ela = r_df[(r_df["outcome"] == "ELA") & (r_df["specification"] == "Spec 1A: Primary Need-Adjusted ANCOVA")].iloc[0]
+    assert abs(prim_ela["coef"] - (-0.0176)) < 0.001
+    assert abs(prim_ela["se_hc3"] - 0.0532) < 0.001
+    assert abs(prim_ela["p_value"] - 0.741) < 0.005
+
+    # Spec 1G: Unadjusted Benchmark
+    unadj_comb = r_df[(r_df["outcome"] == "Combined") & (r_df["specification"] == "Spec 1G: Unadjusted Benchmark")].set_index("target_variable")
+    assert abs(unadj_comb.loc["corsup_intensity_2019", "coef"] - (-0.0034)) < 0.001
+    assert abs(unadj_comb.loc["delta_corsup_2019_to_2022", "coef"] - (-0.0216)) < 0.001
+    assert abs(unadj_comb.loc["schadm_intensity_2019", "coef"] - (-0.0013)) < 0.001
+    assert abs(unadj_comb.loc["corsup_intensity_2019", "r_squared"] - 0.838) < 0.01
+
+    # State-Stratified Kansas FDR testing
+    ks_rows = r_df[r_df["specification"] == "Stratified KS"].set_index(["outcome", "target_variable"])
+    # Nominal p < .05 on baseline, but FDR q = 0.362
+    assert abs(ks_rows.loc[("Combined", "corsup_intensity_2019"), "p_value"] - 0.048) < 0.005
+    assert abs(ks_rows.loc[("Combined", "corsup_intensity_2019"), "fdr_p_value"] - 0.362) < 0.005
+    assert abs(ks_rows.loc[("ELA", "corsup_intensity_2019"), "p_value"] - 0.045) < 0.005
+    assert abs(ks_rows.loc[("ELA", "corsup_intensity_2019"), "fdr_p_value"] - 0.362) < 0.005
+    # Kansas coordinator expansion is completely null
+    assert abs(ks_rows.loc[("Combined", "delta_corsup_2019_to_2022"), "coef"] - 0.0113) < 0.001
+    assert abs(ks_rows.loc[("Combined", "delta_corsup_2019_to_2022"), "p_value"] - 0.823) < 0.005
+
+    # Tested-N-Weighted Composite
+    weighted_comb = r_df[r_df["specification"] == "Tested-N-Weighted Need-Adjusted"].iloc[0]
+    assert abs(weighted_comb["coef"] - (-0.0308)) < 0.001
+    assert abs(weighted_comb["p_value"] - 0.705) < 0.005
 
     # 5. Narrative report synchronization
     rep_path = OUTPUTS_DIR / "phase6d_achievement_screening_report.md"
     assert rep_path.exists(), f"Missing {rep_path}"
     rep_text = rep_path.read_text(encoding="utf-8")
-    assert "Macroeconometric Verdict — Decisive Null Architecture Effect (H6D-4 Confirmed)" in rep_text
+    assert "Macroeconometric Verdict — No Detectable Regional Association (H6D-4 Supported)" in rep_text
+    assert "no detectable regional linear association" in rep_text
     assert "Between 2014–15 and 2023–24, the region added +255.5 coordinator FTE" in rep_text
-    assert "Shawnee Mission vs. Olathe (Coaching Expansion vs. Retrenchment)" in rep_text
+    assert "Shawnee Mission vs. Olathe (Coaching Overlay vs. Retrenchment)" in rep_text
     assert "Lee's Summit (Lean Central Infrastructure)" in rep_text
+    assert "Student poverty strongly predicts post-pandemic recovery headwinds" in rep_text
+    assert "Smallest Effect Size of Interest (SESOI)" in rep_text
+    assert "Two One-Sided Tests (TOST)" in rep_text
 
 
 def test_manifest_provenance_and_checksums():
