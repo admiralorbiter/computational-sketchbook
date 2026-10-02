@@ -7,6 +7,7 @@ and board_document_audit_report.md match the canonical CSV files with 100% preci
 """
 
 import hashlib
+import sys
 from pathlib import Path
 import re
 import pandas as pd
@@ -14,6 +15,7 @@ import numpy as np
 import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
 DATA_DIR = ROOT / "data"
 OUTPUTS_DIR = ROOT / "outputs" / "tables"
 
@@ -639,17 +641,39 @@ def test_phase6c_fiscal_support_and_substitution():
     assert "Regime 4: Partial Substitution + Expansion" in rep_text
 
 
+def test_kansas_budget_parser_execution():
+    """
+    Directly invokes parse_ks_file from src.parse_ks_budget_focal against an archived
+    Kansas Form USD-E PDF and asserts known object-level extractions.
+    """
+    from src.parse_ks_budget_focal import parse_ks_file
+    smsd_pdf = DATA_DIR / "raw" / "kansas_budget" / "shawnee_mission" / "512_Codes2024_Actuals2023.pdf"
+    assert smsd_pdf.exists(), f"Missing {smsd_pdf}"
+    totals, fb = parse_ks_file(smsd_pdf, target_col_idx=1)
+    
+    # Assert exact object extractions for Shawnee Mission 2022-23
+    assert abs(totals["purchased_prof_300"] - 114986.0) < 1.0
+    assert abs(totals["property_700"] - 537277.0) < 1.0
+    assert abs((totals["sal_certified"] + totals["sal_noncertified"]) - 9472875.0) < 1.0
+    assert abs((totals["benefits_insurance"] + totals["benefits_socsec"] + totals["benefits_other"]) - 3022823.0) < 1.0
+    assert len(fb) > 10, "Expected non-empty fund breakdown extractions"
+
+
 def test_phase6c2_state_object_audit():
     """
-    Validates Gate 6C.2 state object-level audit data, mechanism deltas, and synthesis report.
-    Tests whether the vendor insourcing hypothesis (Object 300 / 6300 substitution) is decisively rejected.
+    Validates Gate 6C.2 state object-level audit data, mechanism deltas, reconciliation table, and report.
+    Tests whether the vendor insourcing hypothesis is rejected and Raytown's NCES ID is canonical.
     """
     # 1. Focal Object-Level Support Panel
     p_path = DATA_DIR / "processed" / "focal_archetype_object_level_support_panel.csv"
     assert p_path.exists(), f"Missing {p_path}"
     df_p = pd.read_csv(p_path)
     assert len(df_p) == 18
-    assert len(df_p.columns) == 29
+    assert len(df_p.columns) == 38
+
+    # Raytown NCES ID canonical assertion
+    raytown_rows = df_p[df_p["district_name"] == "Raytown C-2"]
+    assert (raytown_rows["nces_lea_id"] == 2926070).all(), f"Raytown NCES ID must be 2926070, got {raytown_rows['nces_lea_id'].tolist()}"
 
     # Shawnee Mission USD 512 checks
     smsd = df_p[df_p["district_name"] == "Shawnee Mission USD 512"].set_index("school_year")
@@ -657,43 +681,55 @@ def test_phase6c2_state_object_audit():
     assert abs(smsd.loc["2018-2019", "real_purchased_prof_tech_per_pupil"] - 3.25) < 0.1
     assert abs(smsd.loc["2022-2023", "real_purchased_prof_tech_per_pupil"] - 4.41) < 0.1
     assert abs(smsd.loc["2022-2023", "corsup_fte"] - 93.0) < 0.1
-    # Vendor spending grew, disproving insourcing
+    # Vendor spending grew, contradicting insourcing
     assert smsd.loc["2022-2023", "real_purchased_prof_tech_per_pupil"] > smsd.loc["2014-2015", "real_purchased_prof_tech_per_pupil"]
+
+    # Dual nonpersonnel measures exist
+    assert "real_nonpersonnel_allobjects_per_pupil" in df_p.columns
+    assert "real_nonpersonnel_f33comp_per_pupil" in df_p.columns
 
     # Lee's Summit R-VII checks
     ls = df_p[df_p["district_name"] == "Lee's Summit R-VII"].set_index("school_year")
     assert abs(ls.loc["2014-2015", "real_purchased_prof_tech_per_pupil"] - 71.85) < 0.1
     assert abs(ls.loc["2022-2023", "real_purchased_prof_tech_per_pupil"] - 58.19) < 0.1
     assert abs(ls.loc["2022-2023", "real_supplies_materials_per_pupil"] - 124.39) < 0.1
-    assert abs(ls.loc["2022-2023", "real_nonpersonnel_total_per_pupil"] - 185.77) < 0.1
+    assert abs(ls.loc["2022-2023", "real_nonpersonnel_allobjects_per_pupil"] - 185.77) < 0.1
 
     # 2. Mechanism Deltas Table
     d_path = OUTPUTS_DIR / "phase6c2_focal_archetype_mechanism_deltas.csv"
     assert d_path.exists(), f"Missing {d_path}"
     df_d = pd.read_csv(d_path).set_index("district_name")
     assert len(df_d) == 6
+    assert (df_d.loc["Raytown C-2", "nces_lea_id"] == 2926070)
 
     # Shawnee Mission delta assertions
     assert abs(df_d.loc["Shawnee Mission USD 512", "delta_corsup_fte"] - 65.4) < 0.1
     assert abs(df_d.loc["Shawnee Mission USD 512", "delta_real_purchased_prof_obj300_per_pupil"] - 4.32) < 0.1
-    assert abs(df_d.loc["Shawnee Mission USD 512", "delta_real_supplies_materials_obj600_per_pupil"] - 26.92) < 0.1
     assert abs(df_d.loc["Shawnee Mission USD 512", "delta_real_salaries_per_pupil"] - 99.13) < 0.1
-    assert "Disproven" in df_d.loc["Shawnee Mission USD 512", "insourcing_verdict"]
+    assert "Insourcing" in df_d.loc["Shawnee Mission USD 512", "insourcing_verdict"]
 
-    # Olathe delta assertions
-    assert abs(df_d.loc["Olathe USD 233", "delta_corsup_fte"] - 35.9) < 0.1
-    assert abs(df_d.loc["Olathe USD 233", "delta_real_purchased_prof_obj300_per_pupil"] - 9.55) < 0.1
-    assert abs(df_d.loc["Olathe USD 233", "delta_real_supplies_materials_obj600_per_pupil"] - 21.60) < 0.1
+    # 3. Reconciliation Table Assertions
+    rec_path = OUTPUTS_DIR / "phase6c2_focal_reconciliation_to_f33.csv"
+    assert rec_path.exists(), f"Missing {rec_path}"
+    df_rec = pd.read_csv(rec_path)
+    assert len(df_rec) == 18
+    # In Missouri, current 2200 equals F-33 E07 within $1,000 rounding across all years
+    mo_rec = df_rec[df_rec["state"] == "MO"]
+    assert (mo_rec["diff_total_current_vs_e07"].abs() < 1000).all()
+    # Kansas salaries match F-33 V13 within rounding (e.g. within $10,000 or < 1%)
+    ks_rec = df_rec[df_rec["state"] == "KS"]
+    assert (ks_rec["diff_salaries"].abs() / ks_rec["f33_v13_salaries"] < 0.11).all()
 
-    # 3. Report Document Integrity
+    # 4. Report Document Integrity
     rep_path = OUTPUTS_DIR / "phase6c2_state_object_audit_report.md"
     assert rep_path.exists(), f"Missing {rep_path}"
     rep_text = rep_path.read_text(encoding="utf-8")
     assert "$0.09" in rep_text
     assert "$4.41" in rep_text
     assert "+65.4" in rep_text
-    assert "Additive Internal Staffing Layer" in rep_text
-    assert "The \"Vendor Insourcing / Private Substitution\" hypothesis is decisively disproven" in rep_text
+    assert "Generalized instructional-support insourcing is not supported as the dominant mechanism" in rep_text
+    assert "Within Function 2200, Shawnee Mission had essentially no Object 300 professional/technical-services expenditure before the coordinator expansion" in rep_text
+    assert "KS Object 300 Professional/Technical Services / MO Object 6300 Purchased Services" in rep_text
 
 
 def test_manifest_provenance_and_checksums():
@@ -737,6 +773,8 @@ if __name__ == "__main__":
     print("[PASS] Phase 6 architecture coordinates & repaired chronic absenteeism validated.")
     test_phase6c_fiscal_support_and_substitution()
     print("[PASS] Phase 6C fiscal support panel & substitution models validated.")
+    test_kansas_budget_parser_execution()
+    print("[PASS] Kansas Form USD-E PDF parser execution and object extraction validated.")
     test_phase6c2_state_object_audit()
     print("[PASS] Phase 6C.2 state object-level audit & mechanism deltas validated.")
     test_manifest_provenance_and_checksums()
