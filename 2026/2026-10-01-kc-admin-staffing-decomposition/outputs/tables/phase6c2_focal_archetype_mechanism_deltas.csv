@@ -1,0 +1,7 @@
+district_name,state,organizational_archetype,delta_corsup_fte,delta_real_purchased_prof_obj300_per_pupil,delta_real_other_purchased_services_per_pupil,delta_real_supplies_materials_obj600_per_pupil,delta_real_nonpersonnel_total_per_pupil,delta_real_salaries_per_pupil,delta_real_total_support_2200_per_pupil,insourcing_verdict
+Kansas City USD 500,KS,Dual-Intensity (Coaching + School Supervision),5.6,-129.31,32.18,39.55,-63.79,184.06,182.84,Budget Realignment / Other
+Lee's Summit R-VII,MO,Direct School Supervision,-9.2,-13.66,0.0,84.73,70.48,31.28,121.62,Additive Layering / Apparatus Expansion
+North Kansas City 74,MO,Direct School Supervision,18.7,-13.64,0.0,11.14,170.11,-14.48,166.39,Additive Layering / Apparatus Expansion
+Olathe USD 233,KS,Lean / Department Chair,35.9,9.55,0.18,21.6,38.48,55.24,142.08,Additive Layering / Apparatus Expansion
+Raytown C-2,MO,Coaching Overlay,-1.2,0.13,0.0,61.62,54.05,-35.11,27.72,Additive Layering / Apparatus Expansion
+Shawnee Mission USD 512,KS,Coaching Overlay,65.4,4.32,-3.77,26.92,47.75,99.13,195.52,Disproven (Obj 300 grew; non-personnel is supplies/curriculum)

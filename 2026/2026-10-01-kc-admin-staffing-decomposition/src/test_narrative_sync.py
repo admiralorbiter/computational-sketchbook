@@ -639,6 +639,63 @@ def test_phase6c_fiscal_support_and_substitution():
     assert "Regime 4: Partial Substitution + Expansion" in rep_text
 
 
+def test_phase6c2_state_object_audit():
+    """
+    Validates Gate 6C.2 state object-level audit data, mechanism deltas, and synthesis report.
+    Tests whether the vendor insourcing hypothesis (Object 300 / 6300 substitution) is decisively rejected.
+    """
+    # 1. Focal Object-Level Support Panel
+    p_path = DATA_DIR / "processed" / "focal_archetype_object_level_support_panel.csv"
+    assert p_path.exists(), f"Missing {p_path}"
+    df_p = pd.read_csv(p_path)
+    assert len(df_p) == 18
+    assert len(df_p.columns) == 29
+
+    # Shawnee Mission USD 512 checks
+    smsd = df_p[df_p["district_name"] == "Shawnee Mission USD 512"].set_index("school_year")
+    assert abs(smsd.loc["2014-2015", "real_purchased_prof_tech_per_pupil"] - 0.09) < 0.05
+    assert abs(smsd.loc["2018-2019", "real_purchased_prof_tech_per_pupil"] - 3.25) < 0.1
+    assert abs(smsd.loc["2022-2023", "real_purchased_prof_tech_per_pupil"] - 4.41) < 0.1
+    assert abs(smsd.loc["2022-2023", "corsup_fte"] - 93.0) < 0.1
+    # Vendor spending grew, disproving insourcing
+    assert smsd.loc["2022-2023", "real_purchased_prof_tech_per_pupil"] > smsd.loc["2014-2015", "real_purchased_prof_tech_per_pupil"]
+
+    # Lee's Summit R-VII checks
+    ls = df_p[df_p["district_name"] == "Lee's Summit R-VII"].set_index("school_year")
+    assert abs(ls.loc["2014-2015", "real_purchased_prof_tech_per_pupil"] - 71.85) < 0.1
+    assert abs(ls.loc["2022-2023", "real_purchased_prof_tech_per_pupil"] - 58.19) < 0.1
+    assert abs(ls.loc["2022-2023", "real_supplies_materials_per_pupil"] - 124.39) < 0.1
+    assert abs(ls.loc["2022-2023", "real_nonpersonnel_total_per_pupil"] - 185.77) < 0.1
+
+    # 2. Mechanism Deltas Table
+    d_path = OUTPUTS_DIR / "phase6c2_focal_archetype_mechanism_deltas.csv"
+    assert d_path.exists(), f"Missing {d_path}"
+    df_d = pd.read_csv(d_path).set_index("district_name")
+    assert len(df_d) == 6
+
+    # Shawnee Mission delta assertions
+    assert abs(df_d.loc["Shawnee Mission USD 512", "delta_corsup_fte"] - 65.4) < 0.1
+    assert abs(df_d.loc["Shawnee Mission USD 512", "delta_real_purchased_prof_obj300_per_pupil"] - 4.32) < 0.1
+    assert abs(df_d.loc["Shawnee Mission USD 512", "delta_real_supplies_materials_obj600_per_pupil"] - 26.92) < 0.1
+    assert abs(df_d.loc["Shawnee Mission USD 512", "delta_real_salaries_per_pupil"] - 99.13) < 0.1
+    assert "Disproven" in df_d.loc["Shawnee Mission USD 512", "insourcing_verdict"]
+
+    # Olathe delta assertions
+    assert abs(df_d.loc["Olathe USD 233", "delta_corsup_fte"] - 35.9) < 0.1
+    assert abs(df_d.loc["Olathe USD 233", "delta_real_purchased_prof_obj300_per_pupil"] - 9.55) < 0.1
+    assert abs(df_d.loc["Olathe USD 233", "delta_real_supplies_materials_obj600_per_pupil"] - 21.60) < 0.1
+
+    # 3. Report Document Integrity
+    rep_path = OUTPUTS_DIR / "phase6c2_state_object_audit_report.md"
+    assert rep_path.exists(), f"Missing {rep_path}"
+    rep_text = rep_path.read_text(encoding="utf-8")
+    assert "$0.09" in rep_text
+    assert "$4.41" in rep_text
+    assert "+65.4" in rep_text
+    assert "Additive Internal Staffing Layer" in rep_text
+    assert "The \"Vendor Insourcing / Private Substitution\" hypothesis is decisively disproven" in rep_text
+
+
 def test_manifest_provenance_and_checksums():
     manifest_path = DATA_DIR / "manifest.csv"
     assert manifest_path.exists(), f"Missing {manifest_path}"
@@ -680,6 +737,8 @@ if __name__ == "__main__":
     print("[PASS] Phase 6 architecture coordinates & repaired chronic absenteeism validated.")
     test_phase6c_fiscal_support_and_substitution()
     print("[PASS] Phase 6C fiscal support panel & substitution models validated.")
+    test_phase6c2_state_object_audit()
+    print("[PASS] Phase 6C.2 state object-level audit & mechanism deltas validated.")
     test_manifest_provenance_and_checksums()
     print("[PASS] Dataset manifest provenance and SHA256 checksums validated.")
     test_markdown_link_and_retraction_hygiene()
