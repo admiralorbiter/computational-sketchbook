@@ -27,3 +27,8 @@ venv/
 *.duckdb
 *.duckdb.wal
 *transcript_review_tutorial.pdf
+
+# Godot Engine
+.godot/
+*.import
+export_presets.cfg

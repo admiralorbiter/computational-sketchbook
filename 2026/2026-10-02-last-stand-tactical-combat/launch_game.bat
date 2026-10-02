@@ -1,0 +1,3 @@
+@echo off
+echo Starting Last Stand: Tactical Combat prototype...
+start "" "%LOCALAPPDATA%\Microsoft\WinGet\Packages\GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe\godot.exe" --path prototype
