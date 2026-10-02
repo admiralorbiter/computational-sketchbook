@@ -732,6 +732,72 @@ def test_phase6c2_state_object_audit():
     assert "KS Object 300 Professional/Technical Services / MO Object 6300 Purchased Services" in rep_text
 
 
+def test_phase6d_achievement_screening():
+    # 1. Panel file
+    panel_path = DATA_DIR / "processed" / "district_achievement_panel.csv"
+    assert panel_path.exists(), f"Missing {panel_path}"
+    p_df = pd.read_csv(panel_path)
+    assert len(p_df) == 550, f"Expected 550 rows in achievement panel, got {len(p_df)}"
+    assert p_df["nces_lea_id"].nunique() == 55
+    assert set(p_df["school_year"].unique()) == {2019, 2021, 2022, 2023, 2024}
+    assert set(p_df["subject"].unique()) == {"ELA", "Math"}
+
+    # 2. Wide recovery file
+    wide_path = DATA_DIR / "processed" / "district_achievement_recovery_wide.csv"
+    assert wide_path.exists(), f"Missing {wide_path}"
+    w_df = pd.read_csv(wide_path)
+    assert len(w_df) == 55
+    assert "delta_z_recovery_combined" in w_df.columns
+    assert "part_ge_90_flag" in w_df.columns
+
+    # 3. Focal archetype trajectories
+    focal_path = OUTPUTS_DIR / "phase6d_focal_archetype_recovery_trajectories.csv"
+    assert focal_path.exists(), f"Missing {focal_path}"
+    f_df = pd.read_csv(focal_path).set_index("nces_lea_id")
+    assert len(f_df) == 6
+
+    smsd = f_df.loc[2011640]
+    olat = f_df.loc[2010140]
+    kck = f_df.loc[2007950]
+    ls = f_df.loc[2918300]
+    nkc = f_df.loc[2922800]
+    ray = f_df.loc[2926070]
+
+    assert abs(smsd["delta_corsup_2019_to_2022"] - 3.34) < 0.05
+    assert abs(smsd["delta_z_recovery_combined"] - (-0.086)) < 0.01
+    assert abs(olat["delta_corsup_2019_to_2022"] - 1.62) < 0.05
+    assert abs(olat["delta_z_recovery_combined"] - (-0.011)) < 0.01
+    assert abs(kck["corsup_intensity_2019"] - 6.36) < 0.05
+    assert abs(kck["delta_z_recovery_combined"] - (-0.377)) < 0.01
+    assert abs(ls["corsup_intensity_2019"] - 0.67) < 0.05
+    assert abs(ls["delta_z_recovery_combined"] - (-0.705)) < 0.01
+    assert abs(nkc["corsup_intensity_2019"] - 1.61) < 0.05
+    assert abs(nkc["delta_z_recovery_combined"] - (-0.365)) < 0.01
+    assert abs(ray["corsup_intensity_2019"] - 3.65) < 0.05
+    assert abs(ray["delta_z_recovery_combined"] - (-0.710)) < 0.01
+
+    # 4. Regression estimates
+    reg_path = OUTPUTS_DIR / "phase6d_achievement_regression_results.csv"
+    assert reg_path.exists(), f"Missing {reg_path}"
+    r_df = pd.read_csv(reg_path)
+    assert len(r_df) == 57
+
+    prim_comb = r_df[(r_df["outcome"] == "Combined") & (r_df["specification"] == "Spec 1C: Primary ANCOVA (+SchAdm)")].set_index("target_variable")
+    assert abs(prim_comb.loc["corsup_intensity_2019", "coef"] - (-0.0034)) < 0.001
+    assert abs(prim_comb.loc["delta_corsup_2019_to_2022", "coef"] - (-0.0216)) < 0.001
+    assert abs(prim_comb.loc["schadm_intensity_2019", "coef"] - (-0.0013)) < 0.001
+    assert abs(prim_comb.loc["corsup_intensity_2019", "r_squared"] - 0.838) < 0.01
+
+    # 5. Narrative report synchronization
+    rep_path = OUTPUTS_DIR / "phase6d_achievement_screening_report.md"
+    assert rep_path.exists(), f"Missing {rep_path}"
+    rep_text = rep_path.read_text(encoding="utf-8")
+    assert "Macroeconometric Verdict — Decisive Null Architecture Effect (H6D-4 Confirmed)" in rep_text
+    assert "Between 2014–15 and 2023–24, the region added +255.5 coordinator FTE" in rep_text
+    assert "Shawnee Mission vs. Olathe (Coaching Expansion vs. Retrenchment)" in rep_text
+    assert "Lee's Summit (Lean Central Infrastructure)" in rep_text
+
+
 def test_manifest_provenance_and_checksums():
     manifest_path = DATA_DIR / "manifest.csv"
     assert manifest_path.exists(), f"Missing {manifest_path}"
@@ -777,6 +843,8 @@ if __name__ == "__main__":
     print("[PASS] Kansas Form USD-E PDF parser execution and object extraction validated.")
     test_phase6c2_state_object_audit()
     print("[PASS] Phase 6C.2 state object-level audit & mechanism deltas validated.")
+    test_phase6d_achievement_screening()
+    print("[PASS] Phase 6D student academic achievement screening & models validated.")
     test_manifest_provenance_and_checksums()
     print("[PASS] Dataset manifest provenance and SHA256 checksums validated.")
     test_markdown_link_and_retraction_hygiene()
