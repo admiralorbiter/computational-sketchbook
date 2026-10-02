@@ -81,6 +81,69 @@ def run_fiscal_substitution_analysis():
             "ci_upper_95": round(float(ci_u), 4),
         })
 
+    # 1B. Within-District FE with State x Year Fixed Effects
+    fe_df["state_year"] = fe_df["state"] + "_" + fe_df["school_year"]
+    res_fe_sy = smf.ols(
+        "real_instr_support_nonpersonnel_per_pupil ~ corsup_per_100_teachers + C(nces_lea_id) + C(state_year)",
+        data=fe_df
+    ).fit(cov_type="cluster", cov_kwds={"groups": fe_df["nces_lea_id"]})
+    results_records.append({
+        "model_family": "Within-District Fixed Effects (Sensitivities)",
+        "model_name": "FE Sensitivity 1: District + State*Year FE (Real NP / Pupil)",
+        "dependent_variable": "real_instr_support_nonpersonnel_per_pupil",
+        "sample_n": int(res_fe_sy.nobs),
+        "r_squared": round(float(res_fe_sy.rsquared), 4),
+        "predictor_variable": "corsup_per_100_teachers",
+        "coef": round(float(res_fe_sy.params["corsup_per_100_teachers"]), 4),
+        "std_error": round(float(res_fe_sy.bse["corsup_per_100_teachers"]), 4),
+        "t_statistic": round(float(res_fe_sy.tvalues["corsup_per_100_teachers"]), 2),
+        "p_value": round(float(res_fe_sy.pvalues["corsup_per_100_teachers"]), 4),
+        "ci_lower_95": round(float(res_fe_sy.conf_int().loc["corsup_per_100_teachers", 0]), 4),
+        "ci_upper_95": round(float(res_fe_sy.conf_int().loc["corsup_per_100_teachers", 1]), 4),
+    })
+
+    res_fe_sy_tot = smf.ols(
+        "real_instr_support_total_per_pupil ~ corsup_per_100_teachers + C(nces_lea_id) + C(state_year)",
+        data=fe_df
+    ).fit(cov_type="cluster", cov_kwds={"groups": fe_df["nces_lea_id"]})
+    results_records.append({
+        "model_family": "Within-District Fixed Effects (Sensitivities)",
+        "model_name": "FE Sensitivity 2: District + State*Year FE (Total E07 / Pupil)",
+        "dependent_variable": "real_instr_support_total_per_pupil",
+        "sample_n": int(res_fe_sy_tot.nobs),
+        "r_squared": round(float(res_fe_sy_tot.rsquared), 4),
+        "predictor_variable": "corsup_per_100_teachers",
+        "coef": round(float(res_fe_sy_tot.params["corsup_per_100_teachers"]), 4),
+        "std_error": round(float(res_fe_sy_tot.bse["corsup_per_100_teachers"]), 4),
+        "t_statistic": round(float(res_fe_sy_tot.tvalues["corsup_per_100_teachers"]), 2),
+        "p_value": round(float(res_fe_sy_tot.pvalues["corsup_per_100_teachers"]), 4),
+        "ci_lower_95": round(float(res_fe_sy_tot.conf_int().loc["corsup_per_100_teachers", 0]), 4),
+        "ci_upper_95": round(float(res_fe_sy_tot.conf_int().loc["corsup_per_100_teachers", 1]), 4),
+    })
+
+    # 1C. Winsorized FE (2.5% - 97.5%) with District + State x Year FE
+    q_low = fe_df["real_instr_support_nonpersonnel_per_pupil"].quantile(0.025)
+    q_high = fe_df["real_instr_support_nonpersonnel_per_pupil"].quantile(0.975)
+    fe_df["real_np_win"] = fe_df["real_instr_support_nonpersonnel_per_pupil"].clip(q_low, q_high)
+    res_win = smf.ols(
+        "real_np_win ~ corsup_per_100_teachers + C(nces_lea_id) + C(state_year)",
+        data=fe_df
+    ).fit(cov_type="cluster", cov_kwds={"groups": fe_df["nces_lea_id"]})
+    results_records.append({
+        "model_family": "Within-District Fixed Effects (Sensitivities)",
+        "model_name": "FE Sensitivity 3: Winsorized NP (2.5-97.5%) + State*Year FE",
+        "dependent_variable": "real_np_win",
+        "sample_n": int(res_win.nobs),
+        "r_squared": round(float(res_win.rsquared), 4),
+        "predictor_variable": "corsup_per_100_teachers",
+        "coef": round(float(res_win.params["corsup_per_100_teachers"]), 4),
+        "std_error": round(float(res_win.bse["corsup_per_100_teachers"]), 4),
+        "t_statistic": round(float(res_win.tvalues["corsup_per_100_teachers"]), 2),
+        "p_value": round(float(res_win.pvalues["corsup_per_100_teachers"]), 4),
+        "ci_lower_95": round(float(res_win.conf_int().loc["corsup_per_100_teachers", 0]), 4),
+        "ci_upper_95": round(float(res_win.conf_int().loc["corsup_per_100_teachers", 1]), 4),
+    })
+
     # -------------------------------------------------------------
     # 2. Long Difference Models (2014-15 to 2022-23, N=55)
     # -------------------------------------------------------------
@@ -135,9 +198,10 @@ def run_fiscal_substitution_analysis():
     df_dyn["delta_real_np"] = df_dyn.groupby("nces_lea_id")["real_instr_support_nonpersonnel_per_pupil"].diff()
     df_dyn["lead_delta_np"] = df_dyn.groupby("nces_lea_id")["delta_real_np"].shift(-1)
     df_dyn["lead_delta_corsup"] = df_dyn.groupby("nces_lea_id")["delta_corsup"].shift(-1)
+    df_dyn["state_year"] = df_dyn["state"] + "_" + df_dyn["school_year"]
 
-    # 3A. Contemporaneous FD
-    m_fd = df_dyn.dropna(subset=["delta_real_np", "delta_corsup"]).copy()
+    # 3A. Contemporaneous FD (pooled)
+    m_fd = df_dyn.dropna(subset=["delta_real_np", "delta_corsup"]).copy().reset_index(drop=True)
     res_fd = sm.OLS(m_fd["delta_real_np"], sm.add_constant(m_fd[["delta_corsup"]])).fit(
         cov_type="cluster", cov_kwds={"groups": m_fd["nces_lea_id"]}
     )
@@ -156,8 +220,46 @@ def run_fiscal_substitution_analysis():
         "ci_upper_95": round(float(res_fd.conf_int().loc["delta_corsup", 1]), 4),
     })
 
-    # 3B. Lead NP on Delta CORSUP (Insourcing reaction test)
-    m_lead_np = df_dyn.dropna(subset=["lead_delta_np", "delta_corsup"]).copy()
+    # 3B. FD with Year Fixed Effects
+    res_fd_yr = smf.ols("delta_real_np ~ delta_corsup + C(school_year)", data=m_fd).fit(
+        cov_type="cluster", cov_kwds={"groups": m_fd["nces_lea_id"]}
+    )
+    results_records.append({
+        "model_family": "Dynamic First Differences",
+        "model_name": "FD Sensitivity 1: Delta Real NP ~ Delta CORSUP + Year FE",
+        "dependent_variable": "delta_real_np",
+        "sample_n": int(res_fd_yr.nobs),
+        "r_squared": round(float(res_fd_yr.rsquared), 4),
+        "predictor_variable": "delta_corsup",
+        "coef": round(float(res_fd_yr.params["delta_corsup"]), 4),
+        "std_error": round(float(res_fd_yr.bse["delta_corsup"]), 4),
+        "t_statistic": round(float(res_fd_yr.tvalues["delta_corsup"]), 2),
+        "p_value": round(float(res_fd_yr.pvalues["delta_corsup"]), 4),
+        "ci_lower_95": round(float(res_fd_yr.conf_int().loc["delta_corsup", 0]), 4),
+        "ci_upper_95": round(float(res_fd_yr.conf_int().loc["delta_corsup", 1]), 4),
+    })
+
+    # 3C. FD with State x Year Fixed Effects
+    res_fd_sy = smf.ols("delta_real_np ~ delta_corsup + C(state_year)", data=m_fd).fit(
+        cov_type="cluster", cov_kwds={"groups": m_fd["nces_lea_id"]}
+    )
+    results_records.append({
+        "model_family": "Dynamic First Differences",
+        "model_name": "FD Sensitivity 2: Delta Real NP ~ Delta CORSUP + State*Year FE",
+        "dependent_variable": "delta_real_np",
+        "sample_n": int(res_fd_sy.nobs),
+        "r_squared": round(float(res_fd_sy.rsquared), 4),
+        "predictor_variable": "delta_corsup",
+        "coef": round(float(res_fd_sy.params["delta_corsup"]), 4),
+        "std_error": round(float(res_fd_sy.bse["delta_corsup"]), 4),
+        "t_statistic": round(float(res_fd_sy.tvalues["delta_corsup"]), 2),
+        "p_value": round(float(res_fd_sy.pvalues["delta_corsup"]), 4),
+        "ci_lower_95": round(float(res_fd_sy.conf_int().loc["delta_corsup", 0]), 4),
+        "ci_upper_95": round(float(res_fd_sy.conf_int().loc["delta_corsup", 1]), 4),
+    })
+
+    # 3D. Lead NP on Delta CORSUP (Insourcing reaction test)
+    m_lead_np = df_dyn.dropna(subset=["lead_delta_np", "delta_corsup"]).copy().reset_index(drop=True)
     res_lead_np = sm.OLS(m_lead_np["lead_delta_np"], sm.add_constant(m_lead_np[["delta_corsup"]])).fit(
         cov_type="cluster", cov_kwds={"groups": m_lead_np["nces_lea_id"]}
     )
@@ -176,8 +278,8 @@ def run_fiscal_substitution_analysis():
         "ci_upper_95": round(float(res_lead_np.conf_int().loc["delta_corsup", 1]), 4),
     })
 
-    # 3C. Lead CORSUP on Level NP (Demand-driven insourcing test)
-    m_lead_cor = df_dyn.dropna(subset=["lead_delta_corsup", "real_instr_support_nonpersonnel_per_pupil"]).copy()
+    # 3E. Lead CORSUP on Level NP (Demand-driven insourcing test)
+    m_lead_cor = df_dyn.dropna(subset=["lead_delta_corsup", "real_instr_support_nonpersonnel_per_pupil"]).copy().reset_index(drop=True)
     res_lead_cor = sm.OLS(
         m_lead_cor["lead_delta_corsup"],
         sm.add_constant(m_lead_cor[["real_instr_support_nonpersonnel_per_pupil"]])
@@ -215,17 +317,20 @@ def run_fiscal_substitution_analysis():
         "represented an **additive organizational layer** expanding total supervisory overhead across the Kansas City metropolitan area.",
         "",
         "### Key Empirical Findings:",
-        "1. **Macroeconometric Verdict — Additive Layering Across the Panel:** Across the 55 balanced districts from 2014–15 to 2022–23,",
-        "   within-district fixed-effects estimation rejects pure insourcing/substitution. As coordinator density expanded, real non-personnel",
-        f"   spending per student did not decline ($\\beta = +{results_records[0]['coef']:.2f}, t = {results_records[0]['t_statistic']:+.2f}, p = {results_records[0]['p_value']:.3f}$),",
-        f"   while total instructional staff support spending ($E07$) grew ($\\beta = +{results_records[1]['coef']:.2f}, t = {results_records[1]['t_statistic']:+.2f}, p = {results_records[1]['p_value']:.3f}$).",
-        "   Across the broader region, coordinators were added on top of existing non-personnel operating budgets rather than replacing vendor contracts.",
-        "2. **Long-Difference Confirmation (2014–15 $\\to$ 2022–23):** Over the 8-year span, long differences across all 55 districts confirm",
-        f"   that changes in coordinator staffing are weakly positively associated with real non-personnel spending ($\\beta = +{results_records[3]['coef']:.2f}, t = {results_records[3]['t_statistic']:+.2f}, p = {results_records[3]['p_value']:.3f}$),",
-        "   with no evidence of systemic vendor displacement.",
-        "3. **Dynamic Lead-Lag Neutrality:** Neither contemporaneous first differences ($t = -0.20, p = 0.841$) nor 1-year lagged coordinator changes",
-        "   ($t = +1.09, p = 0.274$) show displacement of non-personnel support. High initial non-personnel spending does not predict subsequent",
-        "   coordinator hiring ($t = +0.02, p = 0.984$), disproving the hypothesis of generalized vendor insourcing.",
+        "1. **No Evidence of Generalized Substitution Across the Regional Panel:** Across the 55 balanced districts from 2014–15 to 2022–23,",
+        "   within-district fixed-effects estimation yields no evidence that coordinator growth was associated with systematic declines in",
+        f"   non-personnel instructional-support spending (baseline FE $\\beta = +{results_records[0]['coef']:.2f}, t = {results_records[0]['t_statistic']:+.2f}, p = {results_records[0]['p_value']:.3f}$;",
+        f"   State$\\times$Year FE $\\beta = +{results_records[3]['coef']:.2f}, t = {results_records[3]['t_statistic']:+.2f}, p = {results_records[3]['p_value']:.3f}$;",
+        f"   Winsorized $\\beta = +{results_records[5]['coef']:.2f}, t = {results_records[5]['t_statistic']:+.2f}, p = {results_records[5]['p_value']:.3f}$).",
+        "   Point estimates are uniformly nonnegative, which is more consistent with additive layering than pure insourcing, but the estimates are",
+        "   imprecise and do not establish a positive additive effect.",
+        "2. **Long-Difference and First-Difference Robustness:** Over the 8-year span, long differences across all 55 districts confirm",
+        f"   that changes in coordinator staffing are weakly positively associated with real non-personnel spending ($\\beta = +{results_records[6]['coef']:.2f}, t = {results_records[6]['t_statistic']:+.2f}, p = {results_records[6]['p_value']:.3f}$).",
+        "   First-difference models with common year effects ($\\beta = -2.65, t = -0.38, p = 0.704$) and state$\\times$year effects ($\\beta = -4.07, t = -0.58, p = 0.563$)",
+        "   are similarly indistinguishable from zero.",
+        "3. **Dynamic Lead-Lag Neutrality:** Lagged coordinator changes do not predict subsequent non-personnel reductions ($t = +1.09, p = 0.274$),",
+        "   and high initial non-personnel spending does not predict subsequent coordinator hiring ($t = +0.02, p = 0.984$). The data do not support",
+        "   generalized non-personnel expenditure substitution as the dominant regional mechanism.",
         "4. **The Shawnee Mission Exception — Partial Substitution plus Net Expansion:** Among the focal archetypes, **Shawnee Mission USD 512**",
         "   presents the single prominent case consistent with partial substitution. As its coordinator workforce expanded from 27.6 FTE to 93.0 FTE,",
         "   its real non-personnel instructional support spending fell by **34.5%** (from **$63.51** to **$41.59 / pupil**), while total instructional",

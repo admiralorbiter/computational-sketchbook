@@ -597,7 +597,7 @@ def test_phase6c_fiscal_support_and_substitution():
     res_path = OUTPUTS_DIR / "phase6c_fiscal_substitution_regression_results.csv"
     assert res_path.exists(), f"Missing {res_path}"
     df_res = pd.read_csv(res_path).set_index("model_name")
-    assert len(df_res) == 9
+    assert len(df_res) == 14
 
     # Within-District FE Model 1 (Non-personnel): +11.85, p=0.111
     assert abs(df_res.loc["FE Model 1: Real Non-Personnel Support / Pupil", "coef"] - 11.8509) < 0.01
@@ -606,11 +606,24 @@ def test_phase6c_fiscal_support_and_substitution():
     # Within-District FE Model 2 (Total E07): +19.41, p=0.216
     assert abs(df_res.loc["FE Model 2: Real Total E07 Support / Pupil", "coef"] - 19.4144) < 0.01
 
+    # Within-District FE Sensitivities
+    assert abs(df_res.loc["FE Sensitivity 1: District + State*Year FE (Real NP / Pupil)", "coef"] - 9.4365) < 0.01
+    assert abs(df_res.loc["FE Sensitivity 1: District + State*Year FE (Real NP / Pupil)", "p_value"] - 0.1754) < 0.01
+    assert abs(df_res.loc["FE Sensitivity 3: Winsorized NP (2.5-97.5%) + State*Year FE", "coef"] - 9.0315) < 0.01
+    assert abs(df_res.loc["FE Sensitivity 3: Winsorized NP (2.5-97.5%) + State*Year FE", "p_value"] - 0.1895) < 0.01
+
     # Long Difference Model 1 (Delta Real Non-personnel): +14.96, p=0.221
     assert abs(df_res.loc["Long Difference Model 1: Delta Real Non-Personnel / Pupil", "coef"] - 14.9587) < 0.01
 
-    # Contemporaneous FD: -1.35, p=0.841
+    # Contemporaneous FD & Sensitivities
     assert abs(df_res.loc["Contemporaneous FD: Delta Real NP ~ Delta CORSUP", "coef"] - (-1.3478)) < 0.01
+    assert abs(df_res.loc["FD Sensitivity 1: Delta Real NP ~ Delta CORSUP + Year FE", "coef"] - (-2.6479)) < 0.01
+    assert abs(df_res.loc["FD Sensitivity 1: Delta Real NP ~ Delta CORSUP + Year FE", "p_value"] - 0.7037) < 0.01
+    assert abs(df_res.loc["FD Sensitivity 2: Delta Real NP ~ Delta CORSUP + State*Year FE", "coef"] - (-4.0747)) < 0.01
+    assert abs(df_res.loc["FD Sensitivity 2: Delta Real NP ~ Delta CORSUP + State*Year FE", "p_value"] - 0.5629) < 0.01
+
+    # Lead Response (Delta Real NP (t+1) ~ Delta CORSUP (t)): +10.36, p=0.274
+    assert abs(df_res.loc["Lead Response: Delta Real NP (t+1) ~ Delta CORSUP (t)", "coef"] - 10.3643) < 0.01
 
     # 4. Synthesis Report Document Checks
     rep_path = OUTPUTS_DIR / "phase6c_fiscal_substitution_report.md"
