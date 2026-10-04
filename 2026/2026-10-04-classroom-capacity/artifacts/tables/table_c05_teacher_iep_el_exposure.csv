@@ -1,0 +1,7 @@
+teacher_archetype,school_level,instructional_model,schedule_model,total_active_students,expected_idea_iep_students,expected_section_504_students,expected_combined_accommodations,expected_english_learners,expected_chronically_absent_students,notes
+Elementary Self-Contained Teacher (US Benchmark),Elementary School,Self-Contained,All-Day Core (Single Cohort),19.1,2.6,1.0,3.6,1.8,6.1,NCES NTPS 2020-21 national elementary self-contained average
+Secondary Teacher: Contractual 5-of-7 (US Benchmark),High School,Departmentalized,5 sections of 21.0 students,105.0,14.2,5.7,19.9,10.0,33.6,"5 teaching periods @ 21.0 mean (Modern contractual regime, 2 prep/duty periods)"
+Secondary Teacher: Traditional 6-of-7 (US Benchmark),High School,Departmentalized,6 sections of 21.0 students,126.0,17.1,6.9,23.9,12.0,40.3,"6 teaching periods @ 21.0 mean (Traditional regime, 1 prep period)"
+Secondary Teacher: Alternating 8-Block (US Benchmark),High School,Departmentalized,6 sections of 21.0 students (3 daily),126.0,17.1,6.9,23.9,12.0,40.3,6 active sections on A/B rotation; daily contact = 63.0 students
+Suburban Comprehensive HS Teacher (Contractual 5-of-7),High School,Departmentalized,5 sections of 24.5 core students,122.5,16.6,6.7,23.3,11.6,39.2,CRDC measured secondary core average (24.5) under SMSD contractual model
+Suburban Comprehensive HS Teacher (Traditional 6-of-7),High School,Departmentalized,6 sections of 24.5 core students,147.0,19.9,8.0,27.9,14.0,47.0,CRDC measured secondary core average (24.5) under traditional 6-period teaching load

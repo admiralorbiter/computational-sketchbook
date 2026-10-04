@@ -1,0 +1,10 @@
+metric,sec_high_departmentalized,middle_departmentalized,elem_self_contained,notes
+National Benchmark (Verbatim NCES),21.0,22.0,19.1,Published national population statistic
+50-State + DC Mean,19.85,21.16,18.47,Unweighted mean across state entities
+50-State + DC Median,20.0,20.9,18.3,50th percentile among states
+25th Percentile (P25),17.8,19.4,17.55,Lower quartile threshold
+75th Percentile (P75),21.8,23.1,19.35,Upper quartile threshold
+Minimum State,13.4,14.2,14.2,Lowest state: Maine (13.4)
+Maximum State,27.6,27.5,23.0,Highest state: Nevada (27.6)
+Missouri State Average,19.2,18.5,18.2,State rank: 33 of 51 (Lower-middle distribution)
+Kansas State Average,17.4,19.8,17.9,State rank: 40 of 51 (Bottom decile nationally)
