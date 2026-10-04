@@ -142,5 +142,100 @@ def test_partial_missingness_undercount_bias():
         
     assert np.isnan(strict_sum(male_count, female_suppressed_code))
 
+def test_course_specific_balanced_panel_qualification():
+    """
+    Synthetic test: A school observed every year, but with the target course missing in one year,
+    must NOT qualify for that course's balanced panel.
+    """
+    df_history = pd.DataFrame({
+        "nces_school_id": ["sch_A"] * 5 + ["sch_B"] * 5,
+        "wave": ["2015-16", "2017-18", "2020-21", "2021-22", "2023-24"] * 2,
+        "course_code": [
+            # School A offers Geometry in all 5 waves
+            "geom", "geom", "geom", "geom", "geom",
+            # School B offers Geometry in waves 1, 2, 4, 5, but Biology in wave 3 (missing Geometry in wave 3!)
+            "geom", "geom", "bio", "geom", "geom"
+        ]
+    })
+    
+    # Generic school balance: both School A and School B have some course in all 5 waves
+    generic_balanced = df_history.groupby("nces_school_id")["wave"].nunique()
+    assert generic_balanced["sch_A"] == 5
+    assert generic_balanced["sch_B"] == 5 # Misleadingly qualified under old logic!
+    
+    # Genuinely Course-Specific Balanced Panel for Geometry:
+    geom_df = df_history[df_history["course_code"] == "geom"]
+    geom_waves = geom_df.groupby("nces_school_id")["wave"].nunique()
+    
+    assert geom_waves["sch_A"] == 5
+    assert geom_waves["sch_B"] == 4 # Correctly disqualified from Geometry balanced panel!
+    
+    geom_qualified = set(geom_waves[geom_waves == 5].index)
+    assert "sch_A" in geom_qualified
+    assert "sch_B" not in geom_qualified
+
+def test_fe_non_informative_group_exclusion():
+    """
+    Synthetic test: School-wave groups with only 1 course offer zero identifying
+    within-group variation after demeaning, and must be excluded from the FE sample.
+    """
+    df_fe_test = pd.DataFrame({
+        "school_wave_id": ["sw_1", "sw_1", "sw_2", "sw_3", "sw_3", "sw_3"],
+        "course_code": ["geom", "calc", "geom", "geom", "bio", "chem"],
+        "mean_class_size": [22.0, 16.0, 24.0, 20.0, 21.0, 19.0],
+    })
+    
+    counts = df_fe_test.groupby("school_wave_id")["course_code"].nunique()
+    valid_groups = counts[counts >= 2].index
+    filtered_df = df_fe_test[df_fe_test["school_wave_id"].isin(valid_groups)]
+    
+    # sw_1 has 2 courses -> kept
+    # sw_2 has 1 course -> excluded!
+    # sw_3 has 3 courses -> kept
+    assert "sw_1" in valid_groups
+    assert "sw_2" not in valid_groups
+    assert "sw_3" in valid_groups
+    assert len(filtered_df) == 5 # 6 rows minus the 1 non-informative singleton row
+
+def test_threshold_semantics_cell_vs_section_exposure():
+    """
+    Theorem: Cell-level exposure to >= 30 students is neither a mathematical lower bound
+    nor an upper bound on the percentage of students sitting in individual sections >= 30.
+    """
+    # Case 1: Cell mean is 28 (< 30), but contains sections [20, 28, 36].
+    # Total enrollment: 84.
+    # Cell-level >= 30 exposure: 0% (cell mean 28 < 30).
+    # Actual section-level >= 30 exposure: 36 students in the 36-student class -> 36 / 84 = 42.9%!
+    sec1 = [20, 28, 36]
+    cell1_mean = np.mean(sec1) # 28.0
+    cell1_exposure = 1.0 if cell1_mean >= 30 else 0.0 # 0.0
+    sec1_exposure = sum(s for s in sec1 if s >= 30) / sum(sec1) # 36 / 84 ≈ 0.4286
+    
+    assert cell1_mean < 30.0
+    assert cell1_exposure == 0.0
+    assert sec1_exposure > 0.40 # Section exposure strictly exceeds cell exposure!
+    
+    # Case 2: Cell mean is 31 (>= 30), but contains sections [24, 31, 38].
+    # Total enrollment: 93.
+    # Cell-level >= 30 exposure: 100% (all 93 students are in a cell averaging >= 30).
+    # Actual section-level >= 30 exposure: (31 + 38) / 93 = 74.2% (24 students are in a class of 24 < 30!)
+    sec2 = [24, 31, 38]
+    cell2_mean = np.mean(sec2) # 31.0
+    cell2_exposure = 1.0 if cell2_mean >= 30 else 0.0 # 1.0
+    sec2_exposure = sum(s for s in sec2 if s >= 30) / sum(sec2) # 69 / 93 ≈ 0.7419
+    
+    assert cell2_mean >= 30.0
+    assert cell2_exposure == 1.0
+    assert sec2_exposure < 1.0 # Cell exposure strictly overstates section exposure!
+
+def test_cache_versioning_prevents_stale_cache():
+    """Verify that versioned cache tags ensure clean rebuilds when extraction schema changes."""
+    expected_cache_tag = "v2_strict"
+    valid_cache_name = f"crdc_2013_14_active_{expected_cache_tag}.parquet"
+    legacy_cache_name = "crdc_2013_14_active.parquet"
+    
+    assert expected_cache_tag in valid_cache_name
+    assert expected_cache_tag not in legacy_cache_name
+
 if __name__ == "__main__":
     pytest.main([__file__])

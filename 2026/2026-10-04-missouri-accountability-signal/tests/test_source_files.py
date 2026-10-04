@@ -22,7 +22,7 @@ def test_registry_exists():
 
 def test_all_source_files_exist_and_match_hash():
     df = pd.read_csv(REGISTRY_PATH)
-    assert len(df) == 19, f"Expected 19 registered sources, found {len(df)}"
+    assert len(df) == 22, f"Expected 22 registered sources, found {len(df)}"
 
     for _, row in df.iterrows():
         source_id = row["source_id"]

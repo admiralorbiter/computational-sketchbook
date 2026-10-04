@@ -4,15 +4,18 @@ src/build_school_panel.py
 Constructs the master school-year accountability panel:
 data/processed/mo_school_accountability_panel.parquet
 
-Integrates:
-- MSIP 6 Building APR Summary & Supporting files (2022-2025)
-- Free and Reduced Price Lunch & CEP Participation (2022-2025)
-- Student Demographics (Race/ethnicity, IEP, EL/LEP, Title I)
-- Attendance and Chronic Absenteeism (Proportional Attendance 90/90)
-- Student Mobility Rates
-- Prior year achievement, growth, and APR lags
-- Analytic sample flags (Sample A, Sample B, Sample C)
-- Data suppression and small school indicators
+Calibrated per Phase 6.1 Review:
+- Merges NCES CCD directory classifications (school_type, virtual, direct_certification, ncessch)
+- Implements explicit institutional type flags:
+  regular, alternative, special education, CTE/vocational, virtual, juvenile/detention
+- Audits and preserves 3 CEP states: CEP, NON_CEP, UNKNOWN
+- Audits FRPL clipping: tracks frpl_pct_raw and frpl_clipped_flag
+- Constructs DESE exact URM (Black + Hispanic + Native American) and broad analyst URM
+- Enforces complete subject information (skipna=False) for composite measures:
+  analyst_composite_status_mpi and apr_growth_pts_pct
+- Tracks completeness case types (COMPLETE_BOTH, ELA_ONLY, MATH_ONLY, NEITHER)
+- Computes longitudinal lags across 2022-2025
+- Constructs Samples A, B, and C
 """
 
 from pathlib import Path
@@ -52,38 +55,45 @@ def load_frpl_panel():
     for sheet_name, yr in sheet_year_map.items():
         df_raw = pd.read_excel(frpl_file, sheet_name=sheet_name, skiprows=9)
         df_sub = df_raw.dropna(subset=["District Code", "BLDG. NO."]).copy()
-        
+
         df_sub["school_year"] = yr
         df_sub["district_code"] = df_sub["District Code"].astype(int).astype(str).str.strip().str.zfill(6)
         df_sub["building_code"] = df_sub["BLDG. NO."].astype(int).astype(str).str.strip().str.zfill(4)
-        
+
         # Identify F&RL percentage column
         pct_col = [c for c in df_sub.columns if "F&RL Percentage" in str(c) or "Percentage" in str(c)]
         if pct_col:
-            # Raw F&RL Percentage is on a 0.0 - 1.0 proportion scale.
-            # Scale to percentage [0, 100] and clip ratio overages at 100.0
-            raw_pct = df_sub[pct_col[0]].apply(parse_clean_numeric)
-            df_sub["frpl_pct_file"] = (raw_pct * 100.0).clip(lower=0.0, upper=100.0)
+            raw_pct = df_sub[pct_col[0]].apply(parse_clean_numeric) * 100.0
+            df_sub["frpl_pct_raw"] = raw_pct
+            df_sub["frpl_clipped_flag"] = (raw_pct > 100.0).astype(int)
+            df_sub["frpl_pct_file"] = raw_pct.clip(lower=0.0, upper=100.0)
         else:
+            df_sub["frpl_pct_raw"] = np.nan
+            df_sub["frpl_clipped_flag"] = 0
             df_sub["frpl_pct_file"] = np.nan
 
         # Membership / count
         count_col = [c for c in df_sub.columns if "F&RL Count" in str(c)]
         df_sub["frpl_count_file"] = df_sub[count_col[0]].apply(parse_clean_numeric) if count_col else np.nan
 
-        # CEP participating flag
+        # CEP participating flag: preserve 3 states
         cep_col = [c for c in df_sub.columns if "Community" in str(c) or "CEP" in str(c)]
         if cep_col:
-            df_sub["cep_flag"] = df_sub[cep_col[0]].astype(str).str.strip().str.upper().apply(
-                lambda x: 1 if x in ["Y", "YES", "TRUE", "1"] else 0
+            df_sub["cep_status"] = df_sub[cep_col[0]].astype(str).str.strip().str.upper().apply(
+                lambda x: "CEP" if x in ["Y", "YES", "TRUE", "1"] else "NON_CEP"
             )
         else:
-            df_sub["cep_flag"] = 0
+            df_sub["cep_status"] = "NON_CEP"
 
-        dfs.append(df_sub[["school_year", "district_code", "building_code", "frpl_pct_file", "frpl_count_file", "cep_flag"]])
+        df_sub["cep_flag"] = (df_sub["cep_status"] == "CEP").astype(int)
 
-    df_frpl_all = pd.concat(dfs, ignore_index=True)
-    return df_frpl_all
+        dfs.append(df_sub[[
+            "school_year", "district_code", "building_code",
+            "frpl_pct_raw", "frpl_clipped_flag", "frpl_pct_file", "frpl_count_file",
+            "cep_status", "cep_flag"
+        ]])
+
+    return pd.concat(dfs, ignore_index=True)
 
 
 def load_demographics_panel():
@@ -110,14 +120,31 @@ def load_demographics_panel():
     df["race_multiracial_pct"] = df["ENROLLMENT_MULTIRACIAL_PCT"].apply(parse_clean_numeric)
     df["race_pacific_islander_pct"] = df["ENROLLMENT_PACIFIC_ISLANDER_PCT"].apply(parse_clean_numeric)
 
-    # Combined underrepresented minority (URM) percentage
-    df["race_urm_pct"] = (
+    # Official DESE URM definition (Black, Hispanic, and Native American / Indian)
+    df["dese_urm_pct"] = (
+        df["race_black_pct"].fillna(0) +
+        df["race_hispanic_pct"].fillna(0) +
+        df["race_indian_pct"].fillna(0)
+    ).clip(lower=0.0, upper=100.0)
+
+    # Broad Analyst URM percentage
+    df["analyst_urm_pct"] = (
         df["race_black_pct"].fillna(0) +
         df["race_hispanic_pct"].fillna(0) +
         df["race_indian_pct"].fillna(0) +
         df["race_multiracial_pct"].fillna(0) +
         df["race_pacific_islander_pct"].fillna(0)
     ).clip(lower=0.0, upper=100.0)
+
+    # Subgroup suppression tracking
+    df["urm_missing_subgroup_flag"] = (
+        df["race_black_pct"].isna() |
+        df["race_hispanic_pct"].isna() |
+        df["race_indian_pct"].isna()
+    ).astype(int)
+
+    # Backward compatibility
+    df["race_urm_pct"] = df["dese_urm_pct"]
 
     # EL and IEP
     df["ell_pct"] = df["ELL_LEP_STUDENTS_ENROLLED_K_12_PCT"].apply(parse_clean_numeric).clip(lower=0.0, upper=100.0)
@@ -129,7 +156,8 @@ def load_demographics_panel():
     keep_cols = [
         "school_year", "district_code", "building_code", "enrollment", "january_membership",
         "frpl_pct_demog", "race_white_pct", "race_black_pct", "race_hispanic_pct",
-        "race_asian_pct", "race_indian_pct", "race_multiracial_pct", "race_urm_pct",
+        "race_asian_pct", "race_indian_pct", "race_multiracial_pct", "race_pacific_islander_pct",
+        "dese_urm_pct", "analyst_urm_pct", "race_urm_pct", "urm_missing_subgroup_flag",
         "ell_pct", "iep_pct", "title1_flag"
     ]
     return df[keep_cols]
@@ -166,6 +194,34 @@ def load_mobility_panel():
     return df[["school_year", "district_code", "building_code", "mobility_pct"]]
 
 
+def load_nces_ccd_panel():
+    """Loads NCES CCD school directory, institutional type, and direct certification."""
+    dfs = []
+    for yr in [2022, 2023, 2024, 2025]:
+        ccd_yr = min(yr, 2024)
+        p = RAW_CONTEXT_DIR / f"mo_nces_ccd_directory_{ccd_yr}.csv"
+        df_yr = pd.read_csv(p, dtype=str)
+        df_yr["school_year"] = yr
+        df_yr["district_code"] = df_yr["state_leaid"].astype(str).str.replace("MO-", "", regex=False).str.strip().str.zfill(6)
+        df_yr["building_code"] = df_yr["seasch"].astype(str).str.slice(7, 11)
+
+        df_yr["nces_school_id"] = df_yr["ncessch"]
+        df_yr["nces_school_type"] = df_yr["school_type"].astype(str).str.strip()
+        df_yr["nces_virtual"] = df_yr["virtual"].astype(str).str.strip()
+
+        dc_count = pd.to_numeric(df_yr["direct_certification"], errors="coerce")
+        enr_ccd = pd.to_numeric(df_yr["enrollment"], errors="coerce")
+        df_yr["direct_cert_count"] = dc_count
+        df_yr["direct_cert_pct"] = np.where(enr_ccd > 0, (dc_count / enr_ccd) * 100.0, np.nan)
+        df_yr["direct_cert_pct"] = df_yr["direct_cert_pct"].clip(lower=0.0, upper=100.0)
+
+        dfs.append(df_yr[[
+            "school_year", "district_code", "building_code", "nces_school_id",
+            "nces_school_type", "nces_virtual", "direct_cert_count", "direct_cert_pct"
+        ]])
+    return pd.concat(dfs, ignore_index=True)
+
+
 def build_panel():
     print("[*] Building master school accountability panel...")
 
@@ -183,6 +239,7 @@ def build_panel():
     df_demog = load_demographics_panel()
     df_att = load_attendance_panel()
     df_mob = load_mobility_panel()
+    df_ccd = load_nces_ccd_panel()
 
     # 3. Join context with APR
     print("[*] Merging datasets...")
@@ -190,11 +247,14 @@ def build_panel():
     df_panel = pd.merge(df_panel, df_frpl, on=["school_year", "district_code", "building_code"], how="left")
     df_panel = pd.merge(df_panel, df_att, on=["school_year", "district_code", "building_code"], how="left")
     df_panel = pd.merge(df_panel, df_mob, on=["school_year", "district_code", "building_code"], how="left")
+    df_panel = pd.merge(df_panel, df_ccd, on=["school_year", "district_code", "building_code"], how="left")
 
-    # Reconcile primary poverty variable:
-    # Prefer explicit frpl_pct_file from FRPL table; if missing, fall back to demographics FRPL
+    # CEP Status preservation
+    df_panel["cep_status"] = df_panel["cep_status"].fillna("UNKNOWN")
+    df_panel["cep_flag"] = np.where(df_panel["cep_status"] == "CEP", 1, np.where(df_panel["cep_status"] == "NON_CEP", 0, np.nan))
+
+    # Reconcile primary poverty variable
     df_panel["frpl_pct"] = df_panel["frpl_pct_file"].combine_first(df_panel["frpl_pct_demog"])
-    df_panel["cep_flag"] = df_panel["cep_flag"].fillna(0).astype(int)
 
     # 4. Classify School Level and Grade Spans
     df_panel["school_level"] = df_panel.apply(
@@ -203,37 +263,53 @@ def build_panel():
     df_panel["grade_low"] = df_panel["BEG_GRADE"]
     df_panel["grade_high"] = df_panel["END_GRADE"]
 
-    # 5. Composite Outcome Measures
-    # Status: Mean of ELA and Math MPI
-    df_panel["achievement_measure"] = df_panel[["ela_status_mpi", "math_status_mpi"]].mean(axis=1)
+    # 5. Composite Outcome Measures (Complete-Case Enforcement)
+    # Status: Mean of ELA and Math MPI requiring complete subject information
+    df_panel["analyst_composite_status_mpi"] = df_panel[["ela_status_mpi", "math_status_mpi"]].mean(axis=1, skipna=False)
+    ela_s_ok = df_panel["ela_status_mpi"].notna()
+    mat_s_ok = df_panel["math_status_mpi"].notna()
+    df_panel["status_case_type"] = np.where(
+        ela_s_ok & mat_s_ok, "COMPLETE_BOTH",
+        np.where(ela_s_ok & ~mat_s_ok, "ELA_ONLY",
+        np.where(~ela_s_ok & mat_s_ok, "MATH_ONLY", "NEITHER"))
+    )
 
-    # Growth:
-    # 2023-2025: composite growth points percentage
-    df_panel["composite_growth_pts_pct"] = df_panel[["ela_growth_pts_pct", "math_growth_pts_pct"]].mean(axis=1)
-    # 2022: standardized zscore composite
-    df_panel["growth_zscore_composite"] = df_panel[["ela_growth_zscore", "math_growth_zscore"]].mean(axis=1)
-    # Generic growth measure: composite points pct for 2023-2025
-    df_panel["growth_measure"] = df_panel["composite_growth_pts_pct"]
+    # Growth: 2023-2025 APR growth points percentage requiring complete subject information
+    df_panel["apr_growth_pts_pct"] = df_panel[["ela_growth_pts_pct", "math_growth_pts_pct"]].mean(axis=1, skipna=False)
+    ela_g_ok = df_panel["ela_growth_pts_pct"].notna()
+    mat_g_ok = df_panel["math_growth_pts_pct"].notna()
+    df_panel["growth_case_type"] = np.where(
+        ela_g_ok & mat_g_ok, "COMPLETE_BOTH",
+        np.where(ela_g_ok & ~mat_g_ok, "ELA_ONLY",
+        np.where(~ela_g_ok & mat_g_ok, "MATH_ONLY", "NEITHER"))
+    )
 
-    # 6. Assign Sample Flags and Exclusions
+    # 2022 standardized zscore composite requiring complete cases
+    df_panel["growth_zscore_composite"] = df_panel[["ela_growth_zscore", "math_growth_zscore"]].mean(axis=1, skipna=False)
+
+    # Canonical aliases for backward compatibility
+    df_panel["achievement_measure"] = df_panel["analyst_composite_status_mpi"]
+    df_panel["composite_growth_pts_pct"] = df_panel["apr_growth_pts_pct"]
+    df_panel["growth_measure"] = df_panel["apr_growth_pts_pct"]
+
+    # 6. Assign Institutional Flags and Sample Exclusions
     df_panel = assign_sample_flags(df_panel)
 
     # 7. Longitudinal Lags (prior year achievement, growth, APR)
     print("[*] Computing longitudinal lags...")
     df_panel = df_panel.sort_values(["district_code", "building_code", "school_year"]).reset_index(drop=True)
 
-    # Verify building continuity for lags
     df_panel["prior_school_year"] = df_panel.groupby(["district_code", "building_code"])["school_year"].shift(1)
     df_panel["is_consecutive_year"] = (df_panel["school_year"] - df_panel["prior_school_year"]) == 1
 
     df_panel["prior_year_achievement"] = np.where(
         df_panel["is_consecutive_year"],
-        df_panel.groupby(["district_code", "building_code"])["achievement_measure"].shift(1),
+        df_panel.groupby(["district_code", "building_code"])["analyst_composite_status_mpi"].shift(1),
         np.nan
     )
     df_panel["prior_year_growth"] = np.where(
         df_panel["is_consecutive_year"],
-        df_panel.groupby(["district_code", "building_code"])["growth_measure"].shift(1),
+        df_panel.groupby(["district_code", "building_code"])["apr_growth_pts_pct"].shift(1),
         np.nan
     )
     df_panel["prior_year_apr"] = np.where(
@@ -254,20 +330,21 @@ def build_panel():
         axis=1
     )
 
-    # 9. Suppression and Small School Flags
+    # 9. Small school flag and data suppressions
     df_panel["small_school_flag"] = (df_panel["enrollment"] < 100).astype(int)
     df_panel["suppression_flag_achievement"] = (
         df_panel["ela_status_mpi"].isna() | df_panel["math_status_mpi"].isna()
     ).astype(int)
     df_panel["suppression_flag_growth"] = (
-        df_panel["growth_measure"].isna() & df_panel["growth_zscore_composite"].isna()
+        df_panel["apr_growth_pts_pct"].isna() & df_panel["growth_zscore_composite"].isna()
     ).astype(int)
 
     # Clean string dtypes for Parquet compatibility
     str_cols = [
         "district_code", "building_code", "DISTRICT_NAME", "SCHOOL_NAME",
         "BEG_GRADE", "END_GRADE", "school_level", "grade_low", "grade_high",
-        "exclusion_reason", "ela_growth_designation", "math_growth_designation", "science_growth_designation"
+        "exclusion_reason", "ela_growth_designation", "math_growth_designation", "science_growth_designation",
+        "nces_school_id", "nces_school_type", "nces_virtual", "cep_status", "status_case_type", "growth_case_type"
     ]
     for c in str_cols:
         if c in df_panel.columns:
@@ -285,8 +362,8 @@ def build_panel():
         mean_enrollment=("enrollment", "mean"),
         mean_frpl_pct=("frpl_pct", "mean"),
         mean_apr_pct=("apr_pct", "mean"),
-        mean_achievement_mpi=("achievement_measure", "mean"),
-        mean_growth_pct=("composite_growth_pts_pct", "mean"),
+        mean_status_mpi=("analyst_composite_status_mpi", "mean"),
+        mean_growth_pts=("apr_growth_pts_pct", "mean"),
     ).reset_index()
     print("\nMaster Panel Summary by Year:")
     print(summary.to_string(index=False))

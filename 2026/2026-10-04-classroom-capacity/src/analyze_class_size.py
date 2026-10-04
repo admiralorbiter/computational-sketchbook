@@ -135,39 +135,62 @@ def run_analysis_a1_and_a2(df_valid):
 def run_analysis_a3(df_valid):
     """
     Analysis A3: Weighting sensitivity.
-    Directly quantifies the divergence between course-cell weighting,
-    section weighting, and seat weighting across all courses in recent waves.
+    Directly quantifies the divergence between:
+    - Quantity A: Unweighted course-cell mean (mean of school-course averages)
+    - Quantity B: Section-weighted mean (total enrollment / total classes)
+    - Quantity C: Enrollment-weighted course-cell mean (lower-bound proxy for student-experienced size)
+    And calculates the three distinct gaps:
+    - Gap C - A: Enrollment-weighted vs. unweighted course-cell mean
+    - Gap C - B: Enrollment-weighted vs. section-weighted mean (Jensen's inequality gap)
+    - Gap B - A: Section-weighted vs. unweighted course-cell mean (institutional size gap)
     """
     print("--> Running Analysis A3: Weighting Sensitivity Analysis...")
     rows = []
     
-    for wave in ["2013-14", "2017-18", "2023-24"]:
+    for wave in ["2013-14", "2015-16", "2017-18", "2020-21", "2021-22", "2023-24"]:
         w_df = df_valid[df_valid["crdc_wave"] == wave]
-        for ccode in ["alg1", "geom", "alg2", "calc", "bio", "chem", "phys"]:
+        for ccode in ["alg1", "geom", "alg2", "calc", "bio", "chem", "phys", "advm"]:
             cg = w_df[w_df["course_code"] == ccode]
             if cg.empty:
                 continue
             cname = cg["course_name"].iloc[0]
-            unwt = cg["mean_class_size"].mean()
+            n_cells = len(cg)
+            unwt_a = cg["mean_class_size"].mean()
             tot_enr = cg["num_enrolled"].sum()
             tot_cls = cg["num_classes"].sum()
-            sec_wt = tot_enr / tot_cls if tot_cls > 0 else np.nan
-            seat_wt = (cg["num_enrolled"] * cg["mean_class_size"]).sum() / tot_enr if tot_enr > 0 else np.nan
+            sec_wt_b = tot_enr / tot_cls if tot_cls > 0 else np.nan
+            enr_wt_c = (cg["num_enrolled"] * cg["mean_class_size"]).sum() / tot_enr if tot_enr > 0 else np.nan
             
-            gap_seat_unwt = seat_wt - unwt
-            gap_seat_sec = seat_wt - sec_wt
-            pct_boost = (gap_seat_unwt / unwt) * 100
+            gap_c_minus_a = enr_wt_c - unwt_a
+            pct_gap_c_minus_a = (gap_c_minus_a / unwt_a) * 100 if unwt_a > 0 else np.nan
+            
+            gap_c_minus_b = enr_wt_c - sec_wt_b
+            pct_gap_c_minus_b = (gap_c_minus_b / sec_wt_b) * 100 if sec_wt_b > 0 else np.nan
+            
+            gap_b_minus_a = sec_wt_b - unwt_a
+            pct_gap_b_minus_a = (gap_b_minus_a / unwt_a) * 100 if unwt_a > 0 else np.nan
             
             rows.append({
                 "wave": wave,
                 "course_code": ccode,
                 "course_name": cname,
-                "course_cell_mean": unwt,
-                "section_weighted_mean": sec_wt,
-                "seat_weighted_mean": seat_wt,
-                "seat_minus_cell_gap": gap_seat_unwt,
-                "seat_minus_sec_gap": gap_seat_sec,
-                "pct_increase_seat_weighting": pct_boost,
+                "valid_cells_n": n_cells,
+                "unweighted_cell_mean_a": unwt_a,
+                "section_weighted_mean_b": sec_wt_b,
+                "enrollment_weighted_mean_c": enr_wt_c,
+                "gap_c_minus_a": gap_c_minus_a,
+                "pct_gap_c_minus_a": pct_gap_c_minus_a,
+                "gap_c_minus_b": gap_c_minus_b,
+                "pct_gap_c_minus_b": pct_gap_c_minus_b,
+                "gap_b_minus_a": gap_b_minus_a,
+                "pct_gap_b_minus_a": pct_gap_b_minus_a,
+                # Retain legacy column names for compatibility
+                "course_cell_mean": unwt_a,
+                "section_weighted_mean": sec_wt_b,
+                "seat_weighted_mean": enr_wt_c,
+                "seat_minus_cell_gap": gap_c_minus_a,
+                "seat_minus_sec_gap": gap_c_minus_b,
+                "pct_increase_seat_weighting": pct_gap_c_minus_a,
             })
             
     df_wt = pd.DataFrame(rows)
@@ -203,26 +226,44 @@ def run_analysis_a4(df_valid):
             
             mean_cs = w_df["mean_class_size"].mean()
             median_cs = w_df["mean_class_size"].median()
+            tot_enr = w_df["num_enrolled"].sum()
+            tot_cls = w_df["num_classes"].sum()
+            sec_wt_cs = tot_enr / tot_cls if tot_cls > 0 else np.nan
+            enr_wt_cs = (w_df["num_enrolled"] * w_df["mean_class_size"]).sum() / tot_enr if tot_enr > 0 else np.nan
+            
             mean_ptr = w_df["school_ptr"].mean()
             median_ptr = w_df["school_ptr"].median()
             
-            wedge = w_df["ptr_wedge"]
-            ratio = w_df["ptr_wedge_ratio"]
+            cell_wedge = w_df["ptr_wedge"]
+            cell_ratio = w_df["ptr_wedge_ratio"]
+            enr_wedge = enr_wt_cs - mean_ptr
+            enr_ratio = enr_wt_cs / mean_ptr if mean_ptr > 0 else np.nan
             
             rows.append({
                 "population": pop_name,
                 "wave": wave,
                 "n_observations": len(w_df),
                 "schools_n": w_df["nces_school_id"].nunique(),
-                "mean_class_size": mean_cs,
-                "median_class_size": median_cs,
+                "mean_class_size_cell": mean_cs,
+                "median_class_size_cell": median_cs,
+                "section_weighted_class_size": sec_wt_cs,
+                "enrollment_weighted_class_size": enr_wt_cs,
                 "mean_school_ptr": mean_ptr,
                 "median_school_ptr": median_ptr,
-                "mean_absolute_wedge": wedge.mean(),
-                "median_absolute_wedge": wedge.median(),
-                "mean_wedge_ratio": ratio.mean(),
-                "median_wedge_ratio": ratio.median(),
-                "pct_schools_class_size_gt_ptr": (wedge > 0).mean() * 100,
+                "mean_cell_wedge": cell_wedge.mean(),
+                "median_cell_wedge": cell_wedge.median(),
+                "mean_cell_wedge_ratio": cell_ratio.mean(),
+                "median_cell_wedge_ratio": cell_ratio.median(),
+                "enrollment_weighted_wedge": enr_wedge,
+                "enrollment_weighted_wedge_ratio": enr_ratio,
+                "pct_schools_class_size_gt_ptr": (cell_wedge > 0).mean() * 100,
+                # Legacy compatibility
+                "mean_class_size": mean_cs,
+                "median_class_size": median_cs,
+                "mean_absolute_wedge": cell_wedge.mean(),
+                "median_absolute_wedge": cell_wedge.median(),
+                "mean_wedge_ratio": cell_ratio.mean(),
+                "median_wedge_ratio": cell_ratio.median(),
             })
             
     df_wedge = pd.DataFrame(rows)
@@ -234,9 +275,16 @@ def run_analysis_a4(df_valid):
 def estimate_fe_demeaned(df_sample, depvar="mean_class_size", weights_col=None, cluster_col="nces_school_id", group_col="school_wave_id", ref_course="geom"):
     """
     Frisch-Waugh-Lovell within-estimator for school x wave fixed effects + course fixed effects,
-    with clustered standard errors at the school level and exact DoF correction.
+    with clustered standard errors at the school level, exact DoF correction, and Student's t inference.
+    Excludes non-informative groups with fewer than 2 distinct courses.
     """
     df = df_sample.copy()
+    
+    # Filter out non-informative groups with < 2 courses
+    grp_counts = df.groupby(group_col)["course_code"].nunique()
+    valid_groups = grp_counts[grp_counts >= 2].index
+    df = df[df[group_col].isin(valid_groups)].copy()
+    
     all_courses = sorted(df["course_code"].unique())
     reg_courses = [c for c in all_courses if c != ref_course]
     
@@ -280,7 +328,10 @@ def estimate_fe_demeaned(df_sample, depvar="mean_class_size", weights_col=None, 
     N = len(df)
     K = len(dummy_cols)
     G = df[group_col].nunique()
+    n_clusters = df[cluster_col].nunique()
     dof_factor = np.sqrt((N - K) / max(1, (N - K - G)))
+    df_t = max(1, n_clusters - 1)
+    t_crit = stats.t.ppf(0.975, df=df_t)
     
     course_labels = {
         "alg1": "Algebra I", "geom": "Geometry (Ref)", "alg2": "Algebra II",
@@ -294,18 +345,89 @@ def estimate_fe_demeaned(df_sample, depvar="mean_class_size", weights_col=None, 
         coef = res.params[col_name]
         se = res.bse[col_name] * dof_factor
         tstat = coef / se
+        pval = 2 * (1 - stats.t.cdf(abs(tstat), df=df_t))
         results.append({
             "course_code": c,
             "course_name": course_labels.get(c, c),
             "coef_vs_geom": coef,
             "std_err": se,
             "t_stat": tstat,
-            "p_value": 2 * (1 - stats.norm.cdf(abs(tstat))),
-            "ci_95_low": coef - 1.96 * se,
-            "ci_95_high": coef + 1.96 * se,
+            "p_value": pval,
+            "ci_95_low": coef - t_crit * se,
+            "ci_95_high": coef + t_crit * se,
         })
         
-    return pd.DataFrame(results), N, G, df[cluster_col].nunique()
+    return pd.DataFrame(results), N, G, n_clusters
+
+def estimate_fe_pairwise(df_sample, target_course, ref_course="geom", weights_col=None, cluster_col="nces_school_id", group_col="school_wave_id"):
+    """
+    Direct pairwise within-school comparison: restrict strictly to school-waves containing
+    BOTH ref_course and target_course. Fits school x wave FE with school-level clustering.
+    """
+    sub = df_sample[df_sample["course_code"].isin([ref_course, target_course])].copy()
+    counts = sub.groupby(group_col)["course_code"].nunique()
+    both_sw = counts[counts == 2].index
+    pair_df = sub[sub[group_col].isin(both_sw)].copy()
+    
+    pair_df["d_target"] = (pair_df["course_code"] == target_course).astype(float)
+    
+    if weights_col is not None:
+        w = pair_df[weights_col].values
+        pair_df["_w"] = w
+        pair_df["_wy"] = w * pair_df["mean_class_size"]
+        pair_df["_wd"] = w * pair_df["d_target"]
+        
+        grp_w = pair_df.groupby(group_col)["_w"].transform("sum")
+        y_mean = pair_df.groupby(group_col)["_wy"].transform("sum") / grp_w
+        d_mean = pair_df.groupby(group_col)["_wd"].transform("sum") / grp_w
+        
+        pair_df["y_tilde"] = pair_df["mean_class_size"] - y_mean
+        pair_df["d_tilde"] = pair_df["d_target"] - d_mean
+        
+        mod = sm.WLS(pair_df["y_tilde"], pair_df[["d_tilde"]], weights=w)
+    else:
+        y_mean = pair_df.groupby(group_col)["mean_class_size"].transform("mean")
+        d_mean = pair_df.groupby(group_col)["d_target"].transform("mean")
+        pair_df["y_tilde"] = pair_df["mean_class_size"] - y_mean
+        pair_df["d_tilde"] = pair_df["d_target"] - d_mean
+        mod = sm.OLS(pair_df["y_tilde"], pair_df[["d_tilde"]])
+        
+    res = mod.fit(cov_type="cluster", cov_kwds={"groups": pair_df[cluster_col]})
+    
+    N = len(pair_df)
+    K = 1
+    G = pair_df[group_col].nunique()
+    n_clusters = pair_df[cluster_col].nunique()
+    dof_factor = np.sqrt((N - K) / max(1, (N - K - G)))
+    df_t = max(1, n_clusters - 1)
+    
+    coef = res.params["d_tilde"]
+    se = res.bse["d_tilde"] * dof_factor
+    tstat = coef / se
+    pval = 2 * (1 - stats.t.cdf(abs(tstat), df=df_t))
+    t_crit = stats.t.ppf(0.975, df=df_t)
+    
+    course_labels = {
+        "alg1": "Algebra I", "geom": "Geometry (Ref)", "alg2": "Algebra II",
+        "advm": "Advanced Math", "calc": "Calculus", "bio": "Biology",
+        "chem": "Chemistry", "phys": "Physics"
+    }
+    
+    return {
+        "target_course": target_course,
+        "target_course_name": course_labels.get(target_course, target_course),
+        "ref_course": ref_course,
+        "ref_course_name": course_labels.get(ref_course, ref_course),
+        "n_obs": N,
+        "n_school_wave_fe": G,
+        "n_clusters": n_clusters,
+        "coef_pairwise": coef,
+        "std_err": se,
+        "t_stat": tstat,
+        "p_value": pval,
+        "ci_95_low": coef - t_crit * se,
+        "ci_95_high": coef + t_crit * se,
+    }
 
 def run_analysis_a5(df_valid):
     """
@@ -314,8 +436,8 @@ def run_analysis_a5(df_valid):
     Estimates whether foundation core courses absorb systematically larger classes
     than advanced electives within the exact same school building during the exact same year.
     Reference course: Geometry (due to contemporaneous fall snapshot alignment).
-    Clusters standard errors at the school level.
-    Runs unweighted, section-weighted, and Algebra-I-excluded sensitivity specifications.
+    Clusters standard errors at the school level with exact DoF adjustment and Student's t inference.
+    Runs unweighted, section-weighted, Algebra-I-excluded, and direct pairwise Geometry models.
     """
     print("--> Running Analysis A5: Within-School Fixed Effects Models (School x Wave FE)...")
     
@@ -370,53 +492,93 @@ def run_analysis_a5(df_valid):
     out_csv = TABLES_DIR / "table04_fixed_effects_coefficients.csv"
     df_fe.to_csv(out_csv, index=False)
     print(f"--> Saved Table 04 to {out_csv}")
-    return df_fe
+    
+    # 4. Direct Pairwise Geometry Models (Table 04b)
+    print("--> Running Direct Pairwise Geometry Robustness Models...")
+    pairwise_rows = []
+    nat_df = df_valid.copy()
+    multi_nat = nat_df.groupby("school_wave_id")["course_code"].nunique()
+    nat_reg = nat_df[nat_df["school_wave_id"].isin(multi_nat[multi_nat >= 2].index)].copy()
+    
+    target_courses = ["calc", "phys", "advm", "chem", "alg2", "bio", "alg1"]
+    for tc in target_courses:
+        # Section-weighted pairwise
+        r_wt = estimate_fe_pairwise(nat_reg, target_course=tc, ref_course="geom", weights_col="num_classes")
+        r_wt["sample"] = "National Full Panel"
+        r_wt["weighting"] = "Section-Weighted"
+        pairwise_rows.append(r_wt)
+        
+        # Unweighted pairwise
+        r_unwt = estimate_fe_pairwise(nat_reg, target_course=tc, ref_course="geom", weights_col=None)
+        r_unwt["sample"] = "National Full Panel"
+        r_unwt["weighting"] = "Unweighted"
+        pairwise_rows.append(r_unwt)
+        
+    df_pw = pd.DataFrame(pairwise_rows)
+    out_pw_csv = TABLES_DIR / "table04b_pairwise_geometry_robustness.csv"
+    df_pw.to_csv(out_pw_csv, index=False)
+    print(f"--> Saved Table 04b to {out_pw_csv}")
+    
+    return df_fe, df_pw
 
 def run_analysis_a6(df_valid):
     """
-    Analysis A6: Longitudinal Robustness: Balanced Panel vs. Repeated Cross-Sections.
-    Examines whether trends from 2013-14 to 2023-24 hold when restricting to the
-    balanced panel of schools present in all 6 CRDC collection waves.
+    Analysis A6: Longitudinal Robustness: Course-Specific Balanced Panels vs. Repeated Cross-Sections.
+    Examines whether secular trends from 2013-14 to 2023-24 hold when restricting to
+    course-specific balanced panels of schools continuously reporting that course:
+    - Geometry & Algebra I: 5 waves (2015-16 to 2023-24) due to 2013-14 grade span coverage.
+    - Biology, Chemistry, Calculus, Algebra II, Physics, Advanced Math: 6 waves (2013-14 to 2023-24).
     """
-    print("--> Running Analysis A6: Balanced Panel Robustness...")
+    print("--> Running Analysis A6: Course-Specific Balanced Panel Robustness...")
     
-    # Identify balanced schools reporting in all 6 waves
-    wave_counts = df_valid.groupby("nces_school_id")["crdc_wave"].nunique()
-    balanced_sids = set(wave_counts[wave_counts == 6].index)
-    
-    print(f"    Identified {len(balanced_sids):,} balanced schools reporting across all 6 waves.")
-    
-    df_balanced = df_valid[df_valid["nces_school_id"].isin(balanced_sids)].copy()
+    courses_config = [
+        ("geom", "Geometry", ["2015-16", "2017-18", "2020-21", "2021-22", "2023-24"], 5),
+        ("alg1", "Algebra I", ["2015-16", "2017-18", "2020-21", "2021-22", "2023-24"], 5),
+        ("bio", "Biology", ["2013-14", "2015-16", "2017-18", "2020-21", "2021-22", "2023-24"], 6),
+        ("chem", "Chemistry", ["2013-14", "2015-16", "2017-18", "2020-21", "2021-22", "2023-24"], 6),
+        ("alg2", "Algebra II", ["2013-14", "2015-16", "2017-18", "2020-21", "2021-22", "2023-24"], 6),
+        ("calc", "Calculus", ["2013-14", "2015-16", "2017-18", "2020-21", "2021-22", "2023-24"], 6),
+        ("phys", "Physics", ["2013-14", "2015-16", "2017-18", "2020-21", "2021-22", "2023-24"], 6),
+        ("advm", "Advanced Mathematics", ["2013-14", "2015-16", "2017-18", "2020-21", "2021-22", "2023-24"], 6),
+    ]
     
     rows = []
-    for wave in ["2013-14", "2015-16", "2017-18", "2020-21", "2021-22", "2023-24"]:
-        cross_w = df_valid[df_valid["crdc_wave"] == wave]
-        bal_w = df_balanced[df_balanced["crdc_wave"] == wave]
+    for ccode, cname, waves, n_req in courses_config:
+        c_df = df_valid[df_valid["course_code"] == ccode]
+        c_sub = c_df[c_df["crdc_wave"].isin(waves)]
+        w_counts = c_sub.groupby("nces_school_id")["crdc_wave"].nunique()
+        bal_sids = set(w_counts[w_counts == n_req].index)
+        n_bal_schools = len(bal_sids)
+        print(f"    {cname}: {n_bal_schools:,} continuously reporting schools across {n_req} waves.")
         
-        for ccode in ["alg1", "geom", "alg2", "bio", "chem"]:
-            cg_cross = cross_w[cross_w["course_code"] == ccode]
-            cg_bal = bal_w[bal_w["course_code"] == ccode]
+        bal_df = c_sub[c_sub["nces_school_id"].isin(bal_sids)]
+        
+        for w in waves:
+            cr_w = c_sub[c_sub["crdc_wave"] == w]
+            ba_w = bal_df[bal_df["crdc_wave"] == w]
             
-            cname = cg_cross["course_name"].iloc[0] if not cg_cross.empty else ccode
+            cell_cr = cr_w["mean_class_size"].mean() if not cr_w.empty else np.nan
+            sec_cr = cr_w["num_enrolled"].sum() / cr_w["num_classes"].sum() if not cr_w.empty and cr_w["num_classes"].sum() > 0 else np.nan
+            enr_cr = (cr_w["num_enrolled"] * cr_w["mean_class_size"]).sum() / cr_w["num_enrolled"].sum() if not cr_w.empty and cr_w["num_enrolled"].sum() > 0 else np.nan
             
-            # Cross section
-            unwt_cross = cg_cross["mean_class_size"].mean() if not cg_cross.empty else np.nan
-            seat_cross = (cg_cross["num_enrolled"] * cg_cross["mean_class_size"]).sum() / cg_cross["num_enrolled"].sum() if not cg_cross.empty else np.nan
-            
-            # Balanced
-            unwt_bal = cg_bal["mean_class_size"].mean() if not cg_bal.empty else np.nan
-            seat_bal = (cg_bal["num_enrolled"] * cg_bal["mean_class_size"]).sum() / cg_bal["num_enrolled"].sum() if not cg_bal.empty else np.nan
+            cell_ba = ba_w["mean_class_size"].mean() if not ba_w.empty else np.nan
+            sec_ba = ba_w["num_enrolled"].sum() / ba_w["num_classes"].sum() if not ba_w.empty and ba_w["num_classes"].sum() > 0 else np.nan
+            enr_ba = (ba_w["num_enrolled"] * ba_w["mean_class_size"]).sum() / ba_w["num_enrolled"].sum() if not ba_w.empty and ba_w["num_enrolled"].sum() > 0 else np.nan
             
             rows.append({
-                "wave": wave,
                 "course_code": ccode,
                 "course_name": cname,
-                "repeated_cross_cell_mean": unwt_cross,
-                "repeated_cross_seat_mean": seat_cross,
-                "balanced_cell_mean": unwt_bal,
-                "balanced_seat_mean": seat_bal,
-                "cell_mean_diff_bal_minus_cross": unwt_bal - unwt_cross,
-                "seat_mean_diff_bal_minus_cross": seat_bal - seat_cross,
+                "balanced_school_n": n_bal_schools,
+                "wave": w,
+                "repeated_cross_cell_mean": cell_cr,
+                "repeated_cross_sec_mean": sec_cr,
+                "repeated_cross_enr_mean": enr_cr,
+                "balanced_cell_mean": cell_ba,
+                "balanced_sec_mean": sec_ba,
+                "balanced_enr_mean": enr_ba,
+                "diff_cell_bal_minus_cross": cell_ba - cell_cr,
+                "diff_sec_bal_minus_cross": sec_ba - sec_cr,
+                "diff_enr_bal_minus_cross": enr_ba - enr_cr,
             })
             
     df_rob = pd.DataFrame(rows)
@@ -620,7 +782,7 @@ def main():
     df_res = run_analysis_a1_and_a2(df_valid)
     df_wt = run_analysis_a3(df_valid)
     df_wedge = run_analysis_a4(df_valid)
-    df_fe = run_analysis_a5(df_valid)
+    df_fe, df_pw = run_analysis_a5(df_valid)
     df_rob = run_analysis_a6(df_valid)
     
     generate_analytical_figures(df_valid, df_res, df_wt, df_wedge)

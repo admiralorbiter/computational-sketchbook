@@ -23,35 +23,37 @@ This repository answers four foundational empirical questions:
 2026-10-04-classroom-capacity/
     README.md                           # Observatory overview and navigation
     docs/
-        research_design.md              # Governing design and pre-registered hypotheses
+        research_design.md              # Governing design and pre-registered hypotheses (H1–H7)
         variable_crosswalk.md           # CRDC variable harmonization protocol across 6 waves
-        methods.md                      # Mathematical estimands, weighting, and fixed-effects models
-        limitations.md                  # Epistemic limits and data constraints
+        methods.md                      # Mathematical estimands, Lower-Bound Theorem, weighting, and fixed-effects models
+        limitations.md                  # Epistemic limits and data constraints (7 core boundaries)
     sources/
         source_registry.csv             # Provenance registry of raw data files and archives
         study_registry.csv              # Audit registry of causal and observational studies
         crdc_crosswalk.csv              # Field-by-field variable mapping across 6 waves
     data/
         raw/                            # Raw data link documentation
-        intermediate/                   # Working staging tables
+        intermediate/                   # Working staging tables & versioned caches
         processed/
-            crdc_course_panel.parquet   # Harmonized longitudinal school-course panel
+            crdc_course_panel.parquet   # Harmonized longitudinal school-course panel (rebuilt with strict missingness)
             crdc_national_summary.csv   # National benchmark distributions
             crdc_kc_metro_panel.csv     # Local Kansas City 9-county panel
     src/
-        harmonize_crdc.py               # Harmonization pipeline across 6 CRDC waves
+        harmonize_crdc.py               # Harmonization pipeline across 6 CRDC waves (strict complete cases)
         build_class_size_panel.py       # Master script generating the parquet panel
         analyze_class_size.py           # Statistical and econometric estimation suite
     tests/
-        test_crdc_harmonization.py      # Unit tests for variable harmonization
-        test_class_size_metrics.py      # Unit tests for weighting formulas & wedge calculations
+        test_crdc_harmonization.py      # Unit tests for variable harmonization & strict missingness integration
+        test_class_size_metrics.py      # Unit tests for weighting formulas, Lower-Bound Theorem & threshold semantics
         test_crosswalks.py              # Crosswalk ID integrity and validity checks
     notebooks/
         01_class_size_measurement.ipynb # Interactive visual walkthrough of Study A
     artifacts/
         01_class_size_measurement.md    # Comprehensive Phase 3 research artifact
-        figures/                        # High-resolution analytical charts
-        tables/                         # Exported publication summary tables
+        01b_measurement_calibration.md  # Phase 3.1 calibration audit artifact
+        01c_final_measurement_certification.md # Phase 3.2 final measurement certification delta
+        figures/                        # High-resolution analytical charts (repo-relative paths)
+        tables/                         # Exported publication summary tables (Tables 01–06, 04b)
 ```
 
 ---
@@ -62,6 +64,8 @@ This repository answers four foundational empirical questions:
 - [x] **Phase 1:** CRDC Variable Crosswalk (`sources/crdc_crosswalk.csv`, `docs/variable_crosswalk.md`)
 - [x] **Phase 2:** Longitudinal Panel Construction & QA Suite (`data/processed/crdc_course_panel.parquet`)
 - [x] **Phase 3:** Empirical Class Size Measurement (`artifacts/01_class_size_measurement.md`, `notebooks/01_class_size_measurement.ipynb`)
+- [x] **Phase 3.1:** Methodological Calibration Patch (`artifacts/01b_measurement_calibration.md`)
+- [x] **Phase 3.2:** Final Measurement Consistency Patch (`artifacts/01c_final_measurement_certification.md`)
 - [ ] **Phase 4:** Instructional-Load Panel (`02_instructional_load.md`)
 - [ ] **Phase 5:** SASS / NTPS Series Validation (`ntps_sass_class_size_series.csv`)
 - [ ] **Phase 6:** Project STAR Re-Analysis (`03_star_replication.md`)

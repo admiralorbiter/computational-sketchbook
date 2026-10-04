@@ -1,38 +1,67 @@
 # Epistemic Boundaries and Measurement Limitations
 
-Strict empirical discipline requires explicitly defining what the available federal datasets can and cannot measure.
+Strict empirical discipline requires explicitly defining what the available federal datasets can and cannot measure. Below are the seven core epistemic boundaries governing Study A and the classroom capacity analysis.
 
 ---
 
-## 1. School-Course Aggregates vs. True Classroom Section Counts
+## 1. School-Course Aggregates and the Lower-Bound Property
 
-1. **Aggregation Over Sections:** CRDC collects only total course enrollment ($E$) and total number of class sections ($K$) per school. The derived measure $\bar C = E / K$ is the **school-course mean class size**.
+1. **Aggregation Over Sections:** CRDC collects only total course enrollment ($E$) and total number of class sections ($K$) per school-course cell. The derived measure $\bar C = E / K$ is the **school-course mean class size**.
 2. **Unobservable Section Dispersion:** CRDC cannot observe within-school variation among sections. A reported 6 sections averaging 30 students could represent:
    - Six perfectly uniform sections: $(30, 30, 30, 30, 30, 30)$;
    - Or wide variance across honors, remedial, and co-taught sections: $(20, 25, 28, 32, 35, 40)$.
-3. **Implication for Tail Shares:** Statements such as "X% of students are in classes $\ge 30$" are strictly inadmissible from CRDC data alone. The correct phrasing is:
-   > *"X% of student enrollment is concentrated in school-course cells averaging $\ge 30$ students."*
+3. **The Lower-Bound Theorem:** By the within-cell variance decomposition $\sum s_{ij}^2 = K_i \bar s_i^2 + K_i \sigma_i^2$, whenever sections within a school differ in size ($\sigma_i^2 > 0$), the true student-experienced mean is strictly greater than the enrollment-weighted course-cell mean:
+   $$\bar C_{\text{true-student}} = \bar C_{\text{enr-wt}} + \frac{\sum_i K_i \sigma_i^2}{\sum_i E_i} \ge \bar C_{\text{enr-wt}}$$
+   Therefore, CRDC enrollment-weighted means represent a **mathematical lower bound** on student-experienced section size.
 
 ---
 
-## 2. Pupil-Teacher Ratio (PTR) is NOT Class Size
+## 2. Threshold Exposure Semantics: Cell Means Do Not Bound Section Exposure
 
-1. **Accounting vs. Classroom Reality:** Pupil-teacher ratio (from CCD or state registries) divides total school membership by total classroom teacher FTE ($FTE_{\text{teacher}}$).
-2. **Scheduling Wedge:** In secondary schools, teachers typically instruct 4 or 5 periods out of a 6- or 7-period schedule, reserving 1 to 2 periods for planning, collaboration, and duty assignments. This mechanical schedule factor inflates true classroom size by 20% to 40% above PTR.
-3. **Classification Drift:** CCD teacher FTE counts include instructional specialists, reading coaches, interventionists, and department chairs who do not manage standalone rostered classrooms.
-4. **Discipline Rule:** Never substitute PTR for class size. CCD PTR is used exclusively as a baseline to quantify the **staffing-to-classroom wedge**.
-
----
-
-## 3. Survey Wave Discontinuities and Comparability
-
-1. **2013–14 Grade Spans:** In 2013–14, Algebra I and Geometry class counts spanned grades 7–12, whereas subsequent waves split middle school (7–8) and high school (9–12).
-2. **2020–21 COVID-19 Discontinuity:** The 2020–21 CRDC was collected during peak COVID disruptions, featuring hybrid cohorts, simultaneous remote streaming, and atypical master schedules. It must not be treated as a smooth secular trend point.
-3. **2023–24 Nonbinary Gender Classification:** The release of 2023–24 public data introduced the `_X` reporting category, expanding enrollment summations.
+1. **Cell vs. Section Thresholds:** A school-course cell mean $\bar C_i \ge 30$ does **not** bound the proportion of individual students in classrooms $\ge 30$ in either direction:
+   - *False Positive Case:* A school with two sections of [35, 25] has cell mean 30.0. 100% of enrollment is in a cell averaging $\ge 30$, but only 58% (35/60) sit in a class $\ge 30$.
+   - *False Negative Case:* A school with two sections of [32, 24] has cell mean 28.0. 0% of enrollment is in a cell averaging $\ge 30$, but 57% (32/56) sit in a class $\ge 30$.
+2. **Disciplinary Language Standard:** Statements such as "X% of students are in classes $\ge 30$" are strictly inadmissible. The correct terminology is:
+   > *"X% of student enrollment is concentrated in school-course cells whose mean class size is $\ge 30$."*
+   This serves as an index of institutional exposure to large-class environments, not an exact individual headcount.
 
 ---
 
-## 4. State Administrative Data Boundaries
+## 3. Algebra I Collection Timing Mismatch (Bidirectional Bias)
 
-1. **Collection vs. Public Download:** While Missouri (MOSIS) and Kansas (SO66/PBR) collect student-course-teacher section assignment rosters, these files contain protected FERPA records and are restricted.
-2. **Public Data Scope:** All empirical findings in Phases 0–3 rely exclusively on audited public federal microdata and state aggregate releases.
+1. **Survey Timing Asynchrony:** In the 2023–24 CRDC School Form, the number of Algebra I classes ($K$) is enumerated on **October 1**, while student enrollment ($E$) is explicitly enumerated on **a day at the end of the regular school year**. In contrast, Geometry and all science courses measure both $K$ and $E$ on the contemporaneous October 1 snapshot date.
+2. **Bidirectional Bias Direction:** This asynchrony does **not** guarantee a downward bias:
+   - *Upward Pressure:* Cumulative enrollment, semester-based block scheduling, and spring credit-recovery transfers can inflate spring enrollment relative to fall capacity.
+   - *Downward Pressure:* High school dropouts, course withdrawals, and mid-year schedule changes reduce spring enrollment relative to fall seats.
+3. **Methodological Safeguard:** Geometry is adopted as the primary mathematical reference course across all fixed-effects and cross-sectional benchmarks. Sensitivity models excluding Algebra I verify that substantive conclusions do not depend on Algebra I timing.
+
+---
+
+## 4. Longitudinal Survey Discontinuities (2013–14 & 2020–21)
+
+1. **2013–14 Grade-Span Break:** In the 2013–14 CRDC wave, Algebra I and Geometry data collections spanned grades 7–12 combined. Beginning in 2015–16, collections separated middle school (grades 7–8) from high school (grades 9–12). Consequently, 10-year longitudinal comparisons for mathematics must use **2015–16 through 2023–24** as the primary comparable series, treating 2013–14 as an isolated earlier benchmark.
+2. **2020–21 COVID-19 Disruption:** Data collected during the 2020–21 academic year reflect emergency remote instruction, hybrid scheduling, and altered grading policies. The observed 1.5–2.0 student dip must not be interpreted as a permanent secular structural shift.
+
+---
+
+## 5. Justification and Impact of the >60 Class-Size Truncation
+
+1. **Exclusion Criterion:** School-course records with derived mean class size $\bar C_i > 60$ are excluded from brick-and-mortar analytical samples.
+2. **Empirical Distribution:** Across all 924,846 records in the longitudinal panel, cells exceeding 60 students represent only **0.450% of active records**.
+3. **Organizational Profile:** Inspection confirms these cells are almost exclusively statewide virtual charters, cyber correspondence schools, and independent study programs (e.g., Interior Distance Education of Alaska: 1,919 students in 1 class).
+4. **Impact on Robustness:** Truncation alters median class sizes by $0.00$ students and 90th percentiles by $<0.08$ students, but protects quadratic weighting formulas ($\sum E_i^2 / K_i$) from extreme asymptotic distortion.
+
+---
+
+## 6. Strict Missingness Handling in Demographic Summations
+
+1. **Suppression and Reserve Codes:** CRDC records negative integers (e.g., -5, -7, -9) for small-cell privacy suppression, missing data, and non-applicability.
+2. **Naive Summation Bias:** Treating negative values as zero prior to summing demographic components creates substantial downward undercount bias.
+3. **Strict Policy (`require_complete=True`):** In the production pipeline, any school-course record where an active demographic component is negative or missing yields a missing (`NaN`) derived total. No missing component is silently coerced to zero.
+
+---
+
+## 7. The 2023–24 Nonbinary Gender Classification (`_X`)
+
+1. **Category Expansion:** The 2023–24 CRDC introduced reporting for nonbinary students (`_X`) alongside male (`_M`) and female (`_F`).
+2. **Harmonization Architecture:** Pipeline extraction dynamically detects whether `_X` is reported and executes 3-way strict summation for 2023–24 while preserving 2-way summation for 2013–14 through 2021–22.

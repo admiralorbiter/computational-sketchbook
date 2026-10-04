@@ -55,4 +55,4 @@ def test_enrollment_positive(panel):
 
 def test_sample_flags_binary(panel):
     for flag in ["sample_a_all", "sample_b_conventional", "sample_c_stable_panel", "cep_flag"]:
-        assert set(panel[flag].unique()).issubset({0, 1}), f"{flag} contains non-binary values"
+        assert set(panel[flag].dropna().unique()).issubset({0, 1}), f"{flag} contains non-binary values"
