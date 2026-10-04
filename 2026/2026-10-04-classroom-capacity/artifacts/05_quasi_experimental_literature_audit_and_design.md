@@ -291,10 +291,71 @@ Before requesting restricted administrative microdata, we execute a rigorous **S
 
 ### Detailed Gate Specifications
 
-#### Gate 0 — Measurement & Temporal Alignment (The Foundational Stopping Rule)
+#### Gate 0 — Measurement & Temporal Alignment (Empirical Audit & Stopping Rule Evaluation)
+
+##### 1. Conceptual Framing & Stopping Rule
 - **The Timing Question:** Does the public course enrollment variable ($E_{sct}$) measure the student roster that existed when the section-count decision ($K_{sct}$) was made?
-- **The CRDC vs. FDOE Roster Break:** Florida statutory compliance is calculated from student course records submitted during the **October Survey 2 membership census**. By contrast, CRDC course enrollment can reflect cumulative enrollment across the school year or combine terms in 4x4 block-scheduled schools.
-- **Stopping Rule:** If the numerator (students) and denominator (sections) do not represent the same roster universe and census date, any observed discontinuity may be an artifact of schedule aggregation. If Gate 0 fails, public data cannot identify the statutory first stage, pointing directly to the necessity of administrative microdata.
+- **The Institutional Break:** Florida statutory compliance under s. 1003.03, F.S., is evaluated at the **individual classroom level** based on student membership during the **October FTE Survey 2**. By contrast, CRDC course enrollment aggregates all sections of a course school-wide, pools terms in semester/block schedules, and in 2023–24 reflects cumulative full-year enrollees for Algebra I.
+- **Stopping Rule Definition:** If the numerator (students) and denominator (sections) do not represent the same roster universe and census date, any observed discontinuity may be an artifact of schedule aggregation. If Gate 0 fails to find a discontinuous jump in section formation at statutory cutoffs, public data cannot identify the statutory first stage, pointing directly to the necessity of administrative microdata.
+
+##### 2. Regulatory & Survey Rules Comparison (Table 09)
+```
+========================================================================================================================
+DIMENSION                  FLORIDA SURVEY 2 COMPLIANCE           CRDC COURSE DATA                      ALIGNMENT VERDICT
+========================================================================================================================
+Legal / Regulatory Basis   Florida Statute § 1003.03 & Art. IX   Title VI / Section 504 / IX OCR       MISALIGNED: Civil rights access
+                           Florida Constitution                  Civil Rights Data Collection           vs. funding/legal mandate.
+Census Timing              Survey 2: Third week of October       Fall snapshot (Oct 1) 2013-2021;      PARTIALLY MISALIGNED: 2023-24
+                           (Fall FTE membership count)           Cumulative full-year 2023-24 Alg 1    Alg 1 cumulative vs fall classes.
+Observation Level          Individual classroom section          School-by-course aggregate cell       SEVERELY AGGREGATED: Lacks
+                           (roster-level student IDs)            (total E, total K, mean E/K)          section-level microdata.
+Co-Teaching / Team Model   2 teachers co-teaching 48 students    Reported as 1 class with 48 students  CONCEALED: Public CRDC cannot
+                           counts as 24:1 (COMPLIANT with C=25)  (appears as massive non-compliance)   observe co-teaching staffing.
+Post-Survey Flexibility    s. 1003.03(2)(b): Up to +5 students   Does not track date of student        UNOBSERVED: Apparent violations
+                           over cap post-October (classes to 30) enrollments                           reflect legal flexibility.
+4x4 Block / Semester       Counts fall term sections only;       Schools vary: some report fall,       NOISY: Produces synthetic halved
+                           Survey 3 counts spring term           others pool full-year sections        or fractional class sizes.
+========================================================================================================================
+```
+
+##### 3. Empirical Discontinuity Tests at Statutory Cutoffs (Table 10)
+We formally test for section responsiveness across 29,578 course cells in Florida traditional public high schools across all six CRDC waves (2013–14 through 2023–24):
+
+```
+=======================================================================================================================================
+SAMPLE SPECIFICATION              CUTOFF  TARGET K  N_BELOW  N_AT  N_ABOVE  Pr(K>=k|AT)  Pr(K>=k|ABV)  JUMP (DELTA)  P-VALUE    JUMP IN C_BAR
+=======================================================================================================================================
+All Traditional High Schools      C = 25   K >= 2     144     132    129       78.8%        78.3%        -0.0049     p = 0.923   +0.42 students
+All Traditional High Schools      C = 50   K >= 3      70      67     71       80.6%        71.8%        -0.0877     p = 0.228   +1.92 students
+All Traditional High Schools      C = 75   K >= 4      56      73     49       79.5%        69.4%        -0.1006     p = 0.206   +2.02 students
+---------------------------------------------------------------------------------------------------------------------------------------
+Comprehensive HS (Enr >= 300)     C = 25   K >= 2      57      47     35       57.4%        62.9%        +0.0541     p = 0.621   -0.85 students
+Comprehensive HS (Enr >= 300)     C = 50   K >= 3      40      36     43       83.3%        76.7%        -0.0659     p = 0.468   +0.48 students
+Comprehensive HS (Enr >= 300)     C = 75   K >= 4      32      46     36       73.9%        58.3%        -0.1558     p = 0.136   +2.56 students
+---------------------------------------------------------------------------------------------------------------------------------------
+Core Courses (Alg1, Geom, Bio)    C = 25   K >= 2      57      57     69       91.2%        89.9%        -0.0137     p = 0.794   +0.86 students
+Core Courses (Alg1, Geom, Bio)    C = 50   K >= 3      25      25     20       92.0%        85.0%        -0.0700     p = 0.458   +4.25 students
+Core Courses (Alg1, Geom, Bio)    C = 75   K >= 4      18      18     12       77.8%        75.0%        -0.0278     p = 0.860   +1.54 students
+---------------------------------------------------------------------------------------------------------------------------------------
+Comprehensive Core Courses        C = 25   K >= 2       7       7      9       57.1%        77.8%        +0.2063     p = 0.377   -1.23 students
+Comprehensive Core Courses        C = 50   K >= 3       8       8     11      100.0%        90.9%        -0.0909     p = 0.381   +3.15 students
+Comprehensive Core Courses        C = 75   K >= 4      10      10     10       70.0%        70.0%         0.0000     p = 1.000   +2.43 students
+=======================================================================================================================================
+```
+
+##### 4. Schedule Noise & Alternative Facility Diagnostic (Table 11)
+In the immediate vicinity of the statutory cap ($E \in [20, 30]$, $N=1,496$ cells):
+- **Section Multiplicity:** **53.2% of cells have $K \ge 3$ sections** (averaging $<10$ students per section), and **52.2% have mean class size $<10.0$**.
+- **Alternative / Juvenile / Virtual Clustering:** **35.7% of cells** are located in small or alternative facilities ($<300$ students), and **47.3% contain explicit alternative name keywords** (e.g., Juvenile Detention, PACE Center for Girls, Virtual Franchise, Alternative Learning Center).
+- In high schools operating on 4x4 block schedules, reporting full-year sections alongside single-term enrollments divides class size in half, artificially driving implied section sizes below 10.
+
+![Gate 0 Feasibility Audit](/C:/Users/admir/.gemini/antigravity/brain/873b7f0f-08cb-453c-b3e0-5a0024dac318/fig_e01_florida_gate0_responsiveness.png)
+
+##### 5. Evaluation of the Gate 0 Stopping Rule: TRIGGERED
+- **Null First-Stage Discontinuity:** Across all 12 specifications, there is **zero statistically significant jump** in section formation at statutory thresholds ($p \ge 0.136$, with $p=0.923$ at the primary $C=25$ margin).
+- **No Class-Size Sawtooth:** Average implied class size rises smoothly across enrollment thresholds rather than collapsing from 25 to 13, 17, or 19.
+- **Methodological Verdict:** The **Gate 0 Stopping Rule is formally triggered**. Running naive 2SLS or fuzzy RD regressions on public CRDC data would estimate an utterly spurious first stage ($F < 1$), confounding statutory compliance with block schedule pooling, co-teaching omissions, and alternative facility noise.
+- **Operational Action:** We do not proceed with Gates 1–5 on public data. We pivot immediately to **Phase 9B: Preregistered Administrative Microdata Protocol**, where student-section-teacher links and official October Survey 2 rosters are observed without aggregation bias.
 
 #### Gate 1 — Institutional Scope & Legal Exclusions
 - Under Florida Statute § 1003.03 and FDOE compliance guidelines:
@@ -368,10 +429,12 @@ If Phase 9A demonstrates that public data cannot resolve within-school sorting o
 
 ## 8. Summary & Next Immediate Actions
 
-1. **Phase 7 (Literature Audit):** Certified. The literature demonstrates that the **25–35 departmentalized secondary margin is an open empirical frontier**.
+1. **Phase 7 (Literature Audit):** Certified. The literature demonstrates that the **25–35 departmentalized secondary margin is an open empirical frontier**, with Han & Ryu (2017) serving as the primary causal benchmark ($<0.02\text{ SD}$ per 10 students).
 2. **Phase 8 (Coverage Mapping):** Certified. Parameter space mapped across elementary self-contained vs. secondary departmentalized structures.
-3. **Next Operational Step (Phase 9A Execution):**
-   - Execute **Gate 0** (Measurement & Temporal Alignment audit comparing CRDC course enrollment against Florida October Survey 2 documentation).
-   - Execute **Gate 1 & Gate 2** (Extract traditional Florida public high schools; test section-count jumps at 26, 51, and 76 across pre-2023 vs. post-2023 penalty regimes).
-   - Execute **Gate 3** (Discrete bunching test around 25, 50, and 75).
-   - Report findings across the Six Gates to determine whether public data suffice or whether Phase 9B microdata must be requested immediately.
+3. **Phase 9A Gate 0 (Measurement & Discontinuity Audit):** **EXECUTED & STOPPING RULE TRIGGERED**.
+   - Public CRDC course data exhibit **zero section responsiveness** at Florida's statutory thresholds ($p=0.923$ at $C=25$; $p=0.228$ at $C=50$; $p=0.206$ at $C=75$).
+   - 53.2% of cells near $C=25$ have $K \ge 3$ sections, reflecting 4x4 block schedule pooling and alternative facility noise.
+   - Forcing a naive public 2SLS or fuzzy RD estimator would produce a completely spurious first stage ($F < 1$).
+4. **Immediate Operational Pivot (Phase 9B Execution):**
+   - Formalize the **Preregistered Administrative Microdata Protocol** for submission to the Florida Department of Education (Education Data Warehouse / PK-20) and Missouri DESE (MOSIS).
+   - Preregister the econometric model, first-stage pre-assignment demand instrument, co-teaching adjustment, and minimum detectable effect power tiers ($0.02, 0.05, 0.08\text{ SD}$).
