@@ -53,7 +53,7 @@ Phase 9C   Causal Estimation & Execution       Estimate structural section-size 
 
 ## 2. Systematic Literature Audit: Quasi-Experimental Class Size Research
 
-Existing causal research on class size is concentrated almost exclusively in primary grades or relies on policy shifts that conflate class size with teacher labor market dilution.
+Existing causal research on class size is concentrated primarily in elementary grades, with secondary evidence sparse, geographically distant, or testing margins well above U.S. norms.
 
 ```
 =====================================================================================================================================
@@ -76,6 +76,18 @@ Chingos (2012)             Difference-in-Differences  Florida CSR         18 (K-
 -------------------------------------------------------------------------------------------------------------------------------------
 Angrist et al. (2019)      Modern RD Donut-Hole       Israel 10-Yr Panel  20 to 40        Attenuated         LOW. Confirms sorting/manipulation
                            & Density Corrections      (Grades 4–5)        (Cap = 40)      +0.05 to +0.08 SD  concerns; elementary only.
+-------------------------------------------------------------------------------------------------------------------------------------
+Han & Ryu (2017)           Policy Discontinuity &     Seoul, South Korea  35 vs. 44       Small / Null       HIGH (Upper Secondary). Clean 10th-12th
+                           Within-School Allocation   (Grades 10–12)      (44 down to 35) (<0.02 SD per 10)  admin panel; high baseline margin.
+-------------------------------------------------------------------------------------------------------------------------------------
+Denny & Oppedisano (2013)  Cohort Size IV             United States & UK  22 vs. 26       Imprecise / Mixed  MODERATE. 15-year-olds (Grades 9-10)
+                           (PISA International)       (Age 15)            (PISA Sample)   (~0.03 SD, SE .04) in US/UK; weak instrument limits.
+-------------------------------------------------------------------------------------------------------------------------------------
+Akabayashi & Nakamura (14) Statutory Cap RD           Japan Public        25 vs. 36       Small / Null       MODERATE (Lower Secondary). Grades 7-9
+                           (Statutory Cap C=40)       (Grades 7–9)        (Cap = 40)      (~0.01 SD, SE .02) departmentalized; cap is 40.
+-------------------------------------------------------------------------------------------------------------------------------------
+Cohen-Zada et al. (2013)   Secondary RD Audit         Israel Secondary    28 vs. 35       Sorting Biased     METHODOLOGICAL WARNING. Proves sorting
+                           (Maimonides' Rule, C=40)   (Grades 7–10)       (Cap = 40)      (Non-linear)       around secondary caps invalidates naive RD.
 =====================================================================================================================================
 ```
 
@@ -88,12 +100,12 @@ Angrist et al. (2019)      Modern RD Donut-Hole       Israel 10-Yr Panel  20 to 
 - **Discontinuities:** Predicted class size drops abruptly from 40 to 20.5 at $E=41$, from 40 to 27.0 at $E=81$, and from 40 to 30.2 at $E=121$.
 - **Relevance to Secondary Design:** Angrist & Lavy proved that administrative section-splitting rules generate massive exogenous variation in class size without requiring experimental randomization. However, their empirical application was restricted to elementary grades 3, 4, and 5.
 
-#### 2. Angrist, Lavy, Leder-Luis, & Shany (2019) — "Maimonides' Rule Redux"
-- **Methodological Warning:** Re-examining the Israeli data with modern regression discontinuity techniques revealed that enrollment near the threshold is subject to strategic sorting: parents in affluent communities avoid schools operating just below the cutoff (class sizes near 39–40) or lobby principals to open an unauthorized extra section.
-- **Empirical Lesson for Us:** Any quasi-experimental design using class size caps **must** include:
-  - Formal McCrary density tests to verify that enrollment is smooth around the threshold.
-  - Donut-hole RD specifications excluding observations immediately adjacent to the threshold ($\pm 1$ student).
-  - Predetermined student baseline covariate balance tests across the threshold.
+#### 2. Methodological Warnings: Sorting & Manipulation Around Secondary Caps (Cohen-Zada et al. 2013; Angrist et al. 2019; Urquiola 2006)
+- **The Secondary Sorting Vulnerability:** Cohen-Zada, Gradstein, & Reuven (2013) examined secondary Israeli public schools subject to Maimonides' rule, demonstrating that high-SES parents strategically sort around class-size thresholds (e.g. lobbying principals to open borderline sections or transferring across tracks). Naive RD estimates fail to condition on this sorting, creating spurious treatment effects.
+- **Empirical Lessons for U.S. Design:** Any quasi-experimental design using class size caps **must**:
+  - Test for discrete running-variable bunching at integer enrollment cutoffs (25, 50, 75).
+  - Check predetermined student baseline covariate balance across the threshold.
+  - Report donut-hole RD sensitivity models as a diagnostic check.
 
 #### 3. Chingos (2012) — The Florida Statewide CSR Mandate
 - **Context:** Florida's 2002 constitutional amendment required school districts to phase in class size reductions:
@@ -106,26 +118,28 @@ Angrist et al. (2019)      Modern RD Donut-Hole       Israel 10-Yr Panel  20 to 
   2. Chingos evaluated the **broad statewide policy intervention** during the 2003–2009 phase-in period when compliance was measured as *district-wide* or *school-wide averages*, which forced massive hiring surges and capital construction.
   3. Chingos did **not** estimate the sharp, local regression discontinuity generated by individual course section-formation thresholds ($25 \to 26$, $50 \to 51$) under modern classroom-level enforcement.
 
-#### 4. The Complete Empirical Void in Modern High Schools
-Across the entire empirical economics of education literature, there is a **complete void** regarding the causal effect of class size in modern departmentalized secondary schools:
-- We do not know whether reducing Algebra I class size from 32 to 24 improves student mastery or algebra proficiency.
-- We do not know whether the returns to class size reduction are non-linear (e.g. negligible from 35 to 30, but steep from 28 to 22).
-- We do not know how class size interacts with modern secondary teacher roster burdens (managing 150 students across 5 periods vs. 110 students).
+#### 4. The Real Empirical Gap: Sparse and Poorly Matched U.S. Secondary Evidence
+Credible causal evidence in departmentalized secondary settings is sparse, especially in the United States and especially near the modern 25–35 student margin:
+- **Upper-Secondary International Benchmarks:** Han & Ryu (2017) provide high-quality administrative evidence on 10th–12th graders in Seoul, Korea, finding that a policy reducing average class size from 44 down to 35 yielded very small effects: less than about 0.02 SD per 10 students, with tight confidence intervals. While this establishes that upper-secondary class size can be studied causally, the Korean setting features a high baseline margin (44 to 35), extensive private tutoring (hagwons), and tracked secondary cohorts.
+- **U.S. Secondary Imprecision:** Denny & Oppedisano (2013) study 15-year-olds in the U.S. using PISA cohort shocks, but U.S. estimates are statistically imprecise ($\text{SE} \approx 0.04$ SD) and cannot distinguish between subtle cognitive gains and non-cognitive trade-offs.
+- **The Core Unanswered Question:** In modern U.S. high schools—where teachers instruct departmentalized subjects across 5–6 periods, manage aggregate daily rosters of 90–150 students, and serve student populations with high rates of IEP/504 plans ($19\%$), EL status ($9\%$), and chronic absenteeism ($32\%$)—does shifting section size across the **25 vs. 30 vs. 35 margin** produce meaningful achievement gains, or does it behave like the near-zero effects observed in Seoul?
 
 ---
 
-## 3. Econometric Framework: The Scheduling-Rule Discontinuity Design
+## 3. Econometric Framework: The Fuzzy Scheduling-Rule IV / Regression Discontinuity Design
 
 ### The Structural High School Scheduling Model
 
 Let $s$ denote school, $c$ denote a specific core academic course (e.g., Algebra I, Geometry, Biology I, English II), and $t$ denote academic year.
 
-Let $E_{sct}$ be the total verified student enrollment demanding course $c$ in school $s$ at time $t$. Under a maximum class size threshold $C$ (such as Florida's statutory cap of $C=25$), the institutional scheduling algorithm predicts that the school must create:
+Let $E_{sct}$ be total student demand for course $c$ in school $s$ at time $t$. Under a maximum class size threshold $C$ (such as Florida's statutory cap of $C=25$), mechanical rule adherence predicts that the school must create:
 $$K_{sct}^* = \left\lceil \frac{E_{sct}}{C} \right\rceil$$
-sections.
-
-The predicted class size under mechanical rule adherence is:
+sections, yielding the Maimonides-style predicted class size:
 $$\widehat{CS}_{sct} = \frac{E_{sct}}{\lceil E_{sct} / C \rceil} = \frac{E_{sct}}{K_{sct}^*}$$
+
+> [!NOTE]
+> **Fuzzy IV/RD Identification vs. Sharp RD:**  
+> The scheduling rule must be treated as a **fuzzy instrumental variable**, not a deterministic sharp RD. Real high schools create sections in response to master schedule conflicts, teacher availability, laboratory station limits, special education co-teaching models, and semesterization. Consequently, $K_{sct}^*$ and $\widehat{CS}_{sct}$ act as exogenous instruments that shift the conditional probability distribution of actual class size $\text{ActualCS}_{sct}$, rather than assigning class size mechanically. Gate 2 empirically tests the strength of this first-stage relationship ($\pi$).
 
 ```
 ========================================================================================================================
@@ -300,7 +314,7 @@ Before requesting restricted administrative microdata, we execute a rigorous **S
 - **Discrete Bunching Protocol:**
   1. Inspect the frequency distribution of integer enrollment $E$ for anomalous mass points immediately at or below $C=25$, $50$, and $75$.
   2. Test for excess probability mass at $E=25$ relative to $E=26$ using discrete bunching estimators (Chetty et al. 2011; Kleven 2016).
-  3. Implement **donut-hole RD specifications** dropping $E \in \{24, 25, 26\}$ to verify that estimates are not driven by strategic student reallocation near the threshold.
+  3. Implement **donut-hole RD specifications** (dropping $E \in \{24, 25, 26\}$) as a **secondary sensitivity and robustness check**, rather than the primary estimator, to verify that baseline estimates are not driven by strategic student reallocation immediately adjacent to the threshold.
   4. Test for predetermined student covariate balance (FRL share, minority share, baseline SWD) across cutoffs.
 
 #### Gate 4 — Public Outcome Alignment
@@ -309,7 +323,12 @@ Before requesting restricted administrative microdata, we execute a rigorous **S
 
 #### Gate 5 — Empirical Support & Statistical Power
 - A statistically valid discontinuity requires sufficient mass in the local bandwidths on both sides of each cutoff.
-- **Empirical Audit:** In Florida CRDC course data, there are **2,318 school-course-year observations** with enrollment in $[20, 30]$, **1,294 observations** in $[45, 55]$, and **977 observations** in $[70, 80]$. We will evaluate whether statistical power is sufficient for a minimum detectable effect size of $0.05\text{--}0.08$ SD under school $\times$ course clustering.
+- **Empirical Audit:** In Florida CRDC course data, there are **2,318 school-course-year observations** with enrollment in $[20, 30]$, **1,294 observations** in $[45, 55]$, and **977 observations** in $[70, 80]$.
+- **Power Targets Across Secondary Plausibility Thresholds:** Power calculations in departmentalized high schools cannot assume large elementary-style treatment effects ($0.15\text{--}0.20\text{ SD}$). In light of upper-secondary benchmarks (e.g., Han & Ryu 2017 finding effects $< 0.02\text{ SD}$ per 10 students), statistical power must be evaluated against three distinct Minimum Detectable Effect (MDE) thresholds under school $\times$ course clustering:
+  1. **Small / Null Secondary Baseline ($\text{MDE} \approx 0.02\text{ SD}$):** Reflects upper-secondary empirical reality where modest class-size shifts yield subtle cognitive gains.
+  2. **Moderate Secondary Effect ($\text{MDE} \approx 0.05\text{ SD}$):** Benchmark for economically meaningful improvements in secondary end-of-course exams.
+  3. **Upper-Bound Benchmark ($\text{MDE} \approx 0.08\text{ SD}$):** Standard elementary-attenuated benchmark; if public data cannot even detect $0.08\text{ SD}$, the public quasi-experiment is hopelessly underpowered.
+  We evaluate whether effective sample size and cluster structure provide 80% power at $\alpha = 0.05$ across each of these three tiers.
 
 ---
 
