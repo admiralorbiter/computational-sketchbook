@@ -521,7 +521,7 @@ def build_figure_13b():
 def build_figure_14_infographic():
     """
     Figure 14: Conceptual Infographic explaining Missouri's value-added growth model.
-    Calibrated to statewide regression and student-level residual terminology.
+    Calibrated to statewide regression and student-level standardized residual terminology.
     """
     print("[*] Generating Figure 14: Value-Added Growth Conceptual Infographic...")
     fig, ax = plt.subplots(figsize=(9.4, 5.3), dpi=300)
@@ -557,11 +557,12 @@ def build_figure_14_infographic():
     ax.text(39, 71, "Statistical prediction:", fontsize=8.2, color="#475569", fontstyle="italic", va="top")
     exp_desc = (
         "Statewide regression predicts\n"
-        "current MAP performance based\n"
-        "on testing history and mobility:\n\n"
-        "Predicted Score:  370"
+        "standardized performance (z-score)\n"
+        "from testing history & mobility:\n\n"
+        "Predicted Score (ẑ):   0.00 SD\n"
+        "(Statewide statistical benchmark)"
     )
-    ax.text(39, 64, exp_desc, fontsize=8.2, color="#1e293b", linespacing=1.35, va="top")
+    ax.text(39, 64, exp_desc, fontsize=8.0, color="#1e293b", linespacing=1.3, va="top")
 
     # Arrow 2 -> 3
     ax.annotate("", xy=(68.5, 61), xytext=(65.5, 61), arrowprops=dict(arrowstyle="->,head_width=0.4,head_length=0.6", color="#64748b", lw=1.8))
@@ -572,11 +573,12 @@ def build_figure_14_infographic():
     ax.text(72, 77, "3. STUDENT RESIDUAL", fontsize=9.5, fontweight="bold", color="#15803d", va="center")
     ax.text(72, 71, "Actual minus predicted:", fontsize=8.2, color="#475569", fontstyle="italic", va="top")
     res_desc = (
-        "Actual MAP Score:     385\n"
-        "Predicted Score:      370\n"
-        "Individual Residual:  +15 pts"
+        "Actual Score (z):     +0.35 SD\n"
+        "Predicted Score (ẑ):   0.00 SD\n"
+        "Standardized Residual: +0.35 SD\n"
+        "(e = z − ẑ, in SD units)"
     )
-    ax.text(72, 64, res_desc, fontsize=8.2, color="#1e293b", linespacing=1.35, va="top")
+    ax.text(72, 64, res_desc, fontsize=8.0, color="#1e293b", linespacing=1.3, va="top")
 
     # Badge for Above Expectation
     badge = patches.FancyBboxPatch((72, 44), 23, 6, boxstyle="round,pad=0.4", facecolor="#16a34a", edgecolor="none")
@@ -595,9 +597,9 @@ def build_figure_14_infographic():
 
     fig.text(
         0.04,
-        0.04,
-        "Note: The student residual is an individual score difference. To produce official school growth points, Missouri averages these\nresiduals across students, evaluates statistical uncertainty, and assigns discrete accountability points.",
-        fontsize=7.5,
+        0.035,
+        "Note: Missouri standardizes MAP scores (z-scores) before estimation; residuals represent standard deviations from expectation, not raw MAP scale points.\nTo produce official school growth points, Missouri averages these standardized residuals, evaluates uncertainty, and maps to discrete accountability tiers.",
+        fontsize=7.3,
         color="#64748b",
         style="italic",
         linespacing=1.25,
@@ -740,7 +742,7 @@ def build_figure_15(df25):
 def build_figure_16_transformation_pipeline():
     """
     Figure 16: Pipeline showing how student test scores become public growth points.
-    Explains the transformation from continuous residual to discrete accountability grid.
+    Explains the transformation from continuous standardized residual to discrete accountability grid.
     """
     print("[*] Generating Figure 16: Transformation Pipeline...")
     fig, ax = plt.subplots(figsize=(9.8, 5.8), dpi=300)
@@ -759,20 +761,17 @@ def build_figure_16_transformation_pipeline():
     )
     ax.text(4, 91, "How student MAP test results become official MSIP 6 school growth accountability points", fontsize=9.2, color="#64748b")
 
-    # 5 steps in a vertical/horizontal cascade or 5 connected cards
-    # Let's use 5 compact cards arranged horizontally across the page
-    # Card width: 16.5, Gap: 3.5 -> Total = 5 * 16.5 + 4 * 3.5 = 82.5 + 14 = 96.5 (fits 2 to 98)
     cards = [
         ("1. TEST SCORES", "#1e3a8a", "#f8fafc", "#cbd5e1",
          "Prior MAP scores\n(ELA & Math)\n\n+ Student mobility\n\n+ School prior context"),
         ("2. MODEL PREDICTION", "#0284c7", "#f8fafc", "#cbd5e1",
-         "Statewide regression\ncalculates predicted\ncurrent MAP score\nfor each student"),
+         "Statewide regression\npredicts standardized\ncurrent performance\nfor each student"),
         ("3. STUDENT RESIDUAL", "#0d9488", "#f0fdfa", "#99f6e4",
-         "Actual Score minus\nPredicted Score:\n\nResidual = Y − Ŷ\n(continuous score)"),
+         "Standardized Residual:\n\ne = z − ẑ\n(Actual − Predicted)\n\nMeasured in standard\ndeviation (SD) units\n(not raw scale points)"),
         ("4. SCHOOL ESTIMATE", "#d97706", "#fffbeb", "#fde68a",
          "Average residuals\nacross all students\n\n+ Statistical certainty\n(N & score variance)"),
         ("5. PUBLIC POINTS", "#16a34a", "#f0fdf4", "#bbf7d0",
-         "4 Performance Tiers:\nFloor, Approaching,\nTarget, Exceeding\n\n→ Discrete Points\n(0, 12.5, 25... 100%)"),
+         "Subject Growth Tiers:\nFloor, Approaching,\nTarget, Exceeding\n(0%, 25%, 50%, 75%, 100%)\n\nCombined composite\nlands on 12.5% steps"),
     ]
 
     card_w = 16.8
@@ -796,20 +795,21 @@ def build_figure_16_transformation_pipeline():
                         arrowprops=dict(arrowstyle="->,head_width=0.35,head_length=0.5", color="#64748b", lw=1.5))
 
     # Bottom Banner explaining the horizontal stripes
-    banner = patches.FancyBboxPatch((3.5, 16), 93.0, 18, boxstyle="round,pad=0.8", facecolor="#eff6ff", edgecolor="#bfdbfe", linewidth=1.2)
+    banner = patches.FancyBboxPatch((3.5, 14.5), 93.0, 21.0, boxstyle="round,pad=0.8", facecolor="#eff6ff", edgecolor="#bfdbfe", linewidth=1.2)
     ax.add_patch(banner)
-    ax.text(5.5, 28.5, "WHY THE PUBLIC GRAPH HAS HORIZONTAL STRIPES", fontsize=8.5, fontweight="bold", color="#1e40af", va="center")
+    ax.text(5.5, 31.0, "WHY THE PUBLIC GRAPH HAS HORIZONTAL STRIPES", fontsize=8.5, fontweight="bold", color="#1e40af", va="center")
     stripes_quote = (
-        "“The number the public sees has already passed through a statistical model, an aggregation step,\n"
-        "and an accountability scoring grid. Schools do not receive their raw continuous residuals, but discrete point tiers.”"
+        "“The public number is not a continuous learning gain. Missouri assigns subject growth into discrete 25-point tiers\n"
+        "(0%, 25%, 50%, 75%, 100%). When ELA and Math are averaged across student groups (All Students & Subgroup),\n"
+        "they combine into the 12.5-percentage-point increments (eighths) observed on the public scatterplot.”"
     )
-    ax.text(5.5, 23.5, stripes_quote, fontsize=8.8, fontweight="600", color="#0f172a", linespacing=1.3, va="top")
+    ax.text(5.5, 26.5, stripes_quote, fontsize=8.5, fontweight="600", color="#0f172a", linespacing=1.35, va="top")
 
     fig.text(
         0.04,
-        0.04,
-        "Note: Missouri DESE's MSIP 6 Comprehensive Guide specifies that building growth ratings depend on the mean residual, the number of student\nscore pairs, and individual residual variance, which are mapped to discrete accountability point allocations (0% to 100% in 12.5-point steps).",
-        fontsize=7.5,
+        0.035,
+        "Note: Missouri DESE standardizes MAP scores (z-scores) before running hierarchical regressions. Building growth determinations evaluate the mean standardized residual,\nnumber of test pairs, and score variance against discrete subject targets (0, 25, 50, 75, 100%). Averaging ELA and Math produces the observed 12.5% increments.",
+        fontsize=7.3,
         color="#64748b",
         style="italic",
         linespacing=1.25,
