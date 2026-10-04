@@ -28,6 +28,12 @@ Generates publication-ready figures for external presentation and essays:
   Conceptual infographic illustrating how baseline test noise can masquerade as growth.
 - Figure 20: 20_growth_uncertainty_by_school_size.png
   Statistical infographic comparing confidence intervals for small vs. large schools.
+- Figure 21: 21_status_growth_disagreement_clean.png
+  Four-quadrant scatterplot highlighting extreme divergent schools (low status/high growth vs. high status/low growth).
+- Figure 22: 22_three_signals_poverty_vs_persistence.png
+  The Accountability Trade-Off: comparing Growth, APR, and Status on poverty association vs. persistence.
+- Figure 23: 23_what_missouri_counts_changes_meaning.png
+  Two-bar APR counterfactual comparing poverty association with and without value-added growth (18.3% vs. 40.1%).
 """
 
 from pathlib import Path
@@ -1158,6 +1164,400 @@ def build_figure_20_uncertainty():
     print(f"[+] Saved {out_path}")
 
 
+def build_figure_21_status_growth_disagreement(df25):
+    """
+    Figure 21: Status vs. Growth Disagreement (Four Quadrants with Extreme Divergent Profiles).
+    """
+    print("[*] Generating Figure 21: Status vs. Growth Disagreement...")
+    d25_div = df25.dropna(subset=["analyst_composite_status_mpi", "apr_growth_pts_pct", "frpl_pct"]).copy()
+
+    # 5 quintiles for status and growth
+    d25_div["status_q"] = pd.qcut(d25_div["analyst_composite_status_mpi"], 5, labels=[1, 2, 3, 4, 5])
+    d25_div["growth_q"] = pd.qcut(d25_div["apr_growth_pts_pct"].rank(method="average"), 5, labels=[1, 2, 3, 4, 5])
+
+    g_lh = d25_div[(d25_div["status_q"] == 1) & (d25_div["growth_q"] == 5)]
+    g_hl = d25_div[(d25_div["status_q"] == 5) & (d25_div["growth_q"] == 1)]
+
+    # Medians for crosshairs
+    status_med = d25_div["analyst_composite_status_mpi"].median()
+    growth_med = d25_div["apr_growth_pts_pct"].median()
+
+    fig, ax = plt.subplots(figsize=(9.2, 6.2), dpi=300)
+
+    # 1. Background scatter: all conventional schools in light subtle slate
+    ax.scatter(
+        d25_div["analyst_composite_status_mpi"],
+        d25_div["apr_growth_pts_pct"],
+        color="#94a3b8",
+        alpha=0.22,
+        s=20,
+        edgecolors="none",
+        zorder=2,
+    )
+
+    # 2. Quadrant dividing lines (dashed medians)
+    ax.axvline(status_med, color="#cbd5e1", linestyle="--", linewidth=1.2, zorder=3)
+    ax.axhline(growth_med, color="#cbd5e1", linestyle="--", linewidth=1.2, zorder=3)
+
+    # 3. Highlight extreme divergent schools
+    # Bottom Status / Top Growth (Q1 / Q5): warm amber/coral
+    ax.scatter(
+        g_lh["analyst_composite_status_mpi"],
+        g_lh["apr_growth_pts_pct"],
+        color="#ea580c",
+        alpha=0.85,
+        s=48,
+        edgecolors="#9a3412",
+        linewidth=0.8,
+        zorder=5,
+    )
+
+    # Top Status / Bottom Growth (Q5 / Q1): slate blue
+    ax.scatter(
+        g_hl["analyst_composite_status_mpi"],
+        g_hl["apr_growth_pts_pct"],
+        color="#2563eb",
+        alpha=0.85,
+        s=48,
+        edgecolors="#1e40af",
+        linewidth=0.8,
+        zorder=5,
+    )
+
+    # 4. Subtle quadrant watermark labels
+    quad_font = dict(fontsize=10.0, fontweight="600", color="#64748b", alpha=0.55, va="center")
+    ax.text(230, 94, "LOW STATUS\nHIGH GROWTH", ha="left", **quad_font)
+    ax.text(465, 94, "HIGH STATUS\nHIGH GROWTH", ha="right", **quad_font)
+    ax.text(230, 6, "LOW STATUS\nLOW GROWTH", ha="left", **quad_font)
+    ax.text(465, 6, "HIGH STATUS\nLOW GROWTH", ha="right", **quad_font)
+
+    # 5. Editorial callout cards for the two opposing corners
+    box_lh = (
+        "Bottom status / top growth\n"
+        f"{len(g_lh)} extreme schools\n"
+        f"Avg. FRPL: {g_lh['frpl_pct'].mean():.0f}%   ·   URM: {g_lh['dese_urm_pct'].mean():.0f}%\n"
+        f"Attendance: {g_lh['proportional_attendance_pct'].mean():.0f}%   ·   Mobility: {g_lh['mobility_pct'].mean():.0f}%"
+    )
+    ax.text(
+        230,
+        74,
+        box_lh,
+        fontsize=8.8,
+        color="#0f172a",
+        linespacing=1.35,
+        va="top",
+        bbox=dict(
+            boxstyle="round,pad=0.7",
+            facecolor="#ffffff",
+            edgecolor="#ea580c",
+            linewidth=1.2,
+            alpha=0.96,
+        ),
+        zorder=6,
+    )
+
+    box_hl = (
+        "Top status / bottom growth\n"
+        f"{len(g_hl)} extreme schools\n"
+        f"Avg. FRPL: {g_hl['frpl_pct'].mean():.0f}%   ·   URM: {g_hl['dese_urm_pct'].mean():.0f}%\n"
+        f"Attendance: {g_hl['proportional_attendance_pct'].mean():.0f}%   ·   Mobility: {g_hl['mobility_pct'].mean():.0f}%"
+    )
+    ax.text(
+        465,
+        28,
+        box_hl,
+        fontsize=8.8,
+        color="#0f172a",
+        linespacing=1.35,
+        va="top",
+        ha="right",
+        bbox=dict(
+            boxstyle="round,pad=0.7",
+            facecolor="#ffffff",
+            edgecolor="#2563eb",
+            linewidth=1.2,
+            alpha=0.96,
+        ),
+        zorder=6,
+    )
+
+    # 6. Axes & Spines
+    ax.set_xlim(210, 485)
+    ax.set_ylim(-4, 104)
+    ax.set_yticks([0, 25, 50, 75, 100])
+    ax.yaxis.set_major_formatter(mtick.PercentFormatter(decimals=0))
+    ax.set_xlabel("Academic Status Composite (Mean ELA & Math MPI)", fontsize=10.5, color="#334155", labelpad=8)
+    ax.set_ylabel("Official APR Value-Added Growth Points earned (%)", fontsize=10.5, color="#334155", labelpad=8)
+    ax.tick_params(colors="#475569", labelsize=9.5)
+
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_color("#cbd5e1")
+    ax.spines["bottom"].set_color("#cbd5e1")
+
+    plt.suptitle(
+        "Status and growth can disagree about the exact same schools",
+        fontsize=12.2,
+        fontweight="bold",
+        color="#0f172a",
+        x=0.08,
+        y=0.97,
+        ha="left",
+    )
+    ax.set_title(
+        "Academic status vs. APR growth points for Missouri conventional public schools (2025)",
+        fontsize=9.2,
+        color="#64748b",
+        pad=10,
+        loc="left",
+    )
+
+    fig.text(
+        0.08,
+        0.015,
+        "Note: Dashed lines indicate statewide medians. Opposing highlighted points represent extreme discordant quintiles (Q1 status / Q5 growth\nand Q5 status / Q1 growth). FRPL = Free/Reduced-Price Lunch; URM = DESE Underrepresented Minority (Black + Hispanic).",
+        fontsize=7.8,
+        color="#64748b",
+        style="italic",
+        linespacing=1.25,
+    )
+
+    plt.tight_layout()
+    fig.subplots_adjust(top=0.88, bottom=0.15)
+    out_path = FIGURES_DIR / "21_status_growth_disagreement_clean.png"
+    fig.savefig(out_path)
+    plt.close(fig)
+    print(f"[+] Saved {out_path}")
+
+
+def build_figure_22_three_signals_tradeoff():
+    """
+    Figure 22: The Accountability Trade-Off (Three Signals Synthesis).
+    Compares Growth, APR, and Status on Poverty Association (R²) vs. Persistence (r).
+    """
+    print("[*] Generating Figure 22: Three Signals Synthesis...")
+    fig, ax = plt.subplots(figsize=(9.2, 5.8), dpi=300)
+
+    signals = [
+        {
+            "name": "Value-Added Growth",
+            "r2_pov": 0.0,
+            "persistence": 0.358,
+            "color": "#0d9488",
+            "desc": "Uncoupled from poverty, but volatile\nR² ≈ 0%  ·  Year-to-year r = .36",
+            "xytext": (2.0, 0.25),
+            "ha": "left",
+            "va": "top",
+        },
+        {
+            "name": "Official MSIP 6 APR",
+            "r2_pov": 18.3,
+            "persistence": 0.622,
+            "color": "#d97706",
+            "desc": "A policy blend sitting directly between the two\nR² = 18.3%  ·  Year-to-year r = .62",
+            "xytext": (18.3, 0.74),
+            "ha": "center",
+            "va": "bottom",
+        },
+        {
+            "name": "Academic Status",
+            "r2_pov": 42.4,
+            "persistence": 0.938,
+            "color": "#2563eb",
+            "desc": "Highly stable, but overwhelmingly tracks poverty\nR² = 42.4%  ·  Year-to-year r = .94",
+            "xytext": (37.5, 0.96),
+            "ha": "right",
+            "va": "bottom",
+        },
+    ]
+
+    # Dashed connection line
+    x_pts = [s["r2_pov"] for s in signals]
+    y_pts = [s["persistence"] for s in signals]
+    ax.plot(x_pts, y_pts, linestyle="--", color="#94a3b8", linewidth=1.5, zorder=2)
+
+    # Plot the 3 big points
+    for s in signals:
+        ax.scatter(s["r2_pov"], s["persistence"], color=s["color"], s=160, edgecolor="#ffffff", linewidth=2.0, zorder=4)
+
+        box_text = f"● {s['name']}\n{s['desc']}"
+        ax.annotate(
+            box_text,
+            xy=(s["r2_pov"], s["persistence"]),
+            xytext=s["xytext"],
+            fontsize=8.8,
+            color="#0f172a",
+            fontweight="normal",
+            linespacing=1.35,
+            ha=s["ha"],
+            va=s["va"],
+            bbox=dict(
+                boxstyle="round,pad=0.65",
+                facecolor="#ffffff",
+                edgecolor=s["color"],
+                linewidth=1.2,
+                alpha=0.97,
+            ),
+            arrowprops=dict(arrowstyle="->", color=s["color"], lw=1.2, shrinkA=4, shrinkB=6),
+            zorder=5,
+        )
+
+    # Trade-off note in center
+    ax.text(
+        25,
+        0.42,
+        "The Accountability Trade-Off:\nGaining socioeconomic independence\ncosts year-to-year persistence",
+        fontsize=9.0,
+        fontstyle="italic",
+        color="#64748b",
+        ha="center",
+        va="center",
+        linespacing=1.3,
+        bbox=dict(boxstyle="round,pad=0.5", facecolor="#f8fafc", edgecolor="#e2e8f0", linewidth=0.8),
+        zorder=3,
+    )
+
+    ax.set_xlim(-4, 48)
+    ax.set_ylim(0.14, 1.08)
+    ax.set_xticks([0, 10, 20, 30, 40, 50])
+    ax.xaxis.set_major_formatter(mtick.PercentFormatter(decimals=0))
+    ax.set_yticks([0.20, 0.40, 0.60, 0.80, 1.00])
+    ax.tick_params(colors="#475569", labelsize=9.5)
+
+    ax.set_xlabel("How strongly the measure tracks school poverty (Socioeconomic association, R²)", fontsize=10.5, color="#334155", labelpad=8)
+    ax.set_ylabel("How similar the measure is from one year to the next (Persistence correlation, r)", fontsize=10.5, color="#334155", labelpad=8)
+
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_color("#cbd5e1")
+    ax.spines["bottom"].set_color("#cbd5e1")
+
+    plt.suptitle(
+        "No single measure gives us everything",
+        fontsize=12.2,
+        fontweight="bold",
+        color="#0f172a",
+        x=0.08,
+        y=0.97,
+        ha="left",
+    )
+    ax.set_title(
+        "Missouri's major accountability signals trade persistence for lower socioeconomic association",
+        fontsize=9.2,
+        color="#64748b",
+        pad=10,
+        loc="left",
+    )
+
+    fig.text(
+        0.08,
+        0.015,
+        "Note: Evaluated across conventional public schools tested in both 2024 and 2025. Poverty association is bivariate R² with Free/Reduced-Price Lunch (FRPL %);\npersistence is the Pearson correlation (r) between 2024 and 2025 school-level scores.",
+        fontsize=7.8,
+        color="#64748b",
+        style="italic",
+        linespacing=1.25,
+    )
+
+    plt.tight_layout()
+    fig.subplots_adjust(top=0.88, bottom=0.15)
+    out_path = FIGURES_DIR / "22_three_signals_poverty_vs_persistence.png"
+    fig.savefig(out_path)
+    plt.close(fig)
+    print(f"[+] Saved {out_path}")
+
+
+def build_figure_23_apr_counterfactual_clean():
+    """
+    Figure 23: What Missouri Chooses to Count Changes What the Score Means.
+    Clean two-bar comparison of Current APR (18.3%) vs. APR without Growth (40.1%).
+    """
+    print("[*] Generating Figure 23: APR Counterfactual (With vs. Without Growth)...")
+    fig, ax = plt.subplots(figsize=(8.8, 4.4), dpi=300)
+
+    categories = [
+        "APR without Value-Added Growth\n(Status, Attendance & Graduation only)",
+        "Current Official MSIP 6 APR\n(Includes Value-Added Growth)",
+    ]
+    vals = [40.1, 18.3]
+    colors = ["#dc2626", "#2563eb"]
+    y_pos = np.arange(len(categories))
+
+    bars = ax.barh(y_pos, vals, height=0.40, color=colors, edgecolor="none", zorder=3)
+
+    for bar, val in zip(bars, vals):
+        w = bar.get_width()
+        y = bar.get_y() + bar.get_height() / 2
+        ax.text(w + 0.9, y, f"{val:.1f}%", va="center", ha="left", fontsize=10.5, fontweight="bold", color="#0f172a")
+
+    # Benchmark vertical line for Raw Academic Status
+    ax.axvline(42.4, color="#64748b", linestyle="--", linewidth=1.3, zorder=2)
+    ax.text(41.8, 1.25, "Benchmark:\nRaw Academic Status (42.4%)", fontsize=8.4, color="#475569", va="center", ha="right", fontstyle="italic")
+
+    # Annotate the delta
+    ax.annotate(
+        "+21.8 percentage points\nMore than double the poverty relationship\nwhen growth points are removed",
+        xy=(29.2, 0.5),
+        xytext=(29.2, 0.5),
+        fontsize=8.8,
+        color="#0f172a",
+        ha="center",
+        va="center",
+        bbox=dict(boxstyle="round,pad=0.6", facecolor="#fef2f2", edgecolor="#fecaca", linewidth=1.0),
+        zorder=4,
+    )
+
+    ax.set_yticks(y_pos)
+    ax.set_yticklabels(categories, fontsize=9.6, color="#0f172a", fontweight="600")
+    ax.set_xlim(0, 50)
+    ax.set_xticks([0, 10, 20, 30, 40, 50])
+    ax.xaxis.set_major_formatter(mtick.PercentFormatter(decimals=0))
+    ax.tick_params(colors="#475569", labelsize=9.2)
+
+    ax.grid(axis="x", color="#e2e8f0", linestyle="-", linewidth=0.8, zorder=1)
+    ax.grid(axis="y", visible=False)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+    ax.spines["bottom"].set_color("#cbd5e1")
+
+    ax.set_xlabel("Share of Cross-School Score Variation Associated with Poverty (R² with FRPL)", fontsize=9.5, color="#334155", labelpad=8)
+
+    plt.suptitle(
+        "What Missouri chooses to count changes what the score means",
+        fontsize=12.2,
+        fontweight="bold",
+        color="#0f172a",
+        x=0.06,
+        y=0.96,
+        ha="left",
+    )
+    ax.set_title(
+        "School score variance explained by poverty with and without value-added growth (2025)",
+        fontsize=9.0,
+        color="#64748b",
+        pad=10,
+        loc="left",
+    )
+
+    fig.text(
+        0.06,
+        0.02,
+        "Note: Calculated across 2025 conventional public schools by recalculating total APR percentage after removing all earned and possible points\nfrom the value-added growth domain. FRPL = Free or Reduced-Price Lunch percentage.",
+        fontsize=7.8,
+        color="#64748b",
+        style="italic",
+        linespacing=1.25,
+    )
+
+    plt.tight_layout()
+    fig.subplots_adjust(top=0.84, bottom=0.20, left=0.34, right=0.94)
+    out_path = FIGURES_DIR / "23_what_missouri_counts_changes_meaning.png"
+    fig.savefig(out_path)
+    plt.close(fig)
+    print(f"[+] Saved {out_path}")
+
+
 def main():
     setup_style()
     print("[*] Loading master panel for publication figures...")
@@ -1176,6 +1576,9 @@ def main():
     build_figure_18_beating_expectations()
     build_figure_19_regression_to_mean()
     build_figure_20_uncertainty()
+    build_figure_21_status_growth_disagreement(df25)
+    build_figure_22_three_signals_tradeoff()
+    build_figure_23_apr_counterfactual_clean()
     print("[SUCCESS] All publication graphics created successfully.")
 
 
