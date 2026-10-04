@@ -44,14 +44,14 @@ Figure 1: Cross-school association of the Analyst ELA–Math Status Composite wi
 ![Growth vs Poverty](figures/02_growth_vs_poverty.png)
 
 ```
-Figure 2: Cross-school association of Value-Added Growth Points with FRPL % across 1,984 conventional public schools in 2025. The flat OLS line confirms statistical orthogonality (R² = 0.0007%).
+Figure 2: Cross-school association of Value-Added Growth Points with FRPL % across 1,984 conventional public schools in 2025. The flat OLS line shows near-zero linear association (R² = 0.0007%).
 ```
 
 The contrast is stark. Absolute achievement status is heavily stratified by student economic background: every 10 percentage point increase in school FRPL is associated with an 8.3-point decline in school MPI ($p < 0.0001$). When weighted by student enrollment ($r_w = -0.7204$), poverty accounts for more than half ($51.9\%$) of the cross-school variance in achievement status.
 
-By contrast, the reported growth-point signal shows very little linear association with school poverty ($r = +0.0027, p = 0.905$). High-poverty and low-poverty schools exhibit virtually identical distributions of growth points.
+By contrast, the reported growth-point signal shows very little linear association with school poverty ($r = +0.0027, p = 0.905$). Across the state, growth-point distributions show little systematic linear shift with poverty.
 
-Crucially, **the analyst status composite and growth points are weakly correlated and empirically distinct**: their cross-school correlation is only $r = 0.2067$ ($R^2 = 4.27\%$). They do not measure two shades of the same underlying school attribute; they measure two independent dimensions of school performance.
+Crucially, the analyst status composite and growth points are weakly correlated and capture empirically distinct aspects of the accountability signal (cross-school $r = 0.2067, R^2 = 4.27\%$).
 
 ---
 
@@ -101,13 +101,13 @@ Figure 4: Out-of-district cross-validation R² across sequential predictive mode
 
 The prediction staircase demonstrates that **prior status is an exceptionally strong predictive summary of persistent between-school differences; the measured contemporaneous covariates add little incremental linear predictive information**. A single prior-year achievement score predicts $88.0\%$ of next-year achievement status for schools in entirely unseen districts. Adding contemporaneous student poverty, racial composition, special education rates, English learner rates, mobility rates, and proportional attendance improves out-of-district prediction by less than half a percentage point ($+0.43\%$).
 
-This does not imply that student circumstances do not matter; rather, it demonstrates that whatever socioeconomic, structural, and institutional factors produce disparities in absolute test scores are already captured in the school's historical baseline.
+This does not imply that student circumstances do not matter; rather, much of the persistent between-school variation associated with those circumstances is already summarized by the prior-year status measure.
 
 ---
 
 ### Section 3: The Demographic Audit of Growth Points
 
-While status is saturated with demographic signal, Missouri's reported growth points measure is almost completely independent of student characteristics.
+While status is saturated with demographic signal, Missouri's reported growth points measure shows very little linear association with the measured student characteristics.
 
 To verify whether the growth model inadvertently tracks student circumstances other than poverty, we performed a comprehensive audit across seven school-level demographic and contextual variables in 2025. Standard 95% confidence intervals are computed using Fisher's $z$-transformation:
 
@@ -131,7 +131,7 @@ All seven bivariate correlations fall below $|r| < 0.09$. In a joint ordinary le
 
 $$R_{\text{joint}}^2 = 0.0198 \quad (F = 2.76, p = 0.009, N = 932)$$
 
-Less than $2.0\%$ of the variation in reported growth points is linearly associated with measured student demographics and contextual adversity. The reported growth-point signal shows very little linear association with the measured school-level demographic and contextual variables. Across these indicators, the data reveal that schools with challenging demographic environments or lower attendance rates are not systematically penalized under the state's value-added growth point allocation.
+Less than $2.0\%$ of the variation in reported growth points is linearly associated with measured student demographics and contextual adversity. The reported growth-point signal shows very little linear association with the measured school-level demographic and contextual variables. Across these indicators, challenging demographic environments or lower attendance rates are not associated with materially lower reported growth points in these cross-sectional analyses.
 
 ---
 
@@ -167,7 +167,7 @@ For each blend weight $w$, we calculate two quantities:
 ![Accountability Design Frontier](figures/05_accountability_frontier.png)
 
 ```
-Figure 6: The Single-Year Status–Growth Design Frontier. The horizontal axis measures socioeconomic association (R² with FRPL); the vertical axis measures longitudinal stability (year-to-year Pearson r). The official MSIP 6 APR composite (red star) lands directly on the 50/50 synthetic blend.
+Figure 6: The Single-Year Status–Growth Design Frontier. The horizontal axis measures socioeconomic association (R² with FRPL); the vertical axis measures longitudinal stability (year-to-year Pearson r). The official APR falls very near the 50/50 synthetic blend in these two coordinates.
 ```
 
 The empirical curve in Figure 6 defines the **single-year status–growth design frontier**:
