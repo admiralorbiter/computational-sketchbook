@@ -46,6 +46,15 @@ def test_sum_clean_series():
     expected = pd.Series([25.0, 20.0, np.nan, 12.0])
     pd.testing.assert_series_equal(res, expected)
 
+def test_sum_clean_series_require_complete():
+    """When require_complete=True, rows with partial missingness among active columns evaluate to NaN."""
+    s1 = pd.Series([10.0, 15.0, np.nan, np.nan])
+    s2 = pd.Series([20.0, np.nan, np.nan, 25.0]) # Row 1 has s1=15, s2=NaN -> partial missingness
+    s3_uncollected = pd.Series([np.nan, np.nan, np.nan, np.nan]) # Uncollected column (e.g. nonbinary)
+    res = sum_clean_series(s1, s2, s3_uncollected, require_complete=True)
+    expected = pd.Series([30.0, np.nan, np.nan, np.nan])
+    pd.testing.assert_series_equal(res, expected)
+
 def test_combokey_cleaning():
     """Combokey must be standardized to a 12-digit string, resolving scientific notation and leading zeros."""
     s = pd.Series(["290531000170", "290531000170.0", "10000201705", "  290531000170  "])

@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
+from scipy import stats
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_DIR))
@@ -47,7 +48,9 @@ def load_data():
     df = pd.read_parquet(DATA_DIR / "crdc_course_panel.parquet")
     # Clean analytical sample: non-zero, plausible bounds (<= 60 for clean distributions)
     valid_mask = (df["mean_class_size"] > 0) & (df["mean_class_size"] <= 60)
-    return df, df[valid_mask].copy()
+    df_valid = df[valid_mask].copy()
+    df_valid["school_wave_id"] = df_valid["nces_school_id"] + "_" + df_valid["crdc_wave"]
+    return df, df_valid
 
 def run_analysis_a1_and_a2(df_valid):
     """
@@ -228,72 +231,142 @@ def run_analysis_a4(df_valid):
     print(f"--> Saved Table 03 to {out_csv}")
     return df_wedge
 
+def estimate_fe_demeaned(df_sample, depvar="mean_class_size", weights_col=None, cluster_col="nces_school_id", group_col="school_wave_id", ref_course="geom"):
+    """
+    Frisch-Waugh-Lovell within-estimator for school x wave fixed effects + course fixed effects,
+    with clustered standard errors at the school level and exact DoF correction.
+    """
+    df = df_sample.copy()
+    all_courses = sorted(df["course_code"].unique())
+    reg_courses = [c for c in all_courses if c != ref_course]
+    
+    for c in reg_courses:
+        df[f"d_{c}"] = (df["course_code"] == c).astype(float)
+        
+    dummy_cols = [f"d_{c}" for c in reg_courses]
+    
+    if weights_col is not None:
+        w = df[weights_col].values
+        df["_w"] = w
+        df["_wy"] = w * df[depvar]
+        for c in dummy_cols:
+            df[f"_w_{c}"] = w * df[c]
+            
+        grp_w = df.groupby(group_col)["_w"].transform("sum")
+        df["_y_mean"] = df.groupby(group_col)["_wy"].transform("sum") / grp_w
+        df["_y_tilde"] = df[depvar] - df["_y_mean"]
+        
+        for c in dummy_cols:
+            mean_c = df.groupby(group_col)[f"_w_{c}"].transform("sum") / grp_w
+            df[f"_{c}_tilde"] = df[c] - mean_c
+            
+        X_tilde = df[[f"_{c}_tilde" for c in dummy_cols]]
+        y_tilde = df["_y_tilde"]
+        mod = sm.WLS(y_tilde, X_tilde, weights=w)
+    else:
+        df["_y_mean"] = df.groupby(group_col)[depvar].transform("mean")
+        df["_y_tilde"] = df[depvar] - df["_y_mean"]
+        
+        for c in dummy_cols:
+            mean_c = df.groupby(group_col)[c].transform("mean")
+            df[f"_{c}_tilde"] = df[c] - mean_c
+            
+        X_tilde = df[[f"_{c}_tilde" for c in dummy_cols]]
+        y_tilde = df["_y_tilde"]
+        mod = sm.OLS(y_tilde, X_tilde)
+        
+    res = mod.fit(cov_type="cluster", cov_kwds={"groups": df[cluster_col]})
+    
+    N = len(df)
+    K = len(dummy_cols)
+    G = df[group_col].nunique()
+    dof_factor = np.sqrt((N - K) / max(1, (N - K - G)))
+    
+    course_labels = {
+        "alg1": "Algebra I", "geom": "Geometry (Ref)", "alg2": "Algebra II",
+        "advm": "Advanced Math", "calc": "Calculus", "bio": "Biology",
+        "chem": "Chemistry", "phys": "Physics"
+    }
+    
+    results = []
+    for c in reg_courses:
+        col_name = f"_d_{c}_tilde"
+        coef = res.params[col_name]
+        se = res.bse[col_name] * dof_factor
+        tstat = coef / se
+        results.append({
+            "course_code": c,
+            "course_name": course_labels.get(c, c),
+            "coef_vs_geom": coef,
+            "std_err": se,
+            "t_stat": tstat,
+            "p_value": 2 * (1 - stats.norm.cdf(abs(tstat))),
+            "ci_95_low": coef - 1.96 * se,
+            "ci_95_high": coef + 1.96 * se,
+        })
+        
+    return pd.DataFrame(results), N, G, df[cluster_col].nunique()
+
 def run_analysis_a5(df_valid):
     """
-    Analysis A5: Within-School Course Hierarchy (School Fixed Effects).
-    ClassSize_{sct} = alpha_s + gamma_c + delta_t + epsilon_{sct}
+    Analysis A5: Within-School Course Hierarchy (School x Wave Fixed Effects).
+    ClassSize_{sct} = alpha_{st} + gamma_c + epsilon_{sct}
     Estimates whether foundation core courses absorb systematically larger classes
-    than advanced electives within the same high school campus.
+    than advanced electives within the exact same school building during the exact same year.
+    Reference course: Geometry (due to contemporaneous fall snapshot alignment).
+    Clusters standard errors at the school level.
+    Runs unweighted, section-weighted, and Algebra-I-excluded sensitivity specifications.
     """
-    print("--> Running Analysis A5: Within-School Fixed Effects Models...")
-    
-    # We estimate two models:
-    # Model 1: Kansas City Metro schools
-    # Model 2: Missouri & Kansas state schools
-    # Model 3: National 10% random sample of schools (to run within seconds with full SE clustering)
+    print("--> Running Analysis A5: Within-School Fixed Effects Models (School x Wave FE)...")
     
     samples = [
         ("Kansas City Metro", df_valid[df_valid["is_kc_metro"] == True]),
         ("MO and KS Statewide", df_valid[df_valid["state"].isin(["MO", "KS"])]),
+        ("National Full Panel", df_valid),
     ]
     
-    # National sample of schools
-    np.random.seed(42)
-    all_sids = df_valid["nces_school_id"].unique()
-    sample_sids = np.random.choice(all_sids, size=min(4000, len(all_sids)), replace=False)
-    df_nat_sample = df_valid[df_valid["nces_school_id"].isin(sample_sids)]
-    samples.append(("National Sample (4,000 Schools)", df_nat_sample))
+    all_results = []
     
-    results = []
     for sname, sdata in samples:
-        # Require at least 2 courses per school
-        sch_counts = sdata.groupby("nces_school_id")["course_code"].nunique()
-        multi_course_sids = sch_counts[sch_counts >= 2].index
-        reg_df = sdata[sdata["nces_school_id"].isin(multi_course_sids)].copy()
+        # Require at least 2 courses per school-wave
+        multi = sdata.groupby("school_wave_id")["course_code"].nunique()
+        valid_sw = multi[multi >= 2].index
+        reg_df = sdata[sdata["school_wave_id"].isin(valid_sw)].copy()
         
-        mod = smf.ols(
-            'mean_class_size ~ C(course_code, Treatment("alg1")) + C(crdc_wave, Treatment("2017-18")) + C(nces_school_id)',
-            data=reg_df
-        ).fit()
+        # 1. Unweighted OLS (School x Wave FE, Clustered SE by School)
+        res_unwt, n_obs, n_fe, n_clusters = estimate_fe_demeaned(reg_df, weights_col=None)
+        res_unwt["sample"] = sname
+        res_unwt["weighting"] = "Unweighted"
+        res_unwt["specification"] = "Full Hierarchy (Ref: Geometry)"
+        res_unwt["n_obs"] = n_obs
+        res_unwt["n_school_wave_fe"] = n_fe
+        res_unwt["n_clusters"] = n_clusters
+        all_results.append(res_unwt)
         
-        # Extract course parameters
-        course_names = {
-            "geom": "Geometry", "alg2": "Algebra II", "advm": "Advanced Math",
-            "calc": "Calculus", "bio": "Biology", "chem": "Chemistry", "phys": "Physics"
-        }
+        # 2. Section-Weighted WLS (School x Wave FE, Clustered SE by School)
+        res_wt, n_obs, n_fe, n_clusters = estimate_fe_demeaned(reg_df, weights_col="num_classes")
+        res_wt["sample"] = sname
+        res_wt["weighting"] = "Section-Weighted"
+        res_wt["specification"] = "Full Hierarchy (Ref: Geometry)"
+        res_wt["n_obs"] = n_obs
+        res_wt["n_school_wave_fe"] = n_fe
+        res_wt["n_clusters"] = n_clusters
+        all_results.append(res_wt)
         
-        for ccode, label in course_names.items():
-            param_key = f'C(course_code, Treatment("alg1"))[T.{ccode}]'
-            if param_key in mod.params:
-                coef = mod.params[param_key]
-                se = mod.bse[param_key]
-                pval = mod.pvalues[param_key]
-                ci_low = coef - 1.96 * se
-                ci_high = coef + 1.96 * se
-                results.append({
-                    "sample": sname,
-                    "n_obs": int(mod.nobs),
-                    "r_squared": mod.rsquared,
-                    "course_code": ccode,
-                    "course_name": label,
-                    "coef_vs_alg1": coef,
-                    "std_err": se,
-                    "p_value": pval,
-                    "ci_95_low": ci_low,
-                    "ci_95_high": ci_high,
-                })
-                
-    df_fe = pd.DataFrame(results)
+        # 3. Sensitivity: Excluding Algebra I (Section-Weighted)
+        reg_df_no_alg1 = reg_df[reg_df["course_code"] != "alg1"].copy()
+        multi_no_alg1 = reg_df_no_alg1.groupby("school_wave_id")["course_code"].nunique()
+        reg_df_no_alg1 = reg_df_no_alg1[reg_df_no_alg1["school_wave_id"].isin(multi_no_alg1[multi_no_alg1 >= 2].index)]
+        res_no_alg1, n_obs, n_fe, n_clusters = estimate_fe_demeaned(reg_df_no_alg1, weights_col="num_classes")
+        res_no_alg1["sample"] = sname
+        res_no_alg1["weighting"] = "Section-Weighted"
+        res_no_alg1["specification"] = "Sensitivity: Excluding Algebra I (Ref: Geometry)"
+        res_no_alg1["n_obs"] = n_obs
+        res_no_alg1["n_school_wave_fe"] = n_fe
+        res_no_alg1["n_clusters"] = n_clusters
+        all_results.append(res_no_alg1)
+        
+    df_fe = pd.concat(all_results, ignore_index=True)
     out_csv = TABLES_DIR / "table04_fixed_effects_coefficients.csv"
     df_fe.to_csv(out_csv, index=False)
     print(f"--> Saved Table 04 to {out_csv}")
@@ -367,13 +440,13 @@ def generate_analytical_figures(df_valid, df_res, df_wt, df_wedge):
     
     ax.barh(y - height, df_23["course_cell_mean"], height, label="Course-Cell Unweighted Mean", color="#4a7c59", alpha=0.85)
     ax.barh(y, df_23["section_weighted_mean"], height, label="Section-Weighted Mean", color="#33658a", alpha=0.85)
-    ax.barh(y + height, df_23["seat_weighted_mean"], height, label="Student / Seat-Weighted Mean", color="#f26419", alpha=0.90)
+    ax.barh(y + height, df_23["seat_weighted_mean"], height, label="Enrollment-Weighted Mean (Lower-Bound Proxy)", color="#f26419", alpha=0.90)
     
     ax.set_yticks(y)
     ax.set_yticklabels(df_23["course_name"], fontweight="bold")
     ax.set_xlabel("Mean Students per Class")
     ax.set_title("Figure 1: The Weighting Wedge in U.S. Classrooms (CRDC 2023–24 Census)\n"
-                 "Institutional Course Averages vs. Actual Student Seat Experience", pad=15)
+                 "Institutional Course Averages vs. Enrollment-Weighted Course-Cell Mean (Lower-Bound Proxy)", pad=15)
     ax.legend(loc="lower right", frameon=True)
     ax.set_xlim(0, 24)
     
@@ -412,7 +485,7 @@ def generate_analytical_figures(df_valid, df_res, df_wt, df_wedge):
     ax.set_xlabel("Secondary Course Offering")
     ax.set_ylabel("School-Course Mean Class Size")
     ax.set_title("Figure 2: Distribution of School-Course Mean Class Sizes Across Subjects (CRDC 2023–24)\n"
-                 "Yellow Diamonds = Seat-Weighted Mean; Solid Lines = Median", pad=15)
+                 "Yellow Diamonds = Enrollment-Weighted Mean (Lower-Bound Proxy); Solid Lines = Median", pad=15)
     ax.legend(title="Curricular Tier", loc="upper right")
     ax.set_ylim(0, 45)
     
@@ -431,15 +504,15 @@ def generate_analytical_figures(df_valid, df_res, df_wt, df_wedge):
     x = np.arange(len(df_23_exp))
     width = 0.25
     
-    ax.bar(x - width, df_23_exp["seat_pct_ge_25"], width, label="Students in Classes ≥ 25", color="#e9c46a", alpha=0.9)
-    ax.bar(x, df_23_exp["seat_pct_ge_30"], width, label="Students in Classes ≥ 30", color="#f4a261", alpha=0.9)
-    ax.bar(x + width, df_23_exp["seat_pct_ge_35"], width, label="Students in Classes ≥ 35", color="#e76f51", alpha=0.9)
+    ax.bar(x - width, df_23_exp["seat_pct_ge_25"], width, label="Enrollment in Cells ≥ 25", color="#e9c46a", alpha=0.9)
+    ax.bar(x, df_23_exp["seat_pct_ge_30"], width, label="Enrollment in Cells ≥ 30", color="#f4a261", alpha=0.9)
+    ax.bar(x + width, df_23_exp["seat_pct_ge_35"], width, label="Enrollment in Cells ≥ 35", color="#e76f51", alpha=0.9)
     
     ax.set_xticks(x)
     ax.set_xticklabels(df_23_exp["course_name"], rotation=30, ha="right", fontweight="bold")
-    ax.set_ylabel("Percentage of Enrolled Students (%)")
-    ax.set_title("Figure 3: Upper-Tail Classroom Exposure in U.S. Secondary Schools (CRDC 2023–24)\n"
-                 "Share of Student Enrollment Concentrated in School-Course Environments ≥ 25, ≥ 30, and ≥ 35", pad=15)
+    ax.set_ylabel("Share of Enrolled Students (%)")
+    ax.set_title("Figure 3: Upper-Tail Classroom Concentration in U.S. Secondary Schools (CRDC 2023–24)\n"
+                 "Share of Student Enrollment in School-Course Cells Averaging ≥ 25, ≥ 30, and ≥ 35", pad=15)
     ax.legend(loc="upper right", frameon=True)
     ax.set_ylim(0, 35)
     
@@ -481,8 +554,8 @@ def generate_analytical_figures(df_valid, df_res, df_wt, df_wedge):
     ax.set_ylim(5, 45)
     ax.set_xlabel("Contemporaneous School Pupil-Teacher Ratio (PTR)")
     ax.set_ylabel("School-Course Mean Class Size")
-    ax.set_title("Figure 4: The Secondary Staffing Wedge in Greater Kansas City (2023–24)\n"
-                 "Course Class Sizes Systematically Exceed Macro PTR", pad=15)
+    ax.set_title("Figure 4: Secondary Staffing Wedge in Greater Kansas City (2023–24)\n"
+                 "Observed Course Class Sizes (1.20×–1.31×) vs. Theoretical 5/7 Schedule Line (1.40× PTR)", pad=15)
     ax.legend(loc="upper left")
     
     plt.tight_layout()
@@ -504,18 +577,30 @@ def generate_analytical_figures(df_valid, df_res, df_wt, df_wedge):
     }
     df_trend["year_num"] = df_trend["crdc_wave"].map(wave_map)
     
+    colors = {
+        "Algebra I": "#1f77b4", "Geometry": "#ff7f0e", "Biology": "#2ca02c",
+        "Chemistry": "#d62728", "Calculus": "#9467bd"
+    }
+    
     for cname in trend_courses:
         cg = df_trend[df_trend["course_name"] == cname].sort_values("year_num")
-        ax.plot(cg["year_num"], cg["seat_weighted_mean"], marker="o", linewidth=2.2, label=f"{cname} (Seat-Weighted)")
+        if cname in ["Algebra I", "Geometry"]:
+            cg_break = cg[cg["year_num"].isin([2014, 2016])]
+            cg_primary = cg[cg["year_num"] >= 2016]
+            ax.plot(cg_break["year_num"], cg_break["seat_weighted_mean"], linestyle="--", marker="o", color=colors[cname], alpha=0.5)
+            ax.plot(cg_primary["year_num"], cg_primary["seat_weighted_mean"], linestyle="-", marker="o", linewidth=2.2, color=colors[cname], label=f"{cname} (Primary 9–12 Series)")
+        else:
+            ax.plot(cg["year_num"], cg["seat_weighted_mean"], marker="o", linewidth=2.2, color=colors[cname], label=f"{cname}")
         
     ax.axvspan(2020.5, 2021.5, color="gray", alpha=0.2, label="COVID-19 Discontinuity (Peak Remote/Hybrid)")
+    ax.axvspan(2013.7, 2014.3, color="lightcoral", alpha=0.15, label="2013–14 Break (Alg1/Geom Covered Grades 7–12)")
     ax.set_xticks([2014, 2016, 2018, 2021, 2022, 2024])
-    ax.set_xticklabels(["2013–14", "2015–16", "2017–18", "2020–21\n(COVID)", "2021–22", "2023–24"])
-    ax.set_ylabel("Student / Seat-Weighted Mean Class Size")
+    ax.set_xticklabels(["2013–14\n(Grades 7–12*)", "2015–16", "2017–18", "2020–21\n(COVID)", "2021–22", "2023–24"])
+    ax.set_ylabel("Enrollment-Weighted Mean Class Size (Lower-Bound Proxy)")
     ax.set_xlabel("CRDC Census Wave")
     ax.set_title("Figure 5: A Decade of Secondary Class Size in the United States (2013–14 to 2023–24)\n"
-                 "Pre-Pandemic Baseline, COVID Shock, and Post-Pandemic Plateau", pad=15)
-    ax.legend(loc="lower left", frameon=True)
+                 "Primary Comparable Series 2015–16 to 2023–24 (*2013–14 Alg1/Geom Spanned Grades 7–12)", pad=15)
+    ax.legend(loc="lower left", frameon=True, fontsize=9)
     ax.set_ylim(16, 26)
     
     plt.tight_layout()

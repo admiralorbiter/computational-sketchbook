@@ -47,14 +47,28 @@ def clean_series(series):
     s_num = pd.to_numeric(series, errors="coerce")
     return s_num.where(s_num >= 0, np.nan)
 
-def sum_clean_series(*series_list):
-    """Sum a list of pandas series element-wise, ignoring NaNs unless all are NaN."""
+def sum_clean_series(*series_list, require_complete=False):
+    """
+    Sum a list of pandas series element-wise.
+    - If require_complete=True, any row with partial missingness among active columns
+      (i.e. some valid, some NaN) evaluates to NaN to prevent undercounting.
+      Columns that are entirely NaN (e.g. uncollected nonbinary fields) are ignored.
+    - If require_complete=False, ignores NaNs unless all are NaN (standard sum).
+    """
     cleaned = [clean_series(s) for s in series_list]
     combined = pd.concat(cleaned, axis=1)
-    # If all values in a row are NaN, sum should be NaN, not 0
-    all_nan = combined.isna().all(axis=1)
-    res = combined.fillna(0).sum(axis=1)
-    return res.mask(all_nan, np.nan)
+    
+    if require_complete:
+        active_cols = combined.dropna(how="all", axis=1)
+        if active_cols.empty:
+            return pd.Series(np.nan, index=combined.index)
+        has_any_nan = active_cols.isna().any(axis=1)
+        res = active_cols.fillna(0).sum(axis=1)
+        return res.mask(has_any_nan, np.nan)
+    else:
+        all_nan = combined.isna().all(axis=1)
+        res = combined.fillna(0).sum(axis=1)
+        return res.mask(all_nan, np.nan)
 
 def clean_combokey(key_series, leaid_series=None, schid_series=None):
     """
