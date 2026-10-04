@@ -29,7 +29,7 @@ This study establishes the empirical crosswalk between **universal administrativ
 
 > [!NOTE]
 > **2. Historical Survey Benchmarks and Series Definition Breaks:**  
-> The SASS/NTPS record must be interpreted as a series of historical benchmark points with explicit definition breaks rather than a single uninterrupted time series. SASS surveys from 1999–00 to 2011–12 reported departmentalized instruction across grades 7–12 (**23.6** in 2000, **24.7** in 2004, **23.4** in 2008, **24.2** in 2012). Beginning in 2011–12, NCES published high school specific (grades 9–12) departmentalized averages (**24.2** in 2012, **26.0** in 2016, **23.3** in 2018, **21.0** in 2021). Furthermore, NCES explicitly cautions that 2020–21 school-level categories differ from previous administrations and were collected under pandemic instructional conditions. Meanwhile, elementary self-contained classrooms have remained remarkably flat across 22 years: **21.1** (1999–00), **20.4** (2003–04), **20.0** (2007–08), **21.2** (2011–12), and **19.1** (2020–21).
+> The older SASS grade-span series reports grades 7–12 departmentalized averages of **23.6** (1999–00), **24.7** (2003–04), **23.4** (2007–08), and **26.8** (2011–12). A separate high-school-specific grades 9–12 series begins in 2011–12 at **24.2** and continues with NTPS benchmarks of **26.0** (2015–16), **23.3** (2017–18), and **21.0** (2020–21). These should be treated as overlapping benchmark series with different definitions, not one continuous trend. Furthermore, NCES explicitly cautions that 2020–21 school-level categories differ from previous administrations and were collected under pandemic instructional conditions. Meanwhile, elementary self-contained classrooms have remained remarkably flat across 22 years: **21.1** (1999–00), **20.4** (2003–04), **20.0** (2007–08), **21.2** (2011–12), and **19.1** (2020–21).
 
 > [!TIP]
 > **3. State Distribution Parameters & Distinguishing Units of Analysis:**  
@@ -131,6 +131,12 @@ Table C01 compiles the published teacher survey benchmarks across 7 survey cycle
 | **2007–08 (SASS)** | 2007–08 | United States | Secondary / Grades 7–12 | Departmentalized | **23.4** | 0.16 | | Grades 7–12 Departmentalized | Digest 2010 Table 71 |
 | **2007–08 (SASS)** | 2007–08 | Missouri | Secondary / Grades 7–12 | Departmentalized | **20.6** | 0.61 | | Grades 7–12 Departmentalized | Digest 2010 Table 71 |
 | **2007–08 (SASS)** | 2007–08 | Kansas | Secondary / Grades 7–12 | Departmentalized | **21.0** | 0.94 | | Grades 7–12 Departmentalized | Digest 2010 Table 71 |
+| **2011–12 (SASS)** | 2011–12 | United States | Elementary School | Self-Contained | **21.2** | 0.18 | | Grades K–5/6 Self-Contained | Digest 2019 Table 209.30 |
+| **2011–12 (SASS)** | 2011–12 | Missouri | Elementary School | Self-Contained | **20.2** | 0.83 | | Grades K–5/6 Self-Contained | Digest 2019 Table 209.30 |
+| **2011–12 (SASS)** | 2011–12 | Kansas | Elementary School | Self-Contained | **20.4** | 0.86 | | Grades K–5/6 Self-Contained | Digest 2019 Table 209.30 |
+| **2011–12 (SASS)** | 2011–12 | United States | Secondary / Grades 7–12 | Departmentalized | **26.8** | 0.22 | | Grades 7–12 Departmentalized | Digest 2019 Table 209.30 |
+| **2011–12 (SASS)** | 2011–12 | Missouri | Secondary / Grades 7–12 | Departmentalized | **26.8** | 1.18 | | Grades 7–12 Departmentalized | Digest 2019 Table 209.30 |
+| **2011–12 (SASS)** | 2011–12 | Kansas | Secondary / Grades 7–12 | Departmentalized | **24.6** | 1.21 | | Grades 7–12 Departmentalized | Digest 2019 Table 209.30 |
 | **2011–12 (SASS)** | 2011–12 | United States | High School | Departmentalized | **24.2** | — | | Grades 9–12 Departmentalized | SASS 2011–12 First Look Table 7 |
 | **2011–12 (SASS)** | 2011–12 | Missouri | High School | Departmentalized | **21.8** | — | | Grades 9–12 Departmentalized | SASS 2011–12 First Look Table 7 |
 | **2011–12 (SASS)** | 2011–12 | Kansas | High School | Departmentalized | **19.7** | — | | Grades 9–12 Departmentalized | SASS 2011–12 First Look Table 7 |
@@ -153,7 +159,7 @@ Table C01 compiles the published teacher survey benchmarks across 7 survey cycle
 ![Figure C01: SASS/NTPS Longitudinal Trajectory](figures/fig_c01_sass_ntps_longitudinal_trajectory.png)
 
 ### Methodological Notes on Series Definition Breaks:
-- **Grades 7–12 vs. Grades 9–12:** SASS 1999–2000 through 2007–08 Digest tables defined secondary departmentalized instruction across grades 7–12. Beginning with SASS 2011–12 and NTPS 2015–2021, NCES published separate high school (grades 9–12) departmentalized estimates.
+- **Grades 7–12 vs. Grades 9–12 Series:** The older SASS series defined secondary departmentalized instruction across grades 7–12, reporting national averages of 23.6 (1999–00), 24.7 (2003–04), 23.4 (2007–08), and **26.8 (2011–12)**. In 2011–12, NCES also introduced a high-school-specific (grades 9–12) departmentalized series at **24.2**, which continued into NTPS at 26.0 (2015–16), 23.3 (2017–18), and 21.0 (2020–21). These represent overlapping series with distinct estimand scopes rather than a single continuous trend.
 - **2020–21 Definition Changes & Pandemic Conditions:** NCES documentation explicitly warns that 2020–21 school-level categories differ from previous NTPS administrations and should be compared over time with caution. Additionally, the 2020–21 survey was administered during widespread COVID-19 instructional modifications.
 - **Elementary Stability:** Elementary self-contained classrooms have remained consistently centered around 19 to 21 students across all administrations.
 
@@ -253,7 +259,7 @@ In *Jenkins v. Missouri*, 639 F. Supp. 19 (W.D. Mo. 1985), the federal district 
 | :--- | :--- | :--- | :---: |
 | **H1: PTR Divergence** | Class size systematically exceeds macro pupil-teacher ratio. | Both CRDC Estimand C (20.0–22.6) and NTPS teacher reports (21.0–26.0) exceed CCD macro PTR (15.3–16.1) by $+4.7$ to $+9.9$ students. | **CONFIRMED** |
 | **H2: Weighting Matters** | Student-weighted averages exceed unweighted cell means. | CRDC Estimand C exceeds Estimand A by $+4.7$ to $+5.0$ students and Estimand B by $+4.1$ to $+5.2$ students. NTPS teacher reports align much closer to C than to A. | **CONFIRMED** |
-| **H3: The Upper Tail Matters** | Averages obscure a substantial tail of students in large sections. | Large comprehensive suburban high schools report core academic cell averages of 22.3 to 24.5 students, translating into modeled active rosters of 134 to 147 students. | **CONFIRMED** |
+| **H3: The Upper Tail Matters** | Averages obscure a substantial tail of students in large sections. | CONFIRMED in Study A: national CRDC distributions show a substantial enrollment share in high-mean school-course cells; Phase 5 adds contextual schedule scenarios showing how large course environments can translate into substantial modeled roster loads. | **CONFIRMED** |
 | **H4: Class Size Persistence** | Class sizes remained flat or eased moderately. | Elementary self-contained has remained virtually static for 22 years (19.1–21.2); high school departmentalized benchmarks moved from 24.2 (2012) and 26.0 (2016) to 21.0 (2021). | **CONFIRMED** *(Series definition breaks noted)* |
 | **H5: Instructional Load Escalation** | Individualized instructional obligations increased even as headcount was stable. | School-level concentrations of IEP, 504, and EL students increased substantially. However, because individual teacher rosters and assignment non-randomness are unobserved in public data, teacher-level load cannot be confirmed as an empirical fact. | **SUPPORTED — SCHOOL-CONTEXT INTENSIFICATION; TEACHER-LEVEL LOAD NOT YET ESTABLISHED** |
 
