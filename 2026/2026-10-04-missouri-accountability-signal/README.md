@@ -29,6 +29,7 @@ This computational sketchbook analyzes the empirical behavior of Missouri's publ
 ├── src/
 │   ├── acquire_apr.py
 │   ├── acquire_context.py
+│   ├── acquire_nces_ccd.py
 │   ├── harmonize_apr.py
 │   ├── build_school_panel.py
 │   ├── classify_schools.py
@@ -47,8 +48,10 @@ This computational sketchbook analyzes the empirical behavior of Missouri's publ
     ├── 01_data_inventory.md
     ├── 02_achievement_and_context.md
     ├── 03_growth_and_context.md
+    ├── 03b_accountability_calibration.md
     ├── growth_replication_check.md
-    └── figures/
+    ├── figures/
+    └── tables/
 ```
 
 ## Running the Pipeline
