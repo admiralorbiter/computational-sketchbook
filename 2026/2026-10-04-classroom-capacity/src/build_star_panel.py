@@ -184,8 +184,10 @@ def build_star_student_panel():
         
         # Explicit one-record Krueger (1999) replication calibration:
         # In the raw public Dataverse export (STAR_Students.tab), kindergarten teacher 22558503 (22 students)
-        # has trace = NaN. In Alan Krueger's (1999) published Table V complete-case sample (N = 5,861),
-        # this teacher was recorded as White (code 1.0).
+        # has trace = NaN. The public Dataverse field is missing for this teacher. Coding the teacher as White
+        # is an explicit replication calibration chosen because it reproduces Krueger's published estimates more closely;
+        # it should not be interpreted as independently verified teacher demographic information.
+        # A strict raw-data sensitivity analysis (N = 5,840) is reported alongside it.
         # We preserve teach_white_k as strictly raw, and provide teach_white_calibrated_k for replication sensitivity.
         if g_num == "k":
             df_clean["teach_white_calibrated_k"] = np.where(

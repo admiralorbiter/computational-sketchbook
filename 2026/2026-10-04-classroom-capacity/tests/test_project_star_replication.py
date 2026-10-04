@@ -172,6 +172,15 @@ class TestKruegerTableVReplication:
             # In specifications with fixed effects and teacher shocks, clustered SE is non-trivial
             assert clu_se > 0.5, f"Clustered SE unexpectedly small: {clu_se}"
 
+    def test_table_v_kindergarten_raw_sensitivity(self, table_v_df):
+        """Verifies explicit raw microdata sensitivity row without teacher calibration."""
+        sens_row = table_v_df[table_v_df["panel_grade"] == "Grade K (Raw Sensitivity)"]
+        assert len(sens_row) == 1, "Missing 'Grade K (Raw Sensitivity)' row in Table D02"
+        row = sens_row.iloc[0]
+        assert row["sample_size_n"] == 5840, f"Expected N=5,840, got {row['sample_size_n']}"
+        assert abs(row["small_coef"] - 5.30) < 0.05, f"Expected small coef ~5.30, got {row['small_coef']}"
+        assert abs(row["small_clustered_se"] - 1.19) < 0.05, f"Expected clustered SE ~1.19, got {row['small_clustered_se']}"
+
 
 class TestKruegerTableVIIandVIII:
     """Verifies Table VII and Table VIII 2SLS replication (Table D03)."""
