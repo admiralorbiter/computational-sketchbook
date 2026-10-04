@@ -275,7 +275,7 @@ def run_analysis_a4(df_valid):
 def estimate_fe_demeaned(df_sample, depvar="mean_class_size", weights_col=None, cluster_col="nces_school_id", group_col="school_wave_id", ref_course="geom"):
     """
     Frisch-Waugh-Lovell within-estimator for school x wave fixed effects + course fixed effects,
-    with clustered standard errors at the school level, exact DoF correction, and Student's t inference.
+    with clustered standard errors at the school level, absorbed-FE finite-sample degrees-of-freedom adjustment, and Student's t inference.
     Excludes non-informative groups with fewer than 2 distinct courses.
     """
     df = df_sample.copy()
@@ -447,7 +447,7 @@ def run_analysis_a5(df_valid):
     Estimates whether foundation core courses absorb systematically larger classes
     than advanced electives within the exact same school building during the exact same year.
     Reference course: Geometry (due to contemporaneous fall snapshot alignment).
-    Clusters standard errors at the school level with exact DoF adjustment and Student's t inference.
+    Clusters standard errors at the school level with absorbed-FE finite-sample adjustment and Student's t inference.
     Runs unweighted, section-weighted, Algebra-I-excluded, and direct pairwise Geometry models.
     """
     print("--> Running Analysis A5: Within-School Fixed Effects Models (School x Wave FE)...")
