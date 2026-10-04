@@ -51,7 +51,7 @@ def build_figure_11(df25):
     intercept = ols.params.iloc[0]
     slope_10pp = slope * 10
 
-    fig, ax = plt.subplots(figsize=(8.5, 5.6), dpi=300)
+    fig, ax = plt.subplots(figsize=(8.8, 5.8), dpi=300)
 
     # 1. Light points showing density
     ax.scatter(
@@ -69,7 +69,7 @@ def build_figure_11(df25):
     y_line = intercept + slope * x_line
     ax.plot(x_line, y_line, color="#dc2626", linewidth=2.4, zorder=3)
 
-    # 3. Clean editorial callout box in the open upper-right space (x=50 to 86)
+    # 3. Clean editorial callout box in the open upper-right space
     callout_text = (
         "Poverty explains 42% of the cross-school\n"
         "variation in academic status.\n\n"
@@ -77,8 +77,8 @@ def build_figure_11(df25):
         "+10 pp poverty ≈ −8.2 MPI points"
     )
     ax.text(
-        50,
-        425,
+        40,
+        428,
         callout_text,
         fontsize=9.2,
         color="#0f172a",
@@ -94,9 +94,28 @@ def build_figure_11(df25):
         zorder=4,
     )
 
+    # Option C: CEP Column Callout arrow pointing to the 100% vertical line
+    ax.annotate(
+        "Community Eligibility (CEP)\n100% free meals by policy (n=360)",
+        xy=(100, 310),
+        xytext=(68, 245),
+        fontsize=8.5,
+        color="#1e293b",
+        linespacing=1.25,
+        arrowprops=dict(arrowstyle="->", color="#475569", lw=1.2, shrinkA=3, shrinkB=4),
+        bbox=dict(
+            boxstyle="round,pad=0.5",
+            facecolor="#ffffff",
+            edgecolor="#cbd5e1",
+            linewidth=1.0,
+            alpha=0.96,
+        ),
+        zorder=4,
+    )
+
     # 4. Axes & Ticks
-    ax.set_xlim(-2, 102)
-    ax.set_ylim(210, 475)
+    ax.set_xlim(-2, 104)
+    ax.set_ylim(205, 478)
     ax.set_xticks([0, 20, 40, 60, 80, 100])
     ax.xaxis.set_major_formatter(mtick.PercentFormatter(decimals=0))
 
@@ -128,8 +147,19 @@ def build_figure_11(df25):
         loc="left",
     )
 
+    # Option A: Explanatory footnote at the bottom of the figure
+    fig.text(
+        0.08,
+        0.015,
+        "Note: The vertical stripe at 100% reflects schools participating in the federal Community Eligibility Provision (CEP), where all enrolled\nstudents receive free meals by administrative policy rather than individual household application (mean Direct Certification = 45%).",
+        fontsize=7.8,
+        color="#64748b",
+        style="italic",
+        linespacing=1.25,
+    )
+
     plt.tight_layout()
-    fig.subplots_adjust(top=0.88, bottom=0.12)
+    fig.subplots_adjust(top=0.88, bottom=0.15)
     out_path = FIGURES_DIR / "11_status_vs_poverty_clean.png"
     fig.savefig(out_path)
     plt.close(fig)
