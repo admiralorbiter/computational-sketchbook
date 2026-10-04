@@ -189,43 +189,41 @@ def build_figure_12():
     status_lvl["label"] = status_lvl["level"].map(level_names)
     status_lvl["r2_pct"] = status_lvl["r2"] * 100
 
-    fig, ax = plt.subplots(figsize=(8.0, 4.4), dpi=300)
+    fig, ax = plt.subplots(figsize=(9.2, 4.8), dpi=300)
 
     # Invert so Elementary is at the top
     y_pos = np.arange(len(status_lvl))[::-1]
     
-    # Highlight Middle school slightly to let the 58% jump stand out
-    colors = ["#1e40af" if lvl == "MIDDLE" else "#3b82f6" for lvl in status_lvl["level"]]
+    # Highlight Middle school in bold navy, Elementary in strong blue, others in muted blue
+    colors = ["#1e3a8a" if lvl == "MIDDLE" else ("#2563eb" if lvl == "ELEMENTARY" else "#60a5fa") for lvl in status_lvl["level"]]
 
-    bars = ax.barh(y_pos, status_lvl["r2_pct"], height=0.50, color=colors, edgecolor="none", zorder=3)
+    bars = ax.barh(y_pos, status_lvl["r2_pct"], height=0.48, color=colors, edgecolor="none", zorder=3)
 
-    # Bar labels
+    # Bar labels in plain English (concise to avoid right clipping)
     for bar, (_, row) in zip(bars, status_lvl.iterrows()):
         w = bar.get_width()
         y = bar.get_y() + bar.get_height() / 2
-        ax.text(
-            w + 1.2,
-            y,
-            f"{row['r2_pct']:.1f}%",
-            va="center",
-            ha="left",
-            fontsize=10,
-            fontweight="bold" if row["level"] == "MIDDLE" else "normal",
-            color="#0f172a",
-        )
+        if row["level"] == "MIDDLE":
+            ax.text(w + 1.2, y, f"{row['r2_pct']:.0f}%  (nearly 6 in 10 score differences)", va="center", ha="left", fontsize=9.5, fontweight="bold", color="#1e3a8a")
+        elif row["level"] == "ELEMENTARY":
+            ax.text(w + 1.2, y, f"{row['r2_pct']:.0f}%  (half of all score differences)", va="center", ha="left", fontsize=9.5, fontweight="bold", color="#2563eb")
+        elif row["level"] == "HIGH":
+            ax.text(w + 1.2, y, f"{row['r2_pct']:.0f}%  (diluted by course choice)", va="center", ha="left", fontsize=9.0, color="#475569")
+        else:
+            ax.text(w + 1.2, y, f"{row['r2_pct']:.0f}%", va="center", ha="left", fontsize=9.2, color="#475569")
 
     # Y-axis
     ax.set_yticks(y_pos)
-    ax.set_yticklabels(status_lvl["label"], fontsize=10.5, color="#1e293b", fontweight="500")
+    ax.set_yticklabels(status_lvl["label"], fontsize=10.5, color="#0f172a", fontweight="600")
 
     # X-axis
-    ax.set_xlim(0, 70)
-    ax.set_xticks([0, 15, 30, 45, 60])
+    ax.set_xlim(0, 100)
+    ax.set_xticks([0, 20, 40, 60, 80, 100])
     ax.xaxis.set_major_formatter(mtick.PercentFormatter(decimals=0))
     ax.tick_params(colors="#475569", labelsize=9.5)
 
     # Gridlines and spines
-    ax.grid(axis="x", color="#e2e8f0", linestyle="-", linewidth=0.7, zorder=1)
+    ax.grid(axis="x", color="#e2e8f0", linestyle="-", linewidth=0.8, zorder=1)
     ax.grid(axis="y", visible=False)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
@@ -234,7 +232,7 @@ def build_figure_12():
 
     # Titles
     plt.suptitle(
-        "Poverty and academic status by school level",
+        "In Missouri middle schools, poverty accounts for nearly 60% of test performance",
         fontsize=12.2,
         fontweight="bold",
         color="#0f172a",
@@ -243,26 +241,29 @@ def build_figure_12():
         ha="left",
     )
     ax.set_title(
-        "Share of cross-school variation in the analyst ELA–Math status composite associated with FRPL,\nMissouri conventional public schools, 2025.",
-        fontsize=8.8,
+        "Percentage of test-score differences between schools explained by student poverty alone (2025 MAP scores)",
+        fontsize=9.2,
         color="#64748b",
         pad=10,
         loc="left",
     )
 
-    # Footnote note
-    ax.text(
-        0,
-        -0.85,
-        "Bivariate R²; descriptive association, not a causal estimate.",
-        fontsize=8.2,
-        color="#64748b",
+    # Plain English intuitive axis caption
+    ax.set_xlabel("← Poverty plays no role in test scores                                        Poverty explains 100% of score differences →", fontsize=8.2, color="#64748b", labelpad=8)
+
+    # Footnote note (wrapped to prevent clipping)
+    fig.text(
+        0.08,
+        0.02,
+        "Note: Values represent statistical variance (R²) in school MAP Performance Index scores explained by Free and Reduced-Price Lunch rates\nacross 2,027 conventional public schools.",
+        fontsize=7.8,
+        color="#94a3b8",
         style="italic",
-        ha="left",
+        linespacing=1.25,
     )
 
     plt.tight_layout()
-    fig.subplots_adjust(top=0.81, bottom=0.18, left=0.16, right=0.92)
+    fig.subplots_adjust(top=0.82, bottom=0.20, left=0.18, right=0.96)
     out_path = FIGURES_DIR / "12_status_poverty_by_school_level.png"
     fig.savefig(out_path)
     plt.close(fig)
