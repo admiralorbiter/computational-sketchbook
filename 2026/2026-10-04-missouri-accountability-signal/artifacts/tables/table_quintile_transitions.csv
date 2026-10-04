@@ -1,3 +1,7 @@
-measure,pair,same_quintile_pct,within_one_quintile_pct
-Status MPI,2024 -> 2025,65.75817641228939,96.28344895936571
-Growth Points %,2024 -> 2025,31.303906646372397,66.21004566210046
+metric,transition_definition,n_schools,same_category_pct,within_plus_minus_one_pct,notes
+Status MPI,Continuous Quintiles (1-5),2018,65.75817641228939,96.28344895936571,Continuous distribution without ties.
+APR Growth Points %,Exact Same Discrete Value (out of 9 levels),1971,22.37442922374429,,"Exact identity across 0, 12.5, 25, 37.5, 50, 62.5, 75, 87.5, 100%."
+APR Growth Points %,Within +/- 12.5 Percentage Points (<= 1 discrete step),1971,53.57686453576864,,Tracks within one 12.5-point composite step.
+APR Growth Points %,Within +/- 25.0 Percentage Points (<= 2 discrete steps),1971,75.84982242516489,,Tracks within one subject-level tier step.
+APR Growth Points %,"4 Official MSIP 6 Growth Tiers (Floor, Appr, Target, Exceed)",1971,38.20395738203957,83.56164383561644,Official accountability performance designation categories.
+APR Growth Points %,Tie-Preserving Average Rank Quintiles (rank method=average),1971,33.181126331811264,67.63064434297311,"Assigns equal average rank to tied values, eliminating row-order distortion."

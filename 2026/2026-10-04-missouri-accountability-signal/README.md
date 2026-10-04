@@ -34,9 +34,7 @@ This computational sketchbook analyzes the empirical behavior of Missouri's publ
 │   ├── build_school_panel.py
 │   ├── classify_schools.py
 │   ├── analyze_descriptive.py
-│   ├── analyze_status_growth.py
-│   ├── replicate_growth_demographics.py
-│   └── build_artifacts.py
+│   └── replicate_growth_demographics.py
 ├── tests/
 │   ├── test_source_files.py
 │   ├── test_school_keys.py
