@@ -23,7 +23,7 @@ DATA_DIR = PROJECT_DIR / "data" / "processed"
 PARQUET_PATH = DATA_DIR / "school_context_panel.parquet"
 COURSE_PARQUET_PATH = DATA_DIR / "crdc_course_panel.parquet"
 
-from src.harmonize_crdc import sum_enrollment_with_nonbinary, clean_series
+from src.harmonize_crdc import sum_enrollment_with_nonbinary, clean_series, pooled_rate
 
 
 @pytest.fixture(scope="module")
@@ -220,11 +220,74 @@ def test_longitudinal_dimension_shifts(context_df):
     # 504 more than doubles in pooled student rate from 2013-14 (2.24%) to 2023-24 (5.45%)
     sub13 = sec[sec["crdc_wave"] == "2013-14"]
     sub23 = sec[sec["crdc_wave"] == "2023-24"]
-    p504_13 = sub13["sec504_count"].sum() / sub13["school_enrollment"].sum() * 100.0
-    p504_23 = sub23["sec504_count"].sum() / sub23["school_enrollment"].sum() * 100.0
+    p504_13 = pooled_rate(sub13, "sec504_count")
+    p504_23 = pooled_rate(sub23, "sec504_count")
     assert p504_23 > 2.0 * p504_13, f"Expected 504 pooled to double: {p504_13:.2f}% to {p504_23:.2f}%"
     
-    # Class size eased over decade rather than remaining flat
-    cs_13 = (sub13["stem_enrolled_tot"] * sub13["enr_weighted_class_size"]).sum() / sub13["stem_enrolled_tot"].sum()
+    # Primary comparable secondary class size eased by ~11.3% from 2015-16 to 2023-24
+    sub15 = sec[sec["crdc_wave"] == "2015-16"]
+    cs_15 = (sub15["stem_enrolled_tot"] * sub15["enr_weighted_class_size"]).sum() / sub15["stem_enrolled_tot"].sum()
     cs_23 = (sub23["stem_enrolled_tot"] * sub23["enr_weighted_class_size"]).sum() / sub23["stem_enrolled_tot"].sum()
-    assert cs_23 < cs_13 - 2.0, f"Expected class size to ease from ~22.4 to ~19.7, found {cs_13:.2f} to {cs_23:.2f}"
+    pct_change = (cs_23 - cs_15) / cs_15 * 100.0
+    assert -12.5 <= pct_change <= -10.0, f"Expected ~ -11.3% change 2015->2023, found {pct_change:.2f}%"
+
+
+def test_b1_b4_national_pooled_rates_identical():
+    """Verify Table B1 and Table B4 national pooled rates are mathematically identical."""
+    b1_path = PROJECT_DIR / "artifacts" / "tables" / "table_b01_longitudinal_dimensions_national.csv"
+    b4_path = PROJECT_DIR / "artifacts" / "tables" / "table_b04_kc_metro_vs_national_context.csv"
+    assert b1_path.exists() and b4_path.exists(), "Tables B01 and B04 must exist"
+    
+    b1 = pd.read_csv(b1_path)
+    b4 = pd.read_csv(b4_path)
+    b4_nat = b4[b4["population"] == "National"].reset_index(drop=True)
+    
+    for metric in ["pooled_pct_idea", "pooled_pct_504", "pooled_pct_idea_or_504", "pooled_pct_el"]:
+        diff = (b1[metric] - b4_nat[metric]).abs().max()
+        assert diff < 1e-9, f"B1 and B4 National disagree on {metric}: max diff = {diff}"
+
+
+def test_pooled_rate_excludes_missing_numerators():
+    """Ensure missing numerator observations are excluded from both numerator and denominator."""
+    df_test = pd.DataFrame({
+        "school_enrollment": [100.0, 200.0, 100.0, 0.0],
+        "count_col": [10.0, np.nan, 20.0, 5.0]
+    })
+    # Valid rows are row 0 (10/100) and row 2 (20/100).
+    # Row 1 has missing count -> must NOT add 200 to denominator.
+    # Row 3 has 0 enrollment -> must NOT add 0 to denominator.
+    # Rate = (10 + 20) / (100 + 100) * 100 = 30 / 200 * 100 = 15.0%
+    rate = pooled_rate(df_test, "count_col")
+    assert rate == 15.0, f"Expected 15.0%, got {rate}"
+
+
+def test_primary_class_size_trajectory_uses_comparable_series():
+    """Verify primary class-size headline uses post-break comparable series (2015-16 -> 2023-24)."""
+    b1_path = PROJECT_DIR / "artifacts" / "tables" / "table_b01_longitudinal_dimensions_national.csv"
+    b1 = pd.read_csv(b1_path).set_index("crdc_wave")
+    
+    cs_15 = b1.loc["2015-16", "enr_weighted_class_size"]
+    cs_23 = b1.loc["2023-24", "enr_weighted_class_size"]
+    
+    assert 22.0 <= cs_15 <= 22.5, f"Expected 2015-16 class size ~22.23, got {cs_15}"
+    assert 19.5 <= cs_23 <= 20.0, f"Expected 2023-24 class size ~19.72, got {cs_23}"
+    
+    decline_pct = (cs_23 - cs_15) / cs_15 * 100.0
+    assert -12.0 <= decline_pct <= -11.0, f"Expected ~11.3% decline, got {decline_pct:.2f}%"
+
+
+def test_absenteeism_labeled_as_snapshot_denominator_proxy():
+    """Verify DG814 absenteeism calculation is treated as snapshot-enrollment proxy with discordance sensitivity."""
+    panel = pd.read_parquet(PARQUET_PATH)
+    sec = panel[panel["in_class_size_panel"]]
+    
+    # Verify unadjusted proxy can exceed 100% due to 12-month cumulative vs October snapshot
+    sub21 = sec[sec["crdc_wave"] == "2021-22"]
+    unadj_gt100 = (sub21["pct_edfacts_absent_10pct"] > 100.0).sum()
+    assert unadj_gt100 > 1500, f"Expected >1,500 schools with cumulative count > snapshot enrollment, found {unadj_gt100}"
+    
+    # Clean rate must be strictly <= 100% as a sensitivity audit sample
+    clean_rates = sub21["pct_chronic_absent_clean"].dropna()
+    assert (clean_rates <= 100.0).all(), "Clean sensitivity sample must not exceed 100%"
+    assert len(clean_rates) + unadj_gt100 == sub21["pct_edfacts_absent_10pct"].notna().sum()
+

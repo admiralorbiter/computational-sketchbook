@@ -27,7 +27,7 @@ SKETCHBOOK_ROOT = PROJECT_DIR.parent.parent
 sys.path.insert(0, str(PROJECT_DIR))
 
 from src.harmonize_crdc import (
-    clean_series, sum_clean_series, sum_enrollment_with_nonbinary, clean_combokey, KC_COUNTY_FIPS
+    clean_series, sum_clean_series, sum_enrollment_with_nonbinary, clean_combokey, KC_COUNTY_FIPS, pooled_rate
 )
 
 RAW_CRDC_DIR = SKETCHBOOK_ROOT / "2026" / "2026-09-23-kc-education-capacity" / "data" / "raw" / "crdc"
@@ -725,19 +725,19 @@ def build_school_context_panel():
             "student_weighted_class_size": (sub_sec["stem_enrolled_tot"] * sub_sec["enr_weighted_class_size"]).sum() / stem_enr_tot if stem_enr_tot > 0 else np.nan,
             "mean_class_size_secondary": sub_sec["enr_weighted_class_size"].mean(),
             "school_mean_pct_idea": sub_sec["pct_idea"].mean(),
-            "pooled_pct_idea": sub_sec["idea_count"].sum() / sec_enr_tot * 100.0 if sec_enr_tot > 0 else np.nan,
+            "pooled_pct_idea": pooled_rate(sub_sec, "idea_count"),
             "school_mean_pct_504": sub_sec["pct_sec504"].mean(),
-            "pooled_pct_504": sub_sec["sec504_count"].sum() / sec_enr_tot * 100.0 if sec_enr_tot > 0 else np.nan,
+            "pooled_pct_504": pooled_rate(sub_sec, "sec504_count"),
             "school_mean_pct_idea_or_504": sub_sec["pct_idea_or_504"].mean(),
-            "pooled_pct_idea_or_504": sub_sec["idea_or_504_count"].sum() / sec_enr_tot * 100.0 if sec_enr_tot > 0 else np.nan,
+            "pooled_pct_idea_or_504": pooled_rate(sub_sec, "idea_or_504_count"),
             "school_mean_pct_el": sub_sec["pct_el"].mean(),
-            "pooled_pct_el": sub_sec["el_count"].sum() / sec_enr_tot * 100.0 if sec_enr_tot > 0 else np.nan,
+            "pooled_pct_el": pooled_rate(sub_sec, "el_count"),
             "crdc_15d_median": sub_sec["pct_crdc_absent_15d"].median(),
-            "crdc_15d_pooled": sub_sec["crdc_absent_15d_count"].sum() / sec_enr_tot * 100.0 if sub_sec["crdc_absent_15d_count"].notna().sum() > 0 else np.nan,
+            "crdc_15d_pooled": pooled_rate(sub_sec, "crdc_absent_15d_count"),
             "crdc_15d_n": sub_sec["pct_crdc_absent_15d"].notna().sum(),
             "edfacts_10pct_median": sub_sec["pct_edfacts_absent_10pct"].median(),
             "edfacts_10pct_clean_median": sub_sec["pct_chronic_absent_clean"].median() if w in ["2017-18", "2020-21", "2021-22"] else np.nan,
-            "edfacts_10pct_pooled": sub_sec["edfacts_absent_10pct_count"].sum() / sec_enr_tot * 100.0 if sub_sec["edfacts_absent_10pct_count"].notna().sum() > 0 else np.nan,
+            "edfacts_10pct_pooled": pooled_rate(sub_sec, "edfacts_absent_10pct_count"),
             "edfacts_10pct_n": sub_sec["pct_edfacts_absent_10pct"].notna().sum(),
             "absent_gt_enr_n": sub_sec["flag_absent_gt_enrollment"].sum(),
         })

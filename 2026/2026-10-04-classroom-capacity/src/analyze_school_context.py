@@ -44,6 +44,8 @@ ARTIFACTS_DIR = PROJECT_DIR / "artifacts"
 TABLES_DIR = ARTIFACTS_DIR / "tables"
 FIGURES_DIR = ARTIFACTS_DIR / "figures"
 
+from src.harmonize_crdc import pooled_rate
+
 TABLES_DIR.mkdir(parents=True, exist_ok=True)
 FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -100,29 +102,29 @@ def generate_table_b01(df):
         # IDEA
         sub_idea = sub[sub["idea_count"].notna() & (sub["school_enrollment"] > 0)]
         school_wt_idea = sub_idea["pct_idea"].mean()
-        pooled_idea = sub_idea["idea_count"].sum() / sub_idea["school_enrollment"].sum() * 100.0 if len(sub_idea) > 0 else np.nan
+        pooled_idea = pooled_rate(sub, "idea_count")
         
         # Section 504-only
         sub_504 = sub[sub["sec504_count"].notna() & (sub["school_enrollment"] > 0)]
         school_wt_504 = sub_504["pct_sec504"].mean()
-        pooled_504 = sub_504["sec504_count"].sum() / sub_504["school_enrollment"].sum() * 100.0 if len(sub_504) > 0 else np.nan
+        pooled_504 = pooled_rate(sub, "sec504_count")
         
         # Combined IDEA or Section 504-only
         sub_comb = sub[sub["idea_or_504_count"].notna() & (sub["school_enrollment"] > 0)]
         school_wt_comb = sub_comb["pct_idea_or_504"].mean()
-        pooled_comb = sub_comb["idea_or_504_count"].sum() / sub_comb["school_enrollment"].sum() * 100.0 if len(sub_comb) > 0 else np.nan
+        pooled_comb = pooled_rate(sub, "idea_or_504_count")
         
         # EL
         sub_el = sub[sub["el_count"].notna() & (sub["school_enrollment"] > 0)]
         school_wt_el = sub_el["pct_el"].mean()
-        pooled_el = sub_el["el_count"].sum() / sub_el["school_enrollment"].sum() * 100.0 if len(sub_el) > 0 else np.nan
+        pooled_el = pooled_rate(sub, "el_count")
         
         # Absenteeism Regime 1: CRDC 15+ Days (2013-14, 2015-16)
         sub_crdc_abs = sub[sub["crdc_absent_15d_count"].notna() & (sub["school_enrollment"] > 0)]
         crdc_abs_n = len(sub_crdc_abs)
         crdc_abs_mean = sub_crdc_abs["pct_crdc_absent_15d"].mean() if crdc_abs_n > 0 else np.nan
         crdc_abs_median = sub_crdc_abs["pct_crdc_absent_15d"].median() if crdc_abs_n > 0 else np.nan
-        crdc_abs_pooled = sub_crdc_abs["crdc_absent_15d_count"].sum() / sub_crdc_abs["school_enrollment"].sum() * 100.0 if crdc_abs_n > 0 else np.nan
+        crdc_abs_pooled = pooled_rate(sub, "crdc_absent_15d_count")
         
         # Absenteeism Regime 2: EDFacts >=10% (2017-18, 2020-21, 2021-22)
         sub_edf_abs = sub[sub["edfacts_absent_10pct_count"].notna() & (sub["school_enrollment"] > 0)]
@@ -133,7 +135,7 @@ def generate_table_b01(df):
         sub_edf_clean = sub_edf_abs[~sub_edf_abs["flag_absent_gt_enrollment"]]
         edf_clean_mean = sub_edf_clean["pct_edfacts_absent_10pct"].mean() if len(sub_edf_clean) > 0 else np.nan
         edf_clean_median = sub_edf_clean["pct_edfacts_absent_10pct"].median() if len(sub_edf_clean) > 0 else np.nan
-        edf_abs_pooled = sub_edf_abs["edfacts_absent_10pct_count"].sum() / sub_edf_abs["school_enrollment"].sum() * 100.0 if edf_abs_n > 0 else np.nan
+        edf_abs_pooled = pooled_rate(sub, "edfacts_absent_10pct_count")
         edf_gt_enr_pct = (sub_edf_abs["flag_absent_gt_enrollment"].mean() * 100.0) if edf_abs_n > 0 else np.nan
 
         # Class size & PTR
@@ -185,8 +187,8 @@ def generate_table_b02(df):
     """
     Table B2: Longitudinal Changes within Measure-Specific Balanced Panels.
     Guarantees genuine balanced samples:
-    - Panel A: 6-Wave Balanced Panel for IDEA, Section 504-only, and EL (N=14,000+ schools observed across all 6 waves)
-    - Panel B: Matched EDFacts Chronic Absenteeism Panel (2017-18 <-> 2021-22, N=20,076 schools)
+    - Panel A: 6-Wave Balanced Panel for IDEA, Section 504-only, and EL (N=11,286 schools observed across all 6 waves)
+    - Panel B: Matched EDFacts Chronic Absenteeism Panel (2017-18 <-> 2021-22, N=20,075 schools)
     - Panel C: Matched CRDC 15+ Days Absenteeism Panel (2013-14 <-> 2015-16, N=21,470 schools)
     """
     print("--> Generating Table B02: Measure-Specific Balanced Panels...")
@@ -219,13 +221,13 @@ def generate_table_b02(df):
             "mean_class_size_cell": sub["mean_class_size_cell"].mean(),
             "mean_ptr": sub["school_ptr"].mean(),
             "school_wt_pct_idea": sub["pct_idea"].mean(),
-            "pooled_pct_idea": sub["idea_count"].sum() / tot_enr * 100.0,
+            "pooled_pct_idea": pooled_rate(sub, "idea_count"),
             "school_wt_pct_504": sub["pct_sec504"].mean(),
-            "pooled_pct_504": sub["sec504_count"].sum() / tot_enr * 100.0,
+            "pooled_pct_504": pooled_rate(sub, "sec504_count"),
             "school_wt_pct_idea_or_504": sub["pct_idea_or_504"].mean(),
-            "pooled_pct_idea_or_504": sub["idea_or_504_count"].sum() / tot_enr * 100.0,
+            "pooled_pct_idea_or_504": pooled_rate(sub, "idea_or_504_count"),
             "school_wt_pct_el": sub["pct_el"].mean(),
-            "pooled_pct_el": sub["el_count"].sum() / tot_enr * 100.0,
+            "pooled_pct_el": pooled_rate(sub, "el_count"),
         })
     df_a = pd.DataFrame(rows_panel_a)
     
@@ -249,7 +251,7 @@ def generate_table_b02(df):
             "clean_median": sub_clean["pct_edfacts_absent_10pct"].median(),
             "school_mean": sub["pct_edfacts_absent_10pct"].mean(),
             "clean_mean": sub_clean["pct_edfacts_absent_10pct"].mean(),
-            "pooled_rate": sub["edfacts_absent_10pct_count"].sum() / tot_enr * 100.0,
+            "pooled_rate": pooled_rate(sub, "edfacts_absent_10pct_count"),
             "pct_gt_enrollment": sub["flag_absent_gt_enrollment"].mean() * 100.0,
         })
     df_b = pd.DataFrame(rows_panel_b)
@@ -273,7 +275,7 @@ def generate_table_b02(df):
             "clean_median": sub[sub["pct_crdc_absent_15d"] <= 100]["pct_crdc_absent_15d"].median(),
             "school_mean": sub["pct_crdc_absent_15d"].mean(),
             "clean_mean": sub[sub["pct_crdc_absent_15d"] <= 100]["pct_crdc_absent_15d"].mean(),
-            "pooled_rate": sub["crdc_absent_15d_count"].sum() / tot_enr * 100.0,
+            "pooled_rate": pooled_rate(sub, "crdc_absent_15d_count"),
             "pct_gt_enrollment": (sub["pct_crdc_absent_15d"] > 100).mean() * 100.0,
         })
     df_c = pd.DataFrame(rows_panel_c)
@@ -310,7 +312,7 @@ def generate_table_b03(df):
                 abs_clean = abs_valid[~abs_valid["flag_absent_gt_enrollment"]]
                 abs_med = abs_valid["pct_edfacts_absent_10pct"].median()
                 abs_clean_med = abs_clean["pct_edfacts_absent_10pct"].median()
-                abs_pooled = abs_valid["edfacts_absent_10pct_count"].sum() / abs_valid["school_enrollment"].sum() * 100.0 if len(abs_valid) > 0 else np.nan
+                abs_pooled = pooled_rate(sub, "edfacts_absent_10pct_count")
             else:
                 abs_med = np.nan
                 abs_clean_med = np.nan
@@ -326,13 +328,13 @@ def generate_table_b03(df):
                 "school_mean_class_size": sub["mean_class_size_cell"].mean(),
                 "mean_ptr": sub["school_ptr"].mean(),
                 "school_wt_pct_idea": sub["pct_idea"].mean(),
-                "pooled_pct_idea": sub["idea_count"].sum() / tot_enr * 100.0 if tot_enr > 0 else np.nan,
+                "pooled_pct_idea": pooled_rate(sub, "idea_count"),
                 "school_wt_pct_504": sub["pct_sec504"].mean(),
-                "pooled_pct_504": sub["sec504_count"].sum() / tot_enr * 100.0 if tot_enr > 0 else np.nan,
+                "pooled_pct_504": pooled_rate(sub, "sec504_count"),
                 "school_wt_pct_idea_or_504": sub["pct_idea_or_504"].mean(),
-                "pooled_pct_idea_or_504": sub["idea_or_504_count"].sum() / tot_enr * 100.0 if tot_enr > 0 else np.nan,
+                "pooled_pct_idea_or_504": pooled_rate(sub, "idea_or_504_count"),
                 "school_wt_pct_el": sub["pct_el"].mean(),
-                "pooled_pct_el": sub["el_count"].sum() / tot_enr * 100.0 if tot_enr > 0 else np.nan,
+                "pooled_pct_el": pooled_rate(sub, "el_count"),
                 "edfacts_10pct_median": abs_med,
                 "edfacts_10pct_clean_median": abs_clean_med,
                 "edfacts_10pct_pooled": abs_pooled,
@@ -366,14 +368,13 @@ def generate_table_b04(df):
             if len(sub) == 0:
                 continue
                 
-            tot_enr = sub["school_enrollment"].sum()
             stem_enr = sub["stem_enrolled_tot"].sum()
             
             # Absenteeism
             sub_edf = sub[sub["pct_edfacts_absent_10pct"].notna() & (sub["school_enrollment"] > 0)]
             edf_med = sub_edf["pct_edfacts_absent_10pct"].median() if len(sub_edf) > 0 else np.nan
             edf_clean_med = sub_edf[~sub_edf["flag_absent_gt_enrollment"]]["pct_edfacts_absent_10pct"].median() if len(sub_edf) > 0 else np.nan
-            edf_pool = sub_edf["edfacts_absent_10pct_count"].sum() / sub_edf["school_enrollment"].sum() * 100.0 if len(sub_edf) > 0 else np.nan
+            edf_pool = pooled_rate(sub, "edfacts_absent_10pct_count")
 
             rows.append({
                 "crdc_wave": w,
@@ -385,17 +386,18 @@ def generate_table_b04(df):
                 "mean_ptr": sub["school_ptr"].mean(),
                 "median_ptr": sub["school_ptr"].median(),
                 "school_wt_pct_idea": sub["pct_idea"].mean(),
-                "pooled_pct_idea": sub["idea_count"].sum() / tot_enr * 100.0 if tot_enr > 0 else np.nan,
+                "pooled_pct_idea": pooled_rate(sub, "idea_count"),
                 "school_wt_pct_504": sub["pct_sec504"].mean(),
-                "pooled_pct_504": sub["sec504_count"].sum() / tot_enr * 100.0 if tot_enr > 0 else np.nan,
+                "pooled_pct_504": pooled_rate(sub, "sec504_count"),
                 "school_wt_pct_idea_or_504": sub["pct_idea_or_504"].mean(),
-                "pooled_pct_idea_or_504": sub["idea_or_504_count"].sum() / tot_enr * 100.0 if tot_enr > 0 else np.nan,
+                "pooled_pct_idea_or_504": pooled_rate(sub, "idea_or_504_count"),
                 "school_wt_pct_el": sub["pct_el"].mean(),
-                "pooled_pct_el": sub["el_count"].sum() / tot_enr * 100.0 if tot_enr > 0 else np.nan,
+                "pooled_pct_el": pooled_rate(sub, "el_count"),
                 "edfacts_10pct_median": edf_med,
                 "edfacts_10pct_clean_median": edf_clean_med,
                 "edfacts_10pct_pooled": edf_pool,
             })
+
             
     df_t4 = pd.DataFrame(rows)
     out_csv = TABLES_DIR / "table_b04_kc_metro_vs_national_context.csv"
@@ -427,8 +429,8 @@ def plot_fig_b01(df_t1):
     ax.set_ylabel("Students per Class / Teacher")
     ax.set_ylim(12, 24)
     ax.legend(loc="upper right", framealpha=0.9)
-    ax.text(0.03, 0.05, "Student-weighted size eased 22.4 -> 19.7 (-12%)\nand stabilized post-2020 at ~19.7-20.1",
-            transform=ax.transAxes, fontsize=8.5, bbox=dict(boxstyle="round,pad=0.3", facecolor="#f0f0f0", edgecolor="gray", alpha=0.8))
+    ax.text(0.03, 0.05, "Primary secondary size eased 22.2 (2015-16) -> 19.7 (2023-24) (-11.3%)\nand stabilized post-2020 at ~19.7-20.1 (2013-14 reflects 7-12 scope break)",
+            transform=ax.transAxes, fontsize=7.8, bbox=dict(boxstyle="round,pad=0.3", facecolor="#f0f0f0", edgecolor="gray", alpha=0.8))
     
     # Panel (b): Accommodations (IDEA & 504)
     ax = axes[0, 1]
@@ -441,7 +443,7 @@ def plot_fig_b01(df_t1):
     ax.set_ylabel("Percent of Enrollment (%)")
     ax.set_ylim(0, 24)
     ax.legend(loc="center left", framealpha=0.9, fontsize=8)
-    ax.text(0.03, 0.05, "Section 504-only doubled (2.2% -> 5.5%);\nCombined IDEA or 504 reached 19.0% (1 in 5)",
+    ax.text(0.03, 0.05, "Section 504-only rose 2.2% -> 5.5%;\nCombined IDEA or 504 reached 19.0% (1 in 5)",
             transform=ax.transAxes, fontsize=8.5, bbox=dict(boxstyle="round,pad=0.3", facecolor="#f0f0f0", edgecolor="gray", alpha=0.8))
     
     # Panel (c): English Learners
@@ -472,9 +474,9 @@ def plot_fig_b01(df_t1):
     y_r2_med = [df_t1.loc[2, "edfacts_10pct_school_median"], df_t1.loc[4, "edfacts_10pct_school_median"]]
     y_r2_clean = [df_t1.loc[2, "edfacts_10pct_clean_median"], df_t1.loc[4, "edfacts_10pct_clean_median"]]
     y_r2_pool = [df_t1.loc[2, "edfacts_10pct_pooled"], df_t1.loc[4, "edfacts_10pct_pooled"]]
-    ax.plot(x_r2, y_r2_med, marker="o", color="#d62728", linewidth=2.5, label="Regime 2: EDFacts ≥10% Days (School Median)")
-    ax.plot(x_r2, y_r2_clean, marker="^", color="#d62728", linestyle=":", linewidth=2.0, label="Regime 2: EDFacts Clean ≤100% Median")
-    ax.plot(x_r2, y_r2_pool, marker="o", color="#d62728", linestyle="--", linewidth=1.8, label="Regime 2: EDFacts ≥10% Days (Pooled Rate)")
+    ax.plot(x_r2, y_r2_med, marker="o", color="#d62728", linewidth=2.5, label="Regime 2: DG814/Snapshot Proxy (School Median)")
+    ax.plot(x_r2, y_r2_clean, marker="^", color="#d62728", linestyle=":", linewidth=2.0, label="Regime 2: Clean ≤100% (Denominator Sensitivity)")
+    ax.plot(x_r2, y_r2_pool, marker="o", color="#d62728", linestyle="--", linewidth=1.8, label="Regime 2: DG814/Snapshot Proxy (Pooled Rate)")
     
     # 2020-21 COVID waiver year point (wave 3) - hollow circle
     ax.plot(3, df_t1.loc[3, "edfacts_10pct_school_median"], marker="o", markerfacecolor="white", markeredgecolor="#d62728", markeredgewidth=2, markersize=8, label="2020–21 Waiver (6% N; non-representative)")
@@ -483,13 +485,14 @@ def plot_fig_b01(df_t1):
     ax.axvline(x=1.5, color="gray", linestyle="-.", alpha=0.7)
     ax.text(1.55, 42, "Definition Break:\nCRDC 15d → EDFacts 10%", fontsize=8, color="#555555", style="italic")
     
-    ax.set_title("(d) Chronic Student Absenteeism (Separate Federal Regimes)", fontweight="bold")
+    ax.set_title("(d) Chronic Student Absenteeism (Separate Federal Regimes & Proxies)", fontweight="bold")
     ax.set_ylabel("Percent of Enrolled Students (%)")
     ax.set_xlabel("CRDC Census Wave")
     ax.set_xticks(x)
     ax.set_xticklabels(waves, rotation=25)
     ax.set_ylim(0, 50)
     ax.legend(loc="upper left", framealpha=0.9, fontsize=7.5)
+
     
     plt.tight_layout()
     out_fig = FIGURES_DIR / "fig_b01_longitudinal_context_dimensions.png"

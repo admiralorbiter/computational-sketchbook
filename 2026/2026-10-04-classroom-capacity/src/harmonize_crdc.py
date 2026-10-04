@@ -138,3 +138,23 @@ def clean_combokey(key_series, leaid_series=None, schid_series=None):
         .str.replace(r"\s+", "", regex=True)
     )
     return cleaned.str.zfill(12)
+
+
+def pooled_rate(df: pd.DataFrame, count_col: str, enr_col: str = "school_enrollment") -> float:
+    """
+    Calculate pooled student-weighted rate restricting both numerator
+    and denominator to schools with a valid count and positive enrollment.
+    
+    Ensures missing numerator observations are excluded from both numerator
+    and denominator, preventing denominator inflation.
+    """
+    if count_col not in df.columns or enr_col not in df.columns:
+        return np.nan
+    valid = df[count_col].notna() & df[enr_col].notna() & (df[enr_col] > 0)
+    if not valid.any():
+        return np.nan
+    denom = df.loc[valid, enr_col].sum()
+    if denom <= 0:
+        return np.nan
+    return float(df.loc[valid, count_col].sum() / denom * 100.0)
+
