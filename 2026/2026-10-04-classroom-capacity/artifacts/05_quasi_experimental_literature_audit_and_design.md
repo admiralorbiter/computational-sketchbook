@@ -34,15 +34,16 @@ Phase 7    Literature & Econometric Audit      Audit existing quasi-experimental
 Phase 8    Empirical Coverage Mapping          Map the parameter space: grade level x baseline class size x instructional load;
                                                synthesize theoretical mechanisms for non-linear teacher capacity.
 ------------------------------------------------------------------------------------------------------------------------
-Phase 9A   Public Natural-Experiment           Audit Florida's statutory 25-student high school core cap and local KC rules:
-           Feasibility Audit                   1. Verify scheduling rules & statutory thresholds.
-                                               2. Test for first-stage section splitting using public course data.
-                                               3. Audit manipulation / McCrary density around cutoffs.
-                                               4. Evaluate public school-level EOC outcome alignment.
+Phase 9A   Public Natural-Experiment           Audit Florida's statutory 25-student cap and local KC/MO rules via Six Gates:
+           Feasibility Audit                   - Gate 0: Temporal & definitional equivalence (CRDC vs October Survey 2).
+                                               - Gate 1: Institutional scope (traditional public classroom C=25 vs charters/choice).
+                                               - Gate 2: First-stage section responsiveness (pre vs post-2023 penalty removal).
+                                               - Gate 3: Discrete running-variable manipulation & bunching audit (mass points/donuts).
+                                               - Gate 4: Public outcome alignment (school-level EOC means vs course enrollment).
+                                               - Gate 5: Empirical support & statistical power (effective N in threshold bandwidths).
 ------------------------------------------------------------------------------------------------------------------------
-Phase 9B   Preregistered Restricted-Data       If Phase 9A confirms a valid first stage, preregister the full IV/RD design
-           Protocol                            and submit a precise 14-variable microdata request to FL DOE, Missouri DESE, 
-                                               or Kansas City metro districts.
+Phase 9B   Preregistered Restricted-Data       Provisional 14-variable minimal relational request for FL DOE, Missouri DESE,
+           Protocol                            or KC metro districts, iteratively refined by Phase 9A feasibility findings.
 ------------------------------------------------------------------------------------------------------------------------
 Phase 9C   Causal Estimation & Execution       Estimate structural section-size effects using administrative microdata.
 ========================================================================================================================
@@ -180,8 +181,8 @@ Florida provides an extraordinary institutional environment for testing secondar
    - Language Arts (English I, II, III, IV)
    - Science (Biology I, Chemistry, Physics, etc.)
    - Social Studies (World History, US History, Government, Economics)
-2. **Measurement Level:** Under current law (s. 1003.03, F.S.), compliance for traditional public schools is calculated at the **individual classroom level** based on student membership in the October Full-Time Equivalent (FTE) Survey 2.
-3. **Financial Penalties:** Districts that fail to meet class size requirements face statutory reductions in their Florida Education Finance Program (FEFP) state funding allocations.
+2. **Measurement Level & Institutional Exclusions:** Under current law (s. 1003.03, F.S.), compliance for **traditional public schools** is calculated at the **individual classroom level** based on student membership in the October Full-Time Equivalent (FTE) Survey 2. Crucially, **charter schools and district-operated schools of choice are evaluated at the school-average level**, not the individual classroom level; they must be excluded or modeled separately in the first-stage discontinuity audit.
+3. **Statutory Penalty Mechanism & The 2023 Regime Shift:** Historically, districts failing to meet class size caps faced statutory reductions in their Florida Education Finance Program (FEFP) state funding allocations. However, **the Florida Legislature eliminated the financial penalty in 2023**. For 2024–25 and 2025–26, noncompliant districts/schools submit **corrective compliance plans** rather than facing funding clawbacks. This creates an explicit empirical test: *Did removing the financial enforcement mechanism in 2023 weaken the first-stage discontinuity at 25?* Rather than pooling all years blindly, the empirical design explicitly models pre-2023 vs. post-2023 compliance behavior.
 
 ### Public Data Availability & The "Catch"
 - **Publicly Available:**
@@ -235,87 +236,123 @@ Even without a constitutional statewide cap like Florida's, Missouri high school
 
 ## 6. Phase 9A: Public Natural-Experiment Feasibility Audit Protocol
 
-Before requesting restricted state files, we execute a rigorous four-stage public-data audit:
+Before requesting restricted administrative microdata, we execute a rigorous **Six-Gate Decision Tree** to determine whether Florida's public data can support a credible quasi-experimental design:
 
 ```
 +---------------------------------------------------------------------------------------------------+
-|                                 PHASE 9A: FOUR EMPIRICAL GATES                                    |
+|                            PHASE 9A: SIX-GATE FEASIBILITY DECISION TREE                           |
 +---------------------------------------------------------------------------------------------------+
-|  [GATE 1: RULE AUDIT]                                                                             |
-|  Identify statutory and contractual caps (Florida C=25; KC metro board policies C=28/30).         |
+|  [GATE 0: MEASUREMENT & TEMPORAL ALIGNMENT (STOPPING RULE)]                                       |
+|  Verify temporal and definitional equivalence between public course enrollment E, section         |
+|  counts K, and the operative Florida October Survey 2 compliance census.                          |
+|  STOPPING RULE: If E and K represent different dates/universes, do not interpret discontinuity    |
+|  as the statutory first stage.                                                                    |
 |                                    |                                                              |
 |                                    v                                                              |
-|  [GATE 2: FIRST-STAGE RESPONSIVENESS]                                                             |
-|  Test whether section counts jump discontinuously when course enrollment crosses thresholds:      |
-|  Pr(Sections = 2 | E = 26) >> Pr(Sections = 2 | E = 24).                                          |
+|  [GATE 1: INSTITUTIONAL SCOPE & EXCLUSIONS]                                                       |
+|  Filter strictly to traditional public schools evaluated at individual classroom C=25.            |
+|  Exclude charter schools and district schools of choice (evaluated at school-average level).       |
 |                                    |                                                              |
 |                                    v                                                              |
-|  [GATE 3: DENSITY & MANIPULATION AUDIT]                                                           |
-|  Run McCrary density test on enrollment E. Verify no clumping immediately below cutoff.           |
-|  Verify baseline student covariates are balanced across the threshold.                           |
+|  [GATE 2: FIRST-STAGE SECTION RESPONSIVENESS & 2023 REGIME SPLIT]                                 |
+|  Test whether section counts jump discontinuously around 25, 50, and 75, and class size falls.    |
+|  Explicitly test pre-2023 (binding FEFP financial penalties) vs. post-2023 (corrective plans).    |
 |                                    |                                                              |
 |                                    v                                                              |
-|  [GATE 4: OUTCOME ALIGNMENT]                                                                      |
-|  Evaluate whether school-level EOC outcomes (Algebra I / Biology) align tightly enough with       |
-|  course-level enrollment to detect structural effects without individual microdata.               |
+|  [GATE 3: DISCRETE RUNNING-VARIABLE MANIPULATION & BUNCHING AUDIT]                                |
+|  Inspect mass points around integer enrollment thresholds (25, 50, 75).                           |
+|  Test excess/deficient probability below/above cutoffs; estimate discrete-RD & donut models.      |
+|                                    |                                                              |
+|                                    v                                                              |
+|  [GATE 4: PUBLIC OUTCOME ALIGNMENT]                                                               |
+|  Evaluate whether Florida school-level EOC reports (Algebra I, Geometry, Biology I, US History)   |
+|  align tightly enough with course enrollment to detect structural effects without microdata.      |
+|                                    |                                                              |
+|                                    v                                                              |
+|  [GATE 5: EMPIRICAL SUPPORT & STATISTICAL POWER]                                                  |
+|  Audit effective sample size in local bandwidths around thresholds (E in [20, 30], [45, 55]).      |
+|  Confirm sufficient observation counts on both sides of each cutoff to support estimation.        |
 +---------------------------------------------------------------------------------------------------+
 ```
 
-### Empirical Gate Descriptions
-1. **Gate 1 — Institutional Rule Verification:**
-   - Review Florida Administrative Code Rule 6A-1.0943 and statutory exemptions (e.g. team teaching, schools of choice flexibility).
-   - Review Missouri school board policy manuals and master agreements across Kansas City metro districts (KCPS, Independence, Lee's Summit, North Kansas City).
-2. **Gate 2 — Section Formation Responsiveness (First Stage):**
-   - Using available public course data (CRDC high school STEM files or Florida state course distributions), test whether observed section counts respond to enrollment.
-   - If schools smooth section sizes by cross-scheduling or ignoring caps, the first stage fails ($\pi \approx 0$), terminating the design.
-3. **Gate 3 — Manipulation & McCrary Density Audit:**
-   - Estimate the McCrary (2008) density discontinuity:
-     $$\theta = \ln \lim_{E \downarrow C} g(E) - \ln \lim_{E \uparrow C} g(E)$$
-   - A statistically significant spike in enrollment density just below the threshold indicates systematic manipulation (counselors holding enrollment at 25 or 50 to avoid funding an additional section), violating the continuity assumption.
-4. **Gate 4 — Public Outcome Alignment:**
-   - Determine whether school-level EOC means have sufficient statistical power to detect reasonable effect sizes ($0.05\text{--}0.10$ SD per 5 students), or whether within-school student sorting across sections requires microdata.
+### Detailed Gate Specifications
+
+#### Gate 0 — Measurement & Temporal Alignment (The Foundational Stopping Rule)
+- **The Timing Question:** Does the public course enrollment variable ($E_{sct}$) measure the student roster that existed when the section-count decision ($K_{sct}$) was made?
+- **The CRDC vs. FDOE Roster Break:** Florida statutory compliance is calculated from student course records submitted during the **October Survey 2 membership census**. By contrast, CRDC course enrollment can reflect cumulative enrollment across the school year or combine terms in 4x4 block-scheduled schools.
+- **Stopping Rule:** If the numerator (students) and denominator (sections) do not represent the same roster universe and census date, any observed discontinuity may be an artifact of schedule aggregation. If Gate 0 fails, public data cannot identify the statutory first stage, pointing directly to the necessity of administrative microdata.
+
+#### Gate 1 — Institutional Scope & Legal Exclusions
+- Under Florida Statute § 1003.03 and FDOE compliance guidelines:
+  1. **Traditional Public Schools:** Evaluated at the **individual classroom level** for all core courses. This is our target estimation universe.
+  2. **Charter Schools:** Evaluated at the **school-wide average** across all classrooms, exempt from classroom-level caps.
+  3. **District-Operated Schools of Choice:** Evaluated at the **school-wide average**.
+- **Action:** Exclude charter schools and schools of choice from the primary discontinuity sample, or analyze them as an explicit non-binding placebo group.
+
+#### Gate 2 — First-Stage Section Responsiveness & The 2023 Penalty Removal
+- **Primary Hypothesis:** $\Pr(K_{sct} = 2 \mid E_{sct} = 26) \gg \Pr(K_{sct} = 2 \mid E_{sct} = 24)$.
+- **The 2023 Legislative Regime Break:** In 2023, the Florida Legislature eliminated the statutory financial penalty (withholding of FEFP state funding allocations) for non-compliance, replacing it with a requirement to submit a corrective compliance plan.
+- **Empirical Strategy:** Split the panel into pre-2023 (binding financial penalties) and post-2023 (corrective compliance plan regime). Test whether the compliance parameter $\pi$ attenuated after the removal of monetary sanctions:
+  $$\text{ActualCS}_{sct} = \alpha + \pi_1 \widehat{CS}_{sct} + \pi_2 (\widehat{CS}_{sct} \times \text{Post2023}_t) + f(E_{sct}) + \mu_{sc} + \lambda_t + \epsilon_{sct}$$
+
+#### Gate 3 — Discrete Running-Variable Manipulation & Bunching Audit
+- **Why Naive McCrary Fails:** Course enrollment $E_{sct}$ is an integer-valued running variable with discrete mass points (e.g. natural cohort sizes, multi-section multiples). Standard continuous-density McCrary tests assume a smooth continuous density and can generate spurious rejection.
+- **Discrete Bunching Protocol:**
+  1. Inspect the frequency distribution of integer enrollment $E$ for anomalous mass points immediately at or below $C=25$, $50$, and $75$.
+  2. Test for excess probability mass at $E=25$ relative to $E=26$ using discrete bunching estimators (Chetty et al. 2011; Kleven 2016).
+  3. Implement **donut-hole RD specifications** dropping $E \in \{24, 25, 26\}$ to verify that estimates are not driven by strategic student reallocation near the threshold.
+  4. Test for predetermined student covariate balance (FRL share, minority share, baseline SWD) across cutoffs.
+
+#### Gate 4 — Public Outcome Alignment
+- Florida publishes annual school-level End-of-Course (EOC) reports containing mean scale scores, percent Level 3+ (proficient), and test-taker counts for **Algebra I, Geometry, Biology I, and US History** (including current 2024–2026 reports).
+- **Feasibility Evaluation:** Test whether school-level EOC mean scale scores can be matched cleanly to school-course enrollment and sections, or whether within-school heterogeneity (e.g. middle-school accelerated students taking Algebra I vs. high-school repeaters) creates unresolvable aggregation bias.
+
+#### Gate 5 — Empirical Support & Statistical Power
+- A statistically valid discontinuity requires sufficient mass in the local bandwidths on both sides of each cutoff.
+- **Empirical Audit:** In Florida CRDC course data, there are **2,318 school-course-year observations** with enrollment in $[20, 30]$, **1,294 observations** in $[45, 55]$, and **977 observations** in $[70, 80]$. We will evaluate whether statistical power is sufficient for a minimum detectable effect size of $0.05\text{--}0.08$ SD under school $\times$ course clustering.
 
 ---
 
-## 7. Phase 9B: Preregistered Administrative Microdata Protocol
+## 7. Phase 9B: Preregistered Administrative Microdata Protocol (Provisional Draft)
 
-If Phase 9A validates the first-stage scheduling discontinuity, we submit a formal, preregistered microdata request to **Florida DOE**, **Missouri DESE**, or **individual Kansas City metro school districts**.
-
-### The 14-Variable Minimal Relational Specification
-
-To maximize approval probability and respect FERPA privacy boundaries, the request is restricted to the exact 14 variables required for causal identification:
+If Phase 9A demonstrates that public data cannot resolve within-school sorting or exact October survey rosters, we submit a preregistered microdata request. Rather than locking a static specification prematurely, this **provisional minimal layout** incorporates the structural nuances identified by the Phase 9A design audit:
 
 ```
 ========================================================================================================================
-#   VARIABLE NAME            TYPE          PURPOSE IN ECONOMETRIC SPECIFICATION
+#   VARIABLE NAME            TYPE          PURPOSE IN ECONOMETRIC SPECIFICATION & DESIGN AUDIT
 ========================================================================================================================
-1   student_id_anon          String (Hash) Unique anonymous longitudinal student key for tracking across grades.
+1   student_id_anon          String (Hash) Anonymous longitudinal student identifier for tracking across grades.
 2   school_id_nces           String        NCES school identifier for school fixed effects (alpha_s).
-3   academic_year            Integer       Academic school year (e.g. 2017 to 2024) for year fixed effects (lambda_t).
-4   course_code_state        String        State course code (restricting to Algebra I, Geometry, Biology, English II).
+3   academic_year            Integer       Academic school year for year fixed effects (lambda_t).
+4   course_code_state        String        State course code (restricted to Algebra I, Geometry, Biology, English II).
 5   section_id               String        Unique classroom section identifier within school-year-course.
 6   teacher_id_anon          String (Hash) Anonymous teacher identifier for classroom clustering and teacher FE.
-7   student_grade_level      Integer       Enrolled grade level of student (e.g. Grade 9 vs Grade 10).
-8   section_enrollment_oct   Integer       Official verified section headcount at the October membership census.
-9   course_schedule_type     String        Schedule structure (4x4 block, A/B block, traditional 7-period, minutes/week).
-10  eoc_scale_score          Float         Standardized End-of-Course continuous scale score (Primary Dependent Variable).
-11  prior_achievement_score  Float         Standardized prior-year MAP (Grade 8) or prior EOC scale score (Lagged Control).
-12  student_demographics     Bitflags      Individual binary flags: FRL eligible, IEP/Special Ed, Section 504, EL status,
-                                           race/ethnicity categories, and gender (for balance tests and covariate adjustment).
-13  enrollment_duration_days Integer       Days enrolled in course section prior to assessment (exposure dose).
-14  student_attendance_rate  Float         Course-specific or annual attendance rate during the enrolled academic term.
+7   term_schedule_structure  String        Term start/end dates, minutes/week, and schedule type (4x4 block vs 7-period).
+8   team_teaching_flag       Boolean       Identifies co-teaching / team-teaching classrooms (statutory exemption audit).
+9   october_census_headcount Integer       Official verified section headcount at the October membership census date.
+10  pre_assignment_demand    Integer       School-course pre-assignment demand count (ideal exogenous running variable).
+11  eoc_scale_score          Float         Standardized End-of-Course continuous scale score (Primary Dependent Variable).
+12  prior_achievement_score  Float         Standardized prior-year MAP (Grade 8) scale score (Baseline Human Capital).
+13  prior_retention_flag     Boolean       Identifies course repeaters vs. first-time enrollees (critical for Algebra I).
+14  student_demographics     Bitflags      Individual binary flags: FRL, IEP/Special Ed, Section 504, EL status, race, sex.
+15  enrollment_duration_days Integer       Days enrolled in course section prior to assessment (exposure dose).
+16  student_attendance_rate  Float         Course-specific or annual attendance rate during the enrolled academic term.
 ========================================================================================================================
 ```
 
-### Why This Request Structure Succeeds
-1. **Zero Personally Identifiable Information (PII):** No names, social security numbers, birth dates, or street addresses are requested. All student and teacher keys are irreversibly hashed.
-2. **Methodologically Bounded:** Request is explicitly restricted to core state-tested subjects (Algebra I, Geometry, Biology, English II) with mandatory EOC exams.
-3. **Preregistered Statistical Code:** The research protocol includes the exact Python/R estimation scripts, leaving zero ambiguity regarding data utilization.
+### Critical Refinements Identified for Administrative Request
+1. **Pre-Assignment Course Demand vs. Realized Section Enrollment:** Realized enrollment in a section is a post-scheduling outcome. Observing total pre-registration course requests before administrators split sections provides the purest exogenous running variable.
+2. **Co-Teaching / Team-Teaching Exemption:** Under Florida law, a classroom with 48 students and two certified teachers complies with the 25-student cap (ratio of 24:1). Without a co-teaching indicator, apparent non-compliance is misclassified.
+3. **Repeater / Acceleration Heterogeneity:** High school Algebra I pools advanced 8th graders, on-track 9th graders, and repeating 10th graders. Separating first-time test-takers is essential for internal validity.
 
 ---
 
 ## 8. Summary & Next Immediate Actions
 
 1. **Phase 7 (Literature Audit):** Certified. The literature demonstrates that the **25–35 departmentalized secondary margin is an open empirical frontier**.
-2. **Phase 8 (Coverage Mapping):** Underway. Parameter space defined across grade level, section size, and instructional load dimensions.
-3. **Next Operational Step (Phase 9A):** Launch the Florida and Missouri public feasibility data pull to test the Maimonides-style scheduling discontinuity at $C=25$ and evaluate empirical Gates 1–4.
+2. **Phase 8 (Coverage Mapping):** Certified. Parameter space mapped across elementary self-contained vs. secondary departmentalized structures.
+3. **Next Operational Step (Phase 9A Execution):**
+   - Execute **Gate 0** (Measurement & Temporal Alignment audit comparing CRDC course enrollment against Florida October Survey 2 documentation).
+   - Execute **Gate 1 & Gate 2** (Extract traditional Florida public high schools; test section-count jumps at 26, 51, and 76 across pre-2023 vs. post-2023 penalty regimes).
+   - Execute **Gate 3** (Discrete bunching test around 25, 50, and 75).
+   - Report findings across the Six Gates to determine whether public data suffice or whether Phase 9B microdata must be requested immediately.
