@@ -34,7 +34,8 @@ This computational sketchbook analyzes the empirical behavior of Missouri's publ
 │   ├── build_school_panel.py
 │   ├── classify_schools.py
 │   ├── analyze_descriptive.py
-│   └── replicate_growth_demographics.py
+│   ├── replicate_growth_demographics.py
+│   └── build_frontier_and_figures.py
 ├── tests/
 │   ├── test_source_files.py
 │   ├── test_school_keys.py
@@ -48,8 +49,34 @@ This computational sketchbook analyzes the empirical behavior of Missouri's publ
     ├── 03_growth_and_context.md
     ├── 03b_accountability_calibration.md
     ├── growth_replication_check.md
+    ├── 04_what_does_a_school_score_measure.md
     ├── figures/
+    │   ├── 01_achievement_vs_poverty.png
+    │   ├── 02_growth_vs_poverty.png
+    │   ├── 03_apr_vs_poverty.png
+    │   ├── 04_apr_counterfactual_growth.png
+    │   ├── 05_accountability_frontier.png
+    │   ├── 06_apr_counterfactual_waterfall.png
+    │   ├── 07_status_growth_divergence.png
+    │   ├── 08_between_within_district_slopes.png
+    │   ├── 09_prior_status_prediction_staircase.png
+    │   └── 10_growth_demographic_correlations.png
     └── tables/
+        ├── table_accountability_frontier.csv
+        ├── table_apr_component_accounting.csv
+        ├── table_apr_counterfactual_decomposition.csv
+        ├── table_between_within_fixed_effects.csv
+        ├── table_bivariate_summary_2025.csv
+        ├── table_complete_case_audit.csv
+        ├── table_divergent_schools_profile.csv
+        ├── table_growth_missing_crosstab.csv
+        ├── table_growth_nonpoverty_audit.csv
+        ├── table_growth_shapley_decomposition.csv
+        ├── table_level_breakdown_2025.csv
+        ├── table_quadrant_status_growth_calibrated.csv
+        ├── table_quintile_transitions.csv
+        ├── table_stability_multi_year.csv
+        └── table_starting_position_cv.csv
 ```
 
 ## Running the Pipeline
@@ -60,3 +87,4 @@ The pipeline is designed to execute systematically:
 - Phase 4: `python src/build_school_panel.py` (join school-years into master panel)
 - Phase 5: `python src/analyze_descriptive.py` (2025 cross-sectional analysis and figures)
 - Phase 6: `python src/replicate_growth_demographics.py` (audit DESE Growth Model diagnostics)
+- Phase 7: `python src/build_frontier_and_figures.py` (design frontier, Shapley decomposition, fixed effects, publication figures)
