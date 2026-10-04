@@ -27,7 +27,7 @@ SKETCHBOOK_ROOT = PROJECT_DIR.parent.parent
 sys.path.insert(0, str(PROJECT_DIR))
 
 from src.harmonize_crdc import (
-    clean_series, sum_clean_series, clean_combokey, KC_COUNTY_FIPS
+    clean_series, sum_clean_series, sum_enrollment_with_nonbinary, clean_combokey, KC_COUNTY_FIPS
 )
 
 RAW_CRDC_DIR = SKETCHBOOK_ROOT / "2026" / "2026-09-23-kc-education-capacity" / "data" / "raw" / "crdc"
@@ -43,7 +43,7 @@ DATA_PROCESSED.mkdir(parents=True, exist_ok=True)
 
 
 def load_kc_metadata():
-    """Load Kansas City metropolitan school metadata."""
+    """Load Kansas City metropolitan school metadata and canonical PTR from Phase 3 CCD files."""
     df_kc_long = pd.read_csv(KC_LONG_PATH, low_memory=False)
     df_kc_2013 = pd.read_csv(KC_2013_PATH, low_memory=False)
     
@@ -54,18 +54,22 @@ def load_kc_metadata():
     kc_sids = set(df_kc_long["sid"]).union(set(df_kc_2013["sid"]))
     
     for _, r in df_kc_2013.iterrows():
+        ptr = r.get("school_ptr")
         kc_meta[(r["sid"], "2013-2014")] = {
             "county_fips": str(r.get("county_fips", "")).zfill(5),
             "county_name": str(r.get("county_name", "")),
             "locale_group": str(r.get("locale_group", "Unknown")),
             "school_level": str(r.get("school_level", "Other")),
+            "school_ptr": float(ptr) if pd.notna(ptr) and float(ptr) > 0 and float(ptr) <= 50 else np.nan,
         }
     for _, r in df_kc_long.iterrows():
+        ptr = r.get("students_per_classroom_teacher_fte_allgrades")
         kc_meta[(r["sid"], str(r["school_year"]))] = {
             "county_fips": str(r.get("county_fips", "")).zfill(5),
             "county_name": str(r.get("county_name", "")),
             "locale_group": str(r.get("locale_group_year", r.get("locale_group", "Unknown"))),
             "school_level": str(r.get("school_level", "Other")),
+            "school_ptr": float(ptr) if pd.notna(ptr) and float(ptr) > 0 and float(ptr) <= 50 else np.nan,
         }
     return kc_sids, kc_meta
 
@@ -112,13 +116,16 @@ def extract_wave_2013_14():
         "el_count": el_cnt,
     })
 
-    # 2. Chronic Absenteeism
+    # 2. Chronic Absenteeism (CRDC 15+ Days Regime)
     f_abs = raw_dir / "09-1 Chronic Absenteeism.xlsx"
     df_abs = pd.read_excel(f_abs, usecols=["COMBOKEY", "TOT_ABSENT_M", "TOT_ABSENT_F"])
     sids_abs = clean_combokey(df_abs["COMBOKEY"])
     tot_abs = sum_clean_series(df_abs["TOT_ABSENT_M"], df_abs["TOT_ABSENT_F"], require_complete=True)
     map_abs = dict(zip(sids_abs, tot_abs))
-    df_base["chronic_absent_count"] = df_base["nces_school_id"].map(map_abs)
+    df_base["crdc_absent_15d_count"] = df_base["nces_school_id"].map(map_abs)
+    df_base["edfacts_absent_10pct_count"] = np.nan
+    df_base["chronic_absent_count"] = df_base["crdc_absent_15d_count"]
+    df_base["chronic_absent_regime"] = "crdc_15d"
 
     # 3. Staffing & Teachers
     f_supp = raw_dir / "08-1 School Support and Security Staff (required elements).xlsx"
@@ -211,7 +218,10 @@ def extract_wave_2015_16():
         "idea_count": idea_cnt,
         "sec504_count": s504_cnt,
         "el_count": el_cnt,
+        "crdc_absent_15d_count": tot_abs,
+        "edfacts_absent_10pct_count": np.nan,
         "chronic_absent_count": tot_abs,
+        "chronic_absent_regime": "crdc_15d",
         "school_teachers_fte": clean_series(df["SCH_FTETEACH_TOT"]),
         "counselors_fte": clean_series(df["SCH_FTECOUNSELORS"]),
         "teachers_absent_count": clean_series(df["SCH_FTETEACH_ABSENT"]),
@@ -267,13 +277,16 @@ def extract_wave_2017_18():
             "el_count": el_cnt,
         })
 
-        # Chronic Absenteeism
+        # Chronic Absenteeism (EDFacts DG814: >=10% of enrolled days)
         abs_name = [n for n in z.namelist() if "814" in n and n.endswith(".csv")][0]
         df_abs = pd.read_csv(z.open(abs_name), usecols=["NCESSCH", "TOTAL_STUDENTS_REPORTED_M", "TOTAL_STUDENTS_REPORTED_F"], encoding="latin1", low_memory=False)
         sids_abs = clean_combokey(df_abs["NCESSCH"])
         tot_abs = sum_clean_series(df_abs["TOTAL_STUDENTS_REPORTED_M"], df_abs["TOTAL_STUDENTS_REPORTED_F"], require_complete=True)
         map_abs = dict(zip(sids_abs, tot_abs))
-        df_out["chronic_absent_count"] = df_out["nces_school_id"].map(map_abs)
+        df_out["crdc_absent_15d_count"] = np.nan
+        df_out["edfacts_absent_10pct_count"] = df_out["nces_school_id"].map(map_abs)
+        df_out["chronic_absent_count"] = df_out["edfacts_absent_10pct_count"]
+        df_out["chronic_absent_regime"] = "edfacts_10pct"
 
         # Staffing
         supp_name = [n for n in z.namelist() if "School Support.csv" in n][0]
@@ -349,14 +362,17 @@ def extract_wave_2020_21():
             "el_count": el_cnt,
         })
 
-        # Chronic Absenteeism (Note: Limited collection due to COVID waivers)
+        # Chronic Absenteeism (EDFacts DG814: >=10% of enrolled days; Note: ~6% reporting due to federal COVID waivers)
         abs_name = [n for n in z.namelist() if "814" in n and n.endswith(".csv")][0]
         df_abs = pd.read_csv(z.open(abs_name), encoding="latin1", low_memory=False)
         sids_abs = clean_combokey(df_abs["NCESSCH"])
         abs_cols = [c for c in df_abs.columns if c.startswith("SCH_ABSENT_") and (c.endswith("_M") or c.endswith("_F")) and not any(k in c for k in ["IDEA", "504", "LEP", "HMENRL"])]
         tot_abs = sum_clean_series(*[df_abs[c] for c in abs_cols], require_complete=True)
         map_abs = dict(zip(sids_abs, tot_abs))
-        df_out["chronic_absent_count"] = df_out["nces_school_id"].map(map_abs)
+        df_out["crdc_absent_15d_count"] = np.nan
+        df_out["edfacts_absent_10pct_count"] = df_out["nces_school_id"].map(map_abs)
+        df_out["chronic_absent_count"] = df_out["edfacts_absent_10pct_count"]
+        df_out["chronic_absent_regime"] = "edfacts_10pct"
 
         # Staffing
         supp_name = [n for n in z.namelist() if "School Support.csv" in n][0]
@@ -412,18 +428,10 @@ def extract_wave_2021_22():
     df_enr = pd.read_csv(f_enr, usecols=usecols_enr, encoding="latin1", low_memory=False)
     sids = clean_combokey(df_enr["COMBOKEY"])
 
-    def add_nonbinary(base_m, base_f, x_col):
-        base = sum_clean_series(base_m, base_f, require_complete=True)
-        if x_col is not None:
-            x_clean = clean_series(x_col)
-            has_pos_x = x_clean.notna() & (x_clean > 0)
-            return np.where(base.notna(), base + np.where(has_pos_x, x_clean, 0), np.nan)
-        return base
-
-    tot_enr = add_nonbinary(df_enr["TOT_ENR_M"], df_enr["TOT_ENR_F"], df_enr.get("TOT_ENR_X"))
-    idea_cnt = add_nonbinary(df_enr["SCH_ENR_IDEA_M"], df_enr["SCH_ENR_IDEA_F"], df_enr.get("SCH_ENR_IDEA_X"))
-    s504_cnt = add_nonbinary(df_enr["SCH_ENR_504_M"], df_enr["SCH_ENR_504_F"], df_enr.get("SCH_ENR_504_X"))
-    el_cnt = add_nonbinary(df_enr["SCH_ENR_EL_M"], df_enr["SCH_ENR_EL_F"], df_enr.get("SCH_ENR_EL_X"))
+    tot_enr = sum_enrollment_with_nonbinary(df_enr["TOT_ENR_M"], df_enr["TOT_ENR_F"], df_enr.get("TOT_ENR_X"), require_complete=True)
+    idea_cnt = sum_enrollment_with_nonbinary(df_enr["SCH_ENR_IDEA_M"], df_enr["SCH_ENR_IDEA_F"], df_enr.get("SCH_ENR_IDEA_X"), require_complete=True)
+    s504_cnt = sum_enrollment_with_nonbinary(df_enr["SCH_ENR_504_M"], df_enr["SCH_ENR_504_F"], df_enr.get("SCH_ENR_504_X"), require_complete=True)
+    el_cnt = sum_enrollment_with_nonbinary(df_enr["SCH_ENR_EL_M"], df_enr["SCH_ENR_EL_F"], df_enr.get("SCH_ENR_EL_X"), require_complete=True)
 
     df_out = pd.DataFrame({
         "nces_school_id": sids,
@@ -439,7 +447,7 @@ def extract_wave_2021_22():
         "el_count": el_cnt,
     })
 
-    # 2. Chronic Absenteeism from EDFacts DG814
+    # 2. Chronic Absenteeism from EDFacts DG814 (>=10% of enrolled days)
     z_edf = RAW_EDFACTS_DIR / "edfacts_chronic_absenteeism_2021_22.zip"
     if z_edf.exists():
         with zipfile.ZipFile(z_edf) as z:
@@ -447,9 +455,13 @@ def extract_wave_2021_22():
             df_sub = df_edf[df_edf["SUBGROUP"] == "ALLSCH"].copy()
             sids_edf = clean_combokey(df_sub["NCES_SCH"])
             map_abs = dict(zip(sids_edf, clean_series(df_sub["NUMERIC_VALUE"])))
-            df_out["chronic_absent_count"] = df_out["nces_school_id"].map(map_abs)
+            df_out["edfacts_absent_10pct_count"] = df_out["nces_school_id"].map(map_abs)
     else:
-        df_out["chronic_absent_count"] = np.nan
+        df_out["edfacts_absent_10pct_count"] = np.nan
+
+    df_out["crdc_absent_15d_count"] = np.nan
+    df_out["chronic_absent_count"] = df_out["edfacts_absent_10pct_count"]
+    df_out["chronic_absent_regime"] = "edfacts_10pct"
 
     # 3. Staffing
     f_supp = wave_dir / "School Support.csv"
@@ -506,10 +518,10 @@ def extract_wave_2023_24():
         df_enr = pd.read_csv(z.open(enr_name), usecols=usecols_enr, encoding="latin1", low_memory=False)
         sids = clean_combokey(df_enr["COMBOKEY"])
 
-        tot_enr = sum_clean_series(df_enr["TOT_ENR_M"], df_enr["TOT_ENR_F"], df_enr["TOT_ENR_X"], require_complete=True)
-        idea_cnt = sum_clean_series(df_enr["SCH_ENR_IDEA_M"], df_enr["SCH_ENR_IDEA_F"], df_enr["SCH_ENR_IDEA_X"], require_complete=True)
-        s504_cnt = sum_clean_series(df_enr["SCH_ENR_504_M"], df_enr["SCH_ENR_504_F"], df_enr["SCH_ENR_504_X"], require_complete=True)
-        el_cnt = sum_clean_series(df_enr["SCH_ENR_EL_M"], df_enr["SCH_ENR_EL_F"], df_enr["SCH_ENR_EL_X"], require_complete=True)
+        tot_enr = sum_enrollment_with_nonbinary(df_enr["TOT_ENR_M"], df_enr["TOT_ENR_F"], df_enr.get("TOT_ENR_X"), require_complete=True)
+        idea_cnt = sum_enrollment_with_nonbinary(df_enr["SCH_ENR_IDEA_M"], df_enr["SCH_ENR_IDEA_F"], df_enr.get("SCH_ENR_IDEA_X"), require_complete=True)
+        s504_cnt = sum_enrollment_with_nonbinary(df_enr["SCH_ENR_504_M"], df_enr["SCH_ENR_504_F"], df_enr.get("SCH_ENR_504_X"), require_complete=True)
+        el_cnt = sum_enrollment_with_nonbinary(df_enr["SCH_ENR_EL_M"], df_enr["SCH_ENR_EL_F"], df_enr.get("SCH_ENR_EL_X"), require_complete=True)
 
         df_out = pd.DataFrame({
             "nces_school_id": sids,
@@ -523,7 +535,10 @@ def extract_wave_2023_24():
             "idea_count": idea_cnt,
             "sec504_count": s504_cnt,
             "el_count": el_cnt,
+            "crdc_absent_15d_count": np.nan,
+            "edfacts_absent_10pct_count": np.nan,
             "chronic_absent_count": np.nan,  # Not published in public 2023-24 CRDC files
+            "chronic_absent_regime": None,
         })
 
         # Staffing
@@ -580,21 +595,44 @@ def build_school_context_panel():
     # Rates must strictly divide by valid positive school enrollment
     valid_enr_mask = panel["school_enrollment"].notna() & (panel["school_enrollment"] > 0)
     
-    panel["pct_idea"] = np.where(valid_enr_mask & panel["idea_count"].notna(), np.minimum((panel["idea_count"] / panel["school_enrollment"]) * 100.0, 100.0), np.nan)
-    panel["pct_sec504"] = np.where(valid_enr_mask & panel["sec504_count"].notna(), np.minimum((panel["sec504_count"] / panel["school_enrollment"]) * 100.0, 100.0), np.nan)
-    panel["pct_el"] = np.where(valid_enr_mask & panel["el_count"].notna(), np.minimum((panel["el_count"] / panel["school_enrollment"]) * 100.0, 100.0), np.nan)
-    panel["pct_chronic_absent"] = np.where(valid_enr_mask & panel["chronic_absent_count"].notna(), np.minimum((panel["chronic_absent_count"] / panel["school_enrollment"]) * 100.0, 100.0), np.nan)
+    panel["pct_idea"] = np.where(valid_enr_mask & panel["idea_count"].notna(), (panel["idea_count"] / panel["school_enrollment"]) * 100.0, np.nan)
+    panel["pct_sec504"] = np.where(valid_enr_mask & panel["sec504_count"].notna(), (panel["sec504_count"] / panel["school_enrollment"]) * 100.0, np.nan)
     
+    # Combined IDEA or Section 504-only
+    both_valid = panel["idea_count"].notna() & panel["sec504_count"].notna()
+    panel["idea_or_504_count"] = np.where(both_valid, panel["idea_count"] + panel["sec504_count"], np.nan)
+    panel["pct_idea_or_504"] = np.where(valid_enr_mask & both_valid, (panel["idea_or_504_count"] / panel["school_enrollment"]) * 100.0, np.nan)
+
+    panel["pct_el"] = np.where(valid_enr_mask & panel["el_count"].notna(), (panel["el_count"] / panel["school_enrollment"]) * 100.0, np.nan)
+    
+    # Distinct Chronic Absenteeism Regimes
+    panel["pct_crdc_absent_15d"] = np.where(valid_enr_mask & panel["crdc_absent_15d_count"].notna(), (panel["crdc_absent_15d_count"] / panel["school_enrollment"]) * 100.0, np.nan)
+    panel["pct_edfacts_absent_10pct"] = np.where(valid_enr_mask & panel["edfacts_absent_10pct_count"].notna(), (panel["edfacts_absent_10pct_count"] / panel["school_enrollment"]) * 100.0, np.nan)
+    
+    # Flags: Denominator discordance (cumulative 12-month count > October snapshot enrollment)
+    panel["flag_absent_gt_enrollment"] = np.where(
+        panel["chronic_absent_count"].notna() & valid_enr_mask,
+        panel["chronic_absent_count"] > panel["school_enrollment"],
+        False
+    )
+    # Waiver flag for 2020-21 COVID wave (~6% reporting)
+    panel["is_absent_waiver_year"] = panel["crdc_wave"] == "2020-21"
+    
+    # Unclipped rate and clean rate
+    panel["pct_chronic_absent"] = np.where(valid_enr_mask & panel["chronic_absent_count"].notna(), (panel["chronic_absent_count"] / panel["school_enrollment"]) * 100.0, np.nan)
+    panel["pct_chronic_absent_clean"] = np.where(panel["flag_absent_gt_enrollment"], np.nan, panel["pct_chronic_absent"])
+
     # Staffing PTR and Counselor ratios
     valid_fte_mask = panel["school_teachers_fte"].notna() & (panel["school_teachers_fte"] > 0)
-    panel["school_ptr"] = np.where(valid_enr_mask & valid_fte_mask, panel["school_enrollment"] / panel["school_teachers_fte"], np.nan)
+    raw_ptr = np.where(valid_enr_mask & valid_fte_mask, panel["school_enrollment"] / panel["school_teachers_fte"], np.nan)
+    panel["school_ptr"] = np.where((raw_ptr > 0) & (raw_ptr <= 50), raw_ptr, np.nan)
     
     valid_couns_mask = panel["counselors_fte"].notna() & (panel["counselors_fte"] > 0)
     panel["student_counselor_ratio"] = np.where(valid_enr_mask & valid_couns_mask, panel["school_enrollment"] / panel["counselors_fte"], np.nan)
     
     panel["pct_teachers_absent"] = np.where(valid_fte_mask & panel["teachers_absent_count"].notna(), np.minimum((panel["teachers_absent_count"] / panel["school_teachers_fte"]) * 100.0, 100.0), np.nan)
 
-    # 3. Add Kansas City Metropolitan Area flags and metadata
+    # 3. Add Kansas City Metropolitan Area flags and metadata (including canonical PTR)
     kc_sids, kc_meta = load_kc_metadata()
     panel["is_kc_metro"] = panel["nces_school_id"].isin(kc_sids)
     
@@ -612,6 +650,9 @@ def build_school_context_panel():
             panel.loc[idx, "county_name"] = meta["county_name"]
             panel.loc[idx, "locale_group"] = meta["locale_group"]
             panel.loc[idx, "school_level"] = meta["school_level"]
+            # Carry forward certified canonical PTR from Phase 3 CCD metadata
+            if pd.notna(meta.get("school_ptr")):
+                panel.loc[idx, "school_ptr"] = meta["school_ptr"]
 
     # 4. Link with Aggregated School-Level Class Size Metrics
     course_panel_path = DATA_PROCESSED / "crdc_course_panel.parquet"
@@ -670,6 +711,9 @@ def build_school_context_panel():
         sub_all = panel[panel["crdc_wave"] == w]
         sub_sec = df_sec[df_sec["crdc_wave"] == w]
         
+        sec_enr_tot = sub_sec["school_enrollment"].sum()
+        stem_enr_tot = sub_sec["stem_enrolled_tot"].sum()
+        
         summary_rows.append({
             "crdc_wave": w,
             "school_year": sub_all["school_year"].iloc[0],
@@ -678,13 +722,24 @@ def build_school_context_panel():
             "schools_in_class_size_panel": sub_all["in_class_size_panel"].sum(),
             "mean_enrollment_secondary": sub_sec["school_enrollment"].mean(),
             "mean_ptr_secondary": sub_sec["school_ptr"].mean(),
+            "student_weighted_class_size": (sub_sec["stem_enrolled_tot"] * sub_sec["enr_weighted_class_size"]).sum() / stem_enr_tot if stem_enr_tot > 0 else np.nan,
             "mean_class_size_secondary": sub_sec["enr_weighted_class_size"].mean(),
-            "mean_pct_idea_secondary": sub_sec["pct_idea"].mean(),
-            "mean_pct_504_secondary": sub_sec["pct_sec504"].mean(),
-            "mean_pct_el_secondary": sub_sec["pct_el"].mean(),
-            "mean_pct_chronic_absent_secondary": sub_sec["pct_chronic_absent"].mean(),
-            "median_pct_chronic_absent_secondary": sub_sec["pct_chronic_absent"].median(),
-            "pct_chronic_absent_coverage_n": sub_sec["pct_chronic_absent"].notna().sum(),
+            "school_mean_pct_idea": sub_sec["pct_idea"].mean(),
+            "pooled_pct_idea": sub_sec["idea_count"].sum() / sec_enr_tot * 100.0 if sec_enr_tot > 0 else np.nan,
+            "school_mean_pct_504": sub_sec["pct_sec504"].mean(),
+            "pooled_pct_504": sub_sec["sec504_count"].sum() / sec_enr_tot * 100.0 if sec_enr_tot > 0 else np.nan,
+            "school_mean_pct_idea_or_504": sub_sec["pct_idea_or_504"].mean(),
+            "pooled_pct_idea_or_504": sub_sec["idea_or_504_count"].sum() / sec_enr_tot * 100.0 if sec_enr_tot > 0 else np.nan,
+            "school_mean_pct_el": sub_sec["pct_el"].mean(),
+            "pooled_pct_el": sub_sec["el_count"].sum() / sec_enr_tot * 100.0 if sec_enr_tot > 0 else np.nan,
+            "crdc_15d_median": sub_sec["pct_crdc_absent_15d"].median(),
+            "crdc_15d_pooled": sub_sec["crdc_absent_15d_count"].sum() / sec_enr_tot * 100.0 if sub_sec["crdc_absent_15d_count"].notna().sum() > 0 else np.nan,
+            "crdc_15d_n": sub_sec["pct_crdc_absent_15d"].notna().sum(),
+            "edfacts_10pct_median": sub_sec["pct_edfacts_absent_10pct"].median(),
+            "edfacts_10pct_clean_median": sub_sec["pct_chronic_absent_clean"].median() if w in ["2017-18", "2020-21", "2021-22"] else np.nan,
+            "edfacts_10pct_pooled": sub_sec["edfacts_absent_10pct_count"].sum() / sec_enr_tot * 100.0 if sub_sec["edfacts_absent_10pct_count"].notna().sum() > 0 else np.nan,
+            "edfacts_10pct_n": sub_sec["pct_edfacts_absent_10pct"].notna().sum(),
+            "absent_gt_enr_n": sub_sec["flag_absent_gt_enrollment"].sum(),
         })
         
     df_summary = pd.DataFrame(summary_rows)

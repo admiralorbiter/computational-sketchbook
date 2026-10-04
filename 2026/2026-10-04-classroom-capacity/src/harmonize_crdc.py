@@ -70,6 +70,54 @@ def sum_clean_series(*series_list, require_complete=True):
         res = combined.fillna(0).sum(axis=1)
         return res.mask(all_nan, np.nan)
 
+def sum_enrollment_with_nonbinary(m_series, f_series, x_series=None, require_complete=True):
+    """
+    Sum male, female, and optional nonbinary counts with strict reserve-code semantics:
+    - Base binary enrollment (M + F) is required.
+      If M or F is missing/suppressed (< 0 or NaN), base evaluates to NaN (under require_complete=True).
+    - If x_series is None: returns base sum (M + F).
+    - If x_series is provided:
+        x_raw = pd.to_numeric(x_series, errors='coerce')
+        - x >= 0: valid reported nonbinary count, added to base (M + F + x).
+        - x in [-9, -10, -12]: structurally not collected / not reported / not applicable.
+          Nonbinary reporting was optional under federal OCR rules for schools/districts that
+          did not collect it. Binary (M + F) fully represents total enrollment; added as 0.
+        - x in [-5, -6]: privacy suppression (1-2 or 1-4 students). The true count is positive but
+          unobserved. If require_complete=True, evaluates to NaN to prevent undercounting.
+        - x in [-3, -8] or other negative/NaN: genuinely missing/unreported when required.
+          If require_complete=True, evaluates to NaN.
+    """
+    m_clean = clean_series(m_series)
+    f_clean = clean_series(f_series)
+    
+    if require_complete:
+        base_valid = m_clean.notna() & f_clean.notna()
+        base = pd.Series(np.where(base_valid, m_clean + f_clean, np.nan), index=m_series.index)
+    else:
+        base = m_clean.fillna(0) + f_clean.fillna(0)
+        base = base.mask(m_clean.isna() & f_clean.isna(), np.nan)
+        
+    if x_series is None:
+        return base
+        
+    x_num = pd.to_numeric(x_series, errors="coerce")
+    if x_num.isna().all():
+        return base
+        
+    is_valid_x = x_num >= 0
+    is_struct_skip = x_num.isin([-9, -10, -12])
+    is_suppressed_or_missing = ~is_valid_x & ~is_struct_skip
+    
+    if require_complete:
+        row_invalid = base.isna() | is_suppressed_or_missing
+        x_val = np.where(is_valid_x, x_num, 0)
+        total = np.where(~row_invalid, base + x_val, np.nan)
+        return pd.Series(total, index=m_series.index)
+    else:
+        x_val = np.where(is_valid_x, x_num, 0)
+        return base + x_val
+
+
 def clean_combokey(key_series, leaid_series=None, schid_series=None):
     """
     Reconstruct 12-digit NCES ID, handling Excel floating-point scientific notation.
