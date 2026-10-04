@@ -1,11 +1,11 @@
 """
-Generate publication quality figure for Phase 9A Gate 0:
+Generate publication quality figure for Phase 9A.1 Gate 0:
 fig_e01_florida_gate0_responsiveness.png
 
 Visualizes:
 1. Empirical section responsiveness vs. theoretical Maimonides rule at C=25.
 2. Implied class size (E/K) vs. theoretical sawtooth across E in [10, 85].
-3. Section multiplicity (K >= 3) and schedule noise in E in [20, 30].
+3. Section multiplicity (K >= 3) and low-enrollment cell structure in E in [20, 30].
 4. Gate 0 stopping rule diagnostic summary card.
 """
 
@@ -61,8 +61,8 @@ def generate_figure():
     theory_p = np.array([0, 0, 1, 1, 1])
     
     ax_a.step(theory_e, theory_p, where="post", color="#d9534f", linestyle="--", linewidth=2.0, label="Theoretical Rule (C=25 Mandate)")
-    ax_a.plot(p_k2_all.index, p_k2_all.values, marker="o", color="#1f77b4", linewidth=2.2, label="All Traditional HS (N=1,496)")
-    ax_a.plot(p_k2_comp.index, p_k2_comp.values, marker="s", color="#2ca02c", linewidth=2.0, linestyle=":", label="Comprehensive HS Enrollment >= 300 (N=486)")
+    ax_a.plot(p_k2_all.index, p_k2_all.values, marker="o", color="#1f77b4", linewidth=2.2, label="All Non-Charter HS (N=1,496)")
+    ax_a.plot(p_k2_comp.index, p_k2_comp.values, marker="s", color="#2ca02c", linewidth=2.0, linestyle=":", label="Comprehensive Non-Charter Enr >= 300 (N=486)")
     
     ax_a.axvline(25.5, color="#333333", linestyle="-.", alpha=0.7, linewidth=1.2)
     ax_a.text(25.6, 0.40, "Statutory Cap Cutoff\n(E = 25 -> 26)", fontsize=9, color="#333333", fontweight="bold")
@@ -77,8 +77,8 @@ def generate_figure():
     ax_a.legend(loc="lower right", fontsize=8.5, framealpha=0.9)
     
     # Add annotation for null jump
-    ax_a.annotate("Empirical Jump: -0.005\np = 0.923 (Statistically Dead Flat)",
-                  xy=(25.5, 0.785), xytext=(21.0, 0.88),
+    ax_a.annotate("Discontinuity: -0.005, p = 0.923\nLocal Regression F = 1.13 (Null)",
+                  xy=(25.5, 0.785), xytext=(20.8, 0.88),
                   arrowprops=dict(facecolor="#1f77b4", shrink=0.08, width=1.5, headwidth=6),
                   fontsize=8.5, fontweight="bold", color="#1f77b4",
                   bbox=dict(boxstyle="round,pad=0.3", facecolor="#eef4f8", edgecolor="#1f77b4", alpha=0.9))
@@ -146,7 +146,7 @@ def generate_figure():
         h = bar.get_height()
         ax_c.text(bar.get_x() + bar.get_width()/2., h + 0.6, f"{h:.1f}%", ha="center", va="bottom", fontsize=8.5, fontweight="bold")
         
-    ax_c.annotate("53.2% of cells have K >= 3\n(Implied Class Size <= 10.0)\nAlternative & Block Schedule Noise",
+    ax_c.annotate("53.2% of cells have K >= 3\n(Implied Class Size <= 10.0)\nMultiplicity & Structure Noise",
                   xy=(4, 15), xytext=(4.2, 22),
                   arrowprops=dict(facecolor="#c94c4c", shrink=0.08, width=1.5, headwidth=6),
                   fontsize=8.5, fontweight="bold", color="#8b2b2b",
@@ -161,22 +161,24 @@ def generate_figure():
     card_text = (
         "GATE 0 EMPIRICAL AUDIT: STOPPING RULE TRIGGERED\n"
         "---------------------------------------------------------------------------------\n"
-        "1. NO STATUTORY SECTION JUMP AT C = 25:\n"
-        "   - Empirical jump in Pr(K >= 2) at 25: -0.0049 (z = -0.10, p = 0.923).\n"
-        "   - Even in comprehensive HS (>=300): jump = +0.0541 (p = 0.621).\n"
-        "   - No sawtooth drop in class size at 26, 51, or 76.\n\n"
-        "2. CENSUS & MEASUREMENT BREAKS:\n"
-        "   - Florida compliance uses October Survey 2 FTE census.\n"
-        "   - CRDC course enrollment pools terms and is cumulative in 2023-24 Alg 1.\n\n"
-        "3. INSTITUTIONAL CONCEALMENT IN PUBLIC DATA:\n"
-        "   - Co-teaching exemptions (2 teachers:48 students = 24:1) hidden as K=1.\n"
-        "   - Statutory post-October flexibility allows +5 students (classes up to 30).\n\n"
-        "4. SCHEDULE NOISE & ALTERNATIVE FACILITY BUNCHING:\n"
-        "   - 53.2% of cells in [20, 30] have K >= 3 (mean class size < 10).\n"
-        "   - 47.3% of low-enrollment cells are alternative/juvenile/virtual facilities.\n\n"
+        "1. NO SECTION JUMP AT C = 25:\n"
+        "   - Local discontinuity in Pr(K >= 2): -0.0049 (z = -0.10, p = 0.923).\n"
+        "   - Comprehensive HS (>=300): jump = +0.0541 (p = 0.621).\n"
+        "   - Local first-stage regression F = 1.13 (Best-case clean F = 0.35).\n\n"
+        "2. OBSERVATIONAL UNIT MISMATCH:\n"
+        "   - Florida compliance audits individual classrooms.\n"
+        "   - CRDC provides school-course aggregates.\n"
+        "   - Scheduling is governed by periods, blocks, & staffing,\n"
+        "     not a deterministic K = ceil(E/25) formula on total demand.\n\n"
+        "3. INSTITUTIONAL & REPORTING CONCEALMENT:\n"
+        "   - CRDC lacks educator links to reconstruct co-teaching rules.\n"
+        "   - Schedule structure (block vs period) unobserved.\n\n"
+        "4. MULTIPLICITY IN LOW ENROLLMENT [20, 30]:\n"
+        "   - 53.2% have K >= 3 sections (mean class size < 10.0).\n"
+        "   - 35.7% in small schools (< 300); 47.3% broad keyword flag.\n\n"
         "---------------------------------------------------------------------------------\n"
-        "DECISION: GATE 0 FAILS. DO NOT FORCE SPURIOUS PUBLIC RD / IV.\n"
-        "PIVOT TO PHASE 9B: PREREGISTERED ADMINISTRATIVE MICRODATA PROTOCOL."
+        "DECISION: CRDC CANNOT RECOVER STATUTORY FIRST STAGE.\n"
+        "PIVOT TO PHASE 9B: TWO-TIER ADMINISTRATIVE PROTOCOL (9B-1 & 9B-2)."
     )
     
     ax_d.text(0.02, 0.98, card_text, fontsize=8.8, family="monospace", va="top", ha="left",

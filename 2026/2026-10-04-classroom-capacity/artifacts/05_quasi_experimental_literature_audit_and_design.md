@@ -138,8 +138,9 @@ sections, yielding the Maimonides-style predicted class size:
 $$\widehat{CS}_{sct} = \frac{E_{sct}}{\lceil E_{sct} / C \rceil} = \frac{E_{sct}}{K_{sct}^*}$$
 
 > [!NOTE]
-> **Fuzzy IV/RD Identification vs. Sharp RD:**  
-> The scheduling rule must be treated as a **fuzzy instrumental variable**, not a deterministic sharp RD. Real high schools create sections in response to master schedule conflicts, teacher availability, laboratory station limits, special education co-teaching models, and semesterization. Consequently, $K_{sct}^*$ and $\widehat{CS}_{sct}$ act as exogenous instruments that shift the conditional probability distribution of actual class size $\text{ActualCS}_{sct}$, rather than assigning class size mechanically. Gate 2 empirically tests the strength of this first-stage relationship ($\pi$).
+> **Fuzzy IV/RD Identification & Institutional Mechanism Discovery:**  
+> In modern departmentalized high schools, the scheduling rule cannot be treated as a deterministic formula. Florida's statutory mandate governs **individual classrooms**, while public data observe **total school-course aggregates**. Even with perfect administrative October census data, high schools do not mechanically assign sections via $K = \lceil E/C \rceil$. A school with 24 Algebra I students may operate 2 or 3 sections due to period availability, lab stations, grade-cohort tracking, schedule conflicts, ESE co-teaching, or block scheduling; conversely, 26 students do not mechanically force an administrator to split the class.  
+> Consequently, the scheduling rule must be treated as an **empirical institutional mechanism to discover**, where predetermined student demand shifts the probability distribution of actual section size ($\text{ActualCS}_{sct}$). Gate 0 tests whether public aggregates can identify this relationship, and Phase 9B explicitly audits the section-level first stage.
 
 ```
 ========================================================================================================================
@@ -291,12 +292,13 @@ Before requesting restricted administrative microdata, we execute a rigorous **S
 
 ### Detailed Gate Specifications
 
-#### Gate 0 — Measurement & Temporal Alignment (Empirical Audit & Stopping Rule Evaluation)
+#### Gate 0 — Measurement & First-Stage Feasibility Audit (Empirical Results & Stopping Rule Evaluation)
 
 ##### 1. Conceptual Framing & Stopping Rule
-- **The Timing Question:** Does the public course enrollment variable ($E_{sct}$) measure the student roster that existed when the section-count decision ($K_{sct}$) was made?
+- **The Core Question:** Can public CRDC school-course aggregates recover Florida's classroom-level statutory first stage?
 - **The Institutional Break:** Florida statutory compliance under s. 1003.03, F.S., is evaluated at the **individual classroom level** based on student membership during the **October FTE Survey 2**. By contrast, CRDC course enrollment aggregates all sections of a course school-wide, pools terms in semester/block schedules, and in 2023–24 reflects cumulative full-year enrollees for Algebra I.
-- **Stopping Rule Definition:** If the numerator (students) and denominator (sections) do not represent the same roster universe and census date, any observed discontinuity may be an artifact of schedule aggregation. If Gate 0 fails to find a discontinuous jump in section formation at statutory cutoffs, public data cannot identify the statutory first stage, pointing directly to the necessity of administrative microdata.
+- **Separating Measurement Failure from First-Stage Failure:** The null discontinuity documented below does **not** prove that every underlying survey date is wrong; earlier CRDC waves are roughly contemporaneous fall measures. Rather, the definitive conclusion is that **CRDC school-course aggregates cannot recover the classroom-level Florida statutory first stage**: observable CRDC variables do not behave like the required treatment-assignment variables.
+- **Sample Scope:** The empirical audit uses all **non-charter Florida public high schools** ($N = 29,578$ course cells across $1,048$ schools, 2013–14 through 2023–24). We use the term "non-charter" rather than "traditional" because CRDC lacks an `is_school_of_choice` indicator to isolate district-operated schools of choice (which Florida evaluates at school-wide averages).
 
 ##### 2. Regulatory & Survey Rules Comparison (Table 09)
 ```
@@ -309,25 +311,25 @@ Census Timing              Survey 2: Third week of October       Fall snapshot (
                            (Fall FTE membership count)           Cumulative full-year 2023-24 Alg 1    Alg 1 cumulative vs fall classes.
 Observation Level          Individual classroom section          School-by-course aggregate cell       SEVERELY AGGREGATED: Lacks
                            (roster-level student IDs)            (total E, total K, mean E/K)          section-level microdata.
-Co-Teaching / Team Model   2 teachers co-teaching 48 students    Reported as 1 class with 48 students  CONCEALED: Public CRDC cannot
-                           counts as 24:1 (COMPLIANT with C=25)  (appears as massive non-compliance)   observe co-teaching staffing.
+Co-Teaching / Team Model   2 teachers co-teaching 48 students    CRDC lacks educator-per-section       CONCEALED: Public CRDC cannot
+                           counts as 24:1 (COMPLIANT with C=25)  linkage to reconstruct Florida rule   observe co-teaching staffing.
 Post-Survey Flexibility    s. 1003.03(2)(b): Up to +5 students   Does not track date of student        UNOBSERVED: Apparent violations
                            over cap post-October (classes to 30) enrollments                           reflect legal flexibility.
-4x4 Block / Semester       Counts fall term sections only;       Schools vary: some report fall,       NOISY: Produces synthetic halved
-                           Survey 3 counts spring term           others pool full-year sections        or fractional class sizes.
+Schedule Structure         Counts fall term sections only;       Data consistent with term pooling,    UNOBSERVED: Schedule type
+                           Survey 3 counts spring term           co-teaching, & reporting conventions  (block vs period) unobserved.
 ========================================================================================================================
 ```
 
 ##### 3. Empirical Discontinuity Tests at Statutory Cutoffs (Table 10)
-We formally test for section responsiveness across 29,578 course cells in Florida traditional public high schools across all six CRDC waves (2013–14 through 2023–24):
+We test for section responsiveness across cutoffs $E \in \{25, 50, 75\}$ in non-charter Florida public high schools:
 
 ```
 =======================================================================================================================================
 SAMPLE SPECIFICATION              CUTOFF  TARGET K  N_BELOW  N_AT  N_ABOVE  Pr(K>=k|AT)  Pr(K>=k|ABV)  JUMP (DELTA)  P-VALUE    JUMP IN C_BAR
 =======================================================================================================================================
-All Traditional High Schools      C = 25   K >= 2     144     132    129       78.8%        78.3%        -0.0049     p = 0.923   +0.42 students
-All Traditional High Schools      C = 50   K >= 3      70      67     71       80.6%        71.8%        -0.0877     p = 0.228   +1.92 students
-All Traditional High Schools      C = 75   K >= 4      56      73     49       79.5%        69.4%        -0.1006     p = 0.206   +2.02 students
+All Non-Charter High Schools      C = 25   K >= 2     144     132    129       78.8%        78.3%        -0.0049     p = 0.923   +0.42 students
+All Non-Charter High Schools      C = 50   K >= 3      70      67     71       80.6%        71.8%        -0.0877     p = 0.228   +1.92 students
+All Non-Charter High Schools      C = 75   K >= 4      56      73     49       79.5%        69.4%        -0.1006     p = 0.206   +2.02 students
 ---------------------------------------------------------------------------------------------------------------------------------------
 Comprehensive HS (Enr >= 300)     C = 25   K >= 2      57      47     35       57.4%        62.9%        +0.0541     p = 0.621   -0.85 students
 Comprehensive HS (Enr >= 300)     C = 50   K >= 3      40      36     43       83.3%        76.7%        -0.0659     p = 0.468   +0.48 students
@@ -343,19 +345,43 @@ Comprehensive Core Courses        C = 75   K >= 4      10      10     10       7
 =======================================================================================================================================
 ```
 
-##### 4. Schedule Noise & Alternative Facility Diagnostic (Table 11)
+##### 4. Local First-Stage OLS Regressions & Best-Case Sensitivity (Table 12)
+Rather than asserting an F-statistic from a two-proportion test, we formally estimate the local first-stage regression around $C=25$ ($E \in [20, 30]$) with HC1 robust standard errors:
+$$K_{sct} = \alpha + \pi 1(E_{sct} \ge 26) + \beta (E_{sct} - 25) + \epsilon_{sct}$$
+and test whether a "best-case clean sample" can recover a first stage:
+
+```
+========================================================================================================================
+MODEL SPECIFICATION                 SAMPLE RESTRICTION                   N_OBS   COEF (pi)   ROBUST SE   P-VALUE   ROBUST F
+========================================================================================================================
+Model 1: Baseline All Non-Charter   All non-charter FL high schools      1,496    0.3570      0.3364     0.2885     1.126
+Model 2: Comprehensive Non-Charter  School enrollment >= 300               486    0.6577      0.4808     0.1713     1.871
+Model 3: Best-Case Clean Sensitivity Enrollment >= 300; Excludes COVID    344    0.3656      0.6206     0.5558     0.347
+                                    (2020-21) & 2023-24 Alg1 mismatch
+Model 4: Best-Case Class Size on CS Enrollment >= 300; clean waves        344    0.1711      0.1306     0.1901     1.717
+========================================================================================================================
+```
+Across all models, the robust first-stage F-statistic never exceeds $1.87$, and falls to $0.35$ in the best-case clean sensitivity. Observable CRDC variables provide no usable first-stage variation.
+
+##### 5. Schedule Noise & Low-Enrollment Cell Structure (Table 11)
 In the immediate vicinity of the statutory cap ($E \in [20, 30]$, $N=1,496$ cells):
 - **Section Multiplicity:** **53.2% of cells have $K \ge 3$ sections** (averaging $<10$ students per section), and **52.2% have mean class size $<10.0$**.
-- **Alternative / Juvenile / Virtual Clustering:** **35.7% of cells** are located in small or alternative facilities ($<300$ students), and **47.3% contain explicit alternative name keywords** (e.g., Juvenile Detention, PACE Center for Girls, Virtual Franchise, Alternative Learning Center).
-- In high schools operating on 4x4 block schedules, reporting full-year sections alongside single-term enrollments divides class size in half, artificially driving implied section sizes below 10.
+- **Small Schools:** **35.7% of cells** are located in small schools ($<300$ students).
+- **Name-Keyword Flag:** **47.3% of cells** match a broad school-name keyword flag (e.g. Alternative, Center, Academy, Virtual, PACE, ESE, Juvenile Detention, Learning Center). While terms like Academy, Center, and Program are broad heuristics, the underlying structural noise remains: non-comprehensive and specialized facilities contribute heavily to low-enrollment cells.
+- **Unobserved Scheduling Mechanisms:** Because CRDC does not observe schedule structure, the data are consistent with multiple real-world factors: term pooling in block schedules, specialized alternative programs, co-teaching models, and period-by-period master schedule conflicts.
 
-![Gate 0 Feasibility Audit](/C:/Users/admir/.gemini/antigravity/brain/873b7f0f-08cb-453c-b3e0-5a0024dac318/fig_e01_florida_gate0_responsiveness.png)
+![Gate 0 Feasibility Audit](artifacts/figures/fig_e01_florida_gate0_responsiveness.png)
 
-##### 5. Evaluation of the Gate 0 Stopping Rule: TRIGGERED
-- **Null First-Stage Discontinuity:** Across all 12 specifications, there is **zero statistically significant jump** in section formation at statutory thresholds ($p \ge 0.136$, with $p=0.923$ at the primary $C=25$ margin).
-- **No Class-Size Sawtooth:** Average implied class size rises smoothly across enrollment thresholds rather than collapsing from 25 to 13, 17, or 19.
-- **Methodological Verdict:** The **Gate 0 Stopping Rule is formally triggered**. Running naive 2SLS or fuzzy RD regressions on public CRDC data would estimate an utterly spurious first stage ($F < 1$), confounding statutory compliance with block schedule pooling, co-teaching omissions, and alternative facility noise.
-- **Operational Action:** We do not proceed with Gates 1–5 on public data. We pivot immediately to **Phase 9B: Preregistered Administrative Microdata Protocol**, where student-section-teacher links and official October Survey 2 rosters are observed without aggregation bias.
+##### 6. Evaluation of the Gate 0 Stopping Rule: TRIGGERED
+- **Empirical Findings:**
+  1. The local section-formation discontinuity is essentially zero: $\Delta = -0.005, p = 0.923$.
+  2. The local first-stage regression yields weak/null instrument strength ($F = 1.13$ in baseline, $F = 0.35$ in best-case clean sensitivity).
+  3. Implied average class size rises smoothly rather than showing a sawtooth discontinuity.
+- **Methodological Characterization:**
+  - **FAILED for CRDC**, decisively enough to abandon public CRDC-based RD/IV.
+  - **Not evidence that Florida's statutory natural experiment doesn't exist.**
+  - **Evidence that school-course CRDC aggregates are the wrong observational unit for discovering it.**
+- **Operational Decision:** The Gate 0 Stopping Rule is formally triggered. We do not attempt to force public regressions through Gates 1–5. We pivot directly to **Phase 9B: Two-Tier Administrative Microdata Protocol**.
 
 #### Gate 1 — Institutional Scope & Legal Exclusions
 - Under Florida Statute § 1003.03 and FDOE compliance guidelines:
@@ -393,48 +419,102 @@ In the immediate vicinity of the statutory cap ($E \in [20, 30]$, $N=1,496$ cell
 
 ---
 
-## 7. Phase 9B: Preregistered Administrative Microdata Protocol (Provisional Draft)
+## 7. Phase 9B: Two-Tier Administrative Microdata Protocol
 
-If Phase 9A demonstrates that public data cannot resolve within-school sorting or exact October survey rosters, we submit a preregistered microdata request. Rather than locking a static specification prematurely, this **provisional minimal layout** incorporates the structural nuances identified by the Phase 9A design audit:
+The Gate 0 audit demonstrated that school-course aggregates in public CRDC data cannot identify the statutory first stage. However, this failure reveals a crucial structural insight: **high school section creation is an institutional mechanism governed by master schedules, period structures, lab capacity, and pre-registration demand, not a deterministic formula on total enrollment**.
+
+Requesting massive, student-identifiable longitudinal records upfront imposes heavy institutional review, FERPA compliance, and agency data use agreement barriers. More fundamentally, we must first verify whether an administrative first stage actually exists. Therefore, Phase 9B is structured into two sequential tiers:
+
+```
++---------------------------------------------------------------------------------------------------+
+|                        PHASE 9B: TWO-TIER ADMINISTRATIVE PROTOCOL ARCHITECTURE                    |
++---------------------------------------------------------------------------------------------------+
+|  [PHASE 9B-1: FIRST-STAGE ADMINISTRATIVE SECTION FILE]                                            |
+|  - Non-student-identifiable, section-level administrative extract (easier agency review/release).  |
+|  - Key variables: Course request demand E*, October section headcount, teachers assigned,         |
+|    co-teaching flag, term/schedule block, period, and statutory school governance type.          |
+|  - CORE MILESTONE: Does predetermined demand generate a strong discontinuity (F >> 10)?            |
+|                                    |                                                              |
+|                     +--------------+--------------+                                               |
+|                     |                             |                                               |
+|               [If F < 10]                   [If F >= 10]                                          |
+|                     v                             v                                               |
+|         [STOPPING RULE TRIGGERED]      [PROCEED TO PHASE 9B-2]                                    |
+|         Stop immediately; do not       Request student outcome layer                              |
+|         request student microdata.     linked to validated sections.                              |
++---------------------------------------------------------------------------------------------------+
+```
+
+### Phase 9B-1: First-Stage Administrative Section File (Non-Identifiable)
+
+This file contains section-level master schedule records without student identifiers, submitted to the Florida Department of Education (Education Data Warehouse / PK-20) and Missouri DESE (MOSIS):
 
 ```
 ========================================================================================================================
-#   VARIABLE NAME            TYPE          PURPOSE IN ECONOMETRIC SPECIFICATION & DESIGN AUDIT
+#   VARIABLE NAME            TYPE          PURPOSE IN FIRST-STAGE STRUCTURAL AUDIT
+========================================================================================================================
+1   school_id_state          String        State school identifier for school fixed effects (mu_s).
+2   school_id_nces           String        NCES school identifier for cross-database institutional crosswalks.
+3   academic_year            Integer       Academic school year for year fixed effects (lambda_t).
+4   course_code_state        String        State course code (restricted to Algebra I, Geometry, Biology I, English II).
+5   term_structure           String        Term type (Fall, Spring, Full Year) and schedule model (4x4 block vs 7-period).
+6   section_id               String        Unique classroom section identifier within school-year-course.
+7   period_block_number      Integer       Master schedule period/block number (controls for period-specific crowding).
+8   october_census_headcount Integer       Official verified section headcount at the October Survey 2 FTE census date.
+9   teachers_assigned_count  Integer       Number of certified teachers assigned (identifies team-teaching denominator).
+10  team_teaching_flag       Boolean       Statutory co-teaching flag (verifies Florida 24:1 ratio compliance).
+11  school_governance_type   String        School governance classification: Traditional Public vs Choice vs Charter.
+12  prescheduling_demand     Integer       Verified pre-assignment course request demand count prior to section creation
+                                           (the critical exogenous running variable E*).
+========================================================================================================================
+```
+
+#### The Phase 9B-1 Research Milestone & Stopping Rule
+- **Primary Empirical Model:** We estimate the section-formation response to predetermined student demand $E_{sct}^*$:
+  $$\text{ActualCS}_{sct} = \alpha + \pi \widehat{CS}(E_{sct}^*) + f(E_{sct}^*) + \mu_s + \lambda_t + \epsilon_{sct}$$
+  and test whether section formation jumps discontinuously at statutory cutoffs ($25, 50, 75$).
+- **Stopping Rule:** If predetermined course demand fails to predict section size discontinuously with robust instrument strength ($F < 10$), **we stop immediately**. We do not request student-level data, avoiding unnecessary administrative burden and eliminating the risk of estimating underpowered structural models.
+
+---
+
+### Phase 9B-2: Student Outcomes Microdata Layer (Conditional on 9B-1 Success)
+
+If and only if Phase 9B-1 demonstrates that predetermined demand generates an exogenous, strong discontinuity ($F \ge 10$), we execute Phase 9B-2 to request student outcome records linked directly to the verified section IDs:
+
+```
+========================================================================================================================
+#   VARIABLE NAME            TYPE          PURPOSE IN SECOND-STAGE CAUSAL ESTIMATION
 ========================================================================================================================
 1   student_id_anon          String (Hash) Anonymous longitudinal student identifier for tracking across grades.
-2   school_id_nces           String        NCES school identifier for school fixed effects (alpha_s).
-3   academic_year            Integer       Academic school year for year fixed effects (lambda_t).
-4   course_code_state        String        State course code (restricted to Algebra I, Geometry, Biology, English II).
-5   section_id               String        Unique classroom section identifier within school-year-course.
-6   teacher_id_anon          String (Hash) Anonymous teacher identifier for classroom clustering and teacher FE.
-7   term_schedule_structure  String        Term start/end dates, minutes/week, and schedule type (4x4 block vs 7-period).
-8   team_teaching_flag       Boolean       Identifies co-teaching / team-teaching classrooms (statutory exemption audit).
-9   october_census_headcount Integer       Official verified section headcount at the October membership census date.
-10  pre_assignment_demand    Integer       School-course pre-assignment demand count (ideal exogenous running variable).
-11  eoc_scale_score          Float         Standardized End-of-Course continuous scale score (Primary Dependent Variable).
-12  prior_achievement_score  Float         Standardized prior-year MAP (Grade 8) scale score (Baseline Human Capital).
-13  prior_retention_flag     Boolean       Identifies course repeaters vs. first-time enrollees (critical for Algebra I).
-14  student_demographics     Bitflags      Individual binary flags: FRL, IEP/Special Ed, Section 504, EL status, race, sex.
-15  enrollment_duration_days Integer       Days enrolled in course section prior to assessment (exposure dose).
-16  student_attendance_rate  Float         Course-specific or annual attendance rate during the enrolled academic term.
+2   section_id               String        Unique section identifier linking directly to verified 9B-1 master schedule.
+3   eoc_scale_score          Float         Standardized End-of-Course continuous scale score (Primary Dependent Variable).
+4   prior_achievement_score  Float         Standardized Grade 8 MAP / FSA scale score (Baseline Human Capital Control).
+5   prior_retention_flag     Boolean       Identifies course repeaters vs. first-time enrollees (essential for Algebra I).
+6   grade_level_enrolled     Integer       Student enrolled grade level (Grade 8 accelerators vs Grade 9 on-track).
+7   student_demographics     Bitflags      Individual binary indicators: FRL, IEP/Special Ed, Section 504, EL status, race.
+8   enrollment_duration_days Integer       Days enrolled in course section prior to assessment (exposure dose).
+9   student_attendance_rate  Float         Course-specific attendance rate during enrolled term.
 ========================================================================================================================
 ```
 
-### Critical Refinements Identified for Administrative Request
-1. **Pre-Assignment Course Demand vs. Realized Section Enrollment:** Realized enrollment in a section is a post-scheduling outcome. Observing total pre-registration course requests before administrators split sections provides the purest exogenous running variable.
-2. **Co-Teaching / Team-Teaching Exemption:** Under Florida law, a classroom with 48 students and two certified teachers complies with the 25-student cap (ratio of 24:1). Without a co-teaching indicator, apparent non-compliance is misclassified.
-3. **Repeater / Acceleration Heterogeneity:** High school Algebra I pools advanced 8th graders, on-track 9th graders, and repeating 10th graders. Separating first-time test-takers is essential for internal validity.
+#### Structural Estimation & Power Benchmarks
+With the linked 9B-1 and 9B-2 microdata, we estimate the second-stage causal effect of secondary section size:
+$$\text{EOC}_{isct} = \alpha + \beta \widehat{\text{ActualCS}}_{sct} + f(E_{sct}^*) + \mu_s + \lambda_t + \mathbf{X}_{isct}' \mathbf{\Gamma} + \epsilon_{isct}$$
+clustering standard errors at the classroom section and school levels, evaluating statistical precision against our three preregistered Minimum Detectable Effect (MDE) thresholds:
+1. **Upper-Secondary Baseline ($\text{MDE} \approx 0.02\text{ SD}$):** Han & Ryu (2017) upper-grade benchmark.
+2. **Moderate Secondary Effect ($\text{MDE} \approx 0.05\text{ SD}$):** Meaningful EOC policy gain.
+3. **Standard CSR Benchmark ($\text{MDE} \approx 0.08\text{ SD}$):** Elementary-attenuated threshold.
 
 ---
 
 ## 8. Summary & Next Immediate Actions
 
-1. **Phase 7 (Literature Audit):** Certified. The literature demonstrates that the **25–35 departmentalized secondary margin is an open empirical frontier**, with Han & Ryu (2017) serving as the primary causal benchmark ($<0.02\text{ SD}$ per 10 students).
+1. **Phase 7 (Literature Audit):** Certified. The literature demonstrates that the **25–35 departmentalized secondary margin is an open empirical frontier**, with Han & Ryu (2017) establishing the primary causal benchmark ($<0.02\text{ SD}$ per 10 students).
 2. **Phase 8 (Coverage Mapping):** Certified. Parameter space mapped across elementary self-contained vs. secondary departmentalized structures.
 3. **Phase 9A Gate 0 (Measurement & Discontinuity Audit):** **EXECUTED & STOPPING RULE TRIGGERED**.
-   - Public CRDC course data exhibit **zero section responsiveness** at Florida's statutory thresholds ($p=0.923$ at $C=25$; $p=0.228$ at $C=50$; $p=0.206$ at $C=75$).
-   - 53.2% of cells near $C=25$ have $K \ge 3$ sections, reflecting 4x4 block schedule pooling and alternative facility noise.
-   - Forcing a naive public 2SLS or fuzzy RD estimator would produce a completely spurious first stage ($F < 1$).
-4. **Immediate Operational Pivot (Phase 9B Execution):**
-   - Formalize the **Preregistered Administrative Microdata Protocol** for submission to the Florida Department of Education (Education Data Warehouse / PK-20) and Missouri DESE (MOSIS).
-   - Preregister the econometric model, first-stage pre-assignment demand instrument, co-teaching adjustment, and minimum detectable effect power tiers ($0.02, 0.05, 0.08\text{ SD}$).
+   - Public CRDC school-course aggregates cannot recover the classroom-level Florida statutory first stage ($\Delta = -0.005, p = 0.923$; local first-stage regression $F = 1.13$ in baseline, $F = 0.35$ in best-case clean sensitivity).
+   - This failure reflects observational unit mismatch and unobserved scheduling structure (period conflicts, block pooling, co-teaching omission), not evidence that Florida's statutory natural experiment does not exist.
+   - Public CRDC-based RD/IV exploration is definitively closed.
+4. **Immediate Operational Execution (Phase 9B Submission):**
+   - Submit the **Phase 9B-1 non-identifiable administrative section request** to the Florida Department of Education (EDW / PK-20) and Missouri DESE (MOSIS) to test whether predetermined course demand generates an exogenous first stage.
+   - If Phase 9B-1 confirms $F \ge 10$, execute the **Phase 9B-2 student outcomes layer** request.

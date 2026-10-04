@@ -1,5 +1,5 @@
 """
-Tests for Phase 9A Gate 0: Florida Measurement & Temporal Alignment Audit.
+Tests for Phase 9A.1 Gate 0: Florida Measurement & First-Stage Feasibility Audit.
 """
 
 import sys
@@ -14,12 +14,13 @@ from src.audit_florida_gate0_measurement import (
     audit_crdc_vs_florida_statutory_rules,
     audit_threshold_section_jumps,
     audit_schedule_noise_and_alternative_facilities,
+    audit_local_first_stage_regressions,
 )
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
 TABLES_DIR = PROJECT_DIR / "artifacts" / "tables"
 
-def test_florida_traditional_high_school_sample():
+def test_florida_non_charter_high_school_sample():
     fl = load_florida_high_school_panel()
     assert len(fl) > 25000, f"Expected >25,000 course cells, got {len(fl)}"
     assert fl["state"].unique() == ["FL"]
@@ -37,8 +38,8 @@ def test_gate0_threshold_jump_is_null_at_25():
     df_jumps = audit_threshold_section_jumps(fl)
     assert (TABLES_DIR / "table10_gate0_threshold_jump_tests.csv").exists()
     
-    # Check baseline All Traditional High Schools at C=25
-    row_25 = df_jumps[(df_jumps["sample"] == "All Traditional High Schools") & (df_jumps["cutoff"] == 25)].iloc[0]
+    # Check baseline All Non-Charter High Schools at C=25
+    row_25 = df_jumps[(df_jumps["sample"] == "All Non-Charter High Schools") & (df_jumps["cutoff"] == 25)].iloc[0]
     # The jump should be statistically null (p > 0.05) and tiny (|jump| < 0.05)
     assert row_25["p_value"] > 0.05
     assert abs(row_25["jump_p_ge_k"]) < 0.05
@@ -54,3 +55,15 @@ def test_gate0_schedule_noise_diagnostics():
     assert noise["total_cells_e_20_30"] > 1000
     assert noise["pct_cells_k_ge_3"] > 50.0
     assert noise["pct_cells_cs_lt_10"] > 50.0
+    assert "pct_cells_broad_name_keyword_flag" in noise
+
+def test_gate0_first_stage_regressions_and_best_case_sensitivity():
+    fl = load_florida_high_school_panel()
+    df_reg = audit_local_first_stage_regressions(fl)
+    assert (TABLES_DIR / "table12_gate0_first_stage_regressions.csv").exists()
+    assert len(df_reg) == 4
+    
+    # Verify all robust F-statistics are weak (< 10 Stock-Yogo threshold)
+    for idx, row in df_reg.iterrows():
+        assert row["robust_f_stat"] < 5.0, f"Expected weak F < 5, got {row['robust_f_stat']} in {row['model']}"
+        assert row["p_value"] > 0.10, f"Expected p > 0.10, got {row['p_value']} in {row['model']}"
