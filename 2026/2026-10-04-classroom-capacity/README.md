@@ -63,13 +63,13 @@ This repository answers four foundational empirical questions:
 - [x] **Phase 0:** Source Registry (`sources/source_registry.csv`)
 - [x] **Phase 1:** CRDC Variable Crosswalk (`sources/crdc_crosswalk.csv`, `docs/variable_crosswalk.md`)
 - [x] **Phase 2:** Longitudinal Panel Construction & QA Suite (`data/processed/crdc_course_panel.parquet`)
-- [x] **Phase 3:** Empirical Class Size Measurement (`artifacts/01_class_size_measurement.md`, `notebooks/01_class_size_measurement.ipynb`)
-- [x] **Phase 3.1:** Methodological Calibration Patch (`artifacts/01b_measurement_calibration.md`)
-- [x] **Phase 3.2:** Final Measurement Consistency Patch (`artifacts/01c_final_measurement_certification.md`)
-- [ ] **Phase 4:** Instructional-Load Panel (`02_instructional_load.md`)
-- [ ] **Phase 5:** SASS / NTPS Series Validation (`ntps_sass_class_size_series.csv`)
-- [ ] **Phase 6:** Project STAR Re-Analysis (`03_star_replication.md`)
-- [ ] **Phase 7:** Literature Audit Database (`04_literature_audit.md`)
-- [ ] **Phase 8:** Evidence Coverage Mapping
-- [ ] **Phase 9:** Nonlinearity Testing (20 / 25 / 30 thresholds)
-- [ ] **Phase 10:** Final Research Synthesis (`05_synthesis.md`)
+- [x] **Phase 3:** Empirical Class Size Measurement (`artifacts/01_class_size_measurement.md`, `artifacts/01c_final_measurement_certification.md`)
+- [x] **Phase 4:** Instructional-Load Panel & Longitudinal Shift Calibration (`artifacts/02b_instructional_load_calibration.md`)
+- [x] **Phase 5:** SASS / NTPS Series Triangulation & Benchmark Validation (`artifacts/03_ntps_sass_validation.md`)
+- [x] **Phase 6:** Project STAR Canonical Causal Replication & Attrition Audit (`artifacts/04_project_star_causal_replication.md`)
+- [x] **Phase 7:** Literature & Econometric Audit: The Secondary Class-Size Void (`artifacts/05_quasi_experimental_literature_audit_and_design.md`)
+- [x] **Phase 8:** Empirical Coverage Mapping & Non-Linearity Frontiers
+- [ ] **Phase 9A:** Public Natural-Experiment Feasibility Audit (Florida $C=25$ & Missouri/KC Scheduling Rules)
+- [ ] **Phase 9B:** Preregistered Administrative Microdata Protocol (14-Variable Specification for FDOE/DESE/Districts)
+- [ ] **Phase 9C:** Causal Estimation & Execution
+- [ ] **Phase 10:** Final Research Synthesis
