@@ -329,7 +329,11 @@ def estimate_fe_demeaned(df_sample, depvar="mean_class_size", weights_col=None, 
     K = len(dummy_cols)
     G = df[group_col].nunique()
     n_clusters = df[cluster_col].nunique()
-    dof_factor = np.sqrt((N - K) / max(1, (N - K - G)))
+    # Absorbed-FE finite-sample adjustment factor:
+    # Statsmodels cluster covariance scales by (N-1)/(N-K), but demeaned OLS does not subtract
+    # the G absorbed fixed effects from residual degrees of freedom. Multiplying SE by
+    # sqrt((N-K)/(N-K-G)) adjusts for absorbed dimensions.
+    absorbed_fe_factor = np.sqrt((N - K) / max(1, (N - K - G)))
     df_t = max(1, n_clusters - 1)
     t_crit = stats.t.ppf(0.975, df=df_t)
     
@@ -343,7 +347,8 @@ def estimate_fe_demeaned(df_sample, depvar="mean_class_size", weights_col=None, 
     for c in reg_courses:
         col_name = f"_d_{c}_tilde"
         coef = res.params[col_name]
-        se = res.bse[col_name] * dof_factor
+        se_cluster_only = res.bse[col_name]
+        se = se_cluster_only * absorbed_fe_factor
         tstat = coef / se
         pval = 2 * (1 - stats.t.cdf(abs(tstat), df=df_t))
         results.append({
@@ -351,6 +356,8 @@ def estimate_fe_demeaned(df_sample, depvar="mean_class_size", weights_col=None, 
             "course_name": course_labels.get(c, c),
             "coef_vs_geom": coef,
             "std_err": se,
+            "std_err_cluster_only": se_cluster_only,
+            "absorbed_fe_factor": absorbed_fe_factor,
             "t_stat": tstat,
             "p_value": pval,
             "ci_95_low": coef - t_crit * se,
@@ -363,6 +370,7 @@ def estimate_fe_pairwise(df_sample, target_course, ref_course="geom", weights_co
     """
     Direct pairwise within-school comparison: restrict strictly to school-waves containing
     BOTH ref_course and target_course. Fits school x wave FE with school-level clustering.
+    Applies absorbed-FE finite-sample adjustment.
     """
     sub = df_sample[df_sample["course_code"].isin([ref_course, target_course])].copy()
     counts = sub.groupby(group_col)["course_code"].nunique()
@@ -398,11 +406,12 @@ def estimate_fe_pairwise(df_sample, target_course, ref_course="geom", weights_co
     K = 1
     G = pair_df[group_col].nunique()
     n_clusters = pair_df[cluster_col].nunique()
-    dof_factor = np.sqrt((N - K) / max(1, (N - K - G)))
+    absorbed_fe_factor = np.sqrt((N - K) / max(1, (N - K - G)))
     df_t = max(1, n_clusters - 1)
     
     coef = res.params["d_tilde"]
-    se = res.bse["d_tilde"] * dof_factor
+    se_cluster_only = res.bse["d_tilde"]
+    se = se_cluster_only * absorbed_fe_factor
     tstat = coef / se
     pval = 2 * (1 - stats.t.cdf(abs(tstat), df=df_t))
     t_crit = stats.t.ppf(0.975, df=df_t)
@@ -423,6 +432,8 @@ def estimate_fe_pairwise(df_sample, target_course, ref_course="geom", weights_co
         "n_clusters": n_clusters,
         "coef_pairwise": coef,
         "std_err": se,
+        "std_err_cluster_only": se_cluster_only,
+        "absorbed_fe_factor": absorbed_fe_factor,
         "t_stat": tstat,
         "p_value": pval,
         "ci_95_low": coef - t_crit * se,
@@ -643,12 +654,25 @@ def generate_analytical_figures(df_valid, df_res, df_wt, df_wedge):
         fliersize=1,
         boxprops=dict(alpha=0.8)
     )
+    
+    # Calculate and overlay actual enrollment-weighted means (Quantity C)
+    enr_means = []
+    for cname in order:
+        cg = df_23_full[df_23_full["course_name"] == cname]
+        em = (cg["num_enrolled"] * cg["mean_class_size"]).sum() / cg["num_enrolled"].sum() if cg["num_enrolled"].sum() > 0 else np.nan
+        enr_means.append(em)
+        
+    ax.scatter(range(len(order)), enr_means, color="#d90429", s=70, marker="*", zorder=5, label="Enrollment-Weighted Mean (Lower-Bound Proxy)")
+    
+    ax.set_xticks(range(len(order)))
     ax.set_xticklabels(order, rotation=25, ha="right")
     ax.set_xlabel("Secondary Course Offering")
     ax.set_ylabel("School-Course Mean Class Size")
     ax.set_title("Figure 2: Distribution of School-Course Mean Class Sizes Across Subjects (CRDC 2023–24)\n"
-                 "Yellow Diamonds = Enrollment-Weighted Mean (Lower-Bound Proxy); Solid Lines = Median", pad=15)
-    ax.legend(title="Curricular Tier", loc="upper right")
+                 "Yellow Diamonds = Course-Cell Mean (Unweighted); Red Stars = Enrollment-Weighted Mean; Solid Lines = Median", pad=15)
+    
+    handles, labels = ax.get_legend_handles_labels()
+    ax.legend(handles=handles, labels=labels, title="Legend", loc="upper right")
     ax.set_ylim(0, 45)
     
     plt.tight_layout()

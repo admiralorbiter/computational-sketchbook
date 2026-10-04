@@ -10,9 +10,15 @@ Strict empirical discipline requires explicitly defining what the available fede
 2. **Unobservable Section Dispersion:** CRDC cannot observe within-school variation among sections. A reported 6 sections averaging 30 students could represent:
    - Six perfectly uniform sections: $(30, 30, 30, 30, 30, 30)$;
    - Or wide variance across honors, remedial, and co-taught sections: $(20, 25, 28, 32, 35, 40)$.
-3. **The Lower-Bound Theorem:** By the within-cell variance decomposition $\sum s_{ij}^2 = K_i \bar s_i^2 + K_i \sigma_i^2$, whenever sections within a school differ in size ($\sigma_i^2 > 0$), the true student-experienced mean is strictly greater than the enrollment-weighted course-cell mean:
+3. **The Lower-Bound Theorem:** By the within-cell variance decomposition $\sum s_{ij}^2 = K_i \bar C_i^2 + K_i \sigma_i^2$, whenever sections within a school differ in size ($\sigma_i^2 > 0$), the true student-experienced mean is strictly greater than the enrollment-weighted course-cell mean:
    $$\bar C_{\text{true-student}} = \bar C_{\text{enr-wt}} + \frac{\sum_i K_i \sigma_i^2}{\sum_i E_i} \ge \bar C_{\text{enr-wt}}$$
-   Therefore, CRDC enrollment-weighted means represent a **mathematical lower bound** on student-experienced section size.
+   Therefore, CRDC enrollment-weighted means represent an **observable mathematical lower bound** on student-experienced section size.
+4. **Separation of Between-Cell and Within-Cell Variance:**
+   The observed gap between enrollment-weighted means ($C$) and section-weighted means ($B$) is:
+   $$C - B = \frac{\operatorname{Var}_K(\bar C_i)}{E_K(\bar C_i)}$$
+   reflecting section-weighted variance in mean class size across schools. In contrast, the unobservable gap between true student-experienced section size and the enrollment-weighted mean is:
+   $$C_{\text{true-student}} - C = \frac{\sum_i K_i \sigma_i^2}{\sum_i E_i}$$
+   reflecting within-cell section size variance. Both shifts are strictly non-negative, but they operate at distinct levels of aggregation.
 
 ---
 
@@ -64,4 +70,4 @@ Strict empirical discipline requires explicitly defining what the available fede
 ## 7. The 2023–24 Nonbinary Gender Classification (`_X`)
 
 1. **Category Expansion:** The 2023–24 CRDC introduced reporting for nonbinary students (`_X`) alongside male (`_M`) and female (`_F`).
-2. **Harmonization Architecture:** Pipeline extraction dynamically detects whether `_X` is reported and executes 3-way strict summation for 2023–24 while preserving 2-way summation for 2013–14 through 2021–22.
+2. **Exact Pipeline Behavior:** The pipeline dynamically inspects the `_X` series and converts negative reserve codes (e.g., `-10` uncollected, `-5` suppressed, `-9` missing) to `NaN`. If a file or wave contains exclusively uncollected/missing values for `_X` (as in pre-2023 waves), the pipeline drops `_X` from active demographic columns and evaluates completeness on `_M` and `_F`. In 2023–24, where `_X` contains active, reported counts, the pipeline requires completeness across all three active components (`_M`, `_F`, `_X`). If any active component is missing or suppressed, the total is treated as `NaN`.

@@ -158,4 +158,54 @@ The pre-registered hypotheses from `docs/research_design.md` are evaluated clean
 *(Note: Pre-registered hypotheses H5, H6, and H7 govern subsequent research phases: H5 covers teacher instructional load in Phase 4, H6 covers nonlinear capacity thresholds in Phase 9, and H7 covers causal class-size effect gradients in Phase 6).*
 
 ---
-*Phase 3.2 is certified complete. The repository is calibrated and ready for Phase 4.*
+
+## Section G: Erratum / Calibration Addendum (Phase 3.2a)
+
+Following the initial Phase 3.2 certification, a secondary precision audit identified seven expositional and statistical refinements. These have been incorporated across the codebase, documentation, analytical tables/figures, and interactive notebook without modifying the underlying raw data panel (`crdc_course_panel.parquet`):
+
+1. **Mathematical Grounding of the $C - B$ Weighting Gap:**
+   - **Between-Cell Variance:** The gap between the enrollment-weighted mean ($C$) and the section-weighted mean ($B$) is mathematically established as:
+     $$C - B = \frac{\operatorname{Var}_K(\bar C_i)}{E_K(\bar C_i)} \ge 0$$
+     where $E_K$ and $\operatorname{Var}_K$ denote expectation and variance weighted by section counts $K_i$. This gap (+4.0 to +5.5 students in core subjects) arises entirely from cross-school section size variance: students disproportionately occupy larger schools and courses with larger section averages.
+   - **Within-Cell Variance (Lower-Bound Property):** Unobserved section-level variance within a course cell ($\sigma_i^2 \ge 0$) produces an additional, distinct positive wedge:
+     $$\bar C_{\text{true-student}} - C = \frac{\sum_i K_i \sigma_i^2}{\sum_i E_i} \ge 0$$
+     This guarantees that $C$ is mathematically a lower-bound proxy for true student-experienced section size. The certification documents now strictly separate between-cell size bias from within-cell dispersion bias.
+
+2. **Absorbed-FE Finite-Sample Degrees-of-Freedom Adjustment:**
+   - The degree-of-freedom scaling factor applied to statsmodels cluster covariance matrices is formally designated as an **absorbed-FE finite-sample adjustment**:
+     $$c_{\text{df}} = \sqrt{\frac{N - K}{N - K - G_{\text{fe}}}}$$
+   - In the joint model ($N = 907,268$, $G = 144,302$), $c_{\text{df}} \approx 1.090$ (+9.0% SE expansion). In pairwise models ($N = 2G$), $c_{\text{df}} \approx \sqrt{2} \approx 1.414$ (+41.4% SE expansion).
+   - Both adjusted standard errors (`std_err`) and cluster-only standard errors (`std_err_cluster_only`) are now explicitly reported side-by-side in `table04` and `table04b`. In both specifications, all curriculum hierarchy conclusions for advanced electives (Calculus, Physics, Advanced Math) remain statistically significant at $p < 0.001$.
+
+3. **Figure 2 Visual Labeling & Explicit Overlay:**
+   - Figure 2 has been updated. Seaborn's `sns.boxplot(..., showmeans=True)` displays the unweighted course-cell mean (Quantity $A$, yellow diamonds).
+   - Figure 2 now explicitly overlays the enrollment-weighted mean (Quantity $C$, lower-bound proxy) as red stars (`★`) via `ax.scatter`, providing an immediate visual comparison between institutional offerings and student exposure across all eight subjects.
+
+4. **Calibration of PTR Prose:**
+   - Textual references in executive summaries and descriptive sections have been calibrated away from informal shorthand like "actual class size" to:
+     *"CRDC-derived school-course mean sizes exceed campus PTR..."* or specifying the exact estimand under consideration.
+
+5. **Benchmarking Table Precision (Table 1):**
+   - Removed "(Universal 2023–24 Benchmark)" from the global table title.
+   - Added explicit data sources and survey years to each row: CRDC 2023–24 universal collection for course, section, and student metrics; NCES NTPS 2020–21 for surveyed teacher class size.
+   - Reconciled the 21.0–23.3 teacher range: departmentalized secondary teachers report average class sizes of 21.0 to 23.3/24.2, aligning closely with CRDC enrollment-weighted core courses (19.1–20.3) and substantially exceeding CRDC unweighted course-cell averages (15.0–15.4).
+
+6. **Strict Nonbinary Gender Classification (`_X`) Pipeline Behavior:**
+   - Documented exact code execution: the harmonization pipeline dynamically inspects whether `_X` columns exist and contain non-null values. If absent or not collected (as in 2013–14 through 2021–22), the column is dropped prior to complete-case enforcement. Three-way completeness (`M + F + X`) is enforced strictly in 2023–24 where the classification was actively collected.
+
+7. **Equal Weighting vs. Enrollment Weighting Framing:**
+   - Calibrated language across all artifacts: *"Equal weighting of school-course cells produces substantially lower estimates than enrollment weighting. Neither estimand is incorrect; they answer different questions: the unweighted cell mean reflects institutional course offerings, whereas the enrollment-weighted mean reflects the student-experienced instructional environment."*
+
+---
+
+## Section H: Phase 0–3.2 Final Freeze & Transition to Phase 4
+
+With Phase 3.2a complete:
+- The entire empirical foundation for Study A (Classroom Size Measurement) is verified, reproducible, and internally consistent.
+- `crdc_course_panel.parquet` (924,846 records) is locked.
+- Analytical tables (Tables 01–06, 04b) and figures (Figures 01–05) are finalized.
+- All 19 unit and integration tests pass cleanly.
+
+**Phase 0 through Phase 3.2 are officially FROZEN.**  
+The repository is cleared to initiate **Phase 4: Instructional-Load Panel Construction (Study B)**.
+

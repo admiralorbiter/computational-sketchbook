@@ -29,44 +29,45 @@ where $M$ is the number of active school-course cells.
 Answers: **"What is the average size of an offered class section?"**
 Weights each school-course cell by its reported section count $K_i$:
 
-$$\bar C_{\text{sec-wt}} = \frac{\sum_{i=1}^M K_i \bar C_i}{\sum_{i=1}^M K_i} = \frac{\sum_{i=1}^M E_i}{\sum_{i=1}^M K_i}$$
+$$\bar C_{\text{sec-wt}} = \frac{\sum_{i=1}^M K_i \bar C_i}{\sum_{i=1}^M K_i} = \frac{\sum_{i=1}^M E_i}{\sum_{i=1}^M K_i} = E_K[\bar C_i]$$
 
 *(Note: This is strictly section-weighted, NOT teacher-weighted. Teacher-reported class size requires survey instruments such as SASS/NTPS where individual educators report their own class rosters.)*
 
-#### Quantity C: Enrollment-Weighted Course-Cell Mean (Lower-Bound Proxy)
+#### Quantity C: Enrollment-Weighted Course-Cell Mean (Observable Lower-Bound Proxy)
 Answers: **"What is the average school-course mean experienced by an enrolled student?"**
 Weights each school-course cell by its student enrollment $E_i$:
 
-$$\bar C_{\text{enr-wt}} = \frac{\sum_{i=1}^M E_i \bar C_i}{\sum_{i=1}^M E_i} = \frac{\sum_{i=1}^M \frac{E_i^2}{K_i}}{\sum_{i=1}^M E_i}$$
+$$\bar C_{\text{enr-wt}} = \frac{\sum_{i=1}^M E_i \bar C_i}{\sum_{i=1}^M E_i} = \frac{\sum_{i=1}^M \frac{E_i^2}{K_i}}{\sum_{i=1}^M E_i} = \frac{E_K[\bar C_i^2]}{E_K[\bar C_i]}$$
 
-### 1.3 The Lower-Bound Theorem (Within-Cell Jensen's Inequality)
+### 1.3 Two Mathematically Distinct Variance Effects
 
-CRDC publishes aggregate school-course totals $(E_i, K_i)$ rather than section-by-section rosters $s_{i1}, s_{i2}, \dots, s_{iK_i}$. 
+A critical clarification established in Phase 3.2 is that the total gap between class-section sizes and student experiences consists of two mathematically separate variance components:
 
-**Theorem:**  
-Whenever sections within a school-course cell vary in size, the enrollment-weighted course-cell mean $\bar C_{\text{enr-wt}}$ is a strict mathematical lower bound on the true student-experienced section size $\bar C_{\text{true-student}}$.
+#### 1. Between-Cell Size Dispersion (Observable $C - B$ Gap):
+The gap between the enrollment-weighted mean ($C$) and the section-weighted mean ($B$) reflects variance in mean section size **across school-course cells**, weighted by section counts $K_i$:
 
-**Proof:**  
-Let school-course cell $i$ contain $K_i$ sections of sizes $s_{ij}$ for $j = 1, \dots, K_i$, with $\sum_{j=1}^{K_i} s_{ij} = E_i$.  
-The cell mean is $\bar s_i = \frac{E_i}{K_i}$.  
-The true student-experienced mean across all sections is:
+$$C - B = \frac{E_K[\bar C_i^2] - (E_K[\bar C_i])^2}{E_K[\bar C_i]} = \frac{\operatorname{Var}_K(\bar C_i)}{E_K[\bar C_i]} \ge 0$$
+
+where $\operatorname{Var}_K(\bar C_i)$ is the section-weighted variance of cell means across schools.  
+**Conceptual Meaning:** Students are disproportionately enrolled in schools and courses with larger average section sizes. This between-cell sorting mechanically drives $C$ above $B$ by $+4.0$ to $+5.5$ students (+24% to +39%) in national secondary courses.
+
+#### 2. Within-Cell Unobserved Dispersion (The Lower-Bound Property $C_{\text{true-student}} - C$):
+Let school-course cell $i$ contain $K_i$ sections of sizes $s_{ij}$ for $j = 1, \dots, K_i$, with $\sum_{j=1}^{K_i} s_{ij} = E_i$. The true student-experienced mean across all individual classroom sections is:
+
 $$\bar C_{\text{true-student}} = \frac{\sum_{i=1}^M \sum_{j=1}^{K_i} s_{ij}^2}{\sum_{i=1}^M E_i}$$
 
-By the variance decomposition for section sizes within cell $i$:
-$$\sum_{j=1}^{K_i} s_{ij}^2 = K_i \bar s_i^2 + K_i \sigma_i^2$$
-where $\sigma_i^2 = \frac{1}{K_i} \sum_{j=1}^{K_i} (s_{ij} - \bar s_i)^2 \ge 0$ is the within-cell section variance.
+By the within-cell section variance decomposition $\sum_{j=1}^{K_i} s_{ij}^2 = K_i \bar C_i^2 + K_i \sigma_i^2$ where $\sigma_i^2 = \frac{1}{K_i} \sum_{j=1}^{K_i} (s_{ij} - \bar C_i)^2 \ge 0$:
 
-Summing across all cells:
-$$\bar C_{\text{true-student}} = \frac{\sum_{i=1}^M (K_i \bar s_i^2 + K_i \sigma_i^2)}{\sum_{i=1}^M E_i} = \frac{\sum_{i=1}^M \frac{E_i^2}{K_i}}{\sum_{i=1}^M E_i} + \frac{\sum_{i=1}^M K_i \sigma_i^2}{\sum_{i=1}^M E_i} = \bar C_{\text{enr-wt}} + \frac{\sum_{i=1}^M K_i \sigma_i^2}{\sum_{i=1}^M E_i}$$
+$$\bar C_{\text{true-student}} - C = \frac{\sum_{i=1}^M K_i \sigma_i^2}{\sum_{i=1}^M E_i} \ge 0$$
 
-Since $\sigma_i^2 \ge 0$ for all $i$:
-$$\bar C_{\text{true-student}} \ge \bar C_{\text{enr-wt}}$$
-with strict inequality whenever any school operates sections of unequal size (e.g., an honors section of 28 alongside an intervention section of 14).
+$$\therefore \bar C_{\text{true-student}} \ge \bar C_{\text{enr-wt}}$$
+
+**Conceptual Meaning:** Unobserved section size dispersion within the same school-course cell (e.g., an honors section of 28 alongside an intervention section of 14) further shifts true student experience strictly above $C$. Thus, $\bar C_{\text{enr-wt}}$ is an **observable mathematical lower bound** on true student-experienced section size.
 
 ### 1.4 Three Distinct Weighting Gaps
-- **Gap $C - A$ ($+3.7$ to $+7.0$ students nationally):** Total gap between enrollment-weighted lower bound and unweighted cell mean. Driven jointly by cross-school enrollment concentration and section counts.
-- **Gap $C - B$ ($+4.0$ to $+5.5$ students nationally):** Jensen's inequality gap between enrollment weighting and section weighting. Driven by cross-school variance in section sizes.
-- **Gap $B - A$ ($-0.8$ to $+1.5$ students nationally):** Difference between section-weighted and unweighted cell mean. Driven by the correlation between school section counts and average class sizes.
+- **Gap $C - A$ ($+3.7$ to $+7.0$ students nationally, +26% to +56%):** Divergence between enrollment-weighted lower bound and unweighted cell mean. Equal weighting of school-course cells produces substantially lower estimates than enrollment weighting because small, single-section rural schools receive equal weight to large multi-section suburban high schools. Neither estimand is incorrect; they answer different questions.
+- **Gap $C - B$ ($+4.0$ to $+5.5$ students nationally, +24% to +39%):** Between-cell variance gap $\frac{\operatorname{Var}_K(\bar C_i)}{E_K[\bar C_i]}$.
+- **Gap $B - A$ ($-0.8$ to $+1.5$ students nationally, -6% to +12%):** Difference between section-weighted and unweighted cell means, capturing the covariance between section count $K_i$ and cell mean $\bar C_i$.
 
 ---
 
@@ -97,7 +98,8 @@ where:
 - $\alpha_{st}$ are school $\times$ wave fixed effects, absorbing campus scale, facility constraints, staffing formulas, and local enrollment shocks;
 - $\gamma_c$ are course fixed effects estimated relative to **Geometry** as the reference course;
 - Non-informative groups (school-waves offering fewer than 2 distinct courses) are strictly filtered out;
-- Standard errors are clustered at the school campus level ($s$), with degree-of-freedom scaling $c_{\text{df}} = \sqrt{\frac{N - K}{N - K - G}}$ where $G$ is the number of absorbed fixed effects;
+- Standard errors are clustered at the school campus level ($s$);
+- An **absorbed-FE finite-sample adjustment** $c_{\text{df}} = \sqrt{\frac{N - K}{N - K - G}}$ is applied to account for the $G$ absorbed fixed-effects dimensions not subtracted by default demeaned cluster covariance;
 - Statistical inference uses Student's $t$ distribution with $df = G_{\text{clusters}} - 1$.
 
 ### 3.2 Pairwise Geometry Robustness Models
@@ -112,12 +114,12 @@ To ensure that longitudinal trajectories and post-pandemic plateaus are not arti
 
 ---
 
-## 4. Contemporary Benchmarks on Secondary Class Size
+## 4. Contemporary Benchmarks on Secondary Class Size Across Perspectives
 
-| Perspective | Data Source | Metric Definition | Target Estimand | Typical Range |
-| :--- | :--- | :--- | :--- | :--- |
-| **Macro Staffing Ratio** | NCES CCD (Annual) | Total Enrolled / Total FTE Teachers | Campus Resource Ratio | 14.5 – 16.5 |
-| **Institutional Offering Mean** | CRDC (Biennial Census) | Unweighted Mean of Course Cells ($\bar C_{\text{cell}}$) | Average Course Offering | 13.5 – 15.5 |
-| **Class Section Mean** | CRDC (Biennial Census) | Section-Weighted Mean ($\sum E / \sum K$) | Average Section Size | 14.0 – 16.5 |
-| **Student-Experienced Lower Bound** | CRDC (Biennial Census) | Enrollment-Weighted Mean ($\sum E \bar C / \sum E$) | Lower-Bound Student Experience | 18.5 – 20.5 |
-| **Teacher-Reported Class Size** | NCES NTPS / SASS | Self-Reported Period / Class Roster | Individual Educator Load | 22.0 – 26.0 |
+| Perspective | Data Source & Survey Year | Metric Definition | Target Estimand | Typical Range |
+| :--- | :--- | :--- | :--- | :---: |
+| **1. Macro Staffing Ratio** | NCES CCD (Annual 2023–24) | Total Enrolled / Total FTE Teachers | Campus Resource Ratio | **14.5 – 16.5** |
+| **2. Institutional Offering Mean** | CRDC (2023–24 Universal Census) | Unweighted Mean of Course Cells ($\bar C_{\text{cell}}$) | Average Course Offering | **15.0 – 15.4** |
+| **3. Class Section Mean** | CRDC (2023–24 Universal Census) | Section-Weighted Mean ($\sum E / \sum K$) | Average Section Size | **15.0 – 16.3** |
+| **4. Student-Experienced Lower Bound** | CRDC (2023–24 Universal Census) | Enrollment-Weighted Mean ($\sum E \bar C / \sum E$) | Lower-Bound Student Experience | **19.1 – 20.3** |
+| **5. Teacher-Reported Class Size** | NCES NTPS (2020–21 Survey) | Self-Reported Period / Class Roster | Individual Educator Load | **21.0 – 23.3** |

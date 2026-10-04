@@ -53,7 +53,7 @@ This metric is **never** referred to as "section size." CRDC reports the total a
 - **Pandemic Discontinuity:** The 2020–21 collection occurred during widespread school closures, hybrid instruction, and remote scheduling. It must be treated as an institutional discontinuity rather than an ordinary point on a secular trend.
 
 ### 3.4 2023–24 Wave (Released August 31, 2026)
-- **Nonbinary Demographic Category:** OCR introduced a third sex reporting category `_X` (Nonbinary). Total course enrollment formulas must incorporate `TOT_*_M + TOT_*_F + TOT_*_X`.
+- **Nonbinary Demographic Category (`_X`):** OCR introduced a third sex reporting category `_X` (Nonbinary). The pipeline inspects `_X` and converts negative reserve codes (`-10` uncollected, `-5` suppressed, `-9` missing) to `NaN`. If a file or wave contains exclusively uncollected/missing values for `_X` (as in pre-2023 waves), `_X` is dropped from active demographic columns and complete-case evaluation runs on `_M` and `_F`. In 2023–24, where `_X` contains active reported counts, complete-case completeness is strictly required across all active components (`_M`, `_F`, `_X`).
 
 ---
 
