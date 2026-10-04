@@ -6,5 +6,5 @@ National Benchmark (Verbatim NCES),21.0,22.0,19.1,Published national population 
 75th Percentile (P75),21.8,23.1,19.35,Upper quartile threshold
 Minimum State,13.4,14.2,14.2,Lowest state: Maine (13.4)
 Maximum State,27.6,27.5,23.0,Highest state: Nevada (27.6)
-Missouri State Average,19.2,18.5,18.2,State rank: 33 of 51 (Lower-middle distribution)
-Kansas State Average,17.4,19.8,17.9,State rank: 40 of 51 (Bottom decile nationally)
+Missouri State Average,19.2,18.5,18.2,"State rank: 33 of 51 (Lower-middle distribution, below state median of 20.00)"
+Kansas State Average,17.4,19.8,17.9,"State rank: 40 of 51 (Lower quartile, below P25 threshold of 17.80)"

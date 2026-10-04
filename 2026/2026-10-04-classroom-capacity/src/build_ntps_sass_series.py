@@ -465,7 +465,13 @@ def build_canonical_series():
             "source_table": "NCES NTPS 2020-21 Table 7", "evidence_class": "Class 1: Measured / Published Survey Statistic"
         })
 
-    # --- H. Secondary Subject-Specific Benchmarks (2020-21 NTPS Calibration) ---
+    # Save Canonical Harmonized Series (Authentic Published Statistics Only)
+    df_canonical = pd.DataFrame(canonical_rows)
+    canonical_path = os.path.join(PROCESSED_DIR, "ntps_sass_class_size_series.csv")
+    df_canonical.to_csv(canonical_path, index=False)
+    print(f"Saved canonical SASS/NTPS class size series -> {canonical_path} ({len(df_canonical)} authentic published records)")
+
+    # Optional: Save Analyst Subject Scenarios in a clearly distinguished separate file
     subject_weights = [
         {"subject": "Mathematics", "multiplier": 1.10, "notes": "Core graduation requirement; balanced tracks"},
         {"subject": "Science", "multiplier": 1.12, "notes": "Lab safety caps typically 24-28"},
@@ -476,32 +482,32 @@ def build_canonical_series():
         {"subject": "Career & Tech Ed (CTE)", "multiplier": 0.83, "notes": "Shop, culinary, lab safety caps"},
         {"subject": "Special Education (Resource)", "multiplier": 0.45, "notes": "Pull-out departmentalized sections"}
     ]
-    
     geo_bases = [
         {"geography": "United States", "state_fips": "US", "base_mean": 21.0},
         {"geography": "Missouri", "state_fips": "29", "base_mean": 19.2},
         {"geography": "Kansas", "state_fips": "20", "base_mean": 17.4},
     ]
-    
+    scenario_rows = []
     for g in geo_bases:
         for sw in subject_weights:
             subj_mean = round(g["base_mean"] * sw["multiplier"], 1)
-            canonical_rows.append({
-                "survey_cycle": "2020-21 (NTPS)", "survey_program": "NTPS", "school_year": "2020-21", "year": 2021,
-                "geography": g["geography"], "state_fips": g["state_fips"], "school_level": "High School",
-                "instructional_type": "Departmentalized", "subject": sw["subject"],
-                "class_size_mean": subj_mean, "class_size_se": np.nan, "reporting_flag": "",
-                "estimand_definition": f"Subject-specific departmentalized estimate ({sw['notes']})",
-                "sample_representation": "National Population" if g["geography"] == "United States" else "State Population",
-                "source_table": "NCES NTPS Table 7 & SASS/NTPS Subject Ratios", "evidence_class": "Class 3: Derived Subject Benchmark"
+            scenario_rows.append({
+                "scenario_type": "Analyst Subject Ratio Projection",
+                "survey_base_cycle": "2020-21 (NTPS)",
+                "geography": g["geography"], "state_fips": g["state_fips"],
+                "subject": sw["subject"], "multiplier": sw["multiplier"],
+                "projected_class_size_mean": subj_mean,
+                "notes": sw["notes"],
+                "evidence_class": "Class 3: Analyst Scenario Projection (Not Published NCES Data)"
             })
-
-    df_canonical = pd.DataFrame(canonical_rows)
-    canonical_path = os.path.join(PROCESSED_DIR, "ntps_sass_class_size_series.csv")
-    df_canonical.to_csv(canonical_path, index=False)
-    print(f"Saved canonical SASS/NTPS class size series -> {canonical_path} ({len(df_canonical)} records)")
+    df_scenarios = pd.DataFrame(scenario_rows)
+    scenario_path = os.path.join(PROCESSED_DIR, "analyst_subject_scenarios.csv")
+    df_scenarios.to_csv(scenario_path, index=False)
+    print(f"Saved analyst subject scenarios -> {scenario_path} ({len(df_scenarios)} records)")
+    
     return df_canonical
 
 
 if __name__ == "__main__":
     build_canonical_series()
+

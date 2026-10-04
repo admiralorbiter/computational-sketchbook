@@ -1,7 +1,7 @@
-school_year,crdc_wave,ccd_macro_ptr,crdc_unweighted_cell_mean,crdc_section_weighted_mean,crdc_student_weighted_mean,ntps_teacher_hs_dept,ntps_teacher_elem_self,weighting_gap_c_minus_b,ptr_wedge_c_minus_ptr,survey_crdc_alignment_d_minus_c
-2013-14,2013-14,16.1,17.4,16.9,22.14,,,4.74,6.04,
-2015-16,2015-16,16.1,17.61,17.85,22.64,26.0,,5.03,6.54,3.36
-2017-18,2017-18,16.0,16.69,17.38,21.51,23.3,,4.82,5.51,1.79
-2020-21,2020-21,15.4,15.42,15.5,20.1,21.0,19.1,4.68,4.7,0.9
-2021-22,2021-22,15.4,15.52,15.47,20.43,,,4.91,5.03,
-2023-24,2023-24,15.3,15.36,15.46,20.01,,,4.65,4.71,
+school_year,crdc_wave,ccd_macro_ptr,crdc_unweighted_cell_mean,crdc_section_weighted_mean,crdc_student_weighted_mean,ntps_teacher_hs_dept,ntps_teacher_elem_self,gap_c_minus_a,weighting_gap_c_minus_b,ptr_wedge_c_minus_ptr,survey_crdc_gap_ntps_minus_c,survey_ptr_gap_ntps_minus_ptr
+2013-14,2013-14,16.1,17.4,16.9,22.14,,,4.74,5.24,6.04,,
+2015-16,2015-16,16.1,17.61,17.85,22.64,26.0,,5.03,4.79,6.54,3.36,9.9
+2017-18,2017-18,16.0,16.69,17.38,21.51,23.3,,4.82,4.12,5.51,1.79,7.3
+2020-21,2020-21,15.4,15.42,15.5,20.1,21.0,19.1,4.68,4.6,4.7,0.9,5.6
+2021-22,2021-22,15.4,15.52,15.47,20.43,,,4.91,4.95,5.03,,
+2023-24,2023-24,15.3,15.36,15.46,20.01,,,4.65,4.55,4.71,,
