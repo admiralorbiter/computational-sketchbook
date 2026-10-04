@@ -47,7 +47,7 @@ def clean_series(series):
     s_num = pd.to_numeric(series, errors="coerce")
     return s_num.where(s_num >= 0, np.nan)
 
-def sum_clean_series(*series_list, require_complete=False):
+def sum_clean_series(*series_list, require_complete=True):
     """
     Sum a list of pandas series element-wise.
     - If require_complete=True, any row with partial missingness among active columns

@@ -99,9 +99,9 @@ def extract_modular_wave(sy, wave, course_file_map, has_nonbinary=False, zip_nam
                     sids_enr = clean_combokey(df_enr["COMBOKEY"]) if "COMBOKEY" in df_enr.columns else clean_combokey(None, df_enr["LEAID"], df_enr["SCHID"])
                     if "TOT_ENR_M" in df_enr.columns:
                         if has_nonbinary and "TOT_ENR_X" in df_enr.columns:
-                            tot = sum_clean_series(df_enr["TOT_ENR_M"], df_enr["TOT_ENR_F"], df_enr["TOT_ENR_X"])
+                            tot = sum_clean_series(df_enr["TOT_ENR_M"], df_enr["TOT_ENR_F"], df_enr["TOT_ENR_X"], require_complete=True)
                         else:
-                            tot = sum_clean_series(df_enr["TOT_ENR_M"], df_enr["TOT_ENR_F"])
+                            tot = sum_clean_series(df_enr["TOT_ENR_M"], df_enr["TOT_ENR_F"], require_complete=True)
                         school_support["enr"] = dict(zip(sids_enr, tot))
 
     # 2. Extract each course
@@ -139,7 +139,7 @@ def extract_modular_wave(sy, wave, course_file_map, has_nonbinary=False, zip_nam
         cls_clean = clean_series(df[cls_var]) if cls_var in df.columns else pd.Series(np.nan, index=df.index)
         
         enr_series_list = [df[col] for col in enr_vars if col in df.columns]
-        enr_clean = sum_clean_series(*enr_series_list) if enr_series_list else pd.Series(np.nan, index=df.index)
+        enr_clean = sum_clean_series(*enr_series_list, require_complete=True) if enr_series_list else pd.Series(np.nan, index=df.index)
         
         # Valid active course cells: classes > 0 and enrollment > 0
         active_mask = (cls_clean > 0) & (enr_clean > 0)
@@ -205,7 +205,7 @@ def extract_2015_16():
     sname = df["SCH_NAME"].astype(str).str.strip()
     leaname = df["LEA_NAME"].astype(str).str.strip()
     
-    tot_enr = sum_clean_series(df["TOT_ENR_M"], df["TOT_ENR_F"])
+    tot_enr = sum_clean_series(df["TOT_ENR_M"], df["TOT_ENR_F"], require_complete=True)
     tot_fte = clean_series(df["SCH_FTETEACH_TOT"])
     ptr = np.where((tot_fte > 0) & (tot_enr > 0), tot_enr / tot_fte, np.nan)
     
@@ -226,7 +226,7 @@ def extract_2015_16():
         cls_var, enr_vars = c_map[ccode]
         
         cls_clean = clean_series(df[cls_var])
-        enr_clean = sum_clean_series(*[df[col] for col in enr_vars])
+        enr_clean = sum_clean_series(*[df[col] for col in enr_vars], require_complete=True)
         
         active_mask = (cls_clean > 0) & (enr_clean > 0)
         
@@ -255,15 +255,29 @@ def extract_2015_16():
 
 def extract_2013_14():
     """
-    Extract 2013-14 CRDC wave. Uses cached intermediate parquet if present;
+    Extract 2013-14 CRDC wave. Uses versioned cached intermediate parquet if present;
     otherwise extracts from 2013-14 Excel files and caches.
+    Strict missingness: If any required enrollment component is missing, suppressed (-5),
+    or a negative reserve code (-9, -11, etc.), the course enrollment is considered incomplete
+    and excluded from active course cells.
     """
-    cache_path = DATA_INTERMEDIATE / "crdc_2013_14_active.parquet"
+    CACHE_VERSION = "v2_strict"
+    cache_path = DATA_INTERMEDIATE / f"crdc_2013_14_active_{CACHE_VERSION}.parquet"
+    
+    # Invalidate and delete unversioned/legacy cache if present
+    legacy_cache = DATA_INTERMEDIATE / "crdc_2013_14_active.parquet"
+    if legacy_cache.exists():
+        try:
+            legacy_cache.unlink()
+            print(f"--> Invalidated and deleted legacy cache: {legacy_cache}")
+        except Exception as e:
+            print(f"Warning: could not delete {legacy_cache}: {e}")
+            
     if cache_path.exists():
-        print("--> Loading cached 2013-14 active course records from intermediate parquet...")
+        print(f"--> Loading cached 2013-14 active course records ({CACHE_VERSION}) from intermediate parquet...")
         return pd.read_parquet(cache_path)
         
-    print("--> Extracting 2013-14 CRDC wave from Excel files (initial run, will cache)...")
+    print(f"--> Extracting 2013-14 CRDC wave from Excel files with strict missingness ({CACHE_VERSION}, will cache)...")
     import openpyxl
     p = RAW_CRDC_DIR / "2013-2014"
     records = []
@@ -292,7 +306,7 @@ def extract_2013_14():
     
     for ccode, fpath, cls_var, enr_vars in files_to_process:
         cspec = cspec_map[ccode]
-        print(f"    Extracting 2013-14 {cspec['name']}...")
+        print(f"    Extracting 2013-14 {cspec['name']} with strict missingness...")
         wb = openpyxl.load_workbook(fpath, read_only=True)
         sheet = wb.active
         rows = sheet.iter_rows(values_only=True)
@@ -312,16 +326,23 @@ def extract_2013_14():
             try:
                 fc = float(c_val)
                 if fc > 0:
+                    is_complete = True
                     enr_sum = 0.0
-                    has_valid_enr = False
                     for i in idx_enr:
                         val = r[i]
-                        if val is not None:
+                        if val is None or str(val).strip() == "":
+                            is_complete = False
+                            break
+                        try:
                             fv = float(val)
-                            if fv >= 0:
-                                enr_sum += fv
-                                has_valid_enr = True
-                    if has_valid_enr and enr_sum > 0:
+                            if fv < 0:
+                                is_complete = False
+                                break
+                            enr_sum += fv
+                        except (ValueError, TypeError):
+                            is_complete = False
+                            break
+                    if is_complete and enr_sum > 0:
                         sid = str(r[idx_leaid]).zfill(7) + str(r[idx_schid]).zfill(5)
                         lid = str(r[idx_leaid]).zfill(7)
                         c_recs.append({

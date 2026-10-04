@@ -89,6 +89,14 @@ def parse_clean_numeric(val):
         return np.nan
 
 
+def parse_clean_mpi(val):
+    """Converts raw MPI to float; scores below 100 (e.g. 0.0 placeholders in non-tested grades) are set to NaN."""
+    num = parse_clean_numeric(val)
+    if pd.isna(num) or num < 100.0:
+        return np.nan
+    return num
+
+
 def harmonize_apr():
     """Harmonizes APR Summary and Supporting datasets for 2022-2025."""
     build_variable_crosswalk()
@@ -132,7 +140,8 @@ def harmonize_apr():
         else:  # 2022
             df_sum["apr_points_possible"] = df_sum["TOTAL_POINTS_POSSIBLE"].apply(parse_clean_numeric)
             df_sum["apr_points_earned"] = df_sum["TOTAL_POINTS_EARNED"].apply(parse_clean_numeric)
-            df_sum["apr_pct"] = df_sum["PERCENT_POINTS_EARNED"].apply(parse_clean_numeric)
+            # In 2022, PERCENT_POINTS_EARNED is a proportion (0-1), scale to 0-100 to match 2023-2025
+            df_sum["apr_pct"] = df_sum["PERCENT_POINTS_EARNED"].apply(parse_clean_numeric) * 100.0
             df_sum["performance_points_possible"] = np.nan
             df_sum["performance_points_earned"] = np.nan
             df_sum["performance_points_pct"] = np.nan
@@ -142,10 +151,10 @@ def harmonize_apr():
 
         # Canonicalize supporting fields
         if yr in [2023, 2024, 2025]:
-            df_sup["ela_status_mpi"] = df_sup["ELA_ALL_STATUS_MPI"].apply(parse_clean_numeric)
-            df_sup["math_status_mpi"] = df_sup["MATH_ALL_STATUS_MPI"].apply(parse_clean_numeric)
-            df_sup["science_status_mpi"] = df_sup["SCIENCE_ALL_STATUS_MPI"].apply(parse_clean_numeric)
-            df_sup["soc_stud_status_mpi"] = df_sup["SOC_STUD_ALL_STATUS_MPI"].apply(parse_clean_numeric)
+            df_sup["ela_status_mpi"] = df_sup["ELA_ALL_STATUS_MPI"].apply(parse_clean_mpi)
+            df_sup["math_status_mpi"] = df_sup["MATH_ALL_STATUS_MPI"].apply(parse_clean_mpi)
+            df_sup["science_status_mpi"] = df_sup["SCIENCE_ALL_STATUS_MPI"].apply(parse_clean_mpi)
+            df_sup["soc_stud_status_mpi"] = df_sup["SOC_STUD_ALL_STATUS_MPI"].apply(parse_clean_mpi)
 
             df_sup["ela_status_pts_earned"] = df_sup["ELA_ALL_STATUS_POINTS_EARNED"].apply(parse_clean_numeric)
             df_sup["ela_status_pts_possible"] = df_sup["ELA_ALL_STATUS_POINTS_POSSIBLE"].apply(parse_clean_numeric)
@@ -186,10 +195,10 @@ def harmonize_apr():
             df_sup["ela_growth_zscore"] = np.nan
             df_sup["math_growth_zscore"] = np.nan
         else:  # 2022
-            df_sup["ela_status_mpi"] = df_sup["ALL_ELA_CURR_MPI"].apply(parse_clean_numeric)
-            df_sup["math_status_mpi"] = df_sup["ALL_MATH_CURR_MPI"].apply(parse_clean_numeric)
-            df_sup["science_status_mpi"] = df_sup["ALL_SCIENCE_CURR_MPI"].apply(parse_clean_numeric)
-            df_sup["soc_stud_status_mpi"] = df_sup["ALL_SOC_STUD_CURR_MPI"].apply(parse_clean_numeric)
+            df_sup["ela_status_mpi"] = df_sup["ALL_ELA_CURR_MPI"].apply(parse_clean_mpi)
+            df_sup["math_status_mpi"] = df_sup["ALL_MATH_CURR_MPI"].apply(parse_clean_mpi)
+            df_sup["science_status_mpi"] = df_sup["ALL_SCIENCE_CURR_MPI"].apply(parse_clean_mpi)
+            df_sup["soc_stud_status_mpi"] = df_sup["ALL_SOC_STUD_CURR_MPI"].apply(parse_clean_mpi)
 
             df_sup["ela_status_pts_earned"] = np.nan
             df_sup["ela_status_pts_possible"] = np.nan
