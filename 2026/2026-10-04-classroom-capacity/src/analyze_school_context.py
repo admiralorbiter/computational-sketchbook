@@ -551,32 +551,42 @@ def plot_fig_b02(df):
 def plot_fig_b03(df):
     """
     Figure B3: Pre-COVID vs Post-COVID Distribution of Chronic Absenteeism in Secondary Schools.
-    Compares 2017-18 to 2021-22 under consistent post-2016 EDFacts definition (>=10% of days).
+    Compares 2017-18 to 2021-22 in the matched balanced panel (N=20,075 schools) under consistent post-2016 EDFacts definition.
     """
     print("--> Rendering Figure B03: Chronic Absenteeism Distribution Shift...")
     sec = df[df["in_class_size_panel"] & df["crdc_wave"].isin(["2017-18", "2021-22"])].copy()
     
+    # Restrict to matched panel: schools observed with valid EDFacts counts in both waves
+    s17 = set(sec[(sec["crdc_wave"] == "2017-18") & sec["edfacts_absent_10pct_count"].notna() & (sec["school_enrollment"] > 0)]["nces_school_id"])
+    s21 = set(sec[(sec["crdc_wave"] == "2021-22") & sec["edfacts_absent_10pct_count"].notna() & (sec["school_enrollment"] > 0)]["nces_school_id"])
+    matched_edf_sids = s17.intersection(s21)
+    
+    sec_matched = sec[sec["nces_school_id"].isin(matched_edf_sids)].copy()
+    
     fig, ax = plt.subplots(figsize=(9, 5))
     
-    sub17 = sec[(sec["crdc_wave"] == "2017-18") & sec["pct_chronic_absent_clean"].notna()]["pct_chronic_absent_clean"]
-    sub21 = sec[(sec["crdc_wave"] == "2021-22") & sec["pct_chronic_absent_clean"].notna()]["pct_chronic_absent_clean"]
+    sub17 = sec_matched[(sec_matched["crdc_wave"] == "2017-18") & sec_matched["pct_chronic_absent_clean"].notna()]["pct_chronic_absent_clean"]
+    sub21 = sec_matched[(sec_matched["crdc_wave"] == "2021-22") & sec_matched["pct_chronic_absent_clean"].notna()]["pct_chronic_absent_clean"]
     
-    sns.kdeplot(sub17, ax=ax, color="#1f77b4", linewidth=2.5, label=f"Pre-COVID (2017–18): Clean Median = {sub17.median():.1f}%", clip=(0, 100))
-    sns.kdeplot(sub21, ax=ax, color="#d62728", linewidth=2.5, label=f"Post-COVID (2021–22): Clean Median = {sub21.median():.1f}%", clip=(0, 100))
+    med17 = sub17.median()
+    med21 = sub21.median()
     
-    ax.axvline(sub17.median(), color="#1f77b4", linestyle="--", alpha=0.7)
-    ax.axvline(sub21.median(), color="#d62728", linestyle="--", alpha=0.7)
+    sns.kdeplot(sub17, ax=ax, color="#1f77b4", linewidth=2.5, label=f"Pre-COVID (2017–18): Clean Median = {med17:.2f}%", clip=(0, 100))
+    sns.kdeplot(sub21, ax=ax, color="#d62728", linewidth=2.5, label=f"Post-COVID (2021–22): Clean Median = {med21:.2f}%", clip=(0, 100))
     
-    # Highlight threshold >= 30%
-    ax.axvline(30, color="gray", linestyle=":", alpha=0.8, label="Severe Disruption Threshold (≥30%)")
+    ax.axvline(med17, color="#1f77b4", linestyle="--", alpha=0.7)
+    ax.axvline(med21, color="#d62728", linestyle="--", alpha=0.7)
+    
+    # Analyst reference threshold at 30%
+    ax.axvline(30, color="gray", linestyle=":", alpha=0.8, label="Analyst reference: 30%")
     
     pct_gt30_17 = (sub17 >= 30).mean() * 100
     pct_gt30_21 = (sub21 >= 30).mean() * 100
     
-    ax.text(32, ax.get_ylim()[1]*0.8, f"Schools ≥30% Absent:\n  2017–18: {pct_gt30_17:.1f}%\n  2021–22: {pct_gt30_21:.1f}% (+{pct_gt30_21-pct_gt30_17:.1f} pp)", fontsize=10, bbox=dict(boxstyle="round,pad=0.5", facecolor="white", edgecolor="gray", alpha=0.9))
+    ax.text(32, ax.get_ylim()[1]*0.8, f"Matched Schools ≥30% Absent:\n  2017–18: {pct_gt30_17:.1f}%\n  2021–22: {pct_gt30_21:.1f}% (+{pct_gt30_21-pct_gt30_17:.1f} pp)", fontsize=10, bbox=dict(boxstyle="round,pad=0.5", facecolor="white", edgecolor="gray", alpha=0.9))
     
-    ax.set_title("The Attendance Shock: Distribution of Secondary School Chronic Absenteeism Rates\n(Consistent EDFacts Definition: Missing ≥10% of School Days)", fontweight="bold")
-    ax.set_xlabel("Chronic Absenteeism Rate (% of Enrolled Students Missing ≥10% of Days)")
+    ax.set_title("The Attendance Shock: DG814 Chronic-Absence Proxy Distribution Shift\n(Matched Panel: N=20,075 Secondary Schools Observed in Both Waves)", fontweight="bold")
+    ax.set_xlabel("DG814 chronic-absence count ÷ CRDC snapshot enrollment (%)")
     ax.set_ylabel("Kernel Density")
     ax.set_xlim(0, 90)
     ax.legend(loc="upper right", framealpha=0.9)
@@ -586,6 +596,7 @@ def plot_fig_b03(df):
     plt.savefig(out_fig, bbox_inches="tight")
     plt.close()
     print(f"--> Saved Figure B03 to {out_fig}")
+
 
 
 def run_all_analysis():

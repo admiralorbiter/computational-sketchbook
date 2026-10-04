@@ -211,13 +211,14 @@ The following ten calibration patches have been implemented, tested, and certifi
 ### Figure B02: Class Size Bins vs. Context (2021–22)
 ![Figure B02](figures/fig_b02_class_size_bins_vs_context.png)
 
-### Figure B03: Chronic Absenteeism Distribution Shift (EDFacts Consistent Definition)
+### Figure B03: Chronic Absenteeism Proxy Distribution Shift (Matched Panel: $N = 20,075$ Secondary Schools)
 ![Figure B03](figures/fig_b03_chronic_absenteeism_distribution_shift.png)
 
 *Figure B03 highlights:*
-- Demonstrates the rightward distribution shift under the consistent EDFacts definition.
-- Pre-COVID (2017–18) clean sensitivity median was 17.85%; post-COVID (2021–22) clean sensitivity median reached 30.08%.
-- Schools with severe attendance disruption ($\ge 30\%$ chronically absent) jumped from **20.7% to 57.0%** (+36.3 percentage points).
+- Demonstrates the rightward distribution shift among identical secondary schools observed in both waves under the consistent post-2016 EDFacts definition.
+- Pre-COVID (2017–18) clean sensitivity median was **17.85%**; post-COVID (2021–22) clean sensitivity median reached **30.08%** (+12.23 percentage points / +68.5% relative increase).
+- Matched schools with elevated chronic absence ($\ge 30\%$ analyst reference threshold) jumped from **21.7% to 50.2%** (+28.5 percentage points).
+
 
 ---
 
