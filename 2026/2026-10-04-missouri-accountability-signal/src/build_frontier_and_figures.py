@@ -97,12 +97,12 @@ def build_frontier_and_figures():
 
     # Official APR
     ax.scatter(apr_r2_pov * 100, apr_pers, color="#d62728", s=140, marker="*", edgecolor="#111111", linewidth=1.2, zorder=4, label=f"Official MSIP 6 APR Score (r²={apr_r2_pov*100:.1f}%, pers={apr_pers:.3f})")
-    ax.annotate("Official APR Score\n(Behaves similarly to ~50/50 blend)", (apr_r2_pov * 100, apr_pers),
+    ax.annotate("Official APR Score\n(Resembles ~50/50 blend in r² and persistence)", (apr_r2_pov * 100, apr_pers),
                 xytext=(apr_r2_pov * 100 - 15.5, apr_pers - 0.08), fontsize=9, fontweight="bold", color="#d62728",
                 arrowprops=dict(arrowstyle="->", color="#d62728", lw=1.5),
                 bbox=dict(boxstyle="round,pad=0.3", facecolor="#fff0f0", edgecolor="#d62728", alpha=0.9))
 
-    ax.set_title("Missouri Accountability Design Frontier: Persistence vs. Socioeconomic Association", fontsize=12, fontweight="bold", pad=12)
+    ax.set_title("Single-Year Status–Growth Design Frontier: Persistence vs. Socioeconomic Association", fontsize=12, fontweight="bold", pad=12)
     ax.set_xlabel("Socioeconomic Association with School Poverty (% Variance Explained, R²)", fontsize=11, labelpad=8)
     ax.set_ylabel("Year-to-Year Persistence Correlation (r 2024 → 2025)", fontsize=11, labelpad=8)
     ax.set_xlim(-2, 48)
@@ -245,35 +245,37 @@ def build_frontier_and_figures():
     d25_multi["frpl_between"] = dist_mean
     d25_multi["frpl_within"] = d25_multi["frpl_pct"] - dist_mean
 
-    m_tot = sm.OLS(d25_multi["analyst_composite_status_mpi"], sm.add_constant(d25_multi["frpl_pct"])).fit()
-    m_bw = sm.OLS(d25_multi["analyst_composite_status_mpi"], sm.add_constant(d25_multi[["frpl_between", "frpl_within"]])).fit()
+    m_tot = sm.OLS(d25_multi["analyst_composite_status_mpi"], sm.add_constant(d25_multi["frpl_pct"])).fit(cov_type="cluster", cov_kwds={"groups": d25_multi["district_code"]})
+    m_bw = sm.OLS(d25_multi["analyst_composite_status_mpi"], sm.add_constant(d25_multi[["frpl_between", "frpl_within"]])).fit(cov_type="cluster", cov_kwds={"groups": d25_multi["district_code"]})
     d_dummies = pd.get_dummies(d25_multi["district_code"], drop_first=True, dtype=float)
     lvl_dummies = pd.get_dummies(d25_multi["school_level"], drop_first=True, dtype=float)
     X_fe_lvl = sm.add_constant(pd.concat([d25_multi[["frpl_pct"]], lvl_dummies, d_dummies], axis=1))
-    m_fe_lvl = sm.OLS(d25_multi["analyst_composite_status_mpi"], X_fe_lvl).fit()
+    m_fe_lvl = sm.OLS(d25_multi["analyst_composite_status_mpi"], X_fe_lvl).fit(cov_type="cluster", cov_kwds={"groups": d25_multi["district_code"]})
 
     df_slopes = pd.DataFrame([
-        {"model": "1. Overall Bivariate Slope", "beta": m_tot.params["frpl_pct"], "se": m_tot.bse["frpl_pct"], "ci_low": m_tot.conf_int().loc["frpl_pct", 0], "ci_high": m_tot.conf_int().loc["frpl_pct", 1]},
-        {"model": "2. Between-District Slope (District Mean FRPL)", "beta": m_bw.params["frpl_between"], "se": m_bw.bse["frpl_between"], "ci_low": m_bw.conf_int().loc["frpl_between", 0], "ci_high": m_bw.conf_int().loc["frpl_between", 1]},
-        {"model": "3. Within-District Slope (Unadjusted)", "beta": m_bw.params["frpl_within"], "se": m_bw.bse["frpl_within"], "ci_low": m_bw.conf_int().loc["frpl_within", 0], "ci_high": m_bw.conf_int().loc["frpl_within", 1]},
-        {"model": "4. Within-District Slope (District FE + School Levels)", "beta": m_fe_lvl.params["frpl_pct"], "se": m_fe_lvl.bse["frpl_pct"], "ci_low": m_fe_lvl.conf_int().loc["frpl_pct", 0], "ci_high": m_fe_lvl.conf_int().loc["frpl_pct", 1]},
+        {"model": "1. Overall Bivariate Slope", "beta": m_tot.params["frpl_pct"], "se": m_tot.bse["frpl_pct"], "ci_low": m_tot.conf_int().loc["frpl_pct", 0], "ci_high": m_tot.conf_int().loc["frpl_pct", 1], "p_value": m_tot.pvalues["frpl_pct"]},
+        {"model": "2. Between-District Slope (District Mean FRPL)", "beta": m_bw.params["frpl_between"], "se": m_bw.bse["frpl_between"], "ci_low": m_bw.conf_int().loc["frpl_between", 0], "ci_high": m_bw.conf_int().loc["frpl_between", 1], "p_value": m_bw.pvalues["frpl_between"]},
+        {"model": "3. Within-District Slope (Unadjusted)", "beta": m_bw.params["frpl_within"], "se": m_bw.bse["frpl_within"], "ci_low": m_bw.conf_int().loc["frpl_within", 0], "ci_high": m_bw.conf_int().loc["frpl_within", 1], "p_value": m_bw.pvalues["frpl_within"]},
+        {"model": "4. Within-District Slope (District FE + School Levels)", "beta": m_fe_lvl.params["frpl_pct"], "se": m_fe_lvl.bse["frpl_pct"], "ci_low": m_fe_lvl.conf_int().loc["frpl_pct", 0], "ci_high": m_fe_lvl.conf_int().loc["frpl_pct", 1], "p_value": m_fe_lvl.pvalues["frpl_pct"]},
     ])
     df_slopes.to_csv(TABLES_DIR / "table_between_within_fixed_effects.csv", index=False)
 
     fig, ax = plt.subplots(figsize=(8.5, 4.8), dpi=300)
     y_pos = np.arange(len(df_slopes))[::-1]
-    ax.errorbar(df_slopes["beta"], y_pos, xerr=1.96 * df_slopes["se"], fmt="o", color="#1f77b4", ecolor="#1f77b4", elinewidth=2.2, capsize=5, markersize=8)
+    xerr_low = df_slopes["beta"] - df_slopes["ci_low"]
+    xerr_high = df_slopes["ci_high"] - df_slopes["beta"]
+    ax.errorbar(df_slopes["beta"], y_pos, xerr=[xerr_low, xerr_high], fmt="o", color="#1f77b4", ecolor="#1f77b4", elinewidth=2.2, capsize=5, markersize=8)
     
     for idx, r in df_slopes.iterrows():
         y_p = y_pos[idx]
-        ax.text(r["beta"], y_p + 0.18, f"β = {r['beta']:.3f} (SE: {r['se']:.3f})", ha="center", fontsize=9, fontweight="bold")
+        ax.text(r["beta"], y_p + 0.18, f"β = {r['beta']:.3f} (Clustered SE: {r['se']:.3f})", ha="center", fontsize=9, fontweight="bold")
 
     ax.set_yticks(y_pos)
     ax.set_yticklabels(df_slopes["model"], fontsize=9.5)
     ax.axvline(0, color="#333333", linestyle="--", linewidth=1.0)
     ax.set_title("The Poverty Gradient Does Not Disappear at the District Boundary", fontsize=12, fontweight="bold", pad=12)
     ax.set_xlabel("Estimated Slope on Free & Reduced-Price Lunch % (Points MPI per 1% Poverty)", fontsize=10.5, labelpad=8)
-    ax.set_xlim(-1.05, 0.05)
+    ax.set_xlim(-1.15, 0.05)
     plt.tight_layout()
     fig.savefig(FIGURES_DIR / "08_between_within_district_slopes.png")
     plt.close(fig)
@@ -324,8 +326,12 @@ def build_frontier_and_figures():
     for col, lbl in features_audit:
         sub = d25.dropna(subset=["apr_growth_pts_pct", col])
         r, p = pearsonr(sub["apr_growth_pts_pct"], sub[col])
-        se = np.sqrt((1 - r**2) / (len(sub) - 2))
-        corrs.append({"feature": lbl, "r": r, "se": se, "ci_low": r - 1.96 * se, "ci_high": r + 1.96 * se, "p_value": p, "n": len(sub)})
+        n = len(sub)
+        z = np.arctanh(r)
+        se_z = 1.0 / np.sqrt(n - 3)
+        ci_low = float(np.tanh(z - 1.95996 * se_z))
+        ci_high = float(np.tanh(z + 1.95996 * se_z))
+        corrs.append({"feature": lbl, "r": r, "fisher_z_se": se_z, "ci_low": ci_low, "ci_high": ci_high, "p_value": p, "n": n})
     df_audit = pd.DataFrame(corrs)
     df_audit.to_csv(TABLES_DIR / "table_growth_nonpoverty_audit.csv", index=False)
 
@@ -333,7 +339,10 @@ def build_frontier_and_figures():
     y_pos_aud = np.arange(len(df_audit))[::-1]
     ax.axvspan(-0.10, 0.10, color="#e6f2ff", alpha=0.6, label="Trivial Association Zone (|r| ≤ 0.10)")
     ax.axvline(0, color="#333333", linestyle="--", linewidth=1.0)
-    ax.errorbar(df_audit["r"], y_pos_aud, xerr=1.96 * df_audit["se"], fmt="o", color="#d62728", ecolor="#d62728", elinewidth=2.0, capsize=4, markersize=7)
+    
+    xerr_aud_low = df_audit["r"] - df_audit["ci_low"]
+    xerr_aud_high = df_audit["ci_high"] - df_audit["r"]
+    ax.errorbar(df_audit["r"], y_pos_aud, xerr=[xerr_aud_low, xerr_aud_high], fmt="o", color="#d62728", ecolor="#d62728", elinewidth=2.0, capsize=4, markersize=7)
 
     for idx, r in df_audit.iterrows():
         y_p = y_pos_aud[idx]
@@ -344,7 +353,7 @@ def build_frontier_and_figures():
     ax.set_yticks(y_pos_aud)
     ax.set_yticklabels(df_audit["feature"], fontsize=9.5)
     ax.set_title("Missouri Value-Added Growth Audit: Cross-Sectional Association with Student Circumstances", fontsize=11.5, fontweight="bold", pad=12)
-    ax.set_xlabel("Pearson Correlation (r) with APR Growth Points Earned %", fontsize=10.5, labelpad=8)
+    ax.set_xlabel("Pearson Correlation (r) with APR Growth Points Earned % (Fisher-z 95% CI)", fontsize=10.5, labelpad=8)
     ax.set_xlim(-0.15, 0.15)
     ax.legend(loc="lower right", frameon=True, facecolor="white", edgecolor="#cccccc", fontsize=9)
     plt.tight_layout()
