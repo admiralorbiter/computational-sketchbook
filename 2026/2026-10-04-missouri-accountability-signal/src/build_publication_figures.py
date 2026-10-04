@@ -15,9 +15,19 @@ Generates publication-ready figures for external presentation and essays:
 - Figure 13b: 13b_prediction_staircase_clean.png
   Minimal horizontal chart showing incremental predictive power of demographics once prior status is known.
 - Figure 14: 14_how_missouri_growth_works.png
-  Clean conceptual infographic explaining Missouri's value-added growth model (expectation vs. reality).
+  Clean conceptual infographic explaining Missouri's value-added growth model (statewide model & student residual).
 - Figure 15: 15_growth_vs_poverty_clean.png
   Exact visual mirror of Figure 11 for Growth vs. Poverty, illustrating the near-zero relationship (r=.003).
+- Figure 16: 16_from_residual_to_growth_points.png
+  Pipeline infographic showing the transformations from raw test scores to public growth points.
+- Figure 17: 17_status_vs_growth_year_to_year.png
+  Two-panel scatterplot comparing year-to-year stability: Status (r=.938) vs. Growth (r=.358).
+- Figure 18: 18_beating_expectations_vs_catching_up.png
+  Conceptual infographic on how growth measures beating expectations, not closing absolute gaps.
+- Figure 19: 19_regression_to_the_mean.png
+  Conceptual infographic illustrating how baseline test noise can masquerade as growth.
+- Figure 20: 20_growth_uncertainty_by_school_size.png
+  Statistical infographic comparing confidence intervals for small vs. large schools.
 """
 
 from pathlib import Path
@@ -132,13 +142,11 @@ def build_figure_11(df25):
     ax.set_ylabel("Analyst ELA–Math status composite (Mean MPI)", fontsize=10.5, color="#334155", labelpad=8)
     ax.tick_params(colors="#475569", labelsize=9.5)
 
-    # Clean spines
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     ax.spines["left"].set_color("#cbd5e1")
     ax.spines["bottom"].set_color("#cbd5e1")
 
-    # Titles
     plt.suptitle(
         "A school's poverty rate predicts a remarkable amount of its academic status",
         fontsize=12.2,
@@ -156,7 +164,6 @@ def build_figure_11(df25):
         loc="left",
     )
 
-    # Simplified footnote
     fig.text(
         0.08,
         0.015,
@@ -390,7 +397,6 @@ def build_figure_13(df):
 
     ax.legend(loc="lower right", frameon=True, facecolor="#ffffff", edgecolor="#cbd5e1", fontsize=8.8)
 
-    # Axes & Ticks
     ax.set_xlim(lim_min, lim_max)
     ax.set_ylim(lim_min, lim_max)
     ax.set_xlabel("2024 analyst ELA–Math status composite (Mean MPI)", fontsize=10.5, color="#334155", labelpad=8)
@@ -515,6 +521,7 @@ def build_figure_13b():
 def build_figure_14_infographic():
     """
     Figure 14: Conceptual Infographic explaining Missouri's value-added growth model.
+    Calibrated to statewide regression and student-level residual terminology.
     """
     print("[*] Generating Figure 14: Value-Added Growth Conceptual Infographic...")
     fig, ax = plt.subplots(figsize=(9.4, 5.3), dpi=300)
@@ -522,7 +529,6 @@ def build_figure_14_infographic():
     ax.set_ylim(0, 100)
     ax.axis("off")
 
-    # Title & Subtitle
     ax.text(4, 93, "HOW MISSOURI MEASURES VALUE-ADDED GROWTH", fontsize=13, fontweight="bold", color="#0f172a")
     ax.text(4, 87, "Missouri does not simply measure score gains; it measures performance relative to a statistical prediction.", fontsize=9.2, color="#64748b")
 
@@ -537,38 +543,38 @@ def build_figure_14_infographic():
         "  (complete ELA & Math history)\n\n"
         "• Student mobility\n"
         "  (mid-year school moves)\n\n"
-        "• School & district context"
+        "• School & LEA prior context"
     )
     ax.text(6, 64, inputs_desc, fontsize=8.0, color="#1e293b", linespacing=1.25, va="top")
 
     # Arrow 1 -> 2
     ax.annotate("", xy=(35.5, 61), xytext=(32.5, 61), arrowprops=dict(arrowstyle="->,head_width=0.4,head_length=0.6", color="#64748b", lw=1.8))
 
-    # Card 2: Model Expectation
+    # Card 2: Statewide Prediction Model
     c2 = patches.FancyBboxPatch((37, 40), 27, 42, boxstyle="round,pad=0.8", facecolor="#f8fafc", edgecolor="#cbd5e1", linewidth=1.2)
     ax.add_patch(c2)
-    ax.text(39, 77, "2. MODEL EXPECTATION", fontsize=9.5, fontweight="bold", color="#0284c7", va="center")
+    ax.text(39, 77, "2. STATEWIDE MODEL", fontsize=9.5, fontweight="bold", color="#0284c7", va="center")
     ax.text(39, 71, "Statistical prediction:", fontsize=8.2, color="#475569", fontstyle="italic", va="top")
     exp_desc = (
-        "What similar students with the\n"
-        "same academic background\n"
-        "score statewide on average:\n\n"
-        "Expected Score:  370"
+        "Statewide regression predicts\n"
+        "current MAP performance based\n"
+        "on testing history and mobility:\n\n"
+        "Predicted Score:  370"
     )
     ax.text(39, 64, exp_desc, fontsize=8.2, color="#1e293b", linespacing=1.35, va="top")
 
     # Arrow 2 -> 3
     ax.annotate("", xy=(68.5, 61), xytext=(65.5, 61), arrowprops=dict(arrowstyle="->,head_width=0.4,head_length=0.6", color="#64748b", lw=1.8))
 
-    # Card 3: Value-Added Result
+    # Card 3: Student Residual
     c3 = patches.FancyBboxPatch((70, 40), 27, 42, boxstyle="round,pad=0.8", facecolor="#f0fdf4", edgecolor="#86efac", linewidth=1.2)
     ax.add_patch(c3)
-    ax.text(72, 77, "3. VALUE-ADDED RESULT", fontsize=9.5, fontweight="bold", color="#15803d", va="center")
-    ax.text(72, 71, "Reality vs. Prediction:", fontsize=8.2, color="#475569", fontstyle="italic", va="top")
+    ax.text(72, 77, "3. STUDENT RESIDUAL", fontsize=9.5, fontweight="bold", color="#15803d", va="center")
+    ax.text(72, 71, "Actual minus predicted:", fontsize=8.2, color="#475569", fontstyle="italic", va="top")
     res_desc = (
-        "Actual Score:     385\n"
-        "Expected Score: 370\n"
-        "Difference:         +15 pts"
+        "Actual MAP Score:     385\n"
+        "Predicted Score:      370\n"
+        "Individual Residual:  +15 pts"
     )
     ax.text(72, 64, res_desc, fontsize=8.2, color="#1e293b", linespacing=1.35, va="top")
 
@@ -587,11 +593,10 @@ def build_figure_14_infographic():
     )
     ax.text(6, 23.5, takeaway_quote, fontsize=9.2, fontweight="600", color="#0f172a", linespacing=1.3, va="top")
 
-    # Footnote
     fig.text(
         0.04,
         0.04,
-        "Note: Missouri DESE's value-added model uses prior test scores and mobility to predict individual MAP performance. Residuals are aggregated\nto school and student-group levels to assign accountability growth points.",
+        "Note: The student residual is an individual score difference. To produce official school growth points, Missouri averages these\nresiduals across students, evaluates statistical uncertainty, and assigns discrete accountability points.",
         fontsize=7.5,
         color="#64748b",
         style="italic",
@@ -621,7 +626,7 @@ def build_figure_15(df25):
 
     fig, ax = plt.subplots(figsize=(8.8, 5.8), dpi=300)
 
-    # 1. Light points showing density (using teal/green tone to distinguish from status blue)
+    # 1. Light points showing density
     ax.scatter(
         sub["frpl_pct"],
         sub["apr_growth_pts_pct"],
@@ -697,7 +702,6 @@ def build_figure_15(df25):
     ax.spines["left"].set_color("#cbd5e1")
     ax.spines["bottom"].set_color("#cbd5e1")
 
-    # Titles deliberately paired with Figure 11
     plt.suptitle(
         "The poverty relationship almost disappears when Missouri measures growth",
         fontsize=12.2,
@@ -715,7 +719,6 @@ def build_figure_15(df25):
         loc="left",
     )
 
-    # Footnote matching Figure 11 styling
     fig.text(
         0.08,
         0.015,
@@ -734,6 +737,427 @@ def build_figure_15(df25):
     print(f"[+] Saved {out_path}")
 
 
+def build_figure_16_transformation_pipeline():
+    """
+    Figure 16: Pipeline showing how student test scores become public growth points.
+    Explains the transformation from continuous residual to discrete accountability grid.
+    """
+    print("[*] Generating Figure 16: Transformation Pipeline...")
+    fig, ax = plt.subplots(figsize=(9.8, 5.8), dpi=300)
+    ax.set_xlim(0, 100)
+    ax.set_ylim(0, 100)
+    ax.axis("off")
+
+    plt.suptitle(
+        "A growth score goes through several transformations before it reaches the public",
+        fontsize=12.2,
+        fontweight="bold",
+        color="#0f172a",
+        x=0.04,
+        y=0.96,
+        ha="left",
+    )
+    ax.text(4, 91, "How student MAP test results become official MSIP 6 school growth accountability points", fontsize=9.2, color="#64748b")
+
+    # 5 steps in a vertical/horizontal cascade or 5 connected cards
+    # Let's use 5 compact cards arranged horizontally across the page
+    # Card width: 16.5, Gap: 3.5 -> Total = 5 * 16.5 + 4 * 3.5 = 82.5 + 14 = 96.5 (fits 2 to 98)
+    cards = [
+        ("1. TEST SCORES", "#1e3a8a", "#f8fafc", "#cbd5e1",
+         "Prior MAP scores\n(ELA & Math)\n\n+ Student mobility\n\n+ School prior context"),
+        ("2. MODEL PREDICTION", "#0284c7", "#f8fafc", "#cbd5e1",
+         "Statewide regression\ncalculates predicted\ncurrent MAP score\nfor each student"),
+        ("3. STUDENT RESIDUAL", "#0d9488", "#f0fdfa", "#99f6e4",
+         "Actual Score minus\nPredicted Score:\n\nResidual = Y − Ŷ\n(continuous score)"),
+        ("4. SCHOOL ESTIMATE", "#d97706", "#fffbeb", "#fde68a",
+         "Average residuals\nacross all students\n\n+ Statistical certainty\n(N & score variance)"),
+        ("5. PUBLIC POINTS", "#16a34a", "#f0fdf4", "#bbf7d0",
+         "4 Performance Tiers:\nFloor, Approaching,\nTarget, Exceeding\n\n→ Discrete Points\n(0, 12.5, 25... 100%)"),
+    ]
+
+    card_w = 16.8
+    card_h = 44.0
+    start_x = 3.5
+    gap = 2.9
+    y_card = 41.0
+
+    for idx, (title, text_col, bg_col, edge_col, body) in enumerate(cards):
+        x = start_x + idx * (card_w + gap)
+        c = patches.FancyBboxPatch((x, y_card), card_w, card_h, boxstyle="round,pad=0.6", facecolor=bg_col, edgecolor=edge_col, linewidth=1.2)
+        ax.add_patch(c)
+        ax.text(x + 1.2, y_card + card_h - 4.5, title, fontsize=8.2, fontweight="bold", color=text_col, va="center")
+        ax.text(x + 1.2, y_card + card_h - 9.0, body, fontsize=7.6, color="#1e293b", linespacing=1.25, va="top")
+
+        # Arrow to next card
+        if idx < len(cards) - 1:
+            arrow_x = x + card_w + 0.4
+            arrow_y = y_card + card_h / 2
+            ax.annotate("", xy=(arrow_x + gap - 0.8, arrow_y), xytext=(arrow_x, arrow_y),
+                        arrowprops=dict(arrowstyle="->,head_width=0.35,head_length=0.5", color="#64748b", lw=1.5))
+
+    # Bottom Banner explaining the horizontal stripes
+    banner = patches.FancyBboxPatch((3.5, 16), 93.0, 18, boxstyle="round,pad=0.8", facecolor="#eff6ff", edgecolor="#bfdbfe", linewidth=1.2)
+    ax.add_patch(banner)
+    ax.text(5.5, 28.5, "WHY THE PUBLIC GRAPH HAS HORIZONTAL STRIPES", fontsize=8.5, fontweight="bold", color="#1e40af", va="center")
+    stripes_quote = (
+        "“The number the public sees has already passed through a statistical model, an aggregation step,\n"
+        "and an accountability scoring grid. Schools do not receive their raw continuous residuals, but discrete point tiers.”"
+    )
+    ax.text(5.5, 23.5, stripes_quote, fontsize=8.8, fontweight="600", color="#0f172a", linespacing=1.3, va="top")
+
+    fig.text(
+        0.04,
+        0.04,
+        "Note: Missouri DESE's MSIP 6 Comprehensive Guide specifies that building growth ratings depend on the mean residual, the number of student\nscore pairs, and individual residual variance, which are mapped to discrete accountability point allocations (0% to 100% in 12.5-point steps).",
+        fontsize=7.5,
+        color="#64748b",
+        style="italic",
+        linespacing=1.25,
+    )
+
+    plt.tight_layout()
+    fig.subplots_adjust(left=0.02, right=0.98, top=0.95, bottom=0.08)
+    out_path = FIGURES_DIR / "16_from_residual_to_growth_points.png"
+    fig.savefig(out_path)
+    plt.close(fig)
+    print(f"[+] Saved {out_path}")
+
+
+def build_figure_17(df):
+    """
+    Figure 17: Two-panel scatterplot comparing year-to-year stability:
+    Left: Status (r = .938)
+    Right: Growth (r = .358)
+    """
+    print("[*] Generating Figure 17: Status vs. Growth Year-to-Year Persistence...")
+    df_b = df[df["sample_b_conventional"] == 1].copy()
+    piv_s = df_b.pivot(index=["district_code", "building_code"], columns="school_year", values="analyst_composite_status_mpi")
+    piv_g = df_b.pivot(index=["district_code", "building_code"], columns="school_year", values="apr_growth_pts_pct")
+
+    s24_25 = piv_s[[2024, 2025]].dropna()
+    g24_25 = piv_g[[2024, 2025]].dropna()
+
+    r_s, _ = pearsonr(s24_25[2024], s24_25[2025])
+    r_g, _ = pearsonr(g24_25[2024], g24_25[2025])
+
+    ols_s = sm.OLS(s24_25[2025], sm.add_constant(s24_25[2024])).fit()
+    ols_g = sm.OLS(g24_25[2025], sm.add_constant(g24_25[2024])).fit()
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12.2, 5.8), dpi=300)
+
+    # Left Panel: Status Persistence
+    ax1.scatter(s24_25[2024], s24_25[2025], color="#2563eb", alpha=0.22, s=20, edgecolors="none", zorder=2)
+    s_min, s_max = 210, 480
+    ax1.plot([s_min, s_max], [s_min, s_max], color="#94a3b8", linestyle="--", linewidth=1.4, label="Identity line (y = x)", zorder=3)
+    x_s = np.linspace(s_min, s_max, 200)
+    ax1.plot(x_s, ols_s.params.iloc[0] + ols_s.params.iloc[1] * x_s, color="#dc2626", linewidth=2.2, label="Fitted linear trend", zorder=4)
+
+    callout_s = (
+        "Status barely moves\n\n"
+        f"r = .{int(round(r_s * 1000))}   ·   R² = {r_s**2*100:.1f}%\n"
+        f"N = {len(s24_25):,} schools"
+    )
+    ax1.text(230, 435, callout_s, fontsize=9.2, color="#0f172a", linespacing=1.35, va="center",
+             bbox=dict(boxstyle="round,pad=0.7", facecolor="#ffffff", edgecolor="#cbd5e1", linewidth=1.2, alpha=0.97), zorder=5)
+
+    ax1.set_xlim(s_min, s_max)
+    ax1.set_ylim(s_min, s_max)
+    ax1.set_xlabel("2024 analyst composite status MPI", fontsize=10.0, color="#334155", labelpad=8)
+    ax1.set_ylabel("2025 analyst composite status MPI", fontsize=10.0, color="#334155", labelpad=8)
+    ax1.set_title("Academic Achievement Status (MPI)", fontsize=11.0, fontweight="bold", color="#0f172a", pad=10)
+    ax1.legend(loc="lower right", frameon=True, facecolor="#ffffff", edgecolor="#cbd5e1", fontsize=8.5)
+    ax1.spines["top"].set_visible(False)
+    ax1.spines["right"].set_visible(False)
+    ax1.spines["left"].set_color("#cbd5e1")
+    ax1.spines["bottom"].set_color("#cbd5e1")
+
+    # Right Panel: Growth Volatility
+    ax2.scatter(g24_25[2024], g24_25[2025], color="#0d9488", alpha=0.22, s=20, edgecolors="none", zorder=2)
+    g_min, g_max = -5, 105
+    ax2.plot([0, 100], [0, 100], color="#94a3b8", linestyle="--", linewidth=1.4, label="Identity line (y = x)", zorder=3)
+    x_g = np.linspace(0, 100, 200)
+    ax2.plot(x_g, ols_g.params.iloc[0] + ols_g.params.iloc[1] * x_g, color="#dc2626", linewidth=2.2, label="Fitted linear trend", zorder=4)
+
+    callout_g = (
+        "Growth moves a lot\n\n"
+        f"r = .{int(round(r_g * 1000))}   ·   R² = {r_g**2*100:.1f}%\n"
+        f"N = {len(g24_25):,} schools"
+    )
+    ax2.text(8, 85, callout_g, fontsize=9.2, color="#0f172a", linespacing=1.35, va="center",
+             bbox=dict(boxstyle="round,pad=0.7", facecolor="#ffffff", edgecolor="#cbd5e1", linewidth=1.2, alpha=0.97), zorder=5)
+
+    ax2.set_xlim(g_min, g_max)
+    ax2.set_ylim(g_min, g_max)
+    ax2.set_xticks([0, 25, 50, 75, 100])
+    ax2.xaxis.set_major_formatter(mtick.PercentFormatter(decimals=0))
+    ax2.set_yticks([0, 25, 50, 75, 100])
+    ax2.yaxis.set_major_formatter(mtick.PercentFormatter(decimals=0))
+    ax2.set_xlabel("2024 APR growth points earned (%)", fontsize=10.0, color="#334155", labelpad=8)
+    ax2.set_ylabel("2025 APR growth points earned (%)", fontsize=10.0, color="#334155", labelpad=8)
+    ax2.set_title("Official APR Growth Points (%)", fontsize=11.0, fontweight="bold", color="#0f172a", pad=10)
+    ax2.legend(loc="lower right", frameon=True, facecolor="#ffffff", edgecolor="#cbd5e1", fontsize=8.5)
+    ax2.spines["top"].set_visible(False)
+    ax2.spines["right"].set_visible(False)
+    ax2.spines["left"].set_color("#cbd5e1")
+    ax2.spines["bottom"].set_color("#cbd5e1")
+
+    plt.suptitle(
+        "Status barely moves. Growth moves a lot.",
+        fontsize=13.0,
+        fontweight="bold",
+        color="#0f172a",
+        x=0.06,
+        y=0.97,
+        ha="left",
+    )
+
+    fig.text(
+        0.06,
+        0.02,
+        "Note: Status is highly persistent from one year to the next (r = .938), while reported growth points fluctuate substantially (r = .358).\nThe discrete grid on the right reflects Missouri's point-assignment scoring tiers across 1,971 conventional schools.",
+        fontsize=8.0,
+        color="#64748b",
+        style="italic",
+        linespacing=1.25,
+    )
+
+    plt.tight_layout()
+    fig.subplots_adjust(top=0.88, bottom=0.15, wspace=0.22)
+    out_path = FIGURES_DIR / "17_status_vs_growth_year_to_year.png"
+    fig.savefig(out_path)
+    plt.close(fig)
+    print(f"[+] Saved {out_path}")
+
+
+def build_figure_18_beating_expectations():
+    """
+    Figure 18: Beating Expectations vs. Catching Up.
+    Two schools with identical +5 residuals that remain 110 points apart.
+    """
+    print("[*] Generating Figure 18: Beating Expectations vs. Catching Up...")
+    fig, ax = plt.subplots(figsize=(9.4, 5.4), dpi=300)
+    ax.set_xlim(0, 100)
+    ax.set_ylim(0, 100)
+    ax.axis("off")
+
+    plt.suptitle(
+        "Growth measures beating expectations, not catching up",
+        fontsize=12.2,
+        fontweight="bold",
+        color="#0f172a",
+        x=0.04,
+        y=0.96,
+        ha="left",
+    )
+    ax.text(4, 91, "Two schools can receive identical positive growth ratings while remaining 110 points apart in achievement", fontsize=9.2, color="#64748b")
+
+    # Card A: Affluent Suburban School
+    cA = patches.FancyBboxPatch((4, 45), 44, 40, boxstyle="round,pad=0.8", facecolor="#f8fafc", edgecolor="#93c5fd", linewidth=1.4)
+    ax.add_patch(cA)
+    ax.text(6, 80, "AFFLUENT SUBURBAN SCHOOL", fontsize=9.2, fontweight="bold", color="#1e40af", va="center")
+    ax.text(6, 74, "High starting achievement (Low Poverty)", fontsize=8.0, color="#64748b", fontstyle="italic", va="top")
+    desc_A = (
+        "• Expected MAP Score:     440\n"
+        "• Actual MAP Score:           445\n\n"
+        "• Value-Added Residual:   +5 points"
+    )
+    ax.text(6, 67, desc_A, fontsize=8.2, color="#1e293b", linespacing=1.25, va="top")
+    badge_A = patches.FancyBboxPatch((6, 48), 24, 6, boxstyle="round,pad=0.4", facecolor="#16a34a", edgecolor="none")
+    ax.add_patch(badge_A)
+    ax.text(18, 51, "ABOVE EXPECTATIONS (+5)", fontsize=7.5, fontweight="bold", color="#ffffff", ha="center", va="center")
+
+    # Card B: High-Poverty School
+    cB = patches.FancyBboxPatch((52, 45), 44, 40, boxstyle="round,pad=0.8", facecolor="#f8fafc", edgecolor="#fdba74", linewidth=1.4)
+    ax.add_patch(cB)
+    ax.text(54, 80, "HIGH-POVERTY URBAN/RURAL SCHOOL", fontsize=9.2, fontweight="bold", color="#c2410c", va="center")
+    ax.text(54, 74, "Low starting achievement (High Poverty)", fontsize=8.0, color="#64748b", fontstyle="italic", va="top")
+    desc_B = (
+        "• Expected MAP Score:     330\n"
+        "• Actual MAP Score:           335\n\n"
+        "• Value-Added Residual:   +5 points"
+    )
+    ax.text(54, 67, desc_B, fontsize=8.2, color="#1e293b", linespacing=1.25, va="top")
+    badge_B = patches.FancyBboxPatch((54, 48), 24, 6, boxstyle="round,pad=0.4", facecolor="#16a34a", edgecolor="none")
+    ax.add_patch(badge_B)
+    ax.text(66, 51, "ABOVE EXPECTATIONS (+5)", fontsize=7.5, fontweight="bold", color="#ffffff", ha="center", va="center")
+
+    # Bottom Takeaway Box
+    banner = patches.FancyBboxPatch((4, 12), 92.0, 27, boxstyle="round,pad=0.8", facecolor="#eff6ff", edgecolor="#bfdbfe", linewidth=1.2)
+    ax.add_patch(banner)
+    ax.text(6, 33.5, "THE ACCOUNTABILITY TENSION", fontsize=8.5, fontweight="bold", color="#1e40af", va="center")
+    quote_t = (
+        "Both schools receive the exact same positive growth credit (+5 residual).\n"
+        "Yet the 110-point achievement gap between their students remains completely unchanged.\n\n"
+        "Growth doesn't ask whether poor and affluent students end up in the same place.\n"
+        "It asks whether each performed better or worse than predicted given their starting position."
+    )
+    ax.text(6, 29.5, quote_t, fontsize=8.5, color="#0f172a", linespacing=1.35, va="top")
+
+    fig.text(
+        0.04,
+        0.04,
+        "Note: Value-added models condition on prior achievement, which removes the correlation with poverty by establishing separate statistical\nexpectations for students based on their starting points.",
+        fontsize=7.5,
+        color="#64748b",
+        style="italic",
+    )
+
+    plt.tight_layout()
+    fig.subplots_adjust(left=0.02, right=0.98, top=0.95, bottom=0.08)
+    out_path = FIGURES_DIR / "18_beating_expectations_vs_catching_up.png"
+    fig.savefig(out_path)
+    plt.close(fig)
+    print(f"[+] Saved {out_path}")
+
+
+def build_figure_19_regression_to_mean():
+    """
+    Figure 19: When test noise can look like growth (Regression to the mean).
+    """
+    print("[*] Generating Figure 19: Regression to the Mean...")
+    fig, ax = plt.subplots(figsize=(9.4, 5.4), dpi=300)
+    ax.set_xlim(0, 100)
+    ax.set_ylim(0, 100)
+    ax.axis("off")
+
+    plt.suptitle(
+        "When test noise can look like growth",
+        fontsize=12.2,
+        fontweight="bold",
+        color="#0f172a",
+        x=0.04,
+        y=0.96,
+        ha="left",
+    )
+    ax.text(4, 91, "How random test-day noise and regression to the mean can simulate academic progress", fontsize=9.2, color="#64748b")
+
+    # 3-step timeline: True Ability -> Year 1 Bad Day -> Year 2 Normal Day
+    c1 = patches.FancyBboxPatch((4, 45), 28, 40, boxstyle="round,pad=0.8", facecolor="#f8fafc", edgecolor="#cbd5e1", linewidth=1.2)
+    ax.add_patch(c1)
+    ax.text(6, 80, "TRUE KNOWLEDGE", fontsize=9.0, fontweight="bold", color="#1e3a8a", va="center")
+    ax.text(6, 73, "Constant true ability:\n\nStudent's underlying\ntrue mastery is 380\nin both years.", fontsize=8.2, color="#1e293b", linespacing=1.3, va="top")
+
+    ax.annotate("", xy=(34.5, 65), xytext=(32.5, 65), arrowprops=dict(arrowstyle="->,head_width=0.4,head_length=0.6", color="#64748b", lw=1.6))
+
+    c2 = patches.FancyBboxPatch((36, 45), 28, 40, boxstyle="round,pad=0.8", facecolor="#fef2f2", edgecolor="#fecaca", linewidth=1.2)
+    ax.add_patch(c2)
+    ax.text(38, 80, "YEAR 1: BAD TEST DAY", fontsize=9.0, fontweight="bold", color="#b91c1c", va="center")
+    ax.text(38, 73, "Unlucky test day (−20 pts):\n\nObserved score: 360\n\nModel predicts low score\nfor Year 2: 365", fontsize=8.2, color="#1e293b", linespacing=1.3, va="top")
+
+    ax.annotate("", xy=(66.5, 65), xytext=(64.5, 65), arrowprops=dict(arrowstyle="->,head_width=0.4,head_length=0.6", color="#64748b", lw=1.6))
+
+    c3 = patches.FancyBboxPatch((68, 45), 28, 40, boxstyle="round,pad=0.8", facecolor="#f0fdf4", edgecolor="#bbf7d0", linewidth=1.2)
+    ax.add_patch(c3)
+    ax.text(70, 80, "YEAR 2: NORMAL DAY", fontsize=9.0, fontweight="bold", color="#15803d", va="center")
+    ax.text(70, 73, "Normal test day (380):\n\nActual: 380\nPredicted: 365\n\nResidual: +15 points\n(Apparent 'Growth')", fontsize=8.2, color="#1e293b", linespacing=1.3, va="top")
+
+    # Bottom Takeaway Box
+    banner = patches.FancyBboxPatch((4, 15), 92.0, 24, boxstyle="round,pad=0.8", facecolor="#eff6ff", edgecolor="#bfdbfe", linewidth=1.2)
+    ax.add_patch(banner)
+    ax.text(6, 33, "THE STATISTICAL MECHANISM", fontsize=8.5, fontweight="bold", color="#1e40af", va="center")
+    quote_r = (
+        "Prior test scores are noisy measurements of true student ability.\n"
+        "An unlucky test score in Year 1 artificially depresses the statistical prediction for Year 2.\n"
+        "When the student merely has an ordinary test day the following year, the model interprets the rebound as positive growth.\n"
+        "Conversely, good luck on baseline tests can make normal follow-up performance look like negative growth."
+    )
+    ax.text(6, 29, quote_r, fontsize=8.5, color="#0f172a", linespacing=1.35, va="top")
+
+    fig.text(
+        0.04,
+        0.04,
+        "Note: Missouri's model incorporates multiple prior scores to mitigate noise, but ordinary least squares regressions remain vulnerable\nto errors-in-variables bias when baseline measures contain random test-day variation.",
+        fontsize=7.5,
+        color="#64748b",
+        style="italic",
+    )
+
+    plt.tight_layout()
+    fig.subplots_adjust(left=0.02, right=0.98, top=0.95, bottom=0.08)
+    out_path = FIGURES_DIR / "19_regression_to_the_mean.png"
+    fig.savefig(out_path)
+    plt.close(fig)
+    print(f"[+] Saved {out_path}")
+
+
+def build_figure_20_uncertainty():
+    """
+    Figure 20: Same estimated growth, different statistical certainty.
+    Comparing confidence intervals for small (n=30) vs. large (n=300) schools.
+    """
+    print("[*] Generating Figure 20: Growth Uncertainty by School Size...")
+    fig, ax = plt.subplots(figsize=(9.2, 4.8), dpi=300)
+
+    y_pos = [1, 0]
+    labels = ["Small School (n = 30 tested)", "Large School (n = 300 tested)"]
+    pe = [0.15, 0.15]
+    ci_low = [-0.08, 0.08]
+    ci_high = [0.38, 0.22]
+    colors = ["#d97706", "#2563eb"]
+
+    for i in range(2):
+        ax.plot([ci_low[i], ci_high[i]], [y_pos[i], y_pos[i]], color=colors[i], linewidth=2.4, zorder=3)
+        ax.scatter([pe[i]], [y_pos[i]], color=colors[i], s=70, zorder=4)
+        ax.plot([ci_low[i], ci_low[i]], [y_pos[i] - 0.08, y_pos[i] + 0.08], color=colors[i], linewidth=2.0, zorder=3)
+        ax.plot([ci_high[i], ci_high[i]], [y_pos[i] - 0.08, y_pos[i] + 0.08], color=colors[i], linewidth=2.0, zorder=3)
+
+    # Annotations
+    ax.text(0.15, 1.22, "Point Estimate: +0.15\nWide confidence interval overlaps zero (Not statistically distinguishable)", fontsize=8.6, color="#b45309", ha="center")
+    ax.text(0.15, 0.22, "Point Estimate: +0.15\nTight confidence interval strictly above zero (Statistically significant)", fontsize=8.6, color="#1e40af", ha="center")
+
+    # Reference line at zero
+    ax.axvline(0, color="#94a3b8", linestyle="--", linewidth=1.2, zorder=1)
+    ax.text(0.005, -0.42, "State Average Growth (0.0)", fontsize=8.2, color="#64748b", fontstyle="italic")
+
+    ax.set_yticks(y_pos)
+    ax.set_yticklabels(labels, fontsize=10.0, fontweight="600", color="#0f172a")
+    ax.set_xlim(-0.20, 0.50)
+    ax.set_ylim(-0.55, 1.55)
+    ax.set_xlabel("Estimated Average Student Growth Residual (Standard Deviations)", fontsize=9.5, color="#334155", labelpad=8)
+    ax.tick_params(colors="#475569", labelsize=9.2)
+
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_visible(False)
+    ax.spines["bottom"].set_color("#cbd5e1")
+    ax.grid(axis="x", color="#e2e8f0", linestyle="-", linewidth=0.8, zorder=1)
+    ax.grid(axis="y", visible=False)
+
+    plt.suptitle(
+        "Same estimated growth, different statistical certainty",
+        fontsize=12.2,
+        fontweight="bold",
+        color="#0f172a",
+        x=0.08,
+        y=0.96,
+        ha="left",
+    )
+    ax.set_title(
+        "How tested student count affects confidence intervals around building-level growth estimates",
+        fontsize=9.2,
+        color="#64748b",
+        pad=10,
+        loc="left",
+    )
+
+    fig.text(
+        0.08,
+        0.02,
+        "Note: Missouri DESE's accountability guide explicitly notes that growth designations depend on the mean residual, score pair count, and variance.\nSmaller schools face substantially wider uncertainty, affecting whether their progress crosses accountability thresholds.",
+        fontsize=7.8,
+        color="#64748b",
+        style="italic",
+        linespacing=1.25,
+    )
+
+    plt.tight_layout()
+    fig.subplots_adjust(top=0.84, bottom=0.20, left=0.28, right=0.95)
+    out_path = FIGURES_DIR / "20_growth_uncertainty_by_school_size.png"
+    fig.savefig(out_path)
+    plt.close(fig)
+    print(f"[+] Saved {out_path}")
+
+
 def main():
     setup_style()
     print("[*] Loading master panel for publication figures...")
@@ -747,6 +1171,11 @@ def main():
     build_figure_13b()
     build_figure_14_infographic()
     build_figure_15(df25)
+    build_figure_16_transformation_pipeline()
+    build_figure_17(df)
+    build_figure_18_beating_expectations()
+    build_figure_19_regression_to_mean()
+    build_figure_20_uncertainty()
     print("[SUCCESS] All publication graphics created successfully.")
 
 
