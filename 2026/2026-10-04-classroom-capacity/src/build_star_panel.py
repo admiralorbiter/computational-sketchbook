@@ -177,12 +177,22 @@ def build_star_student_panel():
         df_clean[f"teach_years_{g_num}"] = pd.to_numeric(df_raw[f"{g_pfx}tyears"], errors="coerce")
         
         # Teacher race (1 = White, 2 = Black)
-        t_white = np.where(df_raw[f"{g_pfx}trace"].isna(), np.nan, (df_raw[f"{g_pfx}trace"] == 1).astype(float))
-        # Note on Kindergarten teacher 22558503: In public Dataverse export, trace was unrecorded (NaN),
-        # but in Krueger (1999) complete-case sample (N=5,861), this classroom teacher was White (code 1.0).
+        # Strict raw encoding directly from public Dataverse (no silent modification)
+        df_clean[f"teach_white_{g_num}"] = np.where(
+            df_raw[f"{g_pfx}trace"].isna(), np.nan, (df_raw[f"{g_pfx}trace"] == 1).astype(float)
+        )
+        
+        # Explicit one-record Krueger (1999) replication calibration:
+        # In the raw public Dataverse export (STAR_Students.tab), kindergarten teacher 22558503 (22 students)
+        # has trace = NaN. In Alan Krueger's (1999) published Table V complete-case sample (N = 5,861),
+        # this teacher was recorded as White (code 1.0).
+        # We preserve teach_white_k as strictly raw, and provide teach_white_calibrated_k for replication sensitivity.
         if g_num == "k":
-            t_white = np.where(df_clean[f"tchid_{g_num}"] == 22558503, 1.0, t_white)
-        df_clean[f"teach_white_{g_num}"] = t_white
+            df_clean["teach_white_calibrated_k"] = np.where(
+                df_clean["tchid_k"] == 22558503, 1.0, df_clean["teach_white_k"]
+            )
+        else:
+            df_clean[f"teach_white_calibrated_{g_num}"] = df_clean[f"teach_white_{g_num}"]
         
         # Teacher gender (1 = Male, 2 = Female)
         if f"{g_pfx}tgen" in df_raw.columns:

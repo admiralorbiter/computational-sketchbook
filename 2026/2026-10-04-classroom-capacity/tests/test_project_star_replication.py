@@ -131,7 +131,7 @@ class TestKruegerTableVReplication:
     def test_table_v_exists(self):
         csv_path = os.path.join(TABLES_DIR, "table_d02_krueger_1999_table_v_replication.csv")
         assert os.path.exists(csv_path)
-        assert len(pd.read_csv(csv_path)) == 32  # 4 grades x 8 columns = 32 models
+        assert len(pd.read_csv(csv_path)) >= 32  # 4 grades x 8 columns = 32 models + optional sensitivity models
 
     def test_sample_sizes_match_published_krueger(self, table_v_df):
         # Published sample sizes: K=5,861; G1=6,452; G2=5,950; G3=6,109

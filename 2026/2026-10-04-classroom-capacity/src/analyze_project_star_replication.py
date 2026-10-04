@@ -348,6 +348,7 @@ def run_krueger_table_v_replication(df):
         sub["tchid_str"] = sub[f"tchid_{g_var}"].astype(str)
         
         # Complete case sample for Table V
+        t_white_col = "teach_white_calibrated_k" if g_var == "k" else f"teach_white_{g_var}"
         full_covs = [
             f"avg_pct_{g_var}",
             f"assigned_small_{g_var}",
@@ -357,7 +358,7 @@ def run_krueger_table_v_replication(df):
             "white_asian",
             "female",
             f"free_lunch_{g_var}",
-            f"teach_white_{g_var}",
+            t_white_col,
             f"teach_years_{g_var}",
             f"teach_master_{g_var}",
             "schid_str",
@@ -373,9 +374,9 @@ def run_krueger_table_v_replication(df):
         # Explanatory variables
         student_covs = f"white_asian + female + free_lunch_{g_var}"
         if g_lbl == "K":
-            teacher_covs = f"teach_white_{g_var} + teach_years_{g_var} + teach_master_{g_var}"
+            teacher_covs = f"{t_white_col} + teach_years_{g_var} + teach_master_{g_var}"
         else:
-            teacher_covs = f"teach_white_{g_var} + teach_male_{g_var} + teach_years_{g_var} + teach_master_{g_var}"
+            teacher_covs = f"{t_white_col} + teach_male_{g_var} + teach_years_{g_var} + teach_master_{g_var}"
             
         col_specs = [
             # Columns 1-4: Actual Class Assignment OLS
@@ -469,6 +470,52 @@ def run_krueger_table_v_replication(df):
                     "n_obs": n_obs,
                 })
 
+    # Explicit sensitivity check for Kindergarten using strict raw public Dataverse without one-record teacher calibration:
+    sub_k = df[df["present_k"] == 1].copy()
+    sub_k["schid_str"] = sub_k["schid_k"].astype(str)
+    sub_k["tchid_str"] = sub_k["tchid_k"].astype(str)
+    raw_k_covs = [
+        "avg_pct_k", "assigned_small_k", "assigned_aide_k", "white_asian", "female", "free_lunch_k",
+        "teach_white_k", "teach_years_k", "teach_master_k", "schid_str", "tchid_str"
+    ]
+    c_raw_k = sub_k.dropna(subset=raw_k_covs).copy()
+    m_raw_ols = smf.ols(
+        "avg_pct_k ~ assigned_small_k + assigned_aide_k + white_asian + female + free_lunch_k + teach_white_k + teach_years_k + teach_master_k + C(schid_str)",
+        data=c_raw_k
+    ).fit()
+    m_raw_clu = smf.ols(
+        "avg_pct_k ~ assigned_small_k + assigned_aide_k + white_asian + female + free_lunch_k + teach_white_k + teach_years_k + teach_master_k + C(schid_str)",
+        data=c_raw_k
+    ).fit(cov_type="cluster", cov_kwds={"groups": c_raw_k["tchid_str"]})
+    
+    b_s_raw = m_raw_clu.params["assigned_small_k"]
+    se_s_raw = m_raw_clu.bse["assigned_small_k"]
+    se_ols_raw = m_raw_ols.bse["assigned_small_k"]
+    b_a_raw = m_raw_clu.params["assigned_aide_k"]
+    se_a_raw = m_raw_clu.bse["assigned_aide_k"]
+    se_a_ols_raw = m_raw_ols.bse["assigned_aide_k"]
+    
+    records.append({
+        "panel_grade": "Grade K (Raw Sensitivity)",
+        "table_v_column": "Column 4 (Raw Sensitivity)",
+        "specification_type": "Actual Assignment OLS (Raw Complete Case)",
+        "controls_description": "Actual Assignment: School FE + Student + Teacher Covariates (Strict Raw Dataverse, N=5,840)",
+        "small_coef": round(b_s_raw, 2),
+        "small_clustered_se": round(se_s_raw, 2),
+        "small_ols_se": round(se_ols_raw, 2),
+        "small_t_stat": round(m_raw_clu.tvalues["assigned_small_k"], 2),
+        "small_p_val": round(m_raw_clu.pvalues["assigned_small_k"], 4),
+        "aide_coef": round(b_a_raw, 2),
+        "aide_clustered_se": round(se_a_raw, 2),
+        "aide_ols_se": round(se_a_ols_raw, 2),
+        "r_squared": round(m_raw_ols.rsquared, 3),
+        "sample_size_n": len(c_raw_k),
+        "krueger_published_small": 5.37,
+        "krueger_published_se": 1.19,
+        "krueger_published_aide": 0.31,
+        "replication_gap": round(b_s_raw - 5.37, 2),
+    })
+
     df_table_v = pd.DataFrame(records)
     out_path = os.path.join(TABLES_DIR, "table_d02_krueger_1999_table_v_replication.csv")
     df_table_v.to_csv(out_path, index=False)
@@ -505,6 +552,7 @@ def run_krueger_table_vii_viii_2sls(df):
         sub["schid_str"] = sub[f"schid_{g_var}"].astype(str)
         sub["tchid_str"] = sub[f"tchid_{g_var}"].astype(str)
         
+        t_white_col = "teach_white_calibrated_k" if g_var == "k" else f"teach_white_{g_var}"
         covs = [
             f"avg_pct_{g_var}",
             f"actual_class_size_{g_var}",
@@ -512,7 +560,7 @@ def run_krueger_table_vii_viii_2sls(df):
             "white_asian",
             "female",
             f"free_lunch_{g_var}",
-            f"teach_white_{g_var}",
+            t_white_col,
             f"teach_years_{g_var}",
             f"teach_master_{g_var}",
             "schid_str",
@@ -525,7 +573,7 @@ def run_krueger_table_vii_viii_2sls(df):
         n_obs = len(c_df)
         
         # Exogenous controls list
-        exog_base = ["white_asian", "female", f"free_lunch_{g_var}", f"teach_white_{g_var}", f"teach_years_{g_var}", f"teach_master_{g_var}"]
+        exog_base = ["white_asian", "female", f"free_lunch_{g_var}", t_white_col, f"teach_years_{g_var}", f"teach_master_{g_var}"]
         if g_lbl != "K":
             exog_base.append(f"teach_male_{g_var}")
             
@@ -596,13 +644,14 @@ def run_krueger_table_vii_viii_2sls(df):
         sub["schid_str"] = sub[f"schid_{curr_var}"].astype(str)
         sub["tchid_str"] = sub[f"tchid_{curr_var}"].astype(str)
         
+        t_white_col = "teach_white_calibrated_k" if curr_var == "k" else f"teach_white_{curr_var}"
         covs = [
             f"avg_pct_{curr_var}",
             f"actual_class_size_{curr_var}",
             "white_asian",
             "female",
             f"free_lunch_{curr_var}",
-            f"teach_white_{curr_var}",
+            t_white_col,
             f"teach_years_{curr_var}",
             f"teach_master_{curr_var}",
             "schid_str",
@@ -611,7 +660,7 @@ def run_krueger_table_vii_viii_2sls(df):
         if curr_lbl != "K":
             covs.append(f"teach_male_{curr_var}")
             
-        exog_base = ["white_asian", "female", f"free_lunch_{curr_var}", f"teach_white_{curr_var}", f"teach_years_{curr_var}", f"teach_master_{curr_var}"]
+        exog_base = ["white_asian", "female", f"free_lunch_{curr_var}", t_white_col, f"teach_years_{curr_var}", f"teach_master_{curr_var}"]
         if curr_lbl != "K":
             exog_base.append(f"teach_male_{curr_var}")
             

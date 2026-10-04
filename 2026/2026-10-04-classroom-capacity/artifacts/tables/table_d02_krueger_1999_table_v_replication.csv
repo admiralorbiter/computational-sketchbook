@@ -31,3 +31,4 @@ Grade 3,Column 5,Initial Assignment Reduced Form (ITT),Initial Assignment (ITT):
 Grade 3,Column 6,Initial Assignment Reduced Form (ITT),Initial Assignment (ITT): School FE,5.32,1.08,0.82,4.9,0.0,0.09,0.86,0.76,0.162,6100,5.42,1.08,0.12,-0.1
 Grade 3,Column 7,Initial Assignment Reduced Form (ITT),Initial Assignment (ITT): School FE + Student Covariates,5.19,1.04,0.79,5.01,0.0,0.1,0.81,0.73,0.219,6100,5.3,1.03,0.13,-0.11
 Grade 3,Column 8,Initial Assignment Reduced Form (ITT),Initial Assignment (ITT): School FE + Student + Teacher Covariates,5.12,1.05,0.8,4.87,0.0,-0.14,0.78,0.73,0.221,6100,5.24,1.04,-0.1,-0.12
+Grade K (Raw Sensitivity),Column 4 (Raw Sensitivity),Actual Assignment OLS (Raw Complete Case),"Actual Assignment: School FE + Student + Teacher Covariates (Strict Raw Dataverse, N=5,840)",5.3,1.19,0.74,4.46,0.0,0.25,1.07,0.72,0.308,5840,5.37,1.19,0.31,-0.07
