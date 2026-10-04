@@ -1,0 +1,33 @@
+panel_grade,table_v_column,specification_type,controls_description,small_coef,small_clustered_se,small_ols_se,small_t_stat,small_p_val,aide_coef,aide_clustered_se,aide_ols_se,r_squared,sample_size_n,krueger_published_small,krueger_published_se,krueger_published_aide,replication_gap
+Grade K,Column 1,Actual Assignment OLS,Actual Assignment: Raw / No Controls,4.82,2.19,0.86,2.21,0.0275,0.13,2.23,0.83,0.007,5862,4.82,2.19,0.12,0.0
+Grade K,Column 2,Actual Assignment OLS,Actual Assignment: School FE,5.37,1.26,0.77,4.27,0.0,0.3,1.13,0.74,0.245,5862,5.37,1.26,0.29,-0.0
+Grade K,Column 3,Actual Assignment OLS,Actual Assignment: School FE + Student Covariates,5.36,1.21,0.74,4.43,0.0,0.54,1.09,0.71,0.305,5862,5.36,1.21,0.53,0.0
+Grade K,Column 4,Actual Assignment OLS,Actual Assignment: School FE + Student + Teacher Covariates,5.39,1.19,0.74,4.54,0.0,0.34,1.07,0.71,0.308,5862,5.37,1.19,0.31,0.02
+Grade K,Column 5,Initial Assignment Reduced Form (ITT),Initial Assignment (ITT): Raw / No Controls,4.82,2.19,0.86,2.21,0.0275,0.13,2.23,0.83,0.007,5862,4.82,2.19,0.12,0.0
+Grade K,Column 6,Initial Assignment Reduced Form (ITT),Initial Assignment (ITT): School FE,5.37,1.26,0.77,4.27,0.0,0.3,1.13,0.74,0.245,5862,5.37,1.25,0.29,-0.0
+Grade K,Column 7,Initial Assignment Reduced Form (ITT),Initial Assignment (ITT): School FE + Student Covariates,5.36,1.21,0.74,4.43,0.0,0.54,1.09,0.71,0.305,5862,5.36,1.21,0.53,0.0
+Grade K,Column 8,Initial Assignment Reduced Form (ITT),Initial Assignment (ITT): School FE + Student + Teacher Covariates,5.39,1.19,0.74,4.54,0.0,0.34,1.07,0.71,0.308,5862,5.37,1.19,0.31,0.02
+Grade 1,Column 1,Actual Assignment OLS,Actual Assignment: Raw / No Controls,8.54,1.98,0.82,4.32,0.0,3.44,2.05,0.79,0.016,6452,8.57,1.97,3.44,-0.03
+Grade 1,Column 2,Actual Assignment OLS,Actual Assignment: School FE,8.4,1.21,0.74,6.97,0.0,2.21,0.99,0.72,0.235,6452,8.43,1.21,2.22,-0.03
+Grade 1,Column 3,Actual Assignment OLS,Actual Assignment: School FE + Student Covariates,7.88,1.17,0.71,6.75,0.0,2.23,0.97,0.69,0.297,6452,7.91,1.17,2.23,-0.03
+Grade 1,Column 4,Actual Assignment OLS,Actual Assignment: School FE + Student + Teacher Covariates,7.38,1.18,0.72,6.25,0.0,1.77,0.97,0.7,0.3,6452,7.4,1.18,1.78,-0.02
+Grade 1,Column 5,Initial Assignment Reduced Form (ITT),Initial Assignment (ITT): Raw / No Controls,7.52,1.77,0.85,4.25,0.0,1.91,1.12,0.77,0.013,6452,7.54,1.76,1.92,-0.02
+Grade 1,Column 6,Initial Assignment Reduced Form (ITT),Initial Assignment (ITT): School FE,7.15,1.14,0.76,6.27,0.0,1.68,0.8,0.7,0.231,6452,7.17,1.14,1.69,-0.02
+Grade 1,Column 7,Initial Assignment Reduced Form (ITT),Initial Assignment (ITT): School FE + Student Covariates,6.77,1.1,0.73,6.13,0.0,1.64,0.76,0.67,0.293,6452,6.79,1.1,1.64,-0.02
+Grade 1,Column 8,Initial Assignment Reduced Form (ITT),Initial Assignment (ITT): School FE + Student + Teacher Covariates,6.35,1.11,0.73,5.73,0.0,1.48,0.76,0.67,0.297,6452,6.37,1.11,1.48,-0.02
+Grade 2,Column 1,Actual Assignment OLS,Actual Assignment: Raw / No Controls,5.94,1.98,0.85,3.0,0.0027,1.94,2.06,0.81,0.008,5953,5.93,1.97,1.97,0.01
+Grade 2,Column 2,Actual Assignment OLS,Actual Assignment: School FE,6.34,1.29,0.78,4.91,0.0,1.84,1.1,0.74,0.217,5953,6.33,1.29,1.88,0.01
+Grade 2,Column 3,Actual Assignment OLS,Actual Assignment: School FE + Student Covariates,5.83,1.23,0.75,4.74,0.0,1.6,1.07,0.71,0.277,5953,5.83,1.23,1.64,0.0
+Grade 2,Column 4,Actual Assignment OLS,Actual Assignment: School FE + Student + Teacher Covariates,5.78,1.23,0.75,4.69,0.0,1.54,1.07,0.72,0.278,5953,5.79,1.23,1.58,-0.01
+Grade 2,Column 5,Initial Assignment Reduced Form (ITT),Initial Assignment (ITT): Raw / No Controls,5.34,1.7,0.87,3.14,0.0017,0.47,1.23,0.79,0.007,5953,5.31,1.7,0.47,0.03
+Grade 2,Column 6,Initial Assignment Reduced Form (ITT),Initial Assignment (ITT): School FE,5.54,1.16,0.79,4.79,0.0,1.44,0.87,0.72,0.214,5953,5.52,1.16,1.44,0.02
+Grade 2,Column 7,Initial Assignment Reduced Form (ITT),Initial Assignment (ITT): School FE + Student Covariates,5.28,1.1,0.76,4.8,0.0,1.15,0.81,0.69,0.276,5953,5.27,1.1,1.16,0.01
+Grade 2,Column 8,Initial Assignment Reduced Form (ITT),Initial Assignment (ITT): School FE + Student + Teacher Covariates,5.27,1.1,0.76,4.79,0.0,1.17,0.8,0.69,0.277,5953,5.26,1.1,1.18,0.01
+Grade 3,Column 1,Actual Assignment OLS,Actual Assignment: Raw / No Controls,5.07,1.92,0.87,2.64,0.0082,-0.27,1.95,0.85,0.008,6100,5.32,1.91,-0.22,-0.25
+Grade 3,Column 2,Actual Assignment OLS,Actual Assignment: School FE,5.47,1.22,0.84,4.47,0.0,-0.19,1.13,0.8,0.164,6100,5.58,1.22,-0.16,-0.11
+Grade 3,Column 3,Actual Assignment OLS,Actual Assignment: School FE + Student Covariates,4.9,1.2,0.81,4.08,0.0,-0.37,1.12,0.78,0.22,6100,5.01,1.19,-0.33,-0.11
+Grade 3,Column 4,Actual Assignment OLS,Actual Assignment: School FE + Student + Teacher Covariates,4.88,1.2,0.81,4.06,0.0,-0.78,1.07,0.78,0.222,6100,5.0,1.19,-0.75,-0.12
+Grade 3,Column 5,Initial Assignment Reduced Form (ITT),Initial Assignment (ITT): Raw / No Controls,5.23,1.46,0.88,3.59,0.0003,-0.35,1.17,0.8,0.008,6100,5.51,1.46,-0.3,-0.28
+Grade 3,Column 6,Initial Assignment Reduced Form (ITT),Initial Assignment (ITT): School FE,5.32,1.08,0.82,4.9,0.0,0.09,0.86,0.76,0.162,6100,5.42,1.08,0.12,-0.1
+Grade 3,Column 7,Initial Assignment Reduced Form (ITT),Initial Assignment (ITT): School FE + Student Covariates,5.19,1.04,0.79,5.01,0.0,0.1,0.81,0.73,0.219,6100,5.3,1.03,0.13,-0.11
+Grade 3,Column 8,Initial Assignment Reduced Form (ITT),Initial Assignment (ITT): School FE + Student + Teacher Covariates,5.12,1.05,0.8,4.87,0.0,-0.14,0.78,0.73,0.221,6100,5.24,1.04,-0.1,-0.12

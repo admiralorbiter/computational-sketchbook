@@ -1,8 +1,0 @@
-panel,grade,measure,retained_students,retention_rate_pct,attrition_rate_pct,small_attrition_pct,regular_attrition_pct,aide_attrition_pct,differential_attrition_small_vs_reg_pp,math_missing_pct,read_missing_pct,avg_missing_pct
-Panel A: Cumulative Attrition from K Cohort,Grade 1,K-Cohort Retention & Attrition,4515,71.4,28.6,26.3,30.4,28.8,-4.1,-,-,-
-Panel A: Cumulative Attrition from K Cohort,Grade 2,K-Cohort Retention & Attrition,3660,57.9,42.1,39.6,42.7,43.8,-3.1,-,-,-
-Panel A: Cumulative Attrition from K Cohort,Grade 3,K-Cohort Retention & Attrition,3231,51.1,48.9,46.8,49.4,50.3,-2.6,-,-,-
-Panel B: Missing Test Scores (Active Students),Grade K,Stanford Achievement Test Missingness,6325,-,-,7.3% (Math),7.4% (Math),6.9% (Math),-0.1,7.2%,8.5%,7.1%
-Panel B: Missing Test Scores (Active Students),Grade 1,Stanford Achievement Test Missingness,6829,-,-,3.0% (Math),3.0% (Math),4.1% (Math),0.0,3.4%,6.4%,3.1%
-Panel B: Missing Test Scores (Active Students),Grade 2,Stanford Achievement Test Missingness,6840,-,-,11.3% (Math),11.9% (Math),10.9% (Math),-0.6,11.3%,11.2%,10.9%
-Panel B: Missing Test Scores (Active Students),Grade 3,Stanford Achievement Test Missingness,6802,-,-,10.9% (Math),11.9% (Math),9.4% (Math),-1.1,10.7%,11.8%,10.2%

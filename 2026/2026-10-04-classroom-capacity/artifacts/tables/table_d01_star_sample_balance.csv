@@ -1,7 +1,12 @@
-covariate,covariate_label,total_mean,small_mean,regular_mean,aide_mean,diff_small_vs_reg,se_small,p_val_small,diff_aide_vs_reg,se_aide,p_val_aide,joint_f_stat,joint_p_val
-Sample Count (Students),Enrolled Sample Size,"6,325","1,900 (30.0%)","2,194 (34.7%)","2,231 (35.3%)",-,-,-,-,-,-,-,-
-female,Female Student,48.617%,48.579%,48.997%,48.274%,-0.342%,1.590,0.829,-0.671%,1.528,0.661,0.10,0.908
-white_asian,White or Asian,67.162%,68.263%,67.457%,65.935%,+0.015%,0.772,0.984,-0.584%,0.742,0.431,0.42,0.660
-black,Black Student,32.538%,31.211%,32.361%,33.841%,-0.321%,0.759,0.673,+0.543%,0.730,0.457,0.68,0.507
-free_lunch_d_k,Free Lunch Eligible,48.253%,46.895%,47.584%,50.067%,-0.236%,1.337,0.860,+1.275%,1.285,0.321,0.78,0.459
-birthyear,Birth Year,1979.76,1979.74,1979.76,1979.76,-0.01,0.01,0.353,-0.00,0.01,0.729,0.44,0.645
+sample_wave,covariate,total_mean,small_mean,regular_mean,aide_mean,diff_small_vs_reg,se_small,p_val_small,diff_aide_vs_reg,se_aide,p_val_aide,omnibus_f_stat,omnibus_p_val,balance_assessment
+Kindergarten Entrants (Baseline),Enrolled Sample Size,"6,325","1,900 (30.0%)","2,194 (34.7%)","2,231 (35.3%)",-,-,-,-,-,-,-,-,Complete Enrollment Wave
+Kindergarten Entrants (Baseline),Female Student,48.617%,48.579%,48.997%,48.274%,-0.342%,1.590,0.829,-0.671%,1.528,0.661,0.10,0.908,No detectable imbalance (p >= 0.05)
+Kindergarten Entrants (Baseline),White or Asian,67.194%,68.299%,67.518%,65.935%,-0.019%,0.772,0.980,-0.613%,0.742,0.408,0.44,0.647,No detectable imbalance (p >= 0.05)
+Kindergarten Entrants (Baseline),Black Student,32.553%,31.227%,32.391%,33.841%,-0.329%,0.757,0.664,+0.479%,0.728,0.510,0.59,0.554,No detectable imbalance (p >= 0.05)
+Kindergarten Entrants (Baseline),Free Lunch Eligible,48.444%,47.093%,47.737%,50.293%,-0.182%,1.338,0.892,+1.334%,1.286,0.300,0.81,0.446,No detectable imbalance (p >= 0.05)
+Kindergarten Entrants (Baseline),Birth Year,1979.76,1979.74,1979.76,1979.76,-0.01,0.01,0.353,-0.00,0.01,0.729,0.44,0.645,No detectable imbalance (p >= 0.05)
+Grade 1 Entrants (New Entrants),Enrolled Sample Size,"2,314",385 (16.6%),"1,026 (44.3%)",903 (39.0%),-,-,-,-,-,-,-,-,Grade 1 Wave (Krueger Table I Panel B)
+Grade 1 Entrants (New Entrants),Female Student,45.328%,48.698%,43.836%,45.587%,+4.424%,3.122,0.157,+0.869%,2.371,0.714,1.01,0.363,No detectable imbalance (p >= 0.05)
+Grade 1 Entrants (New Entrants),White or Asian,60.656%,62.205%,56.158%,65.129%,-1.005%,1.948,0.606,+1.844%,1.479,0.213,1.29,0.276,No detectable imbalance (p >= 0.05)
+Grade 1 Entrants (New Entrants),Free Lunch Eligible,61.205%,59.249%,62.412%,60.665%,-4.151%,2.704,0.125,-0.485%,2.056,0.814,1.23,0.292,No detectable imbalance (p >= 0.05)
+Grade 1 Entrants (New Entrants),Birth Year,1979.32,1979.39,1979.31,1979.31,+0.07,0.04,0.087,+0.01,0.03,0.771,1.52,0.219,No detectable imbalance (p >= 0.05)

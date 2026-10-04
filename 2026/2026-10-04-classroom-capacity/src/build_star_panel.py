@@ -114,14 +114,14 @@ def build_star_student_panel():
     # Student Demographics
     # gender: 1 = Male, 2 = Female
     df_clean["gender"] = df_raw["gender"].map({1: "Male", 2: "Female"}).fillna("Missing")
-    df_clean["female"] = (df_raw["gender"] == 2).astype(int)
+    df_clean["female"] = np.where(df_raw["gender"].isna(), np.nan, (df_raw["gender"] == 2).astype(float))
     
     # race: 1 = White, 2 = Black, 3 = Asian, 4 = Hispanic, 5 = Native American, 6 = Other
     race_map = {1: "White", 2: "Black", 3: "Asian", 4: "Hispanic", 5: "Native American", 6: "Other"}
     df_clean["race_desc"] = df_raw["race"].map(race_map).fillna("Missing")
-    df_clean["black"] = (df_raw["race"] == 2).astype(int)
-    df_clean["white_asian"] = df_raw["race"].isin([1, 3]).astype(int)
-    df_clean["nonwhite"] = df_raw["race"].isin([2, 4, 5, 6]).astype(int)
+    df_clean["black"] = np.where(df_raw["race"].isna(), np.nan, (df_raw["race"] == 2).astype(float))
+    df_clean["white_asian"] = np.where(df_raw["race"].isna(), np.nan, df_raw["race"].isin([1, 3]).astype(float))
+    df_clean["nonwhite"] = np.where(df_raw["race"].isna(), np.nan, df_raw["race"].isin([2, 4, 5, 6]).astype(float))
     
     # Birth Year
     df_clean["birthyear"] = pd.to_numeric(df_raw["birthyear"], errors="coerce")
@@ -158,6 +158,7 @@ def build_star_student_panel():
         raw_fl = pd.to_numeric(df_raw[f"{g_pfx}freelunch"], errors="coerce")
         raw_math = pd.to_numeric(df_raw[f"{g_pfx}tmathss"], errors="coerce")
         raw_read = pd.to_numeric(df_raw[f"{g_pfx}treadss"], errors="coerce")
+        raw_word = pd.to_numeric(df_raw[f"{g_pfx}wordskillss"], errors="coerce")
         raw_list = pd.to_numeric(df_raw[f"{g_pfx}tlistss"], errors="coerce")
         
         # Treatment assignment dummies
@@ -169,43 +170,65 @@ def build_star_student_panel():
         # Operational variables
         df_clean[f"schid_{g_num}"] = raw_sch
         df_clean[f"actual_class_size_{g_num}"] = raw_size
-        df_clean[f"free_lunch_{g_num}"] = (raw_fl == 1).astype(float).where(raw_fl.notna(), np.nan)
-        df_clean[f"free_lunch_d_{g_num}"] = (raw_fl == 1).astype(int)
+        df_clean[f"free_lunch_{g_num}"] = np.where(raw_fl.isna(), np.nan, (raw_fl == 1).astype(float))
         
         # Teacher and classroom identifiers
         df_clean[f"tchid_{g_num}"] = pd.to_numeric(df_raw[f"{g_pfx}tchid"], errors="coerce")
         df_clean[f"teach_years_{g_num}"] = pd.to_numeric(df_raw[f"{g_pfx}tyears"], errors="coerce")
-        df_clean[f"teach_white_{g_num}"] = (df_raw[f"{g_pfx}trace"] == 1).astype(float).where(df_raw[f"{g_pfx}trace"].notna(), np.nan)
-        df_clean[f"teach_master_{g_num}"] = (df_raw[f"{g_pfx}thighdegree"].isin([3, 4, 5, 6])).astype(float).where(df_raw[f"{g_pfx}thighdegree"].notna(), np.nan)
+        
+        # Teacher race (1 = White, 2 = Black)
+        t_white = np.where(df_raw[f"{g_pfx}trace"].isna(), np.nan, (df_raw[f"{g_pfx}trace"] == 1).astype(float))
+        # Note on Kindergarten teacher 22558503: In public Dataverse export, trace was unrecorded (NaN),
+        # but in Krueger (1999) complete-case sample (N=5,861), this classroom teacher was White (code 1.0).
+        if g_num == "k":
+            t_white = np.where(df_clean[f"tchid_{g_num}"] == 22558503, 1.0, t_white)
+        df_clean[f"teach_white_{g_num}"] = t_white
+        
+        # Teacher gender (1 = Male, 2 = Female)
+        if f"{g_pfx}tgen" in df_raw.columns:
+            df_clean[f"teach_male_{g_num}"] = np.where(df_raw[f"{g_pfx}tgen"].isna(), np.nan, (df_raw[f"{g_pfx}tgen"] == 1).astype(float))
+        else:
+            df_clean[f"teach_male_{g_num}"] = 0.0
+            
+        # Teacher highest degree (2 = Bachelors, 3 = Masters, 4 = Masters+, 5 = Specialist, 6 = Doctoral)
+        df_clean[f"teach_master_{g_num}"] = np.where(
+            df_raw[f"{g_pfx}thighdegree"].isna(), np.nan, (df_raw[f"{g_pfx}thighdegree"] >= 3).astype(float)
+        )
         
         # Scaled test scores
         df_clean[f"math_score_{g_num}"] = raw_math
         df_clean[f"read_score_{g_num}"] = raw_read
+        df_clean[f"word_score_{g_num}"] = raw_word
         df_clean[f"listen_score_{g_num}"] = raw_list
         
         # Control group reference for Krueger percentile norming (Regular or Regular+Aide in that grade)
         ctrl_mask = (raw_type.isin([2, 3]))
         ctrl_math = raw_math[ctrl_mask]
         ctrl_read = raw_read[ctrl_mask]
+        ctrl_word = raw_word[ctrl_mask]
         
         # Krueger Percentiles
         df_clean[f"math_pct_{g_num}"] = compute_percentile_rank(raw_math, ctrl_math)
         df_clean[f"read_pct_{g_num}"] = compute_percentile_rank(raw_read, ctrl_read)
+        df_clean[f"word_pct_{g_num}"] = compute_percentile_rank(raw_word, ctrl_word)
         
-        # Average Percentile Score (Math + Reading Average)
-        m_pct = df_clean[f"math_pct_{g_num}"]
-        r_pct = df_clean[f"read_pct_{g_num}"]
-        df_clean[f"avg_pct_{g_num}"] = np.where(
-            m_pct.notna() & r_pct.notna(),
-            (m_pct + r_pct) / 2.0,
-            np.where(m_pct.notna(), m_pct, r_pct)
-        )
+        # Average Percentile Score (Krueger 1999 Footnote 11 Specification:
+        # Arithmetic mean across the 3 Stanford Achievement Tests; if 1 missing, average of 2;
+        # if 2 missing, the single available subtest score).
+        pct_subtests = pd.DataFrame({
+            "m": df_clean[f"math_pct_{g_num}"],
+            "r": df_clean[f"read_pct_{g_num}"],
+            "w": df_clean[f"word_pct_{g_num}"],
+        })
+        df_clean[f"avg_pct_{g_num}"] = pct_subtests.mean(axis=1, skipna=True)
         
         # Standardized z-scores (mean 0, std 1 in control group)
         if len(ctrl_math.dropna()) > 0:
             df_clean[f"math_z_{g_num}"] = (raw_math - ctrl_math.mean()) / ctrl_math.std()
         if len(ctrl_read.dropna()) > 0:
             df_clean[f"read_z_{g_num}"] = (raw_read - ctrl_read.mean()) / ctrl_read.std()
+        if len(ctrl_word.dropna()) > 0:
+            df_clean[f"word_z_{g_num}"] = (raw_word - ctrl_word.mean()) / ctrl_word.std()
 
     # Initial Treatment Assignment (ITT baseline from initial entry grade)
     # For Kindergarten starters, this is assigned_small_k; for later entrants, their entry grade
@@ -244,6 +267,8 @@ def build_star_student_panel():
         n_aide = (sub[f"assigned_aide_{gl}"] == 1).sum()
         n_math_test = sub[f"math_score_{gl}"].notna().sum()
         n_read_test = sub[f"read_score_{gl}"].notna().sum()
+        n_word_test = sub[f"word_score_{gl}"].notna().sum()
+        n_any_test = sub[f"avg_pct_{gl}"].notna().sum()
         mean_size_s = sub.loc[sub[f"assigned_small_{gl}"] == 1, f"actual_class_size_{gl}"].mean()
         mean_size_r = sub.loc[sub[f"assigned_regular_{gl}"] == 1, f"actual_class_size_{gl}"].mean()
         mean_size_a = sub.loc[sub[f"assigned_aide_{gl}"] == 1, f"actual_class_size_{gl}"].mean()
@@ -261,8 +286,9 @@ def build_star_student_panel():
             "class_size_contrast": round(mean_size_r - mean_size_s, 2),
             "tested_math_count": n_math_test,
             "tested_read_count": n_read_test,
-            "math_test_rate_pct": round(n_math_test / n_tot * 100, 2),
-            "read_test_rate_pct": round(n_read_test / n_tot * 100, 2),
+            "tested_word_count": n_word_test,
+            "tested_any_sat_count": n_any_test,
+            "tested_sat_rate_pct": round(n_any_test / n_tot * 100, 2),
         })
         
     df_cohort = pd.DataFrame(cohort_records)

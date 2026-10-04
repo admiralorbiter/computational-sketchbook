@@ -1,5 +1,5 @@
-grade,school_year,enrolled_students,small_class_students,regular_class_students,regular_aide_students,mean_class_size_small,mean_class_size_regular,mean_class_size_aide,class_size_contrast,tested_math_count,tested_read_count,math_test_rate_pct,read_test_rate_pct
-K,1985-86,6325,1900,2194,2231,15.12,22.38,22.77,7.27,5871,5789,92.82,91.53
-1,1986-87,6829,1925,2584,2320,15.7,22.7,23.44,7.0,6598,6395,96.62,93.64
-2,1987-88,6840,2016,2329,2495,15.3,23.47,23.46,8.17,6065,6077,88.67,88.85
-3,1988-89,6802,2174,2085,2543,15.71,23.64,24.03,7.93,6077,6000,89.34,88.21
+grade,school_year,enrolled_students,small_class_students,regular_class_students,regular_aide_students,mean_class_size_small,mean_class_size_regular,mean_class_size_aide,class_size_contrast,tested_math_count,tested_read_count,tested_word_count,tested_any_sat_count,tested_sat_rate_pct
+K,1985-86,6325,1900,2194,2231,15.12,22.38,22.77,7.27,5871,5789,5851,5902,93.31
+1,1986-87,6829,1925,2584,2320,15.7,22.7,23.44,7.0,6598,6395,5972,6635,97.16
+2,1987-88,6840,2016,2329,2495,15.3,23.47,23.46,8.17,6065,6077,6347,6360,92.98
+3,1988-89,6802,2174,2085,2543,15.71,23.64,24.03,7.93,6077,6000,6349,6355,93.43
