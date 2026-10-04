@@ -1,0 +1,50 @@
+wave_raw_name,canonical_name,definition,universe,snapshot_date,notes_on_change
+SCH_ALGCLASSES_GS0712,classes_alg1_gs0712,Number of classes of Algebra I taught in grades 7-12,Grades 7-12,Fall 2013,Used only in 2013-14 wave. Covers both middle and high school grades.
+TOT_ALGENR_GS0708_M,enr_alg1_g0708_m,Male student enrollment in Algebra I in grades 7-8,Grades 7-8,Fall 2013,Part of 2013-14 Algebra I total enrollment numerator.
+TOT_ALGENR_GS0708_F,enr_alg1_g0708_f,Female student enrollment in Algebra I in grades 7-8,Grades 7-8,Fall 2013,Part of 2013-14 Algebra I total enrollment numerator.
+TOT_ALGENR_GS0910_M,enr_alg1_g0910_m,Male student enrollment in Algebra I in grades 9-10,Grades 9-10,Fall 2013 to 2023,Consistent across all 6 waves for high school lower grades.
+TOT_ALGENR_GS0910_F,enr_alg1_g0910_f,Female student enrollment in Algebra I in grades 9-10,Grades 9-10,Fall 2013 to 2023,Consistent across all 6 waves for high school lower grades.
+TOT_ALGENR_GS0910_X,enr_alg1_g0910_x,Nonbinary student enrollment in Algebra I in grades 9-10,Grades 9-10,Fall 2023,Added in 2023-24 wave for nonbinary gender reporting.
+TOT_ALGENR_GS1112_M,enr_alg1_g1112_m,Male student enrollment in Algebra I in grades 11-12,Grades 11-12,Fall 2013 to 2023,Consistent across all 6 waves for high school upper grades.
+TOT_ALGENR_GS1112_F,enr_alg1_g1112_f,Female student enrollment in Algebra I in grades 11-12,Grades 11-12,Fall 2013 to 2023,Consistent across all 6 waves for high school upper grades.
+TOT_ALGENR_GS1112_X,enr_alg1_g1112_x,Nonbinary student enrollment in Algebra I in grades 11-12,Grades 11-12,Fall 2023,Added in 2023-24 wave for nonbinary gender reporting.
+SCH_MATHCLASSES_ALG,classes_alg1_gs0912,Number of classes of Algebra I taught in grades 9-12,Grades 9-12,Fall 2015 to 2023,Canonical high school Algebra I class count used from 2015-16 through 2023-24.
+SCH_ALGCLASSES_GS0708,classes_alg1_gs0708,Number of classes of Algebra I taught in grades 7-8,Grades 7-8,Fall 2015 to 2023,Separate middle school Algebra I class count collected 2015-16 onward.
+SCH_GEOMCLASSES_GS0712,classes_geom_gs0712,Number of classes of Geometry taught in grades 7-12,Grades 7-12,Fall 2013,Used in 2013-14 wave.
+TOT_GEOMENR_GS0712_M,enr_geom_gs0712_m,Male student enrollment in Geometry in grades 7-12,Grades 7-12,Fall 2013,Used in 2013-14 wave.
+TOT_GEOMENR_GS0712_F,enr_geom_gs0712_f,Female student enrollment in Geometry in grades 7-12,Grades 7-12,Fall 2013,Used in 2013-14 wave.
+SCH_MATHCLASSES_GEOM,classes_geom,Number of classes of Geometry taught,High School (Grades 9-12),Fall 2015 to 2023,Consistent class count variable across 2015-16 through 2023-24.
+TOT_GEOM_M,enr_geom_m,Male student enrollment in Geometry,High School (Grades 9-12),Fall 2015,CRDC 2015-16 naming anomaly; omitted MATHENR prefix.
+TOT_GEOM_F,enr_geom_f,Female student enrollment in Geometry,High School (Grades 9-12),Fall 2015,CRDC 2015-16 naming anomaly; omitted MATHENR prefix.
+TOT_MATHENR_GEOM_M,enr_geom_m,Male student enrollment in Geometry,High School (Grades 9-12),Fall 2017 to 2023,Standardized naming in 2017-18, 2020-21, 2021-22, and 2023-24.
+TOT_MATHENR_GEOM_F,enr_geom_f,Female student enrollment in Geometry,High School (Grades 9-12),Fall 2017 to 2023,Standardized naming in 2017-18, 2020-21, 2021-22, and 2023-24.
+TOT_MATHENR_GEOM_X,enr_geom_x,Nonbinary student enrollment in Geometry,High School (Grades 9-12),Fall 2023,Added in 2023-24 wave.
+SCH_MATHCLASSES_ALG2,classes_alg2,Number of classes of Algebra II taught,High School (Grades 9-12),Fall 2013 to 2023,Consistent class count variable across all 6 waves.
+TOT_MATHENR_ALG2_M,enr_alg2_m,Male student enrollment in Algebra II,High School (Grades 9-12),Fall 2013 to 2023,Consistent enrollment variable across all 6 waves.
+TOT_MATHENR_ALG2_F,enr_alg2_f,Female student enrollment in Algebra II,High School (Grades 9-12),Fall 2013 to 2023,Consistent enrollment variable across all 6 waves.
+TOT_MATHENR_ALG2_X,enr_alg2_x,Nonbinary student enrollment in Algebra II,High School (Grades 9-12),Fall 2023,Added in 2023-24 wave.
+SCH_MATHCLASSES_ADVM,classes_advm,Number of classes of Advanced Mathematics taught,High School (Grades 9-12),Fall 2013 to 2023,Consistent class count variable across all 6 waves (Trigonometry/Pre-Calculus/Stats).
+TOT_MATHENR_ADVM_M,enr_advm_m,Male student enrollment in Advanced Mathematics,High School (Grades 9-12),Fall 2013 to 2023,Consistent enrollment variable across all 6 waves.
+TOT_MATHENR_ADVM_F,enr_advm_f,Female student enrollment in Advanced Mathematics,High School (Grades 9-12),Fall 2013 to 2023,Consistent enrollment variable across all 6 waves.
+TOT_MATHENR_ADVM_X,enr_advm_x,Nonbinary student enrollment in Advanced Mathematics,High School (Grades 9-12),Fall 2023,Added in 2023-24 wave.
+SCH_MATHCLASSES_CALC,classes_calc,Number of classes of Calculus taught,High School (Grades 9-12),Fall 2013 to 2023,Consistent class count variable across all 6 waves.
+TOT_MATHENR_CALC_M,enr_calc_m,Male student enrollment in Calculus,High School (Grades 9-12),Fall 2013 to 2023,Consistent enrollment variable across all 6 waves.
+TOT_MATHENR_CALC_F,enr_calc_f,Female student enrollment in Calculus,High School (Grades 9-12),Fall 2013 to 2023,Consistent enrollment variable across all 6 waves.
+TOT_MATHENR_CALC_X,enr_calc_x,Nonbinary student enrollment in Calculus,High School (Grades 9-12),Fall 2023,Added in 2023-24 wave.
+SCH_SCICLASSES_BIOL,classes_bio,Number of classes of Biology taught,High School (Grades 9-12),Fall 2013 to 2023,Consistent class count variable across all 6 waves.
+TOT_SCIENR_BIOL_M,enr_bio_m,Male student enrollment in Biology,High School (Grades 9-12),Fall 2013 to 2023,Consistent enrollment variable across all 6 waves.
+TOT_SCIENR_BIOL_F,enr_bio_f,Female student enrollment in Biology,High School (Grades 9-12),Fall 2013 to 2023,Consistent enrollment variable across all 6 waves.
+TOT_SCIENR_BIOL_X,enr_bio_x,Nonbinary student enrollment in Biology,High School (Grades 9-12),Fall 2023,Added in 2023-24 wave.
+SCH_SCICLASSES_CHEM,classes_chem,Number of classes of Chemistry taught,High School (Grades 9-12),Fall 2013 to 2023,Consistent class count variable across all 6 waves.
+TOT_SCIENR_CHEM_M,enr_chem_m,Male student enrollment in Chemistry,High School (Grades 9-12),Fall 2013 to 2023,Consistent enrollment variable across all 6 waves.
+TOT_SCIENR_CHEM_F,enr_chem_f,Female student enrollment in Chemistry,High School (Grades 9-12),Fall 2013 to 2023,Consistent enrollment variable across all 6 waves.
+TOT_SCIENR_CHEM_X,enr_chem_x,Nonbinary student enrollment in Chemistry,High School (Grades 9-12),Fall 2023,Added in 2023-24 wave.
+SCH_SCICLASSES_PHYS,classes_phys,Number of classes of Physics taught,High School (Grades 9-12),Fall 2013 to 2023,Consistent class count variable across all 6 waves.
+TOT_SCIENR_PHYS_M,enr_phys_m,Male student enrollment in Physics,High School (Grades 9-12),Fall 2013 to 2023,Consistent enrollment variable across all 6 waves.
+TOT_SCIENR_PHYS_F,enr_phys_f,Female student enrollment in Physics,High School (Grades 9-12),Fall 2013 to 2023,Consistent enrollment variable across all 6 waves.
+TOT_SCIENR_PHYS_X,enr_phys_x,Nonbinary student enrollment in Physics,High School (Grades 9-12),Fall 2023,Added in 2023-24 wave.
+COMBOKEY,nces_school_id,NCES 12-digit public school unique identifier,All Public Schools,All Waves,Constructed as 7-digit LEAID + 5-digit SCHID when stored as float/scientific.
+LEAID,nces_lea_id,NCES 7-digit local education agency unique identifier,All Public School Districts,All Waves,Standard district identifier.
+SCH_NAME,school_name,Official reported school name,All Public Schools,All Waves,Reported campus title.
+LEA_NAME,lea_name,Official reported district name,All Public School Districts,All Waves,Reported LEA title.
+LEA_STATE,state,Two-letter state postal abbreviation,All States and Territories,All Waves,State boundary indicator.

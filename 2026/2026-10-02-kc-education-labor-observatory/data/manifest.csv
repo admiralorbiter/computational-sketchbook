@@ -1,0 +1,7 @@
+artifact_id,category,relative_path,source_description,source_url,sha256,notes
+ART-STAFF-001,processed_panel,data/processed/district_labor_panel.parquet,Harmonized 21-year district staffing and fiscal panel from kc_admin_staffing_decomposition,internal_pipeline,none,Linked to NCES CCD and SAIPE
+ART-FOCAL-001,processed_subset,data/processed/focal_7_labor_panel.csv,Focal 7 metropolitan school districts baseline time-series (2004-2024),internal_pipeline,none,KCPS; KCKPS; SMSD; Olathe; Independence; NKC; Park Hill
+ART-STAT-001,statute,data/raw/statutes_caselaw/ks_pna_statute.txt,Kansas Professional Negotiations Act (K.S.A. 72-2218 et seq.),https://ksrevisor.org/statutes/chapters/ch72/072_022_0018.html,pending,Codified collective bargaining statute with 2015 amendments
+ART-STAT-002,constitution,data/raw/statutes_caselaw/mo_const_art1_sec29.txt,Missouri Constitution Article I Section 29,https://www.moga.mo.gov/mostatutes/Const/01029.html,pending,Public employee right to organize and bargain collectively
+ART-CASE-001,caselaw,data/raw/statutes_caselaw/independence_nea_2007.txt,Independence-NEA v. Independence School District 223 S.W.3d 131 (Mo. 2007),https://law.justia.com/cases/missouri/supreme-court/2007/sc87980.html,pending,Overturned 60-year Clouse doctrine
+ART-CASE-002,caselaw,data/raw/statutes_caselaw/nea_shawnee_mission_1973.txt,NEA-Shawnee Mission v. Board of Education 212 Kan. 741 (1973),https://law.justia.com/cases/kansas/supreme-court/1973/47094-1.html,pending,Early Kansas Supreme Court test of mandatory bargaining scope

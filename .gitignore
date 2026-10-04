@@ -3,6 +3,7 @@ kc_education_capacity
 ai_infrastructure_network
 signal_observatory
 kc_admin_staffing_decomposition
+kc_education_labor
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
