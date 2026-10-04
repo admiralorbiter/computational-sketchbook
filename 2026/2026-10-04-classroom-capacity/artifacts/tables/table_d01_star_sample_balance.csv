@@ -1,0 +1,7 @@
+covariate,covariate_label,total_mean,small_mean,regular_mean,aide_mean,diff_small_vs_reg,se_small,p_val_small,diff_aide_vs_reg,se_aide,p_val_aide,joint_f_stat,joint_p_val
+Sample Count (Students),Enrolled Sample Size,"6,325","1,900 (30.0%)","2,194 (34.7%)","2,231 (35.3%)",-,-,-,-,-,-,-,-
+female,Female Student,48.617%,48.579%,48.997%,48.274%,-0.342%,1.590,0.829,-0.671%,1.528,0.661,0.10,0.908
+white_asian,White or Asian,67.162%,68.263%,67.457%,65.935%,+0.015%,0.772,0.984,-0.584%,0.742,0.431,0.42,0.660
+black,Black Student,32.538%,31.211%,32.361%,33.841%,-0.321%,0.759,0.673,+0.543%,0.730,0.457,0.68,0.507
+free_lunch_d_k,Free Lunch Eligible,48.253%,46.895%,47.584%,50.067%,-0.236%,1.337,0.860,+1.275%,1.285,0.321,0.78,0.459
+birthyear,Birth Year,1979.76,1979.74,1979.76,1979.76,-0.01,0.01,0.353,-0.00,0.01,0.729,0.44,0.645

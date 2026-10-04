@@ -1,0 +1,37 @@
+grade,subject,model_specification,small_coef,small_ols_se,small_clustered_se,small_t_stat,small_p_val,aide_coef,aide_ols_se,aide_clustered_se,aide_t_stat,aide_p_val,r_squared,sample_size_n,krueger_1999_benchmark,replication_gap
+K,Average Percentile,Model 1 (Raw / No Controls),4.75,0.88,1.54,5.4,0.0,-0.15,0.84,1.33,-0.18,0.8562,0.007,5874,+4.82,-0.07
+K,Average Percentile,Model 2 (School Fixed Effects),5.38,0.78,1.45,6.88,0.0,0.05,0.75,1.3,0.07,0.9426,0.249,5874,+5.37,+0.01
+K,Average Percentile,Model 3 (School FE + Covariates),5.37,0.75,1.39,7.16,0.0,0.26,0.72,1.26,0.37,0.7132,0.311,5874,+5.37,-0.00
+K,Math Percentile,Model 1 (Raw / No Controls),4.3,0.94,1.57,4.55,0.0,-0.43,0.91,1.51,-0.47,0.6366,0.005,5871,-,-
+K,Math Percentile,Model 2 (School Fixed Effects),4.99,0.86,1.56,5.82,0.0,-0.06,0.82,1.52,-0.07,0.9453,0.219,5871,-,-
+K,Math Percentile,Model 3 (School FE + Covariates),4.98,0.83,1.51,6.01,0.0,0.15,0.79,1.5,0.19,0.8461,0.269,5871,-,-
+K,Reading Percentile,Model 1 (Raw / No Controls),5.39,0.95,1.76,5.69,0.0,0.13,0.91,1.35,0.14,0.8871,0.007,5789,-,-
+K,Reading Percentile,Model 2 (School Fixed Effects),6.08,0.84,1.58,7.22,0.0,0.31,0.81,1.25,0.38,0.701,0.251,5789,-,-
+K,Reading Percentile,Model 3 (School FE + Covariates),6.02,0.81,1.53,7.44,0.0,0.47,0.78,1.22,0.6,0.548,0.308,5789,-,-
+1,Average Percentile,Model 1 (Raw / No Controls),8.58,0.82,1.41,10.45,0.0,3.49,0.78,1.42,4.45,0.0,0.016,6616,+7.08,+1.50
+1,Average Percentile,Model 2 (School Fixed Effects),8.29,0.73,1.36,11.32,0.0,2.1,0.71,1.14,2.96,0.0031,0.248,6616,+7.73,+0.56
+1,Average Percentile,Model 3 (School FE + Covariates),7.85,0.7,1.31,11.15,0.0,1.97,0.68,1.15,2.9,0.0037,0.305,6616,+7.85,+0.00
+1,Math Percentile,Model 1 (Raw / No Controls),8.65,0.88,1.53,9.84,0.0,2.76,0.84,1.57,3.29,0.001,0.015,6598,-,-
+1,Math Percentile,Model 2 (School Fixed Effects),8.53,0.79,1.51,10.79,0.0,1.36,0.76,1.38,1.78,0.0746,0.235,6598,-,-
+1,Math Percentile,Model 3 (School FE + Covariates),8.09,0.77,1.49,10.57,0.0,1.18,0.74,1.4,1.59,0.1115,0.284,6598,-,-
+1,Reading Percentile,Model 1 (Raw / No Controls),8.43,0.89,1.54,9.46,0.0,4.16,0.85,1.5,4.88,0.0,0.014,6395,-,-
+1,Reading Percentile,Model 2 (School Fixed Effects),8.02,0.8,1.48,9.99,0.0,2.79,0.78,1.13,3.58,0.0003,0.23,6395,-,-
+1,Reading Percentile,Model 3 (School FE + Covariates),7.6,0.77,1.41,9.84,0.0,2.74,0.75,1.12,3.65,0.0003,0.288,6395,-,-
+2,Average Percentile,Model 1 (Raw / No Controls),5.93,0.86,1.68,6.87,0.0,1.15,0.82,1.56,1.4,0.1609,0.009,6093,+5.41,+0.52
+2,Average Percentile,Model 2 (School Fixed Effects),6.51,0.78,1.55,8.3,0.0,1.46,0.74,1.37,1.98,0.048,0.23,6093,+6.08,+0.43
+2,Average Percentile,Model 3 (School FE + Covariates),5.98,0.76,1.52,7.91,0.0,1.3,0.71,1.35,1.82,0.0689,0.287,6093,+5.98,-0.00
+2,Math Percentile,Model 1 (Raw / No Controls),5.3,0.93,1.85,5.68,0.0,0.72,0.88,1.74,0.82,0.4139,0.006,6065,-,-
+2,Math Percentile,Model 2 (School Fixed Effects),6.25,0.85,1.8,7.32,0.0,1.22,0.8,1.61,1.52,0.1285,0.216,6065,-,-
+2,Math Percentile,Model 3 (School FE + Covariates),5.76,0.83,1.77,6.95,0.0,1.0,0.78,1.59,1.28,0.1999,0.261,6065,-,-
+2,Reading Percentile,Model 1 (Raw / No Controls),6.58,0.93,1.78,7.07,0.0,1.63,0.88,1.64,1.85,0.0651,0.009,6077,-,-
+2,Reading Percentile,Model 2 (School Fixed Effects),6.8,0.86,1.6,7.92,0.0,1.72,0.81,1.43,2.12,0.0341,0.205,6077,-,-
+2,Reading Percentile,Model 3 (School FE + Covariates),6.26,0.83,1.55,7.56,0.0,1.59,0.78,1.42,2.03,0.0422,0.261,6077,-,-
+3,Average Percentile,Model 1 (Raw / No Controls),5.6,0.87,1.51,6.4,0.0,-0.21,0.84,1.46,-0.25,0.8045,0.01,6110,+4.70,+0.90
+3,Average Percentile,Model 2 (School Fixed Effects),5.61,0.82,1.34,6.83,0.0,0.04,0.79,1.33,0.05,0.9597,0.189,6110,+5.07,+0.54
+3,Average Percentile,Model 3 (School FE + Covariates),5.1,0.8,1.3,6.4,0.0,-0.16,0.76,1.36,-0.21,0.8313,0.238,6110,+5.10,+0.00
+3,Math Percentile,Model 1 (Raw / No Controls),4.99,0.94,1.54,5.32,0.0,-0.54,0.9,1.6,-0.6,0.5456,0.007,6077,-,-
+3,Math Percentile,Model 2 (School Fixed Effects),5.17,0.88,1.44,5.88,0.0,0.04,0.84,1.5,0.05,0.9624,0.187,6077,-,-
+3,Math Percentile,Model 3 (School FE + Covariates),4.66,0.86,1.4,5.42,0.0,-0.23,0.82,1.53,-0.28,0.7805,0.226,6077,-,-
+3,Reading Percentile,Model 1 (Raw / No Controls),6.3,0.95,1.66,6.64,0.0,0.2,0.91,1.57,0.22,0.8244,0.01,6000,-,-
+3,Reading Percentile,Model 2 (School Fixed Effects),6.1,0.91,1.43,6.72,0.0,0.14,0.87,1.39,0.16,0.8721,0.159,6000,-,-
+3,Reading Percentile,Model 3 (School FE + Covariates),5.6,0.88,1.39,6.36,0.0,0.01,0.84,1.41,0.01,0.9938,0.21,6000,-,-
