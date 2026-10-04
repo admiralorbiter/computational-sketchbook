@@ -14,8 +14,10 @@ Generates publication-ready figures for external presentation and essays:
   Scatterplot of 2024 Status vs. 2025 Status showing extreme longitudinal persistence (r=.938, R²=88%).
 - Figure 13b: 13b_prediction_staircase_clean.png
   Minimal horizontal chart showing incremental predictive power of demographics once prior status is known.
-- Figure 14: 14_growth_vs_poverty_clean.png
-  Mirror of Figure 11 for Growth vs. Poverty, illustrating the near-zero relationship (r=.003).
+- Figure 14: 14_how_missouri_growth_works.png
+  Clean conceptual infographic explaining Missouri's value-added growth model (expectation vs. reality).
+- Figure 15: 15_growth_vs_poverty_clean.png
+  Exact visual mirror of Figure 11 for Growth vs. Poverty, illustrating the near-zero relationship (r=.003).
 """
 
 from pathlib import Path
@@ -24,6 +26,7 @@ import pandas as pd
 import statsmodels.api as sm
 from scipy.stats import pearsonr
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 import matplotlib.ticker as mtick
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -54,7 +57,6 @@ def build_figure_11(df25):
 
     r_val, _ = pearsonr(sub["frpl_pct"], sub["analyst_composite_status_mpi"])
     ols = sm.OLS(sub["analyst_composite_status_mpi"], sm.add_constant(sub["frpl_pct"])).fit()
-    r2_pct = ols.rsquared * 100
     slope = ols.params.iloc[1]
     intercept = ols.params.iloc[0]
 
@@ -181,7 +183,6 @@ def build_figure_12():
     df_lvl = pd.read_csv(TABLES_DIR / "table_level_breakdown_2025.csv")
     status_lvl = df_lvl[df_lvl["outcome"].str.contains("Analyst Composite Status")].copy()
 
-    level_order = ["ELEMENTARY", "MIDDLE", "HIGH", "MIXED"]
     level_names = {
         "ELEMENTARY": "Elementary",
         "MIDDLE": "Middle",
@@ -189,19 +190,13 @@ def build_figure_12():
         "MIXED": "Mixed",
     }
     
-    status_lvl["order"] = status_lvl["level"].map(lambda x: level_order.index(x) if x in level_order else 99)
-    status_lvl = status_lvl.sort_values("order").reset_index(drop=True)
+    display_order = ["MIDDLE", "ELEMENTARY", "MIXED", "HIGH"]
+    status_lvl["disp_order"] = status_lvl["level"].map(lambda x: display_order.index(x) if x in display_order else 99)
+    status_lvl = status_lvl.sort_values("disp_order", ascending=False).reset_index(drop=True)
     status_lvl["label"] = status_lvl["level"].map(level_names)
     status_lvl["r2_pct"] = status_lvl["r2"] * 100
 
     fig, ax = plt.subplots(figsize=(8.8, 4.4), dpi=300)
-
-    # Reorder so Middle and Elementary are prominent
-    # Order: Middle, Elementary, Mixed, High school (or Elementary, Middle, Mixed, High school)
-    # Let's display: Middle, Elementary, Mixed, High school
-    display_order = ["MIDDLE", "ELEMENTARY", "MIXED", "HIGH"]
-    status_lvl["disp_order"] = status_lvl["level"].map(lambda x: display_order.index(x))
-    status_lvl = status_lvl.sort_values("disp_order", ascending=False).reset_index(drop=True)
 
     y_pos = np.arange(len(status_lvl))
     colors = ["#1e3a8a" if lvl in ["MIDDLE", "ELEMENTARY"] else "#64748b" for lvl in status_lvl["level"]]
@@ -262,10 +257,6 @@ def build_figure_12b():
     A clean 3-row horizontal chart comparing overall, between-district, and within-district slopes.
     """
     print("[*] Generating Figure 12b: Within-District Poverty Gradient...")
-    # Comparison data from table_between_within_fixed_effects.csv
-    # All Missouri schools: -8.3 MPI
-    # Between districts: -8.5 MPI
-    # Within the same district, adjusting for school level: -7.4 MPI
     rows = [
         {"comparison": "All Missouri schools", "slope_10pp": -8.31, "label": "−8.3 MPI points", "color": "#2563eb"},
         {"comparison": "Between districts", "slope_10pp": -8.48, "label": "−8.5 MPI points", "color": "#0284c7"},
@@ -275,11 +266,9 @@ def build_figure_12b():
 
     fig, ax = plt.subplots(figsize=(8.8, 4.4), dpi=300)
 
-    # Invert order for display: All Missouri schools at top, Within at bottom
     df_p = df_p.iloc[::-1].reset_index(drop=True)
     y_pos = np.arange(len(df_p))
 
-    # Plot bars
     bars = ax.barh(y_pos, np.abs(df_p["slope_10pp"]), height=0.45, color=df_p["color"], edgecolor="none", zorder=3)
 
     for bar, (_, row) in zip(bars, df_p.iterrows()):
@@ -523,11 +512,105 @@ def build_figure_13b():
     print(f"[+] Saved {out_path}")
 
 
-def build_figure_14(df25):
+def build_figure_14_infographic():
     """
-    Figure 14: Poverty vs. Growth (Mirror of Figure 11).
+    Figure 14: Conceptual Infographic explaining Missouri's value-added growth model.
     """
-    print("[*] Generating Figure 14: Clean Growth vs. Poverty scatterplot...")
+    print("[*] Generating Figure 14: Value-Added Growth Conceptual Infographic...")
+    fig, ax = plt.subplots(figsize=(9.4, 5.3), dpi=300)
+    ax.set_xlim(0, 100)
+    ax.set_ylim(0, 100)
+    ax.axis("off")
+
+    # Title & Subtitle
+    ax.text(4, 93, "HOW MISSOURI MEASURES VALUE-ADDED GROWTH", fontsize=13, fontweight="bold", color="#0f172a")
+    ax.text(4, 87, "Missouri does not simply measure score gains; it measures performance relative to a statistical prediction.", fontsize=9.2, color="#64748b")
+
+    # 3 Horizontal Cards: Card 1 (x: 4 to 31), Card 2 (x: 37 to 64), Card 3 (x: 70 to 97)
+    # Card 1: Prior Information (Inputs)
+    c1 = patches.FancyBboxPatch((4, 40), 27, 42, boxstyle="round,pad=0.8", facecolor="#f8fafc", edgecolor="#cbd5e1", linewidth=1.2)
+    ax.add_patch(c1)
+    ax.text(6, 77, "1. PRIOR INFORMATION", fontsize=9.5, fontweight="bold", color="#1e3a8a", va="center")
+    ax.text(6, 71, "What the model considers:", fontsize=8.2, color="#475569", fontstyle="italic", va="top")
+    inputs_desc = (
+        "• Prior MAP test scores\n"
+        "  (complete ELA & Math history)\n\n"
+        "• Student mobility\n"
+        "  (mid-year school moves)\n\n"
+        "• School & district context"
+    )
+    ax.text(6, 64, inputs_desc, fontsize=8.0, color="#1e293b", linespacing=1.25, va="top")
+
+    # Arrow 1 -> 2
+    ax.annotate("", xy=(35.5, 61), xytext=(32.5, 61), arrowprops=dict(arrowstyle="->,head_width=0.4,head_length=0.6", color="#64748b", lw=1.8))
+
+    # Card 2: Model Expectation
+    c2 = patches.FancyBboxPatch((37, 40), 27, 42, boxstyle="round,pad=0.8", facecolor="#f8fafc", edgecolor="#cbd5e1", linewidth=1.2)
+    ax.add_patch(c2)
+    ax.text(39, 77, "2. MODEL EXPECTATION", fontsize=9.5, fontweight="bold", color="#0284c7", va="center")
+    ax.text(39, 71, "Statistical prediction:", fontsize=8.2, color="#475569", fontstyle="italic", va="top")
+    exp_desc = (
+        "What similar students with the\n"
+        "same academic background\n"
+        "score statewide on average:\n\n"
+        "Expected Score:  370"
+    )
+    ax.text(39, 64, exp_desc, fontsize=8.2, color="#1e293b", linespacing=1.35, va="top")
+
+    # Arrow 2 -> 3
+    ax.annotate("", xy=(68.5, 61), xytext=(65.5, 61), arrowprops=dict(arrowstyle="->,head_width=0.4,head_length=0.6", color="#64748b", lw=1.8))
+
+    # Card 3: Value-Added Result
+    c3 = patches.FancyBboxPatch((70, 40), 27, 42, boxstyle="round,pad=0.8", facecolor="#f0fdf4", edgecolor="#86efac", linewidth=1.2)
+    ax.add_patch(c3)
+    ax.text(72, 77, "3. VALUE-ADDED RESULT", fontsize=9.5, fontweight="bold", color="#15803d", va="center")
+    ax.text(72, 71, "Reality vs. Prediction:", fontsize=8.2, color="#475569", fontstyle="italic", va="top")
+    res_desc = (
+        "Actual Score:     385\n"
+        "Expected Score: 370\n"
+        "Difference:         +15 pts"
+    )
+    ax.text(72, 64, res_desc, fontsize=8.2, color="#1e293b", linespacing=1.35, va="top")
+
+    # Badge for Above Expectation
+    badge = patches.FancyBboxPatch((72, 44), 23, 6, boxstyle="round,pad=0.4", facecolor="#16a34a", edgecolor="none")
+    ax.add_patch(badge)
+    ax.text(83.5, 47, "ABOVE EXPECTATION", fontsize=7.8, fontweight="bold", color="#ffffff", ha="center", va="center")
+
+    # Bottom Banner / Key Takeaway
+    banner = patches.FancyBboxPatch((4, 16), 93, 18, boxstyle="round,pad=0.8", facecolor="#eff6ff", edgecolor="#bfdbfe", linewidth=1.2)
+    ax.add_patch(banner)
+    ax.text(6, 28, "THE KEY TAKEAWAY", fontsize=8.5, fontweight="bold", color="#1e40af", va="center")
+    takeaway_quote = (
+        "“Growth is not simply ‘this year’s score minus last year’s score.’\n"
+        "It measures performance relative to a statistical expectation.”"
+    )
+    ax.text(6, 23.5, takeaway_quote, fontsize=9.2, fontweight="600", color="#0f172a", linespacing=1.3, va="top")
+
+    # Footnote
+    fig.text(
+        0.04,
+        0.04,
+        "Note: Missouri DESE's value-added model uses prior test scores and mobility to predict individual MAP performance. Residuals are aggregated\nto school and student-group levels to assign accountability growth points.",
+        fontsize=7.5,
+        color="#64748b",
+        style="italic",
+        linespacing=1.25,
+    )
+
+    plt.tight_layout()
+    fig.subplots_adjust(left=0.02, right=0.98, top=0.96, bottom=0.08)
+    out_path = FIGURES_DIR / "14_how_missouri_growth_works.png"
+    fig.savefig(out_path)
+    plt.close(fig)
+    print(f"[+] Saved {out_path}")
+
+
+def build_figure_15(df25):
+    """
+    Figure 15: Clean Growth vs. Poverty scatterplot (Direct Mirror of Figure 11).
+    """
+    print("[*] Generating Figure 15: Clean Growth vs. Poverty scatterplot (Mirror of Figure 11)...")
     sub = df25.dropna(subset=["frpl_pct", "apr_growth_pts_pct"]).copy()
     n_schools = len(sub)
 
@@ -554,12 +637,11 @@ def build_figure_14(df25):
     y_line = intercept + slope * x_line
     ax.plot(x_line, y_line, color="#dc2626", linewidth=2.4, zorder=3)
 
-    # 3. Clean editorial callout box
+    # 3. Clean editorial callout box (matching Figure 11 positioning in open space)
     callout_text = (
-        "Value-added growth points show near-zero\n"
-        "association with school poverty.\n\n"
-        "r = +0.003   ·   R² ≈ 0.0%   ·   N = 1,984 schools\n"
-        "+10 pp poverty ≈ +0.02 growth points"
+        "Poverty is associated with essentially none of\n"
+        "the cross-school variation in reported growth points.\n\n"
+        f"r = +{r_val:.3f}   ·   N = {n_schools:,} schools"
     )
     ax.text(
         38,
@@ -579,7 +661,26 @@ def build_figure_14(df25):
         zorder=4,
     )
 
-    # Axes & Ticks (matching Figure 11 layout exactly)
+    # CEP Column Callout arrow pointing to the 100% vertical line
+    ax.annotate(
+        "Community Eligibility (CEP)\n100% free meals by policy (n=360)",
+        xy=(100, 62.5),
+        xytext=(68, 80),
+        fontsize=8.5,
+        color="#1e293b",
+        linespacing=1.25,
+        arrowprops=dict(arrowstyle="->", color="#475569", lw=1.2, shrinkA=3, shrinkB=4),
+        bbox=dict(
+            boxstyle="round,pad=0.5",
+            facecolor="#ffffff",
+            edgecolor="#cbd5e1",
+            linewidth=1.0,
+            alpha=0.96,
+        ),
+        zorder=4,
+    )
+
+    # 4. Axes & Ticks (matching Figure 11 layout exactly)
     ax.set_xlim(-2, 104)
     ax.set_ylim(-5, 105)
     ax.set_xticks([0, 20, 40, 60, 80, 100])
@@ -588,7 +689,7 @@ def build_figure_14(df25):
     ax.yaxis.set_major_formatter(mtick.PercentFormatter(decimals=0))
 
     ax.set_xlabel("Students eligible for free or reduced-price lunch (%)", fontsize=10.5, color="#334155", labelpad=8)
-    ax.set_ylabel("Official APR Growth Points earned (%)", fontsize=10.5, color="#334155", labelpad=8)
+    ax.set_ylabel("Official APR Value-Added Growth Points earned (%)", fontsize=10.5, color="#334155", labelpad=8)
     ax.tick_params(colors="#475569", labelsize=9.5)
 
     ax.spines["top"].set_visible(False)
@@ -596,8 +697,9 @@ def build_figure_14(df25):
     ax.spines["left"].set_color("#cbd5e1")
     ax.spines["bottom"].set_color("#cbd5e1")
 
+    # Titles deliberately paired with Figure 11
     plt.suptitle(
-        "Unlike achievement status, Missouri's growth metric shows almost no link to poverty",
+        "The poverty relationship almost disappears when Missouri measures growth",
         fontsize=12.2,
         fontweight="bold",
         color="#0f172a",
@@ -606,17 +708,18 @@ def build_figure_14(df25):
         ha="left",
     )
     ax.set_title(
-        "Official Value-Added Growth Points earned vs. Free/Reduced-Price Lunch %, Missouri conventional schools (2025)",
+        "Official APR Value-Added Growth Points earned vs. Free/Reduced-Price Lunch %, Missouri conventional public schools (2025)",
         fontsize=9.2,
         color="#64748b",
         pad=10,
         loc="left",
     )
 
+    # Footnote matching Figure 11 styling
     fig.text(
         0.08,
         0.015,
-        "Note: Includes 1,984 conventional public schools with reported growth points. Missouri's growth model evaluates student\nscale-score gains relative to statewide academic peers, resulting in an accountability signal orthogonal to poverty.",
+        "Note: The vertical stripe at 100% reflects schools in the Community Eligibility Provision (CEP). Missouri's growth model evaluates student\nscale-score gains relative to statistical expectations, resulting in an accountability measure that is nearly orthogonal to poverty.",
         fontsize=7.8,
         color="#64748b",
         style="italic",
@@ -625,7 +728,7 @@ def build_figure_14(df25):
 
     plt.tight_layout()
     fig.subplots_adjust(top=0.88, bottom=0.15)
-    out_path = FIGURES_DIR / "14_growth_vs_poverty_clean.png"
+    out_path = FIGURES_DIR / "15_growth_vs_poverty_clean.png"
     fig.savefig(out_path)
     plt.close(fig)
     print(f"[+] Saved {out_path}")
@@ -642,7 +745,8 @@ def main():
     build_figure_12b()
     build_figure_13(df)
     build_figure_13b()
-    build_figure_14(df25)
+    build_figure_14_infographic()
+    build_figure_15(df25)
     print("[SUCCESS] All publication graphics created successfully.")
 
 
