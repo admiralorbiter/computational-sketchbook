@@ -27,11 +27,14 @@ This computational sketchbook investigates the central research question:
 2026-10-08-what-does-an-a-mean/
 ├── README.md                           # Observatory overview and navigation
 ├── docs/
-│   ├── research_design.md              # Research questions, theoretical model, and hypotheses
-│   └── literature_review.md            # Synthesis of incentive economics, grading, and psychometrics
+│   ├── research_design.md              # Phase 1: Research questions, model, and hypotheses
+│   ├── literature_review.md            # Synthesis of incentive economics, grading, and psychometrics
+│   ├── kc_institutional_incentives_design.md # Phase 2: KC institutional incentive research design
+│   └── district_policy_audit_protocol.md # Standardized coding protocol for district grading policies
 ├── sources/
 │   ├── source_registry.csv             # Provenance registry of national and Missouri data
-│   └── source_extraction_audit.csv     # Granular audit linking published figures/pages to data fields
+│   ├── source_extraction_audit.csv     # Granular audit linking published figures/pages to data fields
+│   └── kc_district_policy_registry.csv # Coded policy database for 10 KC LEAs (grading & credit recovery)
 ├── data/
 │   ├── raw/                            # Raw data link documentation
 │   └── processed/
@@ -45,21 +48,27 @@ This computational sketchbook investigates the central research question:
 │   ├── acquire_national_benchmarks.py  # Generates cleaned national benchmark datasets & audit
 │   ├── build_kc_highschool_panel.py    # Merges DESE APR supporting graduation data & school panel
 │   ├── generate_figures.py             # Generates publication-quality charts (Figures 1, 2, 3)
-│   └── build_notebook.py               # Generates the Jupyter notebook via nbformat
+│   ├── build_notebook.py               # Generates the Jupyter notebook via nbformat
+│   └── analyze_institutional_incentives.py # Phase 2: Decoupling gap analysis and policy matrix
 ├── notebooks/
-│   └── 01_what_does_an_a_mean.ipynb    # Comprehensive interactive research notebook
+│   └── 01_what_does_an_a-mean.ipynb    # Comprehensive interactive research notebook
 ├── tests/
-│   └── test_data_integrity.py          # Automated verification test suite for data fidelity
+│   ├── test_data_integrity.py          # Phase 1: Automated verification test suite for data fidelity
+│   └── test_institutional_incentives.py # Phase 2: Automated verification of policy & decoupling metrics
 └── artifacts/
-    ├── essay_what_does_an_a_mean.md    # Complete long-form essay written in teacher-researcher voice
+    ├── essay_what_does_an_a_mean.md    # Phase 1: Long-form essay in teacher-researcher voice
+    ├── kc_institutional_incentive_analysis.md # Phase 2: Working paper on KC institutional mechanisms
     ├── figures/
     │   ├── 01_national_gpa_vs_achievement.png # Figure 1: National transcript vs. test disconnect
     │   ├── 02_kc_graduation_vs_math_mpi.png   # Figure 2: KC high schools graduation vs. Math MPI
-    │   └── 03_algebra1_grade_proficiency_gap.png # Figure 3: Algebra I classroom signaling benchmark
+    │   ├── 03_algebra1_grade_proficiency_gap.png # Figure 3: Algebra I classroom signaling benchmark
+    │   └── 04_kc_signaling_decoupling_gap.png # Figure 4: KC Signaling Decoupling landscape & top schools
     └── tables/
         ├── table1_national_trends.csv         # Table 1: National transcript & test trends
         ├── table2_kc_high_schools_2022_2025.csv # Table 2: KC metro high schools benchmark table
-        └── table3_literature_matrix.csv       # Table 3: Comparative incentive literature matrix
+        ├── table3_literature_matrix.csv       # Table 3: Comparative incentive literature matrix
+        ├── table4_kc_institutional_decoupling_summary.csv # Table 4: School-level decoupling summary (N=45)
+        └── table5_district_policy_matrix.csv  # Table 5: District policy & decoupling summary matrix
 ```
 
 ---
@@ -71,6 +80,7 @@ This computational sketchbook investigates the central research question:
 | **Figure 1** | **National Transcript vs. Assessment Disconnect (2009–2021)** | High school GPAs rose substantially (+0.11 NAEP, +0.19 ACT adjusted) while 12th-grade NAEP and ACT math scores fell. Advanced-track students saw math scores drop from 188 to 184 despite GPAs rising from 3.61 to 3.69. |
 | **Figure 2** | **Graduation vs. Mathematics Achievement in Kansas City High Schools** | 2022 cross-sectional baseline (45 complete schools): positive overall metro correlation ($r = +0.68$), strong correlation with direct certification ($r = -0.83$), and high upper-tier graduation rates alongside large MPI spreads (Van Horn 94.6% grad, MPI 300.1 vs. Park Hill 94.2% grad, MPI 428.4; MPI range in $\ge 90\%$ schools is 300.1 to 457.8). |
 | **Figure 3** | **The Algebra I Classroom Signaling Benchmark** | Statewide North Carolina empirical distribution (Gershenson, 2018, Figure 2, p. 16; Tyner & Gershenson, 2020; N ≈ 250,000 from 2014–2016): 92% of 'A' students, 64% of 'B' students (36% non-proficient), 29% of 'C' students (71% non-proficient), and 10% of 'D/F' combined students (90% non-proficient) reach proficiency on external state EOC, despite the EOC counting for $\ge 20\%$ of final course grades. Framed alongside the Missouri open research agenda. |
+| **Figure 4** | **The Signaling Decoupling Landscape & Top Decoupled Kansas City High Schools** | Quantifies the school-level gap between graduation rate rank and mathematics MPI rank ($\Delta = \text{Percentile}(\text{Grad}) - \text{Percentile}(\text{Math MPI})$) across 45 high schools. Highlights large positive decoupling outliers (North Kansas City High +63.3 pts, Van Horn +48.9 pts, Ruskin +22.2 pts) alongside district policy regimes (grading floors, Standards-Based Learning, and Edgenuity credit recovery). |
 
 ---
 
@@ -92,20 +102,36 @@ python 2026/2026-10-08-what-does-an-a-mean/src/generate_figures.py
 python 2026/2026-10-08-what-does-an-a-mean/src/build_notebook.py
 jupyter nbconvert --to notebook --execute 2026/2026-10-08-what-does-an-a-mean/notebooks/01_what_does_an_a_mean.ipynb --output 01_what_does_an_a_mean.ipynb
 
-# Phase 5: Execute automated data-integrity test suite
-pytest 2026/2026-10-08-what-does-an-a-mean/tests/test_data_integrity.py -v
+# Phase 5: Execute Kansas City Institutional Incentive Analysis (Phase 2)
+python 2026/2026-10-08-what-does-an-a-mean/src/analyze_institutional_incentives.py
+
+# Phase 6: Run full automated test suite (Data Integrity + Institutional Incentives)
+pytest 2026/2026-10-08-what-does-an-a-mean/tests/ -v
 ```
 
 ---
 
-## 5. Next Research Phase: Kansas City Institutional Incentive Study
+## 5. Phase 2: Kansas City Institutional Incentive Study
 
-With the descriptive baseline established in Version 1.0, the next investigative phase transitions from establishing *that* grades and standardized test scores decouple to examining *why* they decouple:
+Phase 2 advances beyond describing the disconnect to evaluating *why* high school course marks and graduation rates decouple from external exam achievement across Greater Kansas City:
 
-1. **District Grading Policy Audit**: Systematically collect and code high school grading policies across Kansas City area districts (KCPS, Independence, North Kansas City, Lee's Summit, Hickman Mills), examining:
-   - Minimum grading floors (e.g., 50% minimum F policies).
-   - Retake policies, missing work grace periods, and homework-weighting caps.
-   - Statutory course credit requirements.
-2. **Credit-Recovery Program Design**: Document the software platforms (e.g., Edgenuity, Apex Learning), mastery cutoffs, and proctoring environments used to recover credit for graduation.
-3. **Administrative Pressures & Pass-Rate Expectations**: Investigate whether building administrators and department chairs face explicit or implicit pass-rate expectations tied to school APR targets.
-4. **Long-Term Longitudinal Linkage**: Partner with area districts for FERPA-compliant student-level grade book matching to Missouri Algebra I EOC scores and subsequent DHEWD postsecondary remedial placement.
+1. **Theoretical Mechanism (Campbell's Law)**: High school graduation rate is a high-stakes, heavily weighted component of Missouri MSIP 6 APR scoring. While external standardized test scores (MAP / EOC) cannot be manipulated by school staff, the awarding of course credits is entirely endogenous. High schools rationally optimize on the margin they control: course passing and graduation credit accrual.
+2. **The Missouri Regulatory Void**: Unlike North Carolina (which mandated that state EOC exams count for $\ge 20\%$ of final course marks), Missouri statutes mandate administering the Algebra I EOC but **do not require passing the EOC for graduation**, nor do they mandate a minimum weighting of the EOC in course grades. Local boards retain complete statutory authority over course grading.
+3. **District Policy Levers**:
+   - **Minimum Grading Floors**: Policies establishing 40% or 50% floors (e.g. KCPS 2023–24 40% floor; Hickman Mills 50% quarter floor) compress the failure range from 60 points to 10 points.
+   - **Standards-Based Learning (SBL)**: Models (e.g., North Kansas City Schools) that decouple homework and compliance from grades and mandate uncapped reassessments.
+   - **Digital Credit Recovery**: Universal adoption of modular platforms (Edgenuity, Apex Learning) with unit pre-testing and 60% mastery cutoffs, compressing semester coursework into 15–30 lab hours.
+4. **Key Phase 2 Deliverables**:
+   - **Research Design**: [`docs/kc_institutional_incentives_design.md`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/docs/kc_institutional_incentives_design.md)
+   - **Coding Protocol**: [`docs/district_policy_audit_protocol.md`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/docs/district_policy_audit_protocol.md)
+   - **Policy Registry**: [`sources/kc_district_policy_registry.csv`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/sources/kc_district_policy_registry.csv)
+   - **Working Paper**: [`artifacts/kc_institutional_incentive_analysis.md`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/artifacts/kc_institutional_incentive_analysis.md)
+   - **Empirical Visualizations & Matrices**: Figure 4, Table 4, and Table 5.
+
+---
+
+## 6. Forward Research Agenda (Phase 3: Student-Level Microdata)
+
+Phase 3 will pursue FERPA-compliant student-level data matching between Kansas City LEA student information systems, DESE longitudinal testing files, and Missouri DHEWD / community college postsecondary remedial enrollment records to quantify:
+1. The exact student-level concordance between Missouri Algebra I teacher grades and EOC scale scores within specific grading policy regimes.
+2. The postsecondary remedial placement rate of graduates who earned course credits through online credit recovery versus standard classroom seats.

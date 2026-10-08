@@ -82,6 +82,8 @@ import seaborn as sns
 
 # Ensure workspace paths are resolved
 BASE_DIR = Path.cwd().parent if Path.cwd().name == "notebooks" else Path.cwd()
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
 PROCESSED_DIR = BASE_DIR / "data" / "processed"
 TABLES_DIR = BASE_DIR / "artifacts" / "tables"
 FIG_DIR = BASE_DIR / "artifacts" / "figures"
@@ -460,6 +462,53 @@ To move beyond descriptive correlations and investigate the actual institutional
 2. **Credit-Recovery Program Architecture**: Investigate the scale and design of digital modular credit-recovery software (e.g., Edgenuity, Apex Learning) used to clear course deficiencies.
 3. **Administrative Expectations**: Analyze whether principals and instructional leaders face formal or informal failure-rate quotas or pass-rate targets tied to school accountability status.
 4. **Long-Term De-Identified Student Matching**: Pursue district research partnerships to match student-level course grade books to Missouri Algebra I EOC scores and subsequent postsecondary college remediation in Missouri public institutions (DHEWD).
+"""
+    ))
+
+    # Cell 22: Code - Phase 2 Execution
+    cells.append(nbf.v4.new_code_cell(
+        """# Phase 2: Kansas City Institutional Incentive Analysis & Decoupling Metrics
+import sys
+from pathlib import Path
+import pandas as pd
+from IPython.display import Image, display
+
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
+
+from src.analyze_institutional_incentives import load_and_process_decoupling_data, generate_tables, plot_figure_4
+
+# Execute institutional analysis pipeline
+df_merged, df_policy = load_and_process_decoupling_data()
+generate_tables(df_merged, df_policy)
+plot_figure_4(df_merged)
+
+# Load and display top decoupled high schools
+t4 = pd.read_csv(TABLES_DIR / "table4_kc_institutional_decoupling_summary.csv")
+print("Top 10 High Schools by Signaling Decoupling Gap (Graduation Rank vs. Math MPI Rank):")
+display(t4.head(10)[["District Name", "School Name", "4-Yr Grad Rate (%)", "Math Status MPI", "Decoupling Gap (Pctile Pts)", "Grade Floor Policy", "Credit Recovery Platform"]])
+
+# Display Figure 4
+display(Image(str(FIG_DIR / "04_kc_signaling_decoupling_gap.png")))
+"""
+    ))
+
+    # Cell 23: Markdown - Institutional Findings Synthesis
+    cells.append(nbf.v4.new_markdown_cell(
+        """## Section 9: Institutional Policy Synthesis (Phase 2 Findings)
+
+The empirical results from **Figure 4** and **Table 4** reveal the organizational architecture behind decoupling:
+
+1. **The Magnitude of Decoupling**: Across the 45 high schools in Greater Kansas City, the Signaling Decoupling Gap ($\\Delta = \\text{Percentile}(\\text{Grad}) - \\text{Percentile}(\\text{Math MPI})$) spans from **$-55.6$ to $+63.3$ percentile points** ($\\text{SD} = 23.8$).
+2. **High-Graduation Decoupled Campuses**:
+   - **North Kansas City High**: 98.1% graduation rate (96.7th percentile regionally) alongside an MPI of 331.4 (bottom 33.3rd percentile, below the state proficient mark of 350), producing a decoupling gap of **$+63.3$ percentile points**.
+   - **Van Horn High (Independence)**: 94.6% graduation rate alongside an MPI of 300.1 (mostly Basic/Below Basic), producing a gap of **$+48.9$ percentile points**.
+   - **Ruskin High (Hickman Mills)**: 88.3% graduation rate with an MPI of 315.0, producing a gap of **$+22.2$ percentile points**.
+3. **The Role of District Policy Levers**:
+   - **Minimum Grading Floors**: Policies establishing 40% (KCPS 2023–24) or 50% (Hickman Mills) floors compress the failure zone from 60 points to 10 points, enabling students with sporadic work to pass with a 'D'.
+   - **Standards-Based Learning (SBL)**: North Kansas City's shift to a 4-tier rubric with uncapped retakes and zero homework penalties ensures students remain eligible for graduation credit.
+   - **Digital Credit Recovery**: Universal deployment of Edgenuity and Apex Learning creates an institutional escape hatch where 120-hour courses are recovered in 15–30 lab hours with a 60% passing threshold.
+4. **The Missouri Regulatory Asymmetry**: Unlike North Carolina (which required the EOC to count for $\\ge 20\\%$ of the course grade), Missouri statute does not mandate EOC passing or EOC weighting for graduation. Course credit and test scores operate in completely separate institutional silos.
 
 ---
 *Computational Sketchbook Repository: `computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/`*
