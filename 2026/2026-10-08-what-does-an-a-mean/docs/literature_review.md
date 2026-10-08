@@ -45,10 +45,10 @@ A central insight of this project is that incentives do not simply "corrupt" or 
 - *Epistemic Lesson*: High-stakes pressure did not just produce test-gaming; it focused administrative resources, teacher time, and instructional interventions on basic mathematics mastery. Accountability works, but its mechanisms determine whether the output is real or superficial.
 
 ### 3. High School Accountability and the Postsecondary Disconnect
-**McElroy, Katherine. (2023). "The long-run effects of high school accountability on postsecondary attainment." *Economics of Education Review*, 94, 102377.**
+**McElroy, Katherine. (2023). "Does test-based accountability improve more than just test scores?" *Economics of Education Review*, 94, 102381.**
 - *Setting*: Longitudinal analysis of high school accountability mandates across US states.
 - *Findings*: Exposure to consequential high school exit exams and graduation accountability significantly increased the likelihood that students graduated from high school.
-- *The Disconnect*: However, increased graduation rates did not lead to higher rates of college degree completion or improved labor market earnings. High schools responded to graduation incentives by expanding credit-recovery mechanisms, reducing grading standards, and pushing marginal students over the graduation threshold, granting credentials that did not reflect college readiness.
+- *The Disconnect*: However, increased graduation rates did not lead to higher rates of college degree completion or improved labor market earnings. While some observers hypothesize that high schools may expand credit recovery or alter passing standards to meet graduation targets, McElroy's empirical findings document the divergence at the postsecondary margin without proving specific institutional mechanisms such as weakened classroom grading standards.
 
 ---
 
@@ -64,7 +64,7 @@ A central insight of this project is that incentives do not simply "corrupt" or 
 ### 2. National Grade Inflation Trends
 **Sanchez, Edgar, & Moore, Rachael. (2022). *Grade Inflation Continues to Grow in the Past Decade.* ACT Research Report Series.**
 - *Sample*: Multi-million student sample of ACT-tested high school graduates from 2010 through 2021.
-- *Key Finding*: Average reported high school GPA increased steadily from **3.17 in 2010 to 3.36 in 2021** (+0.19 GPA points).
+- *Key Finding*: Average reported high school GPA increased steadily from **3.17 in 2010 to 3.36 in 2021** (+0.19 GPA points in adjusted HLM; 3.22 to 3.39 unadjusted).
 - *Divergence*: Over the identical 11-year interval, average ACT Composite scores dropped from **21.0 to 20.3**, and the percentage of students meeting ACT College Readiness Benchmarks in mathematics declined.
 - *School-Level Variation*: Grade inflation occurred across all high school types, but was fastest in affluent schools where parent advocacy and college admissions competition are most acute.
 
@@ -74,6 +74,17 @@ A central insight of this project is that incentives do not simply "corrupt" or 
 - *Overall Trend*: Average high school GPA rose from **3.00 in 2009 to 3.11 in 2019**, and mathematics GPA rose from **2.65 to 2.79**. Total credits earned increased from 27.2 to 28.1.
 - *The Rigorous Curriculum Paradox*: Among graduates completing a "rigorous" high school curriculum (including 4 years of English, 4 years of math through precalculus/calculus, 3 years of science, 3 years of social studies, and foreign language), average NAEP 12th grade mathematics scores fell from **188 in 2009 to 184 in 2019** (-4 points), even as their average GPA rose from **3.61 to 3.69**.
 - *Takeaway*: Transcripts showed more courses taken and higher grades awarded, but independent assessment revealed a decline in actual mathematical problem-solving ability.
+
+### 4. Course Grades vs. External End-of-Course Proficiency in Algebra I
+**Gershenson, Seth. (2018). *Great Expectations: The Impact of Rigorous Grading Standards on Student Achievement.* Thomas B. Fordham Institute.**  
+**Tyner, Adam, & Gershenson, Seth. (2020). "Conceptualizing and measuring grade inflation: A case study of North Carolina Algebra I." *Economics of Education Review*, 78, 102029.**
+- *Sample*: Statewide North Carolina administrative panel linking student Algebra I course letter grades to standardized state End-of-Course (EOC) examination scores (2005–2016).
+- *Key Empirical Finding*: Classroom letter grades do not map onto external state test proficiency in a 1-to-1 manner. Specifically:
+  - **92%** of students receiving an 'A' in Algebra I achieved proficiency on the external state exam.
+  - Among students receiving a **'B'**, **36% failed to achieve proficiency** (only 64% proficient).
+  - Among students receiving a **'C'**, **75% failed to reach proficiency** (25% proficient).
+  - Among students receiving a **'D'**, **93% failed to reach proficiency** (7% proficient).
+- *Implications for Secondary Mathematics*: EOC scores predicted subsequent ACT math scores far better than classroom grades. Gershenson demonstrated that grading standards vary widely across schools, and that exposure to more rigorous grading standards substantially improves subsequent student achievement, especially for disadvantaged students. In Missouri, establishing the exact student-level concordance between teacher grades and EOC scores remains an active research question.
 
 ---
 

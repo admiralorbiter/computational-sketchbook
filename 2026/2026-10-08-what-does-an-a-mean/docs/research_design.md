@@ -47,11 +47,14 @@ flowchart TD
 1. **Campbell's Law (1979)**: The more any quantitative social indicator is used for social decision-making, the more subject it will be to corruption pressures and the more apt it will be to distort and corrupt the social processes it is intended to monitor.
 2. **Goodhart's Law (1975)**: When a measure becomes a target, it ceases to be a good measure.
 3. **Multitask Principal-Agent Problem (Holmström & Milgrom, 1991)**: When an agent performs multidimensional tasks (fostering deep conceptual understanding, critical thinking, behavioral habits) but the principal can only measure easily verifiable outputs (test pass rates, credit completion), the agent rationally reallocates effort toward the measured margins.
-4. **Authentic Learning vs. Strategic Distortion (Dee & Jacob, 2011 vs. Jacob, 2005)**:
+4. **Authentic Learning vs. Strategic Distortion (Dee & Jacob, 2011 vs. Jacob, 2005; McElroy, 2023)**:
    - *Jacob (2005)* documented strategic score inflation in Chicago under high-stakes testing (test prep, placement shifts, cheating).
    - *Dee & Jacob (2011)* proved that No Child Left Behind (NCLB) produced statistically significant, authentic gains in 4th and 8th grade mathematics on low-stakes NAEP assessments, demonstrating that accountability pressure can induce real instructional effort.
-   - *McElroy (2023)* showed that high school accountability elevated graduation rates without producing proportional college degree attainment, indicating credential inflation at the secondary exit boundary.
-5. **The Grade vs. Test Information Tension (Allensworth & Clark, 2020)**:
+   - *McElroy (2023)* (*Does test-based accountability improve more than just test scores?*, *Economics of Education Review*, 94, 102381) demonstrated that high school accountability mandates elevated graduation rates without producing proportional college degree completion, raising observational questions about whether exit-boundary incentives produce authentic learning gains or credential inflation.
+5. **Grading Standards and External Assessment (Gershenson, 2018; Tyner & Gershenson, 2020)**:
+   - Using statewide North Carolina student records, Gershenson (*Great Expectations*, Fordham Institute, 2018) showed that grading standards vary widely and that higher grading standards benefit all students, but particularly disadvantaged students.
+   - Tyner & Gershenson (2020, *Economics of Education Review*) demonstrated that grade inflation accelerated over time and that 36% of students receiving a 'B' in Algebra I failed to score proficient on the external state end-of-course exam.
+6. **The Grade vs. Test Information Tension (Allensworth & Clark, 2020)**:
    - High school GPA is substantially more predictive of 4-year college completion than ACT scores across >55,000 Chicago Public Schools graduates.
    - Grades capture multi-month non-cognitive persistence, regular attendance, task completion, and behavioral self-regulation that standardized tests fail to capture.
    - Therefore, a rising GPA is not simply "fraud"; it reflects a complex composite signal of academic mastery and behavioral conformity.
@@ -73,8 +76,8 @@ Algebra I is the single most revealing focal course in secondary education becau
 ## 4. Key Hypotheses
 
 - **H1 (National Transcript Divergence)**: Between 2009 and 2019, national high school transcripts reflect rising course grades and GPAs, while external standardized assessments (NAEP 12th grade mathematics and ACT STEM scores) stagnated or declined—with the sharpest divergence occurring among graduates completing rigorous curricula.
-- **H2 (Metropolitan Credential Compression)**: Across Kansas City metropolitan high schools, graduation rates exhibit extreme compression near the upper ceiling (85%–98%) driven by institutional graduation incentives, while measured mathematics achievement (Algebra I MAP Performance Index) spans a wide socioeconomic gradient (MPI 280 to 430).
-- **H3 (Context-Dependent Signaling of Passing Grades)**: The meaning of a passing grade in secondary mathematics varies systematically with institutional context. In high-poverty secondary schools subject to intense failure-rate scrutiny, course credit is frequently granted based on attendance, effort, and credit recovery, resulting in a large population of course-passing students who score Below Basic or Basic on external assessments.
+- **H2 (Metropolitan Graduation and Achievement Distribution)**: Across Kansas City metropolitan high schools, graduation rates and mathematics achievement (MAP Performance Index) are positively correlated overall ($r = +0.68$), driven by the substantial performance divide between suburban and urban schools. Within suburban and inner-ring schools, graduation rates cluster near the ceiling (25 of 45 schools $\ge 90\%$, while 11 schools, largely urban and charter, have graduation rates $< 80\%$), while measured mathematics achievement spans a massive socioeconomic gradient (MPI 278 to 458), strongly correlated with free/reduced-price lunch ($r = -0.76$) and USDA direct certification ($r = -0.83$).
+- **H3 (Decoupling of Passing Marks and External Proficiency)**: Observational and survey evidence suggests that institutional pressure to reduce course failure rates leads to credit assignment based heavily on attendance, homework completion, and credit recovery. As demonstrated empirically in North Carolina (Gershenson, 2018), a substantial share of students receiving passing grades (including 36% of 'B' students) fail to attain proficiency on external standardized end-of-course exams. In Missouri, establishing the exact student-level concordance between teacher grades and EOC scores remains an active, open research question.
 
 ---
 
@@ -82,5 +85,5 @@ Algebra I is the single most revealing focal course in secondary education becau
 
 This project implements three primary empirical graphs:
 1. **Graph 1: National Trends Aligned Panel**: NAEP High School Transcript Study GPAs (2009–2019) and ACT GPAs (2010–2021) plotted alongside NAEP 12th Grade Mathematics scores and ACT composite scores, stratified by curriculum rigor.
-2. **Graph 2: Kansas City High School Accountability Scatter**: 4-Year Graduation Rate vs. Mathematics MAP Performance Index (MPI) across Kansas City area high schools, mapped by Free/Reduced Price Lunch percentage and building enrollment.
-3. **Graph 3: The Algebra I Signaling Gap**: Modeled cross-school distribution of demonstrated EOC mathematics proficiency conditional on course grade tier (A, B, C, D) across high-poverty urban versus low-poverty suburban secondary schools.
+2. **Graph 2: Kansas City High School Accountability Scatter**: 2022 Cross-Sectional Benchmark (45 complete high schools) plotting 4-Year Graduation Rate vs. Mathematics MAP Performance Index (MPI), documented alongside poverty measures (FRPL and Direct Certification) and school enrollment.
+3. **Graph 3: The Algebra I Signaling Benchmark**: Seth Gershenson's (2018 Fordham Institute; Tyner & Gershenson, 2020) empirical distribution of statewide North Carolina Algebra I EOC proficiency conditional on teacher-assigned course grades (A, B, C, D), framed alongside the open research agenda for Missouri student-level matching.

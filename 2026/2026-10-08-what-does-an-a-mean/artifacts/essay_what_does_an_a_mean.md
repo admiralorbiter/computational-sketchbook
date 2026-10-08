@@ -122,35 +122,40 @@ This gives us a concrete institutional case study: How do accountability pressur
 
 To examine how accountability pressure operates on the ground, we turn to the public high schools of Greater Kansas City. 
 
-We link building-level records from the Missouri Department of Elementary and Secondary Education (DESE) across the 2021–22 through 2024–25 school years (reporting years 2022–2025), combining:
-- Official four-year adjusted cohort graduation rates.
-- Mathematics MAP Performance Index (MPI) scores (representing student performance on the statewide **Algebra I End-of-Course assessment**).
-- Building-level student poverty (Free and Reduced Price Lunch percentages and USDA Direct Certification rates).
-- College and Career Readiness (CCR) graduate percentages.
+We construct an analytical panel from Missouri Department of Elementary and Secondary Education (DESE) building-level records across the 2021–22 through 2024–25 school years (reporting years 2022–2025). The 2022 baseline provides our complete cross-sectional benchmark, with 45 public high schools reporting both four-year adjusted cohort graduation rates and building-level Mathematics MAP Performance Index (MPI) scores (representing student performance on the statewide **Algebra I End-of-Course assessment**, as well as Algebra II for middle-school completers).
 
-**Figure 2** plots official graduation rates against Mathematics MPI across Kansas City metropolitan high schools:
+Importantly, DESE's reporting format shifted with the full rollout of MSIP 6 in 2023: subsequent annual APR supporting files report graduation accountability points rather than continuous cohort percentages, and 2022 assigned a 100.0 pilot placeholder for graduation points. Thus, our cross-sectional analysis focuses rigorously on the complete 2022 continuous cohort records, avoiding misleading longitudinal extrapolations.
+
+**Figure 2** plots official 2022 graduation rates against Mathematics MPI across Kansas City metropolitan high schools:
 
 ![Figure 2: Credential Compression vs. Learning Dispersion](figures/02_kc_graduation_vs_math_mpi.png)
 
-### The Credential Compression Phenomenon
-The data reveals an extraordinary pattern:
-1. **Graduation Rate Compression**: Across suburban and inner-ring high schools, graduation rates cluster in an extremely narrow, elevated band between **88% and 98%**, comfortably surpassing the state's 90% benchmark.
-2. **Colossal Learning Dispersion**: While graduation rates are tightly compressed near the ceiling, measured mathematics achievement spans a massive continuum from **277.8 to 457.8**—a spread of 180 index points.
-3. **The Paired-School Anomaly**:
+### What the Data Actually Show
+An independent audit of the 45 complete Kansas City high school records reveals a relationship that is richer and more complex than simple caricature:
+1. **Positive Overall Metro Correlation ($r = +0.68$)**: Across the full Kansas City metropolitan area, graduation rates and Mathematics MPI are positively correlated ($r = +0.6817$). This overall association is driven primarily by the sharp structural divide between affluent outer-suburban districts and high-poverty urban core schools.
+2. **Deep Socioeconomic Stratification**: Both graduation and mathematics performance correlate powerfully with community poverty:
+   - Graduation Rate vs. Free/Reduced-Price Lunch (FRPL): $r = -0.7343$
+   - Graduation Rate vs. USDA Direct Certification: $r = -0.8076$
+   - Math MPI vs. Free/Reduced-Price Lunch (FRPL): $r = -0.7582$
+   - Math MPI vs. USDA Direct Certification: $r = -0.8285$
+   - *The CEP Measurement Nuance*: In urban centers, the federal Community Eligibility Provision (CEP) provides universal free meals, causing schools like **Lincoln College Preparatory Academy** to report 100% FRPL on state dashboards. However, Lincoln's USDA Direct Certification rate is only **17.2%**, reflecting its selective academic admissions criteria. Incorporating Direct Certification resolves this administrative artifact and confirms that poverty and academic achievement track each other with near-monotonic precision.
+3. **Upper-Tier Compression vs. Urban Polarization**:
+   - Rather than graduation rates being universally compressed across the entire region, **25 of the 45 high schools (56%)** cluster above the state's 90% benchmark, largely spanning suburban and inner-ring systems.
+   - Meanwhile, **11 high schools (24%)** have graduation rates below 80%, concentrated among urban neighborhood schools in KCPS and local charter networks.
+   - However, within the high-graduation tier, measured mathematics achievement spans a colossal continuum from **277.8 to 457.8**—a spread of 180 index points.
+4. **Striking Paired Comparisons**:
    - **Van Horn High School** in Independence reports an official graduation rate of **94.6%**—matching or exceeding **Park Hill High School (94.2%)** and **Lee's Summit Senior High (93.9%)**. Yet Van Horn's Math MPI is **300.1** (the exact borderline of the state's Basic category), whereas Park Hill achieves **428.4** and Lee's Summit achieves **407.7**.
    - **Ruskin High School** in Hickman Mills graduates **88.3%** of its senior cohort, yet its Math MPI is **315.0** and only **29.9%** of its graduates meet the state's College and Career Readiness threshold.
    - **North Kansas City High School** graduates **98.1%** of students, yet its Math MPI is **331.4**.
-   - In the Kansas City Public Schools (KCPS) urban core, selective **Lincoln College Prep** graduates **97.6%** of students with a Math MPI of **355.6** and a 75.2% CCR rate, while non-selective neighborhood high schools (Central, East, Southeast) graduate between **55% and 71%** with Math MPIs clustering between **289 and 306**.
+   - In KCPS, selective **Lincoln College Prep** graduates **97.6%** with a Math MPI of **355.6**, while non-selective neighborhood high schools (Central, East, Southeast) graduate between **55% and 71%** with Math MPIs clustering between **289 and 306**.
 
-### Why Have Graduation Rates Decoupled from Academic Mastery?
-Under both federal guidelines (ESSA) and Missouri's MSIP 6 accountability system, graduation rates carry immense mathematical weight in school performance scores. A high school that allows its graduation rate to dip below 80% faces mandatory state identification and comprehensive support status.
+### Explaining the Upper-Tier Asymmetry
+Under both federal accountability (ESSA) and Missouri's MSIP 6 system, high schools that allow their graduation rate to dip below 80% face severe regulatory scrutiny and state intervention. In response, secondary systems have developed institutional mechanisms to ensure students cross the graduation threshold:
+- **Online Credit Recovery**: Modular software pathways allowing students who failed a semester of Algebra I to earn course credit through unproctored digital modules.
+- **Grading Floors & No-Zero Policies**: Policies preventing failing quarters from dragging semester averages below recoverable levels.
+- **Remedial Course Re-titling**: Granting graduation credit for developmental courses.
 
-In response, school systems have rationally engineered pathways to prevent students from failing. These mechanisms include:
-- **Online Credit Recovery**: Software modules (e.g., Edgenuity, Apex) where students who failed a semester of Algebra I can click through remedial quizzes at their own pace, often with search engines open, earning full course credit in a matter of days.
-- **Administrative No-Zero Policies**: District-mandated grading floors where missing assignments receive a minimum grade of 50% rather than 0%, mathematically preventing a student who does no work for two months from failing beyond mathematical recovery.
-- **Credit-Bearing Remediation**: Retitling developmental courses to grant graduation credit.
-
-These interventions succeed brilliantly at their institutional objective: they raise the graduation rate, satisfy accountability benchmarks, and ensure the district earns its APR points. But they achieve this by **compressing the credential at the top**, decoupling the possession of a high school diploma from the mastery of foundational secondary mathematics.
+These policies help explain how schools with modest mathematics proficiency achieve graduation rates matching the most affluent suburbs. However, establishing whether these patterns reflect lowered passing standards or intensive student retention efforts requires examining classroom-level grading and student records.
 
 ---
 
@@ -158,36 +163,37 @@ These interventions succeed brilliantly at their institutional objective: they r
 
 Why focus on **Algebra I**?
 
-In Missouri, Algebra I provides a unique empirical intersection: it is a universally required high school course that generates two independent, simultaneous observations for every student:
+In secondary education, Algebra I provides a uniquely valuable empirical intersection: it is a universally required high school course that generates two independent, simultaneous observations for every student:
 1. A **teacher-assigned course grade** (A, B, C, D, or F).
-2. An **external statewide End-of-Course (EOC) assessment** administered by DESE.
+2. An **external statewide End-of-Course (EOC) assessment** administered by the state department of education.
 
-Crucially, Missouri law requires students to *take* the Algebra I EOC for accountability, but does *not* require students to achieve a proficient score to graduate. High school graduation requires earning course credit from the classroom teacher.
+Crucially, in Missouri and many other states, students are required to *participate* in the Algebra I EOC for accountability, but are *not* required to achieve a proficient score to graduate. High school graduation requires earning course credit from the classroom teacher.
 
-This design creates an empirical question: **What does a passing grade in Algebra I actually tell us about a student's mathematical understanding, and does that meaning change across schools?**
+This structural design raises an urgent empirical question: **What does a passing grade in Algebra I actually tell us about a student's mathematical understanding, and does that meaning change across schools?**
 
-When we model the distribution of external EOC performance levels conditional on classroom grade tiers across different educational settings, a stark **Signaling Gap** emerges, as illustrated in **Figure 3**:
+### The North Carolina Empirical Benchmark
+Because individual student course grades linked to statewide EOC test records are not yet publicly released in Missouri, establishing that exact concordance locally remains an active, open research question. However, this exact empirical question was answered rigorously by economist Seth Gershenson using statewide administrative records from North Carolina (Gershenson, 2018; Tyner & Gershenson, 2020). 
+
+By analyzing hundreds of thousands of high school student records linking Algebra I teacher-assigned grades to state End-of-Course test scores, Gershenson documented the true empirical distribution of external proficiency across course grade tiers, as illustrated in **Figure 3**:
 
 ![Figure 3: The Algebra I Signaling Gap](figures/03_algebra1_grade_proficiency_gap.png)
 
-### The Dual Meaning of an "A"
-- In **Low-Poverty Suburban High Schools** (<25% FRPL), classroom grading standards align closely with state psychometric benchmarks:
-  - **90%** of students receiving an 'A' and **74%** of students receiving a 'B' score Proficient or Advanced on the state EOC.
-  - Fewer than **1%** of 'A' students and only **4%** of 'B' students score Below Basic.
-  - In these schools, an 'A' or 'B' reliably signals both behavioral diligence and cognitive mastery.
-- In **High-Poverty, High-Stakes High Schools** (>75% FRPL) operating under intense pressure to minimize course failures:
-  - Among students receiving an 'A', **36%** score Below Basic or Basic on the state assessment.
-  - Among students receiving a 'B', **64%** score Below Basic or Basic.
-  - Among students receiving a passing grade of 'C' or 'D'—earning full course credit toward graduation—**84% to 94% score Below Basic or Basic**. In fact, **68% of students receiving a 'D' score in the Below Basic tier**, indicating that they cannot solve multi-step linear equations or interpret a slope on an unassisted examination.
+The published empirical data reveal a striking discordance between classroom marks and external proficiency:
+- **The 'A' Tier**: Among students receiving an 'A' in Algebra I, **92%** achieved proficiency or advanced on the external state EOC, while only **8%** failed to reach proficiency. An 'A' reliably certifies high academic mastery.
+- **The 'B' Tier**: Among students receiving a 'B'—a respectable mark widely regarded by parents and counselors as indicating solid competence—**36% failed to achieve proficiency** on the external state assessment (only 64% were proficient).
+- **The 'C' Tier**: Among students earning a 'C'—granting full course credit toward graduation and advancement to Geometry—**75% failed to reach proficiency** (only 25% were proficient).
+- **The 'D' Tier**: Among students earning a 'D'—sufficient for course completion and diploma progress—**93% failed to reach proficiency** on the external examination (only 7% were proficient).
+
+Furthermore, Tyner & Gershenson (2020) demonstrated that grading standards vary dramatically across schools: in schools with higher grading standards, students learned significantly more mathematics and performed better on subsequent exams like the ACT, even when controlling for baseline achievement.
 
 ### Does This Mean Teachers Are Grading Dishonestly?
-It is essential not to interpret this finding as teacher negligence or fraud. 
+It is essential not to interpret this disconnect as teacher negligence or bad faith. 
 
-In a high-poverty secondary school, a mathematics teacher faces a student population with vast disparities in prior preparation. A student may enter ninth grade performing at a fifth-grade arithmetic level. If that student attends class every day, works diligently, masters integer operations, and makes two years of academic progress in nine months, the teacher recognizes profound learning and effort. Awarding that student an 'F' because they cannot yet pass an on-demand state exam aligned to rigorous tenth-grade standards would be pedagogically demoralizing and administratively punitive.
+In an urban or high-poverty secondary school, a mathematics teacher faces a classroom of students with vast disparities in prior preparation. A student may enter ninth grade performing at a fourth- or fifth-grade arithmetic level. If that student attends class every day, works diligently, masters integer operations, and makes two full years of academic progress in nine months, the teacher recognizes profound learning, growth, and effort. Awarding that student an 'F' because they cannot yet pass an on-demand state exam aligned to rigorous tenth-grade standards would be pedagogically demoralizing, punitive, and administratively fraught.
 
-The teacher's grade rewards **growth, engagement, attendance, and work submission**. The state exam measures **on-demand cognitive mastery against an absolute external standard**.
+The teacher's grade rewards **growth, engagement, attendance, homework completion, and persistence**. The state exam measures **on-demand cognitive mastery against an absolute statewide curriculum standard**.
 
-Both measurements are capturing real aspects of the student's reality. The crisis arises because **the transcript uses a single letter to represent both**. When a college admissions committee, an employer, or a community college math department reads that 'B', they assume it certifies cognitive mastery. When the student is subsequently placed into non-credit developmental math in college, the institutional illusion collapses.
+Both measurements are capturing real aspects of the student's reality. The crisis arises because **the transcript collapses both into a single letter**. When a college admissions committee, an employer, or a community college math department reads that 'B', they assume it certifies cognitive mastery. When the student is subsequently placed into non-credit developmental math in college, the institutional illusion collapses.
 
 ---
 
@@ -203,13 +209,14 @@ The empirical economics literature demonstrates that **incentives generate authe
 | **Jacob (2005)** | Chicago Public Schools (DiD) | ITBS test scores | Special education placement (+1–2 pp), test prep, cheating | Score gains failed to generalize to low-stakes tests (NAEP, IGAP) | Strategic threshold gaming |
 | **Dee & Jacob (2011)** | National NCLB Evaluation | State AYP benchmarks | Bubble-student targeting | **Robust gains on independent low-stakes NAEP Math (+0.23 SD)** | Accountability compels real instructional effort and focus |
 | **Allensworth & Clark (2020)** | Chicago Public Schools (>55K grads) | HS GPA vs. ACT | Rigor variation across school contexts | **HS GPA is 5x more predictive of college graduation than ACT** | Grades capture multi-month non-cognitive persistence |
-| **Sanchez & Moore (2022)** | National ACT Panel (2010–2021) | High School GPA | GPA rose 3.17 → 3.36 while ACT Composite fell 21.0 → 20.3 | Inflation fastest in affluent suburban high schools | Parental advocacy and competitive transcript signaling |
-| **McElroy (2023)** | US High School Mandates | Graduation rate | Credit recovery expansion, lowered course standards | **Graduation rates rose, but college completion and earnings did not** | Credential inflation at secondary exit boundary |
+| **Gershenson (2018) / Tyner & Gershenson (2020)** | North Carolina (Algebra I Panel) | Course letter grades vs. EOC | Subjective standards decouple from external benchmarks | EOC scores predict subsequent ACT math far better than grades | 36% of 'B' students non-proficient; rigorous standards benefit students |
+| **Sanchez & Moore (2022)** | National ACT Panel (2010–2021) | High School GPA | Adjusted GPA rose 3.17 → 3.36 while ACT Composite fell 21.0 → 20.3 | Inflation fastest in affluent suburban high schools | Parental advocacy and competitive transcript signaling |
+| **McElroy (2023)** | US High School Mandates | Graduation rate | Postsecondary completion flat despite graduation gains | Graduation rates rose significantly under test-based accountability | Observational gap between secondary diploma and postsecondary success |
 
 ### The Synthesis
 When Thomas Dee and Brian Jacob (2011) evaluated No Child Left Behind using the National Assessment of Educational Progress (NAEP), they discovered that high-stakes accountability produced **statistically significant, meaningful improvements in elementary and middle school mathematics** (+0.23 standard deviations in 4th grade). Because teachers could not directly teach to the NAEP exam, these gains represented genuine improvements in computational fluency and mathematical reasoning. Accountability forced districts to allocate coaching, extended math blocks, and specialized tutoring to students who had previously been ignored.
 
-Yet when Brian Jacob (2005) examined high-stakes testing in Chicago, he found clear evidence of gaming: teachers placed low-scoring students into special education to remove them from testing pools, drilled students on specific question templates, and manipulated test answer sheets. And when Katherine McElroy (2023) evaluated high school accountability, she found that mandates successfully raised graduation rates, but **failed to increase four-year college completion or adult earnings**, confirming that schools responded to graduation incentives by lowering the bar for diploma receipt.
+Yet when Brian Jacob (2005) examined high-stakes testing in Chicago, he found clear evidence of gaming: teachers placed low-scoring students into special education to remove them from testing pools, drilled students on specific question templates, and manipulated test answer sheets. And when Katherine McElroy (2023) evaluated high school accountability policies (*Does test-based accountability improve more than just test scores?*, *Economics of Education Review*, 94, 102381), she found that mandates successfully raised graduation rates, but **failed to increase four-year college completion or adult earnings**, demonstrating that policy pressure can expand credential receipt without producing commensurate long-term human capital.
 
 The lesson is not that accountability fails. It is that **institutions optimize precisely what is rewarded**:
 - If you reward schools for test scores, they will drill students on test items—producing some real learning and substantial test-format familiarity.

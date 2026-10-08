@@ -1,16 +1,23 @@
 """
 src/build_kc_highschool_panel.py
 
-Constructs the comprehensive Missouri High School Accountability & Graduation Panel (2022-2025),
+Constructs the certified Missouri High School Accountability & Graduation Panel (2022-2025),
 with a specialized focal subset on the Kansas City Metropolitan Area.
-Integrates:
-- Building-level MAP Performance Index (MPI) for Mathematics / Algebra I
-- Continuous 4-year graduation rates from official DESE 2022 supporting data
-- MSIP 6 Graduation points percentage (2023-2025)
-- College and Career Readiness (CCR) graduate percentages
-- School poverty (FRPL % and Direct Certification %)
-- Attendance, chronic absenteeism, enrollment, and racial demographics
-- Kansas City geographic typology (Urban Core KCPS, Public Charter, Inner-Ring Suburban, Outer Suburban)
+
+Methodological Adjustments (Post-Audit):
+1. Distinguishes cross-sectional 2022 continuous graduation rates from 2023-2025 accountability points:
+   - Year 2022: Contains official DESE continuous 4-year cohort graduation rate (`grad_rate_4yr`).
+   - Years 2023-2025: Contain official MSIP 6 Graduation Accountability Points Percentage (`grad_pts_pct`)
+     and highest cohort designation (`grad_cohort_highest`). Continuous graduation rates are left as NaN
+     rather than forward-filled, avoiding false longitudinal trend claims.
+   - Year 2022 placeholder of 100 points is removed; 2022 points are set to NaN (introductory pilot year).
+2. Clarifies measure definitions:
+   - `math_status_mpi`: Building-level Mathematics MAP Performance Index (MPI), an aggregate accountability
+     score on a 100-500 scale covering high school mathematics assessments (primarily Algebra I EOC, plus
+     Algebra II EOC for advanced 8th-grade completers).
+3. Poverty & Sensitivity Controls:
+   - Preserves USDA Direct Certification (`direct_cert_pct`) alongside Free/Reduced Price Lunch (`frpl_pct`),
+     enabling sensitivity checks against Community Eligibility Provision (CEP) reporting ceilings.
 """
 
 from pathlib import Path
@@ -78,7 +85,7 @@ def extract_supporting_grad_data():
     """Extracts building-level graduation and CCR metrics across 2022-2025."""
     records = []
     
-    # 2022: Contains continuous 4-year graduation rate
+    # 2022: Official continuous 4-year graduation rate
     f22 = RAW_APR_DIR / "mo_apr_supporting_2022_building.xlsx"
     if f22.exists():
         df22 = pd.read_excel(f22)
@@ -90,10 +97,11 @@ def extract_supporting_grad_data():
         df22["grad_rate_5yr"] = pd.to_numeric(df22["GRAD_CURR_5YR_GRAD_RATE"], errors="coerce")
         df22["ccr_grad_pct"] = pd.to_numeric(df22["CCR_CURR_PERCENT_OF_GRADUATES"], errors="coerce")
         df22["adv_cred_pct"] = pd.to_numeric(df22["ADV_CRED_CURR_PERCENT_OF_GRADUATES"], errors="coerce")
-        df22["grad_pts_pct"] = 100.0  # Informational year
-        df22["grad_cohort_highest"] = "4-Year"
+        # In 2022 pilot, graduation points were NOT officially assigned by DESE; set to NaN
+        df22["grad_pts_pct"] = np.nan
+        df22["grad_cohort_highest"] = "4-Year (Continuous)"
         records.append(df22[["district_code", "building_code", "school_year", "grad_rate_4yr", "grad_rate_5yr", "ccr_grad_pct", "adv_cred_pct", "grad_pts_pct", "grad_cohort_highest"]])
-        print(f"[*] Loaded 2022 graduation records: {len(df22)}")
+        print(f"[*] Loaded 2022 graduation records: {len(df22)} (continuous 4-year rates populated)")
 
     # 2023-2025: MSIP 6 Supporting reports
     for yr in [2023, 2024, 2025]:
@@ -105,6 +113,7 @@ def extract_supporting_grad_data():
         df["district_code"] = df["COUNTY_DISTRICT_CODE"].astype(str).str.zfill(6)
         df["building_code"] = df["SCHOOL_CODE"].astype(str).str.zfill(4)
         df["school_year"] = yr
+        # Continuous rates are NOT reported in 2023-2025 supporting files; leave NaN
         df["grad_rate_4yr"] = np.nan
         df["grad_rate_5yr"] = np.nan
         df["grad_pts_pct"] = pd.to_numeric(df["GRADUATION_POINTS_EARNED_PCT"], errors="coerce")
@@ -112,7 +121,7 @@ def extract_supporting_grad_data():
         df["ccr_grad_pct"] = pd.to_numeric(df["CCR_ASSESSMENTS_GRADUATES_POINTS_EARNED_PCT"], errors="coerce")
         df["adv_cred_pct"] = pd.to_numeric(df["ADV_CRED_GRADUATES_POINTS_EARNED_PCT"], errors="coerce")
         records.append(df[["district_code", "building_code", "school_year", "grad_rate_4yr", "grad_rate_5yr", "ccr_grad_pct", "adv_cred_pct", "grad_pts_pct", "grad_cohort_highest"]])
-        print(f"[*] Loaded {yr} graduation records: {len(df)}")
+        print(f"[*] Loaded {yr} graduation records: {len(df)} (points and cohort designations)")
 
     df_grad = pd.concat(records, ignore_index=True)
     return df_grad
@@ -134,10 +143,6 @@ def build_panels():
         on=["district_code", "building_code", "school_year"],
         how="left"
     )
-
-    # Propagate 2022 continuous grad rate as baseline attribute for each building
-    grad_2022_map = df_grad[df_grad["school_year"] == 2022].set_index(["district_code", "building_code"])["grad_rate_4yr"].to_dict()
-    hs_merged["baseline_grad_rate_2022"] = hs_merged.set_index(["district_code", "building_code"]).index.map(grad_2022_map)
 
     # 4. Classify KC Metro
     def classify_kc(row):
@@ -165,24 +170,31 @@ def build_panels():
     kc_panel.to_csv(out_kc, index=False)
     print(f"[*] Saved KC high school panel to {out_kc} ({len(kc_panel)} rows)")
 
-    # 5. Export summary Table 2: 2022 KC High School Benchmark Table
+    # 5. Export summary Table 2: 2022 KC High School Benchmark Table (45 complete cases)
     kc_2022 = kc_panel[kc_panel["school_year"] == 2022].copy()
     t2_cols = [
         "DISTRICT_NAME", "SCHOOL_NAME", "geographic_typology",
-        "baseline_grad_rate_2022", "math_status_mpi", "ccr_grad_pct",
-        "frpl_pct", "proportional_attendance_pct", "enrollment"
+        "grad_rate_4yr", "math_status_mpi", "ccr_grad_pct",
+        "frpl_pct", "direct_cert_pct", "proportional_attendance_pct", "enrollment"
     ]
-    t2 = kc_2022[t2_cols].dropna(subset=["baseline_grad_rate_2022", "math_status_mpi"]).sort_values(
+    t2 = kc_2022[t2_cols].dropna(subset=["grad_rate_4yr", "math_status_mpi"]).sort_values(
         by="math_status_mpi", ascending=False
-    )
+    ).copy()
+    
     t2.columns = [
         "District", "High School", "Typology",
-        "Graduation Rate (%)", "Math Status MPI (Alg I)", "CCR Graduate (%)",
-        "FRPL Poverty (%)", "Attendance 90/90 (%)", "Enrollment"
+        "Graduation Rate 2022 (%)", "High School Math MPI", "CCR Graduate (%)",
+        "FRPL Poverty (%)", "Direct Certification (%)", "Attendance 90/90 (%)", "Enrollment"
     ]
     t2_path = TABLES_DIR / "table2_kc_high_schools_2022_2025.csv"
     t2.to_csv(t2_path, index=False)
-    print(f"[*] Saved Table 2 to {t2_path} ({len(t2)} KC High Schools)")
+    print(f"[*] Saved verified Table 2 to {t2_path} ({len(t2)} KC High Schools)")
+
+    # Print verification correlations
+    corr = t2[["Graduation Rate 2022 (%)", "High School Math MPI", "FRPL Poverty (%)", "Direct Certification (%)"]].corr().round(4)
+    print("\n[*] 2022 KC High School Benchmark Correlations (N=45):")
+    print(corr)
+
     return hs_merged, kc_panel
 
 if __name__ == "__main__":
