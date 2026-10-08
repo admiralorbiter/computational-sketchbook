@@ -4,6 +4,7 @@ ai_infrastructure_network
 signal_observatory
 kc_admin_staffing_decomposition
 kc_education_labor
+kc_grades_incentives
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -21,6 +22,15 @@ Thumbs.db
 .venv
 env/
 venv/
+
+# Jupyter & Testing artifacts
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+.pytest_cache/
+*/.pytest_cache/*
+.ruff_cache/
+.coverage
+htmlcov/
 
 # Large media binaries and database files
 *.mp4

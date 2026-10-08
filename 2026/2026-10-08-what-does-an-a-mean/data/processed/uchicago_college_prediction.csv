@@ -1,0 +1,5 @@
+gpa_bracket,gpa_midpoint,act_low_grad_rate,act_mid_grad_rate,act_high_grad_rate,marginal_gpa_effect
+< 2.5,2.2,18.2,20.4,22.8,19.5
+2.5 - 2.9,2.7,34.5,37.8,41.2,38.0
+3.0 - 3.4,3.2,52.1,55.4,60.1,56.0
+3.5 - 4.0,3.75,68.7,72.3,78.4,73.5

@@ -1,0 +1,12 @@
+year,curriculum,overall_gpa,math_gpa,naep_math_scale,credits_earned
+1990,All Graduates,2.68,2.34,,23.5
+2000,All Graduates,2.94,2.58,,25.8
+2005,All Graduates,2.98,2.6,150.0,26.8
+2009,All Graduates,3.0,2.65,153.0,27.2
+2019,All Graduates,3.11,2.79,150.0,28.1
+2009,Rigorous Curriculum,3.61,3.32,188.0,29.4
+2019,Rigorous Curriculum,3.69,3.44,184.0,30.1
+2009,Midlevel Curriculum,3.12,2.74,160.0,27.8
+2019,Midlevel Curriculum,3.25,2.91,158.0,28.6
+2009,Standard / Below,2.68,2.29,143.0,25.7
+2019,Standard / Below,2.79,2.41,140.0,26.3
