@@ -1,5 +1,5 @@
 course_grade,pct_proficient_or_above,pct_non_proficient,sample,source
-A Grade,92.0,8.0,NC Algebra I Students (2005–2016),"Gershenson (2018), Fordham Institute"
-B Grade,64.0,36.0,NC Algebra I Students (2005–2016),"Gershenson (2018), Fordham Institute"
-C Grade,25.0,75.0,NC Algebra I Students (2005–2016),"Gershenson (2018), Fordham Institute"
-D Grade,7.0,93.0,NC Algebra I Students (2005–2016),"Gershenson (2018), Fordham Institute"
+A Grade,92.0,8.0,"NC Algebra I Students (2014–2016; N ≈ 250,000)","Gershenson (2020), Great Expectations, Fordham Institute, Figure 2, p. 16"
+B Grade,64.0,36.0,"NC Algebra I Students (2014–2016; N ≈ 250,000)","Gershenson (2020), Great Expectations, Fordham Institute, Figure 2, p. 16"
+C Grade,29.0,71.0,"NC Algebra I Students (2014–2016; N ≈ 250,000)","Gershenson (2020), Great Expectations, Fordham Institute, Figure 2, p. 16"
+D/F Combined,10.0,90.0,"NC Algebra I Students (2014–2016; N ≈ 250,000)","Gershenson (2020), Great Expectations, Fordham Institute, Figure 2, p. 16"

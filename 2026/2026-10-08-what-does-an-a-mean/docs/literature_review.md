@@ -48,7 +48,7 @@ A central insight of this project is that incentives do not simply "corrupt" or 
 **McElroy, Katherine. (2023). "Does test-based accountability improve more than just test scores?" *Economics of Education Review*, 94, 102381.**
 - *Setting*: Longitudinal analysis of high school accountability mandates across US states.
 - *Findings*: Exposure to consequential high school exit exams and graduation accountability significantly increased the likelihood that students graduated from high school.
-- *The Disconnect*: However, increased graduation rates did not lead to higher rates of college degree completion or improved labor market earnings. While some observers hypothesize that high schools may expand credit recovery or alter passing standards to meet graduation targets, McElroy's empirical findings document the divergence at the postsecondary margin without proving specific institutional mechanisms such as weakened classroom grading standards.
+- *The Disconnect*: However, increased graduation rates did not lead to higher rates of college attendance or bachelor's degree completion (the published study evaluates educational attainment, not labor market earnings). While some observers hypothesize that high schools may expand credit recovery or alter passing standards to meet graduation targets, McElroy's empirical findings document the divergence at the postsecondary margin without proving specific institutional mechanisms such as weakened classroom grading standards.
 
 ---
 
@@ -56,8 +56,8 @@ A central insight of this project is that incentives do not simply "corrupt" or 
 
 ### 1. High School Grades Predict College Success Far Better Than Standardized Tests
 **Allensworth, Elaine M., & Clark, Kallie. (2020). "High school GPAs and ACT scores as predictors of college completion: Examining assumptions about consistency across high schools." *Educational Researcher*, 49(3), 198–211.**
-- *Sample*: 55,084 Chicago Public Schools graduates who enrolled in four-year colleges across the United States.
-- *Key Finding*: High school GPA was strongly and monotonically predictive of four-year college completion across *every* high school in the sample. A 1-point increase in high school GPA was associated with an increase in college graduation rates from under 20% to over 70%.
+- *Sample*: 17,753 Chicago Public Schools graduates who immediately enrolled in four-year colleges (analyzed for six-year college graduation), drawn from a broader graduating cohort of 55,084 students used for analyzing college enrollment patterns.
+- *Key Finding*: High school GPA was strongly and monotonically predictive of six-year college completion across *every* high school in the sample. After controlling for student backgrounds and college characteristics, the probability of graduating within six years ranged from approximately **20% for students with high school GPAs below 1.5** to about **80% for students with GPAs of 3.75 or higher**.
 - *ACT Comparison*: In contrast, ACT scores had minimal incremental predictive power once high school GPA was controlled for. The correlation between ACT scores and college completion was largely accounted for by differences in GPA.
 - *Why?*: Course grades reward behavioral stamina, homework completion, continuous attendance across 180 school days, emotional regulation, and relational navigation with teachers—qualities that are indispensable for navigating college bureaucracies and passing undergraduate coursework. Standardized tests measure on-demand cognitive speed and specific test-taking skills on a single Saturday morning.
 
@@ -76,14 +76,14 @@ A central insight of this project is that incentives do not simply "corrupt" or 
 - *Takeaway*: Transcripts showed more courses taken and higher grades awarded, but independent assessment revealed a decline in actual mathematical problem-solving ability.
 
 ### 4. Course Grades vs. External End-of-Course Proficiency in Algebra I
-**Gershenson, Seth. (2018). *Great Expectations: The Impact of Rigorous Grading Standards on Student Achievement.* Thomas B. Fordham Institute.**  
-**Tyner, Adam, & Gershenson, Seth. (2020). "Conceptualizing and measuring grade inflation: A case study of North Carolina Algebra I." *Economics of Education Review*, 78, 102029.**
-- *Sample*: Statewide North Carolina administrative panel linking student Algebra I course letter grades to standardized state End-of-Course (EOC) examination scores (2005–2016).
+**Gershenson, Seth. (2020). *Great Expectations: The Impact of Rigorous Grading Standards on Student Achievement.* Thomas B. Fordham Institute.**  
+**Tyner, Adam, & Gershenson, Seth. (2020). "Conceptualizing Grade Inflation: A Case Study of North Carolina Algebra I." *Economics of Education Review*, 78, 102037.**
+- *Sample*: Approximately 250,000 North Carolina public school students taking Algebra I between 2014 and 2016 (Figure 2, p. 16), embedded within a 2006–2016 master longitudinal panel of over 350,000 students.
 - *Key Empirical Finding*: Classroom letter grades do not map onto external state test proficiency in a 1-to-1 manner. Specifically:
-  - **92%** of students receiving an 'A' in Algebra I achieved proficiency on the external state exam.
+  - **92%** of students receiving an 'A' in Algebra I achieved proficiency on the external state exam (8% non-proficient).
   - Among students receiving a **'B'**, **36% failed to achieve proficiency** (only 64% proficient).
-  - Among students receiving a **'C'**, **75% failed to reach proficiency** (25% proficient).
-  - Among students receiving a **'D'**, **93% failed to reach proficiency** (7% proficient).
+  - Among students receiving a **'C'**, **71% failed to reach proficiency** (only 29% proficient).
+  - Among students receiving **'D' and 'F' combined**, **90% failed to reach proficiency** (only 10% proficient).
 - *Implications for Secondary Mathematics*: EOC scores predicted subsequent ACT math scores far better than classroom grades. Gershenson demonstrated that grading standards vary widely across schools, and that exposure to more rigorous grading standards substantially improves subsequent student achievement, especially for disadvantaged students. In Missouri, establishing the exact student-level concordance between teacher grades and EOC scores remains an active research question.
 
 ---

@@ -1,7 +1,7 @@
-gpa_bracket,gpa_midpoint,college_grad_rate_pct,source_note
-GPA < 1.5,1.25,20.0,Allensworth & Clark (2020) Figure 1 / text
-GPA 1.5 - 1.9,1.75,31.0,Allensworth & Clark (2020)
-GPA 2.0 - 2.4,2.25,43.0,Allensworth & Clark (2020)
-GPA 2.5 - 2.9,2.75,55.0,Allensworth & Clark (2020)
-GPA 3.0 - 3.4,3.25,67.0,Allensworth & Clark (2020)
-GPA 3.5 - 4.0,3.75,80.0,Allensworth & Clark (2020) Figure 1 / text
+gpa_bracket,gpa_midpoint,college_grad_rate_pct,derivation,sample
+GPA < 1.5,1.25,20.0,"Published Endpoint (Figure 1 & text, p. 202)","17,753 four-year college enrollees"
+GPA 2.0,2.0,33.0,Model curve estimate (Figure 1),"17,753 four-year college enrollees"
+GPA 2.5,2.5,47.0,Model curve estimate (Figure 1),"17,753 four-year college enrollees"
+GPA 3.0,3.0,60.0,Model curve estimate (Figure 1),"17,753 four-year college enrollees"
+GPA 3.5,3.5,73.0,Model curve estimate (Figure 1),"17,753 four-year college enrollees"
+GPA >= 3.75,3.85,80.0,"Published Endpoint (Figure 1 & text, p. 202)","17,753 four-year college enrollees"

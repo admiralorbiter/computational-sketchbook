@@ -102,15 +102,17 @@ def build_uchicago_college_prediction_data():
     """
     Constructs the University of Chicago CCSR documented research findings.
     Source: Allensworth & Clark (2020), Educational Researcher, Vol. 49, No. 3, pp. 198–211.
-    Preserves published empirical graduation probabilities and model findings without synthetic cells.
+    Sample: 17,753 Chicago Public Schools graduates who immediately enrolled in 4-year colleges (cohorts 2006–2009).
+    Outcome: Six-Year College Graduation Rate (Bachelor's degree completion).
+    Preserves published empirical endpoints (20% for GPA < 1.5; 80% for GPA >= 3.75) and documented model curve points.
     """
     records = [
-        {"gpa_bracket": "GPA < 1.5", "gpa_midpoint": 1.25, "college_grad_rate_pct": 20.0, "source_note": "Allensworth & Clark (2020) Figure 1 / text"},
-        {"gpa_bracket": "GPA 1.5 - 1.9", "gpa_midpoint": 1.75, "college_grad_rate_pct": 31.0, "source_note": "Allensworth & Clark (2020)"},
-        {"gpa_bracket": "GPA 2.0 - 2.4", "gpa_midpoint": 2.25, "college_grad_rate_pct": 43.0, "source_note": "Allensworth & Clark (2020)"},
-        {"gpa_bracket": "GPA 2.5 - 2.9", "gpa_midpoint": 2.75, "college_grad_rate_pct": 55.0, "source_note": "Allensworth & Clark (2020)"},
-        {"gpa_bracket": "GPA 3.0 - 3.4", "gpa_midpoint": 3.25, "college_grad_rate_pct": 67.0, "source_note": "Allensworth & Clark (2020)"},
-        {"gpa_bracket": "GPA 3.5 - 4.0", "gpa_midpoint": 3.75, "college_grad_rate_pct": 80.0, "source_note": "Allensworth & Clark (2020) Figure 1 / text"},
+        {"gpa_bracket": "GPA < 1.5", "gpa_midpoint": 1.25, "college_grad_rate_pct": 20.0, "derivation": "Published Endpoint (Figure 1 & text, p. 202)", "sample": "17,753 four-year college enrollees"},
+        {"gpa_bracket": "GPA 2.0", "gpa_midpoint": 2.00, "college_grad_rate_pct": 33.0, "derivation": "Model curve estimate (Figure 1)", "sample": "17,753 four-year college enrollees"},
+        {"gpa_bracket": "GPA 2.5", "gpa_midpoint": 2.50, "college_grad_rate_pct": 47.0, "derivation": "Model curve estimate (Figure 1)", "sample": "17,753 four-year college enrollees"},
+        {"gpa_bracket": "GPA 3.0", "gpa_midpoint": 3.00, "college_grad_rate_pct": 60.0, "derivation": "Model curve estimate (Figure 1)", "sample": "17,753 four-year college enrollees"},
+        {"gpa_bracket": "GPA 3.5", "gpa_midpoint": 3.50, "college_grad_rate_pct": 73.0, "derivation": "Model curve estimate (Figure 1)", "sample": "17,753 four-year college enrollees"},
+        {"gpa_bracket": "GPA >= 3.75", "gpa_midpoint": 3.85, "college_grad_rate_pct": 80.0, "derivation": "Published Endpoint (Figure 1 & text, p. 202)", "sample": "17,753 four-year college enrollees"},
     ]
     df = pd.DataFrame(records)
     out_path = PROCESSED_DIR / "uchicago_college_prediction.csv"
@@ -121,38 +123,43 @@ def build_uchicago_college_prediction_data():
 def build_gershenson_nc_algebra_data():
     """
     Constructs the verified North Carolina Algebra I EOC proficiency by course grade dataset.
-    Sources:
-    1. Gershenson, Seth. (2018). 'Grade Inflation in High Schools (2005–2016)'. Thomas B. Fordham Institute.
-    2. Tyner, Adam, & Gershenson, Seth. (2020). 'Conceptualizing Grade Inflation'. Economics of Education Review, 78, 102037.
+    Source: Gershenson, Seth. (2020). 'Great Expectations: The Impact of Rigorous Grading Standards on Student Achievement'.
+            Thomas B. Fordham Institute, Figure 2, page 16.
+    Sample: Approximately 250,000 North Carolina public school students from 2014–2016.
+    Exact published categories and percentages:
+      - 'A' grade: 92% Proficient or Above, 8% Non-Proficient
+      - 'B' grade: 64% Proficient or Above, 36% Non-Proficient
+      - 'C' grade: 29% Proficient or Above, 71% Non-Proficient
+      - 'D/F Combined' (D and F): 10% Proficient or Above, 90% Non-Proficient
     """
     nc_data = [
         {
             "course_grade": "A Grade",
             "pct_proficient_or_above": 92.0,
             "pct_non_proficient": 8.0,
-            "sample": "NC Algebra I Students (2005–2016)",
-            "source": "Gershenson (2018), Fordham Institute"
+            "sample": "NC Algebra I Students (2014–2016; N ≈ 250,000)",
+            "source": "Gershenson (2020), Great Expectations, Fordham Institute, Figure 2, p. 16"
         },
         {
             "course_grade": "B Grade",
             "pct_proficient_or_above": 64.0,
             "pct_non_proficient": 36.0,
-            "sample": "NC Algebra I Students (2005–2016)",
-            "source": "Gershenson (2018), Fordham Institute"
+            "sample": "NC Algebra I Students (2014–2016; N ≈ 250,000)",
+            "source": "Gershenson (2020), Great Expectations, Fordham Institute, Figure 2, p. 16"
         },
         {
             "course_grade": "C Grade",
-            "pct_proficient_or_above": 25.0,
-            "pct_non_proficient": 75.0,
-            "sample": "NC Algebra I Students (2005–2016)",
-            "source": "Gershenson (2018), Fordham Institute"
+            "pct_proficient_or_above": 29.0,
+            "pct_non_proficient": 71.0,
+            "sample": "NC Algebra I Students (2014–2016; N ≈ 250,000)",
+            "source": "Gershenson (2020), Great Expectations, Fordham Institute, Figure 2, p. 16"
         },
         {
-            "course_grade": "D Grade",
-            "pct_proficient_or_above": 7.0,
-            "pct_non_proficient": 93.0,
-            "sample": "NC Algebra I Students (2005–2016)",
-            "source": "Gershenson (2018), Fordham Institute"
+            "course_grade": "D/F Combined",
+            "pct_proficient_or_above": 10.0,
+            "pct_non_proficient": 90.0,
+            "sample": "NC Algebra I Students (2014–2016; N ≈ 250,000)",
+            "source": "Gershenson (2020), Great Expectations, Fordham Institute, Figure 2, p. 16"
         },
     ]
     df = pd.DataFrame(nc_data)
@@ -161,11 +168,196 @@ def build_gershenson_nc_algebra_data():
     print(f"[*] Saved Gershenson NC Algebra I benchmark to {out_path}")
     return df
 
+def build_source_extraction_audit():
+    """
+    Constructs the comprehensive Source Extraction Audit Table:
+    publication, page, figure/table, exact published value, sample years, sample size, and dataset field.
+    """
+    SOURCES_DIR = BASE_DIR / "sources"
+    SOURCES_DIR.mkdir(parents=True, exist_ok=True)
+    audit_records = [
+        {
+            "audit_key": "gershenson_2020_grade_a",
+            "publication": "Gershenson (2020), Great Expectations, Thomas B. Fordham Institute",
+            "page_location": "Page 16, Figure 2",
+            "sample_definition": "North Carolina public high school Algebra I students",
+            "sample_years": "2014–2016",
+            "sample_size": "≈ 250,000",
+            "dataset_file": "data/processed/gershenson_nc_algebra1_benchmark.csv",
+            "dataset_field": "course_grade='A Grade' -> pct_proficient_or_above",
+            "published_value": "92%",
+            "dataset_value": 92.0,
+            "verification_status": "Verified against Fordham Institute Figure 2"
+        },
+        {
+            "audit_key": "gershenson_2020_grade_b",
+            "publication": "Gershenson (2020), Great Expectations, Thomas B. Fordham Institute",
+            "page_location": "Page 16, Figure 2",
+            "sample_definition": "North Carolina public high school Algebra I students",
+            "sample_years": "2014–2016",
+            "sample_size": "≈ 250,000",
+            "dataset_file": "data/processed/gershenson_nc_algebra1_benchmark.csv",
+            "dataset_field": "course_grade='B Grade' -> pct_proficient_or_above",
+            "published_value": "64%",
+            "dataset_value": 64.0,
+            "verification_status": "Verified against Fordham Institute Figure 2"
+        },
+        {
+            "audit_key": "gershenson_2020_grade_c",
+            "publication": "Gershenson (2020), Great Expectations, Thomas B. Fordham Institute",
+            "page_location": "Page 16, Figure 2",
+            "sample_definition": "North Carolina public high school Algebra I students",
+            "sample_years": "2014–2016",
+            "sample_size": "≈ 250,000",
+            "dataset_file": "data/processed/gershenson_nc_algebra1_benchmark.csv",
+            "dataset_field": "course_grade='C Grade' -> pct_proficient_or_above",
+            "published_value": "29%",
+            "dataset_value": 29.0,
+            "verification_status": "Verified against Fordham Institute Figure 2"
+        },
+        {
+            "audit_key": "gershenson_2020_grade_df",
+            "publication": "Gershenson (2020), Great Expectations, Thomas B. Fordham Institute",
+            "page_location": "Page 16, Figure 2",
+            "sample_definition": "North Carolina public high school Algebra I students",
+            "sample_years": "2014–2016",
+            "sample_size": "≈ 250,000",
+            "dataset_file": "data/processed/gershenson_nc_algebra1_benchmark.csv",
+            "dataset_field": "course_grade='D/F Combined' -> pct_proficient_or_above",
+            "published_value": "10% (D and F combined)",
+            "dataset_value": 10.0,
+            "verification_status": "Verified against Fordham Institute Figure 2"
+        },
+        {
+            "audit_key": "allensworth_clark_2020_sample_completion",
+            "publication": "Allensworth & Clark (2020), Educational Researcher, 49(3), 198–211",
+            "page_location": "Page 199, Method section",
+            "sample_definition": "Chicago Public Schools graduates who immediately enrolled in 4-year colleges",
+            "sample_years": "2006–2009 graduating cohorts (6-year follow-up)",
+            "sample_size": "17,753",
+            "dataset_file": "data/processed/uchicago_college_prediction.csv",
+            "dataset_field": "sample size for 6-year college completion analysis",
+            "published_value": "17,753",
+            "dataset_value": 17753,
+            "verification_status": "Verified against text; 55,084 is broader college-enrollment sample"
+        },
+        {
+            "audit_key": "allensworth_clark_2020_endpoint_low",
+            "publication": "Allensworth & Clark (2020), Educational Researcher, 49(3), 198–211",
+            "page_location": "Page 202, Figure 1 and text",
+            "sample_definition": "CPS 4-year college enrollees with HSGPA < 1.5",
+            "sample_years": "2006–2009 cohorts",
+            "sample_size": "17,753",
+            "dataset_file": "data/processed/uchicago_college_prediction.csv",
+            "dataset_field": "gpa_bracket='GPA < 1.5' -> college_grad_rate_pct",
+            "published_value": "≈ 20% (6-year college completion)",
+            "dataset_value": 20.0,
+            "verification_status": "Verified against Figure 1 model curve"
+        },
+        {
+            "audit_key": "allensworth_clark_2020_endpoint_high",
+            "publication": "Allensworth & Clark (2020), Educational Researcher, 49(3), 198–211",
+            "page_location": "Page 202, Figure 1 and text",
+            "sample_definition": "CPS 4-year college enrollees with HSGPA >= 3.75",
+            "sample_years": "2006–2009 cohorts",
+            "sample_size": "17,753",
+            "dataset_file": "data/processed/uchicago_college_prediction.csv",
+            "dataset_field": "gpa_bracket='GPA >= 3.75' -> college_grad_rate_pct",
+            "published_value": "≈ 80% (6-year college completion)",
+            "dataset_value": 80.0,
+            "verification_status": "Verified against Figure 1 model curve"
+        },
+        {
+            "audit_key": "sanchez_moore_2022_adjusted_hsgpa",
+            "publication": "Sanchez & Moore (2022), ACT Research Report R2134 (ERIC ED621326)",
+            "page_location": "Page 11, Figure 6 & Table A1",
+            "sample_definition": "National ACT-tested graduating cohorts",
+            "sample_years": "2010–2021",
+            "sample_size": "> 2,000,000 per cohort",
+            "dataset_file": "data/processed/act_gpa_score_trends.csv",
+            "dataset_field": "adjusted_gpa (2010 -> 2021)",
+            "published_value": "3.17 (2010) -> 3.36 (2021)",
+            "dataset_value": "3.17 -> 3.36",
+            "verification_status": "Verified against Figure 6 HLM estimates"
+        },
+        {
+            "audit_key": "sanchez_moore_2022_unadjusted_hsgpa",
+            "publication": "Sanchez & Moore (2022), ACT Research Report R2134 (ERIC ED621326)",
+            "page_location": "Page 6, Figure 2",
+            "sample_definition": "National ACT-tested graduating cohorts",
+            "sample_years": "2010–2021",
+            "sample_size": "> 2,000,000 per cohort",
+            "dataset_file": "data/processed/act_gpa_score_trends.csv",
+            "dataset_field": "unadjusted_gpa (2010 -> 2021)",
+            "published_value": "3.22 (2010) -> 3.39 (2021)",
+            "dataset_value": "3.22 -> 3.39",
+            "verification_status": "Verified against Figure 2 unadjusted averages"
+        },
+        {
+            "audit_key": "nces_hsts_2019_midlevel_math",
+            "publication": "NCES (2022), The 2019 High School Transcript Study (HSTS), NCES 2022-011",
+            "page_location": "Chapter 2, Mathematics Assessment Results",
+            "sample_definition": "Nationally representative sample of graduating seniors (Midlevel Curriculum)",
+            "sample_years": "2009 & 2019",
+            "sample_size": "National HSTS sample",
+            "dataset_file": "data/processed/naep_hsts_trends.csv",
+            "dataset_field": "curriculum='Midlevel Curriculum' -> naep_math_scale",
+            "published_value": "158 (2009) -> 153 (2019)",
+            "dataset_value": "158.0 -> 153.0",
+            "verification_status": "Verified against official NCES table; corrected from earlier 160->158"
+        },
+        {
+            "audit_key": "mcelroy_2023_outcomes",
+            "publication": "McElroy, Katherine. (2023). Economics of Education Review, 94, 102381",
+            "page_location": "Article 102381, Tables 4–7",
+            "sample_definition": "US high school accountability cohorts across state policy regimes",
+            "sample_years": "1990s–2010s",
+            "sample_size": "National state-level panel",
+            "dataset_file": "artifacts/tables/table3_literature_matrix.csv",
+            "dataset_field": "McElroy (2023) Target Measure & Observed Distortion",
+            "published_value": "High school graduation, college attendance, BA receipt (no earnings data)",
+            "dataset_value": "Grad rates rose; college attendance and BA receipt had no overall significant gain",
+            "verification_status": "Verified: paper evaluates educational attainment, not earnings"
+        },
+        {
+            "audit_key": "mo_dese_kc_2022_benchmark_schools",
+            "publication": "Missouri DESE MSIP 6 Supporting Data Files (2022 Building APR File)",
+            "page_location": "Building-level supporting graduation & MAP files",
+            "sample_definition": "Kansas City metropolitan public high schools with complete 2022 records",
+            "sample_years": "2022 (Reporting Year)",
+            "sample_size": "45 high schools",
+            "dataset_file": "data/processed/kc_high_school_panel.csv",
+            "dataset_field": "school_year=2022 & grad_rate_4yr.notna() & math_status_mpi.notna()",
+            "published_value": "45 complete schools (25 >= 90% grad rate; 11 < 80% grad rate)",
+            "dataset_value": "45 complete schools (25 >= 90%; 11 < 80%)",
+            "verification_status": "Verified: panel has 51 distinct schools across 188 records (2022-2025)"
+        },
+        {
+            "audit_key": "mo_dese_kc_2022_mpi_ranges",
+            "publication": "Missouri DESE MSIP 6 Supporting Data Files (2022 Building APR File)",
+            "page_location": "Building-level supporting graduation & MAP files",
+            "sample_definition": "Kansas City metropolitan public high schools (2022 Benchmark)",
+            "sample_years": "2022",
+            "sample_size": "45 complete schools",
+            "dataset_file": "data/processed/kc_high_school_panel.csv",
+            "dataset_field": "math_status_mpi min and max",
+            "published_value": "Full sample MPI: 277.8 to 457.8; Within >=90% grad schools: 300.1 to 457.8",
+            "dataset_value": "Full: [277.8, 457.8]; >=90% grad: [300.1, 457.8]",
+            "verification_status": "Verified: 277.8 belongs to full sample; 300.1 is minimum for >=90% grad schools"
+        }
+    ]
+    df_audit = pd.DataFrame(audit_records)
+    out_audit = SOURCES_DIR / "source_extraction_audit.csv"
+    df_audit.to_csv(out_audit, index=False)
+    print(f"[*] Saved source extraction audit table to {out_audit} ({len(df_audit)} entries)")
+    return df_audit
+
 if __name__ == "__main__":
     build_naep_hsts_data()
     build_act_inflation_data()
     build_uchicago_college_prediction_data()
     build_gershenson_nc_algebra_data()
+    build_source_extraction_audit()
 
     # Re-export verified Table 1
     t1_records = [

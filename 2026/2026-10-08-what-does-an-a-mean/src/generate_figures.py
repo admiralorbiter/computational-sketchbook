@@ -160,7 +160,6 @@ def plot_figure_2():
 
     # Reference shading / thresholds
     ax.axhline(90.0, color="#666666", linestyle="--", linewidth=1.0, alpha=0.7, label="State 90% Graduation Target")
-    ax.axvline(350.0, color="#666666", linestyle=":", linewidth=1.0, alpha=0.7, label="Proficient Benchmark Threshold (~350 MPI)")
 
     for typ, color in typology_colors.items():
         sub = df_2022[df_2022["geographic_typology"] == typ]
@@ -221,14 +220,14 @@ def plot_figure_2():
 
     # Narrative callout box with precise descriptive facts and correlation
     text_box = (
-        "DESCRIPTIVE FINDINGS (N=45 KC High Schools):\n"
+        "DESCRIPTIVE FINDINGS (N=45 KC High Schools, 2022 Benchmark):\n"
         "• Overall correlation is positive: r = +0.68 between graduation and Math MPI.\n"
         "• Poverty correlation: r = -0.73 (FRPL), r = -0.81 (Direct Certification).\n"
         "• 25 of 45 high schools (56%) achieved >= 90% graduation rates (primarily suburban).\n"
         "• 11 high schools (24%) had graduation rates < 80% (all urban core/charter/inner-ring).\n"
-        "• Upper-Tier Credential Divergence: Among schools graduating >= 90%,\n"
-        "  Math MPI spans from 300.1 (Van Horn HS, 94.6% grad) to 428.4 (Park Hill HS, 94.2% grad).\n"
-        "• Lincoln College Prep shows 100% FRPL under CEP, but 17.2% Direct Certification."
+        "• Full sample MPI: 277.8 to 457.8; Within >=90% grad schools: 300.1 to 457.8.\n"
+        "• Lincoln College Prep: 97.6% grad, MPI 355.6 (100% FRPL, 17.2% Direct Cert;\n"
+        "  officially coded NON_CEP in 2022, CEP in 2023–2025)."
     )
     ax.text(265, 53, text_box, fontsize=8.0, bbox=dict(boxstyle="round,pad=0.6", facecolor="#f8f9fa", edgecolor="#cccccc", alpha=0.9))
 
@@ -246,12 +245,12 @@ def plot_figure_2():
 
 def plot_figure_3():
     """
-    Figure 3: The Algebra I Signaling Gap: State EOC Proficiency Within Classroom Grade Tiers
+    Figure 3: The Algebra I Signaling Benchmark: State EOC Proficiency Within Classroom Grade Tiers
     Reproduces the verified published empirical distribution from Seth Gershenson's North Carolina study:
-    Sources:
-    - Gershenson, Seth. (2018). 'Grade Inflation in High Schools (2005–2016)'. Thomas B. Fordham Institute.
-    - Tyner, Adam, & Gershenson, Seth. (2020). 'Conceptualizing Grade Inflation'. Economics of Education Review, 78, 102037.
-    Replaces previously simulated data with certified published empirical findings.
+    Source: Gershenson, Seth. (2020). 'Great Expectations: The Impact of Rigorous Grading Standards on Student Achievement'.
+            Thomas B. Fordham Institute, Figure 2, page 16.
+    Sample: Approximately 250,000 North Carolina students from 2014–2016.
+    Published percentages: A: 92%, B: 64%, C: 29%, D/F (Combined): 10%.
     """
     df_nc = pd.read_csv(PROCESSED_DIR / "gershenson_nc_algebra1_benchmark.csv")
 
@@ -275,7 +274,7 @@ def plot_figure_3():
         else:
             ax.text(prof[j] + non_prof[j] / 2.0, y_pos[j], f"{int(non_prof[j])}%", ha="center", va="center", color="#ffffff", fontsize=8.5, fontweight="bold")
 
-    # Annotations highlighting Gershenson's exact findings
+    # Annotations highlighting Gershenson's exact published findings
     ax.annotate("36% of students receiving a 'B' in Algebra I\nfailed to achieve proficiency on the state EOC",
                 xy=(64, 1), xytext=(72, 1.3),
                 arrowprops=dict(facecolor="#d62728", arrowstyle="->", lw=1.2),
@@ -283,8 +282,8 @@ def plot_figure_3():
     ax.annotate("92% of 'A' students met the state proficiency standard",
                 xy=(46, 0), xytext=(46, -0.35),
                 fontsize=9.0, fontweight="bold", color="#2ca02c", ha="center")
-    ax.annotate("75% of 'C' students and 93% of 'D' students\nfailed to reach state proficiency",
-                xy=(25, 2), xytext=(40, 2.3),
+    ax.annotate("71% of 'C' students and 90% of 'D/F' students\nfailed to reach state proficiency",
+                xy=(29, 2), xytext=(42, 2.3),
                 arrowprops=dict(facecolor="#d62728", arrowstyle="->", lw=1.2),
                 fontsize=9.0, fontweight="bold", color="#d62728")
 
@@ -294,16 +293,16 @@ def plot_figure_3():
     ax.set_xlim(0, 100)
     ax.xaxis.set_major_formatter(ticker.PercentFormatter())
     ax.set_xlabel("Percentage of Students Within Course Grade Tier", fontsize=11, labelpad=8)
-    ax.set_title("Figure 3: The Algebra I Signaling Gap: State EOC Proficiency Within Classroom Grade Tiers\n"
-                 "Empirical Findings from North Carolina Public Schools (Gershenson, 2018; Tyner & Gershenson, 2020)",
+    ax.set_title("Figure 3: The Algebra I Signaling Benchmark: State EOC Proficiency Within Classroom Grade Tiers\n"
+                 "Empirical Findings from North Carolina Public Schools (Gershenson, 2020, Figure 2, p. 16; N ≈ 250,000)",
                  fontsize=12, fontweight="bold", pad=12)
     ax.grid(True, axis="x", linestyle="--", alpha=0.4)
     ax.legend(loc="lower center", ncol=2, frameon=True, fontsize=10, bbox_to_anchor=(0.5, -0.15))
 
     # Methodological caveat note
     note = (
-        "Note: Data reflect statewide student-level North Carolina Algebra I records from Seth Gershenson (2018), Fordham Institute.\n"
-        "This published empirical distribution serves as an external benchmark for the course-grade / EOC relationship.\n"
+        "Note: Data reflect statewide student-level North Carolina Algebra I records (2014–2016; N ≈ 250,000) from Seth Gershenson (2020), Fordham Institute (Figure 2, p. 16).\n"
+        "Categories correspond to published figures: A (92%), B (64%), C (29%), and D/F combined (10%).\n"
         "Missouri public data currently provide building-level aggregates; student-level matching in Missouri remains an open empirical question."
     )
     plt.figtext(0.5, -0.05, note, ha="center", fontsize=8.0, fontstyle="italic", color="#555555")
@@ -344,19 +343,19 @@ def export_literature_matrix():
         },
         {
             "Study": "Allensworth & Clark (2020)",
-            "Setting / Design": "Chicago Public Schools (>55,000 grads in 4-yr colleges)",
+            "Setting / Design": "Chicago Public Schools (17,753 four-year college enrollees for 6-yr completion; 55,084 cohort for enrollment)",
             "Target Measure": "High School GPA vs. ACT Scores",
             "Observed Distortion": "Grading standards vary across high schools; test scores do not consistently correlate with college success",
             "Authentic Learning Finding": "HS GPA is 5x more predictive of college graduation than ACT; captures multi-month persistence and attendance",
             "Theoretical Mechanism": "Grades reflect multi-attribute behavioral habits decisive for college survival"
         },
         {
-            "Study": "Gershenson (2018) / Tyner & Gershenson (2020)",
-            "Setting / Design": "North Carolina Public Schools (Algebra I student-level panel, 2005–2016)",
+            "Study": "Gershenson (2020) / Tyner & Gershenson (2020)",
+            "Setting / Design": "North Carolina Public Schools (Algebra I panel, 2014–2016 for Fig 2 [N ≈ 250,000]; 2006–2016 master panel)",
             "Target Measure": "Course letter grades vs. Algebra I EOC scores",
-            "Observed Distortion": "Grade inflation accelerated post-2011, faster in affluent schools; 36% of 'B' students failed state EOC proficiency",
-            "Authentic Learning Finding": "EOC scores predicted subsequent ACT math scores far better than classroom grades",
-            "Theoretical Mechanism": "Subjective grading standards decouple from external standards under parent advocacy and failure aversion"
+            "Observed Distortion": "36% of 'B' students and 71% of 'C' students failed state EOC proficiency; subjective grading standards decouple under grade inflation",
+            "Authentic Learning Finding": "Students learn more mathematics and perform better on subsequent course exams under higher grading standards",
+            "Theoretical Mechanism": "Rigorous grading standards elevate student learning; subjective grades without external anchor can mask skill deficits"
         },
         {
             "Study": "Sanchez & Moore (2022)",
@@ -369,9 +368,9 @@ def export_literature_matrix():
         {
             "Study": "McElroy (2023)",
             "Setting / Design": "US High School Accountability Mandates (Economics of Education Review, 94, 102381)",
-            "Target Measure": "High school graduation rate",
-            "Observed Distortion": "Graduation rates rose significantly under test-based accountability mandates",
-            "Authentic Learning Finding": "No statistically significant overall effect on college attendance or bachelor's degree attainment",
+            "Target Measure": "High school graduation, college attendance, and BA receipt (educational attainment; does not evaluate earnings)",
+            "Observed Distortion": "Graduation rates rose significantly under test-based accountability mandates; no statistically significant overall effect on college attendance or bachelor's degree attainment",
+            "Authentic Learning Finding": "Test-based accountability mandates significantly elevated high school completion rates",
             "Theoretical Mechanism": "Credential expansion without demonstrated postsecondary human capital gains"
         },
     ]
