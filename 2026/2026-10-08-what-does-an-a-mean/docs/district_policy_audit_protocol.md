@@ -70,3 +70,18 @@ For each LEA, coders record the following twelve discrete variables:
 1. **Independent Dual Coding**: Every LEA policy document must be independently coded by two researchers.
 2. **Discrepancy Resolution**: Any divergence in categorical classification is resolved by reviewing the exact text of the Board Policy manual or Secondary Student Handbook.
 3. **Provenance Hash**: The official URL, retrieval timestamp, and SHA-256 hash of downloaded PDF policy files must be recorded in `sources/source_registry.csv`.
+
+---
+
+## 6. Methodological Safeguards: Temporal Alignment & Anti-Imputation Rules
+
+To avoid attributing retrospective causality to post-dated policies, the protocol enforces three mandatory methodological safeguards:
+
+1. **Mandatory Temporal Verification**:
+   - Every coded policy must record its exact `effective_school_year` and `revision_date` from official board minutes.
+   - Policies cannot be used to explain benchmark outcomes that occurred prior to their effective date. (e.g., KCPS's 40% floor adopted in 2023–24 cannot be treated as an operating policy for 2021–22 outcomes; NKC's SBL pilot in fall 2025 cannot be treated as an operating policy for 2021–22 outcomes).
+2. **Strict Prohibition on Default Imputation**:
+   - Researchers and scripts must **never** impute default values (such as assuming traditional percentage grading, zero-allowed, or in-house recovery) for unverified schools or districts.
+   - Any school or LEA lacking primary-source board documentation must be classified as `UNVERIFIED_PENDING_AUDIT`.
+3. **Independent Charter Auditing**:
+   - Because each Missouri charter school operates as an independent LEA under its own distinct governing board, researchers must **never** pool charter high schools under a single blanket policy record. Each charter operator (e.g., DeLaSalle, Crossroads, Hogan Prep, University Academy, Frontier) requires independent primary-source verification.

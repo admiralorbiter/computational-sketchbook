@@ -80,7 +80,7 @@ This computational sketchbook investigates the central research question:
 | **Figure 1** | **National Transcript vs. Assessment Disconnect (2009–2021)** | High school GPAs rose substantially (+0.11 NAEP, +0.19 ACT adjusted) while 12th-grade NAEP and ACT math scores fell. Advanced-track students saw math scores drop from 188 to 184 despite GPAs rising from 3.61 to 3.69. |
 | **Figure 2** | **Graduation vs. Mathematics Achievement in Kansas City High Schools** | 2022 cross-sectional baseline (45 complete schools): positive overall metro correlation ($r = +0.68$), strong correlation with direct certification ($r = -0.83$), and high upper-tier graduation rates alongside large MPI spreads (Van Horn 94.6% grad, MPI 300.1 vs. Park Hill 94.2% grad, MPI 428.4; MPI range in $\ge 90\%$ schools is 300.1 to 457.8). |
 | **Figure 3** | **The Algebra I Classroom Signaling Benchmark** | Statewide North Carolina empirical distribution (Gershenson, 2018, Figure 2, p. 16; Tyner & Gershenson, 2020; N ≈ 250,000 from 2014–2016): 92% of 'A' students, 64% of 'B' students (36% non-proficient), 29% of 'C' students (71% non-proficient), and 10% of 'D/F' combined students (90% non-proficient) reach proficiency on external state EOC, despite the EOC counting for $\ge 20\%$ of final course grades. Framed alongside the Missouri open research agenda. |
-| **Figure 4** | **The Signaling Decoupling Landscape & Top Decoupled Kansas City High Schools** | Quantifies the school-level gap between graduation rate rank and mathematics MPI rank ($\Delta = \text{Percentile}(\text{Grad}) - \text{Percentile}(\text{Math MPI})$) across 45 high schools. Highlights large positive decoupling outliers (North Kansas City High +63.3 pts, Van Horn +48.9 pts, Ruskin +22.2 pts) alongside district policy regimes (grading floors, Standards-Based Learning, and Edgenuity credit recovery). |
+| **Figure 4** | **Graduation–Achievement Rank Differences across Kansas City High Schools** | Quantifies the school-level gap between graduation rate rank and mathematics MPI rank ($\Delta_i = \operatorname{PctRank}(G_i) - \operatorname{PctRank}(M_i)$) across 45 high schools. Highlights large positive rank difference outliers (North Kansas City High +63.3 pts, Van Horn +48.9 pts, Ruskin +22.2 pts) alongside overall positive regional correlation ($r = 0.682, \rho = 0.667$). Footnotes document the cohort discrepancy (seniors vs. 9th/10th grade EOC testers), regional medians (MPI 354.3, Grad 92.3%), and that subsequent policies (KCPS 40% floor in 2023–24, NKC SBL pilot in 2025–26) were not in effect during the 2022 baseline. |
 
 ---
 
@@ -111,22 +111,28 @@ pytest 2026/2026-10-08-what-does-an-a-mean/tests/ -v
 
 ---
 
-## 5. Phase 2: Kansas City Institutional Incentive Study
+## 5. Phase 2: Kansas City Institutional Incentive Study (Research Architecture)
 
-Phase 2 advances beyond describing the disconnect to evaluating *why* high school course marks and graduation rates decouple from external exam achievement across Greater Kansas City:
+Phase 2 establishes the institutional research design for investigating how district grading policies, credit recovery, and state accountability incentives interact:
 
-1. **Theoretical Mechanism (Campbell's Law)**: High school graduation rate is a high-stakes, heavily weighted component of Missouri MSIP 6 APR scoring. While external standardized test scores (MAP / EOC) cannot be manipulated by school staff, the awarding of course credits is entirely endogenous. High schools rationally optimize on the margin they control: course passing and graduation credit accrual.
-2. **The Missouri Regulatory Void**: Unlike North Carolina (which mandated that state EOC exams count for $\ge 20\%$ of final course marks), Missouri statutes mandate administering the Algebra I EOC but **do not require passing the EOC for graduation**, nor do they mandate a minimum weighting of the EOC in course grades. Local boards retain complete statutory authority over course grading.
-3. **District Policy Levers**:
-   - **Minimum Grading Floors**: Policies establishing 40% or 50% floors (e.g. KCPS 2023–24 40% floor; Hickman Mills 50% quarter floor) compress the failure range from 60 points to 10 points.
-   - **Standards-Based Learning (SBL)**: Models (e.g., North Kansas City Schools) that decouple homework and compliance from grades and mandate uncapped reassessments.
-   - **Digital Credit Recovery**: Universal adoption of modular platforms (Edgenuity, Apex Learning) with unit pre-testing and 60% mastery cutoffs, compressing semester coursework into 15–30 lab hours.
+1. **Separation of Three Analytical Levels**:
+   - *Observed Data*: Cross-sectional graduation rates and mathematics MPI scores exhibit a strong positive relationship across 45 high schools ($r = 0.682, \rho = 0.667$), while individual campuses show substantial Graduation–Achievement Rank Differences ($\Delta_i$ from $-55.6$ to $+63.3$ percentile points).
+   - *Institutional Evidence*: Dated board policy records establish when specific grading reforms were enacted.
+   - *Causal Mechanisms*: Prospective empirical hypotheses to test using longitudinal variation.
+2. **The Timing Reality & Longitudinal Case Studies**:
+   - Primary source audit confirms that prominent district reforms occurred **after** the 2022 cross-sectional baseline.
+   - **Case Study A (Kansas City Public Schools)**: Investigates the 40% minimum assignment floor introduced in **2023–24** (and revised in 2024–25), focusing on immediate short-run outcomes: course failure rates ('F' marks), grade distributions, and semester credit accumulation.
+   - **Case Study B (North Kansas City Schools)**: Investigates the phased rollout of Standards-Based Learning (SBL), beginning with a pilot in **fall 2025** (including North Kansas City High) and full implementation in **2026–27**. Explicitly tests competing hypotheses: whether uncapped reassessments improve subsequent assessed learning on state EOC exams or primarily increase course pass rates.
+3. **Statutory and Regulatory Precision**:
+   - Under **5 CSR 20-100.230**, Missouri mandates a statewide minimum of 24 credits for graduation.
+   - Under **Section 171.011 RSMo**, local school boards retain authority to require additional credits, set local grading scales, and define passing thresholds.
+   - Under **Section 160.518 RSMo**, Missouri requires administering EOC exams but does not mandate passing them for graduation or require that EOC scores contribute a set percentage to course grades (unlike North Carolina's 20% mandate).
 4. **Key Phase 2 Deliverables**:
    - **Research Design**: [`docs/kc_institutional_incentives_design.md`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/docs/kc_institutional_incentives_design.md)
    - **Coding Protocol**: [`docs/district_policy_audit_protocol.md`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/docs/district_policy_audit_protocol.md)
    - **Policy Registry**: [`sources/kc_district_policy_registry.csv`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/sources/kc_district_policy_registry.csv)
    - **Working Paper**: [`artifacts/kc_institutional_incentive_analysis.md`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/artifacts/kc_institutional_incentive_analysis.md)
-   - **Empirical Visualizations & Matrices**: Figure 4, Table 4, and Table 5.
+   - **Diagnostic Visualizations & Matrices**: Figure 4, Table 4, and Table 5.
 
 ---
 

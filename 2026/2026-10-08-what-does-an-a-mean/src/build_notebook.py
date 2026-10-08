@@ -467,7 +467,7 @@ To move beyond descriptive correlations and investigate the actual institutional
 
     # Cell 22: Code - Phase 2 Execution
     cells.append(nbf.v4.new_code_cell(
-        """# Phase 2: Kansas City Institutional Incentive Analysis & Decoupling Metrics
+        """# Phase 2: Kansas City Institutional Incentive Analysis & Exploratory Rank Differences
 import sys
 from pathlib import Path
 import pandas as pd
@@ -483,32 +483,41 @@ df_merged, df_policy = load_and_process_decoupling_data()
 generate_tables(df_merged, df_policy)
 plot_figure_4(df_merged)
 
-# Load and display top decoupled high schools
+# Load and display top rank-difference high schools
 t4 = pd.read_csv(TABLES_DIR / "table4_kc_institutional_decoupling_summary.csv")
-print("Top 10 High Schools by Signaling Decoupling Gap (Graduation Rank vs. Math MPI Rank):")
-display(t4.head(10)[["District Name", "School Name", "4-Yr Grad Rate (%)", "Math Status MPI", "Decoupling Gap (Pctile Pts)", "Grade Floor Policy", "Credit Recovery Platform"]])
+print("Top 10 High Schools by Graduation–Achievement Rank Difference:")
+display(t4.head(10)[["District Name", "School Name", "4-Yr Grad Rate (%)", "Math Status MPI", "Grad-Math Rank Diff (Pctile Pts)", "Policy Status in 2022", "Subsequent Policy Adoption"]])
 
 # Display Figure 4
 display(Image(str(FIG_DIR / "04_kc_signaling_decoupling_gap.png")))
 """
     ))
 
-    # Cell 23: Markdown - Institutional Findings Synthesis
+    # Cell 23: Markdown - Institutional Findings & Longitudinal Case Studies
     cells.append(nbf.v4.new_markdown_cell(
-        """## Section 9: Institutional Policy Synthesis (Phase 2 Findings)
+        """## Section 9: Institutional Policy Synthesis & Longitudinal Research Agenda (Phase 2)
 
-The empirical results from **Figure 4** and **Table 4** reveal the organizational architecture behind decoupling:
+The empirical results from **Figure 4** and **Table 4** clarify the relationship between school accountability measures and district policy timelines:
 
-1. **The Magnitude of Decoupling**: Across the 45 high schools in Greater Kansas City, the Signaling Decoupling Gap ($\\Delta = \\text{Percentile}(\\text{Grad}) - \\text{Percentile}(\\text{Math MPI})$) spans from **$-55.6$ to $+63.3$ percentile points** ($\\text{SD} = 23.8$).
-2. **High-Graduation Decoupled Campuses**:
-   - **North Kansas City High**: 98.1% graduation rate (96.7th percentile regionally) alongside an MPI of 331.4 (bottom 33.3rd percentile, below the state proficient mark of 350), producing a decoupling gap of **$+63.3$ percentile points**.
-   - **Van Horn High (Independence)**: 94.6% graduation rate alongside an MPI of 300.1 (mostly Basic/Below Basic), producing a gap of **$+48.9$ percentile points**.
-   - **Ruskin High (Hickman Mills)**: 88.3% graduation rate with an MPI of 315.0, producing a gap of **$+22.2$ percentile points**.
-3. **The Role of District Policy Levers**:
-   - **Minimum Grading Floors**: Policies establishing 40% (KCPS 2023–24) or 50% (Hickman Mills) floors compress the failure zone from 60 points to 10 points, enabling students with sporadic work to pass with a 'D'.
-   - **Standards-Based Learning (SBL)**: North Kansas City's shift to a 4-tier rubric with uncapped retakes and zero homework penalties ensures students remain eligible for graduation credit.
-   - **Digital Credit Recovery**: Universal deployment of Edgenuity and Apex Learning creates an institutional escape hatch where 120-hour courses are recovered in 15–30 lab hours with a 60% passing threshold.
-4. **The Missouri Regulatory Asymmetry**: Unlike North Carolina (which required the EOC to count for $\\ge 20\\%$ of the course grade), Missouri statute does not mandate EOC passing or EOC weighting for graduation. Course credit and test scores operate in completely separate institutional silos.
+1. **Overall Correlation and School-Level Divergence**:
+   - Across the 45 high schools in Greater Kansas City, the overall relationship between four-year cohort graduation rates and mathematics MAP Performance Index (MPI) scores is positive and fairly strong: **Pearson $r = 0.682$, Spearman rank $\\rho = 0.667$**.
+   - However, individual high schools show substantial differences in their relative standing. The **Graduation–Achievement Rank Difference** ($\\Delta_i = \\operatorname{PctRank}(G_i) - \\operatorname{PctRank}(M_i)$) spans from **$-55.6$ to $+63.3$ percentile points** ($\\text{SD} = 23.8$).
+   - This metric serves as an **exploratory screening diagnostic** for identifying schools with divergent institutional outcomes; it is not a direct causal estimate of credential inflation.
+
+2. **The Timing Paradox**:
+   - Our audit of primary board minutes reveals that prominent grading reforms occurred **subsequent to the 2022 benchmark**:
+     - **KCPS (048-078)**: The 40% minimum assignment floor was implemented in **2023–24** (and revised in 2024–25).
+     - **North Kansas City (024-093)**: Standards-Based Learning (SBL) was scheduled for a pilot in **fall 2025** (including North Kansas City High) with full rollout in **2026–27**.
+   - Consequently, these policies did not exist in 2022 and cannot causally explain 2022 cross-sectional rankings.
+
+3. **Methodological Boundaries**:
+   - **Cohort Discrepancy**: Four-year graduation rates measure graduating 12th-grade seniors, whereas mathematics MPI reflects students taking End-of-Course exams (predominantly 9th and 10th graders taking Algebra I).
+   - **Aggregate School MPI**: School MPI is a weighted average across all student achievement levels (100–500 scale), not an individual student proficiency cutoff.
+   - **State Statutory Reality**: Under 5 CSR 20-100.230 and Section 171.011 RSMo, Missouri mandates administering the Algebra I EOC but does not mandate passing it for graduation or require a minimum course grade weighting.
+
+4. **Prospective Longitudinal Agenda**:
+   - **Case Study A (KCPS)**: Pre-post interrupted time series analyzing the immediate effect of the 40% floor (2023–24) on course failure rates ('F' grades) and credit accumulation.
+   - **Case Study B (NKC Schools)**: Pre-post evaluation of the 2025–26 SBL pilot, testing competing hypotheses: does uncapped reassessment foster genuine mastery gains on subsequent EOC exams, or primarily increase course pass rates?
 
 ---
 *Computational Sketchbook Repository: `computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/`*
