@@ -373,14 +373,16 @@ When a student receives a passing grade, whose definition of success has actuall
 ### The North Carolina Empirical Benchmark
 Because individual student course grades linked to statewide EOC test records are not yet publicly released in Missouri, establishing that exact concordance locally remains an active, open research question. 
 
-However, this exact empirical question was answered rigorously by economist Seth Gershenson using statewide administrative records from North Carolina (Gershenson, 2020; Tyner & Gershenson, 2020). Analyzing administrative records for approximately **250,000 North Carolina Algebra I students from 2014 to 2016** (published in *Great Expectations*, Figure 2, p. 16), Gershenson documented the true empirical distribution of external proficiency across course grade tiers:
+However, this exact empirical question was answered rigorously by economist Seth Gershenson using statewide administrative records from North Carolina in *Grade Inflation in High Schools (2005–2016)* (Fordham Institute, 2018, Figure 2, p. 16; Tyner & Gershenson, 2020). Analyzing administrative records for approximately **250,000 North Carolina Algebra I students from 2014 to 2016**, Gershenson documented the true empirical distribution of external proficiency across course grade tiers:
 
 - **'A' Students**: **92%** achieved proficiency or advanced on the state EOC; only **8%** were non-proficient.
 - **'B' Students**: **36% failed to achieve proficiency** on the state EOC (64% proficient).
 - **'C' Students**: **71% failed to reach proficiency** (only 29% proficient).
 - **'D/F Combined'**: **90% failed to reach proficiency** on the external examination (only 10% proficient; reported as a combined category in published research).
 
-Furthermore, Tyner & Gershenson (2020, *Economics of Education Review*, 102037) demonstrated that grading standards vary substantially across schools: in schools with higher grading standards, students learned significantly more mathematics and performed better on subsequent exams like the ACT, even when controlling for baseline achievement.
+Crucially, North Carolina policy during this period mandated that student scores on the standardized EOC exam counted for at least 20% of their final course letter grade. Because the standardized assessment was already partially embedded within the course grade itself, the two measures were not completely independent. This makes the observed discordance—over one-third of 'B' students and seven in ten 'C' students failing proficiency—even more striking.
+
+In a separate subsequent report, *Great Expectations: The Impact of Rigorous Grading Standards on Student Achievement* (Fordham Institute, 2020), Gershenson demonstrated that teacher grading standards vary substantially across classrooms, and that exposure to more rigorous grading standards directly benefits students—substantially improving their subsequent performance in Geometry and Algebra II. Furthermore, the companion econometric paper by Tyner & Gershenson (2020, *Economics of Education Review*, 78, 102037) confirmed that higher grading standards benefit all students, with particularly pronounced advantages for disadvantaged students.
 
 Let's examine Graph 3 below:
 """
@@ -404,14 +406,14 @@ Image(filename=str(FIG_DIR / "03_algebra1_grade_proficiency_gap.png"), width=900
 A responsible empirical investigation must not begin by assuming that accountability incentives are purely corrupting. We must read the evidence on both sides.
 
 ### The Dueling Realities of Educational Incentives
-1. **Incentives Distort Behavior & Inflate Credentials (Jacob, 2005; Gershenson, 2020; McElroy, 2023)**:
+1. **Incentives Distort Behavior & Inflate Credentials (Jacob, 2005; Gershenson, 2018; McElroy, 2023)**:
    - Brian Jacob's evaluation of high-stakes testing in Chicago proved that accountability produced significant score inflation through strategic gaming: assigning low-performing students to special education, teaching narrowly to the test format, and credit recovery.
-   - Seth Gershenson (2020; Tyner & Gershenson, 2020) demonstrated that subjective course grades decouple from standardized assessments under failure-rate scrutiny, with 36% of 'B', 71% of 'C', and 90% of 'D/F' students in Algebra I failing external state proficiency.
+   - Seth Gershenson (2018; Tyner & Gershenson, 2020) demonstrated that subjective course grades decouple from standardized assessments under failure-rate scrutiny, with 36% of 'B', 71% of 'C', and 90% of 'D/F' students in Algebra I failing external state proficiency, even with the EOC counting for >=20% of the course mark.
    - Katherine McElroy (2023) (*Does test-based accountability improve more than just test scores?*, *Economics of Education Review*, 94, 102381) demonstrated that high school accountability mandates significantly increased graduation rates, but **failed to increase college attendance or bachelor's degree attainment**, indicating credential inflation at the secondary exit boundary.
-2. **Incentives Produce Real Learning (Dee & Jacob, 2011)**:
+2. **Incentives Produce Real Learning & Rigor Benefits (Dee & Jacob, 2011; Gershenson, 2020)**:
    - In their national NBER study of No Child Left Behind, Thomas Dee and Brian Jacob found statistically significant, authentic gains in mathematics achievement on the **independent, low-stakes NAEP exam** (+0.23 SD in 4th grade, +0.10 SD in 8th grade).
-   - Because teachers and schools could not game the low-stakes NAEP exam, these gains represented genuine improvements in foundational arithmetic and algebraic reasoning.
-   - Accountability forced school districts to reallocate coaching, extended math blocks, and tutoring resources toward struggling students.
+   - In *Great Expectations* (2020), Gershenson showed that teachers with higher grading standards induce genuine gains in student learning that persist into subsequent math courses.
+   - Accountability can force school systems to reallocate coaching, extended math blocks, and tutoring resources toward struggling students.
 
 Let's inspect the structured literature synthesis matrix below:
 """
@@ -431,7 +433,7 @@ display(df_t3.style.set_properties(**{'text-align': 'left'}))
     # Cell 21: Markdown Conclusion Returning to Student
     # -------------------------------------------------------------
     cells.append(nbf.v4.new_markdown_cell(
-"""## 9. Conclusion: Returning to the Student
+r"""## 9. Conclusion: Returning to the Student
 
 Let us end where we began: with the student.
 
@@ -441,19 +443,23 @@ A student in an urban high school receives a **'B' in Algebra I**.
 - To the **school administrator**, the grade represents an averted failure, a protected graduation rate, and an improved APR report for state accountability.
 - But to the **college admissions office** and the **community college placement exam**, that 'B' may mask a score in the Below Basic tier of algebraic proficiency, requiring the student to spend tuition dollars on non-credit remedial mathematics.
 
-### The Central Empirical Lesson
-The central lesson of this investigation is not that grades are fraudulent or that standardized tests are evil. 
+### The Central Empirical Lesson & Potential Mechanisms
+The central empirical lesson of this descriptive study is that educational measures and demonstrated competencies can diverge substantially without implying teacher negligence or simple bad faith.
 
-It is that **incentives generate real improvement and distorted behavior simultaneously**:
-1. When we demand that schools raise graduation rates, schools figure out how to graduate students—often by inflating course grades and expanding credit recovery.
-2. When we evaluate schools on state test scores, teachers focus intensely on basic skills—often producing authentic gains on low-stakes measures, while simultaneously narrowing the broader curriculum.
-3. Course grades continue to predict college completion because they certify multi-month persistence, work completion, and adult compliance—even while the cognitive content of those grades varies wildly across school zip codes.
+Our data establish descriptive baselines:
+- National transcripts show rising GPAs while standardized test performance stagnates.
+- Chicago longitudinal records prove course grades capture multi-month persistence that tests miss, explaining why grades remain highly predictive.
+- Kansas City high schools display a sharp divide between high-graduation suburban clusters and lower-graduation urban systems, alongside a wide spread of mathematics achievement among schools with $\ge 90\%$ graduation rates.
+- North Carolina administrative records demonstrate that passing marks frequently decouple from standardized proficiency—even when the test is weighted in the course grade.
 
-### The Research Agenda Ahead
-To extend this computational sketchbook into a definitive empirical paper, the next investigative steps are:
-1. **De-Identified Student-Level District Matching**: Partner with Kansas City area school districts under strict FERPA privacy agreements to match individual student Algebra I course grades directly to their state EOC scores, 8th-grade MAP baselines, attendance records, and subsequent performance in Geometry and Algebra II.
-2. **DHEWD College Remediation Linkage**: Integrate the Missouri High School Graduates Performance Report to trace sending high school graduation rates and Math MPI scores to remedial math placement rates in Missouri public universities and community colleges.
-3. **Evaluating the 2026 A–F Rollout**: Monitor the pilot implementation of Missouri's new A–F school rating system to assess whether school letter grades exacerbate or mitigate the gap between course grades and demonstrated learning.
+However, observing this statistical divergence does not prove what caused individual teachers to assign specific grades or why particular schools achieve high graduation rates. 
+
+### The Research Agenda Ahead: Kansas City Institutional Incentive Study
+To move beyond descriptive correlations and investigate the actual institutional mechanisms driving these outcomes, the immediate next research phase focuses on a **Kansas City Institutional Incentive Study**:
+1. **District Grading Policies**: Audit student handbooks and district policy manuals across Kansas City area districts (KCPS, Independence, North Kansas City, Lee's Summit, Hickman Mills) to document the presence of minimum grading floors (e.g., 50% minimum F), homework-weighting caps, and retake requirements.
+2. **Credit-Recovery Program Architecture**: Investigate the scale and design of digital modular credit-recovery software (e.g., Edgenuity, Apex Learning) used to clear course deficiencies.
+3. **Administrative Expectations**: Analyze whether principals and instructional leaders face formal or informal failure-rate quotas or pass-rate targets tied to school accountability status.
+4. **Long-Term De-Identified Student Matching**: Pursue district research partnerships to match student-level course grade books to Missouri Algebra I EOC scores and subsequent postsecondary college remediation in Missouri public institutions (DHEWD).
 
 ---
 *Computational Sketchbook Repository: `computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/`*

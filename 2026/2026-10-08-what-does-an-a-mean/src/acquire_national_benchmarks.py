@@ -123,9 +123,10 @@ def build_uchicago_college_prediction_data():
 def build_gershenson_nc_algebra_data():
     """
     Constructs the verified North Carolina Algebra I EOC proficiency by course grade dataset.
-    Source: Gershenson, Seth. (2020). 'Great Expectations: The Impact of Rigorous Grading Standards on Student Achievement'.
+    Source: Gershenson, Seth. (2018). 'Grade Inflation in High Schools (2005–2016)'.
             Thomas B. Fordham Institute, Figure 2, page 16.
     Sample: Approximately 250,000 North Carolina public school students from 2014–2016.
+    Methodological detail: NC policy mandated that EOC scores counted for at least 20% of final course grades.
     Exact published categories and percentages:
       - 'A' grade: 92% Proficient or Above, 8% Non-Proficient
       - 'B' grade: 64% Proficient or Above, 36% Non-Proficient
@@ -138,28 +139,28 @@ def build_gershenson_nc_algebra_data():
             "pct_proficient_or_above": 92.0,
             "pct_non_proficient": 8.0,
             "sample": "NC Algebra I Students (2014–2016; N ≈ 250,000)",
-            "source": "Gershenson (2020), Great Expectations, Fordham Institute, Figure 2, p. 16"
+            "source": "Gershenson (2018), Grade Inflation in High Schools (2005–2016), Fordham Institute, Figure 2, p. 16 (EOC weighted >= 20% of grade)"
         },
         {
             "course_grade": "B Grade",
             "pct_proficient_or_above": 64.0,
             "pct_non_proficient": 36.0,
             "sample": "NC Algebra I Students (2014–2016; N ≈ 250,000)",
-            "source": "Gershenson (2020), Great Expectations, Fordham Institute, Figure 2, p. 16"
+            "source": "Gershenson (2018), Grade Inflation in High Schools (2005–2016), Fordham Institute, Figure 2, p. 16 (EOC weighted >= 20% of grade)"
         },
         {
             "course_grade": "C Grade",
             "pct_proficient_or_above": 29.0,
             "pct_non_proficient": 71.0,
             "sample": "NC Algebra I Students (2014–2016; N ≈ 250,000)",
-            "source": "Gershenson (2020), Great Expectations, Fordham Institute, Figure 2, p. 16"
+            "source": "Gershenson (2018), Grade Inflation in High Schools (2005–2016), Fordham Institute, Figure 2, p. 16 (EOC weighted >= 20% of grade)"
         },
         {
             "course_grade": "D/F Combined",
             "pct_proficient_or_above": 10.0,
             "pct_non_proficient": 90.0,
             "sample": "NC Algebra I Students (2014–2016; N ≈ 250,000)",
-            "source": "Gershenson (2020), Great Expectations, Fordham Institute, Figure 2, p. 16"
+            "source": "Gershenson (2018), Grade Inflation in High Schools (2005–2016), Fordham Institute, Figure 2, p. 16 (EOC weighted >= 20% of grade)"
         },
     ]
     df = pd.DataFrame(nc_data)
@@ -177,8 +178,8 @@ def build_source_extraction_audit():
     SOURCES_DIR.mkdir(parents=True, exist_ok=True)
     audit_records = [
         {
-            "audit_key": "gershenson_2020_grade_a",
-            "publication": "Gershenson (2020), Great Expectations, Thomas B. Fordham Institute",
+            "audit_key": "gershenson_2018_grade_a",
+            "publication": "Gershenson (2018), Grade Inflation in High Schools (2005–2016), Thomas B. Fordham Institute",
             "page_location": "Page 16, Figure 2",
             "sample_definition": "North Carolina public high school Algebra I students",
             "sample_years": "2014–2016",
@@ -187,11 +188,11 @@ def build_source_extraction_audit():
             "dataset_field": "course_grade='A Grade' -> pct_proficient_or_above",
             "published_value": "92%",
             "dataset_value": 92.0,
-            "verification_status": "Verified against Fordham Institute Figure 2"
+            "verification_status": "Verified against Fordham Institute (2018) Figure 2, p. 16. Note: NC EOC counted for >=20% of final course grade."
         },
         {
-            "audit_key": "gershenson_2020_grade_b",
-            "publication": "Gershenson (2020), Great Expectations, Thomas B. Fordham Institute",
+            "audit_key": "gershenson_2018_grade_b",
+            "publication": "Gershenson (2018), Grade Inflation in High Schools (2005–2016), Thomas B. Fordham Institute",
             "page_location": "Page 16, Figure 2",
             "sample_definition": "North Carolina public high school Algebra I students",
             "sample_years": "2014–2016",
@@ -200,11 +201,11 @@ def build_source_extraction_audit():
             "dataset_field": "course_grade='B Grade' -> pct_proficient_or_above",
             "published_value": "64%",
             "dataset_value": 64.0,
-            "verification_status": "Verified against Fordham Institute Figure 2"
+            "verification_status": "Verified against Fordham Institute (2018) Figure 2, p. 16. Note: NC EOC counted for >=20% of final course grade."
         },
         {
-            "audit_key": "gershenson_2020_grade_c",
-            "publication": "Gershenson (2020), Great Expectations, Thomas B. Fordham Institute",
+            "audit_key": "gershenson_2018_grade_c",
+            "publication": "Gershenson (2018), Grade Inflation in High Schools (2005–2016), Thomas B. Fordham Institute",
             "page_location": "Page 16, Figure 2",
             "sample_definition": "North Carolina public high school Algebra I students",
             "sample_years": "2014–2016",
@@ -213,11 +214,11 @@ def build_source_extraction_audit():
             "dataset_field": "course_grade='C Grade' -> pct_proficient_or_above",
             "published_value": "29%",
             "dataset_value": 29.0,
-            "verification_status": "Verified against Fordham Institute Figure 2"
+            "verification_status": "Verified against Fordham Institute (2018) Figure 2, p. 16. Note: NC EOC counted for >=20% of final course grade."
         },
         {
-            "audit_key": "gershenson_2020_grade_df",
-            "publication": "Gershenson (2020), Great Expectations, Thomas B. Fordham Institute",
+            "audit_key": "gershenson_2018_grade_df",
+            "publication": "Gershenson (2018), Grade Inflation in High Schools (2005–2016), Thomas B. Fordham Institute",
             "page_location": "Page 16, Figure 2",
             "sample_definition": "North Carolina public high school Algebra I students",
             "sample_years": "2014–2016",
@@ -226,7 +227,7 @@ def build_source_extraction_audit():
             "dataset_field": "course_grade='D/F Combined' -> pct_proficient_or_above",
             "published_value": "10% (D and F combined)",
             "dataset_value": 10.0,
-            "verification_status": "Verified against Fordham Institute Figure 2"
+            "verification_status": "Verified against Fordham Institute (2018) Figure 2, p. 16. Note: NC EOC counted for >=20% of final course grade."
         },
         {
             "audit_key": "allensworth_clark_2020_sample_completion",

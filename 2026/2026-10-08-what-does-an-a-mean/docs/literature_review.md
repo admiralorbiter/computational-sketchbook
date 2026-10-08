@@ -76,7 +76,7 @@ A central insight of this project is that incentives do not simply "corrupt" or 
 - *Takeaway*: Transcripts showed more courses taken and higher grades awarded, but independent assessment revealed a decline in actual mathematical problem-solving ability.
 
 ### 4. Course Grades vs. External End-of-Course Proficiency in Algebra I
-**Gershenson, Seth. (2020). *Great Expectations: The Impact of Rigorous Grading Standards on Student Achievement.* Thomas B. Fordham Institute.**  
+**Gershenson, Seth. (2018). *Grade Inflation in High Schools (2005–2016).* Thomas B. Fordham Institute.**  
 **Tyner, Adam, & Gershenson, Seth. (2020). "Conceptualizing Grade Inflation: A Case Study of North Carolina Algebra I." *Economics of Education Review*, 78, 102037.**
 - *Sample*: Approximately 250,000 North Carolina public school students taking Algebra I between 2014 and 2016 (Figure 2, p. 16), embedded within a 2006–2016 master longitudinal panel of over 350,000 students.
 - *Key Empirical Finding*: Classroom letter grades do not map onto external state test proficiency in a 1-to-1 manner. Specifically:
@@ -84,7 +84,8 @@ A central insight of this project is that incentives do not simply "corrupt" or 
   - Among students receiving a **'B'**, **36% failed to achieve proficiency** (only 64% proficient).
   - Among students receiving a **'C'**, **71% failed to reach proficiency** (only 29% proficient).
   - Among students receiving **'D' and 'F' combined**, **90% failed to reach proficiency** (only 10% proficient).
-- *Implications for Secondary Mathematics*: EOC scores predicted subsequent ACT math scores far better than classroom grades. Gershenson demonstrated that grading standards vary widely across schools, and that exposure to more rigorous grading standards substantially improves subsequent student achievement, especially for disadvantaged students. In Missouri, establishing the exact student-level concordance between teacher grades and EOC scores remains an active research question.
+- *Methodological Nuance*: North Carolina policy mandated that a student's score on the statewide standardized End-of-Course exam counted for at least 20% of their final course letter grade. Because the standardized assessment was already partially embedded within the course grade itself, the two measures were not completely independent. This makes the observed discordance—over one-third of 'B' students and seven in ten 'C' students failing proficiency—even more striking.
+- *The Role of Grading Standards (Gershenson, 2020)*: In a separate subsequent report, *Great Expectations: The Impact of Rigorous Grading Standards on Student Achievement* (Fordham Institute, 2020), Gershenson demonstrated that teacher grading standards vary substantially across classrooms, and that exposure to more rigorous grading standards directly benefits students—substantially improving their subsequent performance in Geometry and Algebra II, particularly for disadvantaged students. In Missouri, establishing the exact student-level concordance between teacher grades and EOC scores remains an active research question.
 
 ---
 

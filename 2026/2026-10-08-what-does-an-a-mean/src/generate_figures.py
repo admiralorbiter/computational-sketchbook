@@ -247,10 +247,11 @@ def plot_figure_3():
     """
     Figure 3: The Algebra I Signaling Benchmark: State EOC Proficiency Within Classroom Grade Tiers
     Reproduces the verified published empirical distribution from Seth Gershenson's North Carolina study:
-    Source: Gershenson, Seth. (2020). 'Great Expectations: The Impact of Rigorous Grading Standards on Student Achievement'.
+    Source: Gershenson, Seth. (2018). 'Grade Inflation in High Schools (2005–2016)'.
             Thomas B. Fordham Institute, Figure 2, page 16.
     Sample: Approximately 250,000 North Carolina students from 2014–2016.
     Published percentages: A: 92%, B: 64%, C: 29%, D/F (Combined): 10%.
+    Methodological detail: NC policy mandated EOC scores count for >=20% of final course grades.
     """
     df_nc = pd.read_csv(PROCESSED_DIR / "gershenson_nc_algebra1_benchmark.csv")
 
@@ -294,16 +295,16 @@ def plot_figure_3():
     ax.xaxis.set_major_formatter(ticker.PercentFormatter())
     ax.set_xlabel("Percentage of Students Within Course Grade Tier", fontsize=11, labelpad=8)
     ax.set_title("Figure 3: The Algebra I Signaling Benchmark: State EOC Proficiency Within Classroom Grade Tiers\n"
-                 "Empirical Findings from North Carolina Public Schools (Gershenson, 2020, Figure 2, p. 16; N ≈ 250,000)",
+                 "Empirical Findings from North Carolina Public Schools (Gershenson, 2018, Figure 2, p. 16; N ≈ 250,000)",
                  fontsize=12, fontweight="bold", pad=12)
     ax.grid(True, axis="x", linestyle="--", alpha=0.4)
     ax.legend(loc="lower center", ncol=2, frameon=True, fontsize=10, bbox_to_anchor=(0.5, -0.15))
 
     # Methodological caveat note
     note = (
-        "Note: Data reflect statewide student-level North Carolina Algebra I records (2014–2016; N ≈ 250,000) from Seth Gershenson (2020), Fordham Institute (Figure 2, p. 16).\n"
+        "Note: Data reflect statewide student-level North Carolina Algebra I records (2014–2016; N ≈ 250,000) from Seth Gershenson (2018), Fordham Institute (Figure 2, p. 16).\n"
         "Categories correspond to published figures: A (92%), B (64%), C (29%), and D/F combined (10%).\n"
-        "Missouri public data currently provide building-level aggregates; student-level matching in Missouri remains an open empirical question."
+        "Methodological nuance: NC policy mandated EOC scores count for >=20% of final course grade. Local student-level matching in Missouri remains an open empirical question."
     )
     plt.figtext(0.5, -0.05, note, ha="center", fontsize=8.0, fontstyle="italic", color="#555555")
 
@@ -350,12 +351,20 @@ def export_literature_matrix():
             "Theoretical Mechanism": "Grades reflect multi-attribute behavioral habits decisive for college survival"
         },
         {
-            "Study": "Gershenson (2020) / Tyner & Gershenson (2020)",
+            "Study": "Gershenson (2018) / Tyner & Gershenson (2020)",
             "Setting / Design": "North Carolina Public Schools (Algebra I panel, 2014–2016 for Fig 2 [N ≈ 250,000]; 2006–2016 master panel)",
-            "Target Measure": "Course letter grades vs. Algebra I EOC scores",
-            "Observed Distortion": "36% of 'B' students and 71% of 'C' students failed state EOC proficiency; subjective grading standards decouple under grade inflation",
-            "Authentic Learning Finding": "Students learn more mathematics and perform better on subsequent course exams under higher grading standards",
-            "Theoretical Mechanism": "Rigorous grading standards elevate student learning; subjective grades without external anchor can mask skill deficits"
+            "Target Measure": "Course letter grades vs. Algebra I EOC scores (EOC weighted >= 20% of final grade)",
+            "Observed Distortion": "36% of 'B', 71% of 'C', and 90% of 'D/F' students failed state EOC proficiency; subjective grading standards decouple under grade inflation",
+            "Authentic Learning Finding": "External assessments provide an anchor against grade compression; EOC scores predict subsequent ACT math better than grades",
+            "Theoretical Mechanism": "Subjective grades without external anchor mask skill deficits"
+        },
+        {
+            "Study": "Gershenson (2020)",
+            "Setting / Design": "North Carolina Public Schools (Great Expectations, Fordham Institute, 2006–2016 panel)",
+            "Target Measure": "Grading standards / teacher grading leniency",
+            "Observed Distortion": "Teacher grading standards vary substantially across classrooms and schools",
+            "Authentic Learning Finding": "Higher grading standards directly improve student learning and subsequent performance in Geometry and Algebra II, especially for disadvantaged students",
+            "Theoretical Mechanism": "Rigorous expectations motivate effort and substantive mastery"
         },
         {
             "Study": "Sanchez & Moore (2022)",

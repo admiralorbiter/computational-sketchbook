@@ -16,8 +16,8 @@ This computational sketchbook investigates the central research question:
 2. **The Chicago Tension**: Reconciles the Allensworth & Clark (2020) University of Chicago CCSR finding that high school GPA is vastly more predictive of six-year college graduation than ACT scores (analyzing 17,753 four-year college entrants from a cohort of 55,084). Degree completion rates ranged from ~20% below 1.5 GPA to ~80% at 3.75+ GPA. Grades capture multi-month behavioral habits, attendance, and work submission that tests miss, explaining how grades can be inflated while remaining profoundly predictive.
 3. **The Missouri A–F Accountability Cascade**: Examines the Missouri State Board of Education's September 15, 2026 adoption of a new A–F school rating framework (Executive Order 26-01), tracking how accountability pressure cascades from the state board to district leaders, building principals, classroom teachers, and students.
 4. **Kansas City High School Accountability Landscape**: Analyzes 45 Kansas City metropolitan public high schools in the complete 2022 cross-sectional baseline (drawn from a 51-school, 188-record panel across 2022–2025). Finds a positive overall metro correlation between graduation and math achievement ($r = +0.68$) driven by suburban/urban divides, while graduation rates are polarized: 25 of 45 schools (56%) exceed 90%, while 11 schools (24%) fall below 80%. Within schools graduating $\ge 90\%$, Math MPI spans from 300.1 to 457.8 (across the full sample, 277.8 to 457.8). Documents powerful poverty links ($r = -0.73$ to $-0.83$) and qualifies Community Eligibility Provision status alongside USDA Direct Certification.
-5. **The Algebra I Signaling Benchmark**: Incorporates Seth Gershenson's (2020; Tyner & Gershenson 2020) statewide North Carolina empirical benchmark (~250,000 students from 2014–2016) showing that 92% of 'A', 64% of 'B' (36% non-proficient), 29% of 'C' (71% non-proficient), and 10% of 'D/F' combined students (90% non-proficient) reach proficiency on the external state end-of-course exam, while framing the student-level linkage in Missouri as an open empirical research question.
-6. **Incentive Duality**: Synthesizes the economics literature (Campbell 1979, Jacob 2005, Dee & Jacob 2011, Allensworth & Clark 2020, Gershenson 2020, Sanchez & Moore 2022, McElroy 2023) showing that incentives generate authentic instructional focus and strategic gaming simultaneously. Clarifies that McElroy (2023) evaluates educational attainment (high school graduation, college attendance, BA receipt) rather than adult earnings.
+5. **The Algebra I Signaling Benchmark**: Incorporates Seth Gershenson's (*Grade Inflation in High Schools (2005–2016)*, Fordham Institute, 2018, Figure 2, p. 16; Tyner & Gershenson 2020) statewide North Carolina empirical benchmark (~250,000 students from 2014–2016) showing that 92% of 'A', 64% of 'B' (36% non-proficient), 29% of 'C' (71% non-proficient), and 10% of 'D/F' combined students (90% non-proficient) reach proficiency on the external state end-of-course exam—even though the state exam counted for at least 20% of the final course grade. Contrasted with Gershenson's (2020) *Great Expectations* study examining the positive effects of rigorous grading standards on subsequent learning.
+6. **Incentive Duality**: Synthesizes the economics literature (Campbell 1979, Jacob 2005, Dee & Jacob 2011, Allensworth & Clark 2020, Gershenson 2018, 2020, Sanchez & Moore 2022, McElroy 2023) showing that incentives generate authentic instructional focus and strategic gaming simultaneously. Clarifies that McElroy (2023) evaluates educational attainment (high school graduation, college attendance, BA receipt) rather than adult earnings.
 
 ---
 
@@ -70,7 +70,7 @@ This computational sketchbook investigates the central research question:
 | :--- | :--- | :--- |
 | **Figure 1** | **National Transcript vs. Assessment Disconnect (2009–2021)** | High school GPAs rose substantially (+0.11 NAEP, +0.19 ACT adjusted) while 12th-grade NAEP and ACT math scores fell. Advanced-track students saw math scores drop from 188 to 184 despite GPAs rising from 3.61 to 3.69. |
 | **Figure 2** | **Graduation vs. Mathematics Achievement in Kansas City High Schools** | 2022 cross-sectional baseline (45 complete schools): positive overall metro correlation ($r = +0.68$), strong correlation with direct certification ($r = -0.83$), and high upper-tier graduation rates alongside large MPI spreads (Van Horn 94.6% grad, MPI 300.1 vs. Park Hill 94.2% grad, MPI 428.4; MPI range in $\ge 90\%$ schools is 300.1 to 457.8). |
-| **Figure 3** | **The Algebra I Classroom Signaling Benchmark** | Statewide North Carolina empirical distribution (Gershenson, 2020; Tyner & Gershenson, 2020; N ≈ 250,000 from 2014–2016): 92% of 'A' students, 64% of 'B' students (36% non-proficient), 29% of 'C' students (71% non-proficient), and 10% of 'D/F' combined students (90% non-proficient) reach proficiency on external state EOC. Framed alongside the Missouri open research agenda. |
+| **Figure 3** | **The Algebra I Classroom Signaling Benchmark** | Statewide North Carolina empirical distribution (Gershenson, 2018, Figure 2, p. 16; Tyner & Gershenson, 2020; N ≈ 250,000 from 2014–2016): 92% of 'A' students, 64% of 'B' students (36% non-proficient), 29% of 'C' students (71% non-proficient), and 10% of 'D/F' combined students (90% non-proficient) reach proficiency on external state EOC, despite the EOC counting for $\ge 20\%$ of final course grades. Framed alongside the Missouri open research agenda. |
 
 ---
 
@@ -79,7 +79,7 @@ This computational sketchbook investigates the central research question:
 To reproduce the entire analysis from scratch:
 
 ```bash
-# Phase 1: Compile national benchmark datasets
+# Phase 1: Compile national benchmark datasets & source extraction audit
 python 2026/2026-10-08-what-does-an-a-mean/src/acquire_national_benchmarks.py
 
 # Phase 2: Build the Missouri & Kansas City high school panel
@@ -91,4 +91,21 @@ python 2026/2026-10-08-what-does-an-a-mean/src/generate_figures.py
 # Phase 4: Construct and execute the interactive Jupyter Notebook
 python 2026/2026-10-08-what-does-an-a-mean/src/build_notebook.py
 jupyter nbconvert --to notebook --execute 2026/2026-10-08-what-does-an-a-mean/notebooks/01_what_does_an_a_mean.ipynb --output 01_what_does_an_a_mean.ipynb
+
+# Phase 5: Execute automated data-integrity test suite
+pytest 2026/2026-10-08-what-does-an-a-mean/tests/test_data_integrity.py -v
 ```
+
+---
+
+## 5. Next Research Phase: Kansas City Institutional Incentive Study
+
+With the descriptive baseline established in Version 1.0, the next investigative phase transitions from establishing *that* grades and standardized test scores decouple to examining *why* they decouple:
+
+1. **District Grading Policy Audit**: Systematically collect and code high school grading policies across Kansas City area districts (KCPS, Independence, North Kansas City, Lee's Summit, Hickman Mills), examining:
+   - Minimum grading floors (e.g., 50% minimum F policies).
+   - Retake policies, missing work grace periods, and homework-weighting caps.
+   - Statutory course credit requirements.
+2. **Credit-Recovery Program Design**: Document the software platforms (e.g., Edgenuity, Apex Learning), mastery cutoffs, and proctoring environments used to recover credit for graduation.
+3. **Administrative Pressures & Pass-Rate Expectations**: Investigate whether building administrators and department chairs face explicit or implicit pass-rate expectations tied to school APR targets.
+4. **Long-Term Longitudinal Linkage**: Partner with area districts for FERPA-compliant student-level grade book matching to Missouri Algebra I EOC scores and subsequent DHEWD postsecondary remedial placement.

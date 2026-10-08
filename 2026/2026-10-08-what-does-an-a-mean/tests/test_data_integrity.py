@@ -108,6 +108,7 @@ def test_no_synthetic_data_in_gershenson_benchmark():
     # Check sample years and size documentation
     assert "2014–2016" in str(row_a["sample"]), "Expected 2014-2016 sample years"
     assert "250,000" in str(row_a["sample"]), "Expected ~250,000 sample size"
+    assert "2018" in str(row_a["source"]), "Expected Gershenson (2018) in source attribute"
 
 
 def test_act_trend_exact_match():
@@ -206,10 +207,10 @@ def test_source_extraction_audit_table():
     assert len(df_audit) >= 10, f"Expected at least 10 audit entries, found {len(df_audit)}"
 
     required_keys = [
-        "gershenson_2020_grade_a",
-        "gershenson_2020_grade_b",
-        "gershenson_2020_grade_c",
-        "gershenson_2020_grade_df",
+        "gershenson_2018_grade_a",
+        "gershenson_2018_grade_b",
+        "gershenson_2018_grade_c",
+        "gershenson_2018_grade_df",
         "allensworth_clark_2020_sample_completion",
         "allensworth_clark_2020_endpoint_low",
         "allensworth_clark_2020_endpoint_high",

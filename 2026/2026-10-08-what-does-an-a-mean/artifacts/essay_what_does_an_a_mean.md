@@ -175,9 +175,9 @@ Crucially, in Missouri and many other states, students are required to *particip
 This structural design raises an urgent empirical question: **When a student receives a passing grade, whose definition of success has actually been satisfied? What does a passing grade in Algebra I tell us about a student's mathematical understanding, and does that meaning change across schools?**
 
 ### The North Carolina Empirical Benchmark
-Because individual student course grades linked to statewide EOC test records are not yet publicly released in Missouri, establishing that exact concordance locally remains an active, open research question. However, this exact empirical question was answered rigorously by economist Seth Gershenson using statewide administrative records from North Carolina (Gershenson, 2020; Tyner & Gershenson, 2020). 
+Because individual student course grades linked to statewide EOC test records are not yet publicly released in Missouri, establishing that exact concordance locally remains an active, open research question. However, this exact empirical question was answered rigorously by economist Seth Gershenson using statewide administrative records from North Carolina (Gershenson, 2018; Tyner & Gershenson, 2020). 
 
-Analyzing administrative records for approximately **250,000 North Carolina Algebra I students from 2014 to 2016**, Gershenson documented the true empirical distribution of external proficiency across course grade tiers (published in *Great Expectations*, Figure 2, p. 16), as illustrated in **Figure 3**:
+Analyzing administrative records for approximately **250,000 North Carolina Algebra I students from 2014 to 2016**, Gershenson documented the true empirical distribution of external proficiency across course grade tiers in *Grade Inflation in High Schools (2005–2016)* (published by the Thomas B. Fordham Institute, Figure 2, p. 16), as illustrated in **Figure 3**:
 
 ![Figure 3: The Algebra I Signaling Gap](figures/03_algebra1_grade_proficiency_gap.png)
 
@@ -187,7 +187,9 @@ The published empirical data reveal a striking discordance between classroom mar
 - **The 'C' Tier**: Among students earning a 'C'—granting full course credit toward graduation and advancement to Geometry—**71% failed to reach proficiency** (only 29% were proficient).
 - **The 'D/F Combined' Tier**: Among students earning a 'D' or 'F' (reported as a combined category in the published research), **90% failed to reach proficiency** on the external examination (only 10% achieved proficiency).
 
-Furthermore, Tyner & Gershenson (2020, *Economics of Education Review*, 102037) demonstrated that grading standards vary substantially across schools: in schools with higher grading standards, students learned significantly more mathematics and performed better on subsequent exams like the ACT, even when controlling for baseline achievement.
+Crucially, North Carolina policy during this period mandated that a student's score on the state End-of-Course assessment contributed directly to their final course grade, generally weighted at at least 20%. Because the statewide assessment was already partially embedded within the course grade itself, the two measures were not completely independent. This institutional detail makes the observed discordance even more notable: even when an external standardized examination anchors at least one-fifth of the course grade, more than one-third of 'B' students and seven in ten 'C' students failed to attain state proficiency.
+
+In a separate subsequent report, *Great Expectations: The Impact of Rigorous Grading Standards on Student Achievement* (Fordham Institute, 2020), Gershenson examined how teachers' grading standards relate to students' later performance, showing that exposure to more rigorous grading standards directly benefits students in subsequent courses like Geometry and Algebra II. Furthermore, the companion econometric paper by Tyner & Gershenson (2020, *Economics of Education Review*, 78, 102037) confirmed that higher grading standards benefit all students, with particularly pronounced advantages for disadvantaged students.
 
 ### Does This Mean Teachers Are Grading Dishonestly?
 It is essential not to interpret this disconnect as teacher negligence or bad faith. 
@@ -212,7 +214,8 @@ The empirical economics literature demonstrates that **incentives generate authe
 | **Jacob (2005)** | Chicago Public Schools (DiD) | ITBS test scores | Special education placement (+1–2 pp), test prep, cheating | Score gains failed to generalize to low-stakes tests (NAEP, IGAP) | Strategic threshold gaming |
 | **Dee & Jacob (2011)** | National NCLB Evaluation | State AYP benchmarks | Bubble-student targeting | **Robust gains on independent low-stakes NAEP Math (+0.23 SD)** | Accountability compels real instructional effort and focus |
 | **Allensworth & Clark (2020)** | Chicago Public Schools (17,753 4-yr entrants / 55,084 total cohort) | HS GPA vs. ACT | Grading rigor variation across school contexts | **HS GPA is vastly more predictive of 6-year college completion than ACT** | Grades capture multi-month non-cognitive persistence |
-| **Gershenson (2020) / Tyner & Gershenson (2020)** | North Carolina Algebra I (2014–2016; N ≈ 250k) | Course letter grades vs. EOC | Subjective standards decouple from external benchmarks | EOC scores predict subsequent ACT math far better than grades | 36% of 'B', 71% of 'C', and 90% of 'D/F' students non-proficient; rigorous standards benefit students |
+| **Gershenson (2018) / Tyner & Gershenson (2020)** | North Carolina Algebra I (2014–2016; N ≈ 250k) | Course letter grades vs. EOC (EOC weighted ≥20% of final grade) | Subjective standards decouple from external benchmarks | External assessments provide anchor against grade compression | 36% of 'B', 71% of 'C', and 90% of 'D/F' students non-proficient |
+| **Gershenson (2020)** | North Carolina Public Schools (Great Expectations, 2006–2016) | Grading standards / teacher grading leniency | Teacher grading standards vary substantially across classrooms | Rigorous grading standards directly improve subsequent performance in Geometry and Algebra II | High expectations motivate effort and substantive learning |
 | **Sanchez & Moore (2022)** | National ACT Panel (2010–2021) | High School GPA | Adjusted GPA rose 3.17 → 3.36 while ACT Composite fell 21.0 → 20.3 | Inflation fastest in affluent suburban high schools | Parental advocacy and competitive transcript signaling |
 | **McElroy (2023)** | US High School Mandates | Graduation rate | Educational attainment (college attendance, BA receipt) flat despite graduation gains | Graduation rates rose significantly under test-based accountability | Observational gap between secondary diploma and postsecondary educational attainment |
 
@@ -221,10 +224,10 @@ When Thomas Dee and Brian Jacob (2011) evaluated No Child Left Behind using the 
 
 Yet when Brian Jacob (2005) examined high-stakes testing in Chicago, he found clear evidence of gaming: teachers placed low-scoring students into special education to remove them from testing pools, drilled students on specific question templates, and manipulated test answer sheets. And when Katherine McElroy (2023) evaluated high school accountability policies (*Does test-based accountability improve more than just test scores?*, *Economics of Education Review*, 94, 102381), she found that mandates successfully raised high school graduation rates, but **failed to increase college attendance or bachelor's degree attainment**, demonstrating that policy pressure can expand secondary credential receipt without producing commensurate gains in long-term educational attainment.
 
-The lesson is not that accountability fails. It is that **institutions optimize precisely what is rewarded**:
-- If you reward schools for test scores, they will drill students on test items—producing some real learning and substantial test-format familiarity.
-- If you reward schools for graduation rates, they will ensure students graduate—often by creating online credit recovery mechanisms that bypass genuine course mastery.
-- If you reward teachers for keeping course pass rates high, they will incorporate effort and attendance into grading scales, softening academic rigor to protect students from failure.
+The broader economic and policy literature indicates that **institutions tend to optimize the specific margins that are measured and rewarded**:
+- When schools face stakes attached to standardized tests, educators allocate substantial effort toward tested standards—yielding genuine foundational gains on independent tests alongside strategic test preparation.
+- When policy regimes reward high cohort graduation rates, districts face strong institutional pressure to ensure students cross diploma thresholds—raising questions about whether increased graduation reflects accelerated academic growth or alternative mechanisms like modular credit recovery.
+- When grading standards are left entirely subjective within high-stakes accountability systems, classroom marks can absorb non-cognitive effort, attendance, and persistence—protecting students from credential penalties while creating wide variations in what a passing mark actually signifies.
 
 ---
 
@@ -242,9 +245,15 @@ What does that grade actually communicate?
 
 Yet when that student enrolls at the University of Missouri–Kansas City or Metropolitan Community College and sits for a placement exam, that 'B' may dissolve into a developmental math assignment—requiring her to pay tuition for zero-credit remedial algebra before she is permitted to take a credit-bearing college course.
 
-That disconnect is not an individual failing. The student did not cheat. The teacher did not act maliciously. The principal was not corrupt.
+That disconnect is not evidence of individual failure or bad faith. The student did what was asked of her. The teacher evaluated the work presented in class. The principal navigated the administrative requirements of a complex institution.
 
-Each actor responded rationally to the institutional incentives placed before them. The state asked schools for high graduation rates, and schools delivered high graduation rates. The district asked teachers for low failure rates, and teachers adjusted grading scales. The system measured what was easy to measure, rewarded what was easy to target, and celebrated the resulting indicators.
+When we observe high graduation rates alongside modest standardized test scores, it is tempting to assert a simple causal narrative: that accountability pressure forced districts to demand lower failure rates, that teachers diluted grading standards, and that diplomas were uncoupled from academic learning. But the empirical data currently available do not demonstrate that this happened in individual classrooms. Published North Carolina administrative records establish that wide discrepancies between course grades and test proficiency can exist. Missouri's school-level data establish local patterns of graduation compression and achievement dispersion across schools. Neither dataset alone proves what caused individual teachers to assign the grades they did, or which administrative pressures drove specific school decisions.
+
+Instead, the evidence establishes a critical descriptive baseline and points toward potential institutional mechanisms that demand dedicated empirical investigation:
+- Do local district grading policies—such as minimum 50% grading floors, unlimited retakes, or homework weighting—systematically insulate students from course failure?
+- How extensively do high schools deploy online credit-recovery software, and what level of cognitive mastery do those modular programs enforce?
+- Do building administrators or instructional coaches convey implicit or explicit expectations regarding target pass rates?
+- How do teachers internally negotiate the competing demands of upholding academic standards while protecting vulnerable students from credential penalties?
 
 As Missouri prepares to pilot its new **A–F school grading framework**, policymakers and school leaders must confront the central lesson of this investigation:
 > **Don't begin by trying to prove that incentives corrupt education. Investigate whether the evidence reveals a gap between what schools are trying to achieve, what they measure, and what they reward. Then follow that gap to wherever the evidence takes you.**
@@ -259,7 +268,9 @@ If we truly care about educational equity and academic excellence, we must stop 
    - NAEP High School Transcript Study (HSTS 1990–2019), National Center for Education Statistics (NCES).
    - ACT Research Report Series (Sanchez & Moore, 2022), Grade Inflation in High Schools (2010–2021).
    - University of Chicago Consortium on School Research (Allensworth & Clark, 2020), *Educational Researcher*, 49(3), 198–211.
-   - Thomas B. Fordham Institute (Gershenson, 2020), *Great Expectations: The Impact of Rigorous Grading Standards on Student Achievement*; Tyner & Gershenson (2020), *Economics of Education Review*, 78, 102037.
+   - Thomas B. Fordham Institute (Gershenson, 2018), *Grade Inflation in High Schools (2005–2016)*, Figure 2, p. 16 (Algebra I EOC proficiency benchmark).
+   - Thomas B. Fordham Institute (Gershenson, 2020), *Great Expectations: The Impact of Rigorous Grading Standards on Student Achievement* (effects of grading standards on subsequent course performance).
+   - Peer-Reviewed Econometric Analysis: Tyner & Gershenson (2020), *Economics of Education Review*, 78, 102037.
    - High School Mandates Evaluation (McElroy, 2023), *Does test-based accountability improve more than just test scores?*, *Economics of Education Review*, 94, 102381.
 2. **Missouri State & Regional High School Data**:
    - Missouri Department of Elementary and Secondary Education (DESE), MCDS Portal: Building-Level APR Supporting Records (2022–2025).
