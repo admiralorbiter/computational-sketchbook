@@ -1,5 +1,5 @@
 stage,count,excluded,pct_retained,reason
 1. Missouri Regular Public Schools (CCD),2298,0,100.0,State universe of regular schools
 2. Classified Exactly Grades 9-12 & Open (CCD),318,1980,100.0,"Excludes elementary, middle, combined 7-12, and inactive/future schools"
-3. Matched to CRDC Records,317,1,99.68553459119497,1 school (Academia Del Pueblo / Kansas City) missing in CRDC collection
+3. Matched to CRDC Records,317,1,99.68553459119497,1 school (Hawthorn High School / Kansas City) missing in CRDC collection
 4. Consistent Grades 9-12 Reporting in CRDC,307,10,96.54088050314465,"10 schools report PS, KG, UG, or G10-12 in CRDC; quarantined for sensitivity analysis"

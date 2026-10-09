@@ -1,3 +1,3 @@
-sample,total_schools,no_ap_schools,dual_in_no_ap,dual_pct_of_no_ap,neither_count
-Consistent Grades 9-12 (Baseline),307,113,105,92.92,8
-All Matched (Sensitivity),317,116,108,93.103,8
+sample,total_schools,no_ap_schools,dual_in_no_ap,dual_pct_of_no_ap,either_route_schools,miss_rate_among_either,neither_count
+Consistent Grades 9-12 (Baseline),307,113,105,92.92,299,35.117,8
+All Matched (Sensitivity),317,116,108,93.103,309,34.951,8

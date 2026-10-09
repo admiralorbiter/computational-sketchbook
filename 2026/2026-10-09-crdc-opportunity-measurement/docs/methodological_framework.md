@@ -55,10 +55,9 @@ Before any study is declared feasible or executed, it must satisfy this six-poin
 
 ---
 
-## 4. The Three Exemplary Measurement Questions
-
 | Study | Narrow Question | Data Fields | Statistical Path | Epistemic Boundary |
 | :--- | :--- | :--- | :--- | :--- |
-| **Study 1 (Pilot)** | Among regular high schools reporting no AP participation, how many reported dual-enrollment participation? | NCES CCD Directory; CRDC AP & Dual Enrollment indicators | 4-cell cross-tabulation; conditional percentage calculation | Quantifies the blind spot of AP-only opportunity metrics. Does not evaluate course quality or credit transfer. |
-| **Study 2** | Among schools reporting AP participation, what percentage reported zero AP Computer Science participation? | CRDC AP indicator (`SCH_APENR_IND`) & AP CS indicator (`SCH_APCOMPENR_IND`) | Subpopulation restriction to AP schools; conditional percentage | Establishes curricular concealment under umbrella indicators. Does not measure teacher qualifications. |
-| **Study 3** | Does the percentage of schools reporting zero physics classes differ from the percentage of students attending those schools? | CRDC Physics class count (`SCH_SCICLASSES_PHYS`) & total enrollment | Unweighted school percentage vs. enrollment-weighted percentage; difference wedge | Demonstrates how the choice of denominator alters the perception of STEM course access. |
+| **Study 1 (Pilot)** | 1) Dual Enrollment rate among schools reporting no AP participation?<br>2) Miss rate of AP indicator among schools with either route? | NCES CCD Directory; CRDC AP & Dual Enrollment participation indicators | 4-cell cross-tabulation; conditional percentage calculation (105/113 = 92.9% and 105/299 = 35.1%) | Quantifies how AP-only metrics miss dual enrollment pathways. Does not evaluate course quality, credit transfer, or exhaust other routes (IB/CTE). |
+| **Study 2** | Among schools reporting AP participation, what percentage reported zero AP Computer Science participation? | CRDC AP indicator (`SCH_APENR_IND`) & AP CS indicator (`SCH_APCOMPENR_IND`) | Subpopulation restriction to AP schools; conditional percentage (127/194 = 65.5%) | Establishes reported participation absence under umbrella indicators. Does not measure course catalog listings or teacher credentials. |
+| **Study 3** | Does the percentage of schools reporting zero physics classes differ from the percentage of students attending those schools? | CRDC Physics class count (`SCH_SCICLASSES_PHYS`) & released student enrollment (`crdc_released_enrollment`) | Unweighted school percentage vs. enrollment-weighted percentage; difference divergence (32.90% vs 18.20% released; 14.70 pp divergence) | Demonstrates divergence between institutional availability and student exposure due to school size. Provisional from released counts (1 suppressed record unresolved). |
+

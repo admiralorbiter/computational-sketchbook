@@ -16,7 +16,7 @@ cells = []
 # ==============================================================================
 # 1. Title & Executive Abstract
 # ==============================================================================
-cells.append(nbf.v4.new_markdown_cell("""# Measuring Educational Opportunity: Proxy Definitions, Subject Concealment, and Denominator Wedges
+cells.append(nbf.v4.new_markdown_cell("""# Measuring Educational Opportunity: Proxy Definitions, Participation Indicators, and Denominator Divergence
 ### A Disciplined Empirical Measurement Study of Missouri High Schools (2021–22 CRDC & NCES CCD)
 **Computational Sketchbook: Education Policy & Measurement Observatory**  
 *Data Sources: U.S. Department of Education Office for Civil Rights (OCR) Civil Rights Data Collection (CRDC 2021–22) and National Center for Education Statistics (NCES) Common Core of Data (CCD 2021–22 Directory).*
@@ -25,14 +25,14 @@ cells.append(nbf.v4.new_markdown_cell("""# Measuring Educational Opportunity: Pr
 
 ## Executive Summary & Problem Formulation
 
-When policymakers and researchers evaluate educational opportunity, they rely on administrative proxies:
+When education researchers and state agencies measure advanced academic opportunity, they rely on administrative survey indicators:
 - *"Does a school offer Advanced Placement (AP)?"*
-- *"Do students have access to foundational STEM coursework like Physics or Computer Science?"*
+- *"Do students have access to specialized STEM coursework like Physics or Computer Science?"*
 
 However, empirical measurement routinely breaks down across three distinct vulnerabilities:
-1. **Indicator Misinterpretation**: Survey indicators often measure reported *student participation* rather than institutional *course availability*, altering what research questions can be credibly answered.
-2. **Proxy Blind Spots**: Relying on a single canonical advanced course pathway (such as the College Board's AP program) blinds researchers to parallel institutional pathways (such as Dual Enrollment and college-in-the-high-school partnerships).
-3. **Denominator Divergence**: Reporting unweighted institutional counts (*"a third of high schools lack physics"*) describes a fundamentally different social reality than reporting student exposure (*"less than a fifth of students lack physics"*), because course offerings scale systematically with school enrollment.
+1. **Indicator Interpretation**: Survey items often measure reported *student participation/enrollment* during a specific collection year rather than institutional *course offerings* in a curriculum guide, changing what research questions can be credibly answered.
+2. **Proxy Blind Spots**: Relying solely on an AP participation indicator blinds researchers to parallel institutional pathways (such as Dual Enrollment and dual credit partnerships).
+3. **Denominator Divergence**: Reporting unweighted institutional availability (*"a third of high schools report no physics classes"*) describes a fundamentally different population than reporting student exposure (*"less than a fifth of students attend those schools"*), because course offerings scale systematically with school enrollment size.
 
 This notebook establishes an auditable, six-point admission rule for measurement studies and executes three strictly bounded empirical analyses across Missouri's 2021–22 public high schools.
 """))
@@ -48,7 +48,7 @@ Before specifying regressions or estimating causal parameters, empirical inquiry
 2. **Fixed Population & Denominator**: The population boundaries, exclusions, and denominators are fixed in code and narrative prior to analysis.
 3. **Written Mathematical Model**: The calculation or statistical estimator is written down explicitly.
 4. **Directional Neutrality**: A result of any direction—including no difference or an unexpected null—substantively answers the question.
-5. **Audited Sensitivity Check**: Remaining structural uncertainty (such as conflicting inter-agency reporting) is bounded by a specified sensitivity check.
+5. **Audited Sensitivity Check**: Remaining structural uncertainty (such as conflicting inter-agency reporting or administrative data suppression) is bounded by a specified sensitivity check.
 6. **Scholarly & Survey Integrity**: The exact contribution is checked against prior literature and official survey documentation.
 
 ### Research Stage Demarcation
@@ -119,14 +119,16 @@ In official CRDC survey documentation ([OCR School Form, Items 10 & 11](https://
 - `SCH_APENR_IND`: *"Are students enrolled in Advanced Placement (AP) courses?"*
 - `SCH_DUAL_IND`: *"Are students enrolled in dual enrollment or dual credit programs?"*
 
-Both items measure **reported student participation/enrollment**, not mere catalog offerings.
+Both items measure **reported student enrollment/participation**, not mere course catalog offerings.
 
-### Narrow Question
-> **Among Missouri high schools reporting no AP participation, how many reported dual-enrollment participation?**
+### Narrow Questions
+1. **Conditional Rate**: *Among Missouri high schools reporting no AP participation, how many reported dual-enrollment participation?*
+2. **Miss Rate**: *Among Missouri high schools reporting at least one advanced course route (AP or Dual Enrollment), what proportion is missed by an AP-only measure?*
 
 ### Statistical Path & Calculation
-We construct a four-cell contingency table crossing `SCH_APENR_IND` and `SCH_DUAL_IND`. We calculate the conditional rate:
+We construct a four-cell contingency table crossing `SCH_APENR_IND` and `SCH_DUAL_IND`. We evaluate:
 $$\\text{Rate}_{\\text{Dual} | \\text{No AP}} = \\frac{N(\\text{No AP} \\land \\text{Yes Dual})}{N(\\text{No AP})}$$
+$$\\text{Miss Rate}_{\\text{Either}} = \\frac{N(\\text{No AP} \\land \\text{Yes Dual})}{N(\\text{Yes AP} \\lor \\text{Yes Dual})}$$
 """))
 
 cells.append(nbf.v4.new_code_cell("""# 1. Filter to baseline 307 consistent schools
@@ -153,19 +155,27 @@ ct_pct = (pd.crosstab(
 print("\\n=== STUDY 1: CONTINGENCY TABLE (% OF TOTAL 307 SCHOOLS) ===")
 display.display(ct_pct)
 
-# 4. Conditional rate
+# 4. Metric A: Conditional rate among schools with NO AP
 no_ap_307 = df_307[df_307['ap_indicator_raw'] == 'No']
 n_no_ap = len(no_ap_307)
 n_dual_in_no_ap = (no_ap_307['dual_indicator_raw'] == 'Yes').sum()
-rate_307 = (n_dual_in_no_ap / n_no_ap) * 100
+rate_no_ap_307 = (n_dual_in_no_ap / n_no_ap) * 100
 
-print(f"\\nKey Conditional Metric (Baseline 307):")
+# 5. Metric B: Miss rate among schools reporting EITHER route (N = 105 + 180 + 14 = 299)
+either_route_307 = df_307[(df_307['ap_participating']) | (df_307['dual_participating'])]
+n_either = len(either_route_307)
+miss_rate_either_307 = (n_dual_in_no_ap / n_either) * 100
+
+print(f"\\nMetric A (Among Schools Reporting NO AP Participation):")
 print(f"Schools reporting No AP participation: {n_no_ap} of 307 ({n_no_ap / len(df_307) * 100:.1f}%)")
-print(f"Dual-Enrollment participation among No-AP schools: {n_dual_in_no_ap} of {n_no_ap} = {rate_307:.1f}% ({rate_307:.3f}%)")
+print(f"Dual-Enrollment participation among No-AP schools: {n_dual_in_no_ap} of {n_no_ap} = {rate_no_ap_307:.1f}% ({rate_no_ap_307:.3f}%)")
+
+print(f"\\nMetric B (Miss Rate Among Schools with EITHER Advanced Route, N={n_either}):")
+print(f"Dual-Only Schools Missed by AP Indicator: {n_dual_in_no_ap} of {n_either} = {miss_rate_either_307:.1f}% ({miss_rate_either_307:.3f}%)")
 """))
 
 cells.append(nbf.v4.new_markdown_cell("""### Sensitivity Check: Broad Sample (N=317)
-We repeat the calculation including the 10 schools with conflicting grade-span reporting.
+We repeat the calculations including the 10 schools with conflicting grade-span reporting.
 """))
 
 cells.append(nbf.v4.new_code_cell("""# Sensitivity calculation across all 317 matched schools
@@ -173,24 +183,33 @@ df_317 = panel[panel['flag_matched_crdc']].copy()
 no_ap_317 = df_317[df_317['ap_indicator_raw'] == 'No']
 n_no_ap_317 = len(no_ap_317)
 n_dual_317 = (no_ap_317['dual_indicator_raw'] == 'Yes').sum()
-rate_317 = (n_dual_317 / n_no_ap_317) * 100
+rate_no_ap_317 = (n_dual_317 / n_no_ap_317) * 100
+
+either_route_317 = df_317[(df_317['ap_participating']) | (df_317['dual_participating'])]
+n_either_317 = len(either_route_317)
+miss_rate_either_317 = (n_dual_317 / n_either_317) * 100
 
 print("=== STUDY 1: SENSITIVITY COMPARISON ===")
-print(f"Baseline (307 Consistent): {n_dual_in_no_ap} of {n_no_ap} = {rate_307:.2f}%")
-print(f"Sensitivity (317 Matched): {n_dual_317} of {n_no_ap_317} = {rate_317:.2f}%")
-print(f"Difference: {rate_317 - rate_307:+.2f} percentage points")
+print(f"Metric A (Dual among No AP):")
+print(f"  Baseline (307): {n_dual_in_no_ap} of {n_no_ap} = {rate_no_ap_307:.2f}%")
+print(f"  Sensitivity (317): {n_dual_317} of {n_no_ap_317} = {rate_no_ap_317:.2f}% (Delta: {rate_no_ap_317 - rate_no_ap_307:+.2f} pp)")
+print(f"Metric B (Miss rate among either route):")
+print(f"  Baseline (307): {n_dual_in_no_ap} of {n_either} = {miss_rate_either_307:.2f}%")
+print(f"  Sensitivity (317): {n_dual_317} of {n_either_317} = {miss_rate_either_317:.2f}% (Delta: {miss_rate_either_317 - miss_rate_either_307:+.2f} pp)")
 """))
 
 cells.append(nbf.v4.new_markdown_cell("""### Visualization: Figure 1
-The four-cell matrix and conditional non-AP breakdown:
+The four-cell matrix and the two distinct dual enrollment opportunity metrics:
 """))
 
 cells.append(nbf.v4.new_code_cell("""display.Image(filename=str(ARTIFACTS_DIR / "fig1_ap_dual_contingency.png"), width=850)
 """))
 
 cells.append(nbf.v4.new_markdown_cell("""### Scholarly Interpretation & Epistemic Boundaries
-- **Claim Supported**: An AP-only measure misses **92.9%** (105 of 113) of Missouri high schools reporting advanced coursework participation through dual enrollment. Across all 307 schools, only **8 schools (2.6%)** report neither AP nor Dual Enrollment.
-- **Boundaries**: This study answers a small, highly specific measurement question. It does **not** establish program quality, whether credits successfully transfer, how many students enroll per school, or whether participants experience long-term earnings benefits. Those require distinct studies.
+- **Claim Supported**: Of the 113 high schools reporting no AP participation, **92.9%** (105 schools) report student participation in dual enrollment. If evaluated among all 299 schools with either pathway, an AP-only measure misses **35.1%** (105 schools).
+- **Boundaries**: 
+  - An absence of reported AP and dual enrollment (8 schools, 2.6%) does **not** establish an absence of all college-level pathways (schools may offer International Baccalaureate, career and technical education articulation credits, or local college arrangements not captured under CRDC survey items).
+  - This study does **not** evaluate course quality, credit transferability, or student completion benefits.
 """))
 
 # ==============================================================================
@@ -199,13 +218,13 @@ cells.append(nbf.v4.new_markdown_cell("""### Scholarly Interpretation & Epistemi
 cells.append(nbf.v4.new_markdown_cell("""## 5. Study 2: Curricular Concealment in AP (The Case of Computer Science)
 
 ### Motivation
-School accountability dashboards and real estate aggregators frequently award binary credit for "AP Programs". But does a general AP indicator ensure subject breadth, or does it conceal the complete absence of foundational modern coursework?
+Accountability systems and public scorecards frequently reward high schools for having "an AP Program". But does an umbrella AP indicator guarantee student access across core subject domains, or does it conceal the absence of reported participation in foundational technical fields?
 
 ### Narrow Question
 > **Among schools reporting AP participation, what percentage reported no AP Computer Science participation?**
 
 ### Statistical Path & Calculation
-We restrict the sample to high schools reporting `SCH_APENR_IND == 'Yes'` (N=194 in the baseline 307 cohort), and calculate the proportion reporting `SCH_APCOMPENR_IND == 'No'`:
+We restrict the sample to high schools reporting `SCH_APENR_IND == 'Yes'` ($N=194$ in the baseline 307 cohort), and calculate the proportion reporting `SCH_APCOMPENR_IND == 'No'`:
 $$\\text{Concealment Rate}_{\\text{AP CS}} = \\frac{N(\\text{Yes AP} \\land \\text{No AP CS})}{N(\\text{Yes AP})}$$
 """))
 
@@ -213,14 +232,13 @@ cells.append(nbf.v4.new_code_cell("""# Restrict to AP-participating schools
 ap_schools_307 = df_307[df_307['ap_participating']].copy()
 n_ap_307 = len(ap_schools_307)
 
-cs_counts_307 = ap_schools_307['ap_cs_indicator_raw'].value_counts()
 n_no_cs_307 = (ap_schools_307['ap_cs_indicator_raw'] == 'No').sum()
 n_yes_cs_307 = (ap_schools_307['ap_cs_indicator_raw'] == 'Yes').sum()
 pct_no_cs_307 = (n_no_cs_307 / n_ap_307) * 100
 
-print(f"=== STUDY 2: AP COMPUTER SCIENCE CONCEALMENT (N={n_ap_307}) ===")
-print(f"Schools reporting NO AP Computer Science: {n_no_cs_307} ({pct_no_cs_307:.2f}%)")
-print(f"Schools reporting YES AP Computer Science: {n_yes_cs_307} ({n_yes_cs_307 / n_ap_307 * 100:.2f}%)")
+print(f"=== STUDY 2: AP COMPUTER SCIENCE REPORTED PARTICIPATION (N={n_ap_307}) ===")
+print(f"Schools reporting NO AP Computer Science participation: {n_no_cs_307} ({pct_no_cs_307:.2f}%)")
+print(f"Schools reporting YES AP Computer Science participation: {n_yes_cs_307} ({n_yes_cs_307 / n_ap_307 * 100:.2f}%)")
 
 # Sensitivity check on 317
 ap_schools_317 = df_317[df_317['ap_participating']].copy()
@@ -229,20 +247,22 @@ n_no_cs_317 = (ap_schools_317['ap_cs_indicator_raw'] == 'No').sum()
 pct_no_cs_317 = (n_no_cs_317 / n_ap_317) * 100
 
 print(f"\\nSensitivity (317 Sample, N_AP={n_ap_317}):")
-print(f"Schools reporting NO AP CS: {n_no_cs_317} ({pct_no_cs_317:.2f}%)")
+print(f"Schools reporting NO AP CS participation: {n_no_cs_317} ({pct_no_cs_317:.2f}%)")
 print(f"Difference: {pct_no_cs_317 - pct_no_cs_307:+.2f} percentage points")
 """))
 
 cells.append(nbf.v4.new_markdown_cell("""### Visualization: Figure 2
-The curricular concealment breakdown among AP-participating schools:
+Reported AP Computer Science participation breakdown:
 """))
 
 cells.append(nbf.v4.new_code_cell("""display.Image(filename=str(ARTIFACTS_DIR / "fig2_ap_cs_concealment.png"), width=750)
 """))
 
 cells.append(nbf.v4.new_markdown_cell("""### Scholarly Interpretation & Epistemic Boundaries
-- **Claim Supported**: Among Missouri public high schools actively participating in the AP program, **65.5%** report zero students enrolled in AP Computer Science. An umbrella AP label conceals that nearly two-thirds of AP schools offer no advanced computer science pathway.
-- **Boundaries**: This does not measure teacher supply constraints, student interest, or whether introductory non-AP computing is offered. It specifically bounds the epistemic loss of using aggregate program indicators.
+- **Claim Supported**: Among Missouri public high schools actively reporting AP participation, **65.5%** (127 of 194) reported zero student enrollment in AP Computer Science during 2021–22. An umbrella AP label conceals that nearly two-thirds of AP schools report no students taking AP Computer Science.
+- **Boundaries**: 
+  - This does **not** establish that those schools offered no AP CS courses or pathways in their curriculum catalogs (a course may have been listed but lacked enrolled students).
+  - It does not measure student demand, teacher staffing availability, or introductory non-AP computing electives.
 """))
 
 # ==============================================================================
@@ -251,17 +271,24 @@ cells.append(nbf.v4.new_markdown_cell("""### Scholarly Interpretation & Epistemi
 cells.append(nbf.v4.new_markdown_cell("""## 6. Study 3: The Denominator Wedge (Schools vs. Students in Physics Provision)
 
 ### Motivation
-A central measurement vulnerability in education policy is the confusion between **institutional availability** (school-weighted) and **student exposure** (enrollment-weighted). Headlining that *"a third of schools lack physics"* suggests a vastly different crisis than discovering *"less than a fifth of students attend a school without physics"*.
+A central measurement vulnerability in education policy is confusing **institutional availability** ($P_{\\text{school}}$) with **student exposure** ($P_{\\text{student}}$). Neither measure inherently "overstates" the other; they describe different populations. The divergence between them provides critical structural information about how educational opportunity scales with institutional size.
+
+### Handling Negative Administrative Codes in CRDC Enrollment
+In official CRDC records, student enrollment is disaggregated by sex (`TOT_ENR_M`, `TOT_ENR_F`, `TOT_ENR_X`).
+- Negative values are administrative codes, not negative students:
+  - `-9` indicates *Not Applicable / Skipped* (nonbinary category not collected or reported by the LEA; 304 of 307 schools).
+  - `-12` indicates *Data Suppressed for Privacy Protections* (1 school: Central High School in Kansas City, `291640000840`).
+- Summing only released, nonnegative enrollment components yields a **provisional calculation from released counts**, while the single suppressed nonbinary component remains unresolved.
 
 ### Narrow Question
 > **Does the percentage of schools reporting zero physics classes differ from the percentage of students attending those schools?**
 
 ### Statistical Path & Calculation
-1. **School-Level Unweighted Percentage ($P_{\\text{school}}$)**:
+1. **School-Level Availability ($P_{\\text{school}}$)**:
    $$P_{\\text{school}} = \\frac{1}{N} \\sum_{i=1}^N \\mathbf{1}(\\text{Physics}_i = 0)$$
-2. **Student-Level Enrollment-Weighted Percentage ($P_{\\text{student}}$)**:
-   $$P_{\\text{student}} = \\frac{\\sum_{i=1}^N \\text{Enrollment}_i \\cdot \\mathbf{1}(\\text{Physics}_i = 0)}{\\sum_{i=1}^N \\text{Enrollment}_i}$$
-3. **Denominator Wedge**:
+2. **Student Exposure from Released Counts ($P_{\\text{student}}$)**:
+   $$P_{\\text{student}} = \\frac{\\sum_{i=1}^N \\text{ReleasedEnrollment}_i \\cdot \\mathbf{1}(\\text{Physics}_i = 0)}{\\sum_{i=1}^N \\text{ReleasedEnrollment}_i}$$
+3. **Denominator Wedge / Divergence**:
    $$\\Delta = P_{\\text{school}} - P_{\\text{student}}$$
 """))
 
@@ -270,29 +297,30 @@ zero_phys_307 = df_307['physics_classes'] == 0
 n_zero_schools_307 = zero_phys_307.sum()
 school_pct_307 = (n_zero_schools_307 / len(df_307)) * 100
 
-# 2. Student-level percentage
-total_enr_307 = df_307['crdc_total_enrollment'].sum()
-zero_enr_307 = df_307.loc[zero_phys_307, 'crdc_total_enrollment'].sum()
-student_pct_307 = (zero_enr_307 / total_enr_307) * 100
+# 2. Student-level percentage from released nonnegative counts
+rel_enr_total_307 = df_307['crdc_released_enrollment'].sum()
+rel_enr_zero_307 = df_307.loc[zero_phys_307, 'crdc_released_enrollment'].sum()
+student_pct_307 = (rel_enr_zero_307 / rel_enr_total_307) * 100
 
 wedge_307 = school_pct_307 - student_pct_307
 
-print("=== STUDY 3: DENOMINATOR WEDGE (BASELINE 307) ===")
+print("=== STUDY 3: DENOMINATOR DIVERGENCE (BASELINE 307) ===")
 print(f"Total High Schools: {len(df_307)}")
-print(f"Schools reporting 0 Physics classes: {n_zero_schools_307} ({school_pct_307:.2f}%)")
-print(f"Total High School Students: {total_enr_307:,.0f}")
-print(f"Students attending Zero-Physics schools: {zero_enr_307:,.0f} ({student_pct_307:.2f}%)")
-print(f"Denominator Wedge: {wedge_307:.2f} percentage points")
+print(f"Schools reporting 0 Physics classes: {n_zero_schools_307} ({school_pct_307:.2f}%, exact: {school_pct_307:.4f}%)")
+print(f"Released Student Enrollment across 307 schools: {rel_enr_total_307:,.0f}")
+print(f"Released Student Enrollment at Zero-Physics schools: {rel_enr_zero_307:,.0f}")
+print(f"Student Exposure Percentage: {student_pct_307:.2f}% (exact: {student_pct_307:.4f}%)")
+print(f"Denominator Divergence: {wedge_307:.2f} percentage points (exact: {wedge_307:.4f} pp)")
 
-# Enrollment scale decomposition
-mean_enr_zero = df_307.loc[zero_phys_307, 'crdc_total_enrollment'].mean()
-mean_enr_has = df_307.loc[~zero_phys_307, 'crdc_total_enrollment'].mean()
-med_enr_zero = df_307.loc[zero_phys_307, 'crdc_total_enrollment'].median()
-med_enr_has = df_307.loc[~zero_phys_307, 'crdc_total_enrollment'].median()
+# Institutional scale decomposition
+mean_enr_zero = df_307.loc[zero_phys_307, 'crdc_released_enrollment'].mean()
+mean_enr_has = df_307.loc[~zero_phys_307, 'crdc_released_enrollment'].mean()
+med_enr_zero = df_307.loc[zero_phys_307, 'crdc_released_enrollment'].median()
+med_enr_has = df_307.loc[~zero_phys_307, 'crdc_released_enrollment'].median()
 
-print(f"\\nInstitutional Scale Decomposition:")
-print(f"Zero-Physics Schools: Mean enrollment = {mean_enr_zero:.1f}, Median = {med_enr_zero:.0f}")
-print(f"Physics-Offering Schools: Mean enrollment = {mean_enr_has:.1f}, Median = {med_enr_has:.0f}")
+print(f"\\nInstitutional Enrollment Scale:")
+print(f"Zero-Physics Schools: Mean = {mean_enr_zero:.1f}, Median = {med_enr_zero:.0f}")
+print(f"Physics-Offering Schools: Mean = {mean_enr_has:.1f}, Median = {med_enr_has:.0f}")
 """))
 
 cells.append(nbf.v4.new_markdown_cell("""### Sensitivity Check: Broad Sample (N=317)
@@ -301,27 +329,31 @@ cells.append(nbf.v4.new_markdown_cell("""### Sensitivity Check: Broad Sample (N=
 cells.append(nbf.v4.new_code_cell("""zero_phys_317 = df_317['physics_classes'] == 0
 school_pct_317 = zero_phys_317.mean() * 100
 
-total_enr_317 = df_317['crdc_total_enrollment'].sum()
-zero_enr_317 = df_317.loc[zero_phys_317, 'crdc_total_enrollment'].sum()
-student_pct_317 = (zero_enr_317 / total_enr_317) * 100
+rel_enr_total_317 = df_317['crdc_released_enrollment'].sum()
+rel_enr_zero_317 = df_317.loc[zero_phys_317, 'crdc_released_enrollment'].sum()
+student_pct_317 = (rel_enr_zero_317 / rel_enr_total_317) * 100
 wedge_317 = school_pct_317 - student_pct_317
 
 print("=== STUDY 3: SENSITIVITY COMPARISON ===")
-print(f"Baseline Wedge: {wedge_307:.2f} pp (32.90% school vs. 18.02% student)")
-print(f"Sensitivity Wedge: {wedge_317:.2f} pp (33.12% school vs. 17.67% student)")
+print(f"Baseline (307): School = {school_pct_307:.2f}%, Student = {student_pct_307:.2f}%, Divergence = {wedge_307:.2f} pp")
+print(f"Sensitivity (317): School = {school_pct_317:.2f}%, Student = {student_pct_317:.2f}%, Divergence = {wedge_317:.2f} pp")
 print(f"Difference: {wedge_317 - wedge_307:+.2f} percentage points")
 """))
 
 cells.append(nbf.v4.new_markdown_cell("""### Visualization: Figure 3
-The denominator wedge and institutional scale distribution:
+The denominator divergence and institutional enrollment scale distribution:
 """))
 
 cells.append(nbf.v4.new_code_cell("""display.Image(filename=str(ARTIFACTS_DIR / "fig3_physics_denominator_wedge.png"), width=900)
 """))
 
 cells.append(nbf.v4.new_markdown_cell("""### Scholarly Interpretation & Epistemic Boundaries
-- **Claim Supported**: The choice of denominator generates a **14.9 percentage-point wedge**. In Missouri, 32.9% of regular high schools report zero physics classes, but those schools enroll only 18.0% of the state's secondary student body. Zero-physics schools are systematically smaller (mean enrollment 403 vs. 899).
-- **Boundaries**: This does not prove that large schools provide superior instruction, nor that students in physics-offering schools actually enroll in physics. It establishes that institutional counts systematically overstate the proportion of students who lack access to specialized teachers.
+- **Claim Supported**: The choice of denominator reveals a **14.70 percentage-point divergence**. In Missouri, 32.90% of regular high schools report zero physics classes, but those schools enroll only 18.20% of the state's secondary student body (based on released nonnegative counts).
+- **Structural Driver**: High schools reporting zero physics classes are systematically smaller in student body size (mean enrollment 412, median 280) compared to physics-offering high schools (mean enrollment 908, median 728).
+- **Boundaries**: 
+  - Neither denominator is inherently superior; they answer different questions. School-level counts describe the distribution of course offerings across administrative units; student-level weights describe potential learner exposure.
+  - The suppressed nonbinary record (1 school) remains unresolved in public files.
+  - Explaining the divergence via rural geography would require a separate NCES locale analysis; here we strictly substantiate that zero-physics schools are smaller in scale.
 """))
 
 # ==============================================================================
@@ -332,23 +364,22 @@ cells.append(nbf.v4.new_markdown_cell("""## 7. Synthesis & Scorecard of Findings
 ### Master Findings Scorecard
 
 | Study | Core Question | Baseline (N=307) | Sensitivity (N=317) | Delta | Substantive Conclusion |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Study 1 (Pilot)** | Dual Enrollment rate among schools reporting No AP | **92.9%** (105 / 113) | **93.1%** (108 / 116) | +0.18 pp | AP-only opportunity metrics miss 93% of non-AP schools that offer college-level pathways through dual credit. |
-| **Study 2** | Curricular concealment: No AP Computer Science among AP schools | **65.5%** (127 / 194) | **64.2%** (129 / 201) | -1.28 pp | An umbrella "AP" label conceals that nearly two-thirds of AP high schools offer zero AP Computer Science. |
-| **Study 3** | Denominator wedge: Schools vs. Students reporting Zero Physics | **14.88 pp** (32.9% school vs 18.0% student) | **15.46 pp** (33.1% school vs 17.7% student) | +0.58 pp | Institutional counts overstate student-level absence by ~15 pp because zero-physics schools are small rural/community schools. |
+| :--- | :--- | :---: | :---: | :---: | :--- |
+| **Study 1 (Metric A)** | Dual Enrollment rate among schools reporting No AP | **92.9%** (105 / 113) | **93.1%** (108 / 116) | +0.18 pp | Among schools with no AP participation, 93% report college-level pathways through dual credit. |
+| **Study 1 (Metric B)** | Miss rate of AP indicator among schools with either route | **35.1%** (105 / 299) | **35.0%** (108 / 309) | -0.17 pp | An AP-only measure misses over a third of high schools active in college-level coursework. |
+| **Study 2** | Curricular concealment: No AP Computer Science among AP schools | **65.5%** (127 / 194) | **64.2%** (129 / 201) | -1.28 pp | An umbrella AP label conceals that nearly two-thirds of AP high schools report zero AP CS enrollment. |
+| **Study 3** | Denominator divergence: School availability vs. Student exposure in Physics | **14.70 pp** (32.90% vs 18.20%) | **15.27 pp** (33.12% vs 17.85%) | +0.57 pp | Institutional availability diverges from student exposure by ~15 pp because zero-physics schools are systematically smaller. |
 
 ---
 
-## 8. Epistemic Verdict & Agenda for Future Inquiries
+## 8. Epistemic Positioning & Literature Context
 
-By adhering to the **Six-Point Admission Gate**, we answered three concrete measurement questions with zero regression scaffolding, zero target leakage, and zero reliance on unverifiable causal claims.
-
-Each study stands independently:
-1. **Pilot Complete**: The AP / Dual Enrollment question is fully resolved for Missouri SY 2021–22.
-2. **Next Natural Extension (Study 1B)**: Move from binary participation indicators to **participation rates** (percentage of 11th and 12th graders enrolled).
-3. **Subject Breadth Extension (Study 1C)**: Examine the specific subject taxonomy of dual credit offerings relative to state university general education cores.
-
-Together, these bounded studies construct an evidence-first foundation for understanding how educational opportunity is truly distributed and measured.
+These three studies represent **completed descriptive questions**, not speculative causal claims.
+- **Prior Research Alignment**: 
+  - Nat Malkus (American Enterprise Institute, 2016, 2018) documented that AP course access is systematically constrained by high school scale.
+  - The College Board's *AP Program Results* and ACT's dual-enrollment research series (2017, 2020) show that dual credit has expanded rapidly in non-suburban high schools, serving as the primary college-credit vehicle where AP course section scale is unsustainable.
+  - OCR's CRDC national summaries frequently report unweighted institutional course gaps alongside student numbers.
+- **Exact Contribution**: By establishing an auditable six-point admission rule, this sketchbook explicitly demonstrates how the choice of program indicator (AP vs. Dual) and denominator (institution vs. student) alters the description of secondary educational opportunity.
 """))
 
 nb.cells = cells

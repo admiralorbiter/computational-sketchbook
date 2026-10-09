@@ -2,14 +2,13 @@
 Generate publication-quality figures for the Missouri CRDC Measurement Study.
 
 Figures:
-1. fig1_ap_dual_contingency.png: 4-Cell Matrix & Conditional Pathway Breakdown
-2. fig2_ap_cs_concealment.png: Curricular Concealment of AP Computer Science
-3. fig3_physics_denominator_wedge.png: School vs. Student Denominator Wedge
+1. fig1_ap_dual_contingency.png: 4-Cell Matrix & Dual Opportunity Rates (Non-AP vs. Either Route)
+2. fig2_ap_cs_concealment.png: Reported Student Participation in AP Computer Science
+3. fig3_physics_denominator_wedge.png: Institutional Availability vs. Student Exposure in Physics Provision
 """
 
 from pathlib import Path
 import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 import numpy as np
 import pandas as pd
 
@@ -64,23 +63,28 @@ def plot_fig1(df_307):
     ax_mat.tick_params(top=False, bottom=True, labeltop=False, labelbottom=True)
     ax_mat.set_xlabel("Dual-Enrollment Participation Indicator", fontsize=11, fontweight="semibold", labelpad=8)
     ax_mat.set_ylabel("AP Participation Indicator", fontsize=11, fontweight="semibold", labelpad=8)
-    ax_mat.set_title("Missouri Grades 9–12 Public High Schools (N=307)\nFour-Cell Opportunity Matrix", fontsize=12, fontweight="bold", pad=12)
+    ax_mat.set_title("Missouri Grades 9–12 Public High Schools (N=307)\nFour-Cell Participation Matrix", fontsize=12, fontweight="bold", pad=12)
 
-    # 2. Conditional Breakdown for No-AP Schools
-    no_ap_counts = [105, 8]
-    no_ap_labels = ["Dual Enrollment\nParticipation\n(105 / 113)", "Neither Route\nReported\n(8 / 113)"]
-    colors = ["#2563eb", "#94a3b8"]
+    # 2. Dual Enrollment Rates Under Alternate Denominators
+    rate_no_ap = 105 / 113 * 100         # 92.9%
+    rate_either = 105 / 299 * 100        # 35.1%
 
-    bars = ax_bar.bar([0, 1], [105 / 113 * 100, 8 / 113 * 100], color=colors, width=0.55, edgecolor="#0f172a", linewidth=0.8)
+    bar_labels = [
+        "Conditional Rate:\nAmong Non-AP Schools\n(105 / 113)",
+        "Overall Miss Rate:\nAmong Either Route\n(105 / 299)"
+    ]
+    colors = ["#2563eb", "#0ea5e9"]
+
+    bars = ax_bar.bar([0, 1], [rate_no_ap, rate_either], color=colors, width=0.52, edgecolor="#0f172a", linewidth=0.8)
     ax_bar.set_xticks([0, 1])
-    ax_bar.set_xticklabels(no_ap_labels, fontsize=10.5)
-    ax_bar.set_ylabel("Percentage of Non-AP High Schools (%)", fontsize=11, fontweight="semibold")
-    ax_bar.set_ylim(0, 105)
-    ax_bar.set_title("Among Schools Reporting NO AP Participation:\n92.9% Report Dual-Enrollment Participation", fontsize=12, fontweight="bold", pad=12)
+    ax_bar.set_xticklabels(bar_labels, fontsize=10.5)
+    ax_bar.set_ylabel("Percentage (%)", fontsize=11, fontweight="semibold")
+    ax_bar.set_ylim(0, 110)
+    ax_bar.set_title("Dual Enrollment Metrics by Denominator Choice", fontsize=12, fontweight="bold", pad=12)
     ax_bar.grid(axis="y", alpha=0.7)
 
-    for bar, val, count in zip(bars, [105 / 113 * 100, 8 / 113 * 100], [105, 8]):
-        ax_bar.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 2.5, f"{val:.1f}%\n({count} schools)", ha="center", va="bottom", fontsize=11, fontweight="bold", color="#0f172a")
+    for bar, val, count, denom in zip(bars, [rate_no_ap, rate_either], [105, 105], [113, 299]):
+        ax_bar.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 2.5, f"{val:.1f}%\n({count}/{denom})", ha="center", va="bottom", fontsize=11, fontweight="bold", color="#0f172a")
 
     plt.tight_layout()
     fig.savefig(ARTIFACTS_DIR / "fig1_ap_dual_contingency.png", dpi=250)
@@ -89,7 +93,7 @@ def plot_fig1(df_307):
 
 
 def plot_fig2(df_307):
-    """Figure 2: AP Computer Science Subject Concealment."""
+    """Figure 2: AP Computer Science Reported Participation Concealment."""
     ap_schools = df_307[df_307["ap_participating"]].copy()
     n_ap = len(ap_schools)
     n_no_cs = (ap_schools["ap_cs_indicator_raw"] == "No").sum()
@@ -97,7 +101,7 @@ def plot_fig2(df_307):
 
     fig, ax = plt.subplots(figsize=(8.5, 5))
     bars = ax.barh(
-        ["Offers AP CS Pathway\n(SCH_APCOMPENR_IND = Yes)", "Concealed CS Absence\n(SCH_APCOMPENR_IND = No)"],
+        ["Reported AP CS Participation\n(SCH_APCOMPENR_IND = Yes)", "Reported Zero AP CS Participation\n(SCH_APCOMPENR_IND = No)"],
         [n_yes_cs / n_ap * 100, n_no_cs / n_ap * 100],
         color=["#10b981", "#ef4444"],
         height=0.45,
@@ -107,7 +111,7 @@ def plot_fig2(df_307):
 
     ax.set_xlim(0, 80)
     ax.set_xlabel("Percentage of AP-Participating High Schools (%)", fontsize=11, fontweight="semibold", labelpad=8)
-    ax.set_title(f"Curricular Concealment in AP-Participating Schools (N={n_ap})\n65.5% of AP Schools Report Zero AP Computer Science Participation", fontsize=12, fontweight="bold", pad=14)
+    ax.set_title(f"Reported AP Computer Science Participation in AP Schools (N={n_ap})\n65.5% of AP Schools Report Zero AP Computer Science Enrollment", fontsize=12, fontweight="bold", pad=14)
     ax.grid(axis="x", alpha=0.7)
 
     for bar, val, count in zip(bars, [n_yes_cs / n_ap * 100, n_no_cs / n_ap * 100], [n_yes_cs, n_no_cs]):
@@ -120,13 +124,13 @@ def plot_fig2(df_307):
 
 
 def plot_fig3(df_307):
-    """Figure 3: Physics Provision Denominator Wedge & School Scale."""
+    """Figure 3: Physics Provision Denominator Divergence & School Scale."""
     zero_phys = df_307["physics_classes"] == 0
     school_pct = zero_phys.mean() * 100
 
-    total_enr = df_307["crdc_total_enrollment"].sum()
-    zero_enr = df_307.loc[zero_phys, "crdc_total_enrollment"].sum()
-    student_pct = zero_enr / total_enr * 100
+    rel_enr = df_307["crdc_released_enrollment"].sum()
+    zero_rel_enr = df_307.loc[zero_phys, "crdc_released_enrollment"].sum()
+    student_pct = zero_rel_enr / rel_enr * 100
     wedge = school_pct - student_pct
 
     fig, (ax_bar, ax_box) = plt.subplots(1, 2, figsize=(13, 5.5), gridspec_kw={"width_ratios": [1, 1.2]})
@@ -141,18 +145,18 @@ def plot_fig3(df_307):
         linewidth=0.8
     )
     ax_bar.set_xticks([0, 1])
-    ax_bar.set_xticklabels([f"School Denominator\n(101 / 307 schools)", f"Student Denominator\n(40,707 / 225,889 students)"], fontsize=10.5)
+    ax_bar.set_xticklabels([f"School Denominator\n(101 / 307 schools)", f"Student Denominator\n(41,616 / 228,637 released)"], fontsize=10.5)
     ax_bar.set_ylabel("Share Reporting Zero Physics Classes (%)", fontsize=11, fontweight="semibold")
     ax_bar.set_ylim(0, 42)
-    ax_bar.set_title(f"The Denominator Wedge in Physics Provision\nDifference: {wedge:.1f} Percentage Points", fontsize=12, fontweight="bold", pad=12)
+    ax_bar.set_title(f"Institutional Availability vs. Student Exposure\nDivergence: {wedge:.2f} Percentage Points", fontsize=12, fontweight="bold", pad=12)
     ax_bar.grid(axis="y", alpha=0.7)
 
     for bar, val in zip(bars, [school_pct, student_pct]):
-        ax_bar.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 1.0, f"{val:.1f}%", ha="center", va="bottom", fontsize=12, fontweight="bold")
+        ax_bar.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 1.0, f"{val:.2f}%", ha="center", va="bottom", fontsize=12, fontweight="bold")
 
-    # Annotate wedge arrow
+    # Annotate divergence arrow
     ax_bar.annotate(
-        f"Wedge: -{wedge:.1f} pp",
+        f"Divergence: -{wedge:.2f} pp",
         xy=(1, student_pct), xytext=(0.5, (school_pct + student_pct) / 2 + 5),
         arrowprops=dict(facecolor="#dc2626", shrink=0.08, width=1.5, headwidth=6),
         fontsize=10.5, fontweight="bold", color="#dc2626", ha="center"
@@ -160,12 +164,12 @@ def plot_fig3(df_307):
 
     # 2. Enrollment scale explanation
     box_data = [
-        df_307.loc[zero_phys, "crdc_total_enrollment"].dropna(),
-        df_307.loc[~zero_phys, "crdc_total_enrollment"].dropna()
+        df_307.loc[zero_phys, "crdc_released_enrollment"].dropna(),
+        df_307.loc[~zero_phys, "crdc_released_enrollment"].dropna()
     ]
     ax_box.boxplot(
         box_data,
-        tick_labels=["Zero Physics\n(Mean: 403, Med: 271)", ">=1 Physics Class\n(Mean: 899, Med: 718)"],
+        tick_labels=["Zero Physics Classes\n(Mean: 412, Med: 280)", ">=1 Physics Class\n(Mean: 908, Med: 728)"],
         widths=0.45,
         patch_artist=True,
         boxprops=dict(facecolor="#e2e8f0", color="#334155", linewidth=1.2),
@@ -174,8 +178,8 @@ def plot_fig3(df_307):
         capprops=dict(color="#334155"),
         flierprops=dict(marker="o", color="#94a3b8", alpha=0.5, markersize=4)
     )
-    ax_box.set_ylabel("Total High School Student Headcount", fontsize=11, fontweight="semibold")
-    ax_box.set_title("Institutional Scale Explains the Wedge:\nZero-Physics High Schools Are Systematically Smaller", fontsize=12, fontweight="bold", pad=12)
+    ax_box.set_ylabel("Released Student Enrollment Headcount", fontsize=11, fontweight="semibold")
+    ax_box.set_title("Institutional Scale Explains the Divergence:\nZero-Physics High Schools Are Systematically Smaller", fontsize=12, fontweight="bold", pad=12)
     ax_box.grid(axis="y", alpha=0.7)
 
     plt.tight_layout()

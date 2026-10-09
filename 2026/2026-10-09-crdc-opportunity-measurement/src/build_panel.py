@@ -16,6 +16,10 @@ Rigorous Population Funnel:
 - 317 matched to CRDC records
 - 307 with consistent grades 9–12 reporting across both sources
 - 10 with conflicting grade-span reporting retained for sensitivity analysis
+
+Source Code Auditing:
+- Distinguishes nonnegative enrollment counts from CRDC negative administrative codes (-9 = skipped, -12 = suppressed).
+- Recomputed released enrollment sums only nonnegative released components, holding suppressed values unresolved.
 """
 
 import os
@@ -175,14 +179,26 @@ def main():
     df_cs_mo["ncessch"] = df_cs_mo["COMBOKEY"].astype(str).str.zfill(12)
     df_cs_mo.to_csv(DATA_RAW / "mo_crdc_computer_science_2021_22.csv", index=False)
 
-    # Enrollment
+    # Enrollment: Handle CRDC source codes (-9 skipped, -12 suppressed)
     df_enr = pd.read_csv(RAW_CRDC_DIR / "Enrollment.csv", low_memory=False, encoding="latin1")
     df_enr_mo = df_enr[df_enr["LEA_STATE"] == "MO"].copy()
     df_enr_mo["ncessch"] = df_enr_mo["COMBOKEY"].astype(str).str.zfill(12)
-    enr_m = pd.to_numeric(df_enr_mo["TOT_ENR_M"], errors="coerce").fillna(0)
-    enr_f = pd.to_numeric(df_enr_mo["TOT_ENR_F"], errors="coerce").fillna(0)
-    enr_x = pd.to_numeric(df_enr_mo["TOT_ENR_X"], errors="coerce").fillna(0) if "TOT_ENR_X" in df_enr_mo.columns else 0
-    df_enr_mo["crdc_total_enrollment"] = enr_m + enr_f + enr_x
+
+    enr_m_raw = pd.to_numeric(df_enr_mo["TOT_ENR_M"], errors="coerce")
+    enr_f_raw = pd.to_numeric(df_enr_mo["TOT_ENR_F"], errors="coerce")
+    enr_x_raw = pd.to_numeric(df_enr_mo["TOT_ENR_X"], errors="coerce") if "TOT_ENR_X" in df_enr_mo.columns else pd.Series(np.nan, index=df_enr_mo.index)
+
+    # Explicitly audit and flag negative codes
+    df_enr_mo["flag_enr_x_skipped"] = enr_x_raw == -9
+    df_enr_mo["flag_enr_suppressed"] = (enr_m_raw == -12) | (enr_f_raw == -12) | (enr_x_raw == -12)
+
+    # Sum only released nonnegative counts (clip at 0 so negative codes are never subtracted)
+    df_enr_mo["crdc_released_enrollment"] = (
+        enr_m_raw.clip(lower=0).fillna(0) +
+        enr_f_raw.clip(lower=0).fillna(0) +
+        enr_x_raw.clip(lower=0).fillna(0)
+    )
+    df_enr_mo["crdc_total_enrollment"] = df_enr_mo["crdc_released_enrollment"]  # alias for backward compatibility
     df_enr_mo.to_csv(DATA_RAW / "mo_crdc_enrollment_2021_22.csv", index=False)
 
     # -------------------------------------------------------------
@@ -206,7 +222,7 @@ def main():
         on="ncessch", how="left"
     )
     panel = panel.merge(
-        df_enr_mo[["ncessch", "crdc_total_enrollment"]],
+        df_enr_mo[["ncessch", "crdc_released_enrollment", "crdc_total_enrollment", "flag_enr_suppressed", "flag_enr_x_skipped"]],
         on="ncessch", how="left"
     )
 
@@ -246,7 +262,8 @@ def main():
     output_cols = [
         "ncessch", "leaid", "SCH_NAME_ccd", "LEA_NAME_ccd", "MCITY", "MZIP",
         "flag_matched_crdc", "flag_consistent_9_12", "flag_conflicting_span",
-        "crdc_reported_grades", "crdc_total_enrollment",
+        "crdc_reported_grades", "crdc_released_enrollment", "crdc_total_enrollment",
+        "flag_enr_suppressed", "flag_enr_x_skipped",
         "ap_participating", "ap_indicator_raw", "ap_courses_count",
         "dual_participating", "dual_indicator_raw", "pathway_cell",
         "ap_cs_participating", "ap_cs_indicator_raw",
@@ -268,7 +285,7 @@ def main():
     funnel = pd.DataFrame([
         {"stage": "1. Missouri Regular Public Schools (CCD)", "count": len(df_ccd_mo[df_ccd_mo["SCH_TYPE_TEXT"] == "Regular School"]), "excluded": 0, "pct_retained": 100.0, "reason": "State universe of regular schools"},
         {"stage": "2. Classified Exactly Grades 9-12 & Open (CCD)", "count": 318, "excluded": len(df_ccd_mo[df_ccd_mo["SCH_TYPE_TEXT"] == "Regular School"]) - 318, "pct_retained": 318 / 318 * 100.0, "reason": "Excludes elementary, middle, combined 7-12, and inactive/future schools"},
-        {"stage": "3. Matched to CRDC Records", "count": 317, "excluded": 1, "pct_retained": 317 / 318 * 100.0, "reason": "1 school (Academia Del Pueblo / Kansas City) missing in CRDC collection"},
+        {"stage": "3. Matched to CRDC Records", "count": 317, "excluded": 1, "pct_retained": 317 / 318 * 100.0, "reason": "1 school (Hawthorn High School / Kansas City) missing in CRDC collection"},
         {"stage": "4. Consistent Grades 9-12 Reporting in CRDC", "count": 307, "excluded": 10, "pct_retained": 307 / 318 * 100.0, "reason": "10 schools report PS, KG, UG, or G10-12 in CRDC; quarantined for sensitivity analysis"},
     ])
     funnel.to_csv(DATA_PROCESSED / "population_exclusion_funnel.csv", index=False)
