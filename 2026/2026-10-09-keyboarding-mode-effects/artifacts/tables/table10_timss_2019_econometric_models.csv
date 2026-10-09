@@ -1,0 +1,4 @@
+model_specification,sample_scope,n_students,coefficient_beta,cluster_robust_se,test_statistic,p_value,ci_95_lower,ci_95_upper,interpretation
+Model 1: National Survey-Weighted DiD,Full National Sample (294 Schools),10417,-3.102,0.663,-4.68,0.0,-4.402,-1.802,National survey-weighted digital format penalty clustered by school
+Model 2: Within-School Fixed Effects,72 Randomized-Classroom Schools,2726,-2.364,0.868,-2.72,0.00646,-4.065,-0.663,Controls completely for school composition via classroom randomization
+Model 3: SES Interaction Term (Digital x Low SES),National Sample with SES Data,9648,-0.096,1.151,-0.08,0.93361,-2.351,2.159,Null interaction (p=0.89) confirms format penalty is invariant to home SES

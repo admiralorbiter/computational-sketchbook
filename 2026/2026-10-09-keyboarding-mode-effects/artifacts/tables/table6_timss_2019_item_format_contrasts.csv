@@ -1,4 +1,4 @@
-item_format,n_items,mean_diff_pp,se_pp,median_diff_pp,min_diff_pp,max_diff_pp
-Multiple Choice (Selected Response),49,-2.17,0.52,-1.66,-9.91,5.42
-Constructed Response (Student Entered),50,-4.65,0.7,-4.7,-23.99,7.38
-Format Gap (Constructed - Selected),99,-2.48,0.87,-3.04,,
+item_format,n_items,mean_diff_pp,se_pp,median_diff_pp,paper_omit_pct,digital_omit_pct,answered_only_diff_pp
+Multiple Choice (Selected Response),49,-0.47,0.53,-0.24,3.37,1.19,-2.17
+Constructed Response (Student Entered),50,-3.9,0.73,-3.92,2.64,1.37,-4.82
+Format Gap (Constructed - Selected),99,-3.42,0.9,-3.67,-0.73,0.18,-2.65
