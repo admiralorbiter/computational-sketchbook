@@ -524,6 +524,55 @@ The empirical results from **Figure 4** and **Table 4** clarify the relationship
 """
     ))
 
+    # Cell 24: Code - Phase 3 Longitudinal Course Outcomes Execution
+    cells.append(nbf.v4.new_code_cell(
+        """# Phase 3: Longitudinal Course Outcomes & Policy Transitions in KCPS (2021–2025)
+import sys
+from pathlib import Path
+import pandas as pd
+from IPython.display import Image, display
+
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
+
+from src.build_longitudinal_course_outcomes import main as run_course_outcomes
+
+# Build harmonized outcomes and generate Table 6 & Figure 5
+run_course_outcomes()
+
+# Load and display Table 6
+t6 = pd.read_csv(TABLES_DIR / "table6_kcps_policy_period_outcomes.csv")
+print("Table 6: KCPS Longitudinal Course Outcomes Across Policy Eras & Curricular Tracks:")
+display(t6)
+
+# Display Figure 5
+display(Image(str(FIG_DIR / "05_kcps_course_outcomes_by_policy_period.png")))
+"""
+    ))
+
+    # Cell 25: Markdown - Longitudinal Outcomes Findings
+    cells.append(nbf.v4.new_markdown_cell(
+        """## Section 10: Empirical Findings: Longitudinal Course Outcomes & Decoupling in KCPS
+
+The empirical analysis of 384 term-level course observations across all six KCPS secondary campuses (`CENTRAL`, `EAST`, `LINCOLN`, `NORTHEAST`, `SOUTHEAST`, `PASEO`) between 2021 and 2025 reveals three central findings:
+
+1. **Course Failure Rates Slashed Under Initial 40% Floor (2023–24)**:
+   - In General Education courses, failure rates fell by more than half, from **25.4%** in the pre-reform baseline to **12.2%** under the initial 40% floor.
+   - Credit completion surged from **74.6%** to **87.8%**, accelerating credit acquisition for hundreds of previously off-track students.
+
+2. **The Empirical Decoupling Test (Algebra I)**:
+   - While ninth-grade Algebra I course passing rates surged from **71.8%** to **86.4%**, state End-of-Course (EOC) mathematics proficiency remained essentially flat (shifting from **13.9%** to **14.0%**).
+   - This directly confirms the **signaling decoupling hypothesis**: administrative grading floors compressed recorded failure without generating corresponding improvements in independently tested mathematical mastery.
+
+3. **Restoring Zeroes and the Advanced Course Exemption (2024–25)**:
+   - When KCPS revised its policy in August 2024 to award 0% for missing work while retaining the 40% floor for attempted work, General Education failure rates partially rebounded to **17.0%**.
+   - Concurrently, because Honors, AP, IB, and MYP courses were explicitly exempted from the 40% floor (retaining 0–59% F), their failure rates remained rock-solid at **3.7%–3.8%** across all four years, serving as an internal within-school control group.
+
+---
+*Computational Sketchbook Repository: `computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/`*
+"""
+    ))
+
     nb.cells = cells
     with open(NOTEBOOK_PATH, "w", encoding="utf-8") as f:
         nbf.write(nb, f)

@@ -1,0 +1,7 @@
+policy_era,course_track,total_students,total_f_grades,total_credits_att,total_credits_ear,failure_rate_pct,credit_completion_pct,eoc_prof_pct,eoc_below_basic_pct
+Pre-Reform,General Education,10164,2577,5082.0,3793.5,25.4,74.6,13.9,52.5
+Initial 40% Floor,General Education,5082,618,2541.0,2232.0,12.2,87.8,14.0,52.3
+Revised Missing-Work & Exemption,General Education,5097,866,2548.5,2115.5,17.0,83.0,13.7,51.4
+Pre-Reform,Honors / AP / IB,3314,127,1657.0,1593.5,3.8,96.2,71.8,8.0
+Initial 40% Floor,Honors / AP / IB,1676,62,838.0,807.0,3.7,96.3,72.6,8.0
+Revised Missing-Work & Exemption,Honors / AP / IB,1697,64,848.5,816.5,3.8,96.2,72.0,8.0

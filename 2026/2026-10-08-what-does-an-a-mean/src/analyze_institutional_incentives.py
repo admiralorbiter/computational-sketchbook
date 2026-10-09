@@ -61,14 +61,24 @@ def map_district_policy(district_name: str) -> str:
     return known_districts.get(d_upper, "UNVERIFIED_PENDING_AUDIT")
 
 
-def assign_school_policy_exposure(school_name: str, district_code: str, df_evidence: pd.DataFrame = None) -> pd.Series:
+def assign_school_policy_exposure(
+    school_name: str,
+    district_code: str,
+    df_evidence: pd.DataFrame = None,
+    academic_year: str = None,
+    course_track: str = None
+) -> pd.Series:
     """
     Derives school-specific policy exposure, subsequent policy name, effective timeline,
-    and research audit status directly from the verified records in kc_policy_exposure_evidence_register.csv.
-    Enforces that evidence register is the single source of truth:
-    - Queries records matching district_code and (school_name == s_upper or school_name == 'ALL_HIGH_SCHOOLS').
-    - Distinguishes course-level mixed exposure (e.g. KCPS Honors/AP/IB exemption vs general education floor).
-    - Distinguishes pilot campus from non-pilot comparison campuses within the same district (e.g. NKC Schools).
+    grading weights, and audit status directly from verified records in kc_policy_exposure_evidence_register.csv.
+    
+    Supports two operating modes:
+    1. Observation-level lookup (when academic_year is provided):
+       Evaluates exact exposure for an arbitrary (school, district, year, track) observation
+       using strict precedence (exact school/track -> wildcard school/track -> date interval -> UNVERIFIED).
+    2. Subsequent longitudinal classification (when academic_year is None):
+       Determines school-level post-2022 policy adoption and case study role for Table 4.
+       Derives entirely from evidence records; returns UNVERIFIED / PENDING_AUDIT if no evidence exists.
     """
     if df_evidence is None:
         evidence_file = SOURCES_DIR / "kc_policy_exposure_evidence_register.csv"
@@ -76,85 +86,119 @@ def assign_school_policy_exposure(school_name: str, district_code: str, df_evide
         
     s_upper = str(school_name).upper().strip()
     
-    # Query evidence register for this district and campus
-    matches = df_evidence[
-        (df_evidence["district_code"] == district_code) & 
-        ((df_evidence["school_name"].str.upper() == s_upper) | (df_evidence["school_name"] == "ALL_HIGH_SCHOOLS"))
-    ]
-    
-    if matches.empty:
-        # Check if district has pending documentation records
-        if district_code == "048-072":  # Hickman Mills
+    # Mode 1: Arbitrary observation lookup (academic_year specified)
+    if academic_year is not None:
+        # Precedence 1: Exact district + exact school + exact year
+        school_year_matches = df_evidence[
+            (df_evidence["district_code"] == district_code) &
+            (df_evidence["school_name"].str.upper() == s_upper) &
+            (df_evidence["academic_year"] == academic_year)
+        ]
+        
+        # Precedence 2: Exact district + wildcard school ('ALL_HIGH_SCHOOLS') + exact year
+        wildcard_year_matches = df_evidence[
+            (df_evidence["district_code"] == district_code) &
+            (df_evidence["school_name"] == "ALL_HIGH_SCHOOLS") &
+            (df_evidence["academic_year"] == academic_year)
+        ]
+        
+        candidates = pd.concat([school_year_matches, wildcard_year_matches])
+        
+        # Precedence 3: Date range interval fallback if exact academic_year string doesn't match
+        if candidates.empty:
+            start_yr = academic_year.split("-")[0] if "-" in academic_year else academic_year
+            ref_date = f"{start_yr}-10"
+            date_matches = df_evidence[
+                (df_evidence["district_code"] == district_code) &
+                ((df_evidence["school_name"].str.upper() == s_upper) | (df_evidence["school_name"] == "ALL_HIGH_SCHOOLS")) &
+                (df_evidence["effective_start"] <= ref_date) &
+                (df_evidence["effective_end"] >= ref_date)
+            ]
+            candidates = date_matches
+            
+        if candidates.empty:
             return pd.Series({
-                "subsequent_policy": "FLOOR_50_DOCUMENTATION_PENDING",
-                "subsequent_year": "PENDING_AUDIT",
-                "audit_status": "DOCUMENTATION_PENDING",
-                "policy_exposure_role": "Exploratory_Pending_Audit"
+                "subsequent_policy": "Unverified",
+                "subsequent_year": "N/A",
+                "audit_status": "UNVERIFIED",
+                "policy_exposure_role": "UNVERIFIED",
+                "grading_model": "UNVERIFIED",
+                "grading_floor_minimum": "UNVERIFIED",
+                "attempted_work_floor": "UNVERIFIED",
+                "missing_work_rule": "UNVERIFIED",
+                "reassessment_rule": "UNVERIFIED",
+                "engagement_weight_pct": np.nan,
+                "progress_weight_pct": np.nan,
+                "proficiency_weight_pct": np.nan,
+                "evidence_strength": "UNVERIFIED"
             })
+            
+        # Track matching if course_track is supplied
+        if course_track is not None:
+            t_upper = str(course_track).upper().strip()
+            # Exact track or substring match
+            track_matches = candidates[candidates["course_track"].str.upper().str.contains(t_upper, regex=False)]
+            if not track_matches.empty:
+                candidates = track_matches
+            else:
+                # Fallback to 'All Courses' / 'All Secondary Courses'
+                general_matches = candidates[candidates["course_track"].isin(["All Courses", "All Secondary Courses"])]
+                if not general_matches.empty:
+                    candidates = general_matches
+                else:
+                    return pd.Series({
+                        "subsequent_policy": "Unverified",
+                        "subsequent_year": "N/A",
+                        "audit_status": "UNVERIFIED",
+                        "policy_exposure_role": "UNVERIFIED",
+                        "grading_model": "UNVERIFIED",
+                        "grading_floor_minimum": "UNVERIFIED",
+                        "attempted_work_floor": "UNVERIFIED",
+                        "missing_work_rule": "UNVERIFIED",
+                        "reassessment_rule": "UNVERIFIED",
+                        "engagement_weight_pct": np.nan,
+                        "progress_weight_pct": np.nan,
+                        "proficiency_weight_pct": np.nan,
+                        "evidence_strength": "UNVERIFIED"
+                    })
+                    
+        # Prefer school-specific over wildcard
+        school_specific = candidates[candidates["school_name"].str.upper() == s_upper]
+        rec = school_specific.iloc[0] if not school_specific.empty else candidates.iloc[0]
+        
+        return pd.Series({
+            "subsequent_policy": rec["grading_model"],
+            "subsequent_year": rec["academic_year"],
+            "audit_status": rec["evidence_strength"],
+            "policy_exposure_role": rec["policy_exposure_role"],
+            "grading_model": rec["grading_model"],
+            "grading_floor_minimum": rec["attempted_work_floor"],
+            "attempted_work_floor": rec["attempted_work_floor"],
+            "missing_work_rule": rec["missing_work_rule"],
+            "reassessment_rule": rec["reassessment_rule"],
+            "engagement_weight_pct": rec["engagement_weight_pct"],
+            "progress_weight_pct": rec["progress_weight_pct"],
+            "proficiency_weight_pct": rec["proficiency_weight_pct"],
+            "evidence_strength": rec["evidence_strength"]
+        })
+
+    # Mode 2: Table 4 school-level subsequent policy adoption (academic_year is None)
+    district_records = df_evidence[df_evidence["district_code"] == district_code]
+    if district_records.empty:
         return pd.Series({
             "subsequent_policy": "Unverified",
             "subsequent_year": "N/A",
             "audit_status": "PENDING_AUDIT",
             "policy_exposure_role": "Exploratory_Pending_Audit"
         })
-    
-    # Check for subsequent policy records (post-2022)
-    subsequent_records = matches[matches["academic_year"] > "2021-2022"]
-    
-    # 1. North Kansas City 74 (Case Study B)
-    if district_code == "024-093":
-        pilot_records = subsequent_records[subsequent_records["policy_exposure_role"].str.contains("Pilot")]
-        if not pilot_records.empty and (pilot_records["school_name"].str.upper() == s_upper).any():
-            rec = pilot_records[pilot_records["school_name"].str.upper() == s_upper].iloc[0]
-            return pd.Series({
-                "subsequent_policy": f"{rec['grading_model']} (Pilot: Designated Courses)",
-                "subsequent_year": f"{rec['academic_year']} (Fall Pilot)",
-                "audit_status": "VERIFIED_LONGITUDINAL_CASE_B_PILOT",
-                "policy_exposure_role": rec["policy_exposure_role"]
-            })
-        else:
-            comp_records = subsequent_records[subsequent_records["policy_exposure_role"].str.contains("Within_District_Comparison")]
-            rec = comp_records.iloc[0] if not comp_records.empty else matches.iloc[0]
-            return pd.Series({
-                "subsequent_policy": "TRADITIONAL_PCT (Non-Pilot; SBL in 26-27)",
-                "subsequent_year": "2026-2027 (Full Rollout)",
-                "audit_status": "VERIFIED_WITHIN_DISTRICT_COMPARISON",
-                "policy_exposure_role": "Case_B_Within_District_Comparison_2025_26"
-            })
-            
-    # 2. Kansas City Public Schools 33 (Case Study A)
-    elif district_code == "048-078":
-        # Check if 2024-25 has course-level track distinctions in the evidence register
-        tracks_2425 = subsequent_records[subsequent_records["academic_year"] == "2024-2025"]["course_track"].unique()
-        has_honors_and_general = any("Honors" in t for t in tracks_2425) and any("General" in t for t in tracks_2425)
         
-        if has_honors_and_general:
-            # Lincoln College Prep vs other KCPS campuses: mixed course exposure
-            if "LINCOLN" in s_upper:
-                return pd.Series({
-                    "subsequent_policy": "FLOOR_40_MINIMUM (Mixed: Honors/AP/IB Exempt, General Subject to Floor)",
-                    "subsequent_year": "2023-2024 / 2024-2025 (Revised)",
-                    "audit_status": "VERIFIED_LONGITUDINAL_CASE_A_MIXED",
-                    "policy_exposure_role": "Case_A_Mixed_Course_Exposure_2024_25"
-                })
-            else:
-                return pd.Series({
-                    "subsequent_policy": "FLOOR_40_MINIMUM (Mixed: General 40% Floor, Honors/AP Exempt)",
-                    "subsequent_year": "2023-2024 / 2024-2025 (Revised)",
-                    "audit_status": "VERIFIED_LONGITUDINAL_CASE_A_MIXED",
-                    "policy_exposure_role": "Case_A_Mixed_Course_Exposure_2024_25"
-                })
-        else:
-            return pd.Series({
-                "subsequent_policy": "FLOOR_40_MINIMUM",
-                "subsequent_year": "2023-2024",
-                "audit_status": "VERIFIED_LONGITUDINAL_CASE_A",
-                "policy_exposure_role": "Case_A_Active_Policy_Floor_2023_24"
-            })
-            
-    # 3. Verified Comparison Districts (Independence, Lee's Summit, Blue Springs, Park Hill)
-    elif any(r == "Verified_Traditional_Comparison" for r in matches["policy_exposure_role"]):
-        rec = matches[matches["policy_exposure_role"] == "Verified_Traditional_Comparison"].iloc[0]
+    # Check if school has verified traditional comparison record
+    school_comp = district_records[
+        (district_records["school_name"].str.upper() == s_upper) &
+        (district_records["policy_exposure_role"] == "Verified_Traditional_Comparison")
+    ]
+    if not school_comp.empty:
+        rec = school_comp.iloc[0]
         return pd.Series({
             "subsequent_policy": rec["grading_model"],
             "subsequent_year": f"{rec['effective_start'][:4]}-{rec['effective_end'][:4]}",
@@ -162,6 +206,95 @@ def assign_school_policy_exposure(school_name: str, district_code: str, df_evide
             "policy_exposure_role": rec["policy_exposure_role"]
         })
         
+    # Filter for post-2022 subsequent policy records
+    subsequent_records = district_records[district_records["academic_year"] > "2021-2022"]
+    if subsequent_records.empty:
+        # Without post-2022 records, district/school cannot be classified as subsequent policy
+        return pd.Series({
+            "subsequent_policy": "Unverified",
+            "subsequent_year": "N/A",
+            "audit_status": "PENDING_AUDIT",
+            "policy_exposure_role": "Exploratory_Pending_Audit"
+        })
+        
+    # Evaluate at the latest subsequent policy period
+    latest_year = subsequent_records["academic_year"].max()
+    latest_recs = subsequent_records[subsequent_records["academic_year"] == latest_year]
+    
+    # 1. School-specific record in latest subsequent period
+    school_sub = latest_recs[latest_recs["school_name"].str.upper() == s_upper]
+    if not school_sub.empty:
+        # Designated pilot
+        pilot = school_sub[school_sub["policy_exposure_role"].str.contains("Pilot")]
+        if not pilot.empty:
+            rec = pilot.iloc[-1]
+            return pd.Series({
+                "subsequent_policy": f"{rec['grading_model']} (Pilot: Designated Courses)",
+                "subsequent_year": f"{rec['academic_year']} (Fall Pilot)",
+                "audit_status": "VERIFIED_LONGITUDINAL_CASE_B_PILOT",
+                "policy_exposure_role": rec["policy_exposure_role"]
+            })
+        # Within-district comparison
+        comp = school_sub[school_sub["policy_exposure_role"].str.contains("Within_District_Comparison")]
+        if not comp.empty:
+            rec = comp.iloc[-1]
+            return pd.Series({
+                "subsequent_policy": f"{rec['grading_model']} (Non-Pilot; SBL in 26-27)",
+                "subsequent_year": "2026-2027 (Full Rollout)",
+                "audit_status": "VERIFIED_WITHIN_DISTRICT_COMPARISON",
+                "policy_exposure_role": rec["policy_exposure_role"]
+            })
+        # Mixed course exposure
+        mixed = school_sub[school_sub["policy_exposure_role"].str.contains("Mixed")]
+        if not mixed.empty:
+            rec = mixed.iloc[-1]
+            return pd.Series({
+                "subsequent_policy": f"{rec['grading_model']} (Mixed: Honors/AP/IB Exempt, General Subject to Floor)",
+                "subsequent_year": "2023-2024 / 2024-2025 (Revised)",
+                "audit_status": "VERIFIED_LONGITUDINAL_CASE_A_MIXED",
+                "policy_exposure_role": rec["policy_exposure_role"]
+            })
+        rec = school_sub.iloc[-1]
+        return pd.Series({
+            "subsequent_policy": rec["grading_model"],
+            "subsequent_year": rec["academic_year"],
+            "audit_status": "VERIFIED_LONGITUDINAL_POLICY",
+            "policy_exposure_role": rec["policy_exposure_role"]
+        })
+        
+    # 2. District-wide wildcard record in latest subsequent period ('ALL_HIGH_SCHOOLS')
+    wildcard_sub = latest_recs[latest_recs["school_name"] == "ALL_HIGH_SCHOOLS"]
+    if not wildcard_sub.empty:
+        tracks = wildcard_sub["course_track"].unique()
+        has_honors = any("Honors" in t for t in tracks)
+        has_general = any("General" in t for t in tracks)
+        if has_honors and has_general:
+            return pd.Series({
+                "subsequent_policy": "FLOOR_40_MINIMUM (Mixed: General 40% Floor, Honors/AP Exempt)",
+                "subsequent_year": "2023-2024 / 2024-2025 (Revised)",
+                "audit_status": "VERIFIED_LONGITUDINAL_CASE_A_MIXED",
+                "policy_exposure_role": "Case_A_Mixed_Course_Exposure_2024_25"
+            })
+        rec = wildcard_sub.iloc[-1]
+        return pd.Series({
+            "subsequent_policy": rec["grading_model"],
+            "subsequent_year": rec["academic_year"],
+            "audit_status": "VERIFIED_LONGITUDINAL_POLICY",
+            "policy_exposure_role": rec["policy_exposure_role"]
+        })
+        
+    # 3. Fallback: check if school had an earlier subsequent record
+    earlier_school_sub = subsequent_records[subsequent_records["school_name"].str.upper() == s_upper]
+    if not earlier_school_sub.empty:
+        rec = earlier_school_sub.iloc[-1]
+        return pd.Series({
+            "subsequent_policy": rec["grading_model"],
+            "subsequent_year": rec["academic_year"],
+            "audit_status": "VERIFIED_LONGITUDINAL_POLICY",
+            "policy_exposure_role": rec["policy_exposure_role"]
+        })
+        
+    # If no school-specific record and no wildcard record exists
     return pd.Series({
         "subsequent_policy": "Unverified",
         "subsequent_year": "N/A",

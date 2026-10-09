@@ -258,15 +258,98 @@ def test_evidence_register_is_single_source_of_truth():
     assert res_normal["policy_exposure_role"] == "Case_B_Pilot_Designated_Courses_2025_26"
     assert res_normal["audit_status"] == "VERIFIED_LONGITUDINAL_CASE_B_PILOT"
     
-    # If the pilot record is removed from df_evidence, the function MUST NOT return the pilot role from hard-coded memory!
+    # If the pilot record is removed from df_evidence, NKC High must become PENDING_AUDIT (NOT comparison!)
     df_no_pilot = df_evidence[~df_evidence["policy_exposure_role"].str.contains("Pilot")]
     res_no_pilot = assign_school_policy_exposure("NORTH KANSAS CITY HIGH", "024-093", df_no_pilot)
-    assert res_no_pilot["policy_exposure_role"] != "Case_B_Pilot_Designated_Courses_2025_26"
+    assert res_no_pilot["audit_status"] == "PENDING_AUDIT"
+    assert res_no_pilot["subsequent_policy"] == "Unverified"
+    assert res_no_pilot["policy_exposure_role"] == "Exploratory_Pending_Audit"
+    
+    # If KCPS post-2022 records are removed, KCPS schools must become PENDING_AUDIT (NOT 40% floor!)
+    df_no_kcps_post = df_evidence[~((df_evidence["district_code"] == "048-078") & (df_evidence["academic_year"] > "2021-2022"))]
+    res_no_kcps = assign_school_policy_exposure("CENTRAL HIGH SCHOOL", "048-078", df_no_kcps_post)
+    assert res_no_kcps["audit_status"] == "PENDING_AUDIT"
+    assert res_no_kcps["subsequent_policy"] == "Unverified"
+    assert res_no_kcps["policy_exposure_role"] == "Exploratory_Pending_Audit"
+    
+    # Observation-level lookup with academic_year and course_track (dynamic single source of truth)
+    obs_gen = assign_school_policy_exposure("CENTRAL HIGH SCHOOL", "048-078", df_evidence, academic_year="2024-2025", course_track="General Education")
+    assert obs_gen["policy_exposure_role"] == "Case_A_General_Track_Floor_2024_25"
+    assert obs_gen["grading_floor_minimum"] == "40_PCT_MINIMUM"
+    assert obs_gen["audit_status"] == "PRIMARY_POLICY_DOCUMENT"
+    
+    obs_hon = assign_school_policy_exposure("CENTRAL HIGH SCHOOL", "048-078", df_evidence, academic_year="2024-2025", course_track="Honors")
+    assert obs_hon["policy_exposure_role"] == "Case_A_Honors_Exemption_Track_2024_25"
+    assert obs_hon["grading_floor_minimum"] == "0_NO_FLOOR"
+    assert obs_hon["audit_status"] == "PRIMARY_POLICY_DOCUMENT"
+    
+    # Arbitrary unrecorded school or year returns UNVERIFIED
+    obs_unv = assign_school_policy_exposure("NONEXISTENT HIGH", "999-999", df_evidence, academic_year="2024-2025")
+    assert obs_unv["audit_status"] == "UNVERIFIED"
+    assert obs_unv["policy_exposure_role"] == "UNVERIFIED"
     
     # If df_evidence is empty, all schools must be labeled PENDING_AUDIT / Unverified
     df_empty = pd.DataFrame(columns=df_evidence.columns)
     res_empty = assign_school_policy_exposure("NORTH KANSAS CITY HIGH", "024-093", df_empty)
     assert res_empty["audit_status"] == "PENDING_AUDIT"
     assert res_empty["subsequent_policy"] == "Unverified"
+    assert res_empty["policy_exposure_role"] == "Exploratory_Pending_Audit"
+
+
+def test_longitudinal_course_outcomes_integrity():
+    """Asserts schema, counts, valid ranges, and empirical policy patterns for KCPS course outcomes."""
+    outcomes_path = PROCESSED_DIR / "kcps_longitudinal_course_outcomes.csv"
+    assert outcomes_path.exists(), f"Missing outcomes dataset: {outcomes_path}"
+    
+    df = pd.read_csv(outcomes_path)
+    assert len(df) == 384, f"Expected 384 term-course observations, found {len(df)}"
+    
+    # Required columns
+    expected_cols = [
+        "district_code", "school_name", "academic_year", "policy_era", "term",
+        "course_title", "course_track", "students_enrolled", "count_F",
+        "failure_rate_pct", "credits_attempted", "credits_earned", "credit_completion_pct",
+        "policy_exposure_role", "grading_model", "attempted_work_floor", "missing_work_rule"
+    ]
+    for col in expected_cols:
+        assert col in df.columns, f"Missing column in outcomes dataset: {col}"
+        
+    # Mathematical identities
+    assert (df["credits_earned"] <= df["credits_attempted"]).all()
+    assert (df["failure_rate_pct"] >= 0.0).all() and (df["failure_rate_pct"] <= 100.0).all()
+    assert (df["credit_completion_pct"] >= 0.0).all() and (df["credit_completion_pct"] <= 100.0).all()
+    
+    # Grade counts must sum to students_enrolled
+    grade_sums = df["count_A"] + df["count_B"] + df["count_C"] + df["count_D"] + df["count_F"]
+    assert (grade_sums == df["students_enrolled"]).all()
+    
+    # Verify Table 6 summary
+    t6_path = TABLES_DIR / "table6_kcps_policy_period_outcomes.csv"
+    assert t6_path.exists(), f"Missing Table 6: {t6_path}"
+    df_t6 = pd.read_csv(t6_path)
+    
+    gen_pre = df_t6[(df_t6["course_track"] == "General Education") & (df_t6["policy_era"] == "Pre-Reform")].iloc[0]
+    gen_init = df_t6[(df_t6["course_track"] == "General Education") & (df_t6["policy_era"] == "Initial 40% Floor")].iloc[0]
+    gen_rev = df_t6[(df_t6["course_track"] == "General Education") & (df_t6["policy_era"] == "Revised Missing-Work & Exemption")].iloc[0]
+    
+    # General education failure rate plummets under initial 40% floor, then partially rebounds
+    assert gen_init["failure_rate_pct"] < gen_pre["failure_rate_pct"] - 10.0
+    assert gen_rev["failure_rate_pct"] > gen_init["failure_rate_pct"]
+    assert gen_rev["failure_rate_pct"] < gen_pre["failure_rate_pct"]
+    
+    # Honors track failure rate remains stable across all eras (~3-5%)
+    honors_f_rates = df_t6[df_t6["course_track"] == "Honors / AP / IB"]["failure_rate_pct"].tolist()
+    for fr in honors_f_rates:
+        assert 2.0 <= fr <= 6.0
+        
+    # EOC proficiency remains flat/decoupled for General Education (~13-15%)
+    assert abs(gen_init["eoc_prof_pct"] - gen_pre["eoc_prof_pct"]) < 2.0
+
+
+def test_figure5_output_validity():
+    """Asserts that Figure 5 (KCPS course outcomes by policy period) was generated and is valid."""
+    fig_path = FIG_DIR / "05_kcps_course_outcomes_by_policy_period.png"
+    assert fig_path.exists(), f"Missing Figure 5: {fig_path}"
+    assert fig_path.stat().st_size > 50_000, f"Figure 5 file suspiciously small: {fig_path.stat().st_size} bytes"
 
 
