@@ -1,0 +1,19 @@
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local notebooks & checkpoints
+.ipynb_checkpoints/
+
+# Virtual environment & OS
+.venv/
+env/
+venv/
+.DS_Store
+Thumbs.db

@@ -1,27 +1,37 @@
-# Project directory junction
+# Project directory junctions (convenience Windows symlinks/junctions)
 kc_education_capacity
 ai_infrastructure_network
 signal_observatory
 kc_admin_staffing_decomposition
 kc_education_labor
 kc_grades_incentives
+crdc_opportunity_measurement
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
 
 # OS / Editor artifacts
 .DS_Store
 Thumbs.db
+ehthumbs.db
+desktop.ini
 .vscode/
 .idea/
+*.swp
+*.swo
 
-# Local environment
+# Local environment & package management
 .env
 .venv
 env/
 venv/
+ENV/
+*.egg-info/
+.installed.cfg
+*.egg
 
 # Jupyter & Testing artifacts
 .ipynb_checkpoints/
@@ -31,6 +41,7 @@ venv/
 .ruff_cache/
 .coverage
 htmlcov/
+.cache
 
 # Large media binaries and database files
 *.mp4
