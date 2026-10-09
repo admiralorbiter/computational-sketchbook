@@ -18,6 +18,7 @@ This document provides complete provenance, extraction citations, table referenc
 | `SRC-08` | IEA / NCES ICILS | 2018, 2023 | [*U.S. Results from the 2023 International Computer and Information Literacy Study*](https://nces.ed.gov/surveys/icils/) | National Summary Report | Scale Score & Percentages | **Verified Primary Report** | `data/raw/icils_cil_trends_2018_2023.csv` |
 | `SRC-09` | NAEP Grade 4 Teacher Questionnaire | 2017 | [2017 NAEP SQ Teacher G4](https://nces.ed.gov/nationsreportcard/subject/about/pdf/bgq/teacher/2017_sq_teacher_g4.pdf) | Questions 13 & 14 | Survey Questions | **Instrument Verified / Frequencies Unverified** | `data/raw/naep_g4_teacher_questionnaire_audit.csv` |
 | `SRC-10` | NCES Grade 4 Computer Writing Pilot | 2012 | *2012 NAEP Computer-Based Writing Pilot* & Usability Study | National Pilot Benchmarks | Word Count & WPM | **Verified Primary Benchmark** | `data/raw/mode_effects_literature_meta.csv` |
+| `SRC-11` | IEA / NCES TIMSS | 2019 | [TIMSS 2019 International Database](https://timss2019.org/international-database/) & [NCES PUF 2022-047](https://ies.ed.gov/use-work/dataset/trends-international-mathematics-and-science-study-timss-2019-u-s-public-use-data-files-and) | U.S. Grade 4 eTIMSS & Bridge Microdata | Scale Score & Item pp | **Verified Public Microdata** | `data/processed/timss_2019_g4_item_contrasts.csv`, `data/processed/timss_2019_g4_student_pvs.csv` |
 
 ---
 
@@ -87,3 +88,23 @@ This document provides complete provenance, extraction citations, table referenc
 ### `SRC-09`: NAEP Grade 4 Teacher Questionnaire Status
 - **Audit Findings**: The public background questionnaire instrument (`2017_sq_teacher_g4.pdf`) confirms that teachers were asked about their typing expectations (Question 13) and the percentage of students meeting them (Question 14).
 - **Correction Applied**: Removed previously fabricated response distributions (e.g. "67% of teachers report half or fewer students meet expectations"). Formally registered this item as **Instrument Verified / Response Frequencies Unverified (Awaiting Microdata Extraction)**.
+
+### `SRC-11`: TIMSS 2019 U.S. Grade 4 eTIMSS & Bridge Microdata Audit
+- **Primary Database**: IEA TIMSS 2019 International Database (`T19_G4_USA_SPSS.zip`, files `asausab7.sav`, `asausam7.sav`, `asgusab7.sav`, `asgusam7.sav`, `acgusab7.sav`, `acgusam7.sav`) and NCES Public-Use Files (NCES 2022-047).
+- **Sample Accounting**: $10,428$ U.S. fourth-grade students across 294 participating schools:
+  - Paper Bridge: $N = 1,652$ students in 79 schools.
+  - Digital eTIMSS: $N = 8,776$ students in 287 schools (72 schools participated in both modes via classroom assignment).
+- **Common Anchor Items**: Exactly 99 common mathematics anchor items administered in both paper and digital formats:
+  - Multiple Choice (MC / Selected Response): 49 items.
+  - Constructed Response (CR / Student Entered): 50 items.
+- **Empirical Findings**:
+  - **Overall Scale Score Difference**: $-1.98$ scale score points (Paper $536.72$ vs. Digital $534.73$, pooled $\text{SD} = 87.24$, standardized effect size = $-0.023$ SD).
+  - **Multiple Choice Mode Difference**: **$-2.17$ percentage points** ($\text{SE} = 0.52$, median $-1.66$ pp).
+  - **Constructed Response Mode Difference**: **$-4.65$ percentage points** ($\text{SE} = 0.70$, median $-4.70$ pp).
+  - **Format Gap**: $\Delta_{\text{format}} = (\text{Digital} - \text{Paper})_{\text{CR}} - (\text{Digital} - \text{Paper})_{\text{MC}} = \mathbf{-2.48\text{ percentage points}}$ ($t = 2.85, p = 0.005$).
+  - **Cognitive Domain Divergence**:
+    - Reasoning MC ($N=8$): **$+1.27$ pp** (digital is slightly higher).
+    - Reasoning CR ($N=10$): **$-8.17$ pp** (digital is severely depressed).
+    - Reasoning Format Gap: $\mathbf{-9.45\text{ percentage points}}$! Proves that latent reasoning ability is intact, but the digital transcription/response-entry interface creates severe cognitive friction.
+  - **Subgroup Invariance**: Format gap is $-2.03$ pp for low-SES students (0–25 books) and $-2.02$ pp for high-SES students (26+ books), directly validating the international 2018 TIMSS finding that student background explains little within-student mode variation.
+

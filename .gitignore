@@ -49,6 +49,11 @@ htmlcov/
 *.mov
 *.duckdb
 *.duckdb.wal
+*.sav
+*.dat
+*.zip
+*.sas7bdat
+2026/2026-10-09-keyboarding-mode-effects/data/raw/timss_2019/
 *transcript_review_tutorial.pdf
 
 # Godot Engine

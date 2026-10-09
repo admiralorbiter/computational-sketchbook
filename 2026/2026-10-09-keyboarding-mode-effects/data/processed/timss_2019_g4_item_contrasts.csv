@@ -1,0 +1,100 @@
+item_id,core_id,label,item_type,maximum_points,content_domain,topic_area,cognitive_domain,n_paper_students,n_digital_students,pct_paper,pct_digital,diff_pp,omit_paper_pct,omit_digital_pct,omit_diff_pp
+MP51043,51043,Numbers with 6 as a factor,CR,1,Number,Whole Numbers,Knowing,393,1258,51.5,44.58,-6.92,0.0,0.0,0.0
+MP51040,51040,Figure with three quarters shaded,MC,1,Number,Fractions and Decimals,Knowing,389,1249,91.78,92.33,0.55,0.0,0.0,0.0
+MP51008,51008,Who paid less for each bottle,CR,1,Number,Whole Numbers,Reasoning,401,1243,23.16,17.0,-6.16,0.0,0.0,0.0
+MP51031A,51031A,Fraction watered on Monday,CR,1,Number,Fractions and Decimals,Applying,391,1222,65.32,59.15,-6.17,0.0,0.0,0.0
+MP51031B,51031B,Fraction watered on Tuesday,CR,1,Number,Fractions and Decimals,Applying,391,1217,64.16,59.86,-4.31,0.0,0.0,0.0
+MP51508,51508,Next 2 numbers in the pattern,CR,1,Number,"Expressions, Simple Equations, and Relationships",Applying,394,1227,56.71,47.89,-8.81,0.0,0.0,0.0
+MP51216A,51216A,Street parallel to Green Street,MC,1,Measurement and Geometry,Geometry,Applying,386,1229,62.83,62.7,-0.13,0.0,0.0,0.0
+MP51216B,51216B,Perpendicular to Apple Street,MC,1,Measurement and Geometry,Geometry,Knowing,387,1213,75.76,75.94,0.18,0.0,0.0,0.0
+MP51221,51221,Number of triangles needed,MC,1,Measurement and Geometry,Geometry,Knowing,386,1230,80.94,80.59,-0.35,0.0,0.0,0.0
+MP51115,51115,Shape that folds into a box,MC,1,Measurement and Geometry,Geometry,Reasoning,381,1213,23.5,23.28,-0.21,0.0,0.0,0.0
+MP51507A,51507A,Most frequent score on quiz,CR,1,Data,"Reading, Interpreting, and Representing",Knowing,387,1221,84.15,77.8,-6.35,0.0,0.0,0.0
+MP51507B,51507B,Score of 4 or more on quiz,CR,1,Data,Using Data to Solve Problems,Applying,386,1220,46.33,40.17,-6.16,0.0,0.0,0.0
+MP61026,61026,8 thousands + 4 hundreds + 5 ones,MC,1,Number,Whole Numbers,Knowing,409,1251,85.82,80.58,-5.24,0.0,0.0,0.0
+MP61273,61273,27 x 43 =,MC,1,Number,Whole Numbers,Knowing,395,1234,70.72,62.04,-8.68,0.0,0.0,0.0
+MP61034,61034,Number of people that got off the train,CR,1,Number,Whole Numbers,Reasoning,404,1229,36.23,29.08,-7.15,0.0,0.0,0.0
+MP61040,61040,Shaded fraction of a square,MC,1,Number,Fractions and Decimals,Applying,395,1239,53.82,44.14,-9.68,0.0,0.0,0.0
+MP61228,61228,Art teacher cuts paper for her class,CR,2,Number,Fractions and Decimals,Reasoning,393,1207,37.55,24.11,-13.44,0.0,0.0,0.0
+MP61166,61166,Find the value of W in a subtraction sentence,CR,1,Number,"Expressions, Simple Equations, and Relationships",Applying,393,1220,69.53,64.39,-5.14,0.0,0.0,0.0
+MP61171,61171,Total number of trading cards Mona and Ben bought,MC,1,Number,"Expressions, Simple Equations, and Relationships",Applying,388,1212,88.47,78.57,-9.91,0.0,0.0,0.0
+MP61080,61080,Mark an X on parallel sides of trapezoid,CR,1,Measurement and Geometry,Geometry,Knowing,384,1214,48.39,50.0,1.61,0.0,0.0,0.0
+MP61222,61222,Distance between Shawn and Rick on number line,MC,1,Number,Whole Numbers,Knowing,386,1208,64.55,66.79,2.24,0.0,0.0,0.0
+MP61076,61076,Sandra's model for a decorated cube,CR,1,Measurement and Geometry,Geometry,Reasoning,388,1215,71.68,67.66,-4.03,0.0,0.0,0.0
+MP61084,61084,Complete pie chart of friends' favorite flowers,CR,1,Data,"Reading, Interpreting, and Representing",Applying,379,1201,28.94,36.32,7.38,0.0,0.0,0.0
+MP51206,51206,Add 385 to 5876,CR,1,Number,Whole Numbers,Knowing,405,1233,83.64,75.65,-7.99,0.0,0.0,0.0
+MP51052,51052,Number closest in size to 5341,MC,1,Number,Whole Numbers,Knowing,401,1232,59.05,58.65,-0.4,0.0,0.0,0.0
+MP51049,51049,Stickers bought by Mr. Brown,MC,1,Number,Whole Numbers,Applying,397,1223,58.09,55.55,-2.55,0.0,0.0,0.0
+MP51045,51045,Time when the cake will be baked,CR,1,Measurement and Geometry,Measurement,Applying,405,1225,52.7,52.25,-0.45,0.0,0.0,0.0
+MP51098,51098,Fraction equivalent to 4/10,MC,1,Number,Fractions and Decimals,Knowing,398,1218,63.02,61.55,-1.47,0.0,0.0,0.0
+MP51030,51030,Fraction of the cake left,CR,1,Number,Fractions and Decimals,Applying,400,1209,45.1,40.4,-4.7,0.0,0.0,0.0
+MP51502,51502,Rule to sort the shapes,MC,1,Measurement and Geometry,Geometry,Reasoning,398,1208,40.65,39.48,-1.16,0.0,0.0,0.0
+MP51224,51224,Shape with a right angle,MC,1,Measurement and Geometry,Geometry,Knowing,397,1210,82.16,79.82,-2.34,0.0,0.0,0.0
+MP51207,51207,Shape with 2 kinds of symmetry,MC,1,Measurement and Geometry,Geometry,Knowing,390,1210,63.53,61.09,-2.44,0.0,0.0,0.0
+MP51427,51427,Find the perimeter of the triangle,MC,1,Measurement and Geometry,Measurement,Applying,390,1202,38.22,36.28,-1.94,0.0,0.0,0.0
+MP51533,51533,How many books will fill the box,CR,1,Measurement and Geometry,Measurement,Reasoning,393,1191,42.57,38.04,-4.53,0.0,0.0,0.0
+MP51080,51080,Complete the bar graph,CR,1,Data,"Reading, Interpreting, and Representing",Applying,388,1188,61.24,53.07,-8.16,0.0,0.0,0.0
+MP61018,61018,Identify numbers as even or odd (DERIVED),CR,1,Number,Whole Numbers,Knowing,398,1239,54.11,56.4,2.29,0.0,0.0,0.0
+MP61018A,61018A,Identify numbers as even or odd - 24,MC,1,Number,Whole Numbers,Knowing,392,1234,93.56,93.97,0.41,0.0,0.0,0.0
+MP61018B,61018B,Identify numbers as even or odd - 50,MC,1,Number,Whole Numbers,Knowing,386,1226,72.33,71.75,-0.57,0.0,0.0,0.0
+MP61018C,61018C,Identify numbers as even or odd - 105,MC,1,Number,Whole Numbers,Knowing,384,1220,88.86,88.01,-0.85,0.0,0.0,0.0
+MP61018D,61018D,Identify numbers as even or odd - 132,MC,1,Number,Whole Numbers,Knowing,385,1223,78.53,79.99,1.46,0.0,0.0,0.0
+MP61274,61274,804 divided by 6,MC,1,Number,Whole Numbers,Knowing,391,1229,76.78,73.06,-3.73,0.0,0.0,0.0
+MP61248,61248,Show 2 ways a teacher can put students in groups,CR,2,Number,Whole Numbers,Reasoning,396,1217,46.94,45.74,-1.2,0.0,0.0,0.0
+MP61039,61039,Fraction Anna has left to cycle,CR,1,Number,Fractions and Decimals,Applying,385,1217,71.59,67.1,-4.49,0.0,0.0,0.0
+MP61079,61079,Draw the chocolate bar on the grid,CR,1,Number,Fractions and Decimals,Reasoning,393,1219,27.67,22.13,-5.55,0.0,0.0,0.0
+MP61179,61179,Choose operation to complete number sentence,MC,1,Number,"Expressions, Simple Equations, and Relationships",Applying,370,1209,64.32,61.01,-3.31,0.0,0.0,0.0
+MP61052,61052,Ravi and Indira pour water into a tank,MC,1,Number,"Expressions, Simple Equations, and Relationships",Applying,379,1199,61.29,56.72,-4.58,0.0,0.0,0.0
+MP61207,61207,Length of line above ruler in cm,MC,1,Measurement and Geometry,Measurement,Knowing,378,1194,30.38,31.32,0.94,0.0,0.0,0.0
+MP61236,61236,Identify 2 acute angles from the figure,CR,1,Measurement and Geometry,Geometry,Knowing,383,1193,51.24,50.56,-0.68,0.0,0.0,0.0
+MP61266,61266,Table of triangles and squares for 3D shapes,CR,2,Measurement and Geometry,Geometry,Applying,383,1187,35.15,34.97,-0.18,0.0,0.0,0.0
+MP61106,61106,Identify pie chart that represents Sam's plants,MC,1,Data,"Reading, Interpreting, and Representing",Reasoning,371,1169,75.39,72.4,-2.99,0.0,0.0,0.0
+MP51401,51401,Number of pencils 9 boxes hold,CR,1,Number,Whole Numbers,Applying,412,1238,41.57,44.65,3.08,0.0,0.0,0.0
+MP51075,51075,Fraction equal to 0.4,MC,1,Number,Fractions and Decimals,Knowing,400,1234,65.15,68.17,3.01,0.0,0.0,0.0
+MP51402,51402,Weight of Sam's rods,CR,1,Number,Whole Numbers,Applying,406,1233,50.29,48.71,-1.58,0.0,0.0,0.0
+MP51226,51226,Pattern with 2/3 shapes shaded,MC,1,Number,Fractions and Decimals,Applying,403,1231,63.04,62.32,-0.72,0.0,0.0,0.0
+MP51131,51131,What number triangle stands for,CR,1,Number,"Expressions, Simple Equations, and Relationships",Knowing,395,1217,55.21,56.97,1.76,0.0,0.0,0.0
+MP51103,51103,Add 2 to 2.25,MC,1,Number,Fractions and Decimals,Knowing,399,1231,59.42,55.16,-4.26,0.0,0.0,0.0
+MP51217,51217,Length of the line in cm,CR,1,Measurement and Geometry,Measurement,Knowing,398,1235,17.27,16.52,-0.75,0.0,0.0,0.0
+MP51079,51079,Draw angle less than right angle,CR,1,Measurement and Geometry,Geometry,Applying,394,1237,55.38,44.3,-11.08,0.0,0.0,0.0
+MP51211,51211,View of solid shape from above,MC,1,Measurement and Geometry,Geometry,Reasoning,395,1225,61.52,64.49,2.97,0.0,0.0,0.0
+MP51102,51102,Area of the given rectangle ,MC,1,Measurement and Geometry,Measurement,Applying,383,1231,60.23,59.44,-0.8,0.0,0.0,0.0
+MP51009,51009,Family water use each day,CR,1,Data,Using Data to Solve Problems,Applying,408,1234,48.13,53.45,5.32,0.0,0.0,0.0
+MP51100,51100,Favorite season of students,MC,1,Data,"Reading, Interpreting, and Representing",Reasoning,395,1223,62.55,67.97,5.42,0.0,0.0,0.0
+MP61275,61275,3126 + 845 + 72 =,MC,1,Number,Whole Numbers,Knowing,406,1237,84.6,78.34,-6.27,0.0,0.0,0.0
+MP61027,61027,Sara's 4-digit password,CR,1,Number,Whole Numbers,Applying,410,1226,76.08,69.12,-6.96,0.0,0.0,0.0
+MP61255,61255,Game in Zedland buying bicycles and scooters,CR,2,Number,Whole Numbers,Reasoning,403,1210,45.31,35.85,-9.45,0.0,0.0,0.0
+MP61021,61021,Fill in box to make multiple of 8,CR,1,Number,Whole Numbers,Reasoning,397,1219,37.77,13.78,-23.99,0.0,0.0,0.0
+MP61043,61043,Difference between Ana and Rui's diving scores,CR,1,Number,Fractions and Decimals,Knowing,405,1209,46.79,43.59,-3.2,0.0,0.0,0.0
+MP61151,61151,Expression to represent Pat's pencils,MC,1,Number,"Expressions, Simple Equations, and Relationships",Applying,398,1209,80.16,71.67,-8.49,0.0,0.0,0.0
+MP61172,61172,Find value of p in number sentence,MC,1,Number,"Expressions, Simple Equations, and Relationships",Applying,395,1209,35.27,34.76,-0.51,0.0,0.0,0.0
+MP61223,61223,Joan and Cliff meet halfway on number line,MC,1,Number,Whole Numbers,Knowing,394,1210,78.08,71.07,-7.01,0.0,0.0,0.0
+MP61269,61269,Identify solid with top and bottom shown above,MC,1,Measurement and Geometry,Geometry,Applying,388,1213,79.01,76.54,-2.47,0.0,0.0,0.0
+MP61081A,61081A,Draw a line parallel to AB through C,CR,1,Measurement and Geometry,Geometry,Applying,333,1209,34.17,26.73,-7.44,0.0,0.0,0.0
+MP61081B,61081B,Draw a line perpendicular to AB through D,CR,1,Measurement and Geometry,Geometry,Applying,379,1209,21.85,17.45,-4.39,0.0,0.0,0.0
+MP61178,61178,Round Mount Everest height to nearest 1000,CR,1,Number,Whole Numbers,Knowing,405,1232,71.2,66.51,-4.69,0.0,0.0,0.0
+MP61246,61246,Number that is even and multiple of 7,MC,1,Number,Whole Numbers,Knowing,397,1232,68.08,62.12,-5.96,0.0,0.0,0.0
+MP61271,61271,6 x 312 =,CR,1,Number,Whole Numbers,Knowing,405,1222,72.14,67.96,-4.18,0.0,0.0,0.0
+MP61256,61256,Mark and Keith's card game - can Keith win,CR,1,Number,Whole Numbers,Reasoning,412,1230,55.49,49.25,-6.24,0.0,0.0,0.0
+MP61182,61182,Total amount of juice Zara and Khattab have,CR,1,Number,Fractions and Decimals,Applying,406,1224,35.73,31.68,-4.05,0.0,0.0,0.0
+MP61049,61049,Choose operation for box in number sentence,MC,1,Number,"Expressions, Simple Equations, and Relationships",Applying,391,1224,81.31,79.48,-1.83,0.0,0.0,0.0
+MP61232,61232,Expression for players on teams in football league,MC,1,Number,"Expressions, Simple Equations, and Relationships",Applying,398,1206,65.14,63.48,-1.66,0.0,0.0,0.0
+MP61095,61095,Identify angle types from diagram in a table,CR,1,Measurement and Geometry,Geometry,Knowing,380,1212,64.05,61.16,-2.88,0.0,0.0,0.0
+MP61264,61264,Label points on the Snail path,CR,2,Number,Whole Numbers,Applying,387,1137,36.83,32.07,-4.76,0.0,0.0,0.0
+MP61108,61108,Choose cardboard for Julia's hexagonal box,MC,1,Measurement and Geometry,Geometry,Reasoning,398,1200,42.31,41.9,-0.41,0.0,0.0,0.0
+MP61211A,61211A,Fruit market - pieces of fruit sold on Monday,CR,1,Data,"Reading, Interpreting, and Representing",Knowing,403,1166,62.08,56.83,-5.25,0.0,0.0,0.0
+MP61211B,61211B,Fruit market - apples sold on Tuesday,MC,1,Data,Using Data to Solve Problems,Applying,390,1172,59.89,51.42,-8.46,0.0,0.0,0.0
+MP61240,61240,Place value expansion (DERIVED),CR,1,Number,Whole Numbers,Knowing,402,1234,43.24,37.39,-5.85,0.0,0.0,0.0
+MP61240A,61240A,Place value expansion - 3h + 58o,MC,1,Number,Whole Numbers,Knowing,400,1222,80.28,78.39,-1.89,0.0,0.0,0.0
+MP61240B,61240B,Place value expansion - 3h + 4t + 18o,MC,1,Number,Whole Numbers,Knowing,397,1215,52.64,46.89,-5.75,0.0,0.0,0.0
+MP61240C,61240C,Place value expansion - 3h + 15t + 8o,MC,1,Number,Whole Numbers,Knowing,395,1210,88.27,87.99,-0.28,0.0,0.0,0.0
+MP61254,61254,Complete the table for Mia's input-output game,CR,1,Number,"Expressions, Simple Equations, and Relationships",Applying,392,1232,61.89,49.59,-12.3,0.0,0.0,0.0
+MP61244,61244,Choose true statement about 2 and 3 digit numbers,MC,1,Number,Whole Numbers,Reasoning,389,1229,70.0,73.36,3.36,0.0,0.0,0.0
+MP61041,61041,Identify number between 1.4 and 1.78,MC,1,Number,Fractions and Decimals,Knowing,388,1223,50.11,42.56,-7.55,0.0,0.0,0.0
+MP61173,61173,Find the value of w in number sentence,CR,1,Number,"Expressions, Simple Equations, and Relationships",Knowing,391,1223,69.69,67.77,-1.92,0.0,0.0,0.0
+MP61252,61252,Expression to find number of books Luke read,MC,1,Number,"Expressions, Simple Equations, and Relationships",Applying,395,1222,46.0,42.95,-3.05,0.0,0.0,0.0
+MP61261,61261,Find the next number for Ian's number pattern,CR,1,Number,"Expressions, Simple Equations, and Relationships",Applying,392,1218,57.01,51.96,-5.05,0.0,0.0,0.0
+MP61224,61224,Draw angle MNP larger than a right angle,CR,1,Measurement and Geometry,Geometry,Applying,386,1222,40.8,34.4,-6.39,0.0,0.0,0.0
+MP61077,61077,View of building from above,MC,1,Measurement and Geometry,Geometry,Reasoning,390,1218,61.4,64.61,3.22,0.0,0.0,0.0
+MP61069A,61069A,Time for Ahmed to read 10 pages,CR,1,Data,"Reading, Interpreting, and Representing",Knowing,394,1220,77.59,73.01,-4.58,0.0,0.0,0.0
+MP61069B,61069B,Number of pages Ahmed reads in 60 minutes,CR,1,Data,Using Data to Solve Problems,Applying,390,1213,56.33,52.07,-4.26,0.0,0.0,0.0
