@@ -1,3 +1,4 @@
-contrast_name,metric_unit,sr_difference,cr_difference,format_gap,substantive_interpretation
-Grade 4 Reading Item Format Difference (CR vs. SR),Percentage Points (pp),-3.8 pp,-6.8 pp,-3.0 pp,"Both item types show statistically significant negative mode differences in Grade 4. Constructed response exhibits an incremental -3.0 pp gap (-6.8 pp vs -3.8 pp), but keyboarding is only one of multiple plausible mechanisms (alongside screen reading, scrolling, and interface complexity)."
-Grade 8 Reading Item Format Difference (CR vs. SR),Percentage Points (pp),-1.6 pp,-2.0 pp,-0.4 pp,"At Grade 8, mode differences attenuate substantially (-1.6 pp SR vs -2.0 pp CR), leaving a narrow -0.4 pp format gap."
+comparison_domain,selected_response_diff,constructed_response_diff,format_gap,substantive_finding
+Grade 4 Reading (Table 4.1c),-3.8 pp,-6.8 pp,-3.0 pp,Both item types show statistically significant negative mode differences in Grade 4. Constructed response exhibits an incremental -3.0 pp gap (-6.8 pp vs -3.8 pp).
+Grade 4 Mathematics (Table 4.1c),-2.4 pp,-6.9 pp,-4.5 pp,"Constructed response difference (-6.9 pp) is almost identical to reading (-6.8 pp), pointing to a general response construction bottleneck (equations, diagrams, text) rather than keyboarding alone."
+Grade 8 Reading (Table 4.1c),-1.6 pp,-2.0 pp,-0.4 pp,"At Grade 8, mode differences attenuate substantially (-1.6 pp SR vs -2.0 pp CR), leaving a narrow -0.4 pp format gap as student digital fluency matures."

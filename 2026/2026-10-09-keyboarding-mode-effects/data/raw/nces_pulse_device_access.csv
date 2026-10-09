@@ -1,5 +1,3 @@
 survey_program,year,school_year,pct_1to1_devices,reported_metric,comparable_to_pulse,verification_status
-NCES Fast Response Survey System (FRSS),2013,2013-14,,High student-to-device ratio (~3.5:1),False,Contextual FRSS Benchmark
-Pew Research Center K-12 Survey,2017,2017-18,,Growing 1:1 pilot adoption,False,Contextual Pew Survey
-NCES School Pulse Panel,2021,2021-22,83.0,83% of public schools provide 1:1 devices,True,Verified (NCES School Pulse 2022)
+NCES School Pulse Panel,2021,2021-22,83.0,83% of public schools report 1:1 computing program,True,Verified (NCES School Pulse 2022)
 NCES School Pulse Panel,2024,2024-25,88.0,88% of public schools report 1:1 computing program,True,Verified (NCES School Pulse 2025)

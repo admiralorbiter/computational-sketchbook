@@ -3,7 +3,7 @@ src/analyze_mode_effects.py
 
 Performs audited empirical synthesis, mode difference contrast calculations,
 and exploratory parameter sensitivity accounting for the Keyboarding & Digital
-Assessment Mode Effects Observatory.
+Assessment Mode Effects Observatory (Review 2 Reconciled Edition).
 """
 
 from pathlib import Path
@@ -61,9 +61,9 @@ def analyze_divergent_trends():
         },
         {
             "indicator": "Public Schools with 1:1 Student Device Programs",
-            "historical_benchmark": "Non-comparable pre-2021 surveys (FRSS / Pew)",
+            "historical_benchmark": "83.0% (2021-22, School Pulse)",
             "recent_benchmark": "88.0% (2024-25)",
-            "net_change": "83.0% (2021) -> 88.0% (2024)",
+            "net_change": "+5.0 pp in School Pulse Panel",
             "verification_status": "Verified (NCES School Pulse 2025)",
             "source_citation": "NCES School Pulse Panel (2021-2025)"
         },
@@ -82,33 +82,48 @@ def analyze_divergent_trends():
 
 
 def analyze_naep_table41c_contrasts():
-    """Audited item-level mode differences from NCES NAEP 2017 Mode Evaluation Table 4.1c."""
+    """
+    Audited item-level mode differences from NCES NAEP 2017 Mode Evaluation Table 4.1c (p. 37).
+    Includes Reading AND Mathematics across Grades 4 and 8 in percentage points.
+    """
     df_41c = pd.read_csv(RAW_DIR / "naep_2017_mode_table41c.csv")
 
-    g4_sr = df_41c[(df_41c["grade"] == 4) & (df_41c["item_type"].str.contains("Selected"))]["difference_pp"].values[0]
-    g4_cr = df_41c[(df_41c["grade"] == 4) & (df_41c["item_type"].str.contains("Constructed"))]["difference_pp"].values[0]
-    format_gap_g4 = g4_cr - g4_sr
+    # Grade 4 Reading
+    g4_r_sr = df_41c[(df_41c["grade"] == 4) & (df_41c["subject"] == "Reading") & (df_41c["item_type"].str.contains("Selected"))]["difference_pp"].values[0]
+    g4_r_cr = df_41c[(df_41c["grade"] == 4) & (df_41c["subject"] == "Reading") & (df_41c["item_type"].str.contains("Constructed"))]["difference_pp"].values[0]
+    format_gap_g4_r = g4_r_cr - g4_r_sr
 
-    g8_sr = df_41c[(df_41c["grade"] == 8) & (df_41c["item_type"].str.contains("Selected"))]["difference_pp"].values[0]
-    g8_cr = df_41c[(df_41c["grade"] == 8) & (df_41c["item_type"].str.contains("Constructed"))]["difference_pp"].values[0]
-    format_gap_g8 = g8_cr - g8_sr
+    # Grade 4 Mathematics
+    g4_m_sr = df_41c[(df_41c["grade"] == 4) & (df_41c["subject"] == "Mathematics") & (df_41c["item_type"].str.contains("Selected"))]["difference_pp"].values[0]
+    g4_m_cr = df_41c[(df_41c["grade"] == 4) & (df_41c["subject"] == "Mathematics") & (df_41c["item_type"].str.contains("Constructed"))]["difference_pp"].values[0]
+    format_gap_g4_m = g4_m_cr - g4_m_sr
+
+    # Grade 8 Reading
+    g8_r_sr = df_41c[(df_41c["grade"] == 8) & (df_41c["subject"] == "Reading") & (df_41c["item_type"].str.contains("Selected"))]["difference_pp"].values[0]
+    g8_r_cr = df_41c[(df_41c["grade"] == 8) & (df_41c["subject"] == "Reading") & (df_41c["item_type"].str.contains("Constructed"))]["difference_pp"].values[0]
+    format_gap_g8_r = g8_r_cr - g8_r_sr
 
     contrasts = [
         {
-            "contrast_name": "Grade 4 Reading Item Format Difference (CR vs. SR)",
-            "metric_unit": "Percentage Points (pp)",
-            "sr_difference": f"{g4_sr:.1f} pp",
-            "cr_difference": f"{g4_cr:.1f} pp",
-            "format_gap": f"{format_gap_g4:.1f} pp",
-            "substantive_interpretation": "Both item types show statistically significant negative mode differences in Grade 4. Constructed response exhibits an incremental -3.0 pp gap (-6.8 pp vs -3.8 pp), but keyboarding is only one of multiple plausible mechanisms (alongside screen reading, scrolling, and interface complexity)."
+            "comparison_domain": "Grade 4 Reading (Table 4.1c)",
+            "selected_response_diff": f"{g4_r_sr:.1f} pp",
+            "constructed_response_diff": f"{g4_r_cr:.1f} pp",
+            "format_gap": f"{format_gap_g4_r:.1f} pp",
+            "substantive_finding": "Both item types show statistically significant negative mode differences in Grade 4. Constructed response exhibits an incremental -3.0 pp gap (-6.8 pp vs -3.8 pp)."
         },
         {
-            "contrast_name": "Grade 8 Reading Item Format Difference (CR vs. SR)",
-            "metric_unit": "Percentage Points (pp)",
-            "sr_difference": f"{g8_sr:.1f} pp",
-            "cr_difference": f"{g8_cr:.1f} pp",
-            "format_gap": f"{format_gap_g8:.1f} pp",
-            "substantive_interpretation": "At Grade 8, mode differences attenuate substantially (-1.6 pp SR vs -2.0 pp CR), leaving a narrow -0.4 pp format gap."
+            "comparison_domain": "Grade 4 Mathematics (Table 4.1c)",
+            "selected_response_diff": f"{g4_m_sr:.1f} pp",
+            "constructed_response_diff": f"{g4_m_cr:.1f} pp",
+            "format_gap": f"{format_gap_g4_m:.1f} pp",
+            "substantive_finding": "Constructed response difference (-6.9 pp) is almost identical to reading (-6.8 pp), pointing to a general response construction bottleneck (equations, diagrams, text) rather than keyboarding alone."
+        },
+        {
+            "comparison_domain": "Grade 8 Reading (Table 4.1c)",
+            "selected_response_diff": f"{g8_r_sr:.1f} pp",
+            "constructed_response_diff": f"{g8_r_cr:.1f} pp",
+            "format_gap": f"{format_gap_g8_r:.1f} pp",
+            "substantive_finding": "At Grade 8, mode differences attenuate substantially (-1.6 pp SR vs -2.0 pp CR), leaving a narrow -0.4 pp format gap as student digital fluency matures."
         }
     ]
     df_contrasts = pd.DataFrame(contrasts)
@@ -117,7 +132,7 @@ def analyze_naep_table41c_contrasts():
 
 
 def analyze_instruction_equity():
-    """Audited EdWeek 2024 survey statistics."""
+    """Audited EdWeek 2024 survey statistics (74% vs 51% in K-2)."""
     df_equity = pd.read_csv(RAW_DIR / "edweek_equity_breakdown_2024.csv")
     k2_low = df_equity[(df_equity["grade_span"] == "Grades K-2") & (df_equity["poverty_tier"] == "Lower-Poverty Systems")]["pct_reporting_instruction"].values[0]
     k2_high = df_equity[(df_equity["grade_span"] == "Grades K-2") & (df_equity["poverty_tier"] == "Higher-Poverty Systems")]["pct_reporting_instruction"].values[0]
@@ -169,7 +184,7 @@ def analyze_literature_benchmark_table():
 
 def main():
     print("=" * 70)
-    print("ANALYZING AUDITED KEYBOARDING & DIGITAL ASSESSMENT MODE EFFECTS")
+    print("ANALYZING AUDITED KEYBOARDING & DIGITAL ASSESSMENT MODE EFFECTS (ROUND 2)")
     print("=" * 70)
     ensure_directories()
     

@@ -1,5 +1,7 @@
 subject,grade,item_type,dba_pct,pba_pct,difference_pp,se_pp,p_value,table_reference,verification_status
-Reading,4,Selected response (SR),56.0,60.0,-3.8,0.24,<0.05,Table 4.1c (NCES Mode Evaluation 2017),Verified Primary Table
-Reading,4,Constructed response (CR),33.0,40.0,-6.8,0.27,<0.05,Table 4.1c (NCES Mode Evaluation 2017),Verified Primary Table
-Reading,8,Selected response (SR),74.0,76.0,-1.6,0.19,<0.05,Table 4.1c (NCES Mode Evaluation 2017),Verified Primary Table
-Reading,8,Constructed response (CR),53.0,55.0,-2.0,0.24,<0.05,Table 4.1c (NCES Mode Evaluation 2017),Verified Primary Table
+Reading,4,Selected response (SR),60.0,64.0,-3.8,0.22,<0.05,"Table 4.1c, p. 37 (NCES 2017)",Verified Primary Table
+Reading,4,Constructed response (CR),35.0,42.0,-6.8,0.18,<0.05,"Table 4.1c, p. 37 (NCES 2017)",Verified Primary Table
+Mathematics,4,Selected response (SR),,,-2.4,0.17,<0.05,"Table 4.1c, p. 37 (NCES 2017)",Verified Primary Table
+Mathematics,4,Constructed response (CR),,,-6.9,0.21,<0.05,"Table 4.1c, p. 37 (NCES 2017)",Verified Primary Table
+Reading,8,Selected response (SR),74.0,76.0,-1.6,0.19,<0.05,"Table 4.1c, p. 37 (NCES 2017)",Verified Primary Table
+Reading,8,Constructed response (CR),53.0,55.0,-2.0,0.24,<0.05,"Table 4.1c, p. 37 (NCES 2017)",Verified Primary Table

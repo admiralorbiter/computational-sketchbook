@@ -71,26 +71,50 @@ def test_edweek_audited_survey():
 
 
 def test_naep_2017_mode_table41c():
-    """Verify official NCES Table 4.1c reading item differences in percentage points."""
+    """Verify official NCES Table 4.1c reading and math item differences, percentages, and SEs in percentage points."""
     df_41c = pd.read_csv(RAW_DIR / "naep_2017_mode_table41c.csv")
 
-    # Grade 4
-    g4_sr = df_41c[(df_41c["grade"] == 4) & (df_41c["item_type"].str.contains("Selected"))]["difference_pp"].values[0]
-    g4_cr = df_41c[(df_41c["grade"] == 4) & (df_41c["item_type"].str.contains("Constructed"))]["difference_pp"].values[0]
-    assert g4_sr == pytest.approx(-3.8)
-    assert g4_cr == pytest.approx(-6.8)
-    assert (g4_cr - g4_sr) == pytest.approx(-3.0)
+    # Grade 4 Reading: DBA 60%, PBA 64%, Diff -3.8 pp (SE 0.22); CR: DBA 35%, PBA 42%, Diff -6.8 pp (SE 0.18)
+    g4_rd_sr = df_41c[(df_41c["subject"] == "Reading") & (df_41c["grade"] == 4) & (df_41c["item_type"].str.contains("Selected"))].iloc[0]
+    g4_rd_cr = df_41c[(df_41c["subject"] == "Reading") & (df_41c["grade"] == 4) & (df_41c["item_type"].str.contains("Constructed"))].iloc[0]
+    
+    assert g4_rd_sr["dba_pct"] == 60.0
+    assert g4_rd_sr["pba_pct"] == 64.0
+    assert g4_rd_sr["difference_pp"] == pytest.approx(-3.8)
+    assert g4_rd_sr["se_pp"] == pytest.approx(0.22)
 
-    # Grade 8
-    g8_sr = df_41c[(df_41c["grade"] == 8) & (df_41c["item_type"].str.contains("Selected"))]["difference_pp"].values[0]
-    g8_cr = df_41c[(df_41c["grade"] == 8) & (df_41c["item_type"].str.contains("Constructed"))]["difference_pp"].values[0]
-    assert g8_sr == pytest.approx(-1.6)
-    assert g8_cr == pytest.approx(-2.0)
-    assert (g8_cr - g8_sr) == pytest.approx(-0.4)
+    assert g4_rd_cr["dba_pct"] == 35.0
+    assert g4_rd_cr["pba_pct"] == 42.0
+    assert g4_rd_cr["difference_pp"] == pytest.approx(-6.8)
+    assert g4_rd_cr["se_pp"] == pytest.approx(0.18)
+    assert (g4_rd_cr["difference_pp"] - g4_rd_sr["difference_pp"]) == pytest.approx(-3.0)
+
+    # Grade 4 Mathematics: SR Diff -2.4 pp (SE 0.17); CR Diff -6.9 pp (SE 0.21)
+    g4_m_sr = df_41c[(df_41c["subject"] == "Mathematics") & (df_41c["grade"] == 4) & (df_41c["item_type"].str.contains("Selected"))].iloc[0]
+    g4_m_cr = df_41c[(df_41c["subject"] == "Mathematics") & (df_41c["grade"] == 4) & (df_41c["item_type"].str.contains("Constructed"))].iloc[0]
+
+    assert g4_m_sr["difference_pp"] == pytest.approx(-2.4)
+    assert g4_m_sr["se_pp"] == pytest.approx(0.17)
+    assert g4_m_cr["difference_pp"] == pytest.approx(-6.9)
+    assert g4_m_cr["se_pp"] == pytest.approx(0.21)
+    # Highlight that CR penalty is nearly identical across Reading (-6.8 pp) and Math (-6.9 pp)
+    assert abs(g4_rd_cr["difference_pp"] - g4_m_cr["difference_pp"]) == pytest.approx(0.1, abs=1e-4)
+
+    # Grade 8 Reading: DBA 74%, PBA 76%, Diff -1.6 pp (SE 0.19); CR: DBA 53%, PBA 55%, Diff -2.0 pp (SE 0.24)
+    g8_rd_sr = df_41c[(df_41c["subject"] == "Reading") & (df_41c["grade"] == 8) & (df_41c["item_type"].str.contains("Selected"))].iloc[0]
+    g8_rd_cr = df_41c[(df_41c["subject"] == "Reading") & (df_41c["grade"] == 8) & (df_41c["item_type"].str.contains("Constructed"))].iloc[0]
+    assert g8_rd_sr["dba_pct"] == 74.0
+    assert g8_rd_sr["pba_pct"] == 76.0
+    assert g8_rd_sr["difference_pp"] == pytest.approx(-1.6)
+    assert g8_rd_sr["se_pp"] == pytest.approx(0.19)
+    assert g8_rd_cr["dba_pct"] == 53.0
+    assert g8_rd_cr["pba_pct"] == 55.0
+    assert g8_rd_cr["difference_pp"] == pytest.approx(-2.0)
+    assert g8_rd_cr["se_pp"] == pytest.approx(0.24)
 
 
 def test_icils_scores():
-    """Verify IEA ICILS digital literacy scores and 37-point decline."""
+    """Verify IEA ICILS digital literacy scores, 37-pt decline, 51% at/below Level 1, and 102-pt SES gap."""
     df_icils = pd.read_csv(RAW_DIR / "icils_cil_trends_2018_2023.csv")
     score_2018 = df_icils[(df_icils["metric"] == "U.S. 8th Grade CIL Score") & (df_icils["year"] == 2018)]["score"].values[0]
     score_2023 = df_icils[(df_icils["metric"] == "U.S. 8th Grade CIL Score") & (df_icils["year"] == 2023)]["score"].values[0]
@@ -99,25 +123,70 @@ def test_icils_scores():
     assert score_2023 == 482.0
     assert score_2018 - score_2023 == 37.0
 
+    # Proficiency distribution: 25% below Level 1 + 26% Level 1 = 51% combined
+    below_l1 = df_icils[df_icils["metric"] == "Below Level 1 (Deficient)"]["score"].values[0]
+    l1 = df_icils[df_icils["metric"] == "Level 1 (Basic)"]["score"].values[0]
+    comb_l1 = df_icils[df_icils["metric"] == "Combined At or Below Level 1"]["score"].values[0]
+    assert below_l1 == 25.0
+    assert l1 == 26.0
+    assert comb_l1 == 51.0
+    assert below_l1 + l1 == comb_l1
+
+    # Socioeconomic gap: 102 scale points between highest and lowest quartiles
+    ses_gap = df_icils[df_icils["metric"] == "Socioeconomic Gap (Highest vs Lowest SES Quartile)"]["score"].values[0]
+    assert ses_gap == 102.0
+
 
 def test_literature_bibliographic_fidelity():
-    """Verify that citations match correct peer-reviewed journals and authors."""
+    """Verify that citations match correct peer-reviewed journals, DOIs, and empirical estimates."""
     df_meta = pd.read_csv(RAW_DIR / "mode_effects_literature_meta.csv")
 
     # Backes & Cowan 2019
-    bc = df_meta[df_meta["study_id"] == "Backes_Cowan_2019_MA_ELA_Y1"].iloc[0]
-    assert "Economics of Education Review" in bc["publication"]
-    assert bc["reported_effect"] == "-0.25 SD"
+    bc_ela = df_meta[df_meta["study_id"] == "Backes_Cowan_2019_MA_ELA_Y1"].iloc[0]
+    assert "Economics of Education Review" in bc_ela["publication"]
+    assert bc_ela["doi"] == "10.1016/j.econedurev.2018.12.003"
+    assert bc_ela["reported_effect"] == "-0.25 SD"
 
-    # Gordanier et al. 2023
-    sc = df_meta[df_meta["study_id"] == "Gordanier_Ozturk_Zhan_2023_SC"].iloc[0]
-    assert "Education Finance and Policy" in sc["publication"]
-    assert "Gordanier" in sc["authors"]
+    bc_math = df_meta[df_meta["study_id"] == "Backes_Cowan_2019_MA_Math_Y1"].iloc[0]
+    assert bc_math["reported_effect"] == "-0.10 SD"
+
+    # Gordanier, Ozturk, & Zhan 2023: EFP Vol 18(2), pp. 232-252, DOI 10.1162/edfp_a_00373
+    sc_ela = df_meta[df_meta["study_id"] == "Gordanier_Ozturk_Zhan_2023_SC_ELA"].iloc[0]
+    assert "Education Finance and Policy" in sc_ela["publication"]
+    assert "18(2)" in sc_ela["publication"]
+    assert "232-252" in sc_ela["publication"]
+    assert sc_ela["doi"] == "10.1162/edfp_a_00373"
+    assert "Gordanier" in sc_ela["authors"]
+    assert sc_ela["reported_effect"] == "-0.085 SD"
+
+    sc_math = df_meta[df_meta["study_id"] == "Gordanier_Ozturk_Zhan_2023_SC_Math"].iloc[0]
+    assert sc_math["reported_effect"] == "-0.044 SD"
 
     # Carol Parker 2018 (reconciled as non-significant chi-square, no fabricated SD)
     parker = df_meta[df_meta["study_id"] == "Parker_2018_TN_Keyboarding"].iloc[0]
     assert "Carol Parker" in parker["authors"]
     assert "Chi-square" in parker["reported_effect"] or "Non-significant" in parker["reported_effect"]
+    assert "916" in parker["sample_size"] and "906" in parker["sample_size"]
+
+    # NCES 2012 Writing Pilot: 110 computer words vs 159 paper words
+    pilot = df_meta[df_meta["study_id"] == "NCES_2012_Writing_Pilot"].iloc[0]
+    assert "110 words" in pilot["reported_effect"]
+    assert "159 words" in pilot["reported_effect"]
+    assert "12 WPM" in pilot["key_finding"]
+    assert "30 WPM" in pilot["key_finding"]
+
+    # NAEP 2017 Writing Technical Summary
+    supp = df_meta[df_meta["study_id"] == "NAEP_2017_Writing_Technical_Summary"].iloc[0]
+    assert "SUPPRESSED" in supp["reported_effect"]
+
+
+def test_device_access_pulse_data():
+    """Verify NCES School Pulse Panel device access statistics."""
+    df_pulse = pd.read_csv(RAW_DIR / "nces_pulse_device_access.csv")
+    p24 = df_pulse[df_pulse["year"] == 2024]["pct_1to1_devices"].values[0]
+    assert p24 == 88.0
+    p21 = df_pulse[df_pulse["year"] == 2021]["pct_1to1_devices"].values[0]
+    assert p21 == 83.0
 
 
 def test_sensitivity_analysis_grid_properties():
