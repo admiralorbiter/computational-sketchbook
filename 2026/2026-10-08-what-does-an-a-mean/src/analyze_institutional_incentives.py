@@ -52,13 +52,80 @@ def map_district_policy(district_name: str) -> str:
     return known_districts.get(d_upper, "UNVERIFIED_PENDING_AUDIT")
 
 
+def assign_school_policy_exposure(school_name: str, district_code: str):
+    """
+    Assigns school-specific subsequent policy, effective year, research audit status,
+    and exposure role based on verified primary records in kc_policy_exposure_evidence_register.csv.
+    Distinguishes school-specific exposure (e.g. NKC High pilot vs Oak Park/Staley/Winnetonka comparison).
+    """
+    s_upper = str(school_name).upper().strip()
+    
+    if district_code == "024-093":  # NORTH KANSAS CITY 74
+        if s_upper == "NORTH KANSAS CITY HIGH":
+            return pd.Series({
+                "subsequent_policy": "STANDARDS_BASED_SBL (Pilot)",
+                "subsequent_year": "2025-2026 (Fall Pilot)",
+                "audit_status": "VERIFIED_LONGITUDINAL_CASE_B_PILOT",
+                "policy_exposure_role": "Case_B_Pilot_Exposed_2025_26"
+            })
+        else:
+            return pd.Series({
+                "subsequent_policy": "TRADITIONAL_PCT (Non-Pilot; SBL in 26-27)",
+                "subsequent_year": "2026-2027 (Full Rollout)",
+                "audit_status": "VERIFIED_WITHIN_DISTRICT_COMPARISON",
+                "policy_exposure_role": "Case_B_Within_District_Comparison_2025_26"
+            })
+            
+    elif district_code == "048-078":  # KANSAS CITY 33 (KCPS)
+        if "LINCOLN" in s_upper:
+            return pd.Series({
+                "subsequent_policy": "FLOOR_40_MINIMUM (Honors/AP/IB Exemption)",
+                "subsequent_year": "2023-2024 / 2024-2025 (Exemption)",
+                "audit_status": "VERIFIED_LONGITUDINAL_CASE_A_EXEMPTION",
+                "policy_exposure_role": "Case_A_Honors_Exemption_2024_25"
+            })
+        else:
+            return pd.Series({
+                "subsequent_policy": "FLOOR_40_MINIMUM (Revised: 0% Missing / >=40% Attempted)",
+                "subsequent_year": "2023-2024 / 2024-2025 (Revised)",
+                "audit_status": "VERIFIED_LONGITUDINAL_CASE_A",
+                "policy_exposure_role": "Case_A_Active_Policy_Revised_2024_25"
+            })
+            
+    elif district_code in ["048-077", "048-074", "048-068", "083-005"]:  # Independence, Lee's Summit, Blue Springs, Park Hill
+        return pd.Series({
+            "subsequent_policy": "TRADITIONAL_PCT",
+            "subsequent_year": "2021-2025",
+            "audit_status": "VERIFIED_TRADITIONAL_COMPARISON",
+            "policy_exposure_role": "Verified_Traditional_Comparison"
+        })
+        
+    elif district_code == "048-072":  # Hickman Mills (Ruskin)
+        return pd.Series({
+            "subsequent_policy": "FLOOR_50_DOCUMENTATION_PENDING",
+            "subsequent_year": "PENDING_AUDIT",
+            "audit_status": "DOCUMENTATION_PENDING",
+            "policy_exposure_role": "Exploratory_Pending_Audit"
+        })
+        
+    else:  # Unverified districts / independent charter LEAs
+        return pd.Series({
+            "subsequent_policy": "Unverified",
+            "subsequent_year": "N/A",
+            "audit_status": "PENDING_AUDIT",
+            "policy_exposure_role": "Exploratory_Pending_Audit"
+        })
+
+
 def load_and_process_decoupling_data():
-    """Loads KC high school panel and policy registry, computes Graduation–Achievement Rank Difference."""
+    """Loads KC high school panel, policy registry, and evidence register, computing Rank Difference and exposure."""
     panel_file = PROCESSED_DIR / "kc_high_school_panel.csv"
     policy_file = SOURCES_DIR / "kc_district_policy_registry.csv"
+    evidence_file = SOURCES_DIR / "kc_policy_exposure_evidence_register.csv"
     
     df = pd.read_csv(panel_file)
     df_policy = pd.read_csv(policy_file)
+    df_evidence = pd.read_csv(evidence_file)
     
     # 2022 cross-sectional benchmark (45 complete high schools)
     p2022 = df[df["school_year"] == 2022].dropna(subset=["grad_rate_4yr", "math_status_mpi"]).copy()
@@ -73,28 +140,32 @@ def load_and_process_decoupling_data():
     # Map district policy identifier
     p2022["policy_district_code"] = p2022["DISTRICT_NAME"].apply(map_district_policy)
     
-    # Merge policy details without default-filling unverified entries
+    # Merge district-level policy baseline without default-filling unverified entries
     merged = pd.merge(
         p2022,
-        df_policy,
+        df_policy[["district_code", "policy_name", "status_in_2022_benchmark", "grading_model_2022", "grading_floor_policy_2022"]],
         left_on="policy_district_code",
         right_on="district_code",
         how="left"
     )
+    
+    # Assign verified school-specific subsequent policy exposure and roles
+    exposure_df = merged.apply(lambda r: assign_school_policy_exposure(r["SCHOOL_NAME"], r["policy_district_code"]), axis=1)
+    merged["current_or_subsequent_policy"] = exposure_df["subsequent_policy"]
+    merged["subsequent_effective_year"] = exposure_df["subsequent_year"]
+    merged["verification_status"] = exposure_df["audit_status"]
+    merged["policy_exposure_role"] = exposure_df["policy_exposure_role"]
     
     # Preserve explicit unverified status rather than imputing policies
     merged["policy_name"] = merged["policy_name"].fillna("Policy Documentation Pending Audit")
     merged["status_in_2022_benchmark"] = merged["status_in_2022_benchmark"].fillna("UNVERIFIED")
     merged["grading_model_2022"] = merged["grading_model_2022"].fillna("Unverified")
     merged["grading_floor_policy_2022"] = merged["grading_floor_policy_2022"].fillna("Unverified")
-    merged["current_or_subsequent_policy"] = merged["current_or_subsequent_policy"].fillna("Unverified")
-    merged["subsequent_effective_year"] = merged["subsequent_effective_year"].fillna("N/A")
-    merged["verification_status"] = merged["verification_status"].fillna("PENDING_AUDIT")
     
-    return merged, df_policy
+    return merged, df_policy, df_evidence
 
 
-def generate_tables(df: pd.DataFrame, df_policy: pd.DataFrame):
+def generate_tables(df: pd.DataFrame, df_policy: pd.DataFrame, df_evidence: pd.DataFrame = None):
     """Generates Table 4 (School-level summary) and Table 5 (District Policy Case Study Matrix)."""
     # Table 4: School-level exploratory ranking summary
     cols_table4 = [
@@ -111,7 +182,8 @@ def generate_tables(df: pd.DataFrame, df_policy: pd.DataFrame):
         "status_in_2022_benchmark",
         "current_or_subsequent_policy",
         "subsequent_effective_year",
-        "verification_status"
+        "verification_status",
+        "policy_exposure_role"
     ]
     t4 = df[cols_table4].sort_values(by="grad_math_rank_diff", ascending=False).copy()
     t4.columns = [
@@ -128,7 +200,8 @@ def generate_tables(df: pd.DataFrame, df_policy: pd.DataFrame):
         "Policy Status in 2022",
         "Subsequent Policy Adoption",
         "Subsequent Effective Year",
-        "Research Audit Status"
+        "Research Audit Status",
+        "Longitudinal Policy Exposure Role"
     ]
     t4.to_csv(TABLES_DIR / "table4_kc_institutional_decoupling_summary.csv", index=False)
     print(f"Saved Table 4: {TABLES_DIR / 'table4_kc_institutional_decoupling_summary.csv'} ({len(t4)} schools)")
@@ -141,18 +214,27 @@ def generate_tables(df: pd.DataFrame, df_policy: pd.DataFrame):
         avg_rank_diff=("grad_math_rank_diff", "mean"),
         avg_direct_cert=("direct_cert_pct", "mean"),
         status_in_2022=("status_in_2022_benchmark", "first"),
-        subsequent_policy=("current_or_subsequent_policy", "first"),
-        subsequent_year=("subsequent_effective_year", "first"),
         audit_status=("verification_status", "first")
     ).reset_index()
+    
+    # Merge with district policy registry for district-level subsequent policy metadata
+    dist_summary = pd.merge(
+        dist_summary,
+        df_policy[["district_name", "current_or_subsequent_policy", "subsequent_effective_year"]],
+        left_on="DISTRICT_NAME",
+        right_on="district_name",
+        how="left"
+    )
+    dist_summary["current_or_subsequent_policy"] = dist_summary["current_or_subsequent_policy"].fillna("Unverified")
+    dist_summary["subsequent_effective_year"] = dist_summary["subsequent_effective_year"].fillna("N/A")
     
     # Assign clear research role in longitudinal agenda
     def assign_case_study_role(row):
         d_name = row["DISTRICT_NAME"]
         if d_name == "KANSAS CITY 33":
-            return "Case Study A (40% Minimum Grading Floor; Pre-Post 2023-24)"
+            return "Case Study A (40% Minimum Grading Floor; Pre-Post 2023-24 & 2024-25 Revision)"
         elif d_name == "NORTH KANSAS CITY 74":
-            return "Case Study B (Standards-Based Learning Rollout; Pre-Post 2025-27)"
+            return "Case Study B (NKC High Fall 2025 SBL Pilot vs Non-Pilot Comparisons)"
         elif row["status_in_2022"] == "VERIFIED_IN_EFFECT":
             return "Verified Comparison District (Traditional Grading Scale)"
         else:
@@ -161,6 +243,20 @@ def generate_tables(df: pd.DataFrame, df_policy: pd.DataFrame):
     dist_summary["Research Study Role"] = dist_summary.apply(assign_case_study_role, axis=1)
     
     dist_summary = dist_summary.sort_values(by="avg_rank_diff", ascending=False)
+    cols_table5 = [
+        "DISTRICT_NAME",
+        "num_high_schools",
+        "avg_grad_rate",
+        "avg_math_mpi",
+        "avg_rank_diff",
+        "avg_direct_cert",
+        "status_in_2022",
+        "current_or_subsequent_policy",
+        "subsequent_effective_year",
+        "audit_status",
+        "Research Study Role"
+    ]
+    dist_summary = dist_summary[cols_table5]
     dist_summary.columns = [
         "District Name",
         "High Schools (N)",
@@ -271,11 +367,21 @@ def plot_figure_4(df: pd.DataFrame):
         w = bar.get_width()
         grad = row["grad_rate_4yr"]
         mpi = row["math_status_mpi"]
-        subseq = row["current_or_subsequent_policy"]
-        if subseq == "FLOOR_40_MINIMUM":
-            note = "Case A: 40% Floor (2023-24)"
-        elif subseq == "STANDARDS_BASED_SBL":
-            note = "Case B: SBL Pilot (2025-26)"
+        school = row["SCHOOL_NAME"]
+        d_name = row["DISTRICT_NAME"]
+        
+        if school == "NORTH KANSAS CITY HIGH":
+            note = "Case B: SBL Pilot (Fall 2025)"
+        elif school in ["STALEY HIGH", "OAK PARK HIGH", "WINNETONKA HIGH"]:
+            note = "Case B: Non-Pilot Comparison (SBL in 26-27)"
+        elif "LINCOLN" in school:
+            note = "Case A: Honors/AP/IB (0-59% F Retained)"
+        elif d_name == "KANSAS CITY 33":
+            note = "Case A: 40% Floor (23-24) / Revised (24-25)"
+        elif d_name == "INDEPENDENCE 30":
+            note = "Comparison: Traditional Scale"
+        elif d_name == "HICKMAN MILLS C-1":
+            note = "Audit Pending (Floor 50 Reported)"
         else:
             note = "Traditional / Audit Pending"
         
@@ -290,7 +396,7 @@ def plot_figure_4(df: pd.DataFrame):
         
     ax2.set_xlabel("Graduation–Achievement Rank Difference (Percentile Points)\n[Delta = PctRank(Graduation Rate) − PctRank(Mathematics MPI)]", fontsize=9.5)
     ax2.set_title("Panel B: High Schools with Largest Positive Rank Differences\n(Exploratory Diagnostic for Prospective Institutional Case Studies)", fontsize=11, fontweight="bold", pad=10)
-    ax2.set_xlim(0, 90)
+    ax2.set_xlim(0, 120)
     ax2.grid(True, linestyle="--", alpha=0.3, axis="x")
     
     # Methodological footnote
@@ -299,7 +405,7 @@ def plot_figure_4(df: pd.DataFrame):
         "Methodological Notes: Data from Missouri DESE MSIP 6 APR Supporting Files (2021–22) across 45 Kansas City area high schools.\n"
         "Cohort Note: 4-Year Graduation Rate reflects 12th-grade graduating seniors (Class of 2022); Mathematics MPI reflects students tested in End-of-Course exams (predominantly 9th/10th grade Algebra I).\n"
         "Threshold Note: School MPI is an aggregate index across all student performance levels (100–500 scale), not a student-level pass/fail cutoff. Reference lines show regional medians.\n"
-        "Policy Note: Policy labels indicate subsequent policy adoptions for longitudinal study (e.g. KCPS 40% floor in 2023–24; NKC SBL pilot in 2025–26); they were NOT in effect during the 2022 baseline.",
+        "Policy Note: Policy labels indicate subsequent policy adoptions for longitudinal study (e.g. KCPS 40% floor in 2023–24; NKC High SBL pilot in 2025–26 vs non-pilot comparisons); they were NOT in effect during the 2022 baseline.",
         fontsize=7.2, color="#444444", style="italic"
     )
     
@@ -312,8 +418,8 @@ def plot_figure_4(df: pd.DataFrame):
 
 def main():
     print("Executing Kansas City Institutional Incentive Analysis (Refactored)...")
-    df_merged, df_policy = load_and_process_decoupling_data()
-    generate_tables(df_merged, df_policy)
+    df_merged, df_policy, df_evidence = load_and_process_decoupling_data()
+    generate_tables(df_merged, df_policy, df_evidence)
     plot_figure_4(df_merged)
     print("Kansas City Institutional Incentive Analysis completed successfully.")
 

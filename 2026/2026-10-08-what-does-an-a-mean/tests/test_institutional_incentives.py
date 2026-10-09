@@ -112,3 +112,96 @@ def test_figure4_output_validity():
     assert fig_path.exists(), f"Figure 4 missing: {fig_path}"
     file_size_kb = fig_path.stat().st_size / 1024.0
     assert file_size_kb > 50.0, f"Figure 4 appears corrupted or empty: {file_size_kb:.1f} KB"
+
+
+def test_policy_exposure_evidence_register_integrity():
+    """Validates schema, school-specific pilot exposure for NKC High, and KCPS 2024–25 category weights."""
+    evidence_path = SOURCES_DIR / "kc_policy_exposure_evidence_register.csv"
+    assert evidence_path.exists(), f"Missing evidence register: {evidence_path}"
+    
+    df = pd.read_csv(evidence_path)
+    expected_cols = [
+        "district_code",
+        "district_name",
+        "school_name",
+        "academic_year",
+        "course_track",
+        "grading_model",
+        "missing_work_rule",
+        "attempted_work_floor",
+        "engagement_weight_pct",
+        "progress_weight_pct",
+        "proficiency_weight_pct",
+        "reassessment_rule",
+        "policy_exposure_role",
+        "source_document",
+        "verification_status"
+    ]
+    assert list(df.columns) == expected_cols, f"Columns do not match expected schema: {df.columns.tolist()}"
+    assert len(df) >= 20, f"Expected at least 20 evidence register records, got {len(df)}"
+    
+    # 1. Assert KCPS August 2024 Secondary Policy Manual parameters for 2024-25:
+    kcps_2425 = df[(df["district_code"] == "048-078") & (df["academic_year"] == "2024-2025")]
+    assert len(kcps_2425) >= 2, "Expected both general and honors records for KCPS 2024-25"
+    
+    # Verify category weights: 10% engagement, 40% progress, 50% proficiency = 100% total
+    for _, row in kcps_2425.iterrows():
+        eng = float(row["engagement_weight_pct"])
+        prog = float(row["progress_weight_pct"])
+        prof = float(row["proficiency_weight_pct"])
+        assert eng == 10.0, f"Expected 10.0% engagement weight, got {eng}"
+        assert prog == 40.0, f"Expected 40.0% progress weight, got {prog}"
+        assert prof == 50.0, f"Expected 50.0% proficiency weight, got {prof}"
+        assert eng + prog + prof == 100.0, f"Weights must sum to 100.0%, got {eng + prog + prof}"
+        assert row["missing_work_rule"] == "TRUE_ZERO_ALLOWED", "2024-25 policy requires 0% for missing work"
+        
+    # Verify Honors/AP/IB exemption retains traditional failing range (0_NO_FLOOR)
+    kcps_honors = kcps_2425[kcps_2425["course_track"].str.contains("Honors")].iloc[0]
+    assert kcps_honors["attempted_work_floor"] == "0_NO_FLOOR", "Honors/AP/IB must retain 0-59% F range (0_NO_FLOOR)"
+    assert kcps_honors["policy_exposure_role"] == "Case_A_Honors_Exemption_2024_25"
+    
+    # 2. Assert NKC 74 school-specific pilot exposure for 2025-26:
+    nkc_2526 = df[(df["district_code"] == "024-093") & (df["academic_year"] == "2025-2026")]
+    assert len(nkc_2526) == 4, f"Expected 4 NKC high schools in 2025-26, got {len(nkc_2526)}"
+    
+    # North Kansas City High is the specific pilot school
+    nkc_pilot = nkc_2526[nkc_2526["school_name"] == "NORTH KANSAS CITY HIGH"].iloc[0]
+    assert nkc_pilot["grading_model"] == "STANDARDS_BASED_SBL"
+    assert nkc_pilot["policy_exposure_role"] == "Case_B_Pilot_Exposed_2025_26"
+    assert nkc_pilot["reassessment_rule"] == "UNIVERSAL_MANDATORY"
+    
+    # Oak Park, Staley, Winnetonka are within-district non-pilot comparison schools
+    nkc_non_pilots = nkc_2526[nkc_2526["school_name"].isin(["OAK PARK HIGH", "STALEY HIGH", "WINNETONKA HIGH"])]
+    assert len(nkc_non_pilots) == 3
+    assert (nkc_non_pilots["grading_model"] == "TRADITIONAL_PCT").all(), "Non-pilot comparison schools must remain traditional in 2025-26"
+    assert (nkc_non_pilots["policy_exposure_role"] == "Case_B_Within_District_Comparison_2025_26").all()
+
+
+def test_table4_school_specific_exposure_integrity():
+    """Asserts that Table 4 distinguishes NKC High pilot from non-pilot comparison schools and KCPS tracks."""
+    t4_path = TABLES_DIR / "table4_kc_institutional_decoupling_summary.csv"
+    assert t4_path.exists(), f"Missing Table 4: {t4_path}"
+    
+    df = pd.read_csv(t4_path)
+    
+    # NKC High must be identified as the pilot school
+    nkc_high = df[df["School Name"] == "NORTH KANSAS CITY HIGH"].iloc[0]
+    assert "Pilot" in nkc_high["Subsequent Policy Adoption"]
+    assert "2025-2026" in nkc_high["Subsequent Effective Year"]
+    assert nkc_high["Research Audit Status"] == "VERIFIED_LONGITUDINAL_CASE_B_PILOT"
+    assert nkc_high["Longitudinal Policy Exposure Role"] == "Case_B_Pilot_Exposed_2025_26"
+    
+    # Staley, Oak Park, Winnetonka must be identified as within-district comparison schools
+    for non_pilot in ["STALEY HIGH", "OAK PARK HIGH", "WINNETONKA HIGH"]:
+        row = df[df["School Name"] == non_pilot].iloc[0]
+        assert "Non-Pilot" in row["Subsequent Policy Adoption"]
+        assert "2026-2027" in row["Subsequent Effective Year"]
+        assert row["Research Audit Status"] == "VERIFIED_WITHIN_DISTRICT_COMPARISON"
+        assert row["Longitudinal Policy Exposure Role"] == "Case_B_Within_District_Comparison_2025_26"
+        
+    # Lincoln College Prep must reflect the Honors/AP/IB exemption
+    lincoln = df[df["School Name"] == "LINCOLN COLLEGE PREP."].iloc[0]
+    assert "Exemption" in lincoln["Subsequent Policy Adoption"]
+    assert lincoln["Research Audit Status"] == "VERIFIED_LONGITUDINAL_CASE_A_EXEMPTION"
+    assert lincoln["Longitudinal Policy Exposure Role"] == "Case_A_Honors_Exemption_2024_25"
+

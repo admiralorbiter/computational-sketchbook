@@ -479,14 +479,14 @@ if str(BASE_DIR) not in sys.path:
 from src.analyze_institutional_incentives import load_and_process_decoupling_data, generate_tables, plot_figure_4
 
 # Execute institutional analysis pipeline
-df_merged, df_policy = load_and_process_decoupling_data()
-generate_tables(df_merged, df_policy)
+df_merged, df_policy, df_evidence = load_and_process_decoupling_data()
+generate_tables(df_merged, df_policy, df_evidence)
 plot_figure_4(df_merged)
 
 # Load and display top rank-difference high schools
 t4 = pd.read_csv(TABLES_DIR / "table4_kc_institutional_decoupling_summary.csv")
 print("Top 10 High Schools by Graduation–Achievement Rank Difference:")
-display(t4.head(10)[["District Name", "School Name", "4-Yr Grad Rate (%)", "Math Status MPI", "Grad-Math Rank Diff (Pctile Pts)", "Policy Status in 2022", "Subsequent Policy Adoption"]])
+display(t4.head(10)[["District Name", "School Name", "4-Yr Grad Rate (%)", "Math Status MPI", "Grad-Math Rank Diff (Pctile Pts)", "Policy Status in 2022", "Subsequent Policy Adoption", "Longitudinal Policy Exposure Role"]])
 
 # Display Figure 4
 display(Image(str(FIG_DIR / "04_kc_signaling_decoupling_gap.png")))
@@ -513,7 +513,7 @@ The empirical results from **Figure 4** and **Table 4** clarify the relationship
 3. **Methodological Boundaries**:
    - **Cohort Discrepancy**: Four-year graduation rates measure graduating 12th-grade seniors, whereas mathematics MPI reflects students taking End-of-Course exams (predominantly 9th and 10th graders taking Algebra I).
    - **Aggregate School MPI**: School MPI is a weighted average across all student achievement levels (100–500 scale), not an individual student proficiency cutoff.
-   - **State Statutory Reality**: Under 5 CSR 20-100.230 and Section 171.011 RSMo, Missouri mandates administering the Algebra I EOC but does not mandate passing it for graduation or require a minimum course grade weighting.
+   - **State Statutory Reality**: Under 5 CSR 20-100.190 and Section 171.011 RSMo, Missouri mandates administering the Algebra I EOC but does not mandate passing it for graduation or require a minimum course grade weighting.
 
 4. **Prospective Longitudinal Agenda**:
    - **Case Study A (KCPS)**: Pre-post interrupted time series analyzing the immediate effect of the 40% floor (2023–24) on course failure rates ('F' grades) and credit accumulation.

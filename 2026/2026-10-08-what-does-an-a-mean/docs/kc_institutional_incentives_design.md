@@ -26,7 +26,7 @@ Missouri's School Improvement Program (MSIP 6) Annual Performance Report (APR) a
 
 ### 2.2 Missouri Statutory and Regulatory Reality
 The legal framework governing high school graduation in Missouri combines state minimums with local discretion:
-- **State Minimum Graduation Requirements (5 CSR 20-100.230)**: Establishes a statewide baseline of 24 units of credit across designated subject areas (4 ELA, 3 Math, 3 Science, 3 Social Studies, 1 Fine Art, 1 Practical Art, 1 PE, 0.5 Health, 0.5 Personal Finance, and 7 Electives).
+- **State Minimum Graduation Requirements (5 CSR 20-100.190)**: Establishes a statewide baseline of 24 units of credit across designated subject areas (4 ELA, 3 Math, 3 Science, 3 Social Studies, 1 Fine Art, 1 Practical Art, 1 PE, 0.5 Health, 0.5 Personal Finance, and 7 Electives).
 - **Local Board Rule-Making Authority (Section 171.011 RSMo)**: Grants local school boards authority to make rules and regulations for district governance. Local boards may establish graduation requirements beyond the state minimum (e.g., 26 or 28 credits) and retain exclusive authority to define local grading scales, credit-earning thresholds, and retake policies.
 - **The End-of-Course (EOC) Testing Rule**: Section 160.518 RSMo mandates administering statewide EOC assessments in Algebra I, English II, Biology, and Government. Crucially:
   1. Missouri statute **does not require passing an EOC exam to receive a high school diploma**.
@@ -40,14 +40,18 @@ The legal framework governing high school graduation in Missouri combines state 
 A central finding of our primary-source policy audit is that **major district grading reforms in Greater Kansas City were adopted after the 2022 cross-sectional benchmark**:
 
 1. **Kansas City Public Schools (KCPS - 048-078)**:
-   - *Policy*: Equitable Grading Policy introducing a 40% minimum grade floor on attempted assignments.
-   - *Adoption Date*: Implemented in the **2023–2024 school year** for non-Montessori grades 2–12.
+   - *Initial Adoption (2023–24)*: Equitable Grading Policy introducing a 40% minimum grade floor on all assignments, including unsubmitted work (the "no zeros" policy).
+   - *Policy Revision (2024–25)*: Official August 2024 Secondary Grading Policy Manual:
+     * Missing assignments receive 0%.
+     * Attempted assignments receive at least 40%.
+     * Honors, AP, IB, and MYP courses retain traditional 0–59% failing range.
+     * Category weights: Engagement 10% (homework/participation), Progress 40% (formatives/checks for understanding), Proficiency 50% (quizzes/projects/assessments).
    - *Status in 2022*: Not in effect (traditional 0–100% scale operated in 2021–22).
-   - *Revision*: Discontinued/modified following staff feedback after 2023–24.
 2. **North Kansas City Schools (NKC 74 - 024-093)**:
    - *Policy*: Transition to Standards-Based Learning (SBL) in secondary grades (4-tier rubric, uncapped reassessments, zero homework penalties).
-   - *Adoption Date*: Board approved timeline in January 2024. **Pilot implementation begins in fall 2025** (including North Kansas City High School); full district-wide implementation targeted for **2026–2027**.
-   - *Status in 2022*: Not in effect (traditional secondary percentage grading operated in 2021–22).
+   - *Adoption Date*: Board approved timeline in January 2024. **School-specific pilot begins in fall 2025 at North Kansas City High School**; full district-wide secondary rollout targeted for **2026–2027**.
+   - *Within-District Comparison*: Oak Park, Staley, and Winnetonka High Schools remain on traditional secondary grading in 2025–26.
+   - *Status in 2022*: Not in effect (traditional secondary percentage grading operated across all high schools in 2021–22).
 
 ### Methodological Implication
 Because these policies did not exist in 2022, they cannot causally explain the 2022 cross-sectional graduation rates or MPI rankings (e.g., North Kansas City High's +63.3 rank difference in 2022). 
@@ -76,30 +80,32 @@ $$\Delta_i = \operatorname{PctRank}(\text{Grad Rate}_{4\text{yr}, i}) - \operato
 
 Phase 2 narrows the research scope to two tightly dated, high-leverage case studies:
 
-### Case Study A: Kansas City Public Schools (40% Minimum Grading Floor)
-- **Policy Intervention**: 40% minimum grade floor on attempted assignments (2023–24).
+### Case Study A: Kansas City Public Schools (Grading Architecture & Policy Variation)
+- **Policy Interventions**: Initial 40% unsubmitted floor in 2023–24; revised 40% attempted floor with 0% missing, 10/40/50 weighting, and Honors/AP/IB exemption in 2024–25.
 - **Core Research Questions**:
-  1. Did the 40% floor immediately compress course failure rates ('F' grades) in 9th-grade Algebra I and English II?
+  1. Did the initial 40% unsubmitted floor in 2023–24 compress course failure rates ('F' grades) in 9th-grade Algebra I and English II?
   2. Did credit accumulation among at-risk 9th and 10th graders increase during 2023–24 relative to pre-policy years (2021–23)?
-  3. Did failure rates rebound following policy revisions in 2024–25?
+  3. Following the 2024–25 revision (zero for missing work), how did failure rates and credit accrual respond?
+  4. Did course mark distributions diverge between general education courses (40% attempted floor) and exempt Honors/AP/IB courses (0–59% F retained)?
 - **Comparison Group**: Within-metro comprehensive high schools in districts maintaining traditional zero-allowed policies (Independence, Lee's Summit).
 
-### Case Study B: North Kansas City Schools (Standards-Based Learning Rollout)
-- **Policy Intervention**: SBL pilot in fall 2025 (North Kansas City High), followed by district-wide secondary rollout in 2026–27.
+### Case Study B: North Kansas City Schools (School-Specific SBL Pilot & Reassessment)
+- **Policy Intervention**: SBL pilot in fall 2025 at North Kansas City High School; non-pilot high schools (Oak Park, Staley, Winnetonka) maintain traditional scale prior to 2026–27 rollout.
 - **Competing Hypotheses**:
   - *H1 (Leniency / Inflation)*: Uncapped reassessments and zero homework penalties make passing easier without improving underlying knowledge.
   - *H2 (Mastery / Achievement Gains)*: Reassessment incentives motivate students to remediate specific learning deficits, leading to genuine gains on standardized EOC exams.
 - **Core Research Questions**:
   1. During the 2025–26 pilot, how did course mark distributions in North Kansas City High compare to non-pilot high schools (Oak Park, Staley, Winnetonka)?
-  2. Did pilot students demonstrate higher or lower performance on subsequent state EOC exams relative to pre-pilot cohorts?
+  2. Did pilot students demonstrate higher or lower performance on subsequent state EOC exams relative to pre-pilot cohorts and non-pilot comparison schools?
 
 ---
 
 ## 6. Phase 2 Deliverables & File Architecture
 
 1. **Policy Audit Protocol**: [`docs/district_policy_audit_protocol.md`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/docs/district_policy_audit_protocol.md)
-2. **Case Study & Policy Registry**: [`sources/kc_district_policy_registry.csv`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/sources/kc_district_policy_registry.csv)
-3. **Exploratory Analysis Engine**: [`src/analyze_institutional_incentives.py`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/src/analyze_institutional_incentives.py)
-4. **Working Paper**: [`artifacts/kc_institutional_incentive_analysis.md`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/artifacts/kc_institutional_incentive_analysis.md)
-5. **Figure 4 & Tables 4–5**: Visualizations and school/district diagnostic matrices.
-6. **Automated Test Suite**: [`tests/test_institutional_incentives.py`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/tests/test_institutional_incentives.py)
+2. **Case Study Policy Registry**: [`sources/kc_district_policy_registry.csv`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/sources/kc_district_policy_registry.csv)
+3. **Policy-and-Outcomes Evidence Register**: [`sources/kc_policy_exposure_evidence_register.csv`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/sources/kc_policy_exposure_evidence_register.csv)
+4. **Exploratory Analysis Engine**: [`src/analyze_institutional_incentives.py`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/src/analyze_institutional_incentives.py)
+5. **Working Paper**: [`artifacts/kc_institutional_incentive_analysis.md`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/artifacts/kc_institutional_incentive_analysis.md)
+6. **Figure 4 & Tables 4–5**: Visualizations and school/district diagnostic matrices.
+7. **Automated Test Suite**: [`tests/test_institutional_incentives.py`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/tests/test_institutional_incentives.py)

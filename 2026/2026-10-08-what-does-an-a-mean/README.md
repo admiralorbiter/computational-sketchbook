@@ -124,7 +124,7 @@ Phase 2 establishes the institutional research design for investigating how dist
    - **Case Study A (Kansas City Public Schools)**: Investigates the 40% minimum assignment floor introduced in **2023–24** (and revised in 2024–25), focusing on immediate short-run outcomes: course failure rates ('F' marks), grade distributions, and semester credit accumulation.
    - **Case Study B (North Kansas City Schools)**: Investigates the phased rollout of Standards-Based Learning (SBL), beginning with a pilot in **fall 2025** (including North Kansas City High) and full implementation in **2026–27**. Explicitly tests competing hypotheses: whether uncapped reassessments improve subsequent assessed learning on state EOC exams or primarily increase course pass rates.
 3. **Statutory and Regulatory Precision**:
-   - Under **5 CSR 20-100.230**, Missouri mandates a statewide minimum of 24 credits for graduation.
+   - Under **5 CSR 20-100.190**, Missouri mandates a statewide minimum of 24 credits for graduation.
    - Under **Section 171.011 RSMo**, local school boards retain authority to require additional credits, set local grading scales, and define passing thresholds.
    - Under **Section 160.518 RSMo**, Missouri requires administering EOC exams but does not mandate passing them for graduation or require that EOC scores contribute a set percentage to course grades (unlike North Carolina's 20% mandate).
 4. **Key Phase 2 Deliverables**:

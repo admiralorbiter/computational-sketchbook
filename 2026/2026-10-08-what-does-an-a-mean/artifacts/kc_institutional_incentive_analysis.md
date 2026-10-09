@@ -39,7 +39,7 @@ For high schools, four-year and five-year cohort graduation rates carry substant
 
 ### 2.2 The Missouri Statutory and Regulatory Reality
 To understand why course marks and external test scores can diverge, the legal and regulatory framework must be stated with precision:
-- **Statewide Minimum Requirements (5 CSR 20-100.230)**: The Missouri State Board of Education establishes a statewide *minimum* requirement of 24 units of credit for high school graduation, including specific discipline distributions (4 units of English Language Arts, 3 units of Mathematics, 3 units of Science, 3 units of Social Studies, 1 unit of Fine Arts, 1 unit of Practical Arts, 1 unit of Physical Education, 0.5 unit of Health, 0.5 unit of Personal Finance, and 7 units of Electives).
+- **Statewide Minimum Requirements (5 CSR 20-100.190)**: The Missouri State Board of Education establishes a statewide *minimum* requirement of 24 units of credit for high school graduation, including specific discipline distributions (4 units of English Language Arts, 3 units of Mathematics, 3 units of Science, 3 units of Social Studies, 1 unit of Fine Arts, 1 unit of Practical Arts, 1 unit of Physical Education, 0.5 unit of Health, 0.5 unit of Personal Finance, and 7 units of Electives).
 - **Local Board Authority (Section 171.011 RSMo)**: Local boards of education hold broad statutory authority to make rules and regulations for district governance. Crucially, local boards may require additional units of credit beyond the state minimum (e.g., 26 or 28 credits) and retain exclusive authority to establish local grading scales, credit accrual criteria, and course passing marks.
 - **The State Testing Asymmetry**: Under Section 160.518 RSMo and DESE regulations, public school districts are mandated to *administer* End-of-Course (EOC) assessments in Algebra I, English II, Biology, and Government. However:
   1. Missouri **does not require passing an EOC exam to receive a high school diploma**.
@@ -94,7 +94,7 @@ Where $\operatorname{PctRank}(X_i) \in [1.0, 100.0]$ is the empirical percentile
 
 ## 4. The Timing Paradox & Policy Chronologies
 
-The most critical finding from auditing district board minutes and public notices is that **policy timing does not match 2022 cross-sectional outcomes**:
+The most critical finding from auditing district board minutes and public policy documents is that **policy timing does not match 2022 cross-sectional outcomes**:
 
 ```
 Timeline of Policy Adoptions vs. Observed Data Baseline
@@ -102,23 +102,29 @@ Timeline of Policy Adoptions vs. Observed Data Baseline
 2021-2022 School Year:
   [OBSERVED BENCHMARK YEAR: 45 KC High Schools]
   - KCPS operates under standard traditional percentage grading (0-100%, zero allowed).
-  - NKC Schools operates under standard secondary percentage grading.
+  - NKC Schools operates under standard secondary percentage grading across all high schools.
   - Graduation-Achievement Rank Differences already observed (NKC High +63.3, Van Horn +48.9).
 --------------------------------------------------------------------------------------
 2023-2024 School Year:
-  [POLICY EVENT A: KCPS 40% Minimum Grading Floor]
-  - KCPS introduces "Equitable Grading" policy setting 40% floor on attempted assignments.
+  [POLICY EVENT A1: KCPS 40% Minimum Grading Floor (Initial Adoption)]
+  - KCPS introduces "Equitable Grading" policy setting 40% floor on all assignments,
+    including unsubmitted work (the "no zeros" policy).
   - Policy covers non-Montessori grades 2-12.
-  - Staff pushback leads to revisions in 2024-25.
 --------------------------------------------------------------------------------------
 2024-2025 School Year:
-  - NKC Schools Board of Education approves SBL implementation timeline (Jan 2024).
-  - Preparation and professional development for pilot schools.
+  [POLICY EVENT A2: KCPS 2024-25 Policy Revision & Explicit Weighting]
+  - Following staff and union feedback, KCPS publishes revised August 2024 Grading Policy:
+      * Missing assignments: Receive 0%.
+      * Attempted assignments: Receive at least 40%.
+      * Course Exceptions: Honors, AP, IB, and MYP courses retain traditional 0-59% F range.
+      * Explicit Category Weights: Engagement 10% (homework/participation), Progress 40%
+        (checks for understanding), Proficiency 50% (summative assessments/projects).
+  - NKC Schools Board approves SBL implementation timeline (Jan 2024).
 --------------------------------------------------------------------------------------
 Fall 2025:
-  [POLICY EVENT B: NKC Standards-Based Learning Pilot Begins]
-  - North Kansas City High School begins SBL pilot.
-  - 4-level rubric scoring, universal reassessment, zero homework penalties.
+  [POLICY EVENT B: NKC Standards-Based Learning Pilot Begins (School-Specific)]
+  - North Kansas City High School begins SBL pilot (4-level rubric, reassessment, no homework penalty).
+  - Within-district non-pilot comparison schools: Oak Park, Staley, Winnetonka.
 --------------------------------------------------------------------------------------
 2026-2027 School Year:
   - Planned full district-wide secondary implementation of SBL across all NKC high schools.
@@ -129,7 +135,7 @@ This chronological reality demonstrates why cross-sectional data cannot prove ca
 - North Kansas City High School had a +63.3 percentile rank difference in **2022**, years *before* Standards-Based Learning was piloted.
 - KCPS high schools had their observed 2022 graduation rates and MPI levels *prior* to the 40% minimum floor policy.
 
-Rather than weakening our research program, this chronological precision transforms our agenda. We now have **identifiable, dated institutional interventions** that can be analyzed using rigorous pre-post longitudinal methods.
+Rather than weakening our research program, this chronological precision transforms our agenda. We now have **identifiable, dated institutional interventions with documented school-level and course-track variations** that can be analyzed using rigorous pre-post longitudinal methods.
 
 ---
 
@@ -137,25 +143,32 @@ Rather than weakening our research program, this chronological precision transfo
 
 Instead of attempting an imprecise survey of dozens of disparate districts, Phase 2 focuses the empirical investigation into two disciplined, longitudinal case studies:
 
-### Case Study A: Kansas City Public Schools (The 40% Minimum Floor)
-- **Institutional Context**: In the 2023–24 school year, KCPS implemented a policy setting 40% as the minimum grade for attempted assignments, explicitly designed to eliminate the mathematical cliff of a zero.
-- **Plausible Response Horizons**: 
-  - *Immediate Outcomes (Short Run)*: Course failure rates (percentage of students receiving 'F'), grade distributions (shares of 'D' vs. 'C'), and semester credit accumulation.
-  - *Lagged Outcomes (Long Run)*: Four-year cohort graduation rates, which respond only after multiple years of accumulated course credits.
+### Case Study A: Kansas City Public Schools (Grading Architecture & Policy Variation)
+The official KCPS August 2024 Grading Policy manual reveals an exceptionally rich institutional design:
+1. **Defining the Grade Construct**: The district explicitly formalizes what a course grade means:
+   $$\text{Final Grade} = (0.50 \times \text{Proficiency}) + (0.40 \times \text{Progress}) + (0.10 \times \text{Engagement})$$
+   A grade is formally defined as half demonstrated mastery and half academic progress and behavioral compliance.
+2. **Year-Over-Year Policy Variation on Missing Work**:
+   - In 2023–24, unsubmitted work received a 40% floor.
+   - In 2024–25, unsubmitted work receives 0%, while attempted work receives at least 40%.
+   - This year-over-year modification creates an identifiable policy shift within the same district.
+3. **Course-Track Differentiation**:
+   - General education courses operate under the 40% attempted floor.
+   - Advanced courses (Honors, AP, IB, MYP) explicitly retain the traditional 0–59% failing range.
 - **Empirical Strategy**:
-  1. Acquire district-level and school-level course grade distributions from KCPS student information records covering 2021–22 through 2024–25.
-  2. Implement an interrupted time-series design comparing failure rates before (2021–23), during (2023–24), and after (2024–25 revision) policy enforcement.
-  3. Compare high-school course pass rates in KCPS against neighboring comparison districts that maintained traditional zero-allowed policies (e.g., Independence, Lee's Summit).
+  - Acquire course-level grade distributions, failure rates ('F' marks), and credit accumulation across KCPS high schools for 2021–22 through 2024–25.
+  - Implement a difference-in-differences design comparing general education courses against exempt Honors/AP/IB courses within the same schools across policy transitions.
 
-### Case Study B: North Kansas City Schools (Standards-Based Learning & Reassessment)
-- **Institutional Context**: NKC Schools is introducing Standards-Based Learning across secondary schools, beginning with a pilot in fall 2025 (including North Kansas City High) and full implementation in 2026–27.
-- **The Competing Theoretical Hypotheses**:
-  - *Hypothesis 1 (Incentive Corruption / Grade Inflation)*: Decoupling homework from grades, eliminating late penalties, and offering uncapped retakes lowers passing standards, increasing pass rates without improving underlying mastery.
-  - *Hypothesis 2 (Mastery Learning / Genuine Achievement Gains)*: Guaranteed reassessment opportunities incentivize struggling students to persist, re-study unmastered standards, and achieve genuine competency that translates into higher standardized exam performance.
+### Case Study B: North Kansas City Schools (School-Specific SBL Pilot & Reassessment)
+1. **School-Specific Pilot Exposure**:
+   - Official NKC documentation identifies **North Kansas City High School** as the designated pilot high school in fall 2025.
+   - **Within-District Comparison Group**: Oak Park High, Staley High, and Winnetonka High remain on the traditional grading framework during 2025–26.
+2. **The Competing Theoretical Hypotheses**:
+   - *Hypothesis 1 (Incentive Corruption / Grade Inflation)*: Decoupling homework from grades and offering uncapped retakes lowers passing standards, increasing pass rates without improving underlying mastery.
+   - *Hypothesis 2 (Mastery Learning / Genuine Achievement Gains)*: Guaranteed reassessment opportunities incentivize struggling students to remediate specific learning deficits, leading to genuine gains on standardized EOC exams.
 - **Empirical Strategy**:
-  1. Track pilot high schools (North Kansas City High) against within-district non-pilot high schools (Oak Park, Staley, Winnetonka) during the 2025–26 pilot phase.
-  2. Analyze changes in both course mark distributions and standardized Missouri EOC scale scores in Algebra I and English II before and after SBL implementation.
-  3. Explicitly evaluate whether expanded reassessment opportunities improve subsequent EOC scores—testing whether policy changes foster genuine learning gains rather than merely cosmetic credential adjustments.
+  - Compare North Kansas City High against Oak Park, Staley, and Winnetonka before (2021–25) and during (2025–26) the pilot year.
+  - Test whether expanded reassessment opportunities improve subsequent state Algebra I and English II EOC scores—evaluating whether mastery grading fosters genuine learning gains rather than merely cosmetic credential adjustments.
 
 ---
 
