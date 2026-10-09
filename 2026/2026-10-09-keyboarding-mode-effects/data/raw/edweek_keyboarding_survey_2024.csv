@@ -1,5 +1,5 @@
-mode,pct,category
-Standalone Keyboard Class Only,8.0,Standalone
-Both Standalone & Integrated,11.0,Combined
-Integrated within Regular Classroom Only,50.0,Integrated
-No Formal Keyboarding Instruction,31.0,None
+mode,pct,category,verification_status
+Standalone Keyboard Class Only,8.0,Standalone,Verified (EdWeek 2024)
+Both Standalone & Integrated,11.0,Combined,Verified (EdWeek 2024)
+Integrated within Regular Classroom Only,50.0,Integrated,Verified (EdWeek 2024)
+No Formal Keyboarding Instruction,31.0,None,Verified (EdWeek 2024)

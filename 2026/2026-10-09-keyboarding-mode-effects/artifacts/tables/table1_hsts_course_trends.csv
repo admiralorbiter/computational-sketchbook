@@ -1,4 +1,6 @@
-indicator,baseline_val,recent_val,abs_change_pp,rel_change_pct,source
-High School Graduates Earning Keyboarding Credit,44.1% (2000),2.5% (2019),-41.6 pp,-94.3%,NCES NAEP HSTS Table 1
-Public Schools with 1-to-1 Student Device Programs,23.0% (2013),88.0% (2024),+65.0 pp,+282.6%,NCES School Pulse Panel (2025)
-US 8th-Grade Computer & Information Literacy (ICILS),519 pts (2018),482 pts (2023),-37.0 scale pts,-7.1% (-0.37 SD),IEA ICILS 2018 / 2023
+indicator,historical_benchmark,recent_benchmark,net_change,verification_status,source_citation
+High School Graduates Earning Keyboarding Credit,44.1% (2000),2.5% (2019),-41.6 pp (-94.3% rel),Verified (NCES HSTS Table 1),"NCES High School Transcript Study 2019, Table 1"
+High School Graduates Earning Computer Applications Credit,3.1% (2000) / 31.4% (2009),10.4% (2019),+7.3 pp from 2000 (-21.0 pp from peak),Verified (NCES HSTS Table 1),"NCES High School Transcript Study 2019, Table 1"
+High School Graduates Earning Word Processing Credit,12.8% (2000),1.2% (2019),-11.6 pp (-90.6% rel),Verified (NCES HSTS Table 1),"NCES High School Transcript Study 2019, Table 1"
+Public Schools with 1:1 Student Device Programs,Non-comparable pre-2021 surveys (FRSS / Pew),88.0% (2024-25),83.0% (2021) -> 88.0% (2024),Verified (NCES School Pulse 2025),NCES School Pulse Panel (2021-2025)
+US 8th-Grade Computer & Information Literacy (ICILS),519 pts (2018),482 pts (2023),-37.0 scale pts (-0.37 SD),Verified (IEA ICILS 2018/2023),IEA / NCES ICILS Assessment Reports

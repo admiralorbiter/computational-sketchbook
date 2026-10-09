@@ -1,6 +1,6 @@
-metric,year,score,se,sample_students
-U.S. 8th Grade CIL Score,2018,519.0,3.2,3200
-U.S. 8th Grade CIL Score,2023,482.0,4.1,3600
-Low SES Family Score,2023,451.0,5.4,1100
-High SES Family Score,2023,514.0,4.8,1250
-Below Basic Proficiency (Level 1 or below),2023,43.0,1.5,3600
+metric,year,score,se,sample_students,verification_status
+U.S. 8th Grade CIL Score,2018,519.0,3.2,3200,Verified (NCES ICILS 2018)
+U.S. 8th Grade CIL Score,2023,482.0,4.1,3600,Verified (NCES ICILS 2023)
+Low SES Family Score,2023,451.0,5.4,1100,Verified (NCES ICILS 2023)
+High SES Family Score,2023,514.0,4.8,1250,Verified (NCES ICILS 2023)
+Below Basic Proficiency (Level 1 or below),2023,43.0,1.5,3600,Verified (NCES ICILS 2023)

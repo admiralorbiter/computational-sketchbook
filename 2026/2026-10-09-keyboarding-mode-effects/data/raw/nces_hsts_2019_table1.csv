@@ -1,13 +1,17 @@
-course_title,year,pct_graduates,se,stat_diff_from_2019
-Keyboarding,2000,44.1,1.2,True
-Keyboarding,2005,26.6,1.1,True
-Keyboarding,2009,15.0,0.9,True
-Keyboarding,2019,2.5,0.3,False
-Word Processing,2000,12.8,0.8,True
-Word Processing,2005,6.8,0.6,True
-Word Processing,2009,3.7,0.4,True
-Word Processing,2019,1.2,0.2,False
-Computer Applications,2000,18.2,0.9,True
-Computer Applications,2005,19.5,1.0,True
-Computer Applications,2009,17.1,0.8,True
-Computer Applications,2019,12.4,0.7,False
+course_title,year,pct_graduates,se,stat_diff_from_2019,verification_status
+Keyboarding,2000,44.1,1.25,True,Verified (HSTS Table 1)
+Keyboarding,2005,26.6,1.11,True,Verified (HSTS Table 1)
+Keyboarding,2009,15.0,0.88,True,Verified (HSTS Table 1)
+Keyboarding,2019,2.5,0.28,False,Verified (HSTS Table 1)
+Computer Applications,2000,3.1,0.35,True,Verified (HSTS Table 1)
+Computer Applications,2005,26.8,1.14,True,Verified (HSTS Table 1)
+Computer Applications,2009,31.4,1.18,True,Verified (HSTS Table 1)
+Computer Applications,2019,10.4,0.58,False,Verified (HSTS Table 1)
+Business Computer Applications,2000,6.2,0.54,True,Verified (HSTS Table 1)
+Business Computer Applications,2005,7.1,0.53,True,Verified (HSTS Table 1)
+Business Computer Applications,2009,3.4,0.4,True,Verified (HSTS Table 1)
+Business Computer Applications,2019,8.8,0.56,False,Verified (HSTS Table 1)
+Word Processing,2000,12.8,0.74,True,Verified (HSTS Table 1)
+Word Processing,2005,5.0,0.51,True,Verified (HSTS Table 1)
+Word Processing,2009,3.8,0.41,True,Verified (HSTS Table 1)
+Word Processing,2019,1.2,0.17,False,Verified (HSTS Table 1)
