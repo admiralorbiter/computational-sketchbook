@@ -8,12 +8,24 @@ Automated integrity tests for Kansas City Institutional Incentive Study (Phase 2
 - Validates the existence and completeness of generated tables and figures.
 """
 
+import sys
 from pathlib import Path
+
+# Compatibility fix for PySide6 / Shiboken / Python 3.12 meta-path inspection
+try:
+    import six
+    if hasattr(six, "_SixMetaPathImporter") and not hasattr(six._SixMetaPathImporter, "_path"):
+        six._SixMetaPathImporter._path = None
+except ImportError:
+    pass
+
 import numpy as np
 import pandas as pd
 import pytest
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
 PROCESSED_DIR = BASE_DIR / "data" / "processed"
 SOURCES_DIR = BASE_DIR / "sources"
 TABLES_DIR = BASE_DIR / "artifacts" / "tables"
@@ -115,7 +127,7 @@ def test_figure4_output_validity():
 
 
 def test_policy_exposure_evidence_register_integrity():
-    """Validates schema, school-specific pilot exposure for NKC High, and KCPS 2024–25 category weights."""
+    """Validates 20-column auditable schema, provenance fields, secondary journalism labeling, and NKC/KCPS rules."""
     evidence_path = SOURCES_DIR / "kc_policy_exposure_evidence_register.csv"
     assert evidence_path.exists(), f"Missing evidence register: {evidence_path}"
     
@@ -125,6 +137,8 @@ def test_policy_exposure_evidence_register_integrity():
         "district_name",
         "school_name",
         "academic_year",
+        "effective_start",
+        "effective_end",
         "course_track",
         "grading_model",
         "missing_work_rule",
@@ -135,40 +149,59 @@ def test_policy_exposure_evidence_register_integrity():
         "reassessment_rule",
         "policy_exposure_role",
         "source_document",
+        "source_url",
+        "source_page_or_section",
+        "evidence_strength",
         "verification_status"
     ]
     assert list(df.columns) == expected_cols, f"Columns do not match expected schema: {df.columns.tolist()}"
-    assert len(df) >= 20, f"Expected at least 20 evidence register records, got {len(df)}"
+    assert len(df) >= 25, f"Expected at least 25 evidence register records, got {len(df)}"
     
-    # 1. Assert KCPS August 2024 Secondary Policy Manual parameters for 2024-25:
+    # Auditability & Provenance checks: All records must have valid URLs, section citations, and valid date intervals
+    assert df["source_url"].str.startswith("http").all(), "All records must contain direct HTTP/HTTPS source URLs"
+    assert df["source_page_or_section"].str.strip().ne("").all(), "All records must specify a page or section reference"
+    assert (df["effective_start"] <= df["effective_end"]).all(), "effective_start must be <= effective_end"
+    
+    # 1. Assert Secondary Journalistic Source distinction for KCUR reporting:
+    kcur_records = df[df["source_url"].str.contains("kcur.org")]
+    assert len(kcur_records) >= 5, "Expected at least 5 KCUR-sourced records for 2023-24 KCPS floor"
+    assert (kcur_records["evidence_strength"] == "SECONDARY_JOURNALISTIC_RECORD").all(), "KCUR must be classified as SECONDARY_JOURNALISTIC_RECORD"
+    assert (kcur_records["verification_status"] == "SECONDARY_VERIFIED").all(), "KCUR records must be labeled SECONDARY_VERIFIED, not primary source"
+    
+    # 2. Assert Primary Policy Document parameters for KCPS August 2024 manual (2024-25):
     kcps_2425 = df[(df["district_code"] == "048-078") & (df["academic_year"] == "2024-2025")]
-    assert len(kcps_2425) >= 2, "Expected both general and honors records for KCPS 2024-25"
+    assert len(kcps_2425) >= 3, "Expected general, honors, and campus summary records for KCPS 2024-25"
     
-    # Verify category weights: 10% engagement, 40% progress, 50% proficiency = 100% total
-    for _, row in kcps_2425.iterrows():
-        eng = float(row["engagement_weight_pct"])
-        prog = float(row["progress_weight_pct"])
-        prof = float(row["proficiency_weight_pct"])
-        assert eng == 10.0, f"Expected 10.0% engagement weight, got {eng}"
-        assert prog == 40.0, f"Expected 40.0% progress weight, got {prog}"
-        assert prof == 50.0, f"Expected 50.0% proficiency weight, got {prof}"
-        assert eng + prog + prof == 100.0, f"Weights must sum to 100.0%, got {eng + prog + prof}"
-        assert row["missing_work_rule"] == "TRUE_ZERO_ALLOWED", "2024-25 policy requires 0% for missing work"
-        
+    # Verify General Education track weights: 10% engagement, 40% progress, 50% proficiency
+    general_track = kcps_2425[kcps_2425["course_track"] == "General Education"].iloc[0]
+    eng = float(general_track["engagement_weight_pct"])
+    prog = float(general_track["progress_weight_pct"])
+    prof = float(general_track["proficiency_weight_pct"])
+    assert (eng, prog, prof) == (10.0, 40.0, 50.0), f"Expected (10, 40, 50) weights, got ({eng}, {prog}, {prof})"
+    assert general_track["missing_work_rule"] == "TRUE_ZERO_ALLOWED", "2024-25 policy requires 0% for missing work"
+    assert general_track["attempted_work_floor"] == "40_PCT_MINIMUM"
+    assert general_track["evidence_strength"] == "PRIMARY_POLICY_DOCUMENT"
+    
     # Verify Honors/AP/IB exemption retains traditional failing range (0_NO_FLOOR)
-    kcps_honors = kcps_2425[kcps_2425["course_track"].str.contains("Honors")].iloc[0]
-    assert kcps_honors["attempted_work_floor"] == "0_NO_FLOOR", "Honors/AP/IB must retain 0-59% F range (0_NO_FLOOR)"
-    assert kcps_honors["policy_exposure_role"] == "Case_A_Honors_Exemption_2024_25"
+    honors_track = kcps_2425[kcps_2425["course_track"].str.contains("Honors")].iloc[0]
+    assert honors_track["attempted_work_floor"] == "0_NO_FLOOR", "Honors/AP/IB must retain 0-59% F range (0_NO_FLOOR)"
+    assert honors_track["policy_exposure_role"] == "Case_A_Honors_Exemption_Track_2024_25"
     
-    # 2. Assert NKC 74 school-specific pilot exposure for 2025-26:
+    # Verify Lincoln College Prep mixed course exposure record
+    lincoln_rec = kcps_2425[kcps_2425["school_name"] == "LINCOLN COLLEGE PREP."].iloc[0]
+    assert lincoln_rec["policy_exposure_role"] == "Case_A_Mixed_Course_Exposure_2024_25"
+    
+    # 3. Assert NKC 74 school-specific pilot exposure for 2025-26 with corrected assumptions:
     nkc_2526 = df[(df["district_code"] == "024-093") & (df["academic_year"] == "2025-2026")]
     assert len(nkc_2526) == 4, f"Expected 4 NKC high schools in 2025-26, got {len(nkc_2526)}"
     
     # North Kansas City High is the specific pilot school
     nkc_pilot = nkc_2526[nkc_2526["school_name"] == "NORTH KANSAS CITY HIGH"].iloc[0]
     assert nkc_pilot["grading_model"] == "STANDARDS_BASED_SBL"
-    assert nkc_pilot["policy_exposure_role"] == "Case_B_Pilot_Exposed_2025_26"
-    assert nkc_pilot["reassessment_rule"] == "UNIVERSAL_MANDATORY"
+    assert nkc_pilot["policy_exposure_role"] == "Case_B_Pilot_Designated_Courses_2025_26"
+    assert nkc_pilot["engagement_weight_pct"] == "NOT_APPLICABLE", "Proficiency-based SBL grading does not use conventional percentage weights"
+    assert nkc_pilot["proficiency_weight_pct"] == "NOT_APPLICABLE"
+    assert nkc_pilot["reassessment_rule"] == "NOT_YET_VERIFIED", "District FAQ does not establish universal mandatory retakes"
     
     # Oak Park, Staley, Winnetonka are within-district non-pilot comparison schools
     nkc_non_pilots = nkc_2526[nkc_2526["school_name"].isin(["OAK PARK HIGH", "STALEY HIGH", "WINNETONKA HIGH"])]
@@ -178,18 +211,18 @@ def test_policy_exposure_evidence_register_integrity():
 
 
 def test_table4_school_specific_exposure_integrity():
-    """Asserts that Table 4 distinguishes NKC High pilot from non-pilot comparison schools and KCPS tracks."""
+    """Asserts that Table 4 distinguishes NKC High pilot from non-pilot comparison schools and codes KCPS mixed exposure."""
     t4_path = TABLES_DIR / "table4_kc_institutional_decoupling_summary.csv"
     assert t4_path.exists(), f"Missing Table 4: {t4_path}"
     
     df = pd.read_csv(t4_path)
     
-    # NKC High must be identified as the pilot school
+    # NKC High must be identified as the designated pilot school
     nkc_high = df[df["School Name"] == "NORTH KANSAS CITY HIGH"].iloc[0]
     assert "Pilot" in nkc_high["Subsequent Policy Adoption"]
     assert "2025-2026" in nkc_high["Subsequent Effective Year"]
     assert nkc_high["Research Audit Status"] == "VERIFIED_LONGITUDINAL_CASE_B_PILOT"
-    assert nkc_high["Longitudinal Policy Exposure Role"] == "Case_B_Pilot_Exposed_2025_26"
+    assert nkc_high["Longitudinal Policy Exposure Role"] == "Case_B_Pilot_Designated_Courses_2025_26"
     
     # Staley, Oak Park, Winnetonka must be identified as within-district comparison schools
     for non_pilot in ["STALEY HIGH", "OAK PARK HIGH", "WINNETONKA HIGH"]:
@@ -199,9 +232,41 @@ def test_table4_school_specific_exposure_integrity():
         assert row["Research Audit Status"] == "VERIFIED_WITHIN_DISTRICT_COMPARISON"
         assert row["Longitudinal Policy Exposure Role"] == "Case_B_Within_District_Comparison_2025_26"
         
-    # Lincoln College Prep must reflect the Honors/AP/IB exemption
+    # Lincoln College Prep must reflect course-level mixed exposure (NOT treated as an entire untreated school)
     lincoln = df[df["School Name"] == "LINCOLN COLLEGE PREP."].iloc[0]
-    assert "Exemption" in lincoln["Subsequent Policy Adoption"]
-    assert lincoln["Research Audit Status"] == "VERIFIED_LONGITUDINAL_CASE_A_EXEMPTION"
-    assert lincoln["Longitudinal Policy Exposure Role"] == "Case_A_Honors_Exemption_2024_25"
+    assert "Mixed" in lincoln["Subsequent Policy Adoption"]
+    assert lincoln["Research Audit Status"] == "VERIFIED_LONGITUDINAL_CASE_A_MIXED"
+    assert lincoln["Longitudinal Policy Exposure Role"] == "Case_A_Mixed_Course_Exposure_2024_25"
+    
+    # Comprehensive KCPS high schools must also reflect mixed course exposure
+    for kcps_school in ["CENTRAL HIGH SCHOOL", "EAST HIGH SCHOOL", "PASEO ACAD. OF PERFORMING ARTS"]:
+        row = df[df["School Name"] == kcps_school].iloc[0]
+        assert "Mixed" in row["Subsequent Policy Adoption"]
+        assert row["Research Audit Status"] == "VERIFIED_LONGITUDINAL_CASE_A_MIXED"
+        assert row["Longitudinal Policy Exposure Role"] == "Case_A_Mixed_Course_Exposure_2024_25"
+
+
+def test_evidence_register_is_single_source_of_truth():
+    """Asserts that assign_school_policy_exposure dynamically derives all classifications from df_evidence."""
+    from src.analyze_institutional_incentives import assign_school_policy_exposure
+    
+    evidence_path = SOURCES_DIR / "kc_policy_exposure_evidence_register.csv"
+    df_evidence = pd.read_csv(evidence_path)
+    
+    # Normal lookup should return verified pilot for NKC High
+    res_normal = assign_school_policy_exposure("NORTH KANSAS CITY HIGH", "024-093", df_evidence)
+    assert res_normal["policy_exposure_role"] == "Case_B_Pilot_Designated_Courses_2025_26"
+    assert res_normal["audit_status"] == "VERIFIED_LONGITUDINAL_CASE_B_PILOT"
+    
+    # If the pilot record is removed from df_evidence, the function MUST NOT return the pilot role from hard-coded memory!
+    df_no_pilot = df_evidence[~df_evidence["policy_exposure_role"].str.contains("Pilot")]
+    res_no_pilot = assign_school_policy_exposure("NORTH KANSAS CITY HIGH", "024-093", df_no_pilot)
+    assert res_no_pilot["policy_exposure_role"] != "Case_B_Pilot_Designated_Courses_2025_26"
+    
+    # If df_evidence is empty, all schools must be labeled PENDING_AUDIT / Unverified
+    df_empty = pd.DataFrame(columns=df_evidence.columns)
+    res_empty = assign_school_policy_exposure("NORTH KANSAS CITY HIGH", "024-093", df_empty)
+    assert res_empty["audit_status"] == "PENDING_AUDIT"
+    assert res_empty["subsequent_policy"] == "Unverified"
+
 

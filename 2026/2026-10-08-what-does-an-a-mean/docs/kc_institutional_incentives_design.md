@@ -82,6 +82,10 @@ Phase 2 narrows the research scope to two tightly dated, high-leverage case stud
 
 ### Case Study A: Kansas City Public Schools (Grading Architecture & Policy Variation)
 - **Policy Interventions**: Initial 40% unsubmitted floor in 2023–24; revised 40% attempted floor with 0% missing, 10/40/50 weighting, and Honors/AP/IB exemption in 2024–25.
+- **Course-Level Exposure & Mixed Campus Status**:
+  - The August 2024 KCPS secondary manual exempts Honors, AP, IB, and MYP courses (retaining 0–59% F), while applying the 40% attempted floor to general education courses.
+  - Because Lincoln College Prep and comprehensive high schools (Central, East, Paseo, etc.) offer both tracks, campuses exhibit **mixed course exposure** rather than schoolwide treatment or control status.
+  - *Selection Caution*: Honors/AP and general courses differ substantially in student prior achievement and track selection; within-school course comparisons must control for baseline test scores and student background.
 - **Core Research Questions**:
   1. Did the initial 40% unsubmitted floor in 2023–24 compress course failure rates ('F' grades) in 9th-grade Algebra I and English II?
   2. Did credit accumulation among at-risk 9th and 10th graders increase during 2023–24 relative to pre-policy years (2021–23)?
@@ -90,9 +94,12 @@ Phase 2 narrows the research scope to two tightly dated, high-leverage case stud
 - **Comparison Group**: Within-metro comprehensive high schools in districts maintaining traditional zero-allowed policies (Independence, Lee's Summit).
 
 ### Case Study B: North Kansas City Schools (School-Specific SBL Pilot & Reassessment)
-- **Policy Intervention**: SBL pilot in fall 2025 at North Kansas City High School; non-pilot high schools (Oak Park, Staley, Winnetonka) maintain traditional scale prior to 2026–27 rollout.
+- **Policy Intervention**: Phased secondary rollout of Standards-Based Learning (SBL), beginning with designated pilot grades/courses at **North Kansas City High School** in fall 2025; non-pilot high schools (Oak Park, Staley, Winnetonka) maintain traditional scale prior to 2026–27 rollout.
+- **Assessment Parameters**:
+  - Grading weights: Proficiency-based grading uses recent and consistent evidence of learning rather than a fixed percentage formula (conventional weights marked `NOT_APPLICABLE`).
+  - Reassessment rule: While SBL emphasizes reassessment opportunities, the district FAQ does not establish universal mandatory retakes (marked `NOT_YET_VERIFIED` pending course-level guidelines).
 - **Competing Hypotheses**:
-  - *H1 (Leniency / Inflation)*: Uncapped reassessments and zero homework penalties make passing easier without improving underlying knowledge.
+  - *H1 (Leniency / Inflation)*: Decoupling homework from grades and offering retakes lowers passing thresholds, increasing pass rates without improving underlying knowledge.
   - *H2 (Mastery / Achievement Gains)*: Reassessment incentives motivate students to remediate specific learning deficits, leading to genuine gains on standardized EOC exams.
 - **Core Research Questions**:
   1. During the 2025–26 pilot, how did course mark distributions in North Kansas City High compare to non-pilot high schools (Oak Park, Staley, Winnetonka)?
@@ -104,8 +111,8 @@ Phase 2 narrows the research scope to two tightly dated, high-leverage case stud
 
 1. **Policy Audit Protocol**: [`docs/district_policy_audit_protocol.md`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/docs/district_policy_audit_protocol.md)
 2. **Case Study Policy Registry**: [`sources/kc_district_policy_registry.csv`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/sources/kc_district_policy_registry.csv)
-3. **Policy-and-Outcomes Evidence Register**: [`sources/kc_policy_exposure_evidence_register.csv`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/sources/kc_policy_exposure_evidence_register.csv)
-4. **Exploratory Analysis Engine**: [`src/analyze_institutional_incentives.py`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/src/analyze_institutional_incentives.py)
+3. **Auditable Evidence Register**: [`sources/kc_policy_exposure_evidence_register.csv`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/sources/kc_policy_exposure_evidence_register.csv) (29 records with direct URLs, section citations, evidence strength, and effective date ranges).
+4. **Exploratory Analysis Engine**: [`src/analyze_institutional_incentives.py`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/src/analyze_institutional_incentives.py) (dynamically queries evidence register as single source of truth).
 5. **Working Paper**: [`artifacts/kc_institutional_incentive_analysis.md`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/artifacts/kc_institutional_incentive_analysis.md)
 6. **Figure 4 & Tables 4–5**: Visualizations and school/district diagnostic matrices.
 7. **Automated Test Suite**: [`tests/test_institutional_incentives.py`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/tests/test_institutional_incentives.py)

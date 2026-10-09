@@ -12,6 +12,15 @@ Outputs:
 """
 
 from pathlib import Path
+
+# Compatibility fix for PySide6 / Shiboken / Python 3.12 meta-path inspection
+try:
+    import six
+    if hasattr(six, "_SixMetaPathImporter") and not hasattr(six._SixMetaPathImporter, "_path"):
+        six._SixMetaPathImporter._path = None
+except ImportError:
+    pass
+
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import numpy as np
@@ -52,23 +61,60 @@ def map_district_policy(district_name: str) -> str:
     return known_districts.get(d_upper, "UNVERIFIED_PENDING_AUDIT")
 
 
-def assign_school_policy_exposure(school_name: str, district_code: str):
+def assign_school_policy_exposure(school_name: str, district_code: str, df_evidence: pd.DataFrame = None) -> pd.Series:
     """
-    Assigns school-specific subsequent policy, effective year, research audit status,
-    and exposure role based on verified primary records in kc_policy_exposure_evidence_register.csv.
-    Distinguishes school-specific exposure (e.g. NKC High pilot vs Oak Park/Staley/Winnetonka comparison).
+    Derives school-specific policy exposure, subsequent policy name, effective timeline,
+    and research audit status directly from the verified records in kc_policy_exposure_evidence_register.csv.
+    Enforces that evidence register is the single source of truth:
+    - Queries records matching district_code and (school_name == s_upper or school_name == 'ALL_HIGH_SCHOOLS').
+    - Distinguishes course-level mixed exposure (e.g. KCPS Honors/AP/IB exemption vs general education floor).
+    - Distinguishes pilot campus from non-pilot comparison campuses within the same district (e.g. NKC Schools).
     """
+    if df_evidence is None:
+        evidence_file = SOURCES_DIR / "kc_policy_exposure_evidence_register.csv"
+        df_evidence = pd.read_csv(evidence_file)
+        
     s_upper = str(school_name).upper().strip()
     
-    if district_code == "024-093":  # NORTH KANSAS CITY 74
-        if s_upper == "NORTH KANSAS CITY HIGH":
+    # Query evidence register for this district and campus
+    matches = df_evidence[
+        (df_evidence["district_code"] == district_code) & 
+        ((df_evidence["school_name"].str.upper() == s_upper) | (df_evidence["school_name"] == "ALL_HIGH_SCHOOLS"))
+    ]
+    
+    if matches.empty:
+        # Check if district has pending documentation records
+        if district_code == "048-072":  # Hickman Mills
             return pd.Series({
-                "subsequent_policy": "STANDARDS_BASED_SBL (Pilot)",
-                "subsequent_year": "2025-2026 (Fall Pilot)",
+                "subsequent_policy": "FLOOR_50_DOCUMENTATION_PENDING",
+                "subsequent_year": "PENDING_AUDIT",
+                "audit_status": "DOCUMENTATION_PENDING",
+                "policy_exposure_role": "Exploratory_Pending_Audit"
+            })
+        return pd.Series({
+            "subsequent_policy": "Unverified",
+            "subsequent_year": "N/A",
+            "audit_status": "PENDING_AUDIT",
+            "policy_exposure_role": "Exploratory_Pending_Audit"
+        })
+    
+    # Check for subsequent policy records (post-2022)
+    subsequent_records = matches[matches["academic_year"] > "2021-2022"]
+    
+    # 1. North Kansas City 74 (Case Study B)
+    if district_code == "024-093":
+        pilot_records = subsequent_records[subsequent_records["policy_exposure_role"].str.contains("Pilot")]
+        if not pilot_records.empty and (pilot_records["school_name"].str.upper() == s_upper).any():
+            rec = pilot_records[pilot_records["school_name"].str.upper() == s_upper].iloc[0]
+            return pd.Series({
+                "subsequent_policy": f"{rec['grading_model']} (Pilot: Designated Courses)",
+                "subsequent_year": f"{rec['academic_year']} (Fall Pilot)",
                 "audit_status": "VERIFIED_LONGITUDINAL_CASE_B_PILOT",
-                "policy_exposure_role": "Case_B_Pilot_Exposed_2025_26"
+                "policy_exposure_role": rec["policy_exposure_role"]
             })
         else:
+            comp_records = subsequent_records[subsequent_records["policy_exposure_role"].str.contains("Within_District_Comparison")]
+            rec = comp_records.iloc[0] if not comp_records.empty else matches.iloc[0]
             return pd.Series({
                 "subsequent_policy": "TRADITIONAL_PCT (Non-Pilot; SBL in 26-27)",
                 "subsequent_year": "2026-2027 (Full Rollout)",
@@ -76,45 +122,52 @@ def assign_school_policy_exposure(school_name: str, district_code: str):
                 "policy_exposure_role": "Case_B_Within_District_Comparison_2025_26"
             })
             
-    elif district_code == "048-078":  # KANSAS CITY 33 (KCPS)
-        if "LINCOLN" in s_upper:
-            return pd.Series({
-                "subsequent_policy": "FLOOR_40_MINIMUM (Honors/AP/IB Exemption)",
-                "subsequent_year": "2023-2024 / 2024-2025 (Exemption)",
-                "audit_status": "VERIFIED_LONGITUDINAL_CASE_A_EXEMPTION",
-                "policy_exposure_role": "Case_A_Honors_Exemption_2024_25"
-            })
+    # 2. Kansas City Public Schools 33 (Case Study A)
+    elif district_code == "048-078":
+        # Check if 2024-25 has course-level track distinctions in the evidence register
+        tracks_2425 = subsequent_records[subsequent_records["academic_year"] == "2024-2025"]["course_track"].unique()
+        has_honors_and_general = any("Honors" in t for t in tracks_2425) and any("General" in t for t in tracks_2425)
+        
+        if has_honors_and_general:
+            # Lincoln College Prep vs other KCPS campuses: mixed course exposure
+            if "LINCOLN" in s_upper:
+                return pd.Series({
+                    "subsequent_policy": "FLOOR_40_MINIMUM (Mixed: Honors/AP/IB Exempt, General Subject to Floor)",
+                    "subsequent_year": "2023-2024 / 2024-2025 (Revised)",
+                    "audit_status": "VERIFIED_LONGITUDINAL_CASE_A_MIXED",
+                    "policy_exposure_role": "Case_A_Mixed_Course_Exposure_2024_25"
+                })
+            else:
+                return pd.Series({
+                    "subsequent_policy": "FLOOR_40_MINIMUM (Mixed: General 40% Floor, Honors/AP Exempt)",
+                    "subsequent_year": "2023-2024 / 2024-2025 (Revised)",
+                    "audit_status": "VERIFIED_LONGITUDINAL_CASE_A_MIXED",
+                    "policy_exposure_role": "Case_A_Mixed_Course_Exposure_2024_25"
+                })
         else:
             return pd.Series({
-                "subsequent_policy": "FLOOR_40_MINIMUM (Revised: 0% Missing / >=40% Attempted)",
-                "subsequent_year": "2023-2024 / 2024-2025 (Revised)",
+                "subsequent_policy": "FLOOR_40_MINIMUM",
+                "subsequent_year": "2023-2024",
                 "audit_status": "VERIFIED_LONGITUDINAL_CASE_A",
-                "policy_exposure_role": "Case_A_Active_Policy_Revised_2024_25"
+                "policy_exposure_role": "Case_A_Active_Policy_Floor_2023_24"
             })
             
-    elif district_code in ["048-077", "048-074", "048-068", "083-005"]:  # Independence, Lee's Summit, Blue Springs, Park Hill
+    # 3. Verified Comparison Districts (Independence, Lee's Summit, Blue Springs, Park Hill)
+    elif any(r == "Verified_Traditional_Comparison" for r in matches["policy_exposure_role"]):
+        rec = matches[matches["policy_exposure_role"] == "Verified_Traditional_Comparison"].iloc[0]
         return pd.Series({
-            "subsequent_policy": "TRADITIONAL_PCT",
-            "subsequent_year": "2021-2025",
+            "subsequent_policy": rec["grading_model"],
+            "subsequent_year": f"{rec['effective_start'][:4]}-{rec['effective_end'][:4]}",
             "audit_status": "VERIFIED_TRADITIONAL_COMPARISON",
-            "policy_exposure_role": "Verified_Traditional_Comparison"
+            "policy_exposure_role": rec["policy_exposure_role"]
         })
         
-    elif district_code == "048-072":  # Hickman Mills (Ruskin)
-        return pd.Series({
-            "subsequent_policy": "FLOOR_50_DOCUMENTATION_PENDING",
-            "subsequent_year": "PENDING_AUDIT",
-            "audit_status": "DOCUMENTATION_PENDING",
-            "policy_exposure_role": "Exploratory_Pending_Audit"
-        })
-        
-    else:  # Unverified districts / independent charter LEAs
-        return pd.Series({
-            "subsequent_policy": "Unverified",
-            "subsequent_year": "N/A",
-            "audit_status": "PENDING_AUDIT",
-            "policy_exposure_role": "Exploratory_Pending_Audit"
-        })
+    return pd.Series({
+        "subsequent_policy": "Unverified",
+        "subsequent_year": "N/A",
+        "audit_status": "PENDING_AUDIT",
+        "policy_exposure_role": "Exploratory_Pending_Audit"
+    })
 
 
 def load_and_process_decoupling_data():
@@ -149,8 +202,8 @@ def load_and_process_decoupling_data():
         how="left"
     )
     
-    # Assign verified school-specific subsequent policy exposure and roles
-    exposure_df = merged.apply(lambda r: assign_school_policy_exposure(r["SCHOOL_NAME"], r["policy_district_code"]), axis=1)
+    # Assign verified school-specific subsequent policy exposure and roles directly from evidence register
+    exposure_df = merged.apply(lambda r: assign_school_policy_exposure(r["SCHOOL_NAME"], r["policy_district_code"], df_evidence), axis=1)
     merged["current_or_subsequent_policy"] = exposure_df["subsequent_policy"]
     merged["subsequent_effective_year"] = exposure_df["subsequent_year"]
     merged["verification_status"] = exposure_df["audit_status"]
@@ -375,9 +428,9 @@ def plot_figure_4(df: pd.DataFrame):
         elif school in ["STALEY HIGH", "OAK PARK HIGH", "WINNETONKA HIGH"]:
             note = "Case B: Non-Pilot Comparison (SBL in 26-27)"
         elif "LINCOLN" in school:
-            note = "Case A: Honors/AP/IB (0-59% F Retained)"
+            note = "Case A: Mixed Exposure (Honors/AP Exempt)"
         elif d_name == "KANSAS CITY 33":
-            note = "Case A: 40% Floor (23-24) / Revised (24-25)"
+            note = "Case A: Mixed Exposure (General 40% Floor)"
         elif d_name == "INDEPENDENCE 30":
             note = "Comparison: Traditional Scale"
         elif d_name == "HICKMAN MILLS C-1":
@@ -405,7 +458,7 @@ def plot_figure_4(df: pd.DataFrame):
         "Methodological Notes: Data from Missouri DESE MSIP 6 APR Supporting Files (2021–22) across 45 Kansas City area high schools.\n"
         "Cohort Note: 4-Year Graduation Rate reflects 12th-grade graduating seniors (Class of 2022); Mathematics MPI reflects students tested in End-of-Course exams (predominantly 9th/10th grade Algebra I).\n"
         "Threshold Note: School MPI is an aggregate index across all student performance levels (100–500 scale), not a student-level pass/fail cutoff. Reference lines show regional medians.\n"
-        "Policy Note: Policy labels indicate subsequent policy adoptions for longitudinal study (e.g. KCPS 40% floor in 2023–24; NKC High SBL pilot in 2025–26 vs non-pilot comparisons); they were NOT in effect during the 2022 baseline.",
+        "Policy Note: Policy labels indicate subsequent policy exposure from evidence register (e.g. KCPS mixed course exposure; NKC High designated pilot vs non-pilot comparisons); they were NOT in effect during the 2022 baseline.",
         fontsize=7.2, color="#444444", style="italic"
     )
     

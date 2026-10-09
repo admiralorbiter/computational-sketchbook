@@ -73,13 +73,13 @@ Where $\operatorname{PctRank}(X_i) \in [1.0, 100.0]$ is the empirical percentile
 
 | School Name | District | 4-Yr Grad Rate (%) | Grad Pctile | Math Status MPI | Math Pctile | Rank Diff ($\Delta$) | Direct Cert (%) | Status in 2022 | Subsequent Policy Adoption |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- | :--- |
-| **North Kansas City High** | North Kansas City 74 | 98.1% | 96.7 | 331.4 | 33.3 | **+63.3** | 20.2% | Traditional Scale | Case B: SBL Pilot (Fall 2025) |
+| **North Kansas City High** | North Kansas City 74 | 98.1% | 96.7 | 331.4 | 33.3 | **+63.3** | 20.2% | Traditional Scale | Case B: SBL Pilot (Fall 2025: Designated Courses) |
 | **Van Horn High** | Independence 30 | 94.6% | 71.1 | 300.1 | 22.2 | **+48.9** | 25.7% | Verified Traditional | Traditional Scale Maintained |
-| **Lincoln College Prep** | Kansas City 33 (KCPS) | 97.6% | 87.8 | 355.6 | 51.1 | **+36.7** | 17.2% | Traditional Scale | Case A: 40% Floor (2023-24) |
+| **Lincoln College Prep** | Kansas City 33 (KCPS) | 97.6% | 87.8 | 355.6 | 51.1 | **+36.7** | 17.2% | Traditional Scale | Case A: Mixed Exposure (Honors/AP Exempt; General Floor) |
 | **Oak Grove High** | Oak Grove R-VI | 97.6% | 87.8 | 355.7 | 54.4 | **+33.3** | 11.2% | Pending Audit | Pending Audit |
-| **Staley High** | North Kansas City 74 | 98.7% | 100.0 | 366.7 | 71.1 | **+28.9** | 7.0% | Traditional Scale | Case B: SBL Rollout (2026-27) |
-| **Oak Park High** | North Kansas City 74 | 96.6% | 75.6 | 354.3 | 51.1 | **+24.4** | 13.7% | Traditional Scale | Case B: SBL Rollout (2026-27) |
-| **Paseo Academy** | Kansas City 33 (KCPS) | 82.5% | 34.4 | 289.8 | 11.1 | **+23.3** | 33.9% | Traditional Scale | Case A: 40% Floor (2023-24) |
+| **Staley High** | North Kansas City 74 | 98.7% | 100.0 | 366.7 | 71.1 | **+28.9** | 7.0% | Traditional Scale | Case B: Non-Pilot in 25-26 (SBL in 26-27) |
+| **Oak Park High** | North Kansas City 74 | 96.6% | 75.6 | 354.3 | 51.1 | **+24.4** | 13.7% | Traditional Scale | Case B: Non-Pilot in 25-26 (SBL in 26-27) |
+| **Paseo Academy** | Kansas City 33 (KCPS) | 82.5% | 34.4 | 289.8 | 11.1 | **+23.3** | 33.9% | Traditional Scale | Case A: Mixed Exposure (General 40% Floor; Honors/AP Exempt) |
 | **Ruskin High** | Hickman Mills C-1 | 88.3% | 46.7 | 315.0 | 24.4 | **+22.2** | 37.6% | Pending Audit | Policy Adoption Pending Audit |
 | ... | ... | ... | ... | ... | ... | ... | ... | ... | ... |
 | **Grandview High** | Grandview C-4 | 74.0% | 13.3 | 341.7 | 33.3 | **-20.0** | 24.4% | Pending Audit | Policy Adoption Pending Audit |
@@ -152,20 +152,25 @@ The official KCPS August 2024 Grading Policy manual reveals an exceptionally ric
    - In 2023–24, unsubmitted work received a 40% floor.
    - In 2024–25, unsubmitted work receives 0%, while attempted work receives at least 40%.
    - This year-over-year modification creates an identifiable policy shift within the same district.
-3. **Course-Track Differentiation**:
+3. **Course-Track Differentiation & Mixed Exposure**:
    - General education courses operate under the 40% attempted floor.
    - Advanced courses (Honors, AP, IB, MYP) explicitly retain the traditional 0–59% failing range.
+   - Crucially, this exemption applies at the **course level**, not schoolwide. Because Lincoln College Prep offers both tracks and comprehensive high schools (Central, East, Paseo, etc.) also offer advanced tracks, campuses exhibit **mixed course exposure** rather than clean treated versus untreated status.
+   - *Selection Caution*: Honors/AP and general courses differ substantially in student prior achievement and track selection; within-school course comparisons must control for baseline test scores and student background.
 - **Empirical Strategy**:
   - Acquire course-level grade distributions, failure rates ('F' marks), and credit accumulation across KCPS high schools for 2021–22 through 2024–25.
-  - Implement a difference-in-differences design comparing general education courses against exempt Honors/AP/IB courses within the same schools across policy transitions.
+  - Implement a difference-in-differences design comparing general education courses against exempt Honors/AP/IB courses within the same schools across policy transitions, controlling for prior student achievement.
 
 ### Case Study B: North Kansas City Schools (School-Specific SBL Pilot & Reassessment)
 1. **School-Specific Pilot Exposure**:
-   - Official NKC documentation identifies **North Kansas City High School** as the designated pilot high school in fall 2025.
-   - **Within-District Comparison Group**: Oak Park High, Staley High, and Winnetonka High remain on the traditional grading framework during 2025–26.
-2. **The Competing Theoretical Hypotheses**:
-   - *Hypothesis 1 (Incentive Corruption / Grade Inflation)*: Decoupling homework from grades and offering uncapped retakes lowers passing standards, increasing pass rates without improving underlying mastery.
-   - *Hypothesis 2 (Mastery Learning / Genuine Achievement Gains)*: Guaranteed reassessment opportunities incentivize struggling students to remediate specific learning deficits, leading to genuine gains on standardized EOC exams.
+   - Official NKC documentation identifies **North Kansas City High School** as the designated pilot high school in fall 2025 (restricted to designated pilot grades and courses).
+   - **Within-District Comparison Group**: Oak Park High, Staley High, and Winnetonka High remain on the traditional grading framework during 2025–26 prior to district-wide rollout in 2026–27.
+2. **Proficiency-Based Assessment Rules**:
+   - The SBL framework assesses proficiency based on recent and consistent evidence of learning rather than a percentage-weighted formula (weights are non-applicable).
+   - Reassessment rules emphasize remediation, but universal mandatory retakes are not established in district-level FAQs (marked pending course-level guidelines).
+3. **The Competing Theoretical Hypotheses**:
+   - *Hypothesis 1 (Incentive Corruption / Grade Inflation)*: Decoupling homework from grades and offering retakes lowers passing standards, increasing pass rates without improving underlying mastery.
+   - *Hypothesis 2 (Mastery Learning / Genuine Achievement Gains)*: Reassessment incentives motivate students to remediate specific learning deficits, leading to genuine gains on standardized EOC exams.
 - **Empirical Strategy**:
   - Compare North Kansas City High against Oak Park, Staley, and Winnetonka before (2021–25) and during (2025–26) the pilot year.
   - Test whether expanded reassessment opportunities improve subsequent state Algebra I and English II EOC scores—evaluating whether mastery grading fosters genuine learning gains rather than merely cosmetic credential adjustments.
