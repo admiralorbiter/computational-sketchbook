@@ -1,0 +1,5 @@
+contrast_name,estimate_sd,interpretation
+NAEP G4 Item Format Wedge (Constructed Response vs. Multiple Choice),-0.16999999999999998,"Mode penalty is virtually 0 on MC (-0.01 SD) but severe on typed CR (-0.18 SD), yielding a -0.17 SD format penalty."
+NAEP Age Attenuation (Grade 8 CR vs. Grade 4 CR),0.09999999999999999,"Older students recover +0.10 SD, cutting the constructed-response mode penalty by more than half (55.6% reduction)."
+MA PARCC Subject Wedge (ELA vs. Math in Year 1),-0.15,ELA (-0.25 SD) incurs a 2.5x larger penalty than Math (-0.10 SD) due to extensive essay and passage transcription demands.
+MA PARCC Mode Penalty Second-Year Persistence (ELA),-0.13,"Diminishes from -0.25 SD to -0.13 SD (52.0% remaining penalty), proving familiarity reduces but does not eliminate penalty."

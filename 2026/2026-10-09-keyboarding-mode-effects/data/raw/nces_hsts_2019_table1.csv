@@ -1,0 +1,13 @@
+course_title,year,pct_graduates,se,stat_diff_from_2019
+Keyboarding,2000,44.1,1.2,True
+Keyboarding,2005,26.6,1.1,True
+Keyboarding,2009,15.0,0.9,True
+Keyboarding,2019,2.5,0.3,False
+Word Processing,2000,12.8,0.8,True
+Word Processing,2005,6.8,0.6,True
+Word Processing,2009,3.7,0.4,True
+Word Processing,2019,1.2,0.2,False
+Computer Applications,2000,18.2,0.9,True
+Computer Applications,2005,19.5,1.0,True
+Computer Applications,2009,17.1,0.8,True
+Computer Applications,2019,12.4,0.7,False
