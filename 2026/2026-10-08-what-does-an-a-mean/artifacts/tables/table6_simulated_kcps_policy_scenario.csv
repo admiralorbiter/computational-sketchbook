@@ -1,0 +1,7 @@
+policy_era,course_track,simulated_course_enrollment,simulated_f_grades,simulated_credits_att,simulated_credits_ear,simulated_failure_rate_pct,simulated_credit_completion_pct,simulated_eoc_prof_pct,simulated_eoc_bb_pct
+Pre-Reform,General Education,10245,2599,5122.5,3823.0,25.4,74.6,14.0,52.1
+Initial 40% Floor,General Education,5048,619,2524.0,2214.5,12.3,87.7,14.0,51.6
+Revised Missing-Work & Exemption,General Education,5052,860,2526.0,2096.0,17.0,83.0,13.7,52.6
+Pre-Reform,Honors / AP / IB,3324,124,1662.0,1600.0,3.7,96.3,72.2,8.0
+Initial 40% Floor,Honors / AP / IB,1626,63,813.0,781.5,3.9,96.1,72.5,8.0
+Revised Missing-Work & Exemption,Honors / AP / IB,1678,65,839.0,806.5,3.9,96.1,73.1,8.0

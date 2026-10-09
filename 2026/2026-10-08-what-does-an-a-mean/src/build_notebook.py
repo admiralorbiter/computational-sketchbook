@@ -524,9 +524,11 @@ The empirical results from **Figure 4** and **Table 4** clarify the relationship
 """
     ))
 
-    # Cell 24: Code - Phase 3 Longitudinal Course Outcomes Execution
+    # Cell 24: Code - Simulation Pipeline & Pre-Analysis Power Demonstration
     cells.append(nbf.v4.new_code_cell(
-        """# Phase 3: Longitudinal Course Outcomes & Policy Transitions in KCPS (2021–2025)
+        """# Research Frontier: Pre-Analysis Simulation Pipeline & Power Modeling
+# NOTE: This module executes an illustrative simulation scenario to validate econometric pipelines.
+# It does NOT represent observed KCPS student course grades.
 import sys
 from pathlib import Path
 import pandas as pd
@@ -535,38 +537,59 @@ from IPython.display import Image, display
 if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
 
-from src.build_longitudinal_course_outcomes import main as run_course_outcomes
+from src.simulate_longitudinal_course_outcomes import main as run_simulation
 
-# Build harmonized outcomes and generate Table 6 & Figure 5
-run_course_outcomes()
+# Execute simulation pipeline (generates data/synthetic/ and artifact mock demonstrations)
+run_simulation()
 
-# Load and display Table 6
-t6 = pd.read_csv(TABLES_DIR / "table6_kcps_policy_period_outcomes.csv")
-print("Table 6: KCPS Longitudinal Course Outcomes Across Policy Eras & Curricular Tracks:")
+# Load and display Table 6 (Simulated Scenario)
+t6 = pd.read_csv(TABLES_DIR / "table6_simulated_kcps_policy_scenario.csv")
+print("Table 6: Methodological Mock: Hypothetical Course Outcomes Under Assumed Policy Scenarios [SIMULATION]")
 display(t6)
 
-# Display Figure 5
-display(Image(str(FIG_DIR / "05_kcps_course_outcomes_by_policy_period.png")))
+# Display Figure 5 (Simulation Demonstration)
+display(Image(str(FIG_DIR / "05_simulated_policy_scenario_demonstration.png")))
 """
     ))
 
-    # Cell 25: Markdown - Longitudinal Outcomes Findings
+    # Cell 25: Markdown - Pre-Analysis Plan & Real Evidence Roadmap
     cells.append(nbf.v4.new_markdown_cell(
-        """## Section 10: Empirical Findings: Longitudinal Course Outcomes & Decoupling in KCPS
+        """## Section 10: Research Frontier: Methodological Pre-Analysis Plan & Simulation Demonstration
 
-The empirical analysis of 384 term-level course observations across all six KCPS secondary campuses (`CENTRAL`, `EAST`, `LINCOLN`, `NORTHEAST`, `SOUTHEAST`, `PASEO`) between 2021 and 2025 reveals three central findings:
+> [!WARNING]
+> **RESEARCH GOVERNANCE & DATA TRANSPARENCY NOTICE**
+> The estimates presented in **Table 6** and **Figure 5** above are **purely synthetic simulations** designed for methodological testing and statistical power calculations.
+> **They do not represent observed student grade-book records.**
+> 
+> *Governance Rule*: When observational student records are not yet secured, we explicitly document the data gap. We never manufacture observations to complete an empirical analysis.
 
-1. **Course Failure Rates Slashed Under Initial 40% Floor (2023–24)**:
-   - In General Education courses, failure rates fell by more than half, from **25.4%** in the pre-reform baseline to **12.2%** under the initial 40% floor.
-   - Credit completion surged from **74.6%** to **87.8%**, accelerating credit acquisition for hundreds of previously off-track students.
+### 1. Purpose of the Simulation Model
+To prepare an econometric evaluation before accessing sensitive administrative data, empirical researchers build simulated scenarios. This pre-analysis modeling accomplishes three goals:
+1. **Pipeline Architecture Validation**: Ensures our data schema, policy-exposure join logic (`assign_school_policy_exposure()`), and cohort-tracking algorithms execute cleanly without data leakage.
+2. **Identification Strategy Stress-Testing**: Verifies that a Difference-in-Differences (DiD) framework can isolate policy-induced shifts (e.g., General Education tracks subject to minimum grading floors) from secular district trends, using exempt advanced tracks (Honors/AP/IB/MYP) as within-school comparison groups.
+3. **Statistical Power & Sample Size Requirements**: Calibrates the minimum detectable effect size required to distinguish genuine changes in course pass rates from background semester-to-semester noise across secondary campuses.
 
-2. **The Empirical Decoupling Test (Algebra I)**:
-   - While ninth-grade Algebra I course passing rates surged from **71.8%** to **86.4%**, state End-of-Course (EOC) mathematics proficiency remained essentially flat (shifting from **13.9%** to **14.0%**).
-   - This directly confirms the **signaling decoupling hypothesis**: administrative grading floors compressed recorded failure without generating corresponding improvements in independently tested mathematical mastery.
+### 2. The Empirical Data Gap
+At present, the empirical research base for Kansas City high schools consists of:
+- Building-level four-year cohort graduation rates (DESE).
+- Building-level MAP Performance Index (MPI) scores in Mathematics / Algebra I (DESE).
+- Demographic direct certification and free/reduced-price lunch percentages (DESE).
+- Primary board policies, administrative guidelines, and curriculum handbooks (KCPS & regional districts).
 
-3. **Restoring Zeroes and the Advanced Course Exemption (2024–25)**:
-   - When KCPS revised its policy in August 2024 to award 0% for missing work while retaining the 40% floor for attempted work, General Education failure rates partially rebounded to **17.0%**.
-   - Concurrently, because Honors, AP, IB, and MYP courses were explicitly exempted from the 40% floor (retaining 0–59% F), their failure rates remained rock-solid at **3.7%–3.8%** across all four years, serving as an internal within-school control group.
+**What is currently unobserved**:
+We do *not* possess de-identified, student-level or term-level course grade books (A, B, C, D, F mark distributions) or credit recovery records for KCPS secondary campuses across the 2021–2025 academic years. Consequently, **no empirical causal claims can be made regarding the actual magnitude of course failure reduction following the 2023–24 grading reforms.**
+
+### 3. Two-Track Roadmap for Empirical Evidence
+To transition from a methodological pre-analysis plan to certified empirical research, we establish two active acquisition tracks:
+
+- **Track A (Statewide Public Administrative Data — DESE)**:
+  - Acquire official school-level longitudinal End-of-Course (EOC) performance records for Algebra I and Biology spanning 2021 through 2025 directly from Missouri DESE multi-year public files.
+  - Track whether school-level mathematics proficiency shifted contemporaneously with district policy milestones.
+
+- **Track B (Formal District Research Partnership & Data Request — KCPS)**:
+  - Submit a formal institutional data request to the Kansas City Public Schools Department of Research & Accountability pursuant to Board Policy and FERPA guidelines.
+  - Request aggregated, term-level course grade counts (A, B, C, D, F) by secondary building, department (Mathematics vs. Humanities), and track (General Education vs. Advanced/Exempt) from Fall 2021 through Spring 2025.
+  - Protocol specifications, variable schemas, and identification designs are fully documented in [`docs/longitudinal_course_outcomes_protocol.md`](file:///c:/Users/admir/Github/computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/docs/longitudinal_course_outcomes_protocol.md).
 
 ---
 *Computational Sketchbook Repository: `computational-sketchbook/2026/2026-10-08-what-does-an-a-mean/`*

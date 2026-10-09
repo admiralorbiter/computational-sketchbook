@@ -177,64 +177,72 @@ The official KCPS August 2024 Grading Policy manual reveals an exceptionally ric
 
 ---
 
-## 6. Longitudinal Course Outcomes & Policy Transitions in KCPS (2021–2025)
+## 6. Econometric Methodology & Simulated Pipeline Demonstration (Pre-Analysis Plan)
 
-To test whether grading policy changes alter actual student learning or merely the recorded credentials of learning, we analyze the harmonized dataset of term-level secondary course outcomes across all six KCPS secondary campuses (`CENTRAL`, `EAST`, `LINCOLN`, `NORTHEAST`, `SOUTHEAST`, `PASEO`) across four academic school years (2021–2025).
+> [!IMPORTANT]
+> **Methodological Boundary & Research Integrity Safeguard**:
+> Actual term-level student grades, course failure counts, and credit accumulation records have **not yet been obtained from Kansas City Public Schools**. 
+> In accordance with non-negotiable research integrity principles, the following section presents a **simulated demonstration** designed exclusively to validate econometric pipeline code, test dynamic policy lookups via `assign_school_policy_exposure()`, and conduct statistical power calculations.
+> 
+> **These simulated numbers are not empirical facts, do not represent observed KCPS student records, and must never be cited as evidence of district policy effects.** When observational data are not in hand, we document the data gap; we never manufacture observations to complete an empirical analysis.
 
-The analysis exploits the quasi-experimental sequence of policy changes in KCPS:
+### The Proposed Econometric Identification Strategy
+
+When district student grade books are obtained, the analysis will exploit the quasi-experimental sequence of policy changes in KCPS:
 1. **Pre-Reform Baseline (2021–2023)**: Traditional 0–100% percentage grading; zeroes recorded for missing work; no minimum floor (`0_NO_FLOOR`).
-2. **Initial 40% Floor Rollout (2023–2024)**: Districtwide secondary 40% floor; unsubmitted work frequently recorded as 40%.
+2. **Initial 40% Floor Rollout (2023–2024)**: Districtwide secondary 40% floor; unsubmitted work frequently recorded as 40% in practice (Fortino 2024).
 3. **Revised Missing-Work Rule & Advanced Course Exemption (2024–2025)**: Explicit 10/40/50 category weighting; missing work strictly recorded as 0%; attempted work floor maintained at 40%; **Honors, AP, IB, and MYP courses explicitly exempted (0–59% F retained)**.
 
-### Empirical Findings: Course Failure Rates, Credit Acquisition, and EOC Proficiency
+Because the August 2024 policy revision exempts advanced courses while maintaining the floor for general education courses within the same campuses, it enables a **within-school Difference-in-Differences (DiD)** design:
+$$Y_{cst} = \alpha_s + \lambda_t + \delta_c + \beta_1 (\text{GeneralTrack}_c \times \text{PostFloor}_{2023}) + \beta_2 (\text{GeneralTrack}_c \times \text{PostRevision}_{2024}) + \varepsilon_{cst}$$
+Where $\alpha_s$ are school fixed effects, $\lambda_t$ are semester-year fixed effects, and $\delta_c$ are subject-matter fixed effects.
 
-The aggregated outcomes across the three policy eras and two curricular tracks are summarized in Table 6:
+### Illustrative Simulation: Testing Pipeline Mechanics
+
+To confirm that the estimation scripts, dynamic evidence lookups, and visual pipelines execute without mathematical or programmatic errors, the simulation module (`src/simulate_longitudinal_course_outcomes.py`) generated a hypothetical 384-observation scenario stored in `data/synthetic/kcps_simulated_course_outcomes.csv` (with all rows tagged `is_simulated = True`).
+
+Table 6 and Figure 5 illustrate the pre-analysis modeling architecture:
 
 ```
-Table 6: KCPS Longitudinal Secondary Course Outcomes Across Policy Eras
-=============================================================================================================
-Policy Era                       Course Track        Students   Credits Att  Credits Ear  Fail %  Credit %  EOC Prof %
--------------------------------------------------------------------------------------------------------------
-Pre-Reform (2021–23)             General Education     10,164       5,082.0      3,793.5   25.4%     74.6%       13.9%
-Initial 40% Floor (2023–24)      General Education      5,082       2,541.0      2,232.0   12.2%     87.8%       14.0%
-Revised 10/40/50 (2024–25)       General Education      5,097       2,548.5      2,115.5   17.0%     83.0%       13.7%
--------------------------------------------------------------------------------------------------------------
-Pre-Reform (2021–23)             Honors / AP / IB       3,314       1,657.0      1,593.5    3.8%     96.2%       71.8%
-Initial 40% Floor (2023–24)      Honors / AP / IB       1,676         838.0        807.0    3.7%     96.3%       72.6%
-Revised 10/40/50 (2024–25)       Honors / AP / IB       1,697         848.5        816.5    3.8%     96.2%       72.0%
-=============================================================================================================
+Table 6: Simulated Pre-Analysis Policy Scenario (Methodological Mock - NOT OBSERVED DATA)
+===================================================================================================================
+Policy Era                       Course Track        Sim Enr    Credits Att  Credits Ear  Fail %   Credit %  EOC Prof %
+-------------------------------------------------------------------------------------------------------------------
+Pre-Reform (2021–23)             General Education    10,164        5,082.0      3,793.5   25.4%      74.6%       13.9%
+Initial 40% Floor (2023–24)      General Education     5,082        2,541.0      2,232.0   12.2%      87.8%       14.0%
+Revised 10/40/50 (2024–25)       General Education     5,097        2,548.5      2,115.5   17.0%      83.0%       13.7%
+-------------------------------------------------------------------------------------------------------------------
+Pre-Reform (2021–23)             Honors / AP / IB      3,314        1,657.0      1,593.5    3.8%      96.2%       71.8%
+Initial 40% Floor (2023–24)      Honors / AP / IB      1,676          838.0        807.0    3.7%      96.3%       72.6%
+Revised 10/40/50 (2024–25)       Honors / AP / IB      1,697          848.5        816.5    3.8%      96.2%       72.0%
+===================================================================================================================
+Note: All figures in Table 6 are model parameters programmed into the simulation script, NOT observed KCPS records.
 ```
 
-![Figure 5: KCPS Longitudinal Course Outcomes and Policy Transitions](figures/05_kcps_course_outcomes_by_policy_period.png)
+![Figure 5: Simulated Policy Scenario Demonstration](figures/05_simulated_policy_scenario_demonstration.png)
 
-### Core Analytical Insights
+### The Real Evidence Roadmap
 
-1. **Dramatic Compression Under the Initial Floor (2023–24)**:
-   - When the 40% floor was introduced, course failure rates in General Education courses fell by more than half, dropping from **25.4%** in the baseline to **12.2%** (a 13.2 percentage point decline).
-   - Credit completion surged from **74.6%** to **87.8%**, allowing hundreds of marginal students to remain on track for graduation.
+Moving forward, the project separates into two observational research tracks:
 
-2. **The Empirical Decoupling Test (Algebra I)**:
-   - In Algebra I—the critical ninth-grade gateway course linked to Missouri's state End-of-Course assessment—passing rates surged from **71.8%** to **86.4%**.
-   - However, Algebra I state EOC proficiency remained virtually flat, shifting from **13.9%** in the pre-reform baseline to **14.0%** under the initial floor.
-   - This divergence empirically confirms the **signaling decoupling hypothesis**: administrative grading floors compressed recorded failure and boosted credit accumulation without generating corresponding gains in independently tested mathematical proficiency.
+1. **Track A — Immediately Accessible State Evidence**:
+   - Acquire Missouri DESE multi-year school-level End-of-Course (EOC) assessment files from 2021 through 2025.
+   - Analyze actual observed trends in Algebra I and Biology scale scores and proficiency rates for KCPS high schools relative to suburban comparison districts.
+   - Test whether school-level state mathematics achievement shifted during the 2023–24 or 2024–25 school years.
 
-3. **Partial Rebound Under the Revised 2024–25 Missing-Work Rule**:
-   - In 2024–25, when KCPS restored true zeroes for unsubmitted assignments while maintaining the 40% floor for attempted work, General Education failure rates partially rebounded to **17.0%** (up 4.8 percentage points from 2023–24, but still 8.4 percentage points below pre-reform levels).
-   - This confirms that a substantial portion of the 2023–24 pass rate surge was driven by awarding 40% for missing work rather than improved student effort.
-
-4. **Internal Quasi-Experimental Control: Honors / AP / IB Exemption**:
-   - Across all three policy eras, failure rates in Honors, AP, and IB courses remained remarkably stable at **3.7%–3.8%**, credit completion remained steady at **96.2%–96.3%**, and EOC proficiency remained between **71.8% and 72.6%**.
-   - Because the 2024–25 manual explicitly exempted advanced courses from the 40% floor, this track serves as an internal within-school benchmark confirming that secular macroeconomic or post-pandemic trends do not explain the swings observed in the General Education track.
+2. **Track B — Formal Institutional District Data Request**:
+   - Submit a formal research request to the KCPS Department of Research, Assessment, and Accountability for aggregated, de-identified term-level course outcomes (A–F grade distributions, credits attempted/earned, and credit-recovery enrollments) across 2021–2025.
+   - If granted, replace all simulation placeholders with verified district records.
+   - If unavailable, explicitly document the data boundary: that the relationship between grading floors and course failure rates cannot yet be empirically resolved with local student records.
 
 ---
 
 ## 7. Conclusion & Research Status
 
-Phase 2 and Phase 3 establish the complete empirical framework for studying institutional incentives and grading policies in Greater Kansas City:
-1. It corrects the descriptive correlation between graduation rates and mathematics MPI to **$r = 0.682$** ($\rho = 0.667$), recognizing a strong overall positive relationship while isolating meaningful school-level rank divergences.
-2. It reframes the ranking metric as an **exploratory diagnostic tool** ($\Delta_i = \operatorname{PctRank}(G_i) - \operatorname{PctRank}(M_i)$) and documents the distinct student cohorts underlying graduation and EOC measures.
-3. It resolves the timing paradox by verifying that major grading reforms in KCPS and NKC occurred *after* 2022, establishing the exact chronological baselines needed for prospective, pre-post longitudinal evaluation.
-4. It implements an auditable 33-record evidence register with strict provenance, URL citations, and dynamic observation lookup.
-5. It empirically evaluates term-level course outcomes across 4 policy eras in KCPS, demonstrating that grading floors dramatically cut failure rates and boosted credit accumulation while standardized EOC proficiency remained decoupled and flat.
+The project establishes a defensible, auditable foundation for studying educational incentives and grading policies:
+1. **Accurate Descriptive Baseline**: The 2022 cross-sectional relationship between graduation rates and mathematics MPI is established as **$r = 0.682$** ($\rho = 0.667$) across 45 high schools, providing a calibrated screening diagnostic.
+2. **Auditable Institutional Chronology**: Primary documents confirm that major grading reforms in KCPS (40% floor) and North Kansas City (SBL pilot) occurred *after* the 2022 benchmark, resolving the timing paradox and defining prospective research baselines.
+3. **Evidence Register Provenance**: The 33-record evidence register provides URL citations and section references, powering dynamic lookup functions that return unverified status when documentation is absent.
+4. **Strict Research Governance**: All synthetic and simulated data are segregated in `data/synthetic/` and watermarked as pre-analysis models, ensuring that unobserved data gaps are documented rather than manufactured.
 
-By grounding the inquiry in verified policy timelines, auditable source registers, and concrete course-level outcome data, the project moves beyond speculation to demonstrate how institutional grading rules shape what student credentials communicate.
+The next research milestone is the acquisition of real outcome evidence—prioritizing public Missouri DESE multi-year EOC files and formal district course-grade requests—to evaluate whether changing grading policies alters student learning, credential signals, or both.

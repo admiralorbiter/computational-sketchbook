@@ -1,98 +1,111 @@
-# Longitudinal Course Outcomes & Policy Transition Protocol
-**Kansas City Public Schools (KCPS) & Secondary Institutional Case Studies**
+# Longitudinal Course Outcomes Research Protocol & Data Request Specification
+**Kansas City Public Schools (KCPS) Secondary Grading Case Study**
 *Computational Sketchbook Research Series (`2026-10-08-what-does-an-a-mean`)*
 
 ---
 
-## 1. Research Objective & Central Hypothesis
+## 1. Research Governance: Empirical Observational Data vs. Simulation Safeguards
 
-This protocol establishes the empirical framework for analyzing the effects of secondary grading policy reforms on:
-1. **Recorded academic performance**: Term-level letter grades (A–F), course failure rates (% F), and credit completion rates.
-2. **Actual student learning**: Performance on state End-of-Course (EOC) standardized assessments (Algebra I and Biology).
-3. **Signaling fidelity & institutional decoupling**: Whether reductions in course failure rates and increases in credit acquisition reflect true improvements in academic proficiency or administrative artifacts of grading floor policies.
+> [!IMPORTANT]
+> **Non-Negotiable Research Integrity Rule**:
+> When empirical data are not in hand, we document the data gap. We never manufacture observations to complete an empirical analysis or claim factual discoveries from simulated parameters.
 
-### Central Empirical Question
-> *When an urban school district institutes an artificial grading floor (e.g., establishing a 40% minimum score for attempted work) and subsequently revises missing-work penalties and track exemptions, does the resulting improvement in course pass rates signal real academic learning, or does it decouple course credit accumulation from verified mastery?*
+This document establishes the methodological protocol, data request specifications, and pre-analysis econometric plan for evaluating secondary grading policy transitions in Kansas City Public Schools (KCPS).
+
+### Current Empirical Status of the Project
+1. **Empirical & Verified**:
+   - Missouri DESE MSIP 6 Building-Level APR cross-sectional benchmark (2022) across 45 Kansas City metropolitan high schools ($r = 0.682$, $\rho = 0.667$).
+   - Primary institutional policy documents and board minutes establishing adoption dates:
+     - KCPS August 2024 Secondary Grading Policy Manual (10% Engagement, 40% Progress, 50% Proficiency; 0% missing-work rule; 40% attempted floor; Honors/AP/IB/MYP course-level exemption).
+     - North Kansas City Schools January 2024 SBL FAQ (Fall 2025 pilot restricted to designated grades/courses at North Kansas City High).
+   - Auditable 33-record school-course-year policy exposure evidence register ([`kc_policy_exposure_evidence_register.csv`](../sources/kc_policy_exposure_evidence_register.csv)) with direct URLs and section citations.
+2. **Current Data Gap (Unobtained Observational Records)**:
+   - Term-level student letter grades (A–F distributions).
+   - School- and course-specific failure rates (% F).
+   - Credits attempted versus credits earned by curricular track.
+   - Student-level linkages between classroom grades and state End-of-Course (EOC) scale scores.
+3. **Role of Synthetic Data in This Project**:
+   - The file [`data/synthetic/kcps_simulated_course_outcomes.csv`](../data/synthetic/kcps_simulated_course_outcomes.csv) and [`table6_simulated_kcps_policy_scenario.csv`](../artifacts/tables/table6_simulated_kcps_policy_scenario.csv) are **strictly synthetic demonstrations** produced by [`src/simulate_longitudinal_course_outcomes.py`](../src/simulate_longitudinal_course_outcomes.py).
+   - They serve exclusively to validate that the Difference-in-Differences (DiD) pipeline executes, check dynamic evidence lookups, and conduct statistical power calculations.
+   - **They do not represent observed KCPS student outcomes and must never be cited as empirical evidence.**
 
 ---
 
-## 2. Policy Chronology & Empirical Regimes (KCPS Case Study A)
+## 2. The Two-Track Research Strategy for Real Evidence
 
-The Kansas City Public Schools (KCPS) policy sequence provides a natural quasi-experimental progression across four consecutive academic years:
+To answer whether secondary grading reforms alter actual learning, credential signals, or both, the project proceeds along two distinct empirical tracks:
 
-| Academic Year | Policy Era | Institutional Rule Description | General Education Track | Honors / AP / IB / MYP Track |
-| :--- | :--- | :--- | :--- | :--- |
-| **2021–2022** | Pre-Reform Baseline | Board Policy IKA (Traditional 0–100%). Zeroes awarded for missing work; no minimum floor (F = 0–59%). | Traditional (0% floor, zeroes for missing) | Traditional (0% floor, zeroes for missing) |
-| **2022–2023** | Pre-Reform Baseline Trend | Continuation of Policy IKA. Identical grading scales and failure ranges. | Traditional (0% floor, zeroes for missing) | Traditional (0% floor, zeroes for missing) |
-| **2023–2024** | Initial 40% Floor Rollout | Administrative adoption of 40% floor across secondary schools. As reported by KCUR (Fortino 2024), missing assignments in practice frequently received 40% rather than 0%. | 40% Floor Applied (Attempted & Missing) | 40% Floor Applied (Attempted & Missing) |
-| **2024–2025** | Revised Missing-Work & Exemption | Official Secondary Grading Policy Manual (August 2024). Establishes 3-tier category weighting (10% Engagement, 40% Progress, 50% Proficiency). Missing work strictly receives 0%. Attempted work floor remains 40%. **Advanced courses (Honors, AP, IB, MYP) explicitly EXEMPTED (retaining 0–59% F scale).** | 40% Attempted Floor; 0% Missing; 10/40/50 Weights | **EXEMPT**: 0% Floor (0–59% F retained); 10/40/50 Weights |
+```mermaid
+flowchart TD
+    A["Empirical Inquiry: What Does an 'A' Mean?"] --> B["Track A: Public State Assessment Evidence (Immediate)"]
+    A --> C["Track B: District Course-Grade Request (Institutional)"]
+    
+    B --> B1["Missouri DESE Multi-Year EOC Files (2021–2025)"]
+    B1 --> B2["School-Level Algebra I & Biology Proficiency Trends"]
+    B2 --> B3["Cross-District Comparisons (KCPS vs. Suburban Cohorts)"]
+    
+    C --> C1["Formal Data Request to KCPS Research & Accountability"]
+    C1 --> C2["De-Identified Term-Level Grade Records (A–F Counts)"]
+    C2 --> C3["Credit Accumulation & Recovery Participation by Track"]
+    C3 --> C4["Within-School DiD (General Ed Floor vs. Honors Exemption)"]
+```
 
----
+### Track A — Immediately Accessible Public State Evidence
+Using Missouri Department of Elementary and Secondary Education (DESE) public data applications:
+- **Scope**: School-level End-of-Course (EOC) assessment results from 2021 through 2025 across all KCPS secondary campuses and regional comparison schools.
+- **Key Metrics**: Mathematics Performance Index (MPI), percentage Proficient and Advanced, percentage Below Basic, and student participation rates.
+- **Analytical Utility**: Establishes whether independent, state-tested mathematics and science achievement exhibited shifts coincident with the 2023–24 grading floor introduction or the 2024–25 revision.
+- **Boundary**: State EOC files do not report classroom grades or course failure rates. They provide the external benchmark, not the internal grading margin.
 
-## 3. Data Dictionary: `kcps_longitudinal_course_outcomes.csv`
+### Track B — Institutional District Course-Grade Request (Formal Specification)
+We formally specify the data request for submission to the KCPS Department of Research, Assessment, and Accountability:
 
-The harmonized dataset (`data/processed/kcps_longitudinal_course_outcomes.csv`) contains 384 term-level course observations across 6 KCPS secondary campuses:
-- **Campuses**: Central High School, East High School, Lincoln College Preparatory Academy, Northeast High School, Southeast High School, Paseo Academy of Children's & Performing Arts.
-- **Academic Years**: 2021–2022, 2022–2023, 2023–2024, 2024–2025.
+#### Requested Unit of Observation
+Aggregated term-level section summary (FERPA compliant, de-identified, no student PII):
+- **Years**: 2021–22, 2022–23 (Pre-reform baseline), 2023–24 (Initial floor), 2024–25 (Revised manual).
+- **Schools**: Central, East, Lincoln College Prep, Northeast, Southeast, Paseo.
 - **Terms**: Fall (Semester 1), Spring (Semester 2).
-- **Core Subjects**: Algebra I (MATH101), Geometry (MATH201), English I (ENG101), Biology (SCI101).
-- **Tracks**: General Education, Honors / AP / IB.
-
-### Variable Definitions
-
-| Variable Name | Data Type | Description & Verification Standard |
-| :--- | :--- | :--- |
-| `district_code` | string | Missouri DESE 6-digit district identifier (`048-078` for KCPS). |
-| `district_name` | string | Official district name (`Kansas City 33`). |
-| `school_name` | string | Building name matching Missouri DESE APR Directory. |
-| `academic_year` | string | Academic school year (`YYYY-YYYY`). |
-| `policy_era` | string | Analytical regime (`Pre-Reform`, `Initial 40% Floor`, `Revised Missing-Work & Exemption`). |
-| `term` | string | Academic semester (`Fall`, `Spring`). |
-| `course_code` | string | Department course identifier (`MATH101`, `MATH201`, `ENG101`, `SCI101`). |
-| `course_title` | string | Course name. |
-| `course_track` | string | Curricular track (`General Education`, `Honors / AP / IB`). |
-| `students_enrolled` | integer | Total student count completing the term course section. |
-| `count_A`–`count_F` | integer | Absolute count of final semester grades awarded in each letter tier. |
-| `pct_A`–`pct_F` | float | Percentage of enrolled students receiving each letter grade (sum to 100%). |
-| `failure_rate_pct` | float | Primary outcome metric: percentage of students receiving an 'F' (`count_F / students_enrolled * 100`). |
-| `credits_attempted` | float | Total Carnegie units attempted (0.5 credit per semester course per student). |
-| `credits_earned` | float | Total Carnegie units awarded for passing marks (A, B, C, D). |
-| `credit_completion_pct` | float | Ratio of credits earned to credits attempted (`credits_earned / credits_attempted * 100`). |
-| `eoc_proficient_or_advanced_pct`| float | Percentage of students scoring Proficient or Advanced on state EOC assessment (Spring term). |
-| `eoc_below_basic_pct` | float | Percentage of students scoring Below Basic on state EOC assessment. |
-| `policy_exposure_role` | string | Dynamic classification from evidence register (e.g. `Case_A_General_Track_Floor_2024_25`). |
-| `grading_model` | string | Institutional grading structure (`TRADITIONAL_PCT`, `STANDARDS_BASED_SBL`). |
-| `attempted_work_floor` | string | Minimum allowable score for attempted student work (`0_NO_FLOOR`, `40_PCT_MINIMUM`). |
-| `missing_work_rule` | string | Formal penalty for unsubmitted work (`TRUE_ZERO_ALLOWED`, `FLOOR_40_UNSUBMITTED`). |
-| `reassessment_rule` | string | Retake policy (`TEACHER_DISCRETION`, `UNIVERSAL_MANDATORY`, `NOT_YET_VERIFIED`). |
-| `engagement_weight_pct` | float | Formal category weight for attendance/participation (10.0% in 24–25). |
-| `progress_weight_pct` | float | Formal category weight for quizzes/formative progress (40.0% in 24–25). |
-| `proficiency_weight_pct` | float | Formal category weight for summative assessments (50.0% in 24–25). |
-| `audit_status` | string | Evidence classification from evidence register (`PRIMARY_POLICY_DOCUMENT`, etc.). |
+- **Target Courses**:
+  - Algebra I, Geometry, Algebra II
+  - English I, English II
+  - Biology, Chemistry
+- **Variables Requested**:
+  1. `course_track`: General Education, Honors, Pre-AP, AP, IB, MYP.
+  2. `total_students_enrolled`: Course enrollment at census and term completion.
+  3. `letter_grade_counts`: Absolute counts of A, B, C, D, F, Incomplete (with small-cell suppression $N < 10$).
+  4. `credits_attempted`: Total semester credits attempted.
+  5. `credits_earned`: Total semester credits awarded toward graduation.
+  6. `credit_recovery_count`: Number of students enrolled in digital credit recovery modules (e.g. Edgenuity) for that course deficiency.
+  7. `matched_eoc_proficient_count`: Count of enrolled students scoring Proficient/Advanced on the corresponding state EOC (Algebra I and Biology).
 
 ---
 
-## 4. Empirical Methodology & Econometric Framework
+## 3. Econometric Pre-Analysis Plan (When Real Records Are Obtained)
 
-### A. Within-School Difference-in-Differences (DiD)
-The August 2024 policy revision creates an ideal within-school identification strategy. Because Honors, AP, IB, and MYP courses were explicitly exempted from the 40% grading floor while General Education courses remained subject to it:
-$$\text{Outcome}_{ist} = \alpha_s + \lambda_t + \beta_1 (\text{GeneralTrack}_i \times \text{PostFloor}_{t}) + \beta_2 (\text{GeneralTrack}_i \times \text{PostRevision}_t) + \mathbf{X}'_{st}\boldsymbol{\gamma} + \varepsilon_{ist}$$
+### A. Within-School Difference-in-Differences (DiD) Specification
+The August 2024 KCPS secondary manual exempts Honors, AP, IB, and MYP courses from the 40% attempted floor (retaining the traditional 0–59% failing range), while subjecting General Education courses to the floor.
+
+When empirical course-level records are obtained, the econometric model will estimate:
+$$Y_{cst} = \alpha_s + \lambda_t + \delta_c + \beta_1 (\text{GeneralTrack}_c \times \text{PostFloor}_{2023}) + \beta_2 (\text{GeneralTrack}_c \times \text{PostRevision}_{2024}) + \varepsilon_{cst}$$
 Where:
-- $\alpha_s$ are school fixed effects (absorbing constant campus differences like Lincoln's magnet selectivity vs Central's neighborhood intake).
-- $\lambda_t$ are semester-year fixed effects.
-- $\beta_1$ estimates the initial effect of introducing the 40% floor in 2023–24.
-- $\beta_2$ estimates the subsequent adjustment when missing-work zeroes were restored and the honors exemption formalized in 2024–25.
+- $Y_{cst}$ is the observed failure rate (% F) or credit completion rate for course section $c$ in school $s$ in term $t$.
+- $\alpha_s$ are school fixed effects (controlling for time-invariant campus sorting, e.g. Lincoln's magnet selectivity).
+- $\lambda_t$ are semester-year fixed effects (controlling for districtwide or macroeconomic shocks).
+- $\delta_c$ are subject-matter fixed effects (Algebra I vs English I vs Biology).
+- $\beta_1$ estimates the causal effect of introducing the 40% floor in 2023–24.
+- $\beta_2$ estimates the effect of restoring missing-work zeroes and formalizing the track exemption in 2024–25.
 
-### B. Empirical Decoupling Test
-To distinguish genuine learning gains from artificial measurement compression, we estimate the relationship between course pass rates ($\text{PassRate} = 100 - \text{FailureRate}$) and standardized EOC proficiency:
-$$\Delta \text{Decoupling Gap}_{st} = \Delta \text{CoursePassRate}_{st} - \Delta \text{EOCProficiencyRate}_{st}$$
-Under the null hypothesis that grading floor policies promote real learning by maintaining student motivation and engagement, $\Delta \text{Decoupling Gap} \approx 0$ (both metrics rise in tandem). Under the Goodhart-Campbell hypothesis, $\Delta \text{Decoupling Gap} > 0$ (course passing surges while EOC proficiency remains flat or declines).
+### B. The Empirical Decoupling Test
+To determine whether changes in course pass rates represent genuine learning versus measurement distortion, we will estimate the joint covariance:
+$$\operatorname{Cov}(\Delta \text{CoursePassRate}_{st}, \Delta \text{EOCProficiencyRate}_{st})$$
+- **H0 (Learning Hypothesis)**: Grading floors sustain student motivation, prevent fatalistic disengagement, and lead to increased effort; course pass rates and EOC proficiency increase in tandem ($\operatorname{Cov} > 0$).
+- **H1 (Decoupling / Campbell's Law Hypothesis)**: Grading floors mechanically reduce recorded failure by truncating the bottom of the scale; course pass rates surge while EOC proficiency remains flat or deteriorates ($\operatorname{Cov} \approx 0$ or negative correlation).
 
 ---
 
-## 5. North Kansas City SBL Extension (Case Study B)
+## 4. Pipeline Verification via Synthetic Power Simulation
 
-For Phase 3 expansion, North Kansas City High's Standards-Based Learning (SBL) pilot (scheduled for Fall 2025) will be incorporated as Case Study B:
-1. **Pilot designated courses**: English I, Algebra I, Biology at North Kansas City High School.
-2. **Within-district non-pilot controls**: Identical courses at Oak Park High, Staley High, and Winnetonka High (operating under traditional 0–100% percentage grading until full rollout in 2026–27).
-3. **Key outcome difference**: In SBL, grades communicate demonstrated mastery on specific learning standards rather than accumulated mathematical points or attendance. The research question is whether SBL grade distributions demonstrate higher concordance with state EOC performance than traditional point-based grading systems.
+The companion script [`src/simulate_longitudinal_course_outcomes.py`](../src/simulate_longitudinal_course_outcomes.py) simulates this exact econometric architecture to confirm:
+1. Dynamic policy assignment functions handle complex course-track and wildcard lookups without runtime exceptions.
+2. The DiD model specification achieves statistical power to detect a minimum effect size of 5 percentage points in failure rates given KCPS secondary enrollment totals ($N \approx 3,000$ high school students per cohort).
+3. All synthetic output tables and visualizations are explicitly segregated in `data/synthetic/` and watermarked with prominent simulation disclaimers.

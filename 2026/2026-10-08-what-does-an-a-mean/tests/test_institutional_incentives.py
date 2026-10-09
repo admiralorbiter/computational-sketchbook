@@ -27,6 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
 PROCESSED_DIR = BASE_DIR / "data" / "processed"
+SYNTHETIC_DIR = BASE_DIR / "data" / "synthetic"
 SOURCES_DIR = BASE_DIR / "sources"
 TABLES_DIR = BASE_DIR / "artifacts" / "tables"
 FIG_DIR = BASE_DIR / "artifacts" / "figures"
@@ -296,60 +297,65 @@ def test_evidence_register_is_single_source_of_truth():
     assert res_empty["policy_exposure_role"] == "Exploratory_Pending_Audit"
 
 
-def test_longitudinal_course_outcomes_integrity():
-    """Asserts schema, counts, valid ranges, and empirical policy patterns for KCPS course outcomes."""
-    outcomes_path = PROCESSED_DIR / "kcps_longitudinal_course_outcomes.csv"
-    assert outcomes_path.exists(), f"Missing outcomes dataset: {outcomes_path}"
+def test_simulation_pipeline_safeguards():
+    """
+    Asserts strict research governance safeguards:
+    - Synthetic simulation files must NEVER be placed in data/processed/.
+    - Synthetic dataset must reside in data/synthetic/ and tag every row with is_simulated=True.
+    - Mathematical identities must hold for the simulated parameters.
+    - Demonstrative outputs (Table 6, Figure 5) must be clearly labeled as simulation scenarios.
+    """
+    # Safeguard 1: No simulated course outcomes in data/processed/
+    processed_leak = PROCESSED_DIR / "kcps_longitudinal_course_outcomes.csv"
+    assert not processed_leak.exists(), "CRITICAL RESEARCH GOVERNANCE VIOLATION: Synthetic course outcomes leaked into data/processed/"
     
-    df = pd.read_csv(outcomes_path)
-    assert len(df) == 384, f"Expected 384 term-course observations, found {len(df)}"
+    # Safeguard 2: Synthetic dataset exists in data/synthetic/ and is explicitly flagged
+    sim_path = SYNTHETIC_DIR / "kcps_simulated_course_outcomes.csv"
+    assert sim_path.exists(), f"Missing synthetic demonstration dataset: {sim_path}"
     
-    # Required columns
-    expected_cols = [
-        "district_code", "school_name", "academic_year", "policy_era", "term",
-        "course_title", "course_track", "students_enrolled", "count_F",
-        "failure_rate_pct", "credits_attempted", "credits_earned", "credit_completion_pct",
-        "policy_exposure_role", "grading_model", "attempted_work_floor", "missing_work_rule"
-    ]
-    for col in expected_cols:
-        assert col in df.columns, f"Missing column in outcomes dataset: {col}"
-        
-    # Mathematical identities
-    assert (df["credits_earned"] <= df["credits_attempted"]).all()
-    assert (df["failure_rate_pct"] >= 0.0).all() and (df["failure_rate_pct"] <= 100.0).all()
-    assert (df["credit_completion_pct"] >= 0.0).all() and (df["credit_completion_pct"] <= 100.0).all()
+    df_sim = pd.read_csv(sim_path)
+    assert len(df_sim) == 384, f"Expected 384 simulated observations, found {len(df_sim)}"
+    assert df_sim["is_simulated"].all() == True, "Every record in synthetic dataset must have is_simulated=True"
+    assert (df_sim["data_provenance"] == "SYNTHETIC_SIMULATION_FOR_PIPELINE_VALIDATION").all()
     
-    # Grade counts must sum to students_enrolled
-    grade_sums = df["count_A"] + df["count_B"] + df["count_C"] + df["count_D"] + df["count_F"]
-    assert (grade_sums == df["students_enrolled"]).all()
+    # Mathematical identities of simulated parameters
+    assert (df_sim["simulated_credits_earned"] <= df_sim["simulated_credits_attempted"]).all()
+    grade_sums = (
+        df_sim["simulated_count_A"] + df_sim["simulated_count_B"] + 
+        df_sim["simulated_count_C"] + df_sim["simulated_count_D"] + df_sim["simulated_count_F"]
+    )
+    assert (grade_sums == df_sim["simulated_course_enrollment"]).all()
     
-    # Verify Table 6 summary
-    t6_path = TABLES_DIR / "table6_kcps_policy_period_outcomes.csv"
-    assert t6_path.exists(), f"Missing Table 6: {t6_path}"
+    # Safeguard 3: Table 6 is explicitly labeled as a simulated policy scenario
+    t6_path = TABLES_DIR / "table6_simulated_kcps_policy_scenario.csv"
+    assert t6_path.exists(), f"Missing Table 6 (Simulated Scenario): {t6_path}"
     df_t6 = pd.read_csv(t6_path)
+    assert "simulated_failure_rate_pct" in df_t6.columns
+    assert "simulated_credit_completion_pct" in df_t6.columns
     
-    gen_pre = df_t6[(df_t6["course_track"] == "General Education") & (df_t6["policy_era"] == "Pre-Reform")].iloc[0]
-    gen_init = df_t6[(df_t6["course_track"] == "General Education") & (df_t6["policy_era"] == "Initial 40% Floor")].iloc[0]
-    gen_rev = df_t6[(df_t6["course_track"] == "General Education") & (df_t6["policy_era"] == "Revised Missing-Work & Exemption")].iloc[0]
-    
-    # General education failure rate plummets under initial 40% floor, then partially rebounds
-    assert gen_init["failure_rate_pct"] < gen_pre["failure_rate_pct"] - 10.0
-    assert gen_rev["failure_rate_pct"] > gen_init["failure_rate_pct"]
-    assert gen_rev["failure_rate_pct"] < gen_pre["failure_rate_pct"]
-    
-    # Honors track failure rate remains stable across all eras (~3-5%)
-    honors_f_rates = df_t6[df_t6["course_track"] == "Honors / AP / IB"]["failure_rate_pct"].tolist()
-    for fr in honors_f_rates:
-        assert 2.0 <= fr <= 6.0
-        
-    # EOC proficiency remains flat/decoupled for General Education (~13-15%)
-    assert abs(gen_init["eoc_prof_pct"] - gen_pre["eoc_prof_pct"]) < 2.0
+    # Safeguard 4: Figure 5 is explicitly labeled as a simulated demonstration
+    fig5_path = FIG_DIR / "05_simulated_policy_scenario_demonstration.png"
+    assert fig5_path.exists(), f"Missing Figure 5 (Simulation Demonstration): {fig5_path}"
+    assert fig5_path.stat().st_size > 50_000
 
 
-def test_figure5_output_validity():
-    """Asserts that Figure 5 (KCPS course outcomes by policy period) was generated and is valid."""
-    fig_path = FIG_DIR / "05_kcps_course_outcomes_by_policy_period.png"
-    assert fig_path.exists(), f"Missing Figure 5: {fig_path}"
-    assert fig_path.stat().st_size > 50_000, f"Figure 5 file suspiciously small: {fig_path.stat().st_size} bytes"
+def test_empirical_processed_data_purity():
+    """
+    Asserts that all primary processed data files in data/processed/ contain ONLY verified empirical records
+    and have zero synthetic contamination.
+    """
+    empirical_files = [
+        PROCESSED_DIR / "kc_high_school_panel.csv",
+        PROCESSED_DIR / "act_gpa_score_trends.csv",
+        PROCESSED_DIR / "naep_hsts_trends.csv",
+        PROCESSED_DIR / "gershenson_nc_algebra1_benchmark.csv",
+        PROCESSED_DIR / "uchicago_college_prediction.csv"
+    ]
+    for ef in empirical_files:
+        assert ef.exists(), f"Missing verified empirical dataset: {ef}"
+        df = pd.read_csv(ef)
+        # Ensure no synthetic flags or simulated columns exist in empirical datasets
+        assert "is_simulated" not in df.columns, f"Synthetic flag found in empirical dataset {ef}"
+        assert not df.empty, f"Empirical dataset {ef} is unexpectedly empty"
 
 
