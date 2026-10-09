@@ -85,7 +85,7 @@ Our target population is **regular public high schools serving exactly grades 9â
   - *AP Only*: **14 schools (4.6%)**
   - *Both Routes*: **180 schools (58.6%)**
 - **Metric A (Conditional on No AP)**: Among 113 high schools reporting no AP participation, **105 (92.9%)** report dual-enrollment participation (108 of 116, or 93.1%, in sensitivity check).
-- **Metric B (Miss Rate Among Either Route)**: Among the 299 high schools reporting at least one advanced course route, **105 (35.1%)** rely exclusively on dual enrollment and are missed by an AP-only measure.
+- **Metric B (Miss Rate Among Either Route)**: Among the 299 high schools reporting at least one advanced course route, **105 (35.1%)** report dual enrollment but no AP participation and are missed by an AP-only measure.
 - **Epistemic Scope**: Quantifies the divergence between AP-only and dual-credit opportunity measures. Does *not* evaluate course quality, transferability of credits, or student completion benefits.
 
 ### Study 2: Curricular Concealment in AP (The Case of Computer Science)
@@ -97,11 +97,11 @@ Our target population is **regular public high schools serving exactly grades 9â
 ### Study 3: The Denominator Wedge (Schools vs. Students in Physics Provision)
 - **Handling Source Codes**: CRDC enrollment fields disaggregate by sex (`TOT_ENR_M`, `TOT_ENR_F`, `TOT_ENR_X`). Across the 307 schools, `TOT_ENR_X` contains 304 instances of `-9` (Not Applicable / Skipped) and 1 instance of `-12` (Suppressed for Privacy at Central High School, KCPS). Negative codes are audited and clipped at zero, yielding **provisional calculations from released counts** while holding the single suppressed record unresolved.
 - **Key Finding**:
-  - $P_{\\text{school}}$: 101 of 307 schools (**32.90%**) report zero physics classes.
-  - $P_{\\text{student}}$: 41,616 of 228,637 released students (**18.20%**) attend those schools.
-  - **Denominator Divergence**: **14.70 percentage points** ($32.90\\% - 18.20\\%$).
+  - $P_{\text{school}}$: 101 of 307 schools (**32.90%**) report zero physics classes.
+  - $P_{\text{student}}$: 41,616 of 228,637 released students (**18.20%**) attend those schools.
+  - **Denominator Divergence**: **14.70 percentage points** ($32.90\% - 18.20\%$).
 - **Institutional Scale Driver**: Zero-physics schools average **412 students** (median 280), whereas physics-offering schools average **908 students** (median 728).
-- **Epistemic Scope**: Neither denominator inherently overstates the other; they describe different populations (administrative units vs. individual learners). Proves that dual-denominator reporting is essential for transparent policy analysis.
+- **Epistemic Scope**: Neither denominator inherently overstates the other; they describe different populations (administrative units vs. individual learners). The result demonstrates how denominator choice changes this description.
 
 ---
 

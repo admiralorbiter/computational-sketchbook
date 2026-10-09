@@ -237,11 +237,35 @@ def main():
     panel["ap_cs_participating"] = panel["SCH_APCOMPENR_IND"].str.strip() == "Yes"
     panel["ap_cs_indicator_raw"] = panel["SCH_APCOMPENR_IND"].str.strip()
 
-    panel["physics_classes"] = panel["SCH_SCICLASSES_PHYS"].apply(clean_num).fillna(0)
-    panel["has_physics_classes"] = panel["physics_classes"] > 0
+    # Course counts: clean negative exception codes (-9, -12) and missing values to NaN.
+    # Preserve unknowns without fillna(0) so missing/skipped records are never conflated with zero classes.
+    panel["physics_classes"] = panel["SCH_SCICLASSES_PHYS"].apply(clean_num)
+    panel["has_physics_classes"] = panel["physics_classes"].apply(
+        lambda x: np.nan if pd.isna(x) else (x > 0)
+    )
 
-    panel["general_cs_classes"] = panel["SCH_COMPCLASSES_CSCI"].apply(clean_num).fillna(0)
-    panel["has_general_cs_classes"] = panel["general_cs_classes"] > 0
+    panel["general_cs_classes"] = panel["SCH_COMPCLASSES_CSCI"].apply(clean_num)
+    panel["has_general_cs_classes"] = panel["general_cs_classes"].apply(
+        lambda x: np.nan if pd.isna(x) else (x > 0)
+    )
+
+    # Assert that all schools in the analyzed cohorts have valid, non-null, nonnegative course counts
+    for cohort_name, cohort_mask in [("Consistent 307 Cohort", panel["flag_consistent_9_12"]),
+                                     ("Broad Matched 317 Cohort", panel["flag_matched_crdc"])]:
+        sub = panel[cohort_mask]
+        n_missing_phys = sub["physics_classes"].isna().sum()
+        assert n_missing_phys == 0, f"{cohort_name} contains {n_missing_phys} missing or negative physics counts!"
+        assert (sub["physics_classes"] >= 0).all(), f"{cohort_name} contains negative physics counts!"
+
+        n_missing_cs = sub["general_cs_classes"].isna().sum()
+        assert n_missing_cs == 0, f"{cohort_name} contains {n_missing_cs} missing or negative general CS counts!"
+        assert (sub["general_cs_classes"] >= 0).all(), f"{cohort_name} contains negative general CS counts!"
+
+    # Assert that unmatched school (Hawthorn) preserves NaN unknowns rather than defaulting to zero
+    unmatched_sub = panel[~panel["flag_matched_crdc"]]
+    if len(unmatched_sub) > 0:
+        assert unmatched_sub["physics_classes"].isna().all(), "Unmatched school physics count was erroneously set to non-null!"
+        assert unmatched_sub["general_cs_classes"].isna().all(), "Unmatched school general CS count was erroneously set to non-null!"
 
     # Categorize 4-cell pathway: AP x Dual
     def categorize_pathway(row):

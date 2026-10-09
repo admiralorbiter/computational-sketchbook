@@ -203,3 +203,33 @@ def test_study_3_physics_recomputed_released_enrollment(panel):
 
     wedge_317 = school_pct_317 - student_pct_317
     assert pytest.approx(wedge_317, 0.001) == 15.270
+
+
+def test_course_counts_preserve_unknowns_and_assert_valid_cohort(panel):
+    """
+    Validate that missing/administrative course counts are preserved as NaN:
+    - Never silently fillna(0) unknowns into apparent absence of courses.
+    - Assert that all schools in the analyzed cohorts (307 and 317) have verified, non-null, nonnegative counts.
+    - Assert that unmatched schools (Hawthorn) have NaN rather than 0 for course counts.
+    """
+    df_307 = panel[panel["flag_consistent_9_12"]]
+    df_317 = panel[panel["flag_matched_crdc"]]
+    unmatched = panel[~panel["flag_matched_crdc"]]
+
+    # 1. Analyzed cohorts must have strictly non-null, valid nonnegative counts
+    assert df_307["physics_classes"].notna().all(), "Strict cohort contains missing physics counts!"
+    assert (df_307["physics_classes"] >= 0).all(), "Strict cohort contains negative physics counts!"
+    assert df_307["general_cs_classes"].notna().all(), "Strict cohort contains missing CS counts!"
+    assert (df_307["general_cs_classes"] >= 0).all(), "Strict cohort contains negative CS counts!"
+
+    assert df_317["physics_classes"].notna().all(), "Sensitivity cohort contains missing physics counts!"
+    assert (df_317["physics_classes"] >= 0).all(), "Sensitivity cohort contains negative physics counts!"
+    assert df_317["general_cs_classes"].notna().all(), "Sensitivity cohort contains missing CS counts!"
+    assert (df_317["general_cs_classes"] >= 0).all(), "Sensitivity cohort contains negative CS counts!"
+
+    # 2. Unmatched school must have NaN, NOT 0.0 or False
+    assert len(unmatched) == 1
+    assert pd.isna(unmatched.iloc[0]["physics_classes"]), "Unmatched school physics count was converted to 0 instead of NaN!"
+    assert pd.isna(unmatched.iloc[0]["general_cs_classes"]), "Unmatched school general CS count was converted to 0 instead of NaN!"
+    assert pd.isna(unmatched.iloc[0]["has_physics_classes"]), "Unmatched school has_physics_classes was converted to False instead of NA/NaN!"
+

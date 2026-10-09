@@ -163,6 +163,12 @@ def run_study_3(df_307, df_317):
     print("STUDY 3: DENOMINATOR WEDGE (SCHOOL AVAILABILITY vs. STUDENT EXPOSURE IN PHYSICS)")
     print("=" * 70)
 
+    # Audit and assert that course counts contain verified non-null, nonnegative values before calculating zero provision
+    assert df_307["physics_classes"].notna().all(), "Strict 307 cohort contains unverified missing physics counts"
+    assert (df_307["physics_classes"] >= 0).all(), "Strict 307 cohort contains negative physics counts"
+    assert df_317["physics_classes"].notna().all(), "Broad sensitivity cohort contains unverified missing physics counts"
+    assert (df_317["physics_classes"] >= 0).all(), "Broad sensitivity cohort contains negative physics counts"
+
     # Baseline 307
     zero_phys_307 = df_307["physics_classes"] == 0
     n_zero_schools_307 = zero_phys_307.sum()

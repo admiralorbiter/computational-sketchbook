@@ -292,10 +292,15 @@ In official CRDC records, student enrollment is disaggregated by sex (`TOT_ENR_M
    $$\\Delta = P_{\\text{school}} - P_{\\text{student}}$$
 """))
 
-cells.append(nbf.v4.new_code_cell("""# 1. School-level percentage
+cells.append(nbf.v4.new_code_cell("""# Audit and assert that analyzed cohort contains verified non-null, nonnegative counts
+assert df_307['physics_classes'].notna().all(), "Analyzed cohort contains unverified missing physics counts"
+assert (df_307['physics_classes'] >= 0).all(), "Analyzed cohort contains negative physics counts"
+
+# 1. School-level percentage
 zero_phys_307 = df_307['physics_classes'] == 0
 n_zero_schools_307 = zero_phys_307.sum()
 school_pct_307 = (n_zero_schools_307 / len(df_307)) * 100
+
 
 # 2. Student-level percentage from released nonnegative counts
 rel_enr_total_307 = df_307['crdc_released_enrollment'].sum()
@@ -365,8 +370,8 @@ cells.append(nbf.v4.new_markdown_cell("""## 7. Synthesis & Scorecard of Findings
 
 | Study | Core Question | Baseline (N=307) | Sensitivity (N=317) | Delta | Substantive Conclusion |
 | :--- | :--- | :---: | :---: | :---: | :--- |
-| **Study 1 (Metric A)** | Dual Enrollment rate among schools reporting No AP | **92.9%** (105 / 113) | **93.1%** (108 / 116) | +0.18 pp | Among schools with no AP participation, 93% report college-level pathways through dual credit. |
-| **Study 1 (Metric B)** | Miss rate of AP indicator among schools with either route | **35.1%** (105 / 299) | **35.0%** (108 / 309) | -0.17 pp | An AP-only measure misses over a third of high schools active in college-level coursework. |
+| **Study 1 (Metric A)** | Dual Enrollment rate among schools reporting No AP | **92.9%** (105 / 113) | **93.1%** (108 / 116) | +0.18 pp | Among schools reporting no AP participation, 93% report student participation through dual enrollment. |
+| **Study 1 (Metric B)** | Miss rate of AP indicator among schools with either route | **35.1%** (105 / 299) | **35.0%** (108 / 309) | -0.17 pp | An AP-only measure misses over a third of high schools reporting participation in either advanced route. |
 | **Study 2** | Curricular concealment: No AP Computer Science among AP schools | **65.5%** (127 / 194) | **64.2%** (129 / 201) | -1.28 pp | An umbrella AP label conceals that nearly two-thirds of AP high schools report zero AP CS enrollment. |
 | **Study 3** | Denominator divergence: School availability vs. Student exposure in Physics | **14.70 pp** (32.90% vs 18.20%) | **15.27 pp** (33.12% vs 17.85%) | +0.57 pp | Institutional availability diverges from student exposure by ~15 pp because zero-physics schools are systematically smaller. |
 
@@ -375,11 +380,11 @@ cells.append(nbf.v4.new_markdown_cell("""## 7. Synthesis & Scorecard of Findings
 ## 8. Epistemic Positioning & Literature Context
 
 These three studies represent **completed descriptive questions**, not speculative causal claims.
-- **Prior Research Alignment**: 
-  - Nat Malkus (American Enterprise Institute, 2016, 2018) documented that AP course access is systematically constrained by high school scale.
-  - The College Board's *AP Program Results* and ACT's dual-enrollment research series (2017, 2020) show that dual credit has expanded rapidly in non-suburban high schools, serving as the primary college-credit vehicle where AP course section scale is unsustainable.
-  - OCR's CRDC national summaries frequently report unweighted institutional course gaps alongside student numbers.
-- **Exact Contribution**: By establishing an auditable six-point admission rule, this sketchbook explicitly demonstrates how the choice of program indicator (AP vs. Dual) and denominator (institution vs. student) alters the description of secondary educational opportunity.
+- **Role of Prior Research**: Related literature provides essential conceptual and empirical context, but does not by itself establish novelty:
+  - **Nat Malkus (AEI, January 2016)**: *The AP Peak: Public Schools Offering Advanced Placement, 2000–12* documented that public high school AP offerings are tightly bounded by school enrollment scale and non-suburban geography (fewer than 66% of rural schools offered AP vs. 91% of suburban schools).
+  - **ACT (2015 Policy Brief)** & **NCES (December 2020, NCES 2020-125)**: *Dual or Concurrent Enrollment in Public Schools in the United States* reported that 73% of public high schools offered dual enrollment, serving as a primary pathway for advanced coursework outside large suburban districts.
+  - **Susan White & Casey Langer Tesfaye (AIP, April 2014)**: *High School Physics Availability* surveyed physics teachers nationwide, reporting that 91% of high school seniors attended schools offering physics annually, 3% in alternating years, and 6% rarely or never, illustrating the conceptual need to evaluate student exposure alongside administrative school counts.
+- **Exact Contribution**: By establishing an auditable six-point admission rule and preserving administrative data codes, this sketchbook explicitly demonstrates how the choice of survey indicator (AP vs. Dual) and denominator (institution vs. student) alters the empirical description of secondary educational opportunity.
 """))
 
 nb.cells = cells

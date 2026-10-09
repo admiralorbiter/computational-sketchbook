@@ -15,7 +15,7 @@ ncessch,leaid,school_name,district_name,city,zip_code,flag_matched_crdc,flag_con
 290059203205,2900592,GATEWAY SCIENCE ACADEMY HIGH,GATEWAY SCIENCE ACAD/ST LOUIS,ST. LOUIS,63139,True,True,False,"G09, G10, G11, G12",355.0,355.0,False,True,True,Yes,13.0,True,Yes,Both,False,No,2.0,True,0.0,False
 290059303176,2900593,DeLaSalle Charter High School,DELASALLE CHARTER SCHOOL,Kansas City,64109,True,True,False,"G09, G10, G11, G12",181.0,181.0,False,True,False,No,,True,Yes,Dual_Only,False,-9,0.0,False,0.0,False
 290059703277,2900597,EWING MARION KAUFFMAN HIGH,EWING MARION KAUFFMAN SCHOOL,Kansas City,64131,True,True,False,"G09, G10, G11, G12",418.0,418.0,False,True,True,Yes,11.0,True,Yes,Both,True,Yes,1.0,True,0.0,False
-290060803317,2900608,Hawthorn High School,HAWTHORN LEADERSHIP SCHL GIRLS,St. Louis,63113,False,False,False,UNMATCHED_IN_CRDC,,,,,False,,,False,,Neither,False,,0.0,False,0.0,False
+290060803317,2900608,Hawthorn High School,HAWTHORN LEADERSHIP SCHL GIRLS,St. Louis,63113,False,False,False,UNMATCHED_IN_CRDC,,,,,False,,,False,,Neither,False,,,,,
 290100000299,2901000,ROCK BRIDGE SR. HIGH,COLUMBIA 93,COLUMBIA,65203,True,False,True,"PS, G09, G10, G11, G12",1965.0,1965.0,False,True,True,Yes,21.0,True,Yes,Both,True,Yes,0.0,False,25.0,True
 290100000300,2901000,DAVID H. HICKMAN HIGH,COLUMBIA 93,COLUMBIA,65203,True,False,True,"PS, G09, G10, G11, G12",1987.0,1987.0,False,True,True,Yes,27.0,True,Yes,Both,True,Yes,0.0,False,28.0,True
 290100003239,2901000,MURIEL W. BATTLE HIGH SCHOOL,COLUMBIA 93,COLUMBIA,65202,True,False,True,"PS, G09, G10, G11, G12",1581.0,1581.0,False,True,True,Yes,14.0,True,Yes,Both,True,Yes,0.0,False,20.0,True
