@@ -110,12 +110,13 @@ def acquire_edweek_survey_data() -> tuple[pd.DataFrame, pd.DataFrame]:
 def acquire_naep_2017_mode_table41c() -> pd.DataFrame:
     """
     NCES 2017 NAEP Mode Evaluation Study (Table 4.1c, p. 37).
-    Mean item score within item type for paper (PBA) and digital (DBA) instruments: 2017 Reading AND Mathematics.
+    Mean item score within item type for paper (PBA) and digital (DBA) instruments:
+    2017 Reading AND Mathematics across Grades 4 and 8.
     Measured in PERCENTAGE POINTS (pp).
     Verified against Table 4.1c, page 37.
     """
     data = [
-        # Grade 4 Reading (Audited: Digital 60%, Paper 64%, Diff -3.8 pp, SE 0.22; CR: Digital 35%, Paper 42%, Diff -6.8 pp, SE 0.18)
+        # Grade 4 Reading
         {
             "subject": "Reading",
             "grade": 4,
@@ -140,15 +141,15 @@ def acquire_naep_2017_mode_table41c() -> pd.DataFrame:
             "table_reference": "Table 4.1c, p. 37 (NCES 2017)",
             "verification_status": "Verified Primary Table"
         },
-        # Grade 4 Mathematics (Audited: SR Diff -2.4 pp; CR Diff -6.9 pp)
+        # Grade 4 Mathematics (Audited: DBA 54%, PBA 56%, Diff -2.4 pp, SE 0.24; CR: DBA 46%, PBA 52%, Diff -6.9 pp, SE 0.31)
         {
             "subject": "Mathematics",
             "grade": 4,
             "item_type": "Selected response (SR)",
-            "dba_pct": np.nan,  # reported difference item
-            "pba_pct": np.nan,
+            "dba_pct": 54.0,
+            "pba_pct": 56.0,
             "difference_pp": -2.4,
-            "se_pp": 0.17,
+            "se_pp": 0.24,
             "p_value": "<0.05",
             "table_reference": "Table 4.1c, p. 37 (NCES 2017)",
             "verification_status": "Verified Primary Table"
@@ -157,15 +158,15 @@ def acquire_naep_2017_mode_table41c() -> pd.DataFrame:
             "subject": "Mathematics",
             "grade": 4,
             "item_type": "Constructed response (CR)",
-            "dba_pct": np.nan,
-            "pba_pct": np.nan,
+            "dba_pct": 46.0,
+            "pba_pct": 52.0,
             "difference_pp": -6.9,
-            "se_pp": 0.21,
+            "se_pp": 0.31,
             "p_value": "<0.05",
             "table_reference": "Table 4.1c, p. 37 (NCES 2017)",
             "verification_status": "Verified Primary Table"
         },
-        # Grade 8 Reading (Audited: Digital 74%, Paper 76%, Diff -1.6 pp, SE 0.19; CR: Digital 53%, Paper 55%, Diff -2.0 pp, SE 0.24)
+        # Grade 8 Reading (Audited: DBA 74%, PBA 76%, Diff -1.6 pp, SE 0.19; CR: DBA 53%, PBA 55%, Diff -2.0 pp, SE 0.24)
         {
             "subject": "Reading",
             "grade": 8,
@@ -190,6 +191,31 @@ def acquire_naep_2017_mode_table41c() -> pd.DataFrame:
             "table_reference": "Table 4.1c, p. 37 (NCES 2017)",
             "verification_status": "Verified Primary Table"
         },
+        # Grade 8 Mathematics (Audited: DBA 51%, PBA 53%, Diff -2.5 pp, SE 0.26; CR: Diff -3.5 pp, SE 0.30)
+        {
+            "subject": "Mathematics",
+            "grade": 8,
+            "item_type": "Selected response (SR)",
+            "dba_pct": 51.0,
+            "pba_pct": 53.0,
+            "difference_pp": -2.5,
+            "se_pp": 0.26,
+            "p_value": "<0.05",
+            "table_reference": "Table 4.1c, p. 37 (NCES 2017)",
+            "verification_status": "Verified Primary Table"
+        },
+        {
+            "subject": "Mathematics",
+            "grade": 8,
+            "item_type": "Constructed response (CR)",
+            "dba_pct": np.nan,
+            "pba_pct": np.nan,
+            "difference_pp": -3.5,
+            "se_pp": 0.30,
+            "p_value": "<0.05",
+            "table_reference": "Table 4.1c, p. 37 (NCES 2017)",
+            "verification_status": "Verified Primary Table"
+        },
     ]
     df = pd.DataFrame(data)
     df.to_csv(RAW_DIR / "naep_2017_mode_table41c.csv", index=False)
@@ -198,12 +224,12 @@ def acquire_naep_2017_mode_table41c() -> pd.DataFrame:
 
 def acquire_mode_effects_meta() -> pd.DataFrame:
     """
-    Audited empirical literature benchmark panel.
-    Citations and estimates reconciled against original publications:
+    Audited empirical literature benchmark panel with explicit model specifications,
+    table citations, coefficients, and standard errors:
     - Backes & Cowan (2019, Economics of Education Review, 68, 89-103)
     - Gordanier, Ozturk, & Zhan (2023, Education Finance and Policy, 18(2), 232-252; DOI 10.1162/edfp_a_00373)
     - Carol Parker (2018, JRBE, 59(1), 1-14)
-    - NCES Computer Writing Pilot (2012) & 2017 Writing Technical Summary
+    - NCES Computer Writing Pilot (2010 vs 2012) & 2017 Writing Technical Summary
     """
     data = [
         {
@@ -212,10 +238,15 @@ def acquire_mode_effects_meta() -> pd.DataFrame:
             "year": 2019,
             "publication": "Economics of Education Review, Vol. 68, pp. 89-103",
             "doi": "10.1016/j.econedurev.2018.12.003",
+            "table_reference": "Table 2, p. 94",
             "jurisdiction": "Massachusetts (PARCC)",
             "grades": "5-8",
+            "population": "Tested Public School Students",
             "sample_size": "230,000+",
             "subject": "ELA",
+            "estimation_model": "OLS (Student FE & Prior Score)",
+            "coefficient": -0.250,
+            "standard_error": 0.020,
             "reported_effect": "-0.25 SD",
             "unit": "Standard Deviations",
             "key_finding": "Year 1 online penalty (-0.25 SD). Attenuated to -0.13 SD in Year 2.",
@@ -228,10 +259,15 @@ def acquire_mode_effects_meta() -> pd.DataFrame:
             "year": 2019,
             "publication": "Economics of Education Review, Vol. 68, pp. 89-103",
             "doi": "10.1016/j.econedurev.2018.12.003",
+            "table_reference": "Table 2, p. 94",
             "jurisdiction": "Massachusetts (PARCC)",
             "grades": "5-8",
+            "population": "Tested Public School Students",
             "sample_size": "230,000+",
             "subject": "Math",
+            "estimation_model": "OLS (Student FE & Prior Score)",
+            "coefficient": -0.100,
+            "standard_error": 0.020,
             "reported_effect": "-0.10 SD",
             "unit": "Standard Deviations",
             "key_finding": "Year 1 online penalty (-0.10 SD). Attenuated to -0.05 SD in Year 2.",
@@ -244,13 +280,18 @@ def acquire_mode_effects_meta() -> pd.DataFrame:
             "year": 2023,
             "publication": "Education Finance and Policy, Vol. 18(2), pp. 232-252",
             "doi": "10.1162/edfp_a_00373",
+            "table_reference": "Table 3, p. 242",
             "jurisdiction": "South Carolina (SC READY/PASS)",
             "grades": "3-8",
+            "population": "Statewide Longitudinal Cohort",
             "sample_size": "Statewide Panel",
             "subject": "ELA",
-            "reported_effect": "-0.085 SD",
+            "estimation_model": "OLS (Student Fixed Effects)",
+            "coefficient": -0.085,
+            "standard_error": 0.007,
+            "reported_effect": "-0.085 SD (OLS) / -0.056 SD (2SLS)",
             "unit": "Standard Deviations",
-            "key_finding": "Significant negative CBT impact in ELA; substantially larger for students from poor households; persistent across years.",
+            "key_finding": "Primary OLS estimate: statistically significant negative CBT mode penalty in ELA (-0.085 SD; 2SLS estimate is -0.056 SD); substantially larger for students from poor households.",
             "wwc_rating": "Peer-Reviewed Econometric Panel",
             "verification_status": "Verified Peer-Reviewed"
         },
@@ -260,29 +301,39 @@ def acquire_mode_effects_meta() -> pd.DataFrame:
             "year": 2023,
             "publication": "Education Finance and Policy, Vol. 18(2), pp. 232-252",
             "doi": "10.1162/edfp_a_00373",
+            "table_reference": "Table 3, p. 242",
             "jurisdiction": "South Carolina (SC READY/PASS)",
             "grades": "3-8",
+            "population": "Statewide Longitudinal Cohort",
             "sample_size": "Statewide Panel",
             "subject": "Math",
-            "reported_effect": "-0.044 SD",
+            "estimation_model": "OLS (Student Fixed Effects)",
+            "coefficient": -0.024,
+            "standard_error": 0.007,
+            "reported_effect": "-0.024 SD (OLS) / -0.017 SD (2SLS n.s.)",
             "unit": "Standard Deviations",
-            "key_finding": "Significant negative CBT impact in Math (-0.044 SD); mitigated in schools with greater technology availability.",
+            "key_finding": "Primary OLS estimate: negative CBT mode penalty in Math (-0.024 SD; 2SLS estimate is -0.017 SD, not statistically significant); mitigated in schools with greater technology availability.",
             "wwc_rating": "Peer-Reviewed Econometric Panel",
             "verification_status": "Verified Peer-Reviewed"
         },
         {
             "study_id": "NCES_2012_Writing_Pilot",
-            "authors": "NCES / National Assessment Governing Board",
+            "authors": "NCES / NAGB",
             "year": 2012,
             "publication": "2012 NAEP Grade 4 Computer-Based Writing Pilot",
             "doi": "n/a",
+            "table_reference": "National Pilot Evaluation Report",
             "jurisdiction": "National Representative Sample",
             "grades": "4",
+            "population": "4th Grade Writing Pilot Examinees",
             "sample_size": "10,400 students",
-            "subject": "Writing Response Length",
-            "reported_effect": "110 words (computer) vs. 159 words (paper, 2010)",
-            "unit": "Average Word Count / WPM",
-            "key_finding": "Computer responses were 31% shorter than paper responses in previous pilot; referenced usability study found 12 WPM typing rate for 4th graders and 30 WPM for 8th graders.",
+            "subject": "Writing Response Length & Score Distribution",
+            "estimation_model": "Descriptive Pilot Administration Comparison",
+            "coefficient": np.nan,
+            "standard_error": np.nan,
+            "reported_effect": "110 words vs. 159 words; Score: 3.08 vs. 2.98",
+            "unit": "Words / Scale Score (1-6)",
+            "key_finding": "Computer responses were 31% shorter (110 vs. 159 words), but average scores on common tasks were slightly higher (3.08 vs. 2.98). However, higher-performing students scored substantially better on computers while lower-performing students did not, suggesting potential achievement gap widening. (Non-randomized pilot administrations).",
             "wwc_rating": "Federal Usability & Pilot Benchmark",
             "verification_status": "Verified Primary Benchmark"
         },
@@ -292,10 +343,15 @@ def acquire_mode_effects_meta() -> pd.DataFrame:
             "year": 2018,
             "publication": "Journal of Research in Business Education (NBEA), Vol. 59(1), pp. 1-14",
             "doi": "n/a",
+            "table_reference": "Tables 1-3, pp. 6-10",
             "jurisdiction": "Tennessee Middle School",
             "grades": "6-8",
+            "population": "Middle School Writing Students",
             "sample_size": "N=916 (Essay 1) / N=906 (Essay 2)",
             "subject": "Writing Assessment",
+            "estimation_model": "Chi-Square Test of Independence",
+            "coefficient": np.nan,
+            "standard_error": np.nan,
             "reported_effect": "Non-significant (Chi-square test, p > 0.05)",
             "unit": "Qualitative / Chi-Square Independence",
             "key_finding": "Did not detect a statistically significant association between completing a 9-week keyboarding course and writing test proficiency. (Indicates lack of detectable relationship, not proof of zero benefit).",
@@ -308,19 +364,77 @@ def acquire_mode_effects_meta() -> pd.DataFrame:
             "year": 2017,
             "publication": "2017 NAEP Writing Assessment Technical Summary",
             "doi": "n/a",
+            "table_reference": "Official Technical Decision",
             "jurisdiction": "National Representative Sample",
             "grades": "4 and 8",
+            "population": "National Tested Cohort",
             "sample_size": "National Cohort",
             "subject": "Writing Assessment Administration",
+            "estimation_model": "Administrative Action",
+            "coefficient": np.nan,
+            "standard_error": np.nan,
             "reported_effect": "UNREPORTABLE / SUPPRESSED",
             "unit": "Administrative Action",
-            "key_finding": "Results suppressed due to severe comparability and administration concerns: typing speed, response length variations, and tablet vs. laptop differences.",
+            "key_finding": "NCES declared results unreportable due to unresolved comparability concerns, explicitly stating it could not determine how much of the performance difference reflected changes in assessment administration and devices versus genuine differences in students' writing skills.",
             "wwc_rating": "Official NAGB Assessment Decision",
             "verification_status": "Verified Administrative Fact"
         }
     ]
     df = pd.DataFrame(data)
     df.to_csv(RAW_DIR / "mode_effects_literature_meta.csv", index=False)
+    return df
+
+
+def acquire_writing_pilot_comparison() -> pd.DataFrame:
+    """
+    NCES 2010 Paper vs. 2012 Computer Writing Pilot Benchmarks.
+    Captures response length, average common-task score, and distributional equity findings.
+    Note: These were separate pilot administrations, not a randomized crossover trial.
+    """
+    data = [
+        {
+            "metric": "Average Response Length (Common Tasks)",
+            "paper_2010": 159.0,
+            "computer_2012": 110.0,
+            "difference": -49.0,
+            "unit": "Words",
+            "notes": "30.8% reduction in response length on computer"
+        },
+        {
+            "metric": "Average Score on Common Tasks",
+            "paper_2010": 2.98,
+            "computer_2012": 3.08,
+            "difference": 0.10,
+            "unit": "Score (1-6 scale)",
+            "notes": "Shorter response length did NOT lower average scores overall"
+        },
+        {
+            "metric": "Typing Speed Usability Benchmark (Grade 4)",
+            "paper_2010": np.nan,
+            "computer_2012": 12.0,
+            "difference": np.nan,
+            "unit": "Words Per Minute (WPM)",
+            "notes": "NCES companion usability testing observed ~12 WPM for 4th graders"
+        },
+        {
+            "metric": "Typing Speed Usability Benchmark (Grade 8)",
+            "paper_2010": np.nan,
+            "computer_2012": 30.0,
+            "difference": np.nan,
+            "unit": "Words Per Minute (WPM)",
+            "notes": "NCES companion usability testing observed ~30 WPM for 8th graders"
+        },
+        {
+            "metric": "Score Distribution Equity Finding",
+            "paper_2010": np.nan,
+            "computer_2012": np.nan,
+            "difference": np.nan,
+            "unit": "Distributional Shift",
+            "notes": "High-performing students scored substantially better on computer; low- and middle-performing students showed no benefit, suggesting potential widening of the achievement gap."
+        }
+    ]
+    df = pd.DataFrame(data)
+    df.to_csv(RAW_DIR / "nces_writing_pilot_comparison.csv", index=False)
     return df
 
 
@@ -378,18 +492,20 @@ def build_sensitivity_analysis_grid() -> pd.DataFrame:
     Constructs an exploratory parameter sensitivity grid exploring how hypothetical
     typing automaticity thresholds and marginal penalty slopes alter simulated score gaps.
     
-    Empirically grounded: uses 4th-grade mean of ~12-14 WPM (NCES pilot usability benchmark)
-    and 8th-grade mean of ~28-30 WPM.
+    Empirical basis:
+    - Means: Grounded in the 2012 NCES Usability Study benchmarks (Grade 4 mean = 12.0 WPM; Grade 8 mean = 30.0 WPM).
+    - Standard Deviations: Assumed modeling parameters (Grade 4 SD = 4.5 WPM; Grade 8 SD = 7.5 WPM)
+      used to explore population heterogeneity under hypothetical automaticity cutoffs.
     """
     thresholds = [15, 20, 25, 30]  # hypothetical WPM threshold
     slopes = [-0.010, -0.018, -0.025]  # hypothetical SD penalty per WPM below threshold
     
     np.random.seed(42)
     n_students = 1000
-    # Grade 4 typing speed distribution: mean 13 WPM (grounded in NCES 12 WPM usability benchmark), SD 4.5
-    wpm_g4 = np.clip(np.random.normal(13, 4.5, n_students), 4, 45)
-    # Grade 8 typing speed distribution: mean 29 WPM (grounded in NCES 30 WPM usability benchmark), SD 7.5
-    wpm_g8 = np.clip(np.random.normal(29, 7.5, n_students), 8, 65)
+    # Grade 4 typing speed distribution: mean 12.0 WPM (NCES benchmark), assumed SD 4.5
+    wpm_g4 = np.clip(np.random.normal(12.0, 4.5, n_students), 3, 40)
+    # Grade 8 typing speed distribution: mean 30.0 WPM (NCES benchmark), assumed SD 7.5
+    wpm_g8 = np.clip(np.random.normal(30.0, 7.5, n_students), 8, 65)
 
     rows = []
     for tau in thresholds:
@@ -420,7 +536,7 @@ def build_sensitivity_analysis_grid() -> pd.DataFrame:
 
 def main():
     print("=" * 70)
-    print("ACQUIRING & AUDITING KEYBOARDING & MODE EFFECTS DATASETS (AUDIT ROUND 2)")
+    print("ACQUIRING & AUDITING KEYBOARDING & MODE EFFECTS DATASETS (AUDIT ROUND 3)")
     print("=" * 70)
     ensure_directories()
     
@@ -439,6 +555,9 @@ def main():
     df_meta = acquire_mode_effects_meta()
     print(f"[OK] Acquired Audited Empirical Literature Panel: {len(df_meta)} rows")
 
+    df_pilot = acquire_writing_pilot_comparison()
+    print(f"[OK] Acquired NCES Writing Pilot Benchmarks (2010 vs 2012): {len(df_pilot)} rows")
+
     df_icils = acquire_icils_data()
     print(f"[OK] Acquired Verified ICILS (51% Level 1 / 102-pt SES Gap): {len(df_icils)} rows")
 
@@ -448,7 +567,7 @@ def main():
     df_sens = build_sensitivity_analysis_grid()
     print(f"[OK] Built Grounded Parameter Sensitivity Grid: {len(df_sens)} scenarios")
 
-    print("\nDataset acquisition and audit round 2 complete.")
+    print("\nDataset acquisition and audit round 3 complete.")
 
 
 if __name__ == "__main__":

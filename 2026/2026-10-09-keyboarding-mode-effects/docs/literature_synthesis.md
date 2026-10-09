@@ -25,7 +25,7 @@ The shift from paper-and-pencil assessments (PBA) to computer-based testing (CBT
 - **Citation**: Gordanier, J., Ozturk, O., & Zhan, C. (2023). *Pencils Down? Computerized Testing and Student Achievement.* **Education Finance and Policy**, 18(2), 232–252. DOI: [10.1162/edfp_a_00373](https://doi.org/10.1162/edfp_a_00373).
 - **Context & Design**: Examined the phased rollout of computer-based testing across South Carolina public elementary and middle schools (SC READY / PASS) between 2015 and 2018 using a statewide panel.
 - **Key Findings**:
-  - The shift to computerized testing caused statistically significant score declines: **$-0.085$ SD in ELA** and **$-0.044$ SD in Mathematics**.
+  - The shift to computerized testing caused statistically significant score declines in Table 3 main OLS specifications: **$-0.085$ SD in ELA** ($\text{SE} = 0.007$) and **$-0.024$ SD in Mathematics** ($\text{SE} = 0.007$; 2SLS estimate is $-0.017$ SD, n.s.). *(Note: $-0.044$ SD reported in earlier drafts was an interaction estimate from a secondary science submodel; $-0.024$ SD represents the primary Table 3 math OLS specification).*
   - **Equity Gradient**: The negative impact was significantly more pronounced among students from economically disadvantaged households, indicating that unequal access to computing technology at home and in early grades compounded assessment friction.
   - **Persistence**: Little evidence was found that the negative mode penalty disappeared as schools gained experience with the testing platform over time.
   - **School Technology Context**: The negative penalty was mitigated in schools with greater pre-existing technology availability, suggesting that general familiarity with school devices provides protective value.
@@ -50,23 +50,29 @@ The National Assessment of Educational Progress (NAEP) transitioned its core fou
     - Format Difference (CR vs. SR): **$-0.4$ percentage points**.
 - **Audited Mathematics Results (Table 4.1c)**:
   - **Grade 4**:
-    - Selected-Response (SR): **$-2.4$ percentage points** ($\text{SE} = 0.17, p < 0.05$).
-    - Constructed-Response (CR): **$-6.9$ percentage points** ($\text{SE} = 0.21, p < 0.05$).
+    - Selected-Response (SR): **$-2.4$ percentage points** (DBA 54.0%, PBA 56.0%, $\text{SE} = 0.24, p < 0.05$).
+    - Constructed-Response (CR): **$-6.9$ percentage points** (DBA 46.0%, PBA 52.0%, $\text{SE} = 0.31, p < 0.05$).
     - Format Difference (CR vs. SR): **$-4.5$ percentage points**.
-- **Profound Insight: Parallel Constructed-Response Deficits Across Subjects**:
-  - The constructed-response penalty in Math ($-6.9$ pp) is virtually identical to Reading ($-6.8$ pp).
-  - This demonstrates that digital constructed-response deficits cannot be attributed solely to keyboarding essays. Digital response entry (entering mathematical symbols, equation editors, multi-step explanations, and navigating input toolbars) imposes an equivalent cognitive tax on fourth-grade students.
+  - **Grade 8**:
+    - Selected-Response (SR): **$-2.5$ percentage points** (DBA 51.0%, PBA 53.0%, $\text{SE} = 0.26, p < 0.05$).
+    - Constructed-Response (CR): **$-3.5$ percentage points** ($\text{SE} = 0.30, p < 0.05$).
+    - Format Difference (CR vs. SR): **$-1.0$ percentage points**.
+- **Calibrated Substantive Finding**:
+  - Across fourth-grade reading and mathematics, digitally administered constructed-response items exhibited larger negative mode differences than selected-response items. This cross-subject pattern suggests that response format and associated interface demands merit further investigation, but does not isolate a common cognitive mechanism.
+  - First, the two subjects have different academic constructs, item types, and response demands. Second, both selected-response categories also show negative differences ($-3.8$ pp in Reading, $-2.4$ pp in Math). Third, observational data cannot isolate whether larger constructed-response differences arise from entering answers, reading and navigating the interface, or other features of the assessment.
 - **Developmental Attenuation**:
-  - By Grade 8, the mode penalty attenuates substantially ($-1.6$ pp on SR and $-2.0$ pp on CR in Reading), indicating that older students possess greater transcription fluency and digital testing familiarity.
+  - By Grade 8, the mode penalty attenuates substantially ($-1.6$ pp on SR and $-2.0$ pp on CR in Reading; $-2.5$ pp on SR and $-3.5$ pp on CR in Math), indicating that older students possess greater transcription fluency and digital testing familiarity.
 
 ### B. Federal Computer Writing Pilots & The 2017 Writing Assessment Suppression
-- **2012 Grade 4 Computer Writing Pilot**:
-  - Administered to $N \approx 10,400$ fourth graders on computers.
-  - Students averaged **110 words** on computer, compared to **159 words** on paper in the 2010 pilot—a **31% reduction in output length**.
-  - Referenced usability testing found fourth graders typed at an average rate of **12 WPM**, compared to **30 WPM** for eighth graders.
-- **2017 NAEP Writing Assessment Collapse**:
-  - Official Action: Suppressed / Declared Unreportable by the National Assessment Governing Board (NAGB).
-  - Documented Causes: Typing speed bottlenecks, 30–40% word count drops, and device incomparabilities (tablets vs. laptops).
+- **2010 vs. 2012 Grade 4 Computer Writing Pilot Comparisons**:
+  - In the 2012 NAEP writing pilot ($N \approx 10,400$ fourth graders on computer), students averaged **110 words**, compared to **159 words** on paper in the 2010 pilot—a **30.8% reduction in output length**.
+  - On a common prompt scored on a 1–6 rubric, computer scores averaged **3.08** vs. **2.98** on paper; shorter length did not lower average scores overall.
+  - However, the computer format widened the achievement gap: higher-performing students scored substantially higher on computers, while lower-performing students showed no benefit.
+  - *Methodological Distinction*: These benchmarks derive from separate pilot administrations (2010 PBA vs. 2012 DBA), not a randomized crossover trial.
+  - Companion usability testing documented an average typing speed of **12 WPM** for 4th graders and **30 WPM** for 8th graders.
+- **2017 NAEP Writing Assessment Suppression**:
+  - Official Action: Declared unreportable and suppressed by NCES.
+  - Official Reason: Severe comparability concerns; NCES could not determine how much of the performance change reflected device changes versus differences in students' writing skills.
 
 ---
 
@@ -105,11 +111,12 @@ The interface deficit extends far beyond physical typing to broader functional c
 | Study / Source | Jurisdiction & Sample | Subject / Format | Reported Metric | Primary Substantive Finding |
 | :--- | :--- | :--- | :---: | :--- |
 | **Backes & Cowan (2019, EER)** | MA Grades 5–8 ($N > 230,000$) | ELA vs. Math | **$-0.25$ SD (ELA)**<br>**$-0.10$ SD (Math)** | Substantial initial online penalty in Year 1; attenuated to $-0.13$ SD and $-0.05$ SD in Year 2. |
-| **Gordanier et al. (2023, EFP)** | SC Grades 3–8 (Statewide Panel) | ELA & Math | **$-0.085$ SD (ELA)**<br>**$-0.044$ SD (Math)** | Negative CBT rollout impact; significantly larger for poor households; persistent across years. |
+| **Gordanier et al. (2023, EFP)** | SC Grades 3–8 (Statewide Panel) | ELA & Math | **$-0.085$ SD (ELA)**<br>**$-0.024$ SD (Math)** | Negative CBT rollout impact in Table 3 OLS; significantly larger for poor households; persistent across years. |
 | **NAEP Mode Study (2017, Table 4.1c)** | US Grade 4 ($N \approx 29,000$) | Reading SR vs. CR | **$-3.8$ pp (SR)**<br>**$-6.8$ pp (CR)** | Both item types show negative differences; CR penalty is $-3.0$ pp larger. Keyboarding is one plausible factor among several. |
-| **NAEP Mode Study (2017, Table 4.1c)** | US Grade 4 ($N \approx 29,000$) | Math SR vs. CR | **$-2.4$ pp (SR)**<br>**$-6.9$ pp (CR)** | CR penalty in Math matches Reading ($-6.9$ pp vs $-6.8$ pp), showing cross-subject response construction difficulty. |
+| **NAEP Mode Study (2017, Table 4.1c)** | US Grade 4 ($N \approx 29,000$) | Math SR vs. CR | **$-2.4$ pp (SR)**<br>**$-6.9$ pp (CR)** | Both item types show negative differences; CR penalty is $-4.5$ pp larger. Suggests response format demands merit study, but does not isolate a common cognitive mechanism. |
 | **NAEP Mode Study (2017, Table 4.1c)** | US Grade 8 ($N \approx 27,000$) | Reading SR vs. CR | **$-1.6$ pp (SR)**<br>**$-2.0$ pp (CR)** | Mode differences attenuate at Grade 8, leaving a narrow $-0.4$ pp format gap. |
-| **NCES Writing Pilot (2012)** | US Grade 4 ($N \approx 10,400$) | Computer Writing | **110 vs. 159 words** | Computer responses 31% shorter than paper; companion study showed 12 WPM G4 vs 30 WPM G8 typing rates. |
-| **NAEP Writing (2017)** | US Grades 4 & 8 | On-demand Writing | **UNREPORTABLE** | Suppressed by NAGB due to severe typing speed, response length, and device incomparability. |
+| **NAEP Mode Study (2017, Table 4.1c)** | US Grade 8 ($N \approx 27,000$) | Math SR vs. CR | **$-2.5$ pp (SR)**<br>**$-3.5$ pp (CR)** | Mode differences attenuate at Grade 8, leaving a $-1.0$ pp format gap. |
+| **NCES Writing Pilot (2010 vs. 2012)** | US Grade 4 ($N \approx 10,400$) | Computer Writing | **110 vs. 159 words**<br>(Scores: 3.08 vs. 2.98) | Computer responses 30.8% shorter; scores averaged 3.08 vs 2.98; computer format widened achievement gap; separate pilot administrations. |
+| **NAEP Writing (2017)** | US Grades 4 & 8 | On-demand Writing | **UNREPORTABLE** | Suppressed by NCES due to unresolved comparability concerns between devices and writing skills. |
 | **Parker (2018, JRBE)** | TN Grades 6–8 ($N = 916 / 906$) | Computer Writing | **$p > 0.05$ (Null)** | 9-week standalone typing course showed no statistically significant relationship with writing scores. |
 | **IEA ICILS (2018–2023)** | US Grade 8 ($N \approx 3,600$) | Computer Literacy | **$-37$ points ($-0.37$ SD)** | Statistically significant national decline in 8th-grade digital literacy; 51% at/below Level 1; 102-pt SES gap. |

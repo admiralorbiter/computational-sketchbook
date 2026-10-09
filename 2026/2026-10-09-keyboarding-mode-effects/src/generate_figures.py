@@ -113,8 +113,8 @@ def generate_figure2():
         ("MA PARCC Y1 Math (Backes & Cowan 2019, EER)", -0.100, "#f97316"),
         ("MA PARCC Y2 ELA (Backes & Cowan 2019, EER)", -0.130, "#b91c1c"),
         ("MA PARCC Y2 Math (Backes & Cowan 2019, EER)", -0.050, "#f97316"),
-        ("SC CBT Rollout ELA (Gordanier et al. 2023, EFP)", -0.085, "#7c3aed"),
-        ("SC CBT Rollout Math (Gordanier et al. 2023, EFP)", -0.044, "#0284c7"),
+        ("SC CBT Rollout ELA (Gordanier et al. 2023, EFP Table 3 OLS)", -0.085, "#7c3aed"),
+        ("SC CBT Rollout Math (Gordanier et al. 2023, EFP Table 3 OLS)", -0.024, "#0284c7"),
     ]
 
     labels = [s[0] for s in studies][::-1]
@@ -153,8 +153,8 @@ def generate_figure2():
     legend_elements = [
         Line2D([0], [0], marker="s", color="w", markerfacecolor="#b91c1c", markersize=10, label="ELA / Essay Dominant (Backes & Cowan 2019)"),
         Line2D([0], [0], marker="s", color="w", markerfacecolor="#f97316", markersize=10, label="Math / Numeric (Backes & Cowan 2019)"),
-        Line2D([0], [0], marker="s", color="w", markerfacecolor="#7c3aed", markersize=10, label="SC ELA Panel (Gordanier et al. 2023)"),
-        Line2D([0], [0], marker="s", color="w", markerfacecolor="#0284c7", markersize=10, label="SC Math Panel (Gordanier et al. 2023)")
+        Line2D([0], [0], marker="s", color="w", markerfacecolor="#7c3aed", markersize=10, label="SC ELA Panel OLS (Gordanier et al. 2023)"),
+        Line2D([0], [0], marker="s", color="w", markerfacecolor="#0284c7", markersize=10, label="SC Math Panel OLS (Gordanier et al. 2023)")
     ]
     ax.legend(handles=legend_elements, loc="lower right", frameon=True)
 
@@ -167,7 +167,7 @@ def generate_figure2():
 
 def generate_figure3():
     """
-    Figure 3: Keyboarding Delivery (EdWeek 74% vs 51%) & NAEP Table 4.1c (Reading & Math in pp).
+    Figure 3: Keyboarding Delivery (EdWeek 74% vs 51%) & NAEP Table 4.1c (Reading & Math across Grades 4 & 8 in pp).
     """
     fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(18, 5.5))
 
@@ -201,16 +201,18 @@ def generate_figure3():
     # Panel C: Verified NAEP 2017 Mode Evaluation (Table 4.1c: Reading AND Math in Percentage Points)
     df_41c = pd.read_csv(RAW_DIR / "naep_2017_mode_table41c.csv")
 
-    categories = ["Grade 4 Reading", "Grade 4 Math", "Grade 8 Reading"]
+    categories = ["G4 Reading", "G4 Math", "G8 Reading", "G8 Math"]
     sr_vals = [
         df_41c[(df_41c["grade"] == 4) & (df_41c["subject"] == "Reading") & (df_41c["item_type"].str.contains("Selected"))]["difference_pp"].values[0],
         df_41c[(df_41c["grade"] == 4) & (df_41c["subject"] == "Mathematics") & (df_41c["item_type"].str.contains("Selected"))]["difference_pp"].values[0],
-        df_41c[(df_41c["grade"] == 8) & (df_41c["subject"] == "Reading") & (df_41c["item_type"].str.contains("Selected"))]["difference_pp"].values[0]
+        df_41c[(df_41c["grade"] == 8) & (df_41c["subject"] == "Reading") & (df_41c["item_type"].str.contains("Selected"))]["difference_pp"].values[0],
+        df_41c[(df_41c["grade"] == 8) & (df_41c["subject"] == "Mathematics") & (df_41c["item_type"].str.contains("Selected"))]["difference_pp"].values[0]
     ]
     cr_vals = [
         df_41c[(df_41c["grade"] == 4) & (df_41c["subject"] == "Reading") & (df_41c["item_type"].str.contains("Constructed"))]["difference_pp"].values[0],
         df_41c[(df_41c["grade"] == 4) & (df_41c["subject"] == "Mathematics") & (df_41c["item_type"].str.contains("Constructed"))]["difference_pp"].values[0],
-        df_41c[(df_41c["grade"] == 8) & (df_41c["subject"] == "Reading") & (df_41c["item_type"].str.contains("Constructed"))]["difference_pp"].values[0]
+        df_41c[(df_41c["grade"] == 8) & (df_41c["subject"] == "Reading") & (df_41c["item_type"].str.contains("Constructed"))]["difference_pp"].values[0],
+        df_41c[(df_41c["grade"] == 8) & (df_41c["subject"] == "Mathematics") & (df_41c["item_type"].str.contains("Constructed"))]["difference_pp"].values[0]
     ]
 
     x = np.arange(len(categories))
@@ -228,16 +230,17 @@ def generate_figure3():
 
     for rect in rects1:
         h = rect.get_height()
-        ax3.text(rect.get_x() + rect.get_width()/2, h - 0.55, f"{h:.1f} pp", ha="center", va="top", fontweight="bold", fontsize=9, color="#059669")
+        ax3.text(rect.get_x() + rect.get_width()/2, h - 0.55, f"{h:.1f} pp", ha="center", va="top", fontweight="bold", fontsize=8.5, color="#059669")
     for rect in rects2:
         h = rect.get_height()
-        ax3.text(rect.get_x() + rect.get_width()/2, h - 0.55, f"{h:.1f} pp", ha="center", va="top", fontweight="bold", fontsize=9, color="#7c3aed")
+        ax3.text(rect.get_x() + rect.get_width()/2, h - 0.55, f"{h:.1f} pp", ha="center", va="top", fontweight="bold", fontsize=8.5, color="#7c3aed")
 
-    # Annotation highlighting that CR penalty is identical in Reading (-6.8 pp) and Math (-6.9 pp)
-    ax3.annotate("CR penalty nearly identical:\nReading (-6.8 pp) vs Math (-6.9 pp)", xy=(1 + width/2, -6.9), xytext=(0.4, -8.3),
+    # Calibrated annotation: CR penalty larger across subjects, showing format demands merit study without proving single mechanism
+    ax3.annotate("CR penalty larger in both G4 subjects:\nGap: -3.0 pp (Reading), -4.5 pp (Math)\nInterface demands merit investigation.",
+                 xy=(1 + width/2, -6.9), xytext=(0.45, -8.3),
                  arrowprops=dict(arrowstyle="->", color="#7c3aed", lw=1.2),
                  bbox=dict(boxstyle="round,pad=0.3", facecolor="#ede9fe", edgecolor="#7c3aed"),
-                 fontweight="bold", fontsize=8.5, color="#5b21b6")
+                 fontweight="bold", fontsize=8.2, color="#5b21b6")
 
     ax3.legend(loc="upper right", frameon=True)
 
@@ -278,7 +281,7 @@ def generate_figure4():
     np.random.seed(42)
     n = 1000
     theta = np.random.normal(0, 1, n)
-    wpm_g4 = np.clip(np.random.normal(13, 4.5, n), 4, 45)  # grounded in NCES pilot 12 WPM benchmark
+    wpm_g4 = np.clip(np.random.normal(12.0, 4.5, n), 3, 40)  # empirical mean 12 WPM, assumed SD 4.5
     
     score_paper = theta + np.random.normal(0, 0.3, n)
     score_dig_tau20 = theta - 0.018 * np.maximum(0, 20 - wpm_g4) + np.random.normal(0, 0.3, n)
@@ -288,7 +291,7 @@ def generate_figure4():
     sns.kdeplot(score_dig_tau20, label="Digital Simulation (Tau = 20 WPM)", color="#d97706", linestyle="--", linewidth=2.2, ax=ax2)
     sns.kdeplot(score_dig_tau25, label="Digital Simulation (Tau = 25 WPM)", color="#dc2626", linewidth=2.2, ax=ax2)
 
-    ax2.set_title("B. Grade 4 Distribution Shift Under Hypothesized Thresholds\n(Illustrative Simulation Grounded in NCES 12 WPM Pilot Data)", pad=12, fontweight="bold")
+    ax2.set_title("B. Grade 4 Distribution Shift Under Hypothesized Thresholds\n(Empirical Mean = 12 WPM; Assumed SD = 4.5 WPM)", pad=12, fontweight="bold")
     ax2.set_xlabel("Standardized Score Metric (SD)")
     ax2.set_ylabel("Density")
     ax2.legend(loc="upper left")
@@ -306,7 +309,7 @@ def generate_figure4():
 
 def main():
     print("=" * 70)
-    print("GENERATING AUDITED PUBLICATION FIGURES (ROUND 2)")
+    print("GENERATING AUDITED PUBLICATION FIGURES (ROUND 3)")
     print("=" * 70)
     setup_plotting_style()
     FIG_DIR.mkdir(parents=True, exist_ok=True)

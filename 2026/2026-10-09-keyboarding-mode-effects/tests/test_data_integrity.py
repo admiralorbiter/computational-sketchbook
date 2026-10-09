@@ -89,16 +89,20 @@ def test_naep_2017_mode_table41c():
     assert g4_rd_cr["se_pp"] == pytest.approx(0.18)
     assert (g4_rd_cr["difference_pp"] - g4_rd_sr["difference_pp"]) == pytest.approx(-3.0)
 
-    # Grade 4 Mathematics: SR Diff -2.4 pp (SE 0.17); CR Diff -6.9 pp (SE 0.21)
+    # Grade 4 Mathematics: DBA 54%, PBA 56%, Diff -2.4 pp (SE 0.24); CR: DBA 46%, PBA 52%, Diff -6.9 pp (SE 0.31)
     g4_m_sr = df_41c[(df_41c["subject"] == "Mathematics") & (df_41c["grade"] == 4) & (df_41c["item_type"].str.contains("Selected"))].iloc[0]
     g4_m_cr = df_41c[(df_41c["subject"] == "Mathematics") & (df_41c["grade"] == 4) & (df_41c["item_type"].str.contains("Constructed"))].iloc[0]
 
+    assert g4_m_sr["dba_pct"] == 54.0
+    assert g4_m_sr["pba_pct"] == 56.0
     assert g4_m_sr["difference_pp"] == pytest.approx(-2.4)
-    assert g4_m_sr["se_pp"] == pytest.approx(0.17)
+    assert g4_m_sr["se_pp"] == pytest.approx(0.24)
+
+    assert g4_m_cr["dba_pct"] == 46.0
+    assert g4_m_cr["pba_pct"] == 52.0
     assert g4_m_cr["difference_pp"] == pytest.approx(-6.9)
-    assert g4_m_cr["se_pp"] == pytest.approx(0.21)
-    # Highlight that CR penalty is nearly identical across Reading (-6.8 pp) and Math (-6.9 pp)
-    assert abs(g4_rd_cr["difference_pp"] - g4_m_cr["difference_pp"]) == pytest.approx(0.1, abs=1e-4)
+    assert g4_m_cr["se_pp"] == pytest.approx(0.31)
+    assert (g4_m_cr["difference_pp"] - g4_m_sr["difference_pp"]) == pytest.approx(-4.5)
 
     # Grade 8 Reading: DBA 74%, PBA 76%, Diff -1.6 pp (SE 0.19); CR: DBA 53%, PBA 55%, Diff -2.0 pp (SE 0.24)
     g8_rd_sr = df_41c[(df_41c["subject"] == "Reading") & (df_41c["grade"] == 8) & (df_41c["item_type"].str.contains("Selected"))].iloc[0]
@@ -111,6 +115,16 @@ def test_naep_2017_mode_table41c():
     assert g8_rd_cr["pba_pct"] == 55.0
     assert g8_rd_cr["difference_pp"] == pytest.approx(-2.0)
     assert g8_rd_cr["se_pp"] == pytest.approx(0.24)
+
+    # Grade 8 Mathematics: DBA 51%, PBA 53%, Diff -2.5 pp (SE 0.26); CR: Diff -3.5 pp (SE 0.30)
+    g8_m_sr = df_41c[(df_41c["subject"] == "Mathematics") & (df_41c["grade"] == 8) & (df_41c["item_type"].str.contains("Selected"))].iloc[0]
+    g8_m_cr = df_41c[(df_41c["subject"] == "Mathematics") & (df_41c["grade"] == 8) & (df_41c["item_type"].str.contains("Constructed"))].iloc[0]
+    assert g8_m_sr["dba_pct"] == 51.0
+    assert g8_m_sr["pba_pct"] == 53.0
+    assert g8_m_sr["difference_pp"] == pytest.approx(-2.5)
+    assert g8_m_sr["se_pp"] == pytest.approx(0.26)
+    assert g8_m_cr["difference_pp"] == pytest.approx(-3.5)
+    assert g8_m_cr["se_pp"] == pytest.approx(0.30)
 
 
 def test_icils_scores():
@@ -138,29 +152,37 @@ def test_icils_scores():
 
 
 def test_literature_bibliographic_fidelity():
-    """Verify that citations match correct peer-reviewed journals, DOIs, and empirical estimates."""
+    """Verify that citations match correct peer-reviewed journals, DOIs, model fields, and empirical estimates."""
     df_meta = pd.read_csv(RAW_DIR / "mode_effects_literature_meta.csv")
+
+    # Verify structured econometric schema
+    required_cols = ["study_id", "authors", "year", "publication", "table_reference", "estimation_model", "coefficient", "standard_error"]
+    for col in required_cols:
+        assert col in df_meta.columns
 
     # Backes & Cowan 2019
     bc_ela = df_meta[df_meta["study_id"] == "Backes_Cowan_2019_MA_ELA_Y1"].iloc[0]
     assert "Economics of Education Review" in bc_ela["publication"]
     assert bc_ela["doi"] == "10.1016/j.econedurev.2018.12.003"
-    assert bc_ela["reported_effect"] == "-0.25 SD"
+    assert bc_ela["coefficient"] == -0.250
 
     bc_math = df_meta[df_meta["study_id"] == "Backes_Cowan_2019_MA_Math_Y1"].iloc[0]
-    assert bc_math["reported_effect"] == "-0.10 SD"
+    assert bc_math["coefficient"] == -0.100
 
-    # Gordanier, Ozturk, & Zhan 2023: EFP Vol 18(2), pp. 232-252, DOI 10.1162/edfp_a_00373
+    # Gordanier, Ozturk, & Zhan 2023: EFP Vol 18(2), pp. 232-252, Table 3 OLS estimates
     sc_ela = df_meta[df_meta["study_id"] == "Gordanier_Ozturk_Zhan_2023_SC_ELA"].iloc[0]
     assert "Education Finance and Policy" in sc_ela["publication"]
     assert "18(2)" in sc_ela["publication"]
     assert "232-252" in sc_ela["publication"]
     assert sc_ela["doi"] == "10.1162/edfp_a_00373"
-    assert "Gordanier" in sc_ela["authors"]
-    assert sc_ela["reported_effect"] == "-0.085 SD"
+    assert "Table 3" in sc_ela["table_reference"]
+    assert sc_ela["coefficient"] == -0.085
+    assert sc_ela["standard_error"] == 0.007
 
     sc_math = df_meta[df_meta["study_id"] == "Gordanier_Ozturk_Zhan_2023_SC_Math"].iloc[0]
-    assert sc_math["reported_effect"] == "-0.044 SD"
+    assert "Table 3" in sc_math["table_reference"]
+    assert sc_math["coefficient"] == -0.024  # Table 3 OLS estimate (not the -0.044 science interaction)
+    assert sc_math["standard_error"] == 0.007
 
     # Carol Parker 2018 (reconciled as non-significant chi-square, no fabricated SD)
     parker = df_meta[df_meta["study_id"] == "Parker_2018_TN_Keyboarding"].iloc[0]
@@ -168,16 +190,32 @@ def test_literature_bibliographic_fidelity():
     assert "Chi-square" in parker["reported_effect"] or "Non-significant" in parker["reported_effect"]
     assert "916" in parker["sample_size"] and "906" in parker["sample_size"]
 
-    # NCES 2012 Writing Pilot: 110 computer words vs 159 paper words
-    pilot = df_meta[df_meta["study_id"] == "NCES_2012_Writing_Pilot"].iloc[0]
-    assert "110 words" in pilot["reported_effect"]
-    assert "159 words" in pilot["reported_effect"]
-    assert "12 WPM" in pilot["key_finding"]
-    assert "30 WPM" in pilot["key_finding"]
-
-    # NAEP 2017 Writing Technical Summary
+    # NAEP 2017 Writing Technical Summary (cautious official wording)
     supp = df_meta[df_meta["study_id"] == "NAEP_2017_Writing_Technical_Summary"].iloc[0]
     assert "SUPPRESSED" in supp["reported_effect"]
+    assert "unresolved comparability concerns" in supp["key_finding"]
+
+
+def test_writing_pilot_comparison():
+    """Verify NCES Writing Pilot 2010 vs 2012 benchmarks, score parity, and distributional shift."""
+    df_pilot = pd.read_csv(RAW_DIR / "nces_writing_pilot_comparison.csv")
+    
+    # Response length: 159 words paper vs 110 words computer (-49 words)
+    rlen = df_pilot[df_pilot["metric"].str.contains("Response Length")].iloc[0]
+    assert rlen["paper_2010"] == 159.0
+    assert rlen["computer_2012"] == 110.0
+    assert rlen["difference"] == -49.0
+
+    # Average score: 2.98 paper vs 3.08 computer
+    score = df_pilot[df_pilot["metric"].str.contains("Average Score")].iloc[0]
+    assert score["paper_2010"] == pytest.approx(2.98)
+    assert score["computer_2012"] == pytest.approx(3.08)
+
+    # Usability speeds: 12 WPM (G4), 30 WPM (G8)
+    g4_wpm = df_pilot[df_pilot["metric"].str.contains("Grade 4")].iloc[0]["computer_2012"]
+    g8_wpm = df_pilot[df_pilot["metric"].str.contains("Grade 8")].iloc[0]["computer_2012"]
+    assert g4_wpm == 12.0
+    assert g8_wpm == 30.0
 
 
 def test_device_access_pulse_data():

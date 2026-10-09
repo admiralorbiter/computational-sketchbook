@@ -63,17 +63,21 @@ This document provides complete provenance, extraction citations, table referenc
   - **Grade 8 Constructed-Response (CR)**: Digital $53\%$ vs. Paper $55\%$ $\to$ Difference = **$-2.0$ pp** ($\text{SE} = 0.24, p < 0.05$).
   - **Grade 8 Format Gap (CR vs. SR)**: **$-0.4$ pp**.
 - **Audited Values (Mathematics)**:
-  - **Grade 4 Selected-Response (SR)**: Difference = **$-2.4$ pp** ($\text{SE} = 0.17, p < 0.05$).
-  - **Grade 4 Constructed-Response (CR)**: Difference = **$-6.9$ pp** ($\text{SE} = 0.21, p < 0.05$).
-  - **Cross-Subject Symmetry**: The constructed-response penalty in Math ($-6.9$ pp) matches Reading ($-6.8$ pp), showing that constructed-response digital friction is not confined to essay typing.
-- **Correction Applied**: Reconciled DBA/PBA percentages and standard errors to Table 4.1c, p. 37. Added Grade 4 Mathematics contrasts.
+  - **Grade 4 Selected-Response (SR)**: Digital $54\%$ vs. Paper $56\%$ $\to$ Difference = **$-2.4$ pp** ($\text{SE} = 0.24, p < 0.05$).
+  - **Grade 4 Constructed-Response (CR)**: Digital $46\%$ vs. Paper $52\%$ $\to$ Difference = **$-6.9$ pp** ($\text{SE} = 0.31, p < 0.05$).
+  - **Grade 4 Format Gap (CR vs. SR)**: **$-4.5$ pp**.
+  - **Grade 8 Selected-Response (SR)**: Digital $51\%$ vs. Paper $53\%$ $\to$ Difference = **$-2.5$ pp** ($\text{SE} = 0.26, p < 0.05$).
+  - **Grade 8 Constructed-Response (CR)**: Difference = **$-3.5$ pp** ($\text{SE} = 0.30, p < 0.05$).
+  - **Grade 8 Format Gap (CR vs. SR)**: **$-1.0$ pp**.
+- **Calibrated Cross-Subject Interpretation**: Across fourth-grade reading and mathematics, digitally administered constructed-response items exhibited larger negative mode differences than selected-response items. This cross-subject pattern suggests that response format and associated interface demands merit further investigation, but does not isolate a common cognitive mechanism.
+- **Correction Applied**: Reconciled DBA/PBA percentages and standard errors to Table 4.1c, p. 37. Added Grade 4 and Grade 8 Mathematics contrasts.
 
 ### `SRC-05` to `SRC-07` & `SRC-10`: Empirical Benchmark Literature
 - **Backes & Cowan (2019)**: Corrected journal citation to *Economics of Education Review* (Vol. 68, pp. 89–103). Verified Year 1 PARCC mode penalty of $-0.25$ SD in ELA and $-0.10$ SD in math.
-- **Gordanier, Ozturk, & Zhan (2023)**: Corrected citation to *Education Finance and Policy* (Vol. 18(2), pp. 232–252, DOI: 10.1162/edfp_a_00373). Verified separate subject estimates: ELA $-0.085$ SD and Math $-0.044$ SD. Larger impacts for students from poor households; mitigated by school technology access.
+- **Gordanier, Ozturk, & Zhan (2023)**: Corrected citation to *Education Finance and Policy* (Vol. 18(2), pp. 232–252, DOI: 10.1162/edfp_a_00373). Verified Table 3 main OLS estimates: ELA $-0.085$ SD ($\text{SE} = 0.007$) and Math $-0.024$ SD ($\text{SE} = 0.007$; 2SLS is $-0.017$ SD, n.s.). (Note: $-0.044$ SD in previous drafts was a science interaction estimate, corrected to the primary Table 3 math OLS estimate). Larger impacts for students from poor households; mitigated by school technology access.
 - **Carol Parker (2018)**: *Journal of Research in Business Education* (Vol. 59(1), pp. 1–14). Reconciled to the study's actual methodology: a chi-square test of independence on $N = 916$ (Essay 1) and $N = 906$ (Essay 2) middle school students, reporting no statistically significant relationship ($p > 0.05$) between completing a 9-week keyboarding course and writing test proficiency.
-- **NCES Grade 4 Computer Writing Pilot (2012)**: In the 2012 NAEP writing pilot ($N \approx 10,400$), computer responses averaged 110 words vs. 159 words on paper in 2010 (a 31% reduction). Companion usability studies documented an average typing speed of 12 WPM for 4th graders and 30 WPM for 8th graders.
-- **NAGB 2017 Writing Assessment Suppression**: National writing assessment results were declared unreportable and suppressed due to severe comparability issues (typing bottlenecks, 30-40% word count drops, laptop vs tablet device disparities).
+- **NCES Grade 4 Computer Writing Pilot (2010 vs. 2012)**: In the 2012 NAEP writing pilot ($N \approx 10,400$), computer responses averaged 110 words vs. 159 words on paper in 2010 (a 30.8% reduction). However, on a common prompt scored on a 1–6 rubric, computer responses averaged 3.08 vs. 2.98 on paper; shorter length did not lower average scores overall. Crucially, higher-performing students scored substantially higher on computers while lower-performing students did not (widening the achievement gap). *Methodological Note*: These were separate pilot administrations, not a randomized crossover trial. Companion usability studies documented an average typing speed of 12 WPM for 4th graders and 30 WPM for 8th graders.
+- **NAGB 2017 Writing Assessment Suppression**: NCES declared the 2017 national writing assessment results unreportable due to unresolved comparability concerns; researchers could not determine how much of the performance change reflected device changes versus differences in students' writing skills.
 
 ### `SRC-08`: IEA ICILS (2018 vs. 2023)
 - **Scores**: U.S. 8th graders dropped from 519 in 2018 to 482 in 2023 (-37 scale points, -0.37 SD, $p < 0.001$).

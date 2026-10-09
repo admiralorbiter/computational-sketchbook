@@ -1,0 +1,6 @@
+metric,paper_2010,computer_2012,difference,unit,notes
+Average Response Length (Common Tasks),159.0,110.0,-49.0,Words,30.8% reduction in response length on computer
+Average Score on Common Tasks,2.98,3.08,0.1,Score (1-6 scale),Shorter response length did NOT lower average scores overall
+Typing Speed Usability Benchmark (Grade 4),,12.0,,Words Per Minute (WPM),NCES companion usability testing observed ~12 WPM for 4th graders
+Typing Speed Usability Benchmark (Grade 8),,30.0,,Words Per Minute (WPM),NCES companion usability testing observed ~30 WPM for 8th graders
+Score Distribution Equity Finding,,,,Distributional Shift,"High-performing students scored substantially better on computer; low- and middle-performing students showed no benefit, suggesting potential widening of the achievement gap."

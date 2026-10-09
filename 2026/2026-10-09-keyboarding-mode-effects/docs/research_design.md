@@ -23,7 +23,7 @@ We enforce a strict boundary between two distinct empirical claims:
 flowchart TD
     subgraph Claim1["Claim 1: The Interface Penalty Claim (EMPIRICALLY SUPPORTED)"]
         C1["Digital test administration can depress student performance,\nespecially on constructed-response items among younger students."]
-        E1["Empirical Evidence:\n• Backes & Cowan (2019, EER): -0.25 SD in ELA, -0.10 SD in Math\n• Gordanier et al. (2023, EFP): -0.085 SD in ELA, -0.044 SD in Math\n• NAEP 2017 Table 4.1c: G4 Reading (-3.8 pp SR, -6.8 pp CR) & G4 Math (-2.4 pp SR, -6.9 pp CR)\n• NCES 2012 Writing Pilot: 110 words on computer vs. 159 words on paper (31% drop)\n• 2017 NAEP Writing: Results suppressed by NAGB due to typing speed & device disparity"]
+        E1["Empirical Evidence:\n• Backes & Cowan (2019, EER): -0.25 SD in ELA, -0.10 SD in Math\n• Gordanier et al. (2023, EFP): -0.085 SD in ELA, -0.024 SD in Math (Table 3 OLS)\n• NAEP 2017 Table 4.1c: G4 Reading (-3.8 pp SR, -6.8 pp CR) & G4 Math (-2.4 pp SR, -6.9 pp CR)\n• NCES 2010 vs 2012 Writing Pilot: 110 words on computer vs. 159 words on paper (30.8% drop), 3.08 vs 2.98 scores, gap widening\n• 2017 NAEP Writing: Suppressed by NCES due to device vs. writing skills comparability concerns"]
         C1 --> E1
     end
 
@@ -70,7 +70,7 @@ Where:
 ### B. Exploratory Parameter Sensitivity Analysis
 Because student-level typing speed and test score microdata are restricted, we evaluate an **exploratory parameter sensitivity analysis**:
 $$f(\text{WPM}_i) = \beta_{\text{wpm}} \cdot \max(0, \tau - \text{WPM}_i)$$
-We ground our speed distributions in the NCES 2012 Writing Usability benchmarks (Grade 4 mean = 12 WPM, SD = 5.0 WPM; Grade 8 mean = 30 WPM, SD = 8.0 WPM). We evaluate this function across a wide range of plausible parameters:
+We ground our speed distribution means in the NCES 2012 Writing Usability benchmarks (Grade 4 mean = 12.0 WPM; Grade 8 mean = 30.0 WPM), and use explicitly assumed standard deviations ($\sigma = 4.5$ WPM for G4; $\sigma = 7.5$ WPM for G8) to evaluate this function across a wide range of plausible parameters:
 - Thresholds: $\tau \in \{15, 20, 25, 30\}$ WPM.
 - Slopes: $\beta_{\text{wpm}} \in \{-0.010, -0.018, -0.025\}$ SD per WPM deficit.
 
@@ -80,7 +80,12 @@ This illustrates the theoretical bounds of the keyboarding hypothesis without cl
 
 ## 4. Proposed Experimental Protocol: Isolating Keyboarding from Interface Noise
 
-Because existing observational studies cannot separate typing fluency from reading navigation and item complexity, we propose a within-student randomized crossover trial:
+Because existing observational studies cannot separate typing fluency from reading navigation and item complexity, future empirical investigations must address the primary research agenda question:
+
+> **Primary Research Agenda Question**:  
+> *"To what extent do differences in typing fluency, handwriting fluency, and digital interface familiarity explain variation in fourth-grade students' performance between paper and computer-based assessments—and are those differences larger for students with fewer opportunities to develop digital skills?"*
+
+To isolate this mechanism, we propose a within-student randomized crossover trial:
 
 ```mermaid
 flowchart TD

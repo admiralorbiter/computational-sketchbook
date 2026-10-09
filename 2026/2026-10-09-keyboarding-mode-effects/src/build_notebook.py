@@ -36,7 +36,7 @@ Over the past two decades, American elementary and secondary education experienc
 When educational assessments require students to demonstrate academic abilities through digital interfaces, the testing medium itself can introduce **Construct-Irrelevant Variance (CIV)**.
 
 ### Calibrated Central Finding
-> **Digital administration can affect measured student performance, and the differences appear particularly pronounced on constructed-response items among younger students. The degree to which typing fluency explains those differences remains unresolved.**
+> **Across fourth-grade reading and mathematics, digitally administered constructed-response items exhibited larger negative mode differences than selected-response items. This cross-subject pattern suggests that response format and associated interface demands merit further investigation, but does not isolate a common cognitive mechanism.**
 
 ### Project Reclassification
 This project is a **computational literature synthesis, empirical reconciliation, and parameter sensitivity analysis**. It synthesizes published findings from peer-reviewed journals and official government evaluations, evaluates the sensitivity of hypothesized typing thresholds, and outlines an experimental protocol to isolate the keyboarding mechanism.
@@ -53,7 +53,7 @@ To maintain scientific integrity, we draw an absolute boundary between two disti
 | :--- | :--- | :--- |
 | **Proposition** | Digital administration can depress student performance, especially on constructed-response items among younger students. | The national decline in standardized test scores over the past decade was caused by declining keyboarding instruction. |
 | **Psychometric Status** | **Construct-Irrelevant Difficulty** (Messick 1989; Berninger 1999). | Causal attribution with massive unobserved macro confounders. |
-| **Empirical Status** | **Supported by Replicated Evidence**: State transitions (MA $-0.25$ SD ELA, SC panel) and NAEP Table 4.1c ($-6.8$ pp on G4 CR vs. $-3.8$ pp on SR). | **Unsupported**: NAEP 2017+ trends are statistically linked for mode; score declines continued in 2022–2024 within an already digital baseline; typing courses alone (Parker 2018) showed null writing gains. |
+| **Empirical Status** | **Supported by Replicated Evidence**: State transitions (MA $-0.25$ SD ELA; SC $-0.085$ SD ELA, $-0.024$ SD Math) and NAEP Table 4.1c ($-6.8$ pp on G4 Reading CR vs. $-3.8$ pp on SR; $-6.9$ pp on G4 Math CR vs. $-2.4$ pp on SR). | **Unsupported**: NAEP 2017+ trends are statistically linked for mode; score declines continued in 2022–2024 within an already digital baseline; typing courses alone (Parker 2018) showed null writing gains. |
 | **Research Action** | **Admitted to study**: Reconcile published effect sizes, item-format differences, and parameter sensitivity. | **Quarantined from causal claims**: Rejected as an unsupported causal attribution. |
 
 ### The Six-Point Study Admission Gate
@@ -180,19 +180,17 @@ In the official 2017 NAEP Mode Evaluation Study (`transitional_whitepaper.pdf`, 
 1. **Grade 4 Reading**:
    - Selected-Response (SR): **$-3.8$ pp** (DBA 60.0%, PBA 64.0%, $\\text{SE} = 0.22, p < 0.05$).
    - Constructed-Response (CR): **$-6.8$ pp** (DBA 35.0%, PBA 42.0%, $\\text{SE} = 0.18, p < 0.05$).
-   - Reading Format Gap: An additional **$-3.0$ pp** deficit on constructed responses.
+   - Format Gap: Constructed-response items exhibit an incremental **$-3.0$ pp** deficit.
 2. **Grade 4 Mathematics**:
-   - Selected-Response (SR): **$-2.4$ pp** ($\\text{SE} = 0.17, p < 0.05$).
-   - Constructed-Response (CR): **$-6.9$ pp** ($\\text{SE} = 0.21, p < 0.05$).
-   - Math Format Gap: An additional **$-4.5$ pp** deficit on constructed responses.
-3. **Profound Insight: Parallel CR Penalties Across Subjects**:
-   - The Grade 4 constructed-response mode penalty is virtually identical in Reading ($-6.8$ pp) and Mathematics ($-6.9$ pp).
-   - This proves that the constructed-response deficit is **not solely about typing long text essays**. Digital response construction—such as entering mathematical expressions, entering multi-step explanations, manipulating on-screen toolbars, and navigating virtual input fields—imposes a universal cognitive tax on fourth-grade students.
-4. **Developmental Attenuation in Grade 8**:
-   - By Grade 8, the Reading mode difference shrinks to **$-1.6$ pp on SR** and **$-2.0$ pp on CR** (a narrow $-0.4$ pp format gap), confirming strong developmental moderation as students mature in transcription and computer facility.
-5. **NCES Grade 4 Computer Writing Pilot Benchmarks (2012)**:
-   - In the 2012 NAEP computer writing pilot ($N \\approx 10,400$), fourth-grade students produced an average of **110 words** on computer, compared to **159 words** on paper in the 2010 pilot—a **31% reduction in output length**.
-   - Companion NCES usability studies documented that fourth-grade students typed at an average rate of **12 WPM**, compared to **30 WPM** for eighth-graders.
+   - Selected-Response (SR): **$-2.4$ pp** (DBA 54.0%, PBA 56.0%, $\\text{SE} = 0.24, p < 0.05$).
+   - Constructed-Response (CR): **$-6.9$ pp** (DBA 46.0%, PBA 52.0%, $\\text{SE} = 0.31, p < 0.05$).
+   - Format Gap: Constructed-response items exhibit an incremental **$-4.5$ pp** deficit.
+3. **Grade 8 Attenuation**:
+   - Reading: **$-1.6$ pp on SR** ($\text{SE} = 0.19$) vs. **$-2.0$ pp on CR** ($\text{SE} = 0.24$) (a $-0.4$ pp format gap).
+   - Mathematics: **$-2.5$ pp on SR** (DBA 51%, PBA 53%, $\text{SE} = 0.26$) vs. **$-3.5$ pp on CR** ($\text{SE} = 0.30$) (a $-1.0$ pp format gap).
+4. **Calibrated Substantive Interpretation**:
+   - Across fourth-grade reading and mathematics, digitally administered constructed-response items exhibited larger negative mode differences than selected-response items.
+   - However, this cross-subject pattern **does not isolate a single common cognitive mechanism**. The two subjects measure distinct academic constructs and present different item demands. Both selected-response categories also show negative mode differences. Observational mode evaluations cannot isolate whether constructed-response deficits arise from typing, equation entry, screen navigation, or other test features.
 """))
 
 cells.append(nbf.v4.new_code_cell("""df_41c = pd.read_csv(RAW_DIR / "naep_2017_mode_table41c.csv")
@@ -219,19 +217,29 @@ We evaluate published empirical studies across state assessment transitions:
   - Found an overall mode penalty of **$-0.25$ SD in ELA** and **$-0.10$ SD in math** in Year 1.
   - In Year 2, penalties attenuated to **$-0.13$ SD in ELA** and **$-0.05$ SD in math**, showing experiential learning.
 - **South Carolina (Gordanier, Ozturk, & Zhan 2023, *Education Finance and Policy*, 18(2), 232–252, DOI: 10.1162/edfp_a_00373)**:
-  - Statewide panel evaluating SC READY/PASS transitions in grades 3–8.
-  - Estimated significant mode penalties of **$-0.085$ SD in ELA** and **$-0.044$ SD in Math**.
+  - Statewide panel evaluating SC READY/PASS transitions in grades 3–8 (Table 3).
+  - Main OLS estimates: **$-0.085$ SD in ELA** ($\text{SE} = 0.007$) and **$-0.024$ SD in Math** ($\text{SE} = 0.007$; 2SLS estimate is $-0.017$ SD, not statistically significant).
   - Negative impacts were significantly larger for students from low-income households, and were mitigated in schools with greater technology availability.
 - **Tennessee Middle School Study (Parker 2018, *Journal of Research in Business Education*, 59(1), 1–14)**:
   - Analyzed $N = 916$ (Essay 1) and $N = 906$ (Essay 2) middle school students using chi-square tests of independence.
   - Found **no statistically significant relationship** ($p > 0.05$) between completing a 9-week keyboarding course and writing test proficiency.
   - *Methodological note*: A non-significant chi-square indicates a lack of detectable association in this quasi-experimental setting; it does not constitute proof of zero benefit nor a standardized effect size of 0.00 SD.
+- **NCES 2010 Paper vs. 2012 Computer Writing Pilot Benchmarks**:
+  - In tasks common to both administrations, 4th graders produced **110 words on computer** vs. **159 words on paper** (30.8% reduction).
+  - However, average scores did not decline: **3.08 on computer** vs. **2.98 on paper** (scale 1–6).
+  - Crucially, higher-performing students scored substantially better on computers, while lower- and middle-performing students showed no benefit, suggesting a **potential widening of the achievement gap**.
+  - *Methodological note*: These were separate pilot administrations, not a randomized crossover trial.
 - **NAEP 2017 Writing Assessment Suppression**:
-  - The National Assessment Governing Board (NAGB) declared the 2017 national writing assessment results **unreportable and suppressed**, citing severe comparability issues: typing speed constraints, 30–40% word count discrepancies, and tablet vs. laptop administration differences.
+  - NCES declared the 2017 national writing assessment results **unreportable due to unresolved comparability concerns**, explicitly stating it could not determine how much of the performance difference reflected changes in assessment administration and devices versus genuine differences in students' writing skills.
 """))
 
 cells.append(nbf.v4.new_code_cell("""df_meta = pd.read_csv(TABLES_DIR / "table4_literature_benchmark.csv")
-display(df_meta[["authors", "year", "publication", "jurisdiction", "subject", "reported_effect", "unit", "key_finding"]])
+display(df_meta[["authors", "year", "table_reference", "subject", "estimation_model", "coefficient", "standard_error", "key_finding"]])
+"""))
+
+cells.append(nbf.v4.new_code_cell("""# Display Writing Pilot Comparison
+df_pilot = pd.read_csv(RAW_DIR / "nces_writing_pilot_comparison.csv")
+display(df_pilot)
 """))
 
 cells.append(nbf.v4.new_code_cell("""# Display Figure 2: Literature Mode Penalties
@@ -277,11 +285,11 @@ display(df_icils)
 # ==============================================================================
 # Cell 10: Parameter Sensitivity Analysis
 # ==============================================================================
-cells.append(nbf.v4.new_markdown_cell("""## 9. Exploratory Parameter Sensitivity Analysis
+cells.append(nbf.v4.new_markdown_cell(r"""## 9. Exploratory Parameter Sensitivity Analysis
 
 Because student-level typing speed and score microdata are restricted, we evaluate an **exploratory parameter sensitivity analysis**:
-$$f(\\text{WPM}_i) = \\beta_{\\text{wpm}} \\cdot \\max(0, \\tau - \\text{WPM}_i)$$
-We ground our speed distributions in the NCES 2012 Writing Usability benchmarks (Grade 4 mean = 12 WPM, SD = 5.0 WPM; Grade 8 mean = 30 WPM, SD = 8.0 WPM). We explore how simulated mean score penalties vary across hypothetical transcription thresholds ($\\tau \\in [15, 20, 25, 30]$ WPM) and penalty slopes ($\\beta \\in [-0.010, -0.018, -0.025]$).
+$$f(\text{WPM}_i) = \beta_{\text{wpm}} \cdot \max(0, \tau - \text{WPM}_i)$$
+We ground our speed distribution means in the 2012 NCES Usability Study benchmarks (Grade 4 mean = 12.0 WPM; Grade 8 mean = 30.0 WPM), and use assumed standard deviations ($\sigma = 4.5$ WPM for G4; $\sigma = 7.5$ WPM for G8) to explore population heterogeneity under hypothetical transcription thresholds ($\tau \in [15, 20, 25, 30]$ WPM) and penalty slopes ($\beta \in [-0.010, -0.018, -0.025]$).
 
 *Crucial Epistemic Caveat*: This simulation illustrates theoretical model mechanics under hypothesized thresholds; it does **not** validate that typing fluency caused the observed testing gaps. Handwriting also imposes motor transcription burdens (fatigue, dysgraphia), and digital interfaces may offer benefits (editing flexibility, accommodations) for some students.
 """))
@@ -298,48 +306,52 @@ Image(filename=str(FIG_DIR / "fig4_psychometric_civ_simulation.png"))
 # ==============================================================================
 # Cell 11: Master Findings Scorecard & Experimental Agenda
 # ==============================================================================
-cells.append(nbf.v4.new_markdown_cell("""## 10. Master Findings Scorecard & Proposed Experimental Research Agenda
+cells.append(nbf.v4.new_markdown_cell("""## 10. Master Findings Scorecard & Core Research Conclusions
 
 ### Synthesis of Core Questions
 
 #### Question 1: Does digital assessment introduce an interface score penalty, especially on keyboard-intensive questions for younger students?
 **YES. Empirical studies show that digital administration can depress measured student achievement, particularly on constructed-response items among younger students:**
 1. **Massachusetts PARCC (Backes & Cowan 2019)**: An overall mode penalty of **$-0.25$ SD** in ELA and **$-0.10$ SD** in math in Year 1.
-2. **South Carolina (Gordanier et al. 2023)**: Mode penalties of **$-0.085$ SD in ELA** and **$-0.044$ SD in Math**, larger for low-income students.
+2. **South Carolina (Gordanier et al. 2023)**: Main OLS mode penalties of **$-0.085$ SD in ELA** and **$-0.024$ SD in Math**, larger for low-income students.
 3. **NAEP 2017 Mode Evaluation (NCES Table 4.1c)**:
    - Grade 4 Reading: **$-3.8$ pp** on Selected Response vs. **$-6.8$ pp** on Constructed Response (a $-3.0$ pp format gap).
    - Grade 4 Mathematics: **$-2.4$ pp** on Selected Response vs. **$-6.9$ pp** on Constructed Response (a $-4.5$ pp format gap).
-   - The constructed-response penalty in Math ($-6.9$ pp) matches Reading ($-6.8$ pp), pointing to a general digital response construction hurdle.
-4. **Developmental Attenuation**: By Grade 8, the NAEP reading constructed-response penalty attenuates to **$-2.0$ pp** (format gap narrows to $-0.4$ pp).
+   - Across both subjects, constructed-response items exhibited larger negative mode differences than selected-response items, indicating that response format and associated interface demands merit investigation.
+4. **Developmental Attenuation**: By Grade 8, the NAEP constructed-response penalty attenuates to **$-2.0$ pp in Reading** ($-0.4$ pp format gap) and **$-3.5$ pp in Math** ($-1.0$ pp format gap).
 
 #### Question 2: Did the national decline in standardized test scores get caused by declining keyboarding instruction?
 **NO. Available evidence does NOT support this causal claim:**
 1. **Statistical Equating**: NAEP explicitly implemented statistical linking in 2017 to remove mode differences from longitudinal score comparisons. Subsequent score declines between 2019 and 2024 occurred *within* an already digital testing baseline.
 2. **Confounding Factors**: Post-2019 score declines coincided with massive pandemic disruptions, chronic absenteeism, and curriculum adjustments.
 3. **The Keyboarding Null Result**: Parker's (2018) Tennessee middle school study found no statistically significant relationship ($p > 0.05$) between completing a 9-week keyboarding course and writing test proficiency.
-4. **Universal Math Penalty**: The fact that Math constructed responses exhibit the exact same penalty as Reading indicates that interface friction is broader than keyboarding instruction alone.
+4. **Distributional Rather than Universal Shifts**: The 2010 vs 2012 NCES Writing Pilot showed that while digital testing cut word count by 31%, average scores did not decline (3.08 vs 2.98). Instead, high performers gained while lower performers did not, suggesting unequal preparation alters the distribution of achievement rather than imposing an identical macro penalty.
 
 ---
 
-## 11. Proposed Experimental Protocol: Isolating Keyboarding from Interface Noise
+## 11. Proposed Experimental Protocol: The Promising Next Research Frontier
 
-To separate typing fluency from reading navigation and cognitive item complexity, we propose a within-student randomized crossover trial:
+The central unresolved empirical question identified by this observatory is:
+
+> **To what extent do differences in typing fluency, handwriting fluency, and digital interface familiarity explain variation in fourth-grade students' performance between paper and computer-based assessments—and are those differences larger for students with fewer opportunities to develop digital skills?**
+
+To answer this question, we propose a within-student randomized crossover trial:
 
 ```mermaid
 flowchart TD
-    S["Cohort of 4th & 5th Grade Students\\n(Pre-tested for baseline WPM, touch typing, handwriting fluency, and reading ability)"]
+    S["Cohort of 4th Grade Students\\n(Pre-tested for touch-typing WPM, handwriting fluency, and home device access)"]
     S --> R{"Random Assignment"}
-    R -->|Group A| T1["Task 1: Prompt A on Paper (Handwritten)\\nTask 2: Prompt B on Laptop (Digital Keyboard)"]
-    R -->|Group B| T2["Task 1: Prompt A on Laptop (Digital Keyboard)\\nTask 2: Prompt B on Paper (Handwritten)"]
-    T1 --> M["Double-blind Scoring on Standardized Writing Rubric\\n(Word Count, Syntactic Complexity, Text Structure)"]
+    R -->|Group A| T1["Session 1: Prompt A on Paper (Handwritten)\\nSession 2: Prompt B on Laptop (Digital Keyboard)"]
+    R -->|Group B| T2["Session 1: Prompt A on Laptop (Digital Keyboard)\\nSession 2: Prompt B on Paper (Handwritten)"]
+    T1 --> M["Double-blind Rubric Scoring\\n(Word Count, Ideas & Organization, Syntactic Complexity)"]
     T2 --> M
-    M --> E["Econometric Decomposition:\\nEstimate marginal effect of WPM on Paper vs. Laptop score differential\\nholding prompt difficulty and student latent ability constant"]
+    M --> E["Econometric Within-Student Decomposition:\\nEstimate Δ Score (Computer - Paper) as a function of\\n(WPM - Handwriting Speed), prior typing instruction, and district poverty"]
 ```
 
 ### Key Policy Recommendations
 1. **Assessment Design**: State testing agencies should evaluate mode differences using item-level percentage-point tracking and ensure that young elementary students are not subjected to timed typing demands before transcription automaticity is established.
 2. **Instructional Integration**: Schools should move away from isolated, siloed keyboarding drills and integrate touch-typing practice directly into daily classroom composition and digital literacy activities.
-3. **Score Interpretation**: Accountability systems must account for mode effects when transitioning between assessment platforms.
+3. **Score Interpretation**: Accountability systems must account for mode effects and distributional wedges when transitioning between assessment platforms.
 """))
 
 # Assign cells to notebook and write
