@@ -1,7 +1,8 @@
 """
 Notebook Generation Script: 04_pirls_2021_process_data.ipynb
-Generates and executes the Study B research notebook analyzing PIRLS 2021 digital reading
-process data, item response latencies, navigation revisit frequency, and student reading ability.
+Generates and executes the calibrated Study B research notebook analyzing PIRLS 2021 digital reading
+process data, item response latencies, navigation revisit frequency, scored outcomes, and within-item
+time-accuracy gradients in Grade 4 reading.
 """
 
 from pathlib import Path
@@ -31,40 +32,43 @@ def build_pirls_notebook():
     # Title & Study B Research Framing
     # ==============================================================================
     cells.append(nbf.v4.new_markdown_cell(r"""# PIRLS 2021 Digital Reading Process & Interaction Logs (Study B)
-## Testing Three Mechanisms: Navigation Friction, Response-Entry Friction, and Academic Ability (`04_pirls_2021_process_data`)
+## Descriptive Latency Decomposition, Revisit Behavior, and Time-Accuracy Dynamics in Grade 4 Reading (`04_pirls_2021_process_data`)
 
 **Author**: Computational Sketchbook Observatory  
-**Date**: October 2026  
+**Date**: October 2026 (Calibrated Edition)  
 **Primary Dataset**: IEA PIRLS 2021 International Database (`ASPDEUR5.sav`, `ASADEUR5.sav`, `P21_ItemInformation.xlsx`)  
-**Study Scope**: High-income OECD digital reading benchmark sample ($N = 4,611$ fourth-grade examinees across 273 digital reading items).
+**Study Scope**: High-income OECD digital reading benchmark sample ($N = 4,486$ clean fourth-grade examinees across 273 digital reading items, yielding 91,376 matched student-item observations).
 
 ---
 
-### Executive Research Question
+### Executive Research Purpose & Methodological Scope
 In Study A, our within-school item-controlled analysis of TIMSS 2019 demonstrated that fourth graders suffer a robust **$-2.73$ percentage-point penalty** on constructed-response mathematics questions under digital administration ($-2.58$ pp among officially invariant items).
 
-However, test-score outcomes alone cannot adjudicate between three competing theoretical mechanisms:
-1. **Navigation Friction**: Does the digital format disorient young readers through multi-page scrolling, split-screen layouts, and frequent back-and-forth page navigation?
-2. **Response-Entry Friction**: Does the mechanical act of keyboarding / typing answers impose a transcription bottleneck that drains time and executive working memory?
-3. **General Academic Difficulty**: Do timing discrepancies and constructed-response deficits merely reflect underlying differences in reading comprehension ability?
+However, test-score outcomes alone cannot observe the real-time behavioral process of test-taking. Study B utilizes digital process logs from PIRLS 2021 to examine how young elementary students allocate time, navigate on-screen passages, and formulate responses during computerized assessments.
 
-By analyzing item-level timestamps (`_S` total time), first-visit latencies (`_R`), and revisit frequencies (`_F`) recorded in the official PIRLS 2021 digital process database, Study B directly tests these three hypotheses.
+#### Epistemic Demarcation & Calibrated Interpretation
+1. **Descriptive Behavior vs. Causal Transcription Tax**:
+   Because paper response latencies are unobserved for these reading items, the observed $+78.5\text{s}$ duration difference between constructed-response and multiple-choice items cannot be identified as a causal "digital transcription tax." A constructed response takes longer than selecting a radio button for multiple cognitive reasons: formulating, organizing, writing, and revising text. Study B provides descriptive evidence of digital test-taking behavior that generates testable hypotheses for mathematics.
+2. **Institutional Context**:
+   NCES sampled U.S. students for both digital and paper-bridge administration in PIRLS 2021, but published its official results from the paper-bridge sample due to psychometric linking concerns. Germany serves as the primary high-income OECD digital benchmark administering the complete digital PIRLS assessment with verified event timestamps and reading proficiency scales.
 """))
 
     # ==============================================================================
-    # Section 1: Study Admission Gate & Institutional Context
+    # Section 1: Study Admission Gate & Estimand Specifications
     # ==============================================================================
-    cells.append(nbf.v4.new_markdown_cell(r"""## 1. Study Admission Gate & Institutional Audit
+    cells.append(nbf.v4.new_markdown_cell(r"""## 1. Study Admission Gate & Estimand Specifications
 
 ### The Six-Point Study Admission Gate
-1. **Retrieval & Usability**: Full access to the public-use PIRLS 2021 International Database (IEA Hamburg), including process data (`ASPR5`) and student achievement microdata (`ASAR5`).
-2. **Institutional Sample Reality**: Due to the COVID-19 pandemic, the United States delayed its PIRLS 2021 administration to Fall 2021, tested fifth-grade students, and administered **exclusively on paper as a bridge sample** (`ASPUSAR5.sav` contains empty process columns). Germany represents the primary high-income OECD digital sample with complete, cleaned process logs ($N = 4,611$).
-3. **Written Mathematical Model**:
-   $$T_{ij} = \mu_j + \beta_{\text{CR}} \cdot \text{CR}_j + \gamma \cdot \theta_i + \delta \cdot \text{Revisit}_{ij} + \epsilon_{ij}$$
-   where $T_{ij}$ is total item latency, $\beta_{\text{CR}}$ isolates response-entry friction, $\gamma$ captures reading ability moderation, and $\delta$ reflects navigation revisit burden.
-4. **Directional Neutrality**: We test whether revisit frequency explains the format gap. A finding that revisit rates are identical across formats directly falsifies navigational confusion as the primary driver.
-5. **Calibrated Bounds**: All estimates include item- and student-level standard deviations and correlation confidence bounds.
-6. **Data Integrity**: Process flags (`FLAGPT1 == 0`, `FLAGPT2 == 0`) filter technical interruptions and sensor outliers.
+1. **Retrieval & Usability**: Full access to the public-use PIRLS 2021 International Database (IEA Hamburg), including process timing files (`ASP`) and scored achievement microdata (`ASA`).
+2. **Analytical Population**: Exactly $N = 4,486$ clean students meeting official participation criteria (`FLAGPT1 == 0` and `FLAGPT2 == 0`) across 273 digital reading items (124 Multiple Choice, 149 Constructed Response).
+3. **Explicit Estimand Labeling**:
+   - **Table 15**: Item-level macro-averages (unweighted across 273 items).
+   - **Table 16**: Student-level population-weighted averages (using sampling weights `TOTWGT`, $N = 4,486$).
+   - **Table 17**: Student-item matched panel regressions with item fixed effects ($N = 91,376$ observations).
+4. **Directional Neutrality**: We test competing behavioral hypotheses without presupposing an interface penalty:
+   - Does navigation frequency explain format differences?
+   - Does extra time on task predict higher accuracy (productive engagement) or lower accuracy (hesitation/confusion)?
+5. **Audited Data Integrity**: Pinned dependencies, verified two-digit scoring keys, and recovered timing fields.
 """))
 
     # ==============================================================================
@@ -84,9 +88,11 @@ pd.set_option("display.width", 1000)
 
 df_items = pd.read_parquet(PROCESSED_DIR / "pirls_2021_item_process_metrics.parquet")
 clean_stu = pd.read_parquet(PROCESSED_DIR / "pirls_2021_student_process_sample.parquet")
+df_panel = pd.read_parquet(PROCESSED_DIR / "pirls_2021_student_item_panel.parquet")
 
 print(f"[OK] Loaded {len(df_items)} digital items ({df_items['item_type'].value_counts().to_dict()})")
-print(f"[OK] Loaded {len(clean_stu)} clean examinees (Mean PV1: {clean_stu['ASRREA01'].mean():.1f})")
+print(f"[OK] Loaded {len(clean_stu)} clean examinees (Mean PV1: {clean_stu['ASRREA01'].mean():.1f} pts)")
+print(f"[OK] Loaded {len(df_panel):,} matched student-item observations across {df_panel['item_id'].nunique()} items")
 """))
 
     # ==============================================================================
@@ -94,7 +100,7 @@ print(f"[OK] Loaded {len(clean_stu)} clean examinees (Mean PV1: {clean_stu['ASRR
     # ==============================================================================
     cells.append(nbf.v4.new_markdown_cell(r"""## 2. Item-Level Response Latency Decomposition (Table 15)
 
-We compare response latencies across 273 digital reading items (124 Multiple Choice, 149 Constructed Response) across all four reading comprehension processes:
+We calculate unweighted macro-averages across 273 digital reading items (124 Multiple Choice, 149 Constructed Response) across all four reading comprehension processes:
 1. *Focus on and Retrieve Explicitly Stated Information*
 2. *Make Straightforward Inferences*
 3. *Interpret and Integrate Ideas and Information*
@@ -108,33 +114,35 @@ display(df_t15)
 mc_ov = df_t15[(df_t15["grouping"]=="Overall Format") & (df_t15["category"].str.contains("Multiple Choice"))].iloc[0]
 cr_ov = df_t15[(df_t15["grouping"]=="Overall Format") & (df_t15["category"].str.contains("Constructed Response"))].iloc[0]
 
-print("\n--- Overall Item Latency Contrast ---")
-print(f"Multiple Choice Mean Total Time:      {mc_ov['mean_total_time_s']:.1f} seconds")
-print(f"Constructed Response Mean Total Time:  {cr_ov['mean_total_time_s']:.1f} seconds")
-print(f"Response-Entry Time Wedge:            +{cr_ov['mean_total_time_s'] - mc_ov['mean_total_time_s']:.1f} seconds per item")
-print(f"Entry Latency Multiplier:             {cr_ov['entry_latency_ratio']:.2f}x")
+print("\n--- Overall Item Latency Contrast (Table 15 Macro-Averages) ---")
+print(f"Multiple Choice Mean Total Time:         {mc_ov['mean_total_time_s']:.1f} seconds")
+print(f"Constructed Response Mean Total Time:     {cr_ov['mean_total_time_s']:.1f} seconds")
+print(f"Observed Format Duration Wedge:           +{cr_ov['mean_total_time_s'] - mc_ov['mean_total_time_s']:.1f} seconds per item")
+print(f"Latency Multiplier:                       {cr_ov['entry_latency_ratio']:.2f}x")
+print(f"Revisit Rate Gap:                         {cr_ov['revisit_pct']:.1f}% CR vs {mc_ov['revisit_pct']:.1f}% MC (Delta = +{cr_ov['revisit_pct'] - mc_ov['revisit_pct']:.1f} pp)")
+print(f"Additional Time After First Visit:        {cr_ov['mean_additional_time_after_first_visit_s']:.1f}s CR vs {mc_ov['mean_additional_time_after_first_visit_s']:.1f}s MC (3.3x)")
+print(f"Conditional Revisit Duration (when F>1):  {cr_ov['mean_conditional_revisit_duration_s']:.1f}s CR vs {mc_ov['mean_conditional_revisit_duration_s']:.1f}s MC (3.1x)")
 """))
 
     # ==============================================================================
-    # Section 4: Testing the Three Mechanisms (Table 16)
+    # Section 4: Testing the Behavioral Hypotheses (Table 16)
     # ==============================================================================
-    cells.append(nbf.v4.new_markdown_cell(r"""## 3. Empirical Evaluation of the Three Mechanisms (Table 16)
+    cells.append(nbf.v4.new_markdown_cell(r"""## 3. Empirical Evaluation of Behavioral Hypotheses (Table 16)
 
-### Mechanism 1: Navigation Friction (Paging & Scrolling)
-- **Prediction**: If navigation friction explains the penalty, examinees will exhibit higher revisit rates on constructed response items.
-- **Empirical Reality**: Revisit rates are virtually identical: **52.2%** on CR vs. **49.7%** on MC (a negligible $+2.5$ pp difference).
-- **Nuance**: Revisit duration is $3.3\times$ longer on CR (30.5s vs. 9.2s), but this reflects ongoing answer drafting and editing, not screen switching.
+### Hypothesis 1: Navigation Friction (Paging & Scrolling)
+- **Prediction**: If navigation friction disproportionately harms constructed response performance, examinees will exhibit substantially higher revisit rates on CR items due to interface confusion.
+- **Empirical Reality**: Revisit rates are virtually identical across formats: **52.2%** on CR vs. **49.8%** on MC ($\Delta = +2.4\text{ pp}$).
+- **Behavioral Nuance**: Revisit duration is $3.1\times$ to $3.3\times$ longer on CR ($30.4\text{s}$ vs $9.2\text{s}$ unconditional; $56.8\text{s}$ vs $18.5\text{s}$ conditional). This indicates that revisits to CR items involve substantive answer drafting and editing, not screen disorientation.
 
-### Mechanism 2: Response-Entry Friction (Keyboarding Transcription Tax)
-- **Prediction**: The physical task of typing sentences consumes disproportionate test time relative to multiple-choice mouse clicks.
-- **Empirical Reality**: **STRONGLY SUPPORTED**. Students spend an average of **127.2 seconds** per CR item versus **48.7 seconds** per MC item—an extra **78.5 seconds per item**. In a standard 40-minute testing block, CR questions consume nearly triple the testing budget per question.
+### Hypothesis 2: Digital Response Duration (Observed Format Wedge)
+- **Empirical Reality**: Students spend a population-weighted average of **127.0 seconds** per CR item versus **48.6 seconds** per MC item—a **$+78.4\text{s}$ per-item duration wedge** ($2.61\times$).
+- **Calibrated Interpretation**: In a 40-minute test block (12–14 items), CR questions absorb nearly triple the temporal budget of MC questions. However, because paper completion times are unobserved, this reflects the general cognitive and motor demands of constructing text rather than an isolated keyboarding penalty.
 
-### Mechanism 3: General Academic Ability (Comprehension Moderation)
-- **Prediction**: Do weaker readers spend more time on CR items due to comprehension deficits?
-- **Empirical Reality**: **REJECTED AS SOLE EXPLANATION**.
-  - $r(\text{MC Time}, \text{Reading Score}) = -0.094$: Higher-ability readers are faster at multiple choice.
-  - $r(\text{CR Time}, \text{Reading Score}) = +0.114$: Higher-ability readers spend *longer* on constructed response questions!
-  - $r(\text{CR - MC Wedge}, \text{Reading Score}) = +0.173$: Proficient readers generate more extensive text, exposing them to even greater typing friction.
+### Hypothesis 3: General Academic Ability (Comprehension Moderating Duration)
+- **Empirical Reality**:
+  - $r(\text{MC Time}, \text{Reading Score}) = -0.094$: Proficient readers answer multiple-choice questions faster.
+  - $r(\text{CR Time}, \text{Reading Score}) = +0.114$: Proficient readers spend *longer* on constructed-response questions.
+  - $r(\text{Wedge}, \text{Reading Score}) = +0.173$: Higher academic ability widens the response duration wedge, as stronger students write longer, multi-sentence answers.
 """))
 
     cells.append(nbf.v4.new_code_cell(r"""df_t16 = pd.read_csv(TABLES_DIR / "table16_pirls_2021_mechanism_decomposition.csv")
@@ -144,75 +152,78 @@ for _, r in df_t16.iterrows():
     print(f"================================================================================")
     print(f"Metric:        {r['empirical_metric']}")
     print(f"Observed:      {r['observed_value']}")
-    print(f"Wedge / Stat:  {r['p_value_or_wedge']}")
+    print(f"Contrast:      {r['p_value_or_wedge']}")
     print(f"Evaluation:    {r['substantive_evaluation']}")
+    print(f"Estimand:      {r['estimand_note']}")
 """))
 
     # ==============================================================================
-    # Section 5: Student-Level Pacing & Omission Trade-Offs
+    # Section 5: Within-Item Time-Accuracy Gradient (Table 17)
     # ==============================================================================
-    cells.append(nbf.v4.new_markdown_cell(r"""## 4. Student-Level Pacing & Reading Ability Distribution
+    cells.append(nbf.v4.new_markdown_cell(r"""## 4. Within-Item Time-Accuracy Gradient (Table 17)
 
-We examine how the response-entry time wedge ($\Delta T_i = T_{i}^{CR} - T_{i}^{MC}$) is distributed across the student population and how it correlates with reading proficiency.
+To test whether extra time spent on an item represents **productive task engagement** (higher score) or **unproductive hesitation/struggle** (lower score), we estimate within-item fixed effects regressions on the 91,376 matched student-item observations:
+
+$$Y_{ij} - \bar{Y}_j = \beta \cdot (\ln T_{ij} - \overline{\ln T}_j) + \epsilon_{ij}$$
+
+Where $Y_{ij}$ is the percent score earned by student $i$ on item $j$, and $T_{ij}$ is the total time spent in seconds.
 """))
 
-    cells.append(nbf.v4.new_code_cell(r"""print("Student Pacing Distribution (N = 4,486):")
-print(f"  25th Percentile Time Wedge: {clean_stu['cr_mc_time_diff_s'].quantile(0.25):.1f} s")
-print(f"  50th Percentile (Median):   {clean_stu['cr_mc_time_diff_s'].median():.1f} s")
-print(f"  75th Percentile Time Wedge: {clean_stu['cr_mc_time_diff_s'].quantile(0.75):.1f} s")
-print(f"  90th Percentile Time Wedge: {clean_stu['cr_mc_time_diff_s'].quantile(0.90):.1f} s")
+    cells.append(nbf.v4.new_code_cell(r"""df_t17 = pd.read_csv(TABLES_DIR / "table17_pirls_2021_time_accuracy_decomposition.csv")
+display(df_t17)
 
-# Quartiles of Reading Achievement vs Mean Time
-clean_stu["reading_quartile"] = pd.qcut(clean_stu["ASRREA01"], 4, labels=["Q1 (Lowest)", "Q2", "Q3", "Q4 (Highest)"])
+print("\n--- Key Finding from Within-Item Matched Analysis ---")
+mc_row = df_t17[df_t17["item_format"].str.startswith("Multiple Choice")].iloc[0]
+cr_row = df_t17[df_t17["item_format"].str.startswith("Constructed Response")].iloc[0]
+
+print(f"Multiple Choice Within-Item Beta:       {mc_row['within_item_beta_log_time']:+.4f} (Corr: {mc_row['within_item_corr_log_time']:+.4f})")
+print(f"Constructed Response Within-Item Beta:  {cr_row['within_item_beta_log_time']:+.4f} (Corr: {cr_row['within_item_corr_log_time']:+.4f})")
+print(f"Format Slope Wedge:                     {cr_row['within_item_beta_log_time'] - mc_row['within_item_beta_log_time']:+.4f}")
+"""))
+
+    # ==============================================================================
+    # Section 6: Student Pacing & Reading Ability Distribution
+    # ==============================================================================
+    cells.append(nbf.v4.new_markdown_cell(r"""## 5. Student Pacing & Reading Ability Distribution
+
+We examine how student pacing and accuracy trade off across quartiles of reading achievement.
+"""))
+
+    cells.append(nbf.v4.new_code_cell(r"""clean_stu["reading_quartile"] = pd.qcut(clean_stu["ASRREA01"], 4, labels=["Q1 (Lowest)", "Q2", "Q3", "Q4 (Highest)"])
 pacing_by_q = clean_stu.groupby("reading_quartile").agg(
     mean_pv1=("ASRREA01", "mean"),
+    mc_acc_pct=("mc_score_pct", "mean"),
+    cr_acc_pct=("cr_score_pct", "mean"),
     mean_mc_s=("mean_mc_time_s", "mean"),
     mean_cr_s=("mean_cr_time_s", "mean"),
-    mean_wedge_s=("cr_mc_time_diff_s", "mean"),
-    latency_ratio=("cr_mc_time_ratio", "mean")
+    mean_wedge_s=("cr_mc_time_diff_s", "mean")
 )
-print("\n--- Pacing Metrics by Reading Proficiency Quartile ---")
+print("--- Pacing and Accuracy Metrics by Reading Proficiency Quartile ---")
 display(pacing_by_q.round(2))
 """))
 
     # ==============================================================================
-    # Section 6: Synthesis Across Study A and Study B
+    # Section 7: Synthesis & Hypotheses for U.S. Mathematics
     # ==============================================================================
-    cells.append(nbf.v4.new_markdown_cell(r"""## 5. Synthesis: Connecting TIMSS Study A and PIRLS Study B
+    cells.append(nbf.v4.new_markdown_cell(r"""## 6. Synthesis: Generating Hypotheses for U.S. Mathematics
 
-```mermaid
-flowchart LR
-    subgraph StudyA["Study A: TIMSS 2019 Mathematics (Score Outcomes)"]
-        A1["Overall Math Mode Diff: -1.98 pts (negligible)"]
-        A2["Multiple Choice: -0.47 pp (near zero)"]
-        A3["Constructed Response: -3.90 pp (severe)"]
-        A4["Within-School CR Penalty: -2.73 pp (p = 0.001)"]
-        A5["Invariant Items CR Penalty: -2.58 pp (p = 0.008)"]
-        A2 & A3 --> A4 --> A5
-    end
+Study B provides crucial behavioral context for interpreting the digital constructed-response penalty identified in TIMSS 2019 Study A:
 
-    subgraph StudyB["Study B: PIRLS 2021 Reading (Process Data)"]
-        B1["Navigation Revisit Rates: 49.7% MC vs 52.2% CR (Minimal)"]
-        B2["MC Total Time: 48.7s per item"]
-        B3["CR Total Time: 127.2s per item"]
-        B4["Response-Entry Time Wedge: +78.5s per item (2.61x)"]
-        B5["Higher Readers Spend LONGER Typing: r = +0.114"]
-        B2 & B3 --> B4 --> B5
-    end
-
-    A5 -.->|"Mechanism Isolated"| B4
-```
-
-### Key Substantive Conclusion
-1. **The Format Gap is an Entry Phenomenon**: Study A proved that the digital penalty is isolated to constructed response questions, persisting within randomized classrooms and across officially invariant items. Study B proves *why*: entering an open-ended response on a computer requires an additional **78.5 seconds per item** (a $2.6\times$ latency tax).
-2. **Navigational Disorientation is Secondary**: Revisit frequencies are essentially identical across formats (~50%), demonstrating that examinees are not getting lost in the digital passage pages.
-3. **Proficient Students Bear the Transcription Burden**: Higher-ability students take longer on CR items because they compose richer text. Without keyboarding automaticity, this transcription tax consumes scarce working memory and timed assessment budgets.
+1. **Constructed Responses Demand Heavy Time Investment**:
+   Digital open-ended questions require **$2.6\times$ more time than multiple choice** (+78.5s per item). On digital tests, constructed response is an intrinsically high-latency activity.
+2. **Extra Time on Constructed Response is Productive**:
+   Unlike multiple-choice items—where longer duration signals confusion or guessing ($\beta = -0.033$)—longer duration on constructed-response items associates with **higher scores** ($\beta = +0.041$). Students earn credit by drafting, expanding, and refining their answers.
+3. **The Keyboarding Hypothesis**:
+   If productive performance on constructed responses requires extensive drafting, students who lack keyboarding fluency or input automaticity face a binding constraint. Under timed test conditions, typing friction may prevent students from fully articulating what they understand.
+4. **Next Steps in the Empirical Agenda**:
+   - **Longitudinal Trend Study**: Did U.S. fourth-grade performance on common digital constructed-response mathematics items decline disproportionately between TIMSS 2019 and 2023?
+   - **Randomized Assessment Trial**: Does an experimental intervention (Paper vs. Screen vs. Digital Entry vs. Authentic Practice) eliminate the response-entry wedge?
 """))
 
     nb.cells = cells
     with open(NOTEBOOK_PATH, "w", encoding="utf-8") as f:
         nbf.write(nb, f)
-    print(f"[OK] Wrote PIRLS notebook to {NOTEBOOK_PATH.name} ({len(cells)} cells)")
+    print(f"[OK] Wrote calibrated PIRLS notebook to {NOTEBOOK_PATH.name} ({len(cells)} cells)")
 
 
 if __name__ == "__main__":

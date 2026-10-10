@@ -1,11 +1,11 @@
-grouping,category,n_items,mean_total_time_s,median_total_time_s,mean_first_visit_s,revisit_pct,mean_revisit_duration_s,entry_latency_ratio
-Overall Format,Multiple Choice (Selected Response),124,47.03,30.0,37.82,49.75,9.21,1.0
-Overall Format,Constructed Response (Open Ended),149,123.29,89.0,92.84,52.21,30.45,2.62
-Comprehension Process,Evaluate and Critique Content and Textual Elements (MC),20,49.86,35.5,40.68,48.82,9.18,1.0
-Comprehension Process,Evaluate and Critique Content and Textual Elements (CR),19,119.45,87.0,85.25,54.65,34.2,2.4
-Comprehension Process,Focus on and Retrieve Explicitly Stated Information (MC),40,42.97,24.0,34.52,48.69,8.46,1.0
-Comprehension Process,Focus on and Retrieve Explicitly Stated Information (CR),48,104.97,73.5,82.64,49.17,22.33,2.44
-Comprehension Process,Interpret and Integrate Ideas and Information (MC),15,45.68,29.0,36.69,51.11,8.99,1.0
-Comprehension Process,Interpret and Integrate Ideas and Information (CR),53,134.84,106.0,99.74,54.75,35.11,2.95
-Comprehension Process,Make Straightforward Inferences (MC),49,49.59,32.0,39.68,50.58,9.91,1.0
-Comprehension Process,Make Straightforward Inferences (CR),29,135.02,112.0,102.07,50.98,32.95,2.72
+grouping,category,n_items,mean_total_time_s,median_total_time_s,mean_first_visit_s,revisit_pct,mean_revisit_duration_s,mean_additional_time_after_first_visit_s,mean_conditional_revisit_duration_s,entry_latency_ratio,estimand_note
+Overall Format,Multiple Choice (Selected Response),124,46.9,30.0,37.71,49.78,9.19,9.19,18.53,1.0,"Macro-average across items (unweighted) on clean examinee population (N=4,486)"
+Overall Format,Constructed Response (Open Ended),149,123.12,89.5,92.74,52.19,30.38,30.38,56.85,2.63,"Macro-average across items (unweighted) on clean examinee population (N=4,486)"
+Comprehension Process,Evaluate and Critique Content and Textual Elements (MC),20,49.83,35.5,40.65,48.89,9.17,9.17,19.03,1.0,Macro-average across 20 items in Evaluate and Critique Content and Textual Elements
+Comprehension Process,Evaluate and Critique Content and Textual Elements (CR),19,119.32,87.0,85.29,54.61,34.02,34.02,60.85,2.39,Macro-average across 19 items in Evaluate and Critique Content and Textual Elements
+Comprehension Process,Focus on and Retrieve Explicitly Stated Information (MC),40,42.79,24.5,34.37,48.68,8.42,8.42,17.45,1.0,Macro-average across 40 items in Focus on and Retrieve Explicitly Stated Information
+Comprehension Process,Focus on and Retrieve Explicitly Stated Information (CR),48,104.75,73.5,82.53,49.13,22.22,22.22,44.92,2.45,Macro-average across 48 items in Focus on and Retrieve Explicitly Stated Information
+Comprehension Process,Interpret and Integrate Ideas and Information (MC),15,45.59,29.0,36.64,51.11,8.94,8.94,17.52,1.0,Macro-average across 15 items in Interpret and Integrate Ideas and Information
+Comprehension Process,Interpret and Integrate Ideas and Information (CR),53,134.8,106.0,99.7,54.79,35.1,35.1,62.29,2.96,Macro-average across 53 items in Interpret and Integrate Ideas and Information
+Comprehension Process,Make Straightforward Inferences (MC),49,49.46,32.0,39.56,50.63,9.9,9.9,19.51,1.0,Macro-average across 49 items in Make Straightforward Inferences
+Comprehension Process,Make Straightforward Inferences (CR),29,134.69,111.5,101.81,50.93,32.88,32.88,64.0,2.72,Macro-average across 29 items in Make Straightforward Inferences

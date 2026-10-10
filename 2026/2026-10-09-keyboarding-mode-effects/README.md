@@ -72,9 +72,10 @@ flowchart TD
 | **TIMSS 2019 Reasoning Wedge** | Is the penalty driven by reasoning or interface? | **$+2.61$ pp (MC)** vs.<br>**$-7.54$ pp (CR)** | TIMSS 2019 Cognitive Domain Breakdown | **Verified Public Microdata** | Reasoning format gap is $\mathbf{-10.14\text{ pp}}$! Multiple-choice reasoning items show a positive digital-paper difference (+2.61 pp), whereas constructed-response reasoning items exhibit a substantial negative difference (-7.54 pp); however, an 8-item MC sample cannot establish that underlying reasoning ability is unaffected by mode. Note: All 5 text/explanation items belong to Reasoning, confounding complex cognitive demands with open text entry. |
 | **TIMSS 2019 Input Modality** | How does penalty vary by entry interface? | **$-0.47$ pp (MC)** $\to$<br>**$-3.10$ pp (Drawing)** $\to$<br>**$-3.80$ pp (Keypad)** $\to$<br>**$-7.13$ pp (Text/Explain)** | TIMSS 2019 Item Modality Hierarchy (Table 9) | **Verified Public Microdata** | Monotonic gradient across exploratory interface classifications: click selection shows minimal mode difference ($-0.47$ pp), while larger negative differences associate with drawing ($-3.10$ pp), keypad entry ($-3.80$ pp), and typed explanations ($-7.13$ pp). These comparisons reflect observational category associations rather than isolated causal interface effects, and text items remain confounded with the Reasoning domain. |
 | **TIMSS 2019 Equity Gradient** | Do lower-SES students face larger format gaps? | **$-3.17$ pp (Low SES)** vs.<br>**$-3.07$ pp (High SES)** | TIMSS 2019 Subgroup Microdata (Table 8) | **Verified Public Microdata** | Format gap is statistically indistinguishable across home books; econometric interaction $\beta_{\text{Digital}\times\text{LowSES}} = -0.096$ pp ($p = 0.934, 95\% \text{ CI}: [-2.35, +2.16]$ pp). Precision bounds demonstrate lack of detectable moderation rather than confirmed strict equivalence. High-poverty schools score +4.6 pts on computer. |
-| **PIRLS 2021 Response-Entry Tax** | How much longer does digital CR take than MC? | **48.7s (MC)** vs.<br>**127.2s (CR)**<br>($\mathbf{2.61\times}$ ratio) | PIRLS 2021 Process Data ($N = 4,486$, 273 items) | **Verified Public Microdata** | Mechanism 2 (Response-Entry Friction) strongly supported: CR items impose a **+78.5 second per-item transcription tax** ($2.61\times$ latency multiplier). In a 40-minute test block, CR items absorb nearly triple the time budget of MC questions across all four comprehension processes ($2.4\times$ to $2.8\times$). |
-| **PIRLS 2021 Navigation Friction** | Do students get lost navigating CR items? | **49.8% (MC)** vs.<br>**52.2% (CR)**<br>($\Delta = \mathbf{+2.4\text{ pp}}$) | PIRLS 2021 Process Logs (Table 15 & 16) | **Verified Public Microdata** | Mechanism 1 (Navigation Friction) refuted as primary driver: revisit probability is virtually identical between formats ($+2.4$ pp). However, revisit duration is $3.3\times$ longer on CR (30.5s vs 9.2s), reflecting text drafting and answer editing rather than navigational disorientation. |
-| **PIRLS 2021 Ability Mediation** | Does reading ability eliminate the format wedge? | **$r = -0.094$ (MC)** vs.<br>**$r = +0.114$ (CR)**<br>($r_{\text{wedge}} = \mathbf{+0.173}$) | PIRLS 2021 Latency vs Plausible Values | **Verified Public Microdata** | Mechanism 3 (General Ability) rejected as sole explanation: high-ability readers complete MC items faster ($r = -0.094$) but spend *longer* on CR items ($r = +0.114$), widening the entry time wedge ($r = +0.173$). Proficient students write richer, longer text, thereby incurring an even heavier typing time tax. |
+| **PIRLS 2021 Response Duration** | How much longer does digital CR take than MC? | **48.6s (MC)** vs.<br>**127.0s (CR)**<br>($\mathbf{2.61\times}$ ratio) | PIRLS 2021 Process Data ($N = 4,486$, 273 items) | **Verified Public Microdata** | Descriptively demonstrated, causality unidentified: CR items absorb $2.6\times$ more time than MC items (+78.4s per item population-weighted). However, because paper completion times are unobserved, this reflects general response formulation, drafting, and typing time, and cannot be isolated as a causal digital transcription tax. |
+| **PIRLS 2021 Navigation Friction** | Do students get lost navigating CR items? | **49.8% (MC)** vs.<br>**52.2% (CR)**<br>($\Delta = \mathbf{+2.4\text{ pp}}$) | PIRLS 2021 Process Logs (Table 15 & 16) | **Verified Public Microdata** | Revisit probability is format-neutral ($+2.4$ pp gap), showing no evidence of format-specific navigation disorientation. However, revisit duration is $3.1\times$ to $3.3\times$ longer on CR (30.4s vs 9.2s unconditional; 56.8s vs 18.5s conditional), reflecting answer drafting and editing rather than navigational disorientation. |
+| **PIRLS 2021 Ability Mediation** | Does reading ability eliminate the format wedge? | **$r = -0.094$ (MC)** vs.<br>**$r = +0.114$ (CR)**<br>($r_{\text{wedge}} = \mathbf{+0.173}$) | PIRLS 2021 Latency vs Plausible Values | **Verified Public Microdata** | Reading comprehension ability is negatively correlated with MC time ($r = -0.094$, cognitive efficiency) but positively correlated with CR time ($r = +0.114$), widening the entry time wedge ($r = +0.173$). Proficient students write richer, longer text, thereby incurring an even heavier typing time tax. |
+| **PIRLS 2021 Time-Accuracy Gradient** | Does spending more time predict higher accuracy? | **$\beta = -0.033$ (MC)** vs.<br>**$\beta = +0.041$ (CR)** | PIRLS 2021 Matched Panel ($N = 91,376$, Table 17) | **Verified Public Microdata** | Divergent task mechanisms: Within-item fixed effects regressions reveal that extra time on MC items predicts *lower* accuracy ($\beta = -0.033, p < 0.0001$, hesitation/guessing), while extra time on CR items predicts *higher* accuracy ($\beta = +0.041, p < 0.0001$, productive drafting and answer elaboration). |
 
 ---
 
@@ -142,7 +143,8 @@ flowchart TD
 │       ├── timss_2019_g4_student_item_stacked.parquet # 164,653 student x item observations across 99 items
 │       ├── timss_2019_g4_student_item_stacked.csv
 │       ├── pirls_2021_item_process_metrics.parquet   # 273 digital reading items with process timing
-│       └── pirls_2021_student_process_sample.parquet # 4,486 Grade 4 students with timing & PVs
+│       ├── pirls_2021_student_process_sample.parquet # 4,486 Grade 4 students with timing & PVs
+│       └── pirls_2021_student_item_panel.parquet     # 91,376 matched student x item observations
 ├── src/
 │   ├── acquire_datasets.py             # Audited data acquisition for literature baseline
 │   ├── analyze_mode_effects.py         # Statistical analysis for literature baseline
@@ -163,7 +165,7 @@ flowchart TD
 ├── tests/
 │   ├── test_data_integrity.py          # Pytest verification for literature sources (8 passing)
 │   ├── test_timss_2019.py              # Pytest verification for TIMSS 2019 microdata & models (14 passing)
-│   └── test_pirls_2021.py              # Pytest verification for PIRLS 2021 process timing & mechanisms (5 passing)
+│   └── test_pirls_2021.py              # Pytest verification for PIRLS 2021 process timing & mechanisms (6 passing)
 └── artifacts/
     ├── figures/
     │   ├── fig1_three_divergent_trends.png
@@ -189,7 +191,8 @@ flowchart TD
         ├── table13_timss_2019_booklet_exposure_sensitivity.csv
         ├── table14_timss_2019_item_invariance_sensitivity.csv
         ├── table15_pirls_2021_process_metrics_by_format.csv
-        └── table16_pirls_2021_mechanism_decomposition.csv
+        ├── table16_pirls_2021_mechanism_decomposition.csv
+        └── table17_pirls_2021_time_accuracy_decomposition.csv
 ```
 
 ---
@@ -238,13 +241,13 @@ python src/build_validation_notebook.py
 # ---------------------------------------------------------
 # Phase 3: Digital Reading Process Logs (PIRLS 2021 Study B)
 # ---------------------------------------------------------
-# 11. Process PIRLS 2021 digital process data & generate Tables 15-16
+# 11. Process PIRLS 2021 digital process data & generate Tables 15-17
 python src/acquire_pirls_2021.py
 
-# 12. Build and execute Notebook 04 (Three Mechanisms Decomposition)
+# 12. Build and execute Notebook 04 (Calibrated Process Data Analysis)
 python src/build_pirls_notebook.py
 
-# 13. Run entire verification suite (27 passing tests across all studies)
+# 13. Run entire verification suite (28 passing tests across all studies)
 pytest tests/ -v
 ```
 
@@ -259,7 +262,7 @@ Following the establishment of the audited literature foundation (`01_keyboardin
 | **Baseline** | [`01_keyboarding_mode_effects.ipynb`](notebooks/01_keyboarding_mode_effects.ipynb) | NCES HSTS, NAEP 2017 Table 4.1c, EdWeek 2024, ICILS | **Completed**: Audited synthesis separating Claim 1 (interface friction) from Claim 2 (score decline attribution); exploratory parameter sensitivity simulation. | What does published literature establish vs. hypothesize? |
 | **Study A** | [`02_timss_2019_mode_effects.ipynb`](notebooks/02_timss_2019_mode_effects.ipynb) | IEA & NCES TIMSS 2019 G4 U.S. Bridge & eTIMSS ($N=10,428$, 99 items) | **Completed**: Audited format contrast ($-3.42$ pp format gap; survey DiD $\beta = -3.10$ pp with JK2 SE $0.67$ pp and cluster linearization SE $0.66$ pp; national item FE $\beta = -3.42$ pp; within-school FE $\beta = -2.36$ pp; stacked item+school FE $\beta = -2.73$ pp with classroom SE $0.93$ pp and school SE $0.84$ pp; Monte Carlo Randomization Inference $p = 0.0400$; booklet exposure sensitivity $-2.68$ to $-2.93$ pp within-school; item invariance sensitivity: $-3.07$ pp national and $-2.58$ pp within-school among the 74 officially invariant items); cognitive domain decomposition ($-10.14$ pp Reasoning gap); input modality hierarchy ($-0.47$ to $-7.13$ pp); calibrated SES bounds ($-2.35$ to $+2.16$ pp). Verified by automated tests. | Does the digital penalty differ by input format, and is it mediated by SES? |
 | **Audit** | [`03_timss_2019_scoring_validation.ipynb`](notebooks/03_timss_2019_scoring_validation.ipynb) | IEA TIMSS microdata & scoring codebooks | **Completed**: Methodological companion documenting diagnostic recoding, complete automated audit against official published IEA item tables (Table 12: exact match on 94 1-point items within rounding and 5 2-point items to 5 decimals with partial credit verification), booklet exposure sensitivity across 12 weighting models (Table 13), item invariance sensitivity across official calibration subsets (Table 14), user-missing code recovery, omission distributions (paper 2.6–3.4% vs digital 1.2–1.4%), ITT vs answered-only denominators, and dynamic subgroup calculations. | How do scoring rules and response-status definitions shape empirical mode effects? |
-| **Study B** | [`04_pirls_2021_process_data.ipynb`](notebooks/04_pirls_2021_process_data.ipynb) | IEA PIRLS 2021 Digital Reading Process & Interaction Logs ($N=4,486$, 273 items) | **Completed**: Adjudication of the Three Mechanisms: Mechanism 1 (Navigation friction) refuted as format-specific driver (revisit rates 52.2% on CR vs 49.8% on MC; $\Delta = +2.4$ pp; revisit duration $3.3\times$ longer on CR reflecting drafting/editing); Mechanism 2 (Response-entry friction) strongly supported ($2.61\times$ latency multiplier; 127.2s on CR vs 48.7s on MC; $+78.5$s per-item transcription tax across all four comprehension processes); Mechanism 3 (General ability) rejected as sole explanation ($r_{\text{MC}} = -0.094$, $r_{\text{CR}} = +0.114$, widening the wedge $r = +0.173$). Verified by 5 automated tests. | Can process logs distinguish interface navigation friction from academic mastery? |
+| **Study B** | [`04_pirls_2021_process_data.ipynb`](notebooks/04_pirls_2021_process_data.ipynb) | IEA PIRLS 2021 Digital Reading Process & Interaction Logs ($N=4,486$, 273 items) | **Completed**: Descriptive Latency & Behavior Decomposition: Revisit probability is format-neutral (52.2% on CR vs 49.8% on MC; $\Delta = +2.4$ pp), showing no evidence of format-specific navigation disorientation, while revisit duration is 3.1x–3.3x longer on CR (30.4s vs 9.2s unconditional; 56.8s vs 18.5s conditional); Observed response duration is 127.0s on CR vs 48.6s on MC ($2.61\times$ multiplier; $+78.4$s per-item wedge population-weighted), calibrated as descriptive response behavior without paper counterfactuals; Reading ability correlates negatively with MC time ($r = -0.094$) but positively with CR time ($r = +0.114$, widening the wedge $r = +0.173$); Matched within-item regressions on 91,376 observations (Table 17) reveal divergent mechanisms: longer MC time predicts lower accuracy ($\beta = -0.033, p < 0.0001$, hesitation/confusion), while longer CR time predicts higher accuracy ($\beta = +0.041, p < 0.0001$, productive answer drafting and elaboration). Verified by 6 automated tests. | Can process logs distinguish interface navigation friction from academic mastery? |
 | **Study C** | `05_icils_digital_opportunity.ipynb` | IEA ICILS 2018 & 2023 Computer and Information Literacy | **Planned**: Decompose the 102-point socioeconomic gap in digital literacy against school technology access to evaluate whether access guarantees operational fluency. | Does 1:1 hardware access eliminate digital literacy and operational fluency disparities? |
 | **Study D** | `06_mechanism_feasibility.md` | Protocol Design (IRB, power, assessment battery) | **Planned**: Specify a within-student randomized crossover trial measuring typing automaticity, handwriting speed, and digital response quality in Grade 4. | How can an experimental trial isolate typing speed from writing composition quality? |
 
