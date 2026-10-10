@@ -249,6 +249,41 @@ print("Conclusion: While we fail to detect an interaction, the confidence interv
 print("rule out educationally meaningful heterogeneity up to +/- 2.2 percentage points.")
 """))
 
+    # ==============================================================================
+    # Audit 8: Item Invariance & Official Calibration Sensitivity (Table 14)
+    # ==============================================================================
+    cells.append(nbf.v4.new_markdown_cell(r"""## Audit 8: Item Invariance & Official Calibration Sensitivity (Table 14)
+
+### Psychometric Item Inventory Reconciliation
+A critical question in assessment mode evaluations is whether observed penalties stem from interface adaptations (items requiring complex on-screen widgets like line drawing, graph plotting, or drag-and-drop) rather than underlying response format demands.
+
+We audit this using the official TIMSS 2019 Methods and Procedures (Chapters 12 & 13):
+1. **Item Accounting**:
+   - In `T19Br_G4_Item Information.xlsx`, sheet `MAT`: exactly 92 items have `Scaling Status = 'Yes'` and 7 items have `Scaling Status = 'No'`.
+   - The 7 excluded items are all Multiple Choice subparts of two compound items (`MP61018A-D` and `MP61240A-C`).
+   - Subtracting 7 from 49 MC items yields exactly 42 MC items, matching Exhibit 12.31 ($42\text{ MC} + 50\text{ CR} = 92\text{ calibration items}$).
+2. **Invariance Breakdown**:
+   - In official scaling calibrations (Chapter 12 Appendix 12K and Chapter 13 Exhibit 13.1), **74 items** were certified as invariant (mode-equivalent; 41 MC, 33 CR) and inherited fixed IRT parameters.
+   - **18 items** were designated non-invariant (1 MC, 17 CR) and received separate parameters due to interactive interface adaptations (line drawing, grid shading, chart building).
+3. **Sensitivity Analysis (Table 14)**:
+   - Does the format penalty disappear when restricted to officially invariant items?
+"""))
+
+    cells.append(nbf.v4.new_code_cell(r"""df_inv = pd.read_csv(TABLES_DIR / "table14_timss_2019_item_invariance_sensitivity.csv")
+display(df_inv[["subset_key", "n_items_total", "n_mc", "n_cr", "raw_format_gap_pp", "mod2_beta_pp", "mod2_school_se_pp", "mod2_p_value", "mod4_beta_pp", "mod4_school_se_pp", "mod4_school_p_value"]])
+
+# Verification of key finding
+r_inv = df_inv[df_inv["subset_key"] == "invariant_74_items"].iloc[0]
+print(f"\n--- 74 Officially Invariant Items (Mode-Equivalent) ---")
+print(f"Items:             {r_inv['n_items_total']} ({r_inv['n_mc']} MC, {r_inv['n_cr']} CR)")
+print(f"Raw Format Gap:    {r_inv['raw_format_gap_pp']:.2f} pp (MC: {r_inv['mc_mean_diff_pp']:.2f} pp vs CR: {r_inv['cr_mean_diff_pp']:.2f} pp)")
+print(f"Model 2 (Item FE): beta = {r_inv['mod2_beta_pp']:.3f} pp (SE = {r_inv['mod2_school_se_pp']:.3f}, p = {r_inv['mod2_p_value']:.5f})")
+print(f"Model 4 (Within):  beta = {r_inv['mod4_beta_pp']:.3f} pp (SE = {r_inv['mod4_school_se_pp']:.3f}, p = {r_inv['mod4_school_p_value']:.5f})")
+print("\nConclusion: The digital constructed-response penalty is NOT driven by non-invariant items.")
+print("Even among items officially certified as psychometrically equivalent across modes, the")
+print("CR penalty remains -3.07 pp nationally and -2.58 pp within the same schools (both p < 0.01).")
+"""))
+
     nb.cells = cells
     with open(NOTEBOOK_PATH, "w", encoding="utf-8") as f:
         nbf.write(nb, f)

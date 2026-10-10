@@ -75,6 +75,13 @@ def booklet_exposure_sensitivity():
     return pd.read_csv(path)
 
 
+@pytest.fixture(scope="module")
+def item_invariance_sensitivity():
+    path = TABLES_DIR / "table14_timss_2019_item_invariance_sensitivity.csv"
+    assert path.exists(), f"Table 14 missing at {path}"
+    return pd.read_csv(path)
+
+
 def test_timss_sample_accounting(student_pvs, sample_accounting):
     """Verify exact student, school, classroom, and study mode sample counts."""
     # 1. Total students
@@ -334,5 +341,42 @@ def test_text_entry_items_and_reasoning_confounding(item_contrasts):
     
     # Mean mode penalty is severe (~ -7.13 pp)
     assert pytest.approx(-7.13, abs=0.1) == text_items["diff_pp"].mean()
+
+
+def test_item_invariance_sensitivity(item_invariance_sensitivity):
+    """
+    Verify psychometric robustness across official TIMSS invariance subsets:
+    1. Table has 4 subsets: all_99_items, scaled_92_items, invariant_74_items, non_invariant_18_items.
+    2. Exact counts: 74 invariant (41 MC, 33 CR), 18 non-invariant (1 MC, 17 CR), 92 scaled (42 MC, 50 CR).
+    3. Even when strictly restricted to officially invariant items, the CR penalty remains
+       robustly negative: -3.07 pp in Model 2 (p < 0.001) and -2.58 pp in Model 4 (p < 0.01).
+    """
+    assert len(item_invariance_sensitivity) == 4
+    
+    # 74 Invariant items
+    r_inv = item_invariance_sensitivity[item_invariance_sensitivity["subset_key"] == "invariant_74_items"].iloc[0]
+    assert r_inv["n_items_total"] == 74
+    assert r_inv["n_mc"] == 41
+    assert r_inv["n_cr"] == 33
+    assert pytest.approx(-3.073, abs=0.05) == r_inv["mod2_beta_pp"]
+    assert r_inv["mod2_p_value"] < 0.001
+    assert pytest.approx(-2.576, abs=0.05) == r_inv["mod4_beta_pp"]
+    assert r_inv["mod4_school_p_value"] < 0.01
+    assert -4.50 <= r_inv["mod4_ci95_lower"] <= -2.0
+    
+    # 18 Non-invariant items
+    r_noninv = item_invariance_sensitivity[item_invariance_sensitivity["subset_key"] == "non_invariant_18_items"].iloc[0]
+    assert r_noninv["n_items_total"] == 18
+    assert r_noninv["n_mc"] == 1
+    assert r_noninv["n_cr"] == 17
+    assert pytest.approx(-4.088, abs=0.1) == r_noninv["mod2_beta_pp"]
+    
+    # 92 Scaled items
+    r_scaled = item_invariance_sensitivity[item_invariance_sensitivity["subset_key"] == "scaled_92_items"].iloc[0]
+    assert r_scaled["n_items_total"] == 92
+    assert r_scaled["n_mc"] == 42
+    assert r_scaled["n_cr"] == 50
+    assert pytest.approx(-3.195, abs=0.05) == r_scaled["mod2_beta_pp"]
+
 
 

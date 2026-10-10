@@ -979,6 +979,110 @@ def audit_iea_published_benchmarks(item_df: pd.DataFrame) -> pd.DataFrame:
     return audit_df
 
 
+# Provenance-audited classifications from TIMSS 2019 Methods and Procedures Chapter 12 & 13
+# - 18 Non-Invariant items: Chapter 12 Appendix 12G/12K & Chapter 13 Exhibit 13.1
+# - 7 Unscaled Multiple Choice subparts: Sheet 'MAT' in T19Br_G4_Item Information.xlsx
+NON_INVARIANT_ITEMS = [
+    "MP51043", "MP51216B", "MP61080", "MP61076", "MP61084", "MP51080",
+    "MP61018", "MP61079", "MP61236", "MP51079", "MP61021", "MP61081A",
+    "MP61081B", "MP61095", "MP61264", "MP61240", "MP61254", "MP61224"
+]
+
+UNSCALED_SUBPART_ITEMS = [
+    "MP61018A", "MP61018B", "MP61018C", "MP61018D",
+    "MP61240A", "MP61240B", "MP61240C"
+]
+
+
+def analyze_item_invariance_sensitivity(stk_df: pd.DataFrame, item_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Sensitivity analysis of format gap across official TIMSS psychometric item subsets:
+    1. All 99 Administered Items (full U.S. Grade 4 bridge mathematics item pool)
+    2. 92 Scaling Calibration Items (official IEA scaling inventory, Exhibit 12.31; excludes 7 MC subparts)
+    3. 74 Invariant Items (mode-equivalent items with invariant IRT parameters; Chapter 12 App 12K & Chapter 13 Exhibit 13.1)
+    4. 18 Non-Invariant Items (items requiring mode-specific IRT parameters; Chapter 12 App 12G & Chapter 13 Exhibit 13.1)
+    """
+    all_items = set(item_df["item_id"])
+    unscaled_set = set(UNSCALED_SUBPART_ITEMS)
+    scaled_items = all_items - unscaled_set
+    noninv_set = set(NON_INVARIANT_ITEMS).intersection(scaled_items)
+    inv_set = scaled_items - noninv_set
+    
+    subsets = [
+        ("all_99_items", "All 99 Administered Items", all_items, "Full administered Grade 4 bridge mathematics item pool"),
+        ("scaled_92_items", "92 Scaling Calibration Items", scaled_items, "Official IEA scaling inventory (Ex. 12.31; excludes 7 MC subparts of MP61018/MP61240)"),
+        ("invariant_74_items", "74 Invariant Items (Mode-Equivalent)", inv_set, "Officially certified mode-equivalent items with fixed IRT parameters (App. 12K & Ex. 13.1)"),
+        ("non_invariant_18_items", "18 Non-Invariant Items", noninv_set, "Items requiring mode-specific IRT parameters due to interactive interface adaptations (App. 12G & Ex. 13.1)")
+    ]
+    
+    br_schools = set(stk_df[stk_df["study_mode"] == "Bridge_Paper"]["IDSCHOOL"])
+    e_schools = set(stk_df[stk_df["study_mode"] == "eTIMSS_Digital"]["IDSCHOOL"])
+    overlap_schools = br_schools.intersection(e_schools)
+    
+    rows = []
+    for subset_key, subset_label, item_set, desc in subsets:
+        sub_items = item_df[item_df["item_id"].isin(item_set)]
+        n_total = len(sub_items)
+        n_mc = len(sub_items[sub_items["item_type"] == "MC"])
+        n_cr = len(sub_items[sub_items["item_type"] == "CR"])
+        
+        mc_diff = float(sub_items[sub_items["item_type"] == "MC"]["diff_pp"].mean()) if n_mc > 0 else 0.0
+        cr_diff = float(sub_items[sub_items["item_type"] == "CR"]["diff_pp"].mean()) if n_cr > 0 else 0.0
+        raw_gap = cr_diff - mc_diff
+        
+        sub_stk = stk_df[stk_df["item_id"].isin(item_set)].copy()
+        sub_ov = sub_stk[sub_stk["IDSCHOOL"].isin(overlap_schools)].copy()
+        
+        # Model 2: National Item FE (WLS, cluster IDSCHOOL)
+        mod2 = smf.wls("score_pct ~ is_digital + is_digital:is_cr + C(item_id)", data=sub_stk, weights=sub_stk["TOTWGT"]).fit(
+            cov_type="cluster", cov_kwds={"groups": sub_stk["IDSCHOOL"]}
+        )
+        b2 = mod2.params["is_digital:is_cr"]
+        se2 = mod2.bse["is_digital:is_cr"]
+        p2 = mod2.pvalues["is_digital:is_cr"]
+        ci2_low, ci2_upp = mod2.conf_int().loc["is_digital:is_cr"]
+        
+        # Model 4: Within-School Item + School FE (OLS, cluster IDSCHOOL & IDCLASS)
+        mod4_sch = smf.ols("score_pct ~ is_digital + is_digital:is_cr + C(item_id) + C(IDSCHOOL)", data=sub_ov).fit(
+            cov_type="cluster", cov_kwds={"groups": sub_ov["IDSCHOOL"]}
+        )
+        b4 = mod4_sch.params["is_digital:is_cr"]
+        se4_sch = mod4_sch.bse["is_digital:is_cr"]
+        p4_sch = mod4_sch.pvalues["is_digital:is_cr"]
+        ci4_low, ci4_upp = mod4_sch.conf_int().loc["is_digital:is_cr"]
+        
+        mod4_cls = smf.ols("score_pct ~ is_digital + is_digital:is_cr + C(item_id) + C(IDSCHOOL)", data=sub_ov).fit(
+            cov_type="cluster", cov_kwds={"groups": sub_ov["IDCLASS"]}
+        )
+        se4_cls = mod4_cls.bse["is_digital:is_cr"]
+        p4_cls = mod4_cls.pvalues["is_digital:is_cr"]
+        
+        rows.append({
+            "subset_key": subset_key,
+            "subset_label": subset_label,
+            "n_items_total": n_total,
+            "n_mc": n_mc,
+            "n_cr": n_cr,
+            "mc_mean_diff_pp": round(mc_diff, 2),
+            "cr_mean_diff_pp": round(cr_diff, 2),
+            "raw_format_gap_pp": round(raw_gap, 2),
+            "mod2_beta_pp": round(b2, 3),
+            "mod2_school_se_pp": round(se2, 3),
+            "mod2_p_value": round(p2, 5),
+            "mod2_ci95_lower": round(ci2_low, 3),
+            "mod2_ci95_upper": round(ci2_upp, 3),
+            "mod4_beta_pp": round(b4, 3),
+            "mod4_school_se_pp": round(se4_sch, 3),
+            "mod4_class_se_pp": round(se4_cls, 3),
+            "mod4_school_p_value": round(p4_sch, 5),
+            "mod4_ci95_lower": round(ci4_low, 3),
+            "mod4_ci95_upper": round(ci4_upp, 3),
+            "provenance_description": desc
+        })
+    
+    return pd.DataFrame(rows)
+
+
 def main():
     print("=" * 80)
     print("TIMSS 2019 Empirical Mode Effects Analysis (Audited Pipeline)")
@@ -1057,7 +1161,14 @@ def main():
     print(f"\n[OK] Table 13 generated -> {sens_path.name}")
     print(df_sens.to_string(index=False))
 
-    # 11. Classroom Randomization Inference
+    # 11. Item Invariance & Calibration Sensitivity Analysis (Table 14)
+    df_inv = analyze_item_invariance_sensitivity(stk_df, item_df)
+    inv_path = TABLES_DIR / "table14_timss_2019_item_invariance_sensitivity.csv"
+    df_inv.to_csv(inv_path, index=False)
+    print(f"\n[OK] Table 14 generated -> {inv_path.name}")
+    print(df_inv.to_string(index=False))
+
+    # 12. Classroom Randomization Inference
     rand_res = analyze_classroom_randomization_inference(stu_df)
     print("\n--- Within-School Classroom Randomization Inference ---")
     for k, v in rand_res.items():

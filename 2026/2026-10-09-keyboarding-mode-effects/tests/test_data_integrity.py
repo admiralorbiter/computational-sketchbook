@@ -163,7 +163,7 @@ def test_literature_bibliographic_fidelity():
     # Backes & Cowan 2019
     bc_ela = df_meta[df_meta["study_id"] == "Backes_Cowan_2019_MA_ELA_Y1"].iloc[0]
     assert "Economics of Education Review" in bc_ela["publication"]
-    assert bc_ela["doi"] == "10.1016/j.econedurev.2018.12.003"
+    assert bc_ela["doi"] == "10.1016/j.econedurev.2018.12.007"
     assert bc_ela["coefficient"] == -0.250
 
     bc_math = df_meta[df_meta["study_id"] == "Backes_Cowan_2019_MA_Math_Y1"].iloc[0]

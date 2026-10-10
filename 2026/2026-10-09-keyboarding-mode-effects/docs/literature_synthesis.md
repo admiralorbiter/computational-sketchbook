@@ -9,7 +9,7 @@ A rigorous synthesis of peer-reviewed and administrative literature on digital a
 The shift from paper-and-pencil assessments (PBA) to computer-based testing (CBT) across U.S. states began following the 2010 adoption of Common Core State Standards and the rollout of the PARCC and Smarter Balanced assessment consortia around 2014–2016.
 
 ### A. The Massachusetts PARCC Quasi-Experiment (Backes & Cowan, 2019)
-- **Citation**: Backes, B., & Cowan, J. (2019). *Is the Pen Mightier Than the Keyboard? The Effect of Online Testing on Measured Student Achievement.* **Economics of Education Review**, 68, 89–103.
+- **Citation**: Backes, B., & Cowan, J. (2019). *Is the Pen Mightier Than the Keyboard? The Effect of Online Testing on Measured Student Achievement.* **Economics of Education Review**, 68, 89–103. DOI: [10.1016/j.econedurev.2018.12.007](https://doi.org/10.1016/j.econedurev.2018.12.007).
 - **Context & Design**: During Massachusetts' 2015 and 2016 transition to PARCC testing, districts could choose between administering tests on paper or online. Analyzing over 230,000 students in grades 5–8 using student fixed effects and longitudinal prior achievement controls, Backes and Cowan estimated the causal mode penalty.
 - **Empirical Findings**:
   - **Year 1 (2015)**:
@@ -106,7 +106,36 @@ The interface deficit extends far beyond physical typing to broader functional c
 
 ---
 
-## 5. Reconciled Literature Matrix
+## 5. Large-Scale International Assessment Mode Studies and Psychometric Invariance
+
+Large-scale international assessments (TIMSS, PIRLS, PISA) have extensively confronted the mode-effects phenomenon during their transitions to digital administration. This literature provides critical psychometric frameworks for evaluating construct equivalence versus mode friction.
+
+### A. The TIMSS 2019 Item Equivalence Pilot (Fishbein et al., 2018)
+- **Citation**: Fishbein, B., Martin, M. O., Mullis, I. V. S., & Foy, P. (2018). *The TIMSS 2019 item equivalence study: Examining mode effects for computer-based assessment and implications for measuring trends.* **Large-scale Assessments in Education**, 6(1), Article 11. DOI: [10.1186/s40536-018-0064-2](https://doi.org/10.1186/s40536-018-0064-2).
+- **Design & Scope**: A counterbalanced, within-subjects pilot study administered across 24 countries ($N = 16,894$ Grade 4 students; $N = 9,164$ Grade 8 students across 11 countries) preparing for the eTIMSS digital transition.
+- **Key Finding**: While underlying latent constructs remained stable across modes, computer administration systematically increased item difficulty in mathematics, establishing that raw digital and paper scores cannot be directly combined without psychometric mode adjustment constants.
+
+### B. Official eTIMSS 2019 Scaling and Country Differences (von Davier et al., 2020)
+- **Citation**: von Davier, M., Fishbein, B., & Chrostowski, S. J. (2020). *Examining eTIMSS Country Differences.* In M. O. Martin, M. von Davier, & I. V. S. Mullis (Eds.), **Methods and Procedures: TIMSS 2019 Technical Report** (Chapter 13, pp. 13.1–13.24). Chestnut Hill, MA: TIMSS & PIRLS International Study Center, Boston College. [Technical Report Portal](https://timssandpirls.bc.edu/timss2019/methods/).
+- **Companion Technical Chapter**: Fishbein, B., Foy, P., & Yin, L. (2020). *Implementing the TIMSS 2019 Scaling Methodology.* In **Methods and Procedures: TIMSS 2019 Technical Report** (Chapter 12, pp. 12.1–12.146).
+- **Core Psychometric Architecture**:
+  - *Calibration Inventory*: Grade 4 mathematics included 92 scaling calibration trend items (42 MC, 50 CR; Exhibit 12.31).
+  - *Invariance Partition*: Identified 74 equivalent items (41 MC, 30 number-pad, 3 keyboard) whose IRT parameters were fixed from paper calibrations, and 18 non-equivalent items (1 MC, 17 CR) requiring separate mode-specific parameters due to complex interactive adaptations (drawing tools, grid graphs, interactive tables; Exhibit 13.1).
+  - *Official U.S. Benchmark*: Exhibit 13.2 reported average percent correct on invariant items of **56.22% (SE 1.18)** on paper bridge vs. **53.94% (SE 0.70)** on eTIMSS (overall difference of $-2.28$ pp).
+  - *Our Empirical Contribution*: While the official report provided aggregate percent correct, our project provides the granular item-level and within-school format decomposition, demonstrating that the $-2.28$ pp total difference conceals a stark divide: invariant Multiple Choice drops by only $-0.72$ pp, while invariant Constructed Response drops by $-3.78$ pp (a net format gap of $-3.06$ pp within officially invariant items).
+
+### C. Cross-National Variation in Bridge Studies (Clerkin et al., 2026)
+- **Citation**: Clerkin, A., Verhelst, D., Mahdi, A., Mammadov, S., & McHugh, G. (2026). *Mode effects in the transition to digital testing: Evidence from TIMSS in Ireland, Azerbaijan, Bahrain, and Flanders.* **Large-scale Assessments in Education**, 14, Article 4. DOI: [10.1186/s40536-026-00213-x](https://doi.org/10.1186/s40536-026-00213-x).
+- **Takeaway**: Examined bridge studies across diverse education systems, proving that mode effects are neither uniform across countries nor invariant across item formats. Emphasizes the imperative of analyzing within-country item-by-student microdata rather than relying solely on global IRT adjustment constants.
+
+### D. Response Format Cognitive Demands: Multi-Level Meta-Analysis (Breuer, 2023)
+- **Citation**: Breuer, S. (2023). *Effects of response format on achievement and aptitude assessment results: multi-level random effects meta-analyses.* **Royal Society Open Science**, 10(9), Article 230784. DOI: [10.1098/rsos.230784](https://doi.org/10.1098/rsos.230784).
+- **Scope**: Multi-level random-effects meta-analysis synthesizing $k = 184$ effect sizes comparing open-ended (constructed-response) to closed-ended (multiple-choice) item performance.
+- **Theoretical Mechanism**: Open-ended formats impose structurally higher retrieval, production, and executive working-memory demands than recognition-based formats. When digital interfaces introduce auxiliary transcription friction (such as hunt-and-peck typing or unfamiliar on-screen virtual number pads), they disproportionately tax the finite cognitive bandwidth available for constructed-response generation.
+
+---
+
+## 6. Reconciled Literature Matrix
 
 | Study / Source | Jurisdiction & Sample | Subject / Format | Reported Metric | Primary Substantive Finding |
 | :--- | :--- | :--- | :---: | :--- |
@@ -120,3 +149,9 @@ The interface deficit extends far beyond physical typing to broader functional c
 | **NAEP Writing (2017)** | US Grades 4 & 8 | On-demand Writing | **UNREPORTABLE** | Suppressed by NCES due to unresolved comparability concerns between devices and writing skills. |
 | **Parker (2018, JRBE)** | TN Grades 6–8 ($N = 916 / 906$) | Computer Writing | **$p > 0.05$ (Null)** | 9-week standalone typing course showed no statistically significant relationship with writing scores. |
 | **IEA ICILS (2018–2023)** | US Grade 8 ($N \approx 3,600$) | Computer Literacy | **$-37$ points ($-0.37$ SD)** | Statistically significant national decline in 8th-grade digital literacy; 51% at/below Level 1; 102-pt SES gap. |
+| **Fishbein et al. (2018, LSAE)** | 24 Countries Grade 4 ($N = 16,894$) | Math & Science | **Logits / Item pp** | Multi-country within-subjects pilot showed consistent digital mode penalty in math, requiring IRT mode adjustments. |
+| **von Davier et al. (2020, TIMSS Ch 13)** | US Grade 4 ($N = 10,428$) | Math Invariant Items | **$-2.28$ pp overall** | Official U.S. benchmark on 74 invariant items (56.22% paper vs. 53.94% digital). Confirms our baseline scale. |
+| **Clerkin et al. (2026, LSAE)** | 4 Jurisdictions (TIMSS Bridge) | Math & Science | **Bridge Mode Differences** | Documents cross-national and item-type heterogeneity in digital mode transitions; necessitates microdata decomposition. |
+| **Breuer (2023, RSOS)** | Multi-level Meta-Analysis ($k = 184$) | Open vs. Closed Format | **Standardized $g$** | Confirms constructed-response items place substantially greater generative cognitive load on test-takers, elevating vulnerability to interface disruption. |
+| **This Study: TIMSS 2019 Study A** | US Grade 4 ($N = 10,428$, 294 Schools) | Math SR vs. CR | **$-3.42$ pp (National FE)**<br>**$-2.73$ pp (Within-School FE)** | Within the same schools and controlling for items, CR items show a $-2.73$ pp penalty ($p = 0.001$). Robust to 74 invariant items ($-2.58$ pp, $p = 0.008$) and 12 booklet weighting schemes. |
+
