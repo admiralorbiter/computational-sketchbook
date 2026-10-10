@@ -29,6 +29,7 @@ NCES_DIR.mkdir(parents=True, exist_ok=True)
 URLS = {
     "iea_g4_usa": "https://timss2019.org/international-database/downloads/data/grade4/T19_G4_USA_SPSS.zip",
     "iea_g4_item_info": "https://timss2019.org/international-database/downloads/T19_G4_Item%20Information.zip",
+    "iea_g4_item_percent_correct": "https://timss2019.org/international-database/downloads/T19_G4_Item%20Percent%20Correct%20Statistics.zip",
     "nces_bridge_puf": "https://nces.ed.gov/pubs2022/data/bridgeTIMSS_2019_codebooks_data_code_files_PUF.zip",
     "nces_etimss_puf": "https://nces.ed.gov/pubs2022/data/eTIMSS_2019_codebooks_data_code_files_PUF.zip",
 }
@@ -90,6 +91,16 @@ def extract_files():
     e_puf_zip = download_file(URLS["nces_etimss_puf"], RAW_DIR / "etimss_puf.zip")
     with zipfile.ZipFile(e_puf_zip) as z:
         z.extractall(NCES_DIR)
+
+    # 5. IEA Published Item Percent Correct Statistics
+    pct_dir = RAW_DIR / "iea_item_percent_correct"
+    pct_dir.mkdir(exist_ok=True)
+    pct_zip = download_file(URLS["iea_g4_item_percent_correct"], RAW_DIR / "T19_G4_Item_Percent_Correct.zip")
+    with zipfile.ZipFile(pct_zip) as z:
+        for fname in ["T19Br_G4_MAT_Item Percent Correct.xlsx", "eT19_G4_MAT_Item Percent Correct.xlsx"]:
+            dest = pct_dir / fname
+            if not dest.exists():
+                z.extract(fname, pct_dir)
 
 
 def parse_nces_school_data() -> pd.DataFrame:
@@ -396,6 +407,104 @@ def build_student_level_dataset() -> pd.DataFrame:
     return df_merged
 
 
+def build_stacked_student_item_dataset() -> pd.DataFrame:
+    """
+    Construct stacked student-by-item response panel across all 99 common items (N = 164,653).
+    Contains item metadata, student weights, cluster IDs, Jackknife zones, and scored performance.
+    Used for item fixed-effects regressions controlling for booklet matrix-sampling composition.
+    """
+    br_item_path = ITEM_DIR / "T19Br_G4_Item Information.xlsx"
+    items_df = pd.read_excel(br_item_path, sheet_name="MAT")
+    items_df["core_id"] = items_df["Item ID"].str[2:]
+
+    df_br_ach, _ = pyreadstat.read_sav(RAW_DIR / "asausab7.sav", user_missing=True)
+    df_e_ach, _ = pyreadstat.read_sav(RAW_DIR / "asausam7.sav", user_missing=True)
+
+    df_br_stu, _ = pyreadstat.read_sav(RAW_DIR / "asgusab7.sav", user_missing=True)
+    df_e_stu, _ = pyreadstat.read_sav(RAW_DIR / "asgusam7.sav", user_missing=True)
+
+    cols_stu = ["IDSTUD", "ASBG04", "ASBG05A"]
+    df_br_ach = df_br_ach.merge(df_br_stu[cols_stu], on="IDSTUD", how="left")
+    df_e_ach = df_e_ach.merge(df_e_stu[cols_stu], on="IDSTUD", how="left")
+
+    df_sch = parse_nces_school_data()
+
+    stacked_rows = []
+    for _, row in items_df.iterrows():
+        iid = row["Item ID"]
+        cid = row["core_id"]
+        itype = row["Item Type"]
+        max_pts = int(row["Maximum Points"])
+        key = row["Key"]
+        is_cr = 1 if itype == "CR" else 0
+
+        if itype == "MC":
+            modality = "Multiple Choice"
+        elif iid in DRAWING_ITEMS:
+            modality = "CR: Drawing / Graphing"
+        elif iid in TEXT_ITEMS:
+            modality = "CR: Text / Explanation"
+        elif iid in TABLE_ITEMS:
+            modality = "CR: Interactive / Table"
+        else:
+            modality = "CR: Number-pad / Numeric"
+
+        col_br = "MP" + cid
+        col_e = "ME" + cid
+
+        # Bridge
+        if col_br in df_br_ach.columns:
+            s_br = df_br_ach[col_br]
+            sc_br, adm_br, om_br, nr_br, _ = score_response_series(s_br, itype, max_pts, key)
+            df_sub = df_br_ach[adm_br][["IDSTUD", "IDSCHOOL", "IDCLASS", "TOTWGT", "JKZONE", "JKREP", "ASBG04", "ASBG05A"]].copy()
+            df_sub["item_id"] = iid
+            df_sub["core_id"] = cid
+            df_sub["item_type"] = itype
+            df_sub["is_cr"] = is_cr
+            df_sub["modality"] = modality
+            df_sub["cognitive_domain"] = row["Cognitive Domain"]
+            df_sub["content_domain"] = row["Content Domain"]
+            df_sub["max_points"] = max_pts
+            df_sub["score_pct"] = sc_br[adm_br] * 100.0
+            df_sub["score_pts"] = sc_br[adm_br] * max_pts
+            df_sub["is_omit"] = om_br[adm_br].astype(int)
+            df_sub["is_not_reached"] = nr_br[adm_br].astype(int)
+            df_sub["study_mode"] = "Bridge_Paper"
+            df_sub["is_digital"] = 0
+            stacked_rows.append(df_sub)
+
+        # eTIMSS
+        if col_e in df_e_ach.columns:
+            s_e = df_e_ach[col_e]
+            sc_e, adm_e, om_e, nr_e, _ = score_response_series(s_e, itype, max_pts, key)
+            df_sub = df_e_ach[adm_e][["IDSTUD", "IDSCHOOL", "IDCLASS", "TOTWGT", "JKZONE", "JKREP", "ASBG04", "ASBG05A"]].copy()
+            df_sub["item_id"] = iid
+            df_sub["core_id"] = cid
+            df_sub["item_type"] = itype
+            df_sub["is_cr"] = is_cr
+            df_sub["modality"] = modality
+            df_sub["cognitive_domain"] = row["Cognitive Domain"]
+            df_sub["content_domain"] = row["Content Domain"]
+            df_sub["max_points"] = max_pts
+            df_sub["score_pct"] = sc_e[adm_e] * 100.0
+            df_sub["score_pts"] = sc_e[adm_e] * max_pts
+            df_sub["is_omit"] = om_e[adm_e].astype(int)
+            df_sub["is_not_reached"] = nr_e[adm_e].astype(int)
+            df_sub["study_mode"] = "eTIMSS_Digital"
+            df_sub["is_digital"] = 1
+            stacked_rows.append(df_sub)
+
+    df_stacked = pd.concat(stacked_rows, ignore_index=True)
+    df_stacked = df_stacked.merge(
+        df_sch[["IDSCHOOL", "study_mode", "PCTFRPL", "PUBPRIV"]],
+        on=["IDSCHOOL", "study_mode"],
+        how="left"
+    )
+    df_stacked["is_low_ses"] = np.where(df_stacked["ASBG04"].isin([1.0, 2.0]), 1.0,
+                               np.where(df_stacked["ASBG04"].isin([3.0, 4.0, 5.0]), 0.0, np.nan))
+    return df_stacked
+
+
 def main():
     print("=" * 80)
     print("TIMSS 2019 Grade 4 U.S. Data Acquisition & Processing (Audited Pipeline)")
@@ -431,6 +540,15 @@ def main():
 
     print("\n--- Student Counts by Mode ---")
     print(stu_df["study_mode"].value_counts())
+
+    # Step 4: Build Stacked Student-Item Panel Dataset
+    print("\n[PROCESS] Building stacked student-by-item panel dataset (164,653 observations)...")
+    stk_df = build_stacked_student_item_dataset()
+    stk_csv = PROCESSED_DIR / "timss_2019_g4_student_item_stacked.csv"
+    stk_parquet = PROCESSED_DIR / "timss_2019_g4_student_item_stacked.parquet"
+    stk_df.to_csv(stk_csv, index=False)
+    stk_df.to_parquet(stk_parquet, index=False)
+    print(f"[OK] Wrote {len(stk_df)} stacked records to {stk_csv.name} and {stk_parquet.name}")
 
     print("\n[SUCCESS] TIMSS 2019 Grade 4 microdata successfully acquired and processed.")
 

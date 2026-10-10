@@ -90,11 +90,12 @@ This document provides complete provenance, extraction citations, table referenc
 - **Correction Applied**: Removed previously fabricated response distributions (e.g. "67% of teachers report half or fewer students meet expectations"). Formally registered this item as **Instrument Verified / Response Frequencies Unverified (Awaiting Microdata Extraction)**.
 
 ### `SRC-11`: TIMSS 2019 U.S. Grade 4 eTIMSS & Bridge Microdata Audit
-- **Primary Database**: IEA TIMSS 2019 International Database (`T19_G4_USA_SPSS.zip`, files `asausab7.sav`, `asausam7.sav`, `asgusab7.sav`, `asgusam7.sav`, `acgusab7.sav`, `acgusam7.sav`) and NCES Public-Use Files (NCES 2022-047).
+- **Primary Database**: IEA TIMSS 2019 International Database (`T19_G4_USA_SPSS.zip`, files `asausab7.sav`, `asausam7.sav`, `asgusab7.sav`, `asgusam7.sav`, `acgusab7.sav`, `acgusam7.sav`), IEA Published Item Statistics (`T19Br_G4_MAT_Item Percent Correct.xlsx` and `eT19_G4_MAT_Item Percent Correct.xlsx`), and NCES Public-Use Files (NCES 2022-047).
 - **Sample Accounting**: $10,428$ U.S. fourth-grade students across 294 participating schools:
   - Paper Bridge: $N = 1,652$ students in 79 schools (83 classrooms).
   - Digital eTIMSS: $N = 8,776$ students in 287 schools (507 classrooms).
   - **Within-School Randomized Overlap**: 72 public schools administered randomized classroom assignments between modes ($N = 2,728$ students: $1,456$ paper vs $1,272$ digital across 72 vs 75 classrooms).
+- **Stacked Student-by-Item Response Panel**: $164,653$ student $\times$ item observations ($40,759$ paper vs $123,894$ digital) across all 99 anchor items, containing student survey weights, Jackknife zones, cluster IDs, item rubrics, and scored percentage points.
 - **Common Anchor Items**: Exactly 99 common mathematics anchor items administered in both paper and digital formats:
   - Multiple Choice (MC / Selected Response): 49 items.
   - Constructed Response (CR / Student Entered): 50 items.
@@ -102,6 +103,9 @@ This document provides complete provenance, extraction citations, table referenc
   - Replaced naive single-code checking (`== 10.0` / `== 20.0`) with official IEA two-digit diagnostic scoring: full credit awarded to all diagnostic strategies (`10 <= code <= 19` for 1 pt; `20 <= code <= 29` for 2 pts, `10 <= code <= 19` for 1 pt / 0.5 partial credit).
   - Explicitly preserved SPSS user-defined missing codes via `user_missing=True` to recover omitted responses (`99.0` for CR, `9.0` for MC) and not-reached responses (`96.0` for CR, `6.0` for MC).
   - Recovered omission rates: Paper MC 3.37% vs Digital MC 1.19%; Paper CR 2.64% vs Digital CR 1.37%.
+- **Validation against Published IEA Item Benchmarks**:
+  - Validated scoring pipeline against official IEA published item tables: 1-point items (e.g. `MP51043`: paper $49.93\%$, digital $44.27\%$) match to the exact hundredth of a percent.
+  - On 2-point diagnostic items (e.g. `MP61228`), our pipeline's weighted percent full credit ($29.63\%$) matches the published IEA table ($29.63\%$) exactly, while properly crediting partial credit ($21.07\%$ receiving 1 point out of 2) to yield the true psychometric mean score ($40.16\%$).
 - **Audited Empirical Findings**:
   - **Overall Scale Score Difference**: $-1.98$ scale score points across 5 Plausible Values (Paper $536.72$ vs. Digital $534.73$, pooled $\text{SD} = 87.24$, $-0.023$ SD). Within the 72 randomized schools, overall scale score difference is $+3.28$ points ($+0.038$ SD).
   - **Item Format Contrasts**:
@@ -109,19 +113,26 @@ This document provides complete provenance, extraction citations, table referenc
     - Constructed Response Mode Difference: **$-3.90$ percentage points** ($\text{SE} = 0.73$, median $-3.92$ pp).
     - **Format Gap**: $\Delta_{\text{format}} = (\text{Digital} - \text{Paper})_{\text{CR}} - (\text{Digital} - \text{Paper})_{\text{MC}} = \mathbf{-3.42\text{ percentage points}}$ (Welch $t = -3.80, p = 0.0003$).
     - Answered-Only Sensitivity: Format Gap = **$-2.65\text{ pp}$**.
-  - **Cognitive Domain Divergence**:
+  - **Cognitive Domain Divergence & Confounding Disclosure**:
     - Reasoning MC ($N=8$): **$+2.61$ pp** (digital higher than paper).
     - Reasoning CR ($N=10$): **$-7.54$ pp** (digital severely depressed).
-    - Reasoning Format Gap: $\mathbf{-10.14\text{ percentage points}}$! Demonstrates that high-level mathematical reasoning is intact; interface transcription friction suppresses demonstrated performance.
-  - **Input Modality Gradient (Fishbein et al. Taxonomy)**:
+    - Reasoning Format Gap: $\mathbf{-10.14\text{ percentage points}}$!
+    - *Methodological Caveat*: All 5 items requiring typed text explanations (`MP51008`, `MP61228`, `MP61248`, `MP61255`, `MP61256`) belong to the **Reasoning** cognitive domain; input modality is confounded with cognitive complexity in the anchor item pool.
+  - **Input Modality Gradient (Provisional Taxonomy)**:
     - Multiple Choice (click/tap, $N=49$): **$-0.47$ pp** (SE 0.53)
     - CR: Drawing / Graphing ($N=10$): **$-3.10$ pp** (SE 1.89)
     - CR: Interactive / Table ($N=8$): **$-3.18$ pp** (SE 1.87)
     - CR: Number-pad / Numeric ($N=27$): **$-3.80$ pp** (SE 0.96)
     - CR: Text / Explanation ($N=5$): **$-7.13$ pp** (SE 2.09)
-  - **Econometric Estimation**:
+  - **Econometric Estimation Suite**:
     - *Model 1 (National Survey-Weighted DiD)*: $\beta = \mathbf{-3.102\text{ pp}}$ ($\text{SE} = 0.663, t = -4.68, p < 0.0001, 95\%\text{ CI} = [-4.402, -1.802]$), clustered by school.
-    - *Model 2 (Within-School Fixed Effects on 72 Schools)*: $\beta = \mathbf{-2.364\text{ pp}}$ ($\text{SE} = 0.868, t = -2.72, p = 0.0065, 95\%\text{ CI} = [-4.065, -0.663]$).
-    - *Model 3 (SES Interaction)*: Interaction coefficient $\beta = \mathbf{-0.096\text{ pp}}$ ($\text{SE} = 1.151, p = 0.934$). Confirms format penalty is invariant across student socioeconomic status.
+    - *Model 2 (National Item Fixed-Effects Panel WLS)*: $\beta = \mathbf{-3.422\text{ pp}}$ ($\text{SE} = 0.668, t = -5.12, p = 3.0 \times 10^{-7}, 95\%\text{ CI} = [-4.732, -2.112]$), controlling for booklet item composition via 99 item baseline fixed effects.
+    - *Model 3 (Within-School Student DiD on 72 Schools)*: $\beta = \mathbf{-2.364\text{ pp}}$ ($\text{SE} = 0.868, t = -2.72, p = 0.0065, 95\%\text{ CI} = [-4.065, -0.663]$).
+    - *Model 4 (Within-School Item FE + School FE Panel)*: $\beta = \mathbf{-2.734\text{ pp}}$ ($\text{SE} = 0.932, t = -2.93, p = 0.00335, 95\%\text{ CI} = [-4.561, -0.907]$), clustered by classroom ($N=147$).
+    - *Model 5 (SES Interaction Term)*: Interaction coefficient $\beta = \mathbf{-0.096\text{ pp}}$ ($\text{SE} = 1.151, p = 0.934$). Null interaction with $95\%\text{ CI} = [-2.351, +2.159]$ pp confirms absence of detectable moderation while acknowledging that confidence bounds do not rule out $\pm 2.2$ pp heterogeneity.
+  - **Survey Inference & Randomization Inference**:
+    - *TIMSS Jackknife Repeated Replication (JK2)*: Design-based standard error for the student format gap DiD is $0.668$ pp ($t = -4.64, p < 0.00001, 95\%\text{ CI} = [-4.412, -1.792]$ pp).
+    - *Within-School Randomization Inference*: Exact classroom permutation test across 2,000 permutations within the 72 schools confirms statistical significance ($p = 0.0380$).
+
 
 

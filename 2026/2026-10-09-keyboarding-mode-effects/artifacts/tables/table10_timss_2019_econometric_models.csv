@@ -1,4 +1,6 @@
-model_specification,sample_scope,n_students,coefficient_beta,cluster_robust_se,test_statistic,p_value,ci_95_lower,ci_95_upper,interpretation
-Model 1: National Survey-Weighted DiD,Full National Sample (294 Schools),10417,-3.102,0.663,-4.68,0.0,-4.402,-1.802,National survey-weighted digital format penalty clustered by school
-Model 2: Within-School Fixed Effects,72 Randomized-Classroom Schools,2726,-2.364,0.868,-2.72,0.00646,-4.065,-0.663,Controls completely for school composition via classroom randomization
-Model 3: SES Interaction Term (Digital x Low SES),National Sample with SES Data,9648,-0.096,1.151,-0.08,0.93361,-2.351,2.159,Null interaction (p=0.89) confirms format penalty is invariant to home SES
+model_specification,sample_scope,n_observations,coefficient_beta,cluster_robust_se,test_statistic,p_value,ci_95_lower,ci_95_upper,interpretation
+Model 1: National Survey-Weighted Student DiD,Full National Sample (294 Schools),10417,-3.102,0.663,-4.68,0.0,-4.402,-1.802,National survey-weighted student format gap mode difference clustered by school
+Model 2: National Item Fixed-Effects Panel WLS,"Full National Stacked Panel (99 Items, 294 Schools)",164653,-3.422,0.668,-5.12,3e-07,-4.732,-2.112,Controls for matrix-sampling booklet item composition via 99 item fixed effects; absorbs baseline difficulty
+Model 3: Within-School Student DiD,72 Randomized-Classroom Schools (147 Classrooms),2726,-2.364,0.868,-2.72,0.00646,-4.065,-0.663,Controls completely for school selection and neighborhood composition via randomized classroom assignment
+Model 4: Within-School Item FE + School FE Panel,"72 Randomized Schools Stacked Panel (99 Items, 147 Classrooms)",53837,-2.734,0.932,-2.93,0.00335,-4.561,-0.907,Simultaneously absorbs 99 item baseline difficulties and 72 school fixed effects; clustered by classroom
+Model 5: SES Interaction Term (Digital x Low SES),National Sample with SES Data (294 Schools),9648,-0.096,1.151,-0.08,0.93361,-2.351,2.159,"No detectable interaction (p=0.934); 95% CI [-2.35, +2.16] pp rules out large divergence but does not prove statistical equivalence"

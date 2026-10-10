@@ -53,19 +53,27 @@ Core Research Question               Audited Empirical Finding                  
 ------------------------------------------------------------------------------------------------------------------------
 1. Does the mode penalty differ      YES: Constructed Response experiences       Multiple Choice: -0.47 pp (SE 0.53)
    by item format & required input?  a 3.4 pp larger penalty than MC.            Constructed Response: -3.90 pp (SE 0.73)
-                                                                                 Descriptive Format Gap: -3.42 pp (t = -3.80)
-                                                                                 Survey-Weighted DiD: beta = -3.10 pp (p < 0.0001)
+                                     Robust to booklet item composition          Descriptive Format Gap: -3.42 pp (t = -3.80)
+                                     and school selection.                       Survey-Weighted DiD: beta = -3.10 pp (p < 0.0001)
+                                                                                 Item Fixed Effects WLS: beta = -3.42 pp (p < 0.00001)
+                                                                                 Within-School Student FE: beta = -2.36 pp (p = 0.0065)
+                                                                                 Item + School FE (Class Clustered): beta = -2.73 pp (p = 0.0034)
+                                                                                 Randomization Permutation: p = 0.0380
 
-2. Is the penalty driven by          INTERFACE FRICTION: Reasoning MC holds      Reasoning MC: +2.61 pp
-   cognitive ability or entry?       positive, but Reasoning CR collapses.      Reasoning CR: -7.54 pp
-                                     Penalty scales monotonically with entry:    Reasoning Format Gap: -10.14 pp!
-                                     MC (-0.47 pp) -> Drawing (-3.10 pp) ->     Text / Explanation CR: -7.13 pp
-                                     Keypad (-3.80 pp) -> Text (-7.13 pp).
+2. Is the penalty driven by          INTERFACE FRICTION & REASONING WEDGE:       Reasoning MC: +2.61 pp
+   cognitive ability or entry?       Reasoning MC holds positive (+2.6 pp),      Reasoning CR: -7.54 pp
+                                     but Reasoning CR collapses (-7.5 pp).       Reasoning Format Gap: -10.14 pp!
+                                     Provisional input gradient:                 Text / Explanation CR: -7.13 pp
+                                     MC (-0.47 pp) -> Drawing (-3.10 pp) ->     Keypad / Numeric: -3.80 pp
+                                     Keypad (-3.80 pp) -> Text (-7.13 pp).       Note: Text items belong to Reasoning domain;
+                                                                                 entry mode is confounded with cognitive complexity.
 
-3. Are penalties larger for low-SES  NO: Invariant across home resources         Low SES Format Penalty: -3.17 pp
-   or under-resourced students?      and school poverty; confirmed null          High SES Format Penalty: -3.07 pp
-                                     econometric interaction term.               Interaction beta = -0.10 pp (p = 0.93)
-                                     Survives within-school randomization.       72 School Fixed Effects: beta = -2.36 pp (p = 0.0065)
+3. Are penalties larger for low-SES  NO DETECTABLE MODERATION: Subgroup gaps     Low SES Format Penalty: -3.17 pp
+   or under-resourced students?      are near-identical across home books;       High SES Format Penalty: -3.07 pp
+                                     econometric interaction term is null.       Interaction beta = -0.10 pp (p = 0.934)
+                                     However, 95% CI [-2.35, +2.16] pp does      95% CI: [-2.35, +2.16] pp
+                                     not rule out +-2.2 pp heterogeneity.        Reflects lack of detectable moderation,
+                                                                                 not established statistical equivalence.
 ========================================================================================================================
 ```
 """))
@@ -174,6 +182,8 @@ Grounding our analysis in the TIMSS Item Equivalence taxonomy (Fishbein, Foy, & 
 3. **CR: Interactive / Table** (Classifying items into table cells or toggling checkboxes, $N=8$)
 4. **CR: Number-pad / Numeric** (Entering numbers, decimals, or fractions via on-screen keypad, $N=27$)
 5. **CR: Text / Explanation** (Typing multi-step mathematical explanations, $N=5$)
+
+> **Important Methodological Note on Confounding**: This input classification is provisional and exploratory. Crucially, all 5 items requiring typed text explanations (`MP51008`, `MP61228`, `MP61248`, `MP61255`, `MP61256`) belong to the **Reasoning** cognitive domain. Consequently, input modality is confounded with underlying cognitive complexity in the TIMSS anchor item pool; the $-7.13$ pp penalty reflects both typing friction and cognitive reasoning demand.
 """))
 
     cells.append(nbf.v4.new_code_cell(r"""df_mod = pd.read_csv(TABLES_DIR / "table9_timss_2019_input_modality.csv")
@@ -181,7 +191,7 @@ display(df_mod)
 """))
 
     cells.append(nbf.v4.new_markdown_cell(r"""### Figure 6: Cognitive Decompositions and Input Modality Gradient
-*Panel A demonstrates that Reasoning MC performance is positive (+2.6 pp) while Reasoning CR collapses (-7.5 pp). Panel B displays the monotonic progression of digital penalties as input transcription demands increase.*
+*Panel A demonstrates that Reasoning MC performance is positive (+2.6 pp) while Reasoning CR collapses (-7.5 pp). Panel B displays the provisional progression of digital penalties as input transcription demands increase, noting the Reasoning domain confounding on text items.*
 """))
 
     cells.append(nbf.v4.new_code_cell(r"""Image(filename=str(FIGURES_DIR / "fig6_timss_cognitive_content_domains.png"))
@@ -204,23 +214,29 @@ display(df_sub)
     # ==============================================================================
     # Cell 9: Econometric Estimation & Hypothesis Testing
     # ==============================================================================
-    cells.append(nbf.v4.new_markdown_cell(r"""## 7. Econometric Estimation: Clustered Survey DiD & School Fixed Effects
+    cells.append(nbf.v4.new_markdown_cell(r"""## 7. Econometric Estimation: Clustered Survey DiD, Item Fixed Effects, and Within-School Randomization
 
-To account for TIMSS's complex sampling design, clustering within schools, and within-school classroom assignment, we estimate three formal student-level econometric models:
+To account for TIMSS's complex sampling design, matrix-sampled booklet composition, clustering within schools, and within-school classroom assignment, we estimate five formal econometric models:
 
-$$\text{FormatGap}_{ij} = \beta_0 + \beta_1 \text{Digital}_{ij} + \epsilon_{ij}$$
+1. **Model 1 (National Survey-Weighted Student DiD)**: Full national sample ($N = 10,417$) with survey sampling weights (`TOTWGT`) clustered at the school level ($\beta = -3.102$ pp, $p < 0.0001$).
+2. **Model 2 (National Item Fixed-Effects Panel WLS)**: Stacked student-by-item panel ($N = 164,653$ responses across 99 items and 294 schools) with 99 item baseline difficulty fixed effects ($\alpha_j$), fully controlling for booklet item composition ($\beta_2 = -3.422$ pp, $p = 3.0 \times 10^{-7}$).
+3. **Model 3 (Within-School Student DiD)**: 72 schools with randomized classroom assignment ($N = 2,726$), controlling for school selection and neighborhood composition via school fixed effects ($\beta = -2.364$ pp, $p = 0.0065$).
+4. **Model 4 (Within-School Item FE + School FE Panel)**: Stacked panel on 72 randomized schools ($N = 53,837$ responses) simultaneously absorbing 99 item fixed effects AND 72 school fixed effects, clustered by classroom ($\beta_2 = -2.734$ pp, $p = 0.00335$, 95% CI: $[-4.56, -0.91]$ pp).
+5. **Model 5 (SES Interaction Test)**: Testing whether mode effects compound among lower-SES students ($\beta = -0.096$ pp, $p = 0.934$, 95% CI: $[-2.35, +2.16]$ pp).
 
-1. **Model 1**: Full national sample with survey weights (`TOTWGT`) and cluster-robust standard errors clustered at the school level.
-2. **Model 2**: Within-school fixed effects on the 72 overlapping schools where classrooms were randomly assigned to paper vs. digital.
-3. **Model 3**: National sample interacting mode with student socioeconomic status (`Digital` $\times$ `Low SES`).
+Additionally, Table 11 reports survey-design uncertainty estimated via TIMSS Jackknife Repeated Replication (JK2 with 75 digital and 42 paper zones), yielding a design-based DiD standard error of $0.668$ pp ($t = -4.64, p < 0.00001$). Within the 72 schools, exact classroom randomization inference across 2,000 permutations confirms that the within-school penalty is statistically significant ($p = 0.0380$).
 """))
 
     cells.append(nbf.v4.new_code_cell(r"""df_reg = pd.read_csv(TABLES_DIR / "table10_timss_2019_econometric_models.csv")
 display(df_reg)
+
+df_jk = pd.read_csv(TABLES_DIR / "table11_timss_2019_survey_inference_jk2.csv")
+print("\n--- TIMSS Jackknife Repeated Replication (JK2 Design-Based Standard Errors) ---")
+display(df_jk)
 """))
 
     cells.append(nbf.v4.new_markdown_cell(r"""### Figure 7: Testing the Equity Gradient and Within-School Randomization
-*Panel A shows that scale score differences are near-parallel across home book strata. Panel B confirms that the constructed-response mode penalty is identical between Low SES (-3.17 pp) and High SES (-3.07 pp). Panel C displays the within-school randomized classroom contrast across the 72 schools ($\beta = -2.36$ pp, $p = 0.0065$).*
+*Panel A shows that scale score differences are near-parallel across home book strata. Panel B shows that the constructed-response mode penalty is indistinguishable between Low SES (-3.17 pp) and High SES (-3.07 pp) with a null interaction (p=0.934, 95% CI [-2.35, +2.16] pp). Panel C displays the within-school randomized classroom contrast across the 72 schools with descriptive differences and rigorous fixed-effects models.*
 """))
 
     cells.append(nbf.v4.new_code_cell(r"""Image(filename=str(FIGURES_DIR / "fig7_timss_equity_and_counterarguments.png"))
@@ -232,18 +248,13 @@ display(df_reg)
     cells.append(nbf.v4.new_markdown_cell(r"""## 8. Discussion & Synthesis: Answering the Three Research Questions
 
 ### Question 1: Does the digital assessment penalty differ by question format?
-**Confirmed.** Across 99 common items, Multiple Choice items exhibit near-parity ($-0.47\text{ pp}$), while Constructed Response items suffer a statistically significant and substantial penalty ($-3.90\text{ pp}$), yielding a **$-3.42\text{ pp}$ format gap** ($t = -3.80$). In survey-weighted student regressions clustered by school, the difference-in-differences penalty is **$-3.10\text{ pp}$** ($p < 0.0001$). Controlling for school fixed effects across 72 randomized schools, the penalty remains **$-2.36\text{ pp}$** ($p = 0.0065$).
+**Confirmed.** Across 99 common items, Multiple Choice items exhibit near-parity ($-0.47\text{ pp}$), while Constructed Response items suffer a statistically significant and substantial penalty ($-3.90\text{ pp}$), yielding a **$-3.42\text{ pp}$ format gap** ($t = -3.80$). Crucially, **booklet matrix sampling does not explain this gap**: in student-by-item regressions absorbing 99 item fixed effects, the interaction is **$-3.42\text{ pp}$** ($p < 0.00001$). Controlling for school fixed effects across 72 randomized schools, the penalty remains **$-2.36\text{ pp}$** ($p = 0.0065$). Absorbing both 99 item fixed effects and 72 school fixed effects simultaneously, the penalty is **$-2.73\text{ pp}$** ($p = 0.00335$ clustered by classroom; randomization permutation $p = 0.0380$).
 
 ### Question 2: Is the penalty driven by cognitive ability or interface friction?
-**Interface Friction.** When fourth graders answer higher-order **Reasoning** items via multiple-choice radio buttons, their performance is $+2.61\text{ pp}$ higher on computer than on paper. But when answering Reasoning items requiring constructed explanations, their performance collapses by $-7.54\text{ pp}$, producing an acute **$-10.14\text{ pp}$ Reasoning wedge**. Furthermore, the penalty follows a strict monotonic hierarchy corresponding to interface complexity:
-- Multiple Choice: $-0.47\text{ pp}$
-- Drawing / Graphing: $-3.10\text{ pp}$
-- Interactive Tables: $-3.18\text{ pp}$
-- Keypad / Fractions: $-3.80\text{ pp}$
-- Typed Text / Explanations: **$-7.13\text{ pp}$**
+**Interface Friction & Reasoning Confounding.** When fourth graders answer higher-order **Reasoning** items via multiple-choice radio buttons, their performance is $+2.61\text{ pp}$ higher on computer than on paper. But when answering Reasoning items requiring constructed explanations, their performance collapses by $-7.54\text{ pp}$, producing an acute **$-10.14\text{ pp}$ Reasoning wedge**. Across input modalities, the penalty appears monotonic: Multiple Choice ($-0.47$ pp) $\to$ Drawing ($-3.10$ pp) $\to$ Keypad ($-3.80$ pp) $\to$ Typed Text ($-7.13$ pp). However, because all 5 text items belong to the Reasoning domain, input modality is confounded with cognitive difficulty, and this taxonomy should be interpreted as provisional and exploratory.
 
 ### Question 3: Are penalties larger for low-SES or under-resourced students?
-**Rejected.** The mode penalty on constructed response is invariant across socioeconomic status: **$-3.17\text{ pp}$** for Low-SES students vs. **$-3.07\text{ pp}$** for High-SES students. The interaction coefficient in Model 3 is $\beta = -0.096\text{ pp}$ ($p = 0.93$). Furthermore, high-poverty schools ($\ge 75\%$ FRPL) actually score $+4.6$ scale points higher on computer. Interface friction affects fourth graders universally regardless of home socioeconomic resources.
+**No Detectable Moderation.** The mode penalty on constructed response is statistically indistinguishable across socioeconomic status: **$-3.17\text{ pp}$** for Low-SES students vs. **$-3.07\text{ pp}$** for High-SES students. The interaction coefficient in Model 5 is $\beta = -0.096\text{ pp}$ ($p = 0.934$). However, the 95% confidence interval ($[-2.35, +2.16]$ pp) does not rule out educationally meaningful heterogeneity up to $\pm 2.2$ pp. Rather than proving complete invariance, the empirical evidence demonstrates a lack of detectable moderation by home SES.
 """))
 
     nb.cells = cells

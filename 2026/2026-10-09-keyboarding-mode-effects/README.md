@@ -67,10 +67,10 @@ flowchart TD
 | **Keyboarding Intervention** | Does a typing course raise test scores? | **Chi-Square $p > 0.05$**<br>(Null Association) | Parker (2018, *JRBE*, $N=916/906$) | **Verified Peer-Reviewed** | 9-week standalone typing class showed no statistically significant relationship with writing scores. |
 | **NAEP Writing 2017** | Was the federal digital writing test valid? | **UNREPORTABLE / SUPPRESSED** | NCES / NAGB Technical Reports | **Verified Administrative Fact** | Suppressed by NCES due to unresolved comparability concerns between devices and writing skills. |
 | **TIMSS 2019 G4 Scale Score** | How large is the overall math mode difference? | **$-1.98$ points**<br>($-0.023$ SD national)<br>($+3.28$ pts in 72 schools) | TIMSS 2019 U.S. Microdata ($N=10,428$, 5 PVs) | **Verified Public Microdata** | Paper mean 536.72 vs Digital mean 534.73; modest overall score difference; +3.28 pts in randomized schools. |
-| **TIMSS 2019 G4 Format Gap** | Do math constructed responses show penalties? | **$-0.47$ pp (MC)** vs.<br>**$-3.90$ pp (CR)** | TIMSS 2019 U.S. 99 Anchor Items (Audited) | **Verified Public Microdata** | Descriptive Format Gap $\Delta_{\text{format}} = \mathbf{-3.42\text{ pp}}$ ($t = -3.80, p < 0.001$). Survey-weighted DiD: $\beta = \mathbf{-3.10\text{ pp}}$ ($p < 0.0001$). Within-school FE: $\beta = \mathbf{-2.36\text{ pp}}$ ($p = 0.0065$). |
-| **TIMSS 2019 Reasoning Wedge** | Is the penalty driven by reasoning or interface? | **$+2.61$ pp (MC)** vs.<br>**$-7.54$ pp (CR)** | TIMSS 2019 Cognitive Domain Breakdown | **Verified Public Microdata** | Reasoning format gap is $\mathbf{-10.14\text{ pp}}$! Latent reasoning intact; transcription causes friction. |
-| **TIMSS 2019 Input Modality** | How does penalty vary by entry interface? | **$-0.47$ pp (MC)** $\to$<br>**$-3.10$ pp (Drawing)** $\to$<br>**$-3.80$ pp (Keypad)** $\to$<br>**$-7.13$ pp (Text/Explain)** | TIMSS 2019 Item Modality Hierarchy (Table 9) | **Verified Public Microdata** | Monotonic gradient: click selection has negligible penalty; typing written mathematical explanations imposes severe -7.13 pp drop. |
-| **TIMSS 2019 Equity Gradient** | Do lower-SES students face larger format gaps? | **$-3.17$ pp (Low SES)** vs.<br>**$-3.07$ pp (High SES)** | TIMSS 2019 Subgroup Microdata (Table 8) | **Verified Public Microdata** | Format gap is invariant across home books; confirmed null econometric interaction term ($\beta = -0.096$ pp, $p = 0.93$); high-poverty schools score +4.6 pts on computer. |
+| **TIMSS 2019 G4 Format Gap** | Do math constructed responses show penalties? | **$-0.47$ pp (MC)** vs.<br>**$-3.90$ pp (CR)** | TIMSS 2019 U.S. 99 Anchor Items (Audited) | **Verified Public Microdata** | Descriptive Format Gap $\Delta_{\text{format}} = \mathbf{-3.42\text{ pp}}$ ($t = -3.80, p < 0.001$). Survey DiD: $\beta = \mathbf{-3.10\text{ pp}}$ (JK2 $SE = 0.67\text{ pp}, p < 0.0001$). Item FE panel: $\beta = \mathbf{-3.42\text{ pp}}$ ($p = 3.0 \times 10^{-7}$). Within-school FE: $\beta = \mathbf{-2.36\text{ pp}}$ ($p = 0.0065$). Stacked Item+School FE: $\beta = \mathbf{-2.73\text{ pp}}$ ($p = 0.0034$). Classroom permutation test: $p = 0.0380$. Matrix sampling does not explain the gap. |
+| **TIMSS 2019 Reasoning Wedge** | Is the penalty driven by reasoning or interface? | **$+2.61$ pp (MC)** vs.<br>**$-7.54$ pp (CR)** | TIMSS 2019 Cognitive Domain Breakdown | **Verified Public Microdata** | Reasoning format gap is $\mathbf{-10.14\text{ pp}}$! Latent reasoning intact on MC (+2.61 pp), but CR collapses (-7.54 pp). Note: All 5 text/explanation items belong to Reasoning, confounding complex cognitive demands with open text entry. |
+| **TIMSS 2019 Input Modality** | How does penalty vary by entry interface? | **$-0.47$ pp (MC)** $\to$<br>**$-3.10$ pp (Drawing)** $\to$<br>**$-3.80$ pp (Keypad)** $\to$<br>**$-7.13$ pp (Text/Explain)** | TIMSS 2019 Item Modality Hierarchy (Table 9) | **Verified Public Microdata** | Monotonic gradient across exploratory interface classifications: click selection has negligible penalty; drawing ($-3.10$ pp), keypad ($-3.80$ pp), and typed explanations ($-7.13$ pp) impose severe penalties. Confounded with Reasoning domain. |
+| **TIMSS 2019 Equity Gradient** | Do lower-SES students face larger format gaps? | **$-3.17$ pp (Low SES)** vs.<br>**$-3.07$ pp (High SES)** | TIMSS 2019 Subgroup Microdata (Table 8) | **Verified Public Microdata** | Format gap is statistically indistinguishable across home books; econometric interaction $\beta_{\text{Digital}\times\text{LowSES}} = -0.096$ pp ($p = 0.934, 95\% \text{ CI}: [-2.35, +2.16]$ pp). Precision bounds demonstrate lack of detectable moderation rather than confirmed strict equivalence. High-poverty schools score +4.6 pts on computer. |
 
 ---
 
@@ -97,11 +97,11 @@ flowchart TD
 ![Figure 5](artifacts/figures/fig5_timss_item_difference_density.png)
 
 ### Figure 6: TIMSS 2019 Cognitive Decompositions and Input Modality Gradient
-*Panel A highlights the acute cognitive domain contrast: Reasoning items show $+2.61$ pp mode difference under Multiple Choice but collapse to $-7.54$ pp under Constructed Response—a $-10.14$ pp format gap. Panel B illustrates the monotonic input difficulty ladder from Multiple Choice ($-0.47$ pp) to Text / Explanation ($-7.13$ pp).*  
+*Panel A highlights the acute cognitive domain contrast: Reasoning items show $+2.61$ pp mode difference under Multiple Choice but collapse to $-7.54$ pp under Constructed Response—a $-10.14$ pp format gap. However, all 5 text/explanation items belong to the Reasoning cognitive domain, confounding complex mathematical reasoning demands with open-ended digital text transcription. Panel B illustrates the provisional input difficulty ladder from Multiple Choice ($-0.47$ pp) to Drawing ($-3.10$ pp), Interactive Tables ($-3.18$ pp), Keypad/Fractions ($-3.80$ pp), and Text / Explanation ($-7.13$ pp).*  
 ![Figure 6](artifacts/figures/fig6_timss_cognitive_content_domains.png)
 
 ### Figure 7: TIMSS 2019 Testing the Equity Gradient and Within-School Randomization
-*Panel A plots mathematics scale scores across home book categories. Panel B shows that the dynamically computed constructed-response format penalty is invariant across socioeconomic strata ($-3.17$ pp for Low SES vs. $-3.07$ pp for High SES, confirmed null interaction $p = 0.93$). Panel C displays the within-school randomized classroom contrast across 72 schools ($\beta = -2.36$ pp, $p = 0.0065$).*  
+*Panel A plots mathematics scale scores across home book categories. Panel B shows that the dynamically computed constructed-response format penalty is statistically indistinguishable across socioeconomic strata ($-3.17$ pp for Low SES vs. $-3.07$ pp for High SES; interaction $\beta = -0.096$ pp, $p = 0.934$, 95% CI: $[-2.35, +2.16]$ pp, indicating lack of detectable moderation rather than confirmed strict equivalence). Panel C displays the unweighted descriptive differences across the 72 schools represented in both modes (descriptive gap $-2.36$ pp; student FE model $\beta = -2.36$ pp; stacked item+school FE model $\beta = -2.73$ pp, $p = 0.0034$; classroom permutation test $p = 0.0380$).*  
 ![Figure 7](artifacts/figures/fig7_timss_equity_and_counterarguments.png)
 
 ---
@@ -134,7 +134,9 @@ flowchart TD
 │       ├── timss_2019_g4_item_contrasts.parquet # 99 anchor items with mode differences & domains
 │       ├── timss_2019_g4_item_contrasts.csv
 │       ├── timss_2019_g4_student_pvs.parquet   # 10,428 students across 294 schools (5 PVs + SES)
-│       └── timss_2019_g4_student_pvs.csv
+│       ├── timss_2019_g4_student_pvs.csv
+│       ├── timss_2019_g4_student_item_stacked.parquet # 164,653 student x item observations across 99 items
+│       └── timss_2019_g4_student_item_stacked.csv
 ├── src/
 │   ├── acquire_datasets.py             # Audited data acquisition for literature baseline
 │   ├── analyze_mode_effects.py         # Statistical analysis for literature baseline
@@ -151,7 +153,7 @@ flowchart TD
 │   └── 03_timss_2019_scoring_validation.ipynb # Methodological Scoring & Estimation Audit (executed)
 ├── tests/
 │   ├── test_data_integrity.py          # Pytest verification for literature sources (8 passing)
-│   └── test_timss_2019.py              # Pytest verification for TIMSS 2019 microdata (6 passing)
+│   └── test_timss_2019.py              # Pytest verification for TIMSS 2019 microdata & models (9 passing)
 └── artifacts/
     ├── figures/
     │   ├── fig1_three_divergent_trends.png
@@ -171,7 +173,8 @@ flowchart TD
         ├── table7_timss_2019_domain_decomposition.csv
         ├── table8_timss_2019_subgroup_heterogeneity.csv
         ├── table9_timss_2019_input_modality.csv
-        └── table10_timss_2019_econometric_models.csv
+        ├── table10_timss_2019_econometric_models.csv
+        └── table11_timss_2019_survey_inference_jk2.csv
 ```
 
 ---
@@ -217,7 +220,7 @@ python src/build_timss_notebook.py
 # 10. Build and execute Notebook 03 (Methodological Scoring Validation Audit)
 python src/build_validation_notebook.py
 
-# 11. Run entire verification suite (14 passing tests)
+# 11. Run entire verification suite (17 passing tests)
 pytest tests/ -v
 ```
 
@@ -230,8 +233,8 @@ Following the establishment of the audited literature foundation (`01_keyboardin
 | Study | Notebook / Document | Primary Dataset | Research Objective & Status | Key Empirical Question |
 | :--- | :--- | :--- | :--- | :--- |
 | **Baseline** | [`01_keyboarding_mode_effects.ipynb`](notebooks/01_keyboarding_mode_effects.ipynb) | NCES HSTS, NAEP 2017 Table 4.1c, EdWeek 2024, ICILS | **Completed**: Audited synthesis separating Claim 1 (interface friction) from Claim 2 (score decline attribution); exploratory parameter sensitivity simulation. | What does published literature establish vs. hypothesize? |
-| **Study A** | [`02_timss_2019_mode_effects.ipynb`](notebooks/02_timss_2019_mode_effects.ipynb) | IEA & NCES TIMSS 2019 G4 U.S. Bridge & eTIMSS ($N=10,428$, 99 items) | **Completed**: Audited format contrast ($-3.42$ pp format gap; survey DiD $\beta = -3.10$ pp; school FE $\beta = -2.36$ pp); cognitive domain decomposition ($-10.14$ pp Reasoning gap); input modality hierarchy ($-0.47$ to $-7.13$ pp); SES invariance check. | Does the digital penalty differ by input format, and is it mediated by SES? |
-| **Audit** | [`03_timss_2019_scoring_validation.ipynb`](notebooks/03_timss_2019_scoring_validation.ipynb) | IEA TIMSS microdata & scoring codebooks | **Completed**: Methodological companion documenting diagnostic recoding, user-missing code preservation, ITT vs answered-only denominators, and dynamic subgroup calculations. | How do scoring rules and response-status definitions shape empirical mode effects? |
+| **Study A** | [`02_timss_2019_mode_effects.ipynb`](notebooks/02_timss_2019_mode_effects.ipynb) | IEA & NCES TIMSS 2019 G4 U.S. Bridge & eTIMSS ($N=10,428$, 99 items) | **Completed**: Audited format contrast ($-3.42$ pp format gap; survey DiD $\beta = -3.10$ pp with JK2 SE $0.67$; national item FE $\beta = -3.42$ pp; within-school FE $\beta = -2.36$ pp; stacked item+school FE $\beta = -2.73$ pp; classroom permutation $p = 0.0380$); cognitive domain decomposition ($-10.14$ pp Reasoning gap); input modality hierarchy ($-0.47$ to $-7.13$ pp); calibrated SES bounds ($-2.35$ to $+2.16$ pp). | Does the digital penalty differ by input format, and is it mediated by SES? |
+| **Audit** | [`03_timss_2019_scoring_validation.ipynb`](notebooks/03_timss_2019_scoring_validation.ipynb) | IEA TIMSS microdata & scoring codebooks | **Completed**: Methodological companion documenting diagnostic recoding, direct validation against official published IEA item tables (exact match on percent full credit and partial credit verification), user-missing code recovery, omission distributions (paper 2.6–3.4% vs digital 1.2–1.4%), ITT vs answered-only denominators, and dynamic subgroup calculations. | How do scoring rules and response-status definitions shape empirical mode effects? |
 | **Study B** | `03_pirls_2021_process_data.ipynb` | PIRLS 2021 Digital Reading Process & Interaction Logs | **Planned**: Analyze item timing, revisit rates, omissions, and keystroke/navigation interactions to distinguish reading comprehension from digital interface hesitation. | Can process logs distinguish interface navigation friction from academic mastery? |
 | **Study C** | `04_icils_digital_opportunity.ipynb` | IEA ICILS 2018 & 2023 Computer and Information Literacy | **Planned**: Decompose the 102-point socioeconomic gap in digital literacy against school technology access to evaluate whether access guarantees operational fluency. | Does 1:1 hardware access eliminate digital literacy and operational fluency disparities? |
 | **Study D** | `05_mechanism_feasibility.md` | Protocol Design (IRB, power, assessment battery) | **Planned**: Specify a within-student randomized crossover trial measuring typing automaticity, handwriting speed, and digital response quality in Grade 4. | How can an experimental trial isolate typing speed from writing composition quality? |

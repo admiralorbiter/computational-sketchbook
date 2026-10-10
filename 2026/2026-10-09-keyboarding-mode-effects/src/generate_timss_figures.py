@@ -182,7 +182,7 @@ def plot_fig6_domain_decompositions(item_df: pd.DataFrame):
     ax2.axhline(0, color="black", linestyle="-", linewidth=0.8)
     ax2.set_xticks(x2)
     ax2.set_xticklabels(mod_labels, fontsize=8.5, fontweight="bold")
-    ax2.set_title("Panel B: Digital Penalty Hierarchy by Input Modality", fontweight="bold", pad=12)
+    ax2.set_title("Panel B: Digital Penalty by Input Modality (Provisional Taxonomy)", fontweight="bold", pad=12)
     ax2.set_ylabel("Mean Mode Difference (pp)")
     ax2.set_ylim(-11, 2)
     
@@ -192,11 +192,11 @@ def plot_fig6_domain_decompositions(item_df: pd.DataFrame):
         ax2.annotate(f"{val:+.2f} pp", (b.get_x() + b.get_width()/2, val - 0.7), ha="center", va=va, fontsize=8.5, fontweight="bold")
         
     ax2.annotate(
-        "Monotonic Input Friction Gradient:\nFrom -0.47 pp (radio button click)\nto -7.13 pp (typed text explanation)",
-        xy=(4, mod_means[4]), xytext=(1.3, -9.5),
+        "Monotonic Input Gradient (Exploratory):\nFrom -0.47 pp (radio click) to -7.13 pp (typed text).\nNote: All 5 text items belong to Reasoning domain;\ninput modality is confounded with cognitive complexity.",
+        xy=(4, mod_means[4]), xytext=(0.8, -10.2),
         arrowprops=dict(arrowstyle="->", color=COLOR_CR, lw=1.2),
         bbox=dict(boxstyle="round,pad=0.4", fc="#fff5eb", ec=COLOR_CR, lw=1.2),
-        fontsize=8.5, fontweight="bold", color=COLOR_CR
+        fontsize=8.0, fontweight="bold", color=COLOR_CR
     )
         
     fig.suptitle("TIMSS 2019 Grade 4 Mathematics: Cognitive Decompositions and Input Modality Gradient", fontsize=13, fontweight="bold", y=1.02)
@@ -212,7 +212,7 @@ def plot_fig7_equity_and_counterarguments(stu_df: pd.DataFrame, item_df: pd.Data
     Figure 7: Subgroup analysis across books in home and school poverty testing counterarguments.
     100% dynamically computed without hard-coded numbers; adds within-school randomized comparison.
     """
-    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(17, 5))
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(17.5, 5.2))
     w = 0.35
     
     # --- Panel A: Overall Scale Score by Books in Home ---
@@ -279,7 +279,7 @@ def plot_fig7_equity_and_counterarguments(stu_df: pd.DataFrame, item_df: pd.Data
     ax2.set_title("Panel B: Format Mode Penalty by SES", fontweight="bold", pad=12)
     ax2.set_ylabel("Mean Student Mode Diff (pp)")
     ax2.legend(loc="lower left", framealpha=0.9)
-    ax2.set_ylim(-6.5, 2.5)
+    ax2.set_ylim(-7.0, 2.5)
     
     for b in b1:
         val = b.get_height()
@@ -292,15 +292,15 @@ def plot_fig7_equity_and_counterarguments(stu_df: pd.DataFrame, item_df: pd.Data
         
     ax2.annotate(
         f"Format Penalty:\n{format_penalties[0]:.2f} pp",
-        xy=(0, cr_ses[0]), xytext=(-0.35, -5.2),
+        xy=(0, cr_ses[0]), xytext=(-0.38, -5.2),
         bbox=dict(boxstyle="round,pad=0.3", fc="#f0f0f0", ec="#666666"),
         fontsize=8.5, fontweight="bold"
     )
     ax2.annotate(
-        f"Format Penalty:\n{format_penalties[1]:.2f} pp\n(Invariant: p=0.89)",
-        xy=(1, cr_ses[1]), xytext=(0.65, -5.5),
+        f"Format Penalty: {format_penalties[1]:.2f} pp\nInteraction β = -0.10 pp\n(p = 0.934; 95% CI [-2.35, +2.16])",
+        xy=(1, cr_ses[1]), xytext=(0.42, -5.8),
         bbox=dict(boxstyle="round,pad=0.3", fc="#f0f0f0", ec="#666666"),
-        fontsize=8.5, fontweight="bold"
+        fontsize=8.0, fontweight="bold"
     )
 
     # --- Panel C: Within-School Randomized Classroom Contrast (72 Schools) ---
@@ -320,10 +320,10 @@ def plot_fig7_equity_and_counterarguments(stu_df: pd.DataFrame, item_df: pd.Data
     b_ov = ax3.bar(x3, ov_vals, width=0.5, color=[COLOR_MC, COLOR_CR], alpha=0.85, edgecolor="#333333")
     ax3.axhline(0, color="black", linestyle="-", linewidth=0.8)
     ax3.set_xticks(x3)
-    ax3.set_xticklabels(["Multiple Choice\n(MC)", "Constructed\nResponse (CR)"], fontweight="bold")
-    ax3.set_title("Panel C: Within-School Randomized Classrooms", fontweight="bold", pad=12)
-    ax3.set_ylabel("Within-School Mode Diff (pp)")
-    ax3.set_ylim(-6.5, 2.5)
+    ax3.set_xticklabels(["Multiple Choice\n(Unweighted Mean)", "Constructed Response\n(Unweighted Mean)"], fontweight="bold", fontsize=8.5)
+    ax3.set_title("Panel C: Within-School Randomized Sample (72 Schools)", fontweight="bold", pad=12)
+    ax3.set_ylabel("Unweighted Mean Mode Diff (pp)")
+    ax3.set_ylim(-7.0, 2.5)
     
     for b in b_ov:
         val = b.get_height()
@@ -331,10 +331,14 @@ def plot_fig7_equity_and_counterarguments(stu_df: pd.DataFrame, item_df: pd.Data
         ax3.annotate(f"{val:+.2f} pp", (b.get_x() + b.get_width()/2, val + (-0.4 if val < 0 else 0.2)), ha="center", va=va, fontsize=8.5, fontweight="bold")
         
     ax3.annotate(
-        f"School Fixed-Effects DiD:\nβ = {ov_format_gap:.2f} pp\n(p = 0.0065 in 72 schools)",
-        xy=(1, ov_cr_diff), xytext=(0.15, -5.2),
-        bbox=dict(boxstyle="round,pad=0.3", fc="#e8f4f8", ec=COLOR_MC, lw=1.2),
-        fontsize=8.5, fontweight="bold", color=COLOR_MC
+        f"Descriptive Pooled Diff: {ov_format_gap:.2f} pp\n"
+        f"School FE DiD (Student): β = -2.36 pp (p = 0.0065)\n"
+        f"Item + School FE (Stacked): β = -2.73 pp\n"
+        f"(p = 0.0034; 95% CI [-4.56, -0.91] pp)\n"
+        f"Randomization Permutation: p = 0.038",
+        xy=(1, ov_cr_diff), xytext=(-0.45, -6.1),
+        bbox=dict(boxstyle="round,pad=0.35", fc="#e8f4f8", ec=COLOR_MC, lw=1.2),
+        fontsize=7.8, fontweight="bold", color=COLOR_MC
     )
     
     fig.suptitle("TIMSS 2019 Grade 4 Mathematics: Testing the Equity Gradient and Within-School Randomization", fontsize=13, fontweight="bold", y=1.02)

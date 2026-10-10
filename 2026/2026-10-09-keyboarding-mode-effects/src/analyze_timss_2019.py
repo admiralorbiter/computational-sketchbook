@@ -345,87 +345,282 @@ def analyze_subgroup_heterogeneity(stu_df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def analyze_econometric_models(stu_df: pd.DataFrame) -> pd.DataFrame:
+def analyze_econometric_models(stu_df: pd.DataFrame, stk_df: pd.DataFrame = None) -> pd.DataFrame:
     """
-    Run formal student-level econometric models evaluating the format gap,
-    school fixed effects across the 72 randomized schools, and SES interaction.
+    Run formal econometric models evaluating the format gap:
+    1. National survey-weighted student DiD clustered by school
+    2. Student-by-item stacked WLS panel with 99 item fixed effects
+    3. Within-school student DiD across the 72 randomized schools with school fixed effects
+    4. Within-school stacked panel with BOTH 99 item fixed effects AND 72 school fixed effects
+    5. Socioeconomic interaction test (Digital x Low SES) with calibrated precision bounds
     """
+    if stk_df is None:
+        stk_path = PROCESSED_DIR / "timss_2019_g4_student_item_stacked.parquet"
+        if stk_path.exists():
+            stk_df = pd.read_parquet(stk_path)
+            
     df_clean = stu_df.dropna(subset=["format_gap", "TOTWGT", "IDSCHOOL"]).copy()
+    overlap_schools = set(stu_df[stu_df["study_mode"] == "Bridge_Paper"]["IDSCHOOL"]).intersection(
+        set(stu_df[stu_df["study_mode"] == "eTIMSS_Digital"]["IDSCHOOL"])
+    )
     
-    # Model 1: National Survey-Weighted DiD with School Clustering
+    # Model 1: National Survey-Weighted Student DiD with School Clustering
     mod1 = smf.wls("format_gap ~ is_digital", data=df_clean, weights=df_clean["TOTWGT"]).fit(
         cov_type="cluster", cov_kwds={"groups": df_clean["IDSCHOOL"]}
     )
     b1 = mod1.params["is_digital"]
     se1 = mod1.bse["is_digital"]
-    t1 = b1 / se1
+    t1 = mod1.tvalues["is_digital"]
     p1 = mod1.pvalues["is_digital"]
     ci1 = mod1.conf_int().loc["is_digital"]
     
-    # Model 2: Within-School Fixed Effects on 72 Overlapping Schools
-    overlap_schools = set(stu_df[stu_df["study_mode"] == "Bridge_Paper"]["IDSCHOOL"]).intersection(
-        set(stu_df[stu_df["study_mode"] == "eTIMSS_Digital"]["IDSCHOOL"])
+    # Model 2: Student-by-Item Stacked Panel WLS with Item Fixed Effects
+    mod2 = smf.wls("score_pct ~ is_digital + is_digital:is_cr + C(item_id)", data=stk_df, weights=stk_df["TOTWGT"]).fit(
+        cov_type="cluster", cov_kwds={"groups": stk_df["IDSCHOOL"]}
     )
+    b2 = mod2.params["is_digital:is_cr"]
+    se2 = mod2.bse["is_digital:is_cr"]
+    t2 = mod2.tvalues["is_digital:is_cr"]
+    p2 = mod2.pvalues["is_digital:is_cr"]
+    ci2 = mod2.conf_int().loc["is_digital:is_cr"]
+    
+    # Model 3: Within-School Student DiD on 72 Overlapping Schools
     df_ov = df_clean[df_clean["IDSCHOOL"].isin(overlap_schools)].copy()
-    mod2 = smf.ols("format_gap ~ is_digital + C(IDSCHOOL)", data=df_ov).fit(
+    mod3 = smf.ols("format_gap ~ is_digital + C(IDSCHOOL)", data=df_ov).fit(
         cov_type="cluster", cov_kwds={"groups": df_ov["IDSCHOOL"]}
     )
-    b2 = mod2.params["is_digital"]
-    se2 = mod2.bse["is_digital"]
-    t2 = b2 / se2
-    p2 = mod2.pvalues["is_digital"]
-    ci2 = mod2.conf_int().loc["is_digital"]
+    b3 = mod3.params["is_digital"]
+    se3 = mod3.bse["is_digital"]
+    t3 = mod3.tvalues["is_digital"]
+    p3 = mod3.pvalues["is_digital"]
+    ci3 = mod3.conf_int().loc["is_digital"]
     
-    # Model 3: SES Interaction Test (is_digital * is_low_ses)
+    # Model 4: Within-School Stacked Panel with Item FE AND School FE (Classroom Clustered)
+    stk_ov = stk_df[stk_df["IDSCHOOL"].isin(overlap_schools)].copy()
+    mod4 = smf.ols("score_pct ~ is_digital + is_digital:is_cr + C(item_id) + C(IDSCHOOL)", data=stk_ov).fit(
+        cov_type="cluster", cov_kwds={"groups": stk_ov["IDCLASS"]}
+    )
+    b4 = mod4.params["is_digital:is_cr"]
+    se4 = mod4.bse["is_digital:is_cr"]
+    t4 = mod4.tvalues["is_digital:is_cr"]
+    p4 = mod4.pvalues["is_digital:is_cr"]
+    ci4 = mod4.conf_int().loc["is_digital:is_cr"]
+    
+    # Model 5: SES Interaction Test (is_digital * is_low_ses)
     df_ses = df_clean.dropna(subset=["is_low_ses"]).copy()
-    mod3 = smf.wls("format_gap ~ is_digital * is_low_ses", data=df_ses, weights=df_ses["TOTWGT"]).fit(
+    mod5 = smf.wls("format_gap ~ is_digital * is_low_ses", data=df_ses, weights=df_ses["TOTWGT"]).fit(
         cov_type="cluster", cov_kwds={"groups": df_ses["IDSCHOOL"]}
     )
-    b3_int = mod3.params["is_digital:is_low_ses"]
-    se3_int = mod3.bse["is_digital:is_low_ses"]
-    t3_int = b3_int / se3_int
-    p3_int = mod3.pvalues["is_digital:is_low_ses"]
-    ci3_int = mod3.conf_int().loc["is_digital:is_low_ses"]
+    b5_int = mod5.params["is_digital:is_low_ses"]
+    se5_int = mod5.bse["is_digital:is_low_ses"]
+    t5_int = mod5.tvalues["is_digital:is_low_ses"]
+    p5_int = mod5.pvalues["is_digital:is_low_ses"]
+    ci5_int = mod5.conf_int().loc["is_digital:is_low_ses"]
     
     rows = [
         {
-            "model_specification": "Model 1: National Survey-Weighted DiD",
+            "model_specification": "Model 1: National Survey-Weighted Student DiD",
             "sample_scope": "Full National Sample (294 Schools)",
-            "n_students": int(mod1.nobs),
+            "n_observations": int(mod1.nobs),
             "coefficient_beta": round(b1, 3),
             "cluster_robust_se": round(se1, 3),
             "test_statistic": round(t1, 2),
             "p_value": round(p1, 5),
             "ci_95_lower": round(ci1[0], 3),
             "ci_95_upper": round(ci1[1], 3),
-            "interpretation": "National survey-weighted digital format penalty clustered by school"
+            "interpretation": "National survey-weighted student format gap mode difference clustered by school"
         },
         {
-            "model_specification": "Model 2: Within-School Fixed Effects",
-            "sample_scope": "72 Randomized-Classroom Schools",
-            "n_students": int(mod2.nobs),
+            "model_specification": "Model 2: National Item Fixed-Effects Panel WLS",
+            "sample_scope": "Full National Stacked Panel (99 Items, 294 Schools)",
+            "n_observations": int(mod2.nobs),
             "coefficient_beta": round(b2, 3),
             "cluster_robust_se": round(se2, 3),
             "test_statistic": round(t2, 2),
-            "p_value": round(p2, 5),
+            "p_value": round(p2, 7),
             "ci_95_lower": round(ci2[0], 3),
             "ci_95_upper": round(ci2[1], 3),
-            "interpretation": "Controls completely for school composition via classroom randomization"
+            "interpretation": "Controls for matrix-sampling booklet item composition via 99 item fixed effects; absorbs baseline difficulty"
         },
         {
-            "model_specification": "Model 3: SES Interaction Term (Digital x Low SES)",
-            "sample_scope": "National Sample with SES Data",
-            "n_students": int(mod3.nobs),
-            "coefficient_beta": round(b3_int, 3),
-            "cluster_robust_se": round(se3_int, 3),
-            "test_statistic": round(t3_int, 2),
-            "p_value": round(p3_int, 5),
-            "ci_95_lower": round(ci3_int[0], 3),
-            "ci_95_upper": round(ci3_int[1], 3),
-            "interpretation": "Null interaction (p=0.89) confirms format penalty is invariant to home SES"
+            "model_specification": "Model 3: Within-School Student DiD",
+            "sample_scope": "72 Randomized-Classroom Schools (147 Classrooms)",
+            "n_observations": int(mod3.nobs),
+            "coefficient_beta": round(b3, 3),
+            "cluster_robust_se": round(se3, 3),
+            "test_statistic": round(t3, 2),
+            "p_value": round(p3, 5),
+            "ci_95_lower": round(ci3[0], 3),
+            "ci_95_upper": round(ci3[1], 3),
+            "interpretation": "Controls completely for school selection and neighborhood composition via randomized classroom assignment"
+        },
+        {
+            "model_specification": "Model 4: Within-School Item FE + School FE Panel",
+            "sample_scope": "72 Randomized Schools Stacked Panel (99 Items, 147 Classrooms)",
+            "n_observations": int(mod4.nobs),
+            "coefficient_beta": round(b4, 3),
+            "cluster_robust_se": round(se4, 3),
+            "test_statistic": round(t4, 2),
+            "p_value": round(p4, 5),
+            "ci_95_lower": round(ci4[0], 3),
+            "ci_95_upper": round(ci4[1], 3),
+            "interpretation": "Simultaneously absorbs 99 item baseline difficulties and 72 school fixed effects; clustered by classroom"
+        },
+        {
+            "model_specification": "Model 5: SES Interaction Term (Digital x Low SES)",
+            "sample_scope": "National Sample with SES Data (294 Schools)",
+            "n_observations": int(mod5.nobs),
+            "coefficient_beta": round(b5_int, 3),
+            "cluster_robust_se": round(se5_int, 3),
+            "test_statistic": round(t5_int, 2),
+            "p_value": round(p5_int, 5),
+            "ci_95_lower": round(ci5_int[0], 3),
+            "ci_95_upper": round(ci5_int[1], 3),
+            "interpretation": "No detectable interaction (p=0.934); 95% CI [-2.35, +2.16] pp rules out large divergence but does not prove statistical equivalence"
         }
     ]
     return pd.DataFrame(rows)
+
+
+def analyze_jackknife_repeated_replication(stu_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Compute design-based standard errors using TIMSS Jackknife Repeated Replication (JK2).
+    Evaluates Student Format Gap DiD, Multiple Choice Mode Difference, and Constructed Response Mode Difference.
+    """
+    def calc_jk_stats(df, val_col):
+        df_clean = df.dropna(subset=[val_col, "TOTWGT", "JKZONE", "JKREP"]).copy()
+        w_full = df_clean["TOTWGT"].values
+        y = df_clean[val_col].values
+        theta_hat = np.average(y, weights=w_full)
+        
+        zones = int(df_clean["JKZONE"].max())
+        diff_sq_sum = 0.0
+        for z in range(1, zones + 1):
+            w_rep = w_full.copy()
+            in_zone = (df_clean["JKZONE"] == z).values
+            w_rep[in_zone & (df_clean["JKREP"] == 1).values] *= 2.0
+            w_rep[in_zone & (df_clean["JKREP"] == 0).values] = 0.0
+            theta_z = np.average(y, weights=w_rep)
+            diff_sq_sum += (theta_z - theta_hat) ** 2
+        
+        se_jk = np.sqrt(diff_sq_sum)
+        return theta_hat, se_jk
+
+    br_stu = stu_df[stu_df["study_mode"] == "Bridge_Paper"]
+    e_stu = stu_df[stu_df["study_mode"] == "eTIMSS_Digital"]
+
+    # 1. Format gap DiD
+    m_br, se_br = calc_jk_stats(br_stu, "format_gap")
+    m_e, se_e = calc_jk_stats(e_stu, "format_gap")
+    did_jk = m_e - m_br
+    se_did_jk = np.sqrt(se_br**2 + se_e**2)
+    t_did_jk = did_jk / se_did_jk
+    p_did_jk = float(2 * (1 - stats.norm.cdf(abs(t_did_jk))))
+
+    # 2. MC difference
+    mc_br, se_mc_br = calc_jk_stats(br_stu, "mc_pct")
+    mc_e, se_mc_e = calc_jk_stats(e_stu, "mc_pct")
+    mc_diff = mc_e - mc_br
+    se_mc = np.sqrt(se_mc_br**2 + se_mc_e**2)
+    t_mc = mc_diff / se_mc
+    p_mc = float(2 * (1 - stats.norm.cdf(abs(t_mc))))
+
+    # 3. CR difference
+    cr_br, se_cr_br = calc_jk_stats(br_stu, "cr_pct")
+    cr_e, se_cr_e = calc_jk_stats(e_stu, "cr_pct")
+    cr_diff = cr_e - cr_br
+    se_cr = np.sqrt(se_cr_br**2 + se_cr_e**2)
+    t_cr = cr_diff / se_cr
+    p_cr = float(2 * (1 - stats.norm.cdf(abs(t_cr))))
+
+    rows = [
+        {
+            "parameter": "Student Format Gap DiD (CR% - MC%)",
+            "paper_mean": round(m_br, 2),
+            "paper_jk_se": round(se_br, 2),
+            "digital_mean": round(m_e, 2),
+            "digital_jk_se": round(se_e, 2),
+            "mode_difference": round(did_jk, 3),
+            "jk2_standard_error": round(se_did_jk, 3),
+            "t_statistic": round(t_did_jk, 2),
+            "p_value": round(p_did_jk, 5),
+            "ci_95_lower": round(did_jk - 1.96 * se_did_jk, 3),
+            "ci_95_upper": round(did_jk + 1.96 * se_did_jk, 3)
+        },
+        {
+            "parameter": "Multiple Choice Performance (MC%)",
+            "paper_mean": round(mc_br, 2),
+            "paper_jk_se": round(se_mc_br, 2),
+            "digital_mean": round(mc_e, 2),
+            "digital_jk_se": round(se_mc_e, 2),
+            "mode_difference": round(mc_diff, 3),
+            "jk2_standard_error": round(se_mc, 3),
+            "t_statistic": round(t_mc, 2),
+            "p_value": round(p_mc, 5),
+            "ci_95_lower": round(mc_diff - 1.96 * se_mc, 3),
+            "ci_95_upper": round(mc_diff + 1.96 * se_mc, 3)
+        },
+        {
+            "parameter": "Constructed Response Performance (CR%)",
+            "paper_mean": round(cr_br, 2),
+            "paper_jk_se": round(se_cr_br, 2),
+            "digital_mean": round(cr_e, 2),
+            "digital_jk_se": round(se_cr_e, 2),
+            "mode_difference": round(cr_diff, 3),
+            "jk2_standard_error": round(se_cr, 3),
+            "t_statistic": round(t_cr, 2),
+            "p_value": round(p_cr, 5),
+            "ci_95_lower": round(cr_diff - 1.96 * se_cr, 3),
+            "ci_95_upper": round(cr_diff + 1.96 * se_cr, 3)
+        }
+    ]
+    return pd.DataFrame(rows)
+
+
+def analyze_classroom_randomization_inference(stu_df: pd.DataFrame, n_permutations: int = 2000) -> dict:
+    """
+    Perform exact randomization inference across classrooms within the 72 schools.
+    Permutes paper vs digital classroom assignment within each school to test sharp null hypothesis.
+    """
+    overlap_schools = set(stu_df[stu_df["study_mode"] == "Bridge_Paper"]["IDSCHOOL"]).intersection(
+        set(stu_df[stu_df["study_mode"] == "eTIMSS_Digital"]["IDSCHOOL"])
+    )
+    df_ov = stu_df[stu_df["IDSCHOOL"].isin(overlap_schools)].dropna(subset=["format_gap", "IDSCHOOL", "IDCLASS"]).copy()
+    
+    # Classroom level aggregation
+    cls_df = df_ov.groupby(["IDSCHOOL", "IDCLASS", "is_digital"])["format_gap"].mean().reset_index()
+    
+    sch_diffs = []
+    for _, grp in cls_df.groupby("IDSCHOOL"):
+        dig = grp[grp["is_digital"] == 1]["format_gap"]
+        pap = grp[grp["is_digital"] == 0]["format_gap"]
+        if len(dig) > 0 and len(pap) > 0:
+            sch_diffs.append(dig.mean() - pap.mean())
+    obs_diff = float(np.mean(sch_diffs))
+    
+    np.random.seed(42)
+    perm_stats = []
+    for _ in range(n_permutations):
+        p_diffs = []
+        for _, grp in cls_df.groupby("IDSCHOOL"):
+            n_cls = len(grp)
+            n_dig = (grp["is_digital"] == 1).sum()
+            perm_dig = np.zeros(n_cls, dtype=int)
+            perm_dig[np.random.choice(n_cls, n_dig, replace=False)] = 1
+            dig_vals = grp["format_gap"].values[perm_dig == 1]
+            pap_vals = grp["format_gap"].values[perm_dig == 0]
+            if len(dig_vals) > 0 and len(pap_vals) > 0:
+                p_diffs.append(dig_vals.mean() - pap_vals.mean())
+        perm_stats.append(np.mean(p_diffs))
+        
+    p_val = float(np.mean(np.array(perm_stats) <= obs_diff) * 2)  # two-sided
+    return {
+        "n_schools": len(overlap_schools),
+        "n_classrooms": len(cls_df),
+        "observed_classroom_diff_pp": round(obs_diff, 3),
+        "randomization_p_value": round(p_val, 4),
+        "n_permutations": n_permutations
+    }
 
 
 def main():
@@ -436,6 +631,7 @@ def main():
     # Load processed data
     item_df = pd.read_parquet(PROCESSED_DIR / "timss_2019_g4_item_contrasts.parquet")
     stu_df = pd.read_parquet(PROCESSED_DIR / "timss_2019_g4_student_pvs.parquet")
+    stk_df = pd.read_parquet(PROCESSED_DIR / "timss_2019_g4_student_item_stacked.parquet")
     
     # 1. Sample Accounting
     df_acc = analyze_sample_accounting(stu_df, item_df)
@@ -479,11 +675,24 @@ def main():
     print(df_mod.to_string(index=False))
 
     # 7. Econometric Model Comparison
-    df_reg = analyze_econometric_models(stu_df)
+    df_reg = analyze_econometric_models(stu_df, stk_df)
     reg_path = TABLES_DIR / "table10_timss_2019_econometric_models.csv"
     df_reg.to_csv(reg_path, index=False)
     print(f"\n[OK] Table 10 generated -> {reg_path.name}")
     print(df_reg.to_string(index=False))
+
+    # 8. Jackknife Repeated Replication (JK2)
+    df_jk = analyze_jackknife_repeated_replication(stu_df)
+    jk_path = TABLES_DIR / "table11_timss_2019_survey_inference_jk2.csv"
+    df_jk.to_csv(jk_path, index=False)
+    print(f"\n[OK] Table 11 generated -> {jk_path.name}")
+    print(df_jk.to_string(index=False))
+
+    # 9. Classroom Randomization Inference
+    rand_res = analyze_classroom_randomization_inference(stu_df)
+    print("\n--- Within-School Classroom Randomization Inference ---")
+    for k, v in rand_res.items():
+        print(f"  {k}: {v}")
     
     print("\n[SUCCESS] Statistical analysis complete.")
 
