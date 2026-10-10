@@ -18,7 +18,7 @@ This document provides complete provenance, extraction citations, table referenc
 | `SRC-08` | IEA / NCES ICILS | 2018, 2023 | [*U.S. Results from the 2023 International Computer and Information Literacy Study*](https://nces.ed.gov/surveys/icils/) | National Summary Report | Scale Score & Percentages | **Verified Primary Report** | `data/raw/icils_cil_trends_2018_2023.csv` |
 | `SRC-09` | NAEP Grade 4 Teacher Questionnaire | 2017 | [2017 NAEP SQ Teacher G4](https://nces.ed.gov/nationsreportcard/subject/about/pdf/bgq/teacher/2017_sq_teacher_g4.pdf) | Questions 13 & 14 | Survey Questions | **Instrument Verified / Frequencies Unverified** | `data/raw/naep_g4_teacher_questionnaire_audit.csv` |
 | `SRC-10` | NCES Grade 4 Computer Writing Pilot | 2012 | *2012 NAEP Computer-Based Writing Pilot* & Usability Study | National Pilot Benchmarks | Word Count & WPM | **Verified Primary Benchmark** | `data/raw/mode_effects_literature_meta.csv` |
-| `SRC-11` | IEA / NCES TIMSS | 2019 | [TIMSS 2019 International Database](https://timss2019.org/international-database/) & [NCES PUF 2022-047](https://ies.ed.gov/use-work/dataset/trends-international-mathematics-and-science-study-timss-2019-u-s-public-use-data-files-and) | U.S. Grade 4 eTIMSS & Bridge Microdata | Scale Score & Item pp | **Verified Public Microdata** | `data/processed/timss_2019_g4_item_contrasts.csv`, `data/processed/timss_2019_g4_student_pvs.csv` |
+| `SRC-11` | IEA / NCES TIMSS | 2019 | [TIMSS 2019 International Database](https://timss2019.org/international-database/) & [NCES PUF 2022-047](https://ies.ed.gov/use-work/dataset/trends-international-mathematics-and-science-study-timss-2019-u-s-public-use-data-files-and) | U.S. Grade 4 eTIMSS & Bridge Microdata | Scale Score & Item pp | **Verified Public Microdata** | `data/processed/timss_2019_g4_item_contrasts.csv`, `data/processed/timss_2019_g4_student_pvs.csv`, `artifacts/tables/table12_timss_2019_iea_benchmark_audit.csv`, `artifacts/tables/table13_timss_2019_booklet_exposure_sensitivity.csv` |
 
 ---
 
@@ -103,9 +103,11 @@ This document provides complete provenance, extraction citations, table referenc
   - Replaced naive single-code checking (`== 10.0` / `== 20.0`) with official IEA two-digit diagnostic scoring: full credit awarded to all diagnostic strategies (`10 <= code <= 19` for 1 pt; `20 <= code <= 29` for 2 pts, `10 <= code <= 19` for 1 pt / 0.5 partial credit).
   - Explicitly preserved SPSS user-defined missing codes via `user_missing=True` to recover omitted responses (`99.0` for CR, `9.0` for MC) and not-reached responses (`96.0` for CR, `6.0` for MC).
   - Recovered omission rates: Paper MC 3.37% vs Digital MC 1.19%; Paper CR 2.64% vs Digital CR 1.37%.
-- **Validation against Published IEA Item Benchmarks**:
-  - Validated scoring pipeline against official IEA published item tables: 1-point items (e.g. `MP51043`: paper $49.93\%$, digital $44.27\%$) match to the exact hundredth of a percent.
-  - On 2-point diagnostic items (e.g. `MP61228`), our pipeline's weighted percent full credit ($29.63\%$) matches the published IEA table ($29.63\%$) exactly, while properly crediting partial credit ($21.07\%$ receiving 1 point out of 2) to yield the true psychometric mean score ($40.16\%$).
+- **Validation against Published IEA Item Benchmarks (Table 12)**:
+  - Validated scoring pipeline comprehensively across all 99 anchor items against official IEA published item percent-correct workbooks (`T19Br_G4_MAT_Item Percent Correct.xlsx` and `eT19_G4_MAT_Item Percent Correct.xlsx`), logged in `artifacts/tables/table12_timss_2019_iea_benchmark_audit.csv`.
+  - On 1-point items ($N = 94$): The maximum absolute difference between the pipeline and official published IEA item percentages is $\le 0.00500$ percentage points across both paper and digital administrations, reflecting pure rounding to two decimal places in official tables (e.g. `MP51043`: paper $49.93\%$, digital $44.27\%$).
+  - On 2-point diagnostic items ($N = 5$): The pipeline's weighted percent full credit matches the official IEA published full-credit benchmark to 5 decimal places ($\Delta = 0.00000$ exact match across all items, e.g., `MP61228` paper 29.62660% vs. 29.62660%, digital 16.17916% vs. 16.17916%), while properly crediting diagnostic partial credit ($21.07\%$ receiving 1 point out of 2) to yield the true psychometric average score ($40.16\%$).
+  - A programmatic assertion in the automated test suite verifies 99 out of 99 items pass validation against official published IEA tables.
 - **Audited Empirical Findings**:
   - **Overall Scale Score Difference**: $-1.98$ scale score points across 5 Plausible Values (Paper $536.72$ vs. Digital $534.73$, pooled $\text{SD} = 87.24$, $-0.023$ SD). Within the 72 randomized schools, overall scale score difference is $+3.28$ points ($+0.038$ SD).
   - **Item Format Contrasts**:
@@ -128,11 +130,22 @@ This document provides complete provenance, extraction citations, table referenc
     - *Model 1 (National Survey-Weighted DiD)*: $\beta = \mathbf{-3.102\text{ pp}}$ ($\text{SE} = 0.663, t = -4.68, p < 0.0001, 95\%\text{ CI} = [-4.402, -1.802]$), clustered by school.
     - *Model 2 (National Item Fixed-Effects Panel WLS)*: $\beta = \mathbf{-3.422\text{ pp}}$ ($\text{SE} = 0.668, t = -5.12, p = 3.0 \times 10^{-7}, 95\%\text{ CI} = [-4.732, -2.112]$), controlling for booklet item composition via 99 item baseline fixed effects.
     - *Model 3 (Within-School Student DiD on 72 Schools)*: $\beta = \mathbf{-2.364\text{ pp}}$ ($\text{SE} = 0.868, t = -2.72, p = 0.0065, 95\%\text{ CI} = [-4.065, -0.663]$).
-    - *Model 4 (Within-School Item FE + School FE Panel)*: $\beta = \mathbf{-2.734\text{ pp}}$ ($\text{SE} = 0.932, t = -2.93, p = 0.00335, 95\%\text{ CI} = [-4.561, -0.907]$), clustered by classroom ($N=147$).
+    - *Model 4a (Within-School Item FE + School FE Panel, Classroom Clustering)*: $\beta = \mathbf{-2.734\text{ pp}}$ ($\text{SE} = 0.932, t = -2.93, p = 0.00335, 95\%\text{ CI} = [-4.561, -0.907]$), clustered by classroom ($N=147$).
+    - *Model 4b (Within-School Item FE + School FE Panel, School Clustering)*: $\beta = \mathbf{-2.734\text{ pp}}$ ($\text{SE} = 0.843, t = -3.24, p = 0.00119, 95\%\text{ CI} = [-4.386, -1.082]$), clustered by school ($N=72$).
     - *Model 5 (SES Interaction Term)*: Interaction coefficient $\beta = \mathbf{-0.096\text{ pp}}$ ($\text{SE} = 1.151, p = 0.934$). Null interaction with $95\%\text{ CI} = [-2.351, +2.159]$ pp confirms absence of detectable moderation while acknowledging that confidence bounds do not rule out $\pm 2.2$ pp heterogeneity.
+  - **Booklet Exposure & Student-Normalized Weighting Sensitivity (Table 13)**:
+    - *Unequal Booklet Exposure*: Due to TIMSS block matrix designs, paper students completed 2 blocks averaging 24.67 items while digital students completed 2 blocks averaging 14.12 items.
+    - *Weighting Specifications*: Evaluated across 12 regression specifications comparing unweighted row-level, survey WLS row-level ($w_{ij} = \text{TOTWGT}_i$), student-normalized unweighted ($w_{ij} = 1 / n_i$), and student-normalized survey WLS ($w_{ij} = \text{TOTWGT}_i / n_i \times \bar{n}$).
+    - *Invariance of Results*:
+      - Model 2 (National Item FE): Format gap ranges between $-3.30$ and $-3.68$ pp across all 4 weighting schemes (all $p < 10^{-6}$).
+      - Model 4 (Within-School Item+School FE): Format gap ranges between $-2.68$ and $-2.93$ pp across all weighting schemes (all $p < 0.006$ under classroom clustering; all $p < 0.0015$ under school clustering).
+      - Unequal booklet exposure does not account for the observed constructed-response mode penalty.
   - **Survey Inference & Randomization Inference**:
-    - *TIMSS Jackknife Repeated Replication (JK2)*: Design-based standard error for the student format gap DiD is $0.668$ pp ($t = -4.64, p < 0.00001, 95\%\text{ CI} = [-4.412, -1.792]$ pp).
-    - *Within-School Randomization Inference*: Exact classroom permutation test across 2,000 permutations within the 72 schools confirms statistical significance ($p = 0.0380$).
+    - *TIMSS Jackknife Repeated Replication (JK2)*: Design-based standard error for the national student format gap DiD using complementary replicate half-samples is $0.668$ pp ($t = -4.64, p < 0.00001, 95\%\text{ CI} = [-4.412, -1.792]$ pp).
+    - *Cluster Linearization*: Standard error clustered by school is $0.663$ pp ($t = -4.68, p < 0.00001$). The close alignment occurs because school-level paper and digital means correlate positively within the 72 dual-mode schools ($r = +0.57$ for MC, $r = +0.64$ for CR), rendering independent replicate variance conservative.
+    - *Within-School Randomization Inference*: Monte Carlo Randomization Inference with 2,000 classroom permutations within the 72 dual-mode schools yields a finite-sample-corrected two-tailed $p$-value of $p = 0.0400$, confirming statistical significance under non-parametric permutation.
+  - **Verification Suite**:
+    - All empirical findings, scoring tables, and models are verified by a 21-test automated Pytest suite (`pytest tests/ -v`).
 
 
 

@@ -1,0 +1,13 @@
+model_specification,weighting_scheme,cluster_level,beta_cr_int,se,p_value,ci_95
+Model 2: National Item FE,Unweighted Row-Level (Item-Response),School (294),-3.677,0.688,1e-07,"[-5.026, -2.329]"
+Model 2: National Item FE,Unweighted Student-Normalized (1/n_items),School (294),-3.587,0.689,2e-07,"[-4.938, -2.237]"
+Model 2: National Item FE,Survey WLS Row-Level (TOTWGT),School (294),-3.422,0.668,3e-07,"[-4.732, -2.112]"
+Model 2: National Item FE,Survey WLS Student-Normalized (TOTWGT/n_items),School (294),-3.304,0.673,9e-07,"[-4.623, -1.985]"
+Model 4: Within-School Item + School FE,Unweighted Row-Level (Item-Response),Classroom (147),-2.734,0.932,0.00335,"[-4.561, -0.907]"
+Model 4: Within-School Item + School FE,Unweighted Row-Level (Item-Response),School (72),-2.734,0.843,0.00119,"[-4.387, -1.081]"
+Model 4: Within-School Item + School FE,Unweighted Student-Normalized (1/n_items),Classroom (147),-2.677,0.969,0.00573,"[-4.576, -0.778]"
+Model 4: Within-School Item + School FE,Unweighted Student-Normalized (1/n_items),School (72),-2.677,0.875,0.00221,"[-4.392, -0.963]"
+Model 4: Within-School Item + School FE,Survey WLS Row-Level (TOTWGT),Classroom (147),-2.93,0.951,0.00206,"[-4.794, -1.067]"
+Model 4: Within-School Item + School FE,Survey WLS Row-Level (TOTWGT),School (72),-2.93,0.843,0.00051,"[-4.583, -1.278]"
+Model 4: Within-School Item + School FE,Survey WLS Student-Normalized (TOTWGT/n_items),Classroom (147),-2.831,0.989,0.00422,"[-4.770, -0.892]"
+Model 4: Within-School Item + School FE,Survey WLS Student-Normalized (TOTWGT/n_items),School (72),-2.831,0.885,0.00137,"[-4.564, -1.097]"

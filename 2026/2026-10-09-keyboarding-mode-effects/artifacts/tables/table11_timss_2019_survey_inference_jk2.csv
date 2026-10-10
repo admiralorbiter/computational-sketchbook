@@ -1,4 +1,4 @@
-parameter,paper_mean,paper_jk_se,digital_mean,digital_jk_se,mode_difference,jk2_standard_error,t_statistic,p_value,ci_95_lower,ci_95_upper
-Student Format Gap DiD (CR% - MC%),-13.13,0.6,-16.23,0.3,-3.102,0.668,-4.64,0.0,-4.412,-1.792
-Multiple Choice Performance (MC%),63.0,1.06,62.27,0.64,-0.728,1.233,-0.59,0.55489,-3.144,1.688
-Constructed Response Performance (CR%),49.87,1.37,46.04,0.71,-3.83,1.543,-2.48,0.01306,-6.854,-0.805
+parameter,paper_mean,paper_jk2_se,digital_mean,digital_jk2_se,mode_difference,jk2_independent_se,cluster_linearization_se,t_statistic,p_value,ci_95_lower,ci_95_upper,covariance_note
+Student Format Gap DiD (CR% - MC%),-13.13,0.598,-16.23,0.297,-3.102,0.668,0.663,-4.68,0.0,-4.402,-1.802,Cluster linearization accounts for within-school covariance across 294 schools (including 72 shared schools)
+Multiple Choice Performance (MC%),63.0,1.056,62.27,0.636,-0.728,1.233,1.373,-0.53,0.59606,-3.419,1.964,Positive covariance between modes (r=+0.57 across 72 shared schools)
+Constructed Response Performance (CR%),49.87,1.371,46.04,0.705,-3.83,1.542,1.701,-2.25,0.02433,-7.163,-0.497,Positive covariance between modes (r=+0.64 across 72 shared schools)

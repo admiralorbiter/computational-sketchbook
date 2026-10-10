@@ -61,6 +61,20 @@ def survey_inference_jk2():
     return pd.read_csv(path)
 
 
+@pytest.fixture(scope="module")
+def iea_benchmark_audit():
+    path = TABLES_DIR / "table12_timss_2019_iea_benchmark_audit.csv"
+    assert path.exists(), f"Table 12 missing at {path}"
+    return pd.read_csv(path)
+
+
+@pytest.fixture(scope="module")
+def booklet_exposure_sensitivity():
+    path = TABLES_DIR / "table13_timss_2019_booklet_exposure_sensitivity.csv"
+    assert path.exists(), f"Table 13 missing at {path}"
+    return pd.read_csv(path)
+
+
 def test_timss_sample_accounting(student_pvs, sample_accounting):
     """Verify exact student, school, classroom, and study mode sample counts."""
     # 1. Total students
@@ -205,7 +219,8 @@ def test_survey_jackknife_repeated_replication(survey_inference_jk2):
     """Verify design-based standard errors from TIMSS Jackknife Repeated Replication (JK2)."""
     did_row = survey_inference_jk2[survey_inference_jk2["parameter"].str.contains("Student Format Gap")].iloc[0]
     assert pytest.approx(-3.102, abs=0.05) == did_row["mode_difference"]
-    assert pytest.approx(0.668, abs=0.05) == did_row["jk2_standard_error"]
+    assert pytest.approx(0.668, abs=0.05) == did_row["jk2_independent_se"]
+    assert pytest.approx(0.663, abs=0.05) == did_row["cluster_linearization_se"]
     assert did_row["p_value"] < 0.001
 
 
@@ -256,4 +271,68 @@ def test_student_level_subgroup_invariance(student_pvs, econometric_models):
     assert m5["p_value"] > 0.50  # p = 0.934 confirms null interaction
     # Confirm interpretation acknowledges precision bounds rather than asserting strict equivalence
     assert "not prove statistical equivalence" in m5["interpretation"] or "does not rule out" in m5["interpretation"]
+
+
+def test_iea_benchmark_complete_audit(iea_benchmark_audit):
+    """Verify automated audit of all 99 anchor items against official published IEA workbooks."""
+    assert len(iea_benchmark_audit) == 99
+    assert (iea_benchmark_audit["audit_status"] == "PASS").all()
+    
+    df_1pt = iea_benchmark_audit[iea_benchmark_audit["max_pts"] == 1]
+    assert len(df_1pt) == 94
+    assert df_1pt["diff_paper"].max() <= 0.00501
+    assert df_1pt["diff_digital"].max() <= 0.00501
+    
+    df_2pt = iea_benchmark_audit[iea_benchmark_audit["max_pts"] == 2]
+    assert len(df_2pt) == 5
+    assert df_2pt["diff_paper"].max() < 0.00001  # Exact match to 5 decimal places!
+    assert df_2pt["diff_digital"].max() < 0.00001
+
+
+def test_booklet_exposure_weighting_sensitivity(booklet_exposure_sensitivity):
+    """Verify that Model 2 and Model 4 are invariant to row-level vs student-normalized weighting."""
+    assert len(booklet_exposure_sensitivity) == 12
+    
+    # Model 2 estimates remain between -3.30 and -3.68 pp across all weighting schemes
+    m2_rows = booklet_exposure_sensitivity[booklet_exposure_sensitivity["model_specification"].str.contains("Model 2")]
+    assert len(m2_rows) == 4
+    for _, r in m2_rows.iterrows():
+        assert -3.70 <= r["beta_cr_int"] <= -3.25
+        assert r["p_value"] < 1e-6
+        
+    # Model 4 estimates remain between -2.67 and -2.94 pp across all weighting schemes
+    m4_rows = booklet_exposure_sensitivity[booklet_exposure_sensitivity["model_specification"].str.contains("Model 4")]
+    assert len(m4_rows) == 8
+    for _, r in m4_rows.iterrows():
+        assert -3.00 <= r["beta_cr_int"] <= -2.60
+        assert r["p_value"] < 0.01
+
+
+def test_within_school_clustering_sensitivity(econometric_models):
+    """Verify that within-school Model 4 is statistically significant under classroom and school clustering."""
+    m4a = econometric_models[econometric_models["model_specification"].str.contains("Model 4a")].iloc[0]
+    assert pytest.approx(-2.734, abs=0.05) == m4a["coefficient_beta"]
+    assert pytest.approx(0.932, abs=0.05) == m4a["cluster_robust_se"]
+    assert m4a["p_value"] < 0.01  # p = 0.00335
+    
+    m4b = econometric_models[econometric_models["model_specification"].str.contains("Model 4b")].iloc[0]
+    assert pytest.approx(-2.734, abs=0.05) == m4b["coefficient_beta"]
+    assert pytest.approx(0.843, abs=0.05) == m4b["cluster_robust_se"]
+    assert m4b["p_value"] < 0.005  # p = 0.00119
+
+
+def test_text_entry_items_and_reasoning_confounding(item_contrasts):
+    """Verify that the 5 text-entry items are audited and all belong to the Reasoning domain."""
+    expected_text_ids = {"MP51008", "MP61228", "MP61248", "MP61255", "MP61256"}
+    text_items = item_contrasts[item_contrasts["modality"] == "CR: Text / Explanation"]
+    
+    assert set(text_items["item_id"]) == expected_text_ids
+    assert len(text_items) == 5
+    
+    # All 5 items belong to the Reasoning cognitive domain
+    assert (text_items["cognitive_domain"] == "Reasoning").all()
+    
+    # Mean mode penalty is severe (~ -7.13 pp)
+    assert pytest.approx(-7.13, abs=0.1) == text_items["diff_pp"].mean()
+
 

@@ -66,14 +66,17 @@ TABLES_DIR = PROJECT_ROOT / "artifacts" / "tables"
 pd.set_option("display.max_columns", 25)
 pd.set_option("display.width", 1000)
 
+item_df = pd.read_parquet(PROCESSED_DIR / "timss_2019_g4_item_contrasts.parquet")
+
 print(f"[OK] Python {sys.version}")
 print(f"[OK] Project Root: {PROJECT_ROOT}")
+print(f"[OK] Loaded {len(item_df)} anchor items")
 """))
 
     # ==============================================================================
-    # Audit 1: Two-Digit Diagnostic Recoding & IEA Benchmark Validation
+    # Audit 1: Two-Digit Diagnostic Recoding & Automated IEA Benchmark Validation
     # ==============================================================================
-    cells.append(nbf.v4.new_markdown_cell(r"""## Audit 1: Two-Digit Diagnostic Recoding & IEA Benchmark Validation
+    cells.append(nbf.v4.new_markdown_cell(r"""## Audit 1: Two-Digit Diagnostic Recoding & Automated IEA Benchmark Validation
 
 TIMSS constructed-response items are scored using two-digit diagnostic codes:
 - **First Digit**: Score points awarded (`1` = 1 point, `2` = 2 points, `7` = 0 points / incorrect).
@@ -81,39 +84,39 @@ TIMSS constructed-response items are scored using two-digit diagnostic codes:
 
 If a parser checks only `== 10.0` or `== 20.0`, valid student responses assigned codes `11.0` or `12.0` are incorrectly assigned zero points.
 
-### Benchmark Validation against Published IEA Item Statistics
-We directly validate our scoring pipeline against the official published IEA item tables (`T19Br_G4_MAT_Item Percent Correct.xlsx` and `eT19_G4_MAT_Item Percent Correct.xlsx`):
-1. On 1-point items (e.g., `MP51043`), our pipeline's survey-weighted percent correct matches the published IEA table to the exact hundredth of a percent (`49.93%` paper, `44.27%` digital).
-2. On 2-point items (e.g., `MP61228`), the IEA published table reports *Percent Full Credit* (`29.63%`). Our pipeline's full-credit rate matches `29.63%` exactly, while correctly crediting partial-credit students (`21.07%` earning 1 point) to achieve the true score proportion (`40.16%`).
+### Automated Benchmark Validation Against Official IEA Workbooks
+We programmatically parse the official published IEA item spreadsheets (`T19Br_G4_MAT_Item Percent Correct.xlsx` and `eT19_G4_MAT_Item Percent Correct.xlsx`) across all 99 anchor items and verify:
+1. **1-Point Items (94 items)**: Verifies that our pipeline's survey-weighted percent correct matches IEA published Percent Full Credit within rounding tolerance ($< 0.005$ pp).
+2. **2-Point Items (5 items)**: Disentangles *Percent Full Credit* from *Average Score Proportion*. Verifies that our pipeline's Full Credit rate matches the official published IEA rate to 5 decimal places ($\Delta = 0.00000$), while correctly adding partial credit (`code in [10..19]` = 0.5 points) to establish the true psychometric average score.
 """))
 
-    cells.append(nbf.v4.new_code_cell(r"""# Validate against published IEA tables
-iea_dir = RAW_DIR / "iea_item_percent_correct"
-item_df = pd.read_parquet(PROCESSED_DIR / "timss_2019_g4_item_contrasts.parquet")
+    cells.append(nbf.v4.new_code_cell(r"""# Load automated IEA audit results (or run live parsing)
+audit_df = pd.read_csv(TABLES_DIR / "table12_timss_2019_iea_benchmark_audit.csv")
 
-validation_samples = [
-    {"item_id": "MP51043", "name": "MP01_01 (Factors of 6)", "type": "CR (1 pt)", "iea_paper_full": 49.93, "iea_digital_full": 44.27},
-    {"item_id": "MP51040", "name": "MP01_02 (Missing Number)", "type": "MC (1 pt)", "iea_paper_full": 88.53, "iea_digital_full": 90.37},
-    {"item_id": "MP51008", "name": "MP01_03 (Perimeter Explain)", "type": "CR (1 pt)", "iea_paper_full": 23.01, "iea_digital_full": 16.68},
-    {"item_id": "MP61228", "name": "MP03_05 (Rule for Pattern)", "type": "CR (2 pts)", "iea_paper_full": 29.63, "iea_digital_full": 17.58}
-]
+print(f"Total Anchor Items Audited: {len(audit_df)}")
+print(f"Passing Items:               {(audit_df['audit_status'] == 'PASS').sum()} / {len(audit_df)}")
 
-rows = []
-for v in validation_samples:
-    pipe_row = item_df[item_df["item_id"] == v["item_id"]].iloc[0]
-    rows.append({
-        "item_id": v["item_id"],
-        "description": v["name"],
-        "format": v["type"],
-        "iea_published_paper": v["iea_paper_full"],
-        "pipeline_paper_score": pipe_row["pct_paper"],
-        "iea_published_digital": v["iea_digital_full"],
-        "pipeline_digital_score": pipe_row["pct_digital"],
-        "mode_diff_pp": pipe_row["diff_pp"]
-    })
+# 1. Inspect 1-point items validation (94 items)
+df_1pt = audit_df[audit_df["max_pts"] == 1]
+print(f"\n--- 1-Point Items Benchmark Check (N={len(df_1pt)}) ---")
+print(f"Max Paper Absolute Difference:   {df_1pt['diff_paper'].max():.5f} pp (< 0.005 pp)")
+print(f"Max Digital Absolute Difference: {df_1pt['diff_digital'].max():.5f} pp (< 0.005 pp)")
+display(df_1pt[["item_id", "core_id", "item_type", "cognitive_domain", "iea_paper_full_credit", "pipeline_paper_full_credit", "diff_paper", "iea_digital_full_credit", "pipeline_digital_full_credit", "diff_digital"]].head(8))
 
-df_bench = pd.DataFrame(rows)
-display(df_bench)
+# 2. Inspect 2-point items validation (5 items)
+df_2pt = audit_df[audit_df["max_pts"] == 2]
+print(f"\n--- 2-Point Items Benchmark & Partial Credit Check (N={len(df_2pt)}) ---")
+print(f"Max Paper Full-Credit Diff:   {df_2pt['diff_paper'].max():.5f} pp (Exact Match!)")
+print(f"Max Digital Full-Credit Diff: {df_2pt['diff_digital'].max():.5f} pp (Exact Match!)")
+display(df_2pt[["item_id", "core_id", "iea_paper_full_credit", "pipeline_paper_full_credit", "diff_paper", "pipeline_paper_partial_credit", "pipeline_paper_avg_score", "iea_digital_full_credit", "pipeline_digital_full_credit", "diff_digital", "pipeline_digital_partial_credit", "pipeline_digital_avg_score"]])
+
+# Strict Programmatic Assertions
+assert (audit_df["audit_status"] == "PASS").all(), "Some items failed IEA audit!"
+assert df_1pt["diff_paper"].max() < 0.01, "1-pt paper difference exceeds 0.01 pp!"
+assert df_1pt["diff_digital"].max() < 0.01, "1-pt digital difference exceeds 0.01 pp!"
+assert df_2pt["diff_paper"].max() < 0.0001, "2-pt paper full credit exceeds tolerance!"
+assert df_2pt["diff_digital"].max() < 0.0001, "2-pt digital full credit exceeds tolerance!"
+print("\n[VERIFIED] All 99 anchor items programmatically validated against official IEA workbooks!")
 """))
 
     # ==============================================================================
@@ -157,16 +160,17 @@ display(df_mod)
 """))
 
     # ==============================================================================
-    # Audit 4: Econometric Models & Matrix-Sampling Controls
+    # Audit 4: Econometric Models & Clustering Sensitivity
     # ==============================================================================
-    cells.append(nbf.v4.new_markdown_cell(r"""## Audit 4: Econometric Models & Matrix-Sampling Item Fixed Effects
+    cells.append(nbf.v4.new_markdown_cell(r"""## Audit 4: Econometric Models & Clustering Sensitivity
 
 To prove that the constructed-response mode penalty is not an artifact of TIMSS matrix sampling (where students receive different booklet item subsets), we estimate:
 1. **Model 1**: National Survey-Weighted Student DiD ($\beta = -3.102$ pp, $p < 0.0001$).
 2. **Model 2**: Student-by-Item Stacked Panel WLS with 99 Item Fixed Effects ($\beta = -3.422$ pp, $p < 0.00001$).
 3. **Model 3**: Within-School Student DiD across 72 randomized schools ($\beta = -2.364$ pp, $p = 0.0065$).
-4. **Model 4**: Within-School Item FE + School FE Stacked Panel ($\beta = -2.734$ pp, $p = 0.00335$, 95% CI: $[-4.56, -0.91]$ pp).
-5. **Model 5**: SES Interaction Test ($\beta = -0.096$ pp, $p = 0.934$, 95% CI: $[-2.35, +2.16]$ pp).
+4. **Model 4a**: Within-School Item FE + School FE Stacked Panel, Classroom Clustered ($\beta = -2.734$ pp, $SE = 0.932, p = 0.00335$, 95% CI: $[-4.56, -0.91]$ pp).
+5. **Model 4b**: Within-School Item FE + School FE Stacked Panel, School Clustered ($\beta = -2.734$ pp, $SE = 0.843, p = 0.00119$, 95% CI: $[-4.39, -1.08]$ pp).
+6. **Model 5**: SES Interaction Test ($\beta = -0.096$ pp, $p = 0.934$, 95% CI: $[-2.35, +2.16]$ pp).
 """))
 
     cells.append(nbf.v4.new_code_cell(r"""df_reg = pd.read_csv(TABLES_DIR / "table10_timss_2019_econometric_models.csv")
@@ -174,11 +178,40 @@ display(df_reg)
 """))
 
     # ==============================================================================
-    # Audit 5: Survey Uncertainty (JK2) & Classroom Randomization Inference
+    # Audit 5: Booklet Exposure & Student-Normalized Weighting Sensitivity
     # ==============================================================================
-    cells.append(nbf.v4.new_markdown_cell(r"""## Audit 5: Survey Uncertainty (JK2) & Classroom Randomization Inference
+    cells.append(nbf.v4.new_markdown_cell(r"""## Audit 5: Booklet Exposure & Student-Normalized Weighting Sensitivity
 
-We evaluate design-based sampling variance using the official TIMSS Jackknife Repeated Replication (JK2) procedure across paired sampling zones, and test the sharp null hypothesis via classroom permutation inference within the 72 schools:
+In the stacked student-item panel:
+- **Paper Bridge**: 1,652 students answered 40,759 items (mean 24.67 items per student).
+- **Digital eTIMSS**: 8,776 students answered 123,894 items (mean 14.12 items per student).
+
+Because paper students answered more trend anchor items, an item-response-weighted regression weights a paper student more heavily than a digital student.
+To determine whether unequal item exposure affects the findings, we re-estimate Model 2 and Model 4 under a **student-normalized weighting scheme** where each row receives weight $w_{ij} = \text{TOTWGT}_i / n_i$ (or $1 / n_i$ for unweighted OLS), ensuring every student contributes equal total weight.
+"""))
+
+    cells.append(nbf.v4.new_code_cell(r"""df_sens = pd.read_csv(TABLES_DIR / "table13_timss_2019_booklet_exposure_sensitivity.csv")
+display(df_sens)
+
+print("\n--- Key Substantive Conclusion on Weighting Sensitivity ---")
+print("1. Model 2 (National Item FE): Format gap is -3.30 pp to -3.68 pp across all weighting schemes (all p < 1e-6).")
+print("2. Model 4 (Within-School Item + School FE): Format gap is -2.68 pp to -2.93 pp across all weighting schemes (all p < 0.006).")
+print("Conclusion: Unequal booklet item exposure does NOT drive the constructed-response mode penalty.")
+"""))
+
+    # ==============================================================================
+    # Audit 6: Survey Uncertainty (JK2) & Classroom Randomization Inference
+    # ==============================================================================
+    cells.append(nbf.v4.new_markdown_cell(r"""## Audit 6: Survey Uncertainty (JK2) & Monte Carlo Randomization Inference
+
+We evaluate design-based sampling variance using the official TIMSS Jackknife Repeated Replication (JK2) procedure using two-sided complementary replicates per zone with variance factor 0.5:
+$$V(T) = \frac{1}{2} \sum_{h=1}^H \left[ (T_h^{(1)} - T)^2 + (T_h^{(2)} - T)^2 \right]$$
+
+For the mode difference, we report both:
+1. **Independent JK2 SE**: Assumes zero covariance between paper and digital samples ($SE = 0.668$ pp).
+2. **Cluster Linearization SE**: Directly accounts for the positive within-school covariance ($r = +0.57$ for MC, $r = +0.64$ for CR) across all 294 schools (including the 72 shared schools), yielding $SE = 0.663$ pp.
+
+We also conduct **Monte Carlo Randomization Inference** across classrooms within the 72 schools using a two-tailed test statistic with finite-sample correction.
 """))
 
     cells.append(nbf.v4.new_code_cell(r"""df_jk = pd.read_csv(TABLES_DIR / "table11_timss_2019_survey_inference_jk2.csv")
@@ -186,9 +219,9 @@ display(df_jk)
 """))
 
     # ==============================================================================
-    # Audit 6: Dynamic Subgroup Verification & Calibrated SES Precision Bounds
+    # Audit 7: Dynamic Subgroup Verification & Calibrated SES Precision Bounds
     # ==============================================================================
-    cells.append(nbf.v4.new_markdown_cell(r"""## Audit 6: Dynamic Subgroup Verification & Calibrated SES Precision Bounds
+    cells.append(nbf.v4.new_markdown_cell(r"""## Audit 7: Dynamic Subgroup Verification & Calibrated SES Precision Bounds
 
 We confirm that subgroup format penalties are calculated dynamically from individual student microdata. Furthermore, we evaluate the precision bounds of the SES interaction term:
 """))

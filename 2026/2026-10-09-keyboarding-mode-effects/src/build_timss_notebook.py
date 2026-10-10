@@ -214,17 +214,19 @@ display(df_sub)
     # ==============================================================================
     # Cell 9: Econometric Estimation & Hypothesis Testing
     # ==============================================================================
-    cells.append(nbf.v4.new_markdown_cell(r"""## 7. Econometric Estimation: Clustered Survey DiD, Item Fixed Effects, and Within-School Randomization
+    cells.append(nbf.v4.new_markdown_cell(r"""## 7. Econometric Estimation: Clustered Survey DiD, Item Fixed Effects, and Booklet Sensitivity
 
-To account for TIMSS's complex sampling design, matrix-sampled booklet composition, clustering within schools, and within-school classroom assignment, we estimate five formal econometric models:
+To account for TIMSS's complex sampling design, matrix-sampled booklet composition, clustering within schools, and within-school classroom assignment, we estimate formal econometric models and sensitivity checks:
 
 1. **Model 1 (National Survey-Weighted Student DiD)**: Full national sample ($N = 10,417$) with survey sampling weights (`TOTWGT`) clustered at the school level ($\beta = -3.102$ pp, $p < 0.0001$).
 2. **Model 2 (National Item Fixed-Effects Panel WLS)**: Stacked student-by-item panel ($N = 164,653$ responses across 99 items and 294 schools) with 99 item baseline difficulty fixed effects ($\alpha_j$), fully controlling for booklet item composition ($\beta_2 = -3.422$ pp, $p = 3.0 \times 10^{-7}$).
 3. **Model 3 (Within-School Student DiD)**: 72 schools with randomized classroom assignment ($N = 2,726$), controlling for school selection and neighborhood composition via school fixed effects ($\beta = -2.364$ pp, $p = 0.0065$).
-4. **Model 4 (Within-School Item FE + School FE Panel)**: Stacked panel on 72 randomized schools ($N = 53,837$ responses) simultaneously absorbing 99 item fixed effects AND 72 school fixed effects, clustered by classroom ($\beta_2 = -2.734$ pp, $p = 0.00335$, 95% CI: $[-4.56, -0.91]$ pp).
-5. **Model 5 (SES Interaction Test)**: Testing whether mode effects compound among lower-SES students ($\beta = -0.096$ pp, $p = 0.934$, 95% CI: $[-2.35, +2.16]$ pp).
+4. **Model 4a (Within-School Item FE + School FE Panel, Classroom Clustered)**: Stacked panel on 72 randomized schools ($N = 53,837$ responses) simultaneously absorbing 99 item fixed effects AND 72 school fixed effects, clustered by 147 classrooms ($\beta_2 = -2.734$ pp, $SE = 0.932, p = 0.00335$, 95% CI: $[-4.56, -0.91]$ pp).
+5. **Model 4b (Within-School Item FE + School FE Panel, School Clustered)**: Clustered conservatively at the school level across the 72 schools ($\beta_2 = -2.734$ pp, $SE = 0.843, p = 0.00119$, 95% CI: $[-4.39, -1.08]$ pp).
+6. **Model 5 (SES Interaction Test)**: Testing whether mode effects compound among lower-SES students ($\beta = -0.096$ pp, $p = 0.934$, 95% CI: $[-2.35, +2.16]$ pp).
 
-Additionally, Table 11 reports survey-design uncertainty estimated via TIMSS Jackknife Repeated Replication (JK2 with 75 digital and 42 paper zones), yielding a design-based DiD standard error of $0.668$ pp ($t = -4.64, p < 0.00001$). Within the 72 schools, exact classroom randomization inference across 2,000 permutations confirms that the within-school penalty is statistically significant ($p = 0.0380$).
+### Design-Based Inference & Randomization Inference
+Table 11 reports survey-design uncertainty estimated via TIMSS Jackknife Repeated Replication (JK2 using official two-sided complementary replicates per zone with factor 0.5), yielding an independent JK2 DiD standard error of $0.668$ pp. Cluster linearization accounting for positive within-school covariance across all 294 schools yields $SE = 0.663$ pp ($t = -4.68, p < 0.00001$). Within the 72 schools, Monte Carlo randomization inference across 2,000 permutations confirms that the within-school classroom contrast is statistically significant ($p = 0.0400$ two-tailed, finite-sample corrected).
 """))
 
     cells.append(nbf.v4.new_code_cell(r"""df_reg = pd.read_csv(TABLES_DIR / "table10_timss_2019_econometric_models.csv")
@@ -233,10 +235,14 @@ display(df_reg)
 df_jk = pd.read_csv(TABLES_DIR / "table11_timss_2019_survey_inference_jk2.csv")
 print("\n--- TIMSS Jackknife Repeated Replication (JK2 Design-Based Standard Errors) ---")
 display(df_jk)
+
+df_sens = pd.read_csv(TABLES_DIR / "table13_timss_2019_booklet_exposure_sensitivity.csv")
+print("\n--- Matrix-Sampling Booklet Exposure & Weighting Sensitivity (Table 13) ---")
+display(df_sens)
 """))
 
     cells.append(nbf.v4.new_markdown_cell(r"""### Figure 7: Testing the Equity Gradient and Within-School Randomization
-*Panel A shows that scale score differences are near-parallel across home book strata. Panel B shows that the constructed-response mode penalty is indistinguishable between Low SES (-3.17 pp) and High SES (-3.07 pp) with a null interaction (p=0.934, 95% CI [-2.35, +2.16] pp). Panel C displays the within-school randomized classroom contrast across the 72 schools with descriptive differences and rigorous fixed-effects models.*
+*Panel A shows that scale score differences are near-parallel across home book strata. Panel B shows that the constructed-response mode penalty is indistinguishable between Low SES (-3.17 pp) and High SES (-3.07 pp) with a null interaction (p=0.934, 95% CI [-2.35, +2.16] pp). Panel C displays the unweighted descriptive differences across the 72 schools with descriptive gap (-2.36 pp), student FE model (beta = -2.36 pp), stacked item+school FE model (beta = -2.73 pp, p=0.0034), and Monte Carlo classroom permutation test (p=0.0400).*
 """))
 
     cells.append(nbf.v4.new_code_cell(r"""Image(filename=str(FIGURES_DIR / "fig7_timss_equity_and_counterarguments.png"))
@@ -247,11 +253,14 @@ display(df_jk)
     # ==============================================================================
     cells.append(nbf.v4.new_markdown_cell(r"""## 8. Discussion & Synthesis: Answering the Three Research Questions
 
+### Calibrated Synthesis
+> **Defensible Empirical Conclusion**: Using U.S. fourth-grade TIMSS 2019 paper-bridge and digital assessment data, we find larger negative digital-versus-paper performance differences on constructed-response mathematics items than on multiple-choice items. The difference remains negative when controlling for item and school characteristics within schools represented in both modes ($-2.73$ pp, $p = 0.00335$ classroom-clustered; $p = 0.00119$ school-clustered; Monte Carlo classroom permutation $p = 0.0400$). The results are consistent with additional digital response-format demands, although their mechanism, precise magnitude, and nationally representative uncertainty require further validation.
+
 ### Question 1: Does the digital assessment penalty differ by question format?
-**Confirmed.** Across 99 common items, Multiple Choice items exhibit near-parity ($-0.47\text{ pp}$), while Constructed Response items suffer a statistically significant and substantial penalty ($-3.90\text{ pp}$), yielding a **$-3.42\text{ pp}$ format gap** ($t = -3.80$). Crucially, **booklet matrix sampling does not explain this gap**: in student-by-item regressions absorbing 99 item fixed effects, the interaction is **$-3.42\text{ pp}$** ($p < 0.00001$). Controlling for school fixed effects across 72 randomized schools, the penalty remains **$-2.36\text{ pp}$** ($p = 0.0065$). Absorbing both 99 item fixed effects and 72 school fixed effects simultaneously, the penalty is **$-2.73\text{ pp}$** ($p = 0.00335$ clustered by classroom; randomization permutation $p = 0.0380$).
+**Confirmed.** Across 99 common items, Multiple Choice items exhibit near-parity ($-0.47\text{ pp}$), while Constructed Response items suffer a statistically significant and substantial penalty ($-3.90\text{ pp}$), yielding a **$-3.42\text{ pp}$ format gap** ($t = -3.80$). Crucially, **booklet matrix sampling does not explain this gap**: in student-by-item regressions absorbing 99 item fixed effects, the interaction is **$-3.42\text{ pp}$** ($p < 0.00001$), and remains **$-3.30$ to $-3.68\text{ pp}$** whether using row-level or student-normalized weights. Controlling for school fixed effects across 72 randomized schools, the penalty remains **$-2.36\text{ pp}$** ($p = 0.0065$). Absorbing both 99 item fixed effects and 72 school fixed effects simultaneously, the penalty is **$-2.73\text{ pp}$** ($p = 0.00335$ clustered by classroom, $p = 0.00119$ clustered by school; student-normalized $\beta = -2.68$ pp to $-2.83$ pp).
 
 ### Question 2: Is the penalty driven by cognitive ability or interface friction?
-**Interface Friction & Reasoning Confounding.** When fourth graders answer higher-order **Reasoning** items via multiple-choice radio buttons, their performance is $+2.61\text{ pp}$ higher on computer than on paper. But when answering Reasoning items requiring constructed explanations, their performance collapses by $-7.54\text{ pp}$, producing an acute **$-10.14\text{ pp}$ Reasoning wedge**. Across input modalities, the penalty appears monotonic: Multiple Choice ($-0.47$ pp) $\to$ Drawing ($-3.10$ pp) $\to$ Keypad ($-3.80$ pp) $\to$ Typed Text ($-7.13$ pp). However, because all 5 text items belong to the Reasoning domain, input modality is confounded with cognitive difficulty, and this taxonomy should be interpreted as provisional and exploratory.
+**Interface Friction & Reasoning Confounding.** When fourth graders answer higher-order **Reasoning** items via multiple-choice radio buttons, their performance is $+2.61\text{ pp}$ higher on computer than on paper. But when answering Reasoning items requiring constructed explanations, their performance collapses by $-7.54\text{ pp}$, producing an acute **$-10.14\text{ pp}$ Reasoning wedge**. Across input modalities, the penalty appears monotonic: Multiple Choice ($-0.47$ pp) $\to$ Drawing ($-3.10$ pp) $\to$ Keypad ($-3.80$ pp) $\to$ Typed Text ($-7.13$ pp). However, because all 5 text items belong to the Reasoning domain (`MP51008`, `MP61228`, `MP61248`, `MP61255`, `MP61256`), input modality is confounded with cognitive difficulty, and this taxonomy should be interpreted as provisional and exploratory.
 
 ### Question 3: Are penalties larger for low-SES or under-resourced students?
 **No Detectable Moderation.** The mode penalty on constructed response is statistically indistinguishable across socioeconomic status: **$-3.17\text{ pp}$** for Low-SES students vs. **$-3.07\text{ pp}$** for High-SES students. The interaction coefficient in Model 5 is $\beta = -0.096\text{ pp}$ ($p = 0.934$). However, the 95% confidence interval ($[-2.35, +2.16]$ pp) does not rule out educationally meaningful heterogeneity up to $\pm 2.2$ pp. Rather than proving complete invariance, the empirical evidence demonstrates a lack of detectable moderation by home SES.

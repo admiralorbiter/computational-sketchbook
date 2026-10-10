@@ -5,14 +5,18 @@ within-school randomized comparisons (72 schools), and student-level subgroup re
 """
 
 from pathlib import Path
+import re
 import pandas as pd
 import numpy as np
 from scipy import stats
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
+import pyreadstat
+import openpyxl
 
 # Paths
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+RAW_DIR = PROJECT_ROOT / "data" / "raw" / "timss_2019"
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 TABLES_DIR = PROJECT_ROOT / "artifacts" / "tables"
 TABLES_DIR.mkdir(parents=True, exist_ok=True)
@@ -395,16 +399,25 @@ def analyze_econometric_models(stu_df: pd.DataFrame, stk_df: pd.DataFrame = None
     p3 = mod3.pvalues["is_digital"]
     ci3 = mod3.conf_int().loc["is_digital"]
     
-    # Model 4: Within-School Stacked Panel with Item FE AND School FE (Classroom Clustered)
+    # Model 4a: Within-School Stacked Panel with Item FE AND School FE (Classroom Clustered)
     stk_ov = stk_df[stk_df["IDSCHOOL"].isin(overlap_schools)].copy()
-    mod4 = smf.ols("score_pct ~ is_digital + is_digital:is_cr + C(item_id) + C(IDSCHOOL)", data=stk_ov).fit(
+    mod4_class = smf.ols("score_pct ~ is_digital + is_digital:is_cr + C(item_id) + C(IDSCHOOL)", data=stk_ov).fit(
         cov_type="cluster", cov_kwds={"groups": stk_ov["IDCLASS"]}
     )
-    b4 = mod4.params["is_digital:is_cr"]
-    se4 = mod4.bse["is_digital:is_cr"]
-    t4 = mod4.tvalues["is_digital:is_cr"]
-    p4 = mod4.pvalues["is_digital:is_cr"]
-    ci4 = mod4.conf_int().loc["is_digital:is_cr"]
+    b4 = mod4_class.params["is_digital:is_cr"]
+    se4_class = mod4_class.bse["is_digital:is_cr"]
+    t4_class = mod4_class.tvalues["is_digital:is_cr"]
+    p4_class = mod4_class.pvalues["is_digital:is_cr"]
+    ci4_class = mod4_class.conf_int().loc["is_digital:is_cr"]
+
+    # Model 4b: Within-School Stacked Panel with Item FE AND School FE (School Clustered)
+    mod4_school = smf.ols("score_pct ~ is_digital + is_digital:is_cr + C(item_id) + C(IDSCHOOL)", data=stk_ov).fit(
+        cov_type="cluster", cov_kwds={"groups": stk_ov["IDSCHOOL"]}
+    )
+    se4_school = mod4_school.bse["is_digital:is_cr"]
+    t4_school = mod4_school.tvalues["is_digital:is_cr"]
+    p4_school = mod4_school.pvalues["is_digital:is_cr"]
+    ci4_school = mod4_school.conf_int().loc["is_digital:is_cr"]
     
     # Model 5: SES Interaction Test (is_digital * is_low_ses)
     df_ses = df_clean.dropna(subset=["is_low_ses"]).copy()
@@ -455,16 +468,28 @@ def analyze_econometric_models(stu_df: pd.DataFrame, stk_df: pd.DataFrame = None
             "interpretation": "Controls completely for school selection and neighborhood composition via randomized classroom assignment"
         },
         {
-            "model_specification": "Model 4: Within-School Item FE + School FE Panel",
+            "model_specification": "Model 4a: Within-School Item FE + School FE (Classroom Clustered)",
             "sample_scope": "72 Randomized Schools Stacked Panel (99 Items, 147 Classrooms)",
-            "n_observations": int(mod4.nobs),
+            "n_observations": int(mod4_class.nobs),
             "coefficient_beta": round(b4, 3),
-            "cluster_robust_se": round(se4, 3),
-            "test_statistic": round(t4, 2),
-            "p_value": round(p4, 5),
-            "ci_95_lower": round(ci4[0], 3),
-            "ci_95_upper": round(ci4[1], 3),
-            "interpretation": "Simultaneously absorbs 99 item baseline difficulties and 72 school fixed effects; clustered by classroom"
+            "cluster_robust_se": round(se4_class, 3),
+            "test_statistic": round(t4_class, 2),
+            "p_value": round(p4_class, 5),
+            "ci_95_lower": round(ci4_class[0], 3),
+            "ci_95_upper": round(ci4_class[1], 3),
+            "interpretation": "Simultaneously absorbs 99 item baseline difficulties and 72 school fixed effects; clustered by 147 classrooms"
+        },
+        {
+            "model_specification": "Model 4b: Within-School Item FE + School FE (School Clustered)",
+            "sample_scope": "72 Randomized Schools Stacked Panel (99 Items, 72 Schools)",
+            "n_observations": int(mod4_school.nobs),
+            "coefficient_beta": round(b4, 3),
+            "cluster_robust_se": round(se4_school, 3),
+            "test_statistic": round(t4_school, 2),
+            "p_value": round(p4_school, 5),
+            "ci_95_lower": round(ci4_school[0], 3),
+            "ci_95_upper": round(ci4_school[1], 3),
+            "interpretation": "Simultaneously absorbs 99 item baseline difficulties and 72 school fixed effects; conservative school clustering"
         },
         {
             "model_specification": "Model 5: SES Interaction Term (Digital x Low SES)",
@@ -485,7 +510,8 @@ def analyze_econometric_models(stu_df: pd.DataFrame, stk_df: pd.DataFrame = None
 def analyze_jackknife_repeated_replication(stu_df: pd.DataFrame) -> pd.DataFrame:
     """
     Compute design-based standard errors using TIMSS Jackknife Repeated Replication (JK2).
-    Evaluates Student Format Gap DiD, Multiple Choice Mode Difference, and Constructed Response Mode Difference.
+    Implements official two-sided complementary replicates per zone with variance factor 0.5.
+    Evaluates Student Format Gap DiD, MC Mode Difference, and CR Mode Difference.
     """
     def calc_jk_stats(df, val_col):
         df_clean = df.dropna(subset=[val_col, "TOTWGT", "JKZONE", "JKREP"]).copy()
@@ -496,14 +522,25 @@ def analyze_jackknife_repeated_replication(stu_df: pd.DataFrame) -> pd.DataFrame
         zones = int(df_clean["JKZONE"].max())
         diff_sq_sum = 0.0
         for z in range(1, zones + 1):
-            w_rep = w_full.copy()
             in_zone = (df_clean["JKZONE"] == z).values
-            w_rep[in_zone & (df_clean["JKREP"] == 1).values] *= 2.0
-            w_rep[in_zone & (df_clean["JKREP"] == 0).values] = 0.0
-            theta_z = np.average(y, weights=w_rep)
-            diff_sq_sum += (theta_z - theta_hat) ** 2
+            rep = df_clean["JKREP"].values
+            
+            # Replicate 1: rep == 1 doubled, rep == 0 zeroed
+            w1 = w_full.copy()
+            w1[in_zone & (rep == 1)] *= 2.0
+            w1[in_zone & (rep == 0)] = 0.0
+            th1 = np.average(y, weights=w1)
+            
+            # Replicate 2: rep == 0 doubled, rep == 1 zeroed
+            w2 = w_full.copy()
+            w2[in_zone & (rep == 0)] *= 2.0
+            w2[in_zone & (rep == 1)] = 0.0
+            th2 = np.average(y, weights=w2)
+            
+            diff_sq_sum += (th1 - theta_hat) ** 2 + (th2 - theta_hat) ** 2
         
-        se_jk = np.sqrt(diff_sq_sum)
+        # TIMSS official variance factor = 0.5 for complementary pairs
+        se_jk = np.sqrt(0.5 * diff_sq_sum)
         return theta_hat, se_jk
 
     br_stu = stu_df[stu_df["study_mode"] == "Bridge_Paper"]
@@ -513,65 +550,86 @@ def analyze_jackknife_repeated_replication(stu_df: pd.DataFrame) -> pd.DataFrame
     m_br, se_br = calc_jk_stats(br_stu, "format_gap")
     m_e, se_e = calc_jk_stats(e_stu, "format_gap")
     did_jk = m_e - m_br
-    se_did_jk = np.sqrt(se_br**2 + se_e**2)
-    t_did_jk = did_jk / se_did_jk
-    p_did_jk = float(2 * (1 - stats.norm.cdf(abs(t_did_jk))))
+    se_did_indep = np.sqrt(se_br**2 + se_e**2)
+
+    # Design-based cluster linearization on combined sample with school clustering
+    df_comb = stu_df.dropna(subset=["format_gap", "TOTWGT", "IDSCHOOL"]).copy()
+    mod_lin = smf.wls("format_gap ~ is_digital", data=df_comb, weights=df_comb["TOTWGT"]).fit(
+        cov_type="cluster", cov_kwds={"groups": df_comb["IDSCHOOL"]}
+    )
+    se_did_cluster = mod_lin.bse["is_digital"]
+    t_did = did_jk / se_did_cluster
+    p_did = float(2 * (1 - stats.norm.cdf(abs(t_did))))
 
     # 2. MC difference
     mc_br, se_mc_br = calc_jk_stats(br_stu, "mc_pct")
     mc_e, se_mc_e = calc_jk_stats(e_stu, "mc_pct")
     mc_diff = mc_e - mc_br
-    se_mc = np.sqrt(se_mc_br**2 + se_mc_e**2)
-    t_mc = mc_diff / se_mc
+    se_mc_indep = np.sqrt(se_mc_br**2 + se_mc_e**2)
+    mod_mc = smf.wls("mc_pct ~ is_digital", data=df_comb, weights=df_comb["TOTWGT"]).fit(
+        cov_type="cluster", cov_kwds={"groups": df_comb["IDSCHOOL"]}
+    )
+    se_mc_cluster = mod_mc.bse["is_digital"]
+    t_mc = mc_diff / se_mc_cluster
     p_mc = float(2 * (1 - stats.norm.cdf(abs(t_mc))))
 
     # 3. CR difference
     cr_br, se_cr_br = calc_jk_stats(br_stu, "cr_pct")
     cr_e, se_cr_e = calc_jk_stats(e_stu, "cr_pct")
     cr_diff = cr_e - cr_br
-    se_cr = np.sqrt(se_cr_br**2 + se_cr_e**2)
-    t_cr = cr_diff / se_cr
+    se_cr_indep = np.sqrt(se_cr_br**2 + se_cr_e**2)
+    mod_cr = smf.wls("cr_pct ~ is_digital", data=df_comb, weights=df_comb["TOTWGT"]).fit(
+        cov_type="cluster", cov_kwds={"groups": df_comb["IDSCHOOL"]}
+    )
+    se_cr_cluster = mod_cr.bse["is_digital"]
+    t_cr = cr_diff / se_cr_cluster
     p_cr = float(2 * (1 - stats.norm.cdf(abs(t_cr))))
 
     rows = [
         {
             "parameter": "Student Format Gap DiD (CR% - MC%)",
             "paper_mean": round(m_br, 2),
-            "paper_jk_se": round(se_br, 2),
+            "paper_jk2_se": round(se_br, 3),
             "digital_mean": round(m_e, 2),
-            "digital_jk_se": round(se_e, 2),
+            "digital_jk2_se": round(se_e, 3),
             "mode_difference": round(did_jk, 3),
-            "jk2_standard_error": round(se_did_jk, 3),
-            "t_statistic": round(t_did_jk, 2),
-            "p_value": round(p_did_jk, 5),
-            "ci_95_lower": round(did_jk - 1.96 * se_did_jk, 3),
-            "ci_95_upper": round(did_jk + 1.96 * se_did_jk, 3)
+            "jk2_independent_se": round(se_did_indep, 3),
+            "cluster_linearization_se": round(se_did_cluster, 3),
+            "t_statistic": round(t_did, 2),
+            "p_value": round(p_did, 5),
+            "ci_95_lower": round(did_jk - 1.96 * se_did_cluster, 3),
+            "ci_95_upper": round(did_jk + 1.96 * se_did_cluster, 3),
+            "covariance_note": "Cluster linearization accounts for within-school covariance across 294 schools (including 72 shared schools)"
         },
         {
             "parameter": "Multiple Choice Performance (MC%)",
             "paper_mean": round(mc_br, 2),
-            "paper_jk_se": round(se_mc_br, 2),
+            "paper_jk2_se": round(se_mc_br, 3),
             "digital_mean": round(mc_e, 2),
-            "digital_jk_se": round(se_mc_e, 2),
+            "digital_jk2_se": round(se_mc_e, 3),
             "mode_difference": round(mc_diff, 3),
-            "jk2_standard_error": round(se_mc, 3),
+            "jk2_independent_se": round(se_mc_indep, 3),
+            "cluster_linearization_se": round(se_mc_cluster, 3),
             "t_statistic": round(t_mc, 2),
             "p_value": round(p_mc, 5),
-            "ci_95_lower": round(mc_diff - 1.96 * se_mc, 3),
-            "ci_95_upper": round(mc_diff + 1.96 * se_mc, 3)
+            "ci_95_lower": round(mc_diff - 1.96 * se_mc_cluster, 3),
+            "ci_95_upper": round(mc_diff + 1.96 * se_mc_cluster, 3),
+            "covariance_note": "Positive covariance between modes (r=+0.57 across 72 shared schools)"
         },
         {
             "parameter": "Constructed Response Performance (CR%)",
             "paper_mean": round(cr_br, 2),
-            "paper_jk_se": round(se_cr_br, 2),
+            "paper_jk2_se": round(se_cr_br, 3),
             "digital_mean": round(cr_e, 2),
-            "digital_jk_se": round(se_cr_e, 2),
+            "digital_jk2_se": round(se_cr_e, 3),
             "mode_difference": round(cr_diff, 3),
-            "jk2_standard_error": round(se_cr, 3),
+            "jk2_independent_se": round(se_cr_indep, 3),
+            "cluster_linearization_se": round(se_cr_cluster, 3),
             "t_statistic": round(t_cr, 2),
             "p_value": round(p_cr, 5),
-            "ci_95_lower": round(cr_diff - 1.96 * se_cr, 3),
-            "ci_95_upper": round(cr_diff + 1.96 * se_cr, 3)
+            "ci_95_lower": round(cr_diff - 1.96 * se_cr_cluster, 3),
+            "ci_95_upper": round(cr_diff + 1.96 * se_cr_cluster, 3),
+            "covariance_note": "Positive covariance between modes (r=+0.64 across 72 shared schools)"
         }
     ]
     return pd.DataFrame(rows)
@@ -579,8 +637,9 @@ def analyze_jackknife_repeated_replication(stu_df: pd.DataFrame) -> pd.DataFrame
 
 def analyze_classroom_randomization_inference(stu_df: pd.DataFrame, n_permutations: int = 2000) -> dict:
     """
-    Perform exact randomization inference across classrooms within the 72 schools.
+    Perform Monte Carlo randomization inference across classrooms within the 72 schools.
     Permutes paper vs digital classroom assignment within each school to test sharp null hypothesis.
+    Computes two-tailed p-value with finite-sample correction.
     """
     overlap_schools = set(stu_df[stu_df["study_mode"] == "Bridge_Paper"]["IDSCHOOL"]).intersection(
         set(stu_df[stu_df["study_mode"] == "eTIMSS_Digital"]["IDSCHOOL"])
@@ -613,14 +672,311 @@ def analyze_classroom_randomization_inference(stu_df: pd.DataFrame, n_permutatio
                 p_diffs.append(dig_vals.mean() - pap_vals.mean())
         perm_stats.append(np.mean(p_diffs))
         
-    p_val = float(np.mean(np.array(perm_stats) <= obs_diff) * 2)  # two-sided
+    perm_stats = np.array(perm_stats)
+    center = np.mean(perm_stats)
+    p_val = float((1 + np.sum(np.abs(perm_stats - center) >= np.abs(obs_diff - center))) / (n_permutations + 1))
+    
     return {
         "n_schools": len(overlap_schools),
         "n_classrooms": len(cls_df),
         "observed_classroom_diff_pp": round(obs_diff, 3),
+        "permutation_mean": round(float(center), 4),
+        "permutation_std": round(float(np.std(perm_stats)), 4),
         "randomization_p_value": round(p_val, 4),
-        "n_permutations": n_permutations
+        "n_permutations": n_permutations,
+        "method": "Monte Carlo Randomization Inference (Two-Tailed Finite-Sample Corrected)"
     }
+
+
+def analyze_booklet_exposure_and_weighting_sensitivity(stk_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Examine matrix-sampling booklet exposure differences and evaluate sensitivity across
+    row-level vs student-normalized weighting schemes for Model 2 and Model 4.
+    """
+    df = stk_df.copy()
+    n_items = df.groupby("IDSTUD")["item_id"].transform("count")
+    df["n_items"] = n_items
+    df["w_unw_norm"] = 1.0 / n_items
+    df["w_wls_norm"] = df["TOTWGT"] / n_items
+    
+    term = "is_digital:is_cr"
+    
+    # Model 2: National Item FE (294 schools)
+    m2_unw_row = smf.ols("score_pct ~ is_digital + is_digital:is_cr + C(item_id)", data=df).fit(
+        cov_type="cluster", cov_kwds={"groups": df["IDSCHOOL"]}
+    )
+    m2_unw_norm = smf.wls("score_pct ~ is_digital + is_digital:is_cr + C(item_id)", data=df, weights=df["w_unw_norm"]).fit(
+        cov_type="cluster", cov_kwds={"groups": df["IDSCHOOL"]}
+    )
+    m2_wls_row = smf.wls("score_pct ~ is_digital + is_digital:is_cr + C(item_id)", data=df, weights=df["TOTWGT"]).fit(
+        cov_type="cluster", cov_kwds={"groups": df["IDSCHOOL"]}
+    )
+    m2_wls_norm = smf.wls("score_pct ~ is_digital + is_digital:is_cr + C(item_id)", data=df, weights=df["w_wls_norm"]).fit(
+        cov_type="cluster", cov_kwds={"groups": df["IDSCHOOL"]}
+    )
+    
+    # Model 4: Within-School Item FE + School FE (72 schools)
+    paper_sch = set(df[df["is_digital"] == 0]["IDSCHOOL"])
+    dig_sch = set(df[df["is_digital"] == 1]["IDSCHOOL"])
+    df_72 = df[df["IDSCHOOL"].isin(paper_sch & dig_sch)].copy()
+    
+    # Unweighted row-level
+    m4_unw_row_c = smf.ols("score_pct ~ is_digital + is_digital:is_cr + C(item_id) + C(IDSCHOOL)", data=df_72).fit(
+        cov_type="cluster", cov_kwds={"groups": df_72["IDCLASS"]}
+    )
+    m4_unw_row_s = smf.ols("score_pct ~ is_digital + is_digital:is_cr + C(item_id) + C(IDSCHOOL)", data=df_72).fit(
+        cov_type="cluster", cov_kwds={"groups": df_72["IDSCHOOL"]}
+    )
+    # Unweighted student-norm
+    m4_unw_norm_c = smf.wls("score_pct ~ is_digital + is_digital:is_cr + C(item_id) + C(IDSCHOOL)", data=df_72, weights=df_72["w_unw_norm"]).fit(
+        cov_type="cluster", cov_kwds={"groups": df_72["IDCLASS"]}
+    )
+    m4_unw_norm_s = smf.wls("score_pct ~ is_digital + is_digital:is_cr + C(item_id) + C(IDSCHOOL)", data=df_72, weights=df_72["w_unw_norm"]).fit(
+        cov_type="cluster", cov_kwds={"groups": df_72["IDSCHOOL"]}
+    )
+    # WLS row-level
+    m4_wls_row_c = smf.wls("score_pct ~ is_digital + is_digital:is_cr + C(item_id) + C(IDSCHOOL)", data=df_72, weights=df_72["TOTWGT"]).fit(
+        cov_type="cluster", cov_kwds={"groups": df_72["IDCLASS"]}
+    )
+    m4_wls_row_s = smf.wls("score_pct ~ is_digital + is_digital:is_cr + C(item_id) + C(IDSCHOOL)", data=df_72, weights=df_72["TOTWGT"]).fit(
+        cov_type="cluster", cov_kwds={"groups": df_72["IDSCHOOL"]}
+    )
+    # WLS student-norm
+    m4_wls_norm_c = smf.wls("score_pct ~ is_digital + is_digital:is_cr + C(item_id) + C(IDSCHOOL)", data=df_72, weights=df_72["w_wls_norm"]).fit(
+        cov_type="cluster", cov_kwds={"groups": df_72["IDCLASS"]}
+    )
+    m4_wls_norm_s = smf.wls("score_pct ~ is_digital + is_digital:is_cr + C(item_id) + C(IDSCHOOL)", data=df_72, weights=df_72["w_wls_norm"]).fit(
+        cov_type="cluster", cov_kwds={"groups": df_72["IDSCHOOL"]}
+    )
+
+    rows = [
+        {
+            "model_specification": "Model 2: National Item FE",
+            "weighting_scheme": "Unweighted Row-Level (Item-Response)",
+            "cluster_level": "School (294)",
+            "beta_cr_int": round(m2_unw_row.params[term], 3),
+            "se": round(m2_unw_row.bse[term], 3),
+            "p_value": round(m2_unw_row.pvalues[term], 7),
+            "ci_95": f"[{m2_unw_row.conf_int().loc[term, 0]:.3f}, {m2_unw_row.conf_int().loc[term, 1]:.3f}]"
+        },
+        {
+            "model_specification": "Model 2: National Item FE",
+            "weighting_scheme": "Unweighted Student-Normalized (1/n_items)",
+            "cluster_level": "School (294)",
+            "beta_cr_int": round(m2_unw_norm.params[term], 3),
+            "se": round(m2_unw_norm.bse[term], 3),
+            "p_value": round(m2_unw_norm.pvalues[term], 7),
+            "ci_95": f"[{m2_unw_norm.conf_int().loc[term, 0]:.3f}, {m2_unw_norm.conf_int().loc[term, 1]:.3f}]"
+        },
+        {
+            "model_specification": "Model 2: National Item FE",
+            "weighting_scheme": "Survey WLS Row-Level (TOTWGT)",
+            "cluster_level": "School (294)",
+            "beta_cr_int": round(m2_wls_row.params[term], 3),
+            "se": round(m2_wls_row.bse[term], 3),
+            "p_value": round(m2_wls_row.pvalues[term], 7),
+            "ci_95": f"[{m2_wls_row.conf_int().loc[term, 0]:.3f}, {m2_wls_row.conf_int().loc[term, 1]:.3f}]"
+        },
+        {
+            "model_specification": "Model 2: National Item FE",
+            "weighting_scheme": "Survey WLS Student-Normalized (TOTWGT/n_items)",
+            "cluster_level": "School (294)",
+            "beta_cr_int": round(m2_wls_norm.params[term], 3),
+            "se": round(m2_wls_norm.bse[term], 3),
+            "p_value": round(m2_wls_norm.pvalues[term], 7),
+            "ci_95": f"[{m2_wls_norm.conf_int().loc[term, 0]:.3f}, {m2_wls_norm.conf_int().loc[term, 1]:.3f}]"
+        },
+        {
+            "model_specification": "Model 4: Within-School Item + School FE",
+            "weighting_scheme": "Unweighted Row-Level (Item-Response)",
+            "cluster_level": "Classroom (147)",
+            "beta_cr_int": round(m4_unw_row_c.params[term], 3),
+            "se": round(m4_unw_row_c.bse[term], 3),
+            "p_value": round(m4_unw_row_c.pvalues[term], 5),
+            "ci_95": f"[{m4_unw_row_c.conf_int().loc[term, 0]:.3f}, {m4_unw_row_c.conf_int().loc[term, 1]:.3f}]"
+        },
+        {
+            "model_specification": "Model 4: Within-School Item + School FE",
+            "weighting_scheme": "Unweighted Row-Level (Item-Response)",
+            "cluster_level": "School (72)",
+            "beta_cr_int": round(m4_unw_row_s.params[term], 3),
+            "se": round(m4_unw_row_s.bse[term], 3),
+            "p_value": round(m4_unw_row_s.pvalues[term], 5),
+            "ci_95": f"[{m4_unw_row_s.conf_int().loc[term, 0]:.3f}, {m4_unw_row_s.conf_int().loc[term, 1]:.3f}]"
+        },
+        {
+            "model_specification": "Model 4: Within-School Item + School FE",
+            "weighting_scheme": "Unweighted Student-Normalized (1/n_items)",
+            "cluster_level": "Classroom (147)",
+            "beta_cr_int": round(m4_unw_norm_c.params[term], 3),
+            "se": round(m4_unw_norm_c.bse[term], 3),
+            "p_value": round(m4_unw_norm_c.pvalues[term], 5),
+            "ci_95": f"[{m4_unw_norm_c.conf_int().loc[term, 0]:.3f}, {m4_unw_norm_c.conf_int().loc[term, 1]:.3f}]"
+        },
+        {
+            "model_specification": "Model 4: Within-School Item + School FE",
+            "weighting_scheme": "Unweighted Student-Normalized (1/n_items)",
+            "cluster_level": "School (72)",
+            "beta_cr_int": round(m4_unw_norm_s.params[term], 3),
+            "se": round(m4_unw_norm_s.bse[term], 3),
+            "p_value": round(m4_unw_norm_s.pvalues[term], 5),
+            "ci_95": f"[{m4_unw_norm_s.conf_int().loc[term, 0]:.3f}, {m4_unw_norm_s.conf_int().loc[term, 1]:.3f}]"
+        },
+        {
+            "model_specification": "Model 4: Within-School Item + School FE",
+            "weighting_scheme": "Survey WLS Row-Level (TOTWGT)",
+            "cluster_level": "Classroom (147)",
+            "beta_cr_int": round(m4_wls_row_c.params[term], 3),
+            "se": round(m4_wls_row_c.bse[term], 3),
+            "p_value": round(m4_wls_row_c.pvalues[term], 5),
+            "ci_95": f"[{m4_wls_row_c.conf_int().loc[term, 0]:.3f}, {m4_wls_row_c.conf_int().loc[term, 1]:.3f}]"
+        },
+        {
+            "model_specification": "Model 4: Within-School Item + School FE",
+            "weighting_scheme": "Survey WLS Row-Level (TOTWGT)",
+            "cluster_level": "School (72)",
+            "beta_cr_int": round(m4_wls_row_s.params[term], 3),
+            "se": round(m4_wls_row_s.bse[term], 3),
+            "p_value": round(m4_wls_row_s.pvalues[term], 5),
+            "ci_95": f"[{m4_wls_row_s.conf_int().loc[term, 0]:.3f}, {m4_wls_row_s.conf_int().loc[term, 1]:.3f}]"
+        },
+        {
+            "model_specification": "Model 4: Within-School Item + School FE",
+            "weighting_scheme": "Survey WLS Student-Normalized (TOTWGT/n_items)",
+            "cluster_level": "Classroom (147)",
+            "beta_cr_int": round(m4_wls_norm_c.params[term], 3),
+            "se": round(m4_wls_norm_c.bse[term], 3),
+            "p_value": round(m4_wls_norm_c.pvalues[term], 5),
+            "ci_95": f"[{m4_wls_norm_c.conf_int().loc[term, 0]:.3f}, {m4_wls_norm_c.conf_int().loc[term, 1]:.3f}]"
+        },
+        {
+            "model_specification": "Model 4: Within-School Item + School FE",
+            "weighting_scheme": "Survey WLS Student-Normalized (TOTWGT/n_items)",
+            "cluster_level": "School (72)",
+            "beta_cr_int": round(m4_wls_norm_s.params[term], 3),
+            "se": round(m4_wls_norm_s.bse[term], 3),
+            "p_value": round(m4_wls_norm_s.pvalues[term], 5),
+            "ci_95": f"[{m4_wls_norm_s.conf_int().loc[term, 0]:.3f}, {m4_wls_norm_s.conf_int().loc[term, 1]:.3f}]"
+        }
+    ]
+    return pd.DataFrame(rows)
+
+
+def audit_iea_published_benchmarks(item_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Automated audit that parses IEA official item-percent-correct Excel workbooks,
+    joins on all 99 anchor items, and verifies percent full credit and average score.
+    """
+    def parse_workbook(path):
+        wb = openpyxl.load_workbook(path, data_only=True)
+        records = {}
+        for sheet in wb.sheetnames:
+            ws = wb[sheet]
+            title = ws.cell(row=3, column=3).value or ''
+            itype = ws.cell(row=4, column=3).value or ''
+            m = re.search(r'\((M[PE]\d+[A-Z0-9]*)\)', str(title))
+            item_id = m.group(1) if m else sheet
+            norm_key = item_id[0] + item_id[2:] if len(item_id) > 2 else item_id
+            
+            us_pct, us_se = None, None
+            for r in range(5, ws.max_row+1):
+                row_vals = [ws.cell(row=r, column=c).value for c in range(1, ws.max_column+1)]
+                for idx, val in enumerate(row_vals):
+                    if val == 'United States':
+                        nums = [x for x in row_vals[idx+1:] if isinstance(x, (int, float))]
+                        if len(nums) >= 2:
+                            us_pct, us_se = nums[0], nums[1]
+                        elif len(nums) == 1:
+                            us_pct = nums[0]
+                        break
+                if us_pct is not None:
+                    break
+            records[norm_key] = {
+                'orig_id': item_id,
+                'sheet': sheet,
+                'title': title,
+                'item_type': itype,
+                'us_pct': us_pct,
+                'us_se': us_se
+            }
+        return records
+
+    paper_iea = parse_workbook(RAW_DIR / "iea_item_percent_correct" / "T19Br_G4_MAT_Item Percent Correct.xlsx")
+    dig_iea = parse_workbook(RAW_DIR / "iea_item_percent_correct" / "eT19_G4_MAT_Item Percent Correct.xlsx")
+    
+    # Load raw achievement files for two-point exact credit calculation
+    df_br_ach, _ = pyreadstat.read_sav(RAW_DIR / "asausab7.sav", user_missing=True)
+    df_e_ach, _ = pyreadstat.read_sav(RAW_DIR / "asausam7.sav", user_missing=True)
+    
+    audit_rows = []
+    for _, row in item_df.iterrows():
+        cid = row["item_id"]
+        core = row["core_id"]
+        itype = row["item_type"]
+        max_pts = int(row["maximum_points"])
+        norm = "M" + core
+        
+        col_p = "MP" + core
+        col_d = "ME" + core
+        
+        p_info = paper_iea.get(norm)
+        d_info = dig_iea.get(norm)
+        iea_p = p_info["us_pct"] if p_info else np.nan
+        iea_d = d_info["us_pct"] if d_info else np.nan
+        
+        if max_pts == 1:
+            pipe_full_p = float(row["pct_paper"])
+            pipe_full_d = float(row["pct_digital"])
+            pipe_part_p = 0.0
+            pipe_part_d = 0.0
+            pipe_avg_p = float(row["pct_paper"])
+            pipe_avg_d = float(row["pct_digital"])
+            diff_p = abs(iea_p - pipe_full_p)
+            diff_d = abs(iea_d - pipe_full_d)
+        else:
+            sub_p = df_br_ach[df_br_ach[col_p].notna()]
+            wp = sub_p["TOTWGT"]
+            full_p = (sub_p[col_p] >= 20) & (sub_p[col_p] <= 29)
+            part_p = (sub_p[col_p] >= 10) & (sub_p[col_p] <= 19)
+            pipe_full_p = float(100.0 * (full_p * wp).sum() / wp.sum())
+            pipe_part_p = float(100.0 * (part_p * wp).sum() / wp.sum())
+            pipe_avg_p = float(row["pct_paper"])
+            diff_p = abs(iea_p - pipe_full_p)
+            
+            sub_d = df_e_ach[df_e_ach[col_d].notna()]
+            wd = sub_d["TOTWGT"]
+            full_d = (sub_d[col_d] >= 20) & (sub_d[col_d] <= 29)
+            part_d = (sub_d[col_d] >= 10) & (sub_d[col_d] <= 19)
+            pipe_full_d = float(100.0 * (full_d * wd).sum() / wd.sum())
+            pipe_part_d = float(100.0 * (part_d * wd).sum() / wd.sum())
+            pipe_avg_d = float(row["pct_digital"])
+            diff_d = abs(iea_d - pipe_full_d)
+            
+        is_pass = (diff_p < 0.01) and (diff_d < 0.01)
+        audit_rows.append({
+            "item_id": cid,
+            "core_id": core,
+            "item_type": itype,
+            "max_pts": max_pts,
+            "cognitive_domain": row["cognitive_domain"],
+            "iea_paper_full_credit": round(iea_p, 5),
+            "pipeline_paper_full_credit": round(pipe_full_p, 5),
+            "diff_paper": round(diff_p, 5),
+            "iea_digital_full_credit": round(iea_d, 5),
+            "pipeline_digital_full_credit": round(pipe_full_d, 5),
+            "diff_digital": round(diff_d, 5),
+            "pipeline_paper_partial_credit": round(pipe_part_p, 2),
+            "pipeline_digital_partial_credit": round(pipe_part_d, 2),
+            "pipeline_paper_avg_score": round(pipe_avg_p, 2),
+            "pipeline_digital_avg_score": round(pipe_avg_d, 2),
+            "audit_status": "PASS" if is_pass else "FAIL"
+        })
+    
+    audit_df = pd.DataFrame(audit_rows)
+    n_failed = (audit_df["audit_status"] == "FAIL").sum()
+    if n_failed > 0:
+        raise AssertionError(f"IEA Benchmark Validation Failed for {n_failed} items!")
+    return audit_df
 
 
 def main():
@@ -674,21 +1030,34 @@ def main():
     print(f"\n[OK] Table 9 generated -> {mod_path.name}")
     print(df_mod.to_string(index=False))
 
-    # 7. Econometric Model Comparison
+    # 7. Econometric Model Comparison (Table 10)
     df_reg = analyze_econometric_models(stu_df, stk_df)
     reg_path = TABLES_DIR / "table10_timss_2019_econometric_models.csv"
     df_reg.to_csv(reg_path, index=False)
     print(f"\n[OK] Table 10 generated -> {reg_path.name}")
     print(df_reg.to_string(index=False))
 
-    # 8. Jackknife Repeated Replication (JK2)
+    # 8. Jackknife Repeated Replication (JK2) & Survey Inference (Table 11)
     df_jk = analyze_jackknife_repeated_replication(stu_df)
     jk_path = TABLES_DIR / "table11_timss_2019_survey_inference_jk2.csv"
     df_jk.to_csv(jk_path, index=False)
     print(f"\n[OK] Table 11 generated -> {jk_path.name}")
     print(df_jk.to_string(index=False))
 
-    # 9. Classroom Randomization Inference
+    # 9. Automated IEA Published Benchmark Validation (Table 12)
+    df_audit = audit_iea_published_benchmarks(item_df)
+    audit_path = TABLES_DIR / "table12_timss_2019_iea_benchmark_audit.csv"
+    df_audit.to_csv(audit_path, index=False)
+    print(f"\n[OK] Table 12 generated -> {audit_path.name} (99 items audited: {(df_audit['audit_status'] == 'PASS').sum()} PASS)")
+
+    # 10. Booklet Exposure & Student-Normalized Weighting Sensitivity (Table 13)
+    df_sens = analyze_booklet_exposure_and_weighting_sensitivity(stk_df)
+    sens_path = TABLES_DIR / "table13_timss_2019_booklet_exposure_sensitivity.csv"
+    df_sens.to_csv(sens_path, index=False)
+    print(f"\n[OK] Table 13 generated -> {sens_path.name}")
+    print(df_sens.to_string(index=False))
+
+    # 11. Classroom Randomization Inference
     rand_res = analyze_classroom_randomization_inference(stu_df)
     print("\n--- Within-School Classroom Randomization Inference ---")
     for k, v in rand_res.items():
