@@ -11,14 +11,17 @@ Over the past two decades, primary and secondary education in the United States 
 2. **Keyboarding Coursework Collapse**: The proportion of high school graduates earning course credit in keyboarding collapsed from **44.1% in 2000 to 2.5% in 2019** (NCES High School Transcript Study, Table 1)—a **94.3%** structural decline.
 3. **Universal Digital Assessment Mandates**: State testing consortia (PARCC, Smarter Balanced) and federal monitoring assessments (NAEP reading and mathematics in 2017; TIMSS in 2019) transitioned from paper-and-pencil assessments (PBA) to digitally based assessments (DBA).
 
-### Three-Pillar Empirical Architecture
-This repository is organized into three complementary investigations:
-1. **Study 1: Audited Literature Synthesis & Sensitivity Analysis (`notebooks/01_keyboarding_mode_effects.ipynb`)**: Resolves historical controversies, reconciles published econometric effect sizes (Backes & Cowan 2019; Gordanier et al. 2023), audits the NAEP 2017 Mode Evaluation Table 4.1c across all four grade/subject series, documents the 2017 Writing assessment suppression, and evaluates an exploratory parameter sensitivity grid.
-2. **Study 2 (Study A): TIMSS 2019 Microdata Mode Effects & Psychometric Invariance (`notebooks/02_timss_2019_mode_effects.ipynb` & `03_timss_2019_scoring_validation.ipynb`)**: Performs item-level psychometric decomposition on the **TIMSS 2019 U.S. Grade 4 Mathematics** public-use microdata ($N = 10,428$ students across 294 schools), measuring mode differences across 99 common anchor items (49 MC, 50 CR), cognitive domains, and student socioeconomic strata, with full psychometric invariance sensitivity auditing across 74 mode-equivalent items.
-3. **Study 3 (Study B): PIRLS 2021 Process & Interaction Data (`notebooks/04_pirls_2021_process_data.ipynb`)**: Analyzes digital process logs ($N = 4,486$ students, 273 digital reading items) to decompose response latencies across navigation friction, response-entry transcription friction, and reading comprehension ability.
+### Four-Study Empirical Architecture across Two Tracks
+This repository is organized into four complementary empirical investigations across two research tracks:
+- **Track 1: Mechanisms & Interventions (Cognitive & Interface Friction)**:
+  1. **Literature Baseline & Parameter Sensitivity (`notebooks/01_keyboarding_mode_effects.ipynb`)**: Resolves historical controversies, reconciles published econometric effect sizes (Backes & Cowan 2019; Gordanier et al. 2023), audits the NAEP 2017 Mode Evaluation Table 4.1c across all four grade/subject series, documents the 2017 Writing assessment suppression, and evaluates an exploratory parameter sensitivity grid.
+  2. **Study A: TIMSS 2019 Microdata Mode Effects & Psychometric Invariance (`notebooks/02_timss_2019_mode_effects.ipynb` & `03_timss_2019_scoring_validation.ipynb`)**: Performs item-level psychometric decomposition on the **TIMSS 2019 U.S. Grade 4 Mathematics** public-use microdata ($N = 10,428$ students across 294 schools), measuring mode differences across 99 common anchor items (49 MC, 50 CR), cognitive domains, and student socioeconomic strata, with full psychometric invariance sensitivity auditing across 74 mode-equivalent items.
+  3. **Study B: PIRLS 2021 Digital Reading Process & Interaction Data (`notebooks/04_pirls_2021_process_data.ipynb`)**: Analyzes digital process logs ($N = 4,486$ students, 273 digital reading items, 91,376 matched student-item observations) to decompose response latencies, navigation revisit behaviors, and within-item time-accuracy gradients in Grade 4 reading.
+- **Track 2: National Trend Attribution (2019–2023 Score Declines)**:
+  4. **Study C: TIMSS 2023 Microdata Admission & 2019–2023 Common-Item Crosswalk (`notebooks/05_timss_2023_item_crosswalk.ipynb`)**: Audits official U.S. Grade 4 microdata ($N = 9,090$ examinees across 242 schools) and constructs the common-item panel linking 2019 eTIMSS and 2023 group-adaptive digital mathematics (132 codebook items; 128 dual-administered items: 61 MC, 67 CR).
 
 ### Calibrated Central Finding
-> **Digital administration can affect measured student performance, and the differences appear particularly pronounced on constructed-response items among younger students. Process logs reveal a 2.6x response-entry transcription tax on constructed responses, while navigational friction is format-neutral.**
+> **Digital administration introduces measurable format-specific differences, with constructed-response mathematics items exhibiting a $-2.73$ pp within-school penalty in TIMSS 2019. Process logs reveal a 2.6x duration multiplier on constructed responses, while within-item regressions show divergent mechanisms: extra time reflects confusion on MC ($\beta = -0.033$) but productive text formulation on CR ($\beta = +0.041$). A constant mode penalty drops out of longitudinal trends, requiring explicit item-by-item difference-in-differences attribution.**
 
 ---
 
@@ -76,6 +79,9 @@ flowchart TD
 | **PIRLS 2021 Navigation Friction** | Do students get lost navigating CR items? | **49.8% (MC)** vs.<br>**52.2% (CR)**<br>($\Delta = \mathbf{+2.4\text{ pp}}$) | PIRLS 2021 Process Logs (Table 15 & 16) | **Verified Public Microdata** | Revisit probability is format-neutral ($+2.4$ pp gap), showing no evidence of format-specific navigation disorientation. However, revisit duration is $3.1\times$ to $3.3\times$ longer on CR (30.4s vs 9.2s unconditional; 56.8s vs 18.5s conditional), reflecting answer drafting and editing rather than navigational disorientation. |
 | **PIRLS 2021 Ability Mediation** | Does reading ability eliminate the format wedge? | **$r = -0.094$ (MC)** vs.<br>**$r = +0.114$ (CR)**<br>($r_{\text{wedge}} = \mathbf{+0.173}$) | PIRLS 2021 Latency vs Plausible Values | **Verified Public Microdata** | Reading comprehension ability is negatively correlated with MC time ($r = -0.094$, cognitive efficiency) but positively correlated with CR time ($r = +0.114$), widening the entry time wedge ($r = +0.173$). Proficient students write richer, longer text, thereby incurring an even heavier typing time tax. |
 | **PIRLS 2021 Time-Accuracy Gradient** | Does spending more time predict higher accuracy? | **$\beta = -0.033$ (MC)** vs.<br>**$\beta = +0.041$ (CR)** | PIRLS 2021 Matched Panel ($N = 91,376$, Table 17) | **Verified Public Microdata** | Divergent task mechanisms: Within-item fixed effects regressions reveal that extra time on MC items predicts *lower* accuracy ($\beta = -0.033, p < 0.0001$, hesitation/guessing), while extra time on CR items predicts *higher* accuracy ($\beta = +0.041, p < 0.0001$, productive drafting and answer elaboration). |
+| **TIMSS 2023 Sample Accounting** | Does the microdata match published benchmarks? | **$N = 9,090$ students**<br>(242 schools, 479 classes)<br>**Weighted PV1: 516.7 pts** | TIMSS 2023 U.S. Microdata (`asausam8.sav`, Table 18) | **Verified Public Microdata** | Population-weighted mathematics PV1 of 516.69 matches published national benchmark (517.0 points) within rounding across 14 multi-stage group-adaptive booklets. |
+| **TIMSS 2019–2023 Common Items** | How many math items bridge 2019 and 2023? | **132 codebook items**<br>**128 dual-administered**<br>(61 MC, 67 CR) | TIMSS 2019–2023 Crosswalk (Table 19) | **Verified Public Microdata** | Exactly 128 items administered to students in both cycles with ~1,220 examinees per item per cycle; provides balanced common-item panel for Difference-in-Differences trend attribution. |
+
 
 ---
 
@@ -144,7 +150,8 @@ flowchart TD
 │       ├── timss_2019_g4_student_item_stacked.csv
 │       ├── pirls_2021_item_process_metrics.parquet   # 273 digital reading items with process timing
 │       ├── pirls_2021_student_process_sample.parquet # 4,486 Grade 4 students with timing & PVs
-│       └── pirls_2021_student_item_panel.parquet     # 91,376 matched student x item observations
+│       ├── pirls_2021_student_item_panel.parquet     # 91,376 matched student x item observations
+│       └── timss_2019_2023_item_crosswalk.parquet    # 132 common mathematics items (128 dual-administered)
 ├── src/
 │   ├── acquire_datasets.py             # Audited data acquisition for literature baseline
 │   ├── analyze_mode_effects.py         # Statistical analysis for literature baseline
@@ -156,16 +163,20 @@ flowchart TD
 │   ├── build_timss_notebook.py         # Generates and executes Notebook 02
 │   ├── build_validation_notebook.py    # Generates and executes Notebook 03 (Scoring Validation)
 │   ├── acquire_pirls_2021.py           # Processes IEA PIRLS 2021 digital process interaction logs
-│   └── build_pirls_notebook.py         # Generates and executes Notebook 04 (Study B Process Data)
+│   ├── build_pirls_notebook.py         # Generates and executes Notebook 04 (Study B Process Data)
+│   ├── acquire_timss_2023.py           # Acquires TIMSS 2023 U.S. microdata & builds item crosswalk
+│   └── build_crosswalk_notebook.py     # Generates and executes Notebook 05 (Study C Crosswalk)
 ├── notebooks/
 │   ├── 01_keyboarding_mode_effects.ipynb # Literature synthesis & parameter sensitivity (executed)
 │   ├── 02_timss_2019_mode_effects.ipynb  # Study A: TIMSS 2019 microdata mode effects (executed)
 │   ├── 03_timss_2019_scoring_validation.ipynb # Methodological Scoring & Estimation Audit (executed)
-│   └── 04_pirls_2021_process_data.ipynb  # Study B: PIRLS 2021 Process Logs & Mechanisms (executed)
+│   ├── 04_pirls_2021_process_data.ipynb  # Study B: PIRLS 2021 Process Logs & Mechanisms (executed)
+│   └── 05_timss_2023_item_crosswalk.ipynb # Study C: TIMSS 2023 Admission & 2019–2023 Item Crosswalk (executed)
 ├── tests/
 │   ├── test_data_integrity.py          # Pytest verification for literature sources (8 passing)
 │   ├── test_timss_2019.py              # Pytest verification for TIMSS 2019 microdata & models (14 passing)
-│   └── test_pirls_2021.py              # Pytest verification for PIRLS 2021 process timing & mechanisms (6 passing)
+│   ├── test_pirls_2021.py              # Pytest verification for PIRLS 2021 process timing & mechanisms (6 passing)
+│   └── test_timss_2023_crosswalk.py    # Pytest verification for TIMSS 2023 admission & crosswalk (4 passing)
 └── artifacts/
     ├── figures/
     │   ├── fig1_three_divergent_trends.png
@@ -192,7 +203,9 @@ flowchart TD
         ├── table14_timss_2019_item_invariance_sensitivity.csv
         ├── table15_pirls_2021_process_metrics_by_format.csv
         ├── table16_pirls_2021_mechanism_decomposition.csv
-        └── table17_pirls_2021_time_accuracy_decomposition.csv
+        ├── table17_pirls_2021_time_accuracy_decomposition.csv
+        ├── table18_timss_2023_sample_accounting.csv
+        └── table19_timss_2019_2023_item_crosswalk.csv
 ```
 
 ---
@@ -247,7 +260,16 @@ python src/acquire_pirls_2021.py
 # 12. Build and execute Notebook 04 (Calibrated Process Data Analysis)
 python src/build_pirls_notebook.py
 
-# 13. Run entire verification suite (28 passing tests across all studies)
+# ---------------------------------------------------------
+# Phase 4: TIMSS 2023 U.S. Admission & Longitudinal Crosswalk (Study C)
+# ---------------------------------------------------------
+# 13. Acquire TIMSS 2023 microdata, audit sample accounting & build crosswalk
+python src/acquire_timss_2023.py
+
+# 14. Build and execute Notebook 05 (Admission & Crosswalk)
+python src/build_crosswalk_notebook.py
+
+# 15. Run entire verification suite (32 passing tests across all studies)
 pytest tests/ -v
 ```
 
@@ -255,14 +277,22 @@ pytest tests/ -v
 
 ## 7. Multi-Study Empirical Research Roadmap
 
-Following the establishment of the audited literature foundation (`01_keyboarding_mode_effects.ipynb`) and the completion of Study A (`02_timss_2019_mode_effects.ipynb` and `03_timss_2019_scoring_validation.ipynb`), this repository pursues a bounded five-part research sequence to disentangle mode effects from student academic ability:
+Following the establishment of the audited literature foundation (`01_keyboarding_mode_effects.ipynb`) and the completion of Study A and Study B, this repository organizes empirical research into two distinct tracks:
 
+### Track 1: Mechanisms & Interventions (Cognitive & Interface Friction)
 | Study | Notebook / Document | Primary Dataset | Research Objective & Status | Key Empirical Question |
 | :--- | :--- | :--- | :--- | :--- |
 | **Baseline** | [`01_keyboarding_mode_effects.ipynb`](notebooks/01_keyboarding_mode_effects.ipynb) | NCES HSTS, NAEP 2017 Table 4.1c, EdWeek 2024, ICILS | **Completed**: Audited synthesis separating Claim 1 (interface friction) from Claim 2 (score decline attribution); exploratory parameter sensitivity simulation. | What does published literature establish vs. hypothesize? |
-| **Study A** | [`02_timss_2019_mode_effects.ipynb`](notebooks/02_timss_2019_mode_effects.ipynb) | IEA & NCES TIMSS 2019 G4 U.S. Bridge & eTIMSS ($N=10,428$, 99 items) | **Completed**: Audited format contrast ($-3.42$ pp format gap; survey DiD $\beta = -3.10$ pp with JK2 SE $0.67$ pp and cluster linearization SE $0.66$ pp; national item FE $\beta = -3.42$ pp; within-school FE $\beta = -2.36$ pp; stacked item+school FE $\beta = -2.73$ pp with classroom SE $0.93$ pp and school SE $0.84$ pp; Monte Carlo Randomization Inference $p = 0.0400$; booklet exposure sensitivity $-2.68$ to $-2.93$ pp within-school; item invariance sensitivity: $-3.07$ pp national and $-2.58$ pp within-school among the 74 officially invariant items); cognitive domain decomposition ($-10.14$ pp Reasoning gap); input modality hierarchy ($-0.47$ to $-7.13$ pp); calibrated SES bounds ($-2.35$ to $+2.16$ pp). Verified by automated tests. | Does the digital penalty differ by input format, and is it mediated by SES? |
-| **Audit** | [`03_timss_2019_scoring_validation.ipynb`](notebooks/03_timss_2019_scoring_validation.ipynb) | IEA TIMSS microdata & scoring codebooks | **Completed**: Methodological companion documenting diagnostic recoding, complete automated audit against official published IEA item tables (Table 12: exact match on 94 1-point items within rounding and 5 2-point items to 5 decimals with partial credit verification), booklet exposure sensitivity across 12 weighting models (Table 13), item invariance sensitivity across official calibration subsets (Table 14), user-missing code recovery, omission distributions (paper 2.6–3.4% vs digital 1.2–1.4%), ITT vs answered-only denominators, and dynamic subgroup calculations. | How do scoring rules and response-status definitions shape empirical mode effects? |
-| **Study B** | [`04_pirls_2021_process_data.ipynb`](notebooks/04_pirls_2021_process_data.ipynb) | IEA PIRLS 2021 Digital Reading Process & Interaction Logs ($N=4,486$, 273 items) | **Completed**: Descriptive Latency & Behavior Decomposition: Revisit probability is format-neutral (52.2% on CR vs 49.8% on MC; $\Delta = +2.4$ pp), showing no evidence of format-specific navigation disorientation, while revisit duration is 3.1x–3.3x longer on CR (30.4s vs 9.2s unconditional; 56.8s vs 18.5s conditional); Observed response duration is 127.0s on CR vs 48.6s on MC ($2.61\times$ multiplier; $+78.4$s per-item wedge population-weighted), calibrated as descriptive response behavior without paper counterfactuals; Reading ability correlates negatively with MC time ($r = -0.094$) but positively with CR time ($r = +0.114$, widening the wedge $r = +0.173$); Matched within-item regressions on 91,376 observations (Table 17) reveal divergent mechanisms: longer MC time predicts lower accuracy ($\beta = -0.033, p < 0.0001$, hesitation/confusion), while longer CR time predicts higher accuracy ($\beta = +0.041, p < 0.0001$, productive answer drafting and elaboration). Verified by 6 automated tests. | Can process logs distinguish interface navigation friction from academic mastery? |
-| **Study C** | `05_icils_digital_opportunity.ipynb` | IEA ICILS 2018 & 2023 Computer and Information Literacy | **Planned**: Decompose the 102-point socioeconomic gap in digital literacy against school technology access to evaluate whether access guarantees operational fluency. | Does 1:1 hardware access eliminate digital literacy and operational fluency disparities? |
-| **Study D** | `06_mechanism_feasibility.md` | Protocol Design (IRB, power, assessment battery) | **Planned**: Specify a within-student randomized crossover trial measuring typing automaticity, handwriting speed, and digital response quality in Grade 4. | How can an experimental trial isolate typing speed from writing composition quality? |
+| **Study A** | [`02_timss_2019_mode_effects.ipynb`](notebooks/02_timss_2019_mode_effects.ipynb) | IEA & NCES TIMSS 2019 G4 U.S. Bridge & eTIMSS ($N=10,428$, 99 items) | **Completed**: Audited format contrast ($-3.42$ pp format gap; survey DiD $\beta = -3.10$ pp; within-school FE $\beta = -2.73$ pp; item invariance sensitivity: $-2.58$ pp within-school among the 74 invariant items); cognitive domain decomposition ($-10.14$ pp Reasoning gap); input modality hierarchy ($-0.47$ to $-7.13$ pp); calibrated SES bounds ($-2.35$ to $+2.16$ pp). Verified by automated tests. | Does the digital penalty differ by input format, and is it mediated by SES? |
+| **Audit** | [`03_timss_2019_scoring_validation.ipynb`](notebooks/03_timss_2019_scoring_validation.ipynb) | IEA TIMSS microdata & scoring codebooks | **Completed**: Methodological companion documenting diagnostic recoding, complete automated audit against official published IEA item tables (Table 12: exact match on 94 1-point items within rounding and 5 2-point items to 5 decimals with partial credit verification), booklet exposure sensitivity across 12 weighting models (Table 13), and item invariance sensitivity (Table 14). | How do scoring rules and response-status definitions shape empirical mode effects? |
+| **Study B** | [`04_pirls_2021_process_data.ipynb`](notebooks/04_pirls_2021_process_data.ipynb) | IEA PIRLS 2021 Digital Reading Process & Interaction Logs ($N=4,486$, 273 items) | **Completed**: Descriptive Latency & Behavior Decomposition: Revisit probability is format-neutral (52.2% on CR vs 49.8% on MC; $\Delta = +2.4$ pp); Observed response duration is 127.0s on CR vs 48.6s on MC ($2.61\times$ multiplier; $+78.4$s per-item wedge); Within-item regressions on 91,376 observations (Table 17) reveal divergent mechanisms: longer MC time predicts lower accuracy ($\beta = -0.033, p < 0.0001$, hesitation/confusion), while longer CR time predicts higher accuracy ($\beta = +0.041, p < 0.0001$, productive answer drafting). Verified by 6 automated tests. | Can process logs distinguish interface navigation friction from academic mastery? |
+| **Trial Spec** | `06_mechanism_feasibility.md` | Protocol Design (IRB, power, assessment battery) | **Planned**: Within-student randomized crossover trial measuring typing automaticity, handwriting speed, and digital response quality in Grade 4. | How can an experimental trial isolate typing speed from writing composition quality? |
+
+### Track 2: National Trend Attribution (2019–2023 Score Declines)
+| Study | Notebook / Document | Primary Dataset | Research Objective & Status | Key Empirical Question |
+| :--- | :--- | :--- | :--- | :--- |
+| **Study C** | [`05_timss_2023_item_crosswalk.ipynb`](notebooks/05_timss_2023_item_crosswalk.ipynb) | IEA TIMSS 2023 U.S. Grade 4 Microdata (`asausam8.sav`, `aspusam8.sav`, `T23_ItemInformation_G4.xlsx`) | **Completed**: Audited admission ($N = 9,090$ examinees across 242 schools, population-weighted PV1 516.69 matching published 517.0 benchmark); identified 132 common mathematics items (64 MC, 68 CR) and 128 dual-administered items with active responses in both 2019 and 2023 (61 MC, 67 CR); documented 4 single-cycle items (3 MC in 2023 only, 1 CR in 2019 only). Sets up longitudinal Difference-in-Differences trend attribution. Verified by 4 automated tests. | Are the common trend items sufficiently balanced and populated across cycles? |
+| **Study D** | `06_timss_longitudinal_attribution.ipynb` | TIMSS 2019 & 2023 Stacked Common-Item Panel | **In Progress / Next**: Longitudinal Difference-in-Differences estimation ($\beta_3 = \Delta_{\text{CR}} - \Delta_{\text{MC}}$) testing whether the 2019–2023 score drop was driven by expanding interface friction or format-neutral post-pandemic learning loss. | Did the 18-point score decline disproportionately affect constructed-response questions, or was it format-neutral? |
+| **Study E** | `07_icils_digital_opportunity.ipynb` | IEA ICILS 2018 & 2023 Computer and Information Literacy | **Planned**: Decompose the 102-point socioeconomic gap in digital literacy against school technology access to evaluate whether access guarantees operational fluency. | Does 1:1 hardware access eliminate digital literacy and operational fluency disparities? |
+
 

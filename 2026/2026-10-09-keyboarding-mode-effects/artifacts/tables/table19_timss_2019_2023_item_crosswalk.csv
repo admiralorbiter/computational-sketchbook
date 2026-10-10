@@ -1,0 +1,133 @@
+item_id,item_type,format,max_points,content_domain,cognitive_domain,secure_status,scaling_status,block_2023,n_examinees_2019,n_examinees_2023,administered_2019,administered_2023,administered_both
+ME71018,MC,Multiple Choice,1.0,Number,Applying,Secured,Yes,A_MD1,1245,1223,True,True,True
+ME71009,CR,Constructed Response,1.0,Number,Applying,Secured,Yes,A_MD1,1225,1185,True,True,True
+ME71037,CR,Constructed Response,1.0,Number,Applying,Secured,Yes,A_MD1,1229,1205,True,True,True
+ME71051,CR,Constructed Response,1.0,Number,Applying,Secured,Yes,A_MD1,1235,1179,True,True,True
+ME71064,MC,Multiple Choice,1.0,Number,Knowing,Secured,Yes,A_MD1,1232,1180,True,True,True
+ME71176,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Secured,Yes,A_MD1,1235,1171,True,True,True
+ME71169,CR,Constructed Response,1.0,Measurement and Geometry,Knowing,Secured,Yes,A_MD1,1232,1161,True,True,True
+ME71083,MC,Multiple Choice,1.0,Measurement and Geometry,Reasoning,Secured,Yes,A_MD1,1215,1142,True,True,True
+ME71199,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Secured,Yes,A_MD1,0,1140,False,True,False
+ME71184,MC,Multiple Choice,1.0,Measurement and Geometry,Reasoning,Secured,Yes,A_MD1,1208,1108,True,True,True
+ME71141,CR,Constructed Response,1.0,Data,Reasoning,Secured,Yes,A_MD1,1212,1102,True,True,True
+ME71141A,MC,Multiple Choice,1.0,Data,Reasoning,Secured,No,A_MD1,1212,1102,True,True,True
+ME71141B,MC,Multiple Choice,1.0,Data,Reasoning,Secured,No,A_MD1,1212,1102,True,True,True
+ME71141C,MC,Multiple Choice,1.0,Data,Reasoning,Secured,No,A_MD1,1212,1102,True,True,True
+ME71141D,MC,Multiple Choice,1.0,Data,Reasoning,Secured,No,A_MD1,1212,1102,True,True,True
+ME71194,CR,Constructed Response,1.0,Data,Applying,Secured,Yes,A_MD1,1207,1088,True,True,True
+ME71194A,MC,Multiple Choice,1.0,Data,Applying,Secured,No,A_MD1,1206,1086,True,True,True
+ME71194B,MC,Multiple Choice,1.0,Data,Applying,Secured,No,A_MD1,1206,1088,True,True,True
+ME71193,CR,Constructed Response,2.0,Data,Applying,Secured,Yes,A_MD1,1203,1068,True,True,True
+ME71193A,CR,Constructed Response,1.0,Data,Applying,Secured,No,A_MD1,1201,1052,True,True,True
+ME71193B,CR,Constructed Response,1.0,Data,Applying,Secured,No,A_MD1,1020,764,True,True,True
+ME71192,CR,Constructed Response,2.0,Data,Applying,Secured,Yes,A_MD1,1198,993,True,True,True
+ME61275,MC,Multiple Choice,1.0,Number,Knowing,Secured,Yes,A_MD2,1237,1252,True,True,True
+ME61027,CR,Constructed Response,1.0,Number,Applying,Secured,Yes,A_MD2,1226,1250,True,True,True
+ME61255,CR,Constructed Response,2.0,Number,Reasoning,Secured,Yes,A_MD2,1210,1211,True,True,True
+ME61021,CR,Constructed Response,1.0,Number,Reasoning,Secured,No,A_MD2,1219,0,True,False,False
+ME61043,CR,Constructed Response,1.0,Number,Knowing,Secured,Yes,A_MD2,1209,1214,True,True,True
+ME61151,MC,Multiple Choice,1.0,Number,Applying,Secured,Yes,A_MD2,1209,1211,True,True,True
+ME61172,MC,Multiple Choice,1.0,Number,Applying,Secured,Yes,A_MD2,1209,1202,True,True,True
+ME61223,MC,Multiple Choice,1.0,Number,Knowing,Secured,Yes,A_MD2,1210,1200,True,True,True
+ME61269,MC,Multiple Choice,1.0,Measurement and Geometry,Applying,Secured,Yes,A_MD2,1213,1199,True,True,True
+ME61081A,CR,Constructed Response,1.0,Measurement and Geometry,Applying,Secured,No,A_MD2,1209,1198,True,True,True
+ME61081B,CR,Constructed Response,1.0,Measurement and Geometry,Applying,Secured,No,A_MD2,1209,1198,True,True,True
+ME61178,CR,Constructed Response,1.0,Number,Knowing,Restricted Use,Yes,A_ME2,1232,1276,True,True,True
+ME61246,MC,Multiple Choice,1.0,Number,Knowing,Restricted Use,Yes,A_ME2,1232,1284,True,True,True
+ME61271,CR,Constructed Response,1.0,Number,Knowing,Restricted Use,Yes,A_ME2,1222,1279,True,True,True
+ME61256,CR,Constructed Response,1.0,Number,Reasoning,Restricted Use,Yes,A_ME2,1230,1278,True,True,True
+ME61182,CR,Constructed Response,1.0,Number,Applying,Restricted Use,Yes,A_ME2,1224,1267,True,True,True
+ME61049,MC,Multiple Choice,1.0,Number,Applying,Restricted Use,Yes,A_ME2,1224,1273,True,True,True
+ME61232,MC,Multiple Choice,1.0,Number,Applying,Restricted Use,Yes,A_ME2,1206,1268,True,True,True
+ME61095,CR,Constructed Response,1.0,Measurement and Geometry,Knowing,Restricted Use,Yes,A_ME2,1212,1259,True,True,True
+ME61095B,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Restricted Use,No,A_ME2,1165,1204,True,True,True
+ME61095C,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Restricted Use,No,A_ME2,1155,1199,True,True,True
+ME61095D,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Restricted Use,No,A_ME2,1152,1167,True,True,True
+ME61095E,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Restricted Use,No,A_ME2,1145,1178,True,True,True
+ME61264,CR,Constructed Response,2.0,Number,Applying,Restricted Use,Yes,A_ME2,1137,1200,True,True,True
+ME61108,MC,Multiple Choice,1.0,Measurement and Geometry,Reasoning,Restricted Use,Yes,A_ME2,1200,1259,True,True,True
+ME61211A,CR,Constructed Response,1.0,Data,Knowing,Restricted Use,Yes,A_ME2,1166,1166,True,True,True
+ME61211B,MC,Multiple Choice,1.0,Data,Applying,Restricted Use,Yes,A_ME2,1172,1219,True,True,True
+ME61240,CR,Constructed Response,1.0,Number,Knowing,Secured,Yes,A_ME4,1234,1297,True,True,True
+ME61240A,MC,Multiple Choice,1.0,Number,Knowing,Secured,No,A_ME4,1222,1283,True,True,True
+ME61240B,MC,Multiple Choice,1.0,Number,Knowing,Secured,No,A_ME4,1215,1271,True,True,True
+ME61240C,MC,Multiple Choice,1.0,Number,Knowing,Secured,No,A_ME4,1210,1270,True,True,True
+ME61254,CR,Constructed Response,1.0,Number,Applying,Secured,Yes,A_ME4,1232,1289,True,True,True
+ME61254A,CR,Constructed Response,1.0,Number,Applying,Secured,No,A_ME4,1228,1282,True,True,True
+ME61254B,CR,Constructed Response,1.0,Number,Applying,Secured,No,A_ME4,1217,1274,True,True,True
+ME61254C,CR,Constructed Response,1.0,Number,Applying,Secured,No,A_ME4,1219,1270,True,True,True
+ME61244,MC,Multiple Choice,1.0,Number,Reasoning,Secured,Yes,A_ME4,1229,1287,True,True,True
+ME61041,MC,Multiple Choice,1.0,Number,Knowing,Secured,Yes,A_ME4,1223,1289,True,True,True
+ME61173,CR,Constructed Response,1.0,Number,Knowing,Secured,Yes,A_ME4,1223,1276,True,True,True
+ME61252,MC,Multiple Choice,1.0,Number,Applying,Secured,Yes,A_ME4,1222,1287,True,True,True
+ME61261,CR,Constructed Response,1.0,Number,Applying,Secured,Yes,A_ME4,1218,1267,True,True,True
+ME61224,CR,Constructed Response,1.0,Measurement and Geometry,Applying,Secured,Yes,A_ME4,1222,1267,True,True,True
+ME61077,MC,Multiple Choice,1.0,Measurement and Geometry,Reasoning,Secured,Yes,A_ME4,1218,1271,True,True,True
+ME61069A,CR,Constructed Response,1.0,Data,Knowing,Secured,Yes,A_ME4,1220,1257,True,True,True
+ME61069B,CR,Constructed Response,1.0,Data,Applying,Secured,Yes,A_ME4,1213,1244,True,True,True
+ME71013,MC,Multiple Choice,1.0,Number,Knowing,Restricted Use,Yes,A_MM2,1255,1281,True,True,True
+ME71026,CR,Constructed Response,1.0,Number,Reasoning,Restricted Use,Yes,A_MM2,1231,1256,True,True,True
+ME71036,CR,Constructed Response,1.0,Number,Applying,Restricted Use,Yes,A_MM2,1251,1277,True,True,True
+ME71036A,CR,Constructed Response,1.0,Number,Applying,Restricted Use,No,A_MM2,1251,1277,True,True,True
+ME71036B,CR,Constructed Response,1.0,Number,Applying,Restricted Use,No,A_MM2,1251,1277,True,True,True
+ME71040,MC,Multiple Choice,1.0,Number,Applying,Restricted Use,Yes,A_MM2,1239,1257,True,True,True
+ME71068,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Restricted Use,Yes,A_MM2,1241,1261,True,True,True
+ME71075A,CR,Constructed Response,1.0,Measurement and Geometry,Applying,Restricted Use,Yes,A_MM2,1232,1236,True,True,True
+ME71075B,CR,Constructed Response,1.0,Measurement and Geometry,Applying,Restricted Use,Yes,A_MM2,1203,1205,True,True,True
+ME71080,MC,Multiple Choice,1.0,Measurement and Geometry,Reasoning,Restricted Use,Yes,A_MM2,1225,1241,True,True,True
+ME71211,CR,Constructed Response,1.0,Measurement and Geometry,Applying,Restricted Use,Yes,A_MM2,1226,1242,True,True,True
+ME71178,CR,Constructed Response,1.0,Measurement and Geometry,Knowing,Restricted Use,Yes,A_MM2,1205,1228,True,True,True
+ME71178A,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Restricted Use,No,A_MM2,1184,1205,True,True,True
+ME71178B,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Restricted Use,No,A_MM2,1147,1177,True,True,True
+ME71178C,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Restricted Use,No,A_MM2,1156,1163,True,True,True
+ME71135A,MC,Multiple Choice,1.0,Data,Knowing,Restricted Use,Yes,A_MM2,0,1189,False,True,False
+ME71135B,CR,Constructed Response,1.0,Data,Knowing,Restricted Use,Yes,A_MM2,1171,1189,True,True,True
+ME71201,CR,Constructed Response,1.0,Data,Reasoning,Restricted Use,Yes,A_MM2,1144,1166,True,True,True
+ME71175,CR,Constructed Response,2.0,Data,Applying,Restricted Use,Yes,A_MM2,1135,1147,True,True,True
+ME71175A,CR,Constructed Response,1.0,Data,Applying,Restricted Use,No,A_MM2,1131,1143,True,True,True
+ME71175B,CR,Constructed Response,1.0,Data,Applying,Restricted Use,No,A_MM2,1126,1141,True,True,True
+ME71175C,CR,Constructed Response,1.0,Data,Applying,Restricted Use,No,A_MM2,1125,1140,True,True,True
+ME71005,MC,Multiple Choice,1.0,Number,Knowing,Secured,Yes,A_MM3,0,1331,False,True,False
+ME71016,CR,Constructed Response,1.0,Number,Applying,Secured,Yes,A_MM3,1241,1323,True,True,True
+ME71163,MC,Multiple Choice,1.0,Number,Reasoning,Secured,Yes,A_MM3,1230,1327,True,True,True
+ME71045,MC,Multiple Choice,1.0,Number,Reasoning,Secured,Yes,A_MM3,1231,1319,True,True,True
+ME71213,CR,Constructed Response,1.0,Number,Knowing,Secured,Yes,A_MM3,1238,1323,True,True,True
+ME71213A,MC,Multiple Choice,1.0,Number,Knowing,Secured,No,A_MM3,1139,1190,True,True,True
+ME71213B,MC,Multiple Choice,1.0,Number,Knowing,Secured,No,A_MM3,1143,1192,True,True,True
+ME71213C,MC,Multiple Choice,1.0,Number,Knowing,Secured,No,A_MM3,1213,1286,True,True,True
+ME71070,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Secured,Yes,A_MM3,1228,1320,True,True,True
+ME71181,CR,Constructed Response,1.0,Measurement and Geometry,Applying,Secured,Yes,A_MM3,1234,1319,True,True,True
+ME71179,CR,Constructed Response,1.0,Measurement and Geometry,Knowing,Secured,Yes,A_MM3,1222,1314,True,True,True
+ME71179A,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Secured,No,A_MM3,1190,1279,True,True,True
+ME71179B,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Secured,No,A_MM3,1192,1272,True,True,True
+ME71179C,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Secured,No,A_MM3,1193,1263,True,True,True
+ME71067,CR,Constructed Response,2.0,Measurement and Geometry,Reasoning,Secured,Yes,A_MM3,1212,1301,True,True,True
+ME71147A,CR,Constructed Response,1.0,Data,Knowing,Secured,Yes,A_MM3,1206,1293,True,True,True
+ME71147B,CR,Constructed Response,1.0,Data,Reasoning,Secured,Yes,A_MM3,1199,1283,True,True,True
+ME71189,CR,Constructed Response,1.0,Data,Applying,Secured,Yes,A_MM3,1199,1277,True,True,True
+ME71187A,CR,Constructed Response,1.0,Data,Applying,Secured,Yes,A_MM3,1100,1186,True,True,True
+ME71187AA,MC,Multiple Choice,1.0,Data,Applying,Secured,No,A_MM3,1094,1185,True,True,True
+ME71187AB,MC,Multiple Choice,1.0,Data,Applying,Secured,No,A_MM3,1091,1178,True,True,True
+ME71187AC,MC,Multiple Choice,1.0,Data,Applying,Secured,No,A_MM3,1090,1185,True,True,True
+ME71187AD,MC,Multiple Choice,1.0,Data,Applying,Secured,No,A_MM3,1089,1178,True,True,True
+ME71187B,CR,Constructed Response,1.0,Data,Knowing,Secured,Yes,A_MM3,1117,1157,True,True,True
+ME71024,CR,Constructed Response,1.0,Number,Knowing,Secured,Yes,A_MM4,1240,1251,True,True,True
+ME71008,MC,Multiple Choice,1.0,Number,Applying,Secured,Yes,A_MM4,1267,1282,True,True,True
+ME71165,MC,Multiple Choice,1.0,Number,Applying,Secured,Yes,A_MM4,1260,1280,True,True,True
+ME71049,CR,Constructed Response,1.0,Number,Applying,Secured,Yes,A_MM4,1255,1261,True,True,True
+ME71063,CR,Constructed Response,1.0,Number,Applying,Secured,Yes,A_MM4,1250,1265,True,True,True
+ME71079,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Secured,Yes,A_MM4,1248,1273,True,True,True
+ME71081,CR,Constructed Response,1.0,Measurement and Geometry,Knowing,Secured,Yes,A_MM4,1242,1249,True,True,True
+ME71094,MC,Multiple Choice,1.0,Measurement and Geometry,Applying,Secured,Yes,A_MM4,1247,1256,True,True,True
+ME71177,CR,Constructed Response,1.0,Measurement and Geometry,Reasoning,Secured,Yes,A_MM4,1248,1253,True,True,True
+ME71206,MC,Multiple Choice,1.0,Data,Knowing,Secured,Yes,A_MM4,1228,1253,True,True,True
+ME71138A,CR,Constructed Response,1.0,Data,Reasoning,Secured,Yes,A_MM4,1209,1250,True,True,True
+ME71138AA,MC,Multiple Choice,1.0,Data,Reasoning,Secured,No,A_MM4,1202,1239,True,True,True
+ME71138AB,MC,Multiple Choice,1.0,Data,Reasoning,Secured,No,A_MM4,1190,1227,True,True,True
+ME71138AC,MC,Multiple Choice,1.0,Data,Reasoning,Secured,No,A_MM4,1179,1214,True,True,True
+ME71138B,CR,Constructed Response,1.0,Data,Reasoning,Secured,Yes,A_MM4,1199,1075,True,True,True
+ME71203,MC,Multiple Choice,1.0,Data,Applying,Secured,Yes,A_MM4,1186,1222,True,True,True
+ME71205,CR,Constructed Response,1.0,Data,Applying,Secured,Yes,A_MM4,1179,1209,True,True,True
+ME71205A,CR,Constructed Response,1.0,Data,Applying,Secured,No,A_MM4,1179,1206,True,True,True
+ME71205B,CR,Constructed Response,1.0,Data,Applying,Secured,No,A_MM4,1178,1203,True,True,True
+ME71205C,CR,Constructed Response,1.0,Data,Applying,Secured,No,A_MM4,1151,1183,True,True,True
