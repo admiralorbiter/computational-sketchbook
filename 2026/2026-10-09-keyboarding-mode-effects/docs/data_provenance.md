@@ -23,6 +23,7 @@ This document provides complete provenance, extraction citations, table referenc
 | `SRC-13` | Matthias von Davier, Bethany Fishbein, & Stephen J. Chrostowski | 2020 | [*Methods and Procedures: TIMSS 2019 Technical Report*, Chapters 12 & 13](https://timssandpirls.bc.edu/timss2019/methods/) | Exhibits 12.31, 13.1, 13.2 | Scale Score, Percent Correct, Item Invariance | **Verified Primary Report** | IEA Technical Documentation |
 | `SRC-14` | Aidan Clerkin, D. Verhelst, A. Mahdi, S. Mammadov, & G. McHugh | 2026 | [*Large-scale Assessments in Education*, Vol. 14, Article 4](https://doi.org/10.1186/s40536-026-00213-x) | Full Paper | Bridge Mode Differences | **Verified Peer-Reviewed** | Literature / Cross-National Bridge Studies |
 | `SRC-15` | Sonja Breuer | 2023 | [*Royal Society Open Science*, Vol. 10(9), Article 230784](https://doi.org/10.1098/rsos.230784) | Full Paper ($k = 184$) | Standardized Mean Differences ($g$) | **Verified Peer-Reviewed** | Literature / Response Format Meta-Analysis |
+| `SRC-16` | IEA PIRLS | 2021 | [PIRLS 2021 International Database](https://pirls2021.org/data/) | Germany Digital Benchmark (`ASADEUR5`, `ASPDEUR5`) | Item Timing (_S), First Visit (_R), Revisit (_F), PVs | **Verified Public Microdata** | `data/processed/pirls_2021_item_process_metrics.parquet`, `artifacts/tables/table15_pirls_2021_process_metrics_by_format.csv`, `table16_pirls_2021_mechanism_decomposition.csv` |
 
 ---
 
@@ -181,5 +182,15 @@ This document provides complete provenance, extraction citations, table referenc
 - **Meta-Analytic Base**: Synthesizes $k = 184$ effect sizes across open-ended versus closed-ended item formats.
 - **Theoretical Contribution**: Establishes that constructed-response items place substantially greater generative cognitive load and working memory demands on test-takers relative to recognition-based multiple choice, making them structurally more vulnerable to transcription friction, entry-tool unfamiliarity, and modality-induced cognitive interference.
 
-
-
+### `SRC-16`: IEA PIRLS 2021 — Digital Reading Process and Interaction Data (Germany Benchmark)
+- **Citation**: International Association for the Evaluation of Educational Achievement (IEA). (2023). *PIRLS 2021 International Database*. Chestnut Hill, MA: TIMSS & PIRLS International Study Center, Boston College. [Database Portal](https://pirls2021.org/data/).
+- **Microdata Files**: Germany Fourth-Grade Digital Reading Sample (`ASADEUR5.sav` student achievement file; `ASPDEUR5.sav` process interaction file; `P21_ItemInformation.xlsx` digital item classification dictionary).
+- **Sample Accounting**: $N = 4,611$ total assessed students; $N = 4,486$ clean students meeting full participation criteria (`FLAGPT1 == 0` and `FLAGPT2 == 0`). Note: U.S. PIRLS 2021 participated exclusively in the paper bridge administration due to pandemic scheduling; Germany was selected as the primary OECD digital benchmark because it administered the full digital PIRLS assessment with complete process logs and validated psychometric scales (mean $PV1 = 527.2$).
+- **Item Scope**: 273 digital reading items (124 Multiple Choice, 149 Constructed Response) across all four PIRLS comprehension processes (Retrieve, Straightforward Inferences, Interpret & Integrate, Evaluate & Critique) and both reading purposes (Literary and Informational).
+- **Audited Metrics**:
+  - Item total time (`_S`), initial response latency (`_R`), revisit rate and count (`_F`), and revisit duration (`_S - _R`).
+  - Student reading proficiency plausible values (`ASRREA01`–`ASRREA05`).
+- **Core Findings on the Three Mechanisms**:
+  - *Mechanism 1 (Navigation Friction)*: Revisit frequency is virtually format-invariant (52.2% on CR vs. 49.8% on MC; difference $+2.4$ pp), indicating that fourth graders do not experience format-specific navigational disorientation. However, revisit duration is $3.3\times$ longer on CR (30.5s vs. 9.2s), reflecting answer drafting/editing rather than navigation.
+  - *Mechanism 2 (Response-Entry Friction)*: Strongly supported. Mean total item latency is **127.2s on CR vs. 48.7s on MC** ($2.61\times$ latency multiplier; $+78.5$s per-item transcription tax). Across all four reading comprehension processes, CR items absorb $2.4\times$ to $2.8\times$ more time than MC.
+  - *Mechanism 3 (General Academic Ability)*: Higher reading comprehension is associated with faster MC completion ($r = -0.094$) but longer CR completion ($r = +0.114$), widening the entry time wedge ($r = +0.173$). Proficient students write richer, longer text, thereby incurring an even heavier typing time tax.

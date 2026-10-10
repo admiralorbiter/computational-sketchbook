@@ -1,0 +1,11 @@
+grouping,category,n_items,mean_total_time_s,median_total_time_s,mean_first_visit_s,revisit_pct,mean_revisit_duration_s,entry_latency_ratio
+Overall Format,Multiple Choice (Selected Response),124,47.03,30.0,37.82,49.75,9.21,1.0
+Overall Format,Constructed Response (Open Ended),149,123.29,89.0,92.84,52.21,30.45,2.62
+Comprehension Process,Evaluate and Critique Content and Textual Elements (MC),20,49.86,35.5,40.68,48.82,9.18,1.0
+Comprehension Process,Evaluate and Critique Content and Textual Elements (CR),19,119.45,87.0,85.25,54.65,34.2,2.4
+Comprehension Process,Focus on and Retrieve Explicitly Stated Information (MC),40,42.97,24.0,34.52,48.69,8.46,1.0
+Comprehension Process,Focus on and Retrieve Explicitly Stated Information (CR),48,104.97,73.5,82.64,49.17,22.33,2.44
+Comprehension Process,Interpret and Integrate Ideas and Information (MC),15,45.68,29.0,36.69,51.11,8.99,1.0
+Comprehension Process,Interpret and Integrate Ideas and Information (CR),53,134.84,106.0,99.74,54.75,35.11,2.95
+Comprehension Process,Make Straightforward Inferences (MC),49,49.59,32.0,39.68,50.58,9.91,1.0
+Comprehension Process,Make Straightforward Inferences (CR),29,135.02,112.0,102.07,50.98,32.95,2.72
