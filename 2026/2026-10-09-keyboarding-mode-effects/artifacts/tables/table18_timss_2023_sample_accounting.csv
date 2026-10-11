@@ -1,2 +1,4 @@
-assessment_cycle,grade,sample_design,total_assessed_students,total_schools,total_classes,total_booklets,unweighted_math_pv1,population_weighted_math_pv1,official_published_math_scale_score
-TIMSS 2023 (Cycle 8),Grade 4,Group-Adaptive Digital (Chromebooks),9090,242,479,14,516.64,516.69,517.0
+assessment_cycle,grade,sample_design,total_assessed_students,total_schools,total_classes,total_booklets,population_weighted_pv1,population_weighted_5pv_mean,official_published_math_scale_score,reconciliation_delta
+TIMSS 2019 (Official eTIMSS),Grade 4,eTIMSS Digital (Booklets 1–14),8776,287,507,14,534.73,534.73,535.0,-0.27
+TIMSS 2019 (eTIMSS + PSI),Grade 4,eTIMSS Digital + PSI (Booklets 1–16),10029,287,507,16,533.41,533.53,535.0,-1.47
+TIMSS 2023 (Official Digital),Grade 4,Group-Adaptive Digital (Booklets 1–14),9090,242,479,14,516.69,516.93,517.0,-0.07

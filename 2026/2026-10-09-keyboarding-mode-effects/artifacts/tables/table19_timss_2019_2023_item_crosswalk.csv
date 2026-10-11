@@ -1,133 +1,158 @@
-item_id,item_type,format,max_points,content_domain,cognitive_domain,secure_status,scaling_status,block_2023,n_examinees_2019,n_examinees_2023,administered_2019,administered_2023,administered_both
-ME71018,MC,Multiple Choice,1.0,Number,Applying,Secured,Yes,A_MD1,1245,1223,True,True,True
-ME71009,CR,Constructed Response,1.0,Number,Applying,Secured,Yes,A_MD1,1225,1185,True,True,True
-ME71037,CR,Constructed Response,1.0,Number,Applying,Secured,Yes,A_MD1,1229,1205,True,True,True
-ME71051,CR,Constructed Response,1.0,Number,Applying,Secured,Yes,A_MD1,1235,1179,True,True,True
-ME71064,MC,Multiple Choice,1.0,Number,Knowing,Secured,Yes,A_MD1,1232,1180,True,True,True
-ME71176,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Secured,Yes,A_MD1,1235,1171,True,True,True
-ME71169,CR,Constructed Response,1.0,Measurement and Geometry,Knowing,Secured,Yes,A_MD1,1232,1161,True,True,True
-ME71083,MC,Multiple Choice,1.0,Measurement and Geometry,Reasoning,Secured,Yes,A_MD1,1215,1142,True,True,True
-ME71199,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Secured,Yes,A_MD1,0,1140,False,True,False
-ME71184,MC,Multiple Choice,1.0,Measurement and Geometry,Reasoning,Secured,Yes,A_MD1,1208,1108,True,True,True
-ME71141,CR,Constructed Response,1.0,Data,Reasoning,Secured,Yes,A_MD1,1212,1102,True,True,True
-ME71141A,MC,Multiple Choice,1.0,Data,Reasoning,Secured,No,A_MD1,1212,1102,True,True,True
-ME71141B,MC,Multiple Choice,1.0,Data,Reasoning,Secured,No,A_MD1,1212,1102,True,True,True
-ME71141C,MC,Multiple Choice,1.0,Data,Reasoning,Secured,No,A_MD1,1212,1102,True,True,True
-ME71141D,MC,Multiple Choice,1.0,Data,Reasoning,Secured,No,A_MD1,1212,1102,True,True,True
-ME71194,CR,Constructed Response,1.0,Data,Applying,Secured,Yes,A_MD1,1207,1088,True,True,True
-ME71194A,MC,Multiple Choice,1.0,Data,Applying,Secured,No,A_MD1,1206,1086,True,True,True
-ME71194B,MC,Multiple Choice,1.0,Data,Applying,Secured,No,A_MD1,1206,1088,True,True,True
-ME71193,CR,Constructed Response,2.0,Data,Applying,Secured,Yes,A_MD1,1203,1068,True,True,True
-ME71193A,CR,Constructed Response,1.0,Data,Applying,Secured,No,A_MD1,1201,1052,True,True,True
-ME71193B,CR,Constructed Response,1.0,Data,Applying,Secured,No,A_MD1,1020,764,True,True,True
-ME71192,CR,Constructed Response,2.0,Data,Applying,Secured,Yes,A_MD1,1198,993,True,True,True
-ME61275,MC,Multiple Choice,1.0,Number,Knowing,Secured,Yes,A_MD2,1237,1252,True,True,True
-ME61027,CR,Constructed Response,1.0,Number,Applying,Secured,Yes,A_MD2,1226,1250,True,True,True
-ME61255,CR,Constructed Response,2.0,Number,Reasoning,Secured,Yes,A_MD2,1210,1211,True,True,True
-ME61021,CR,Constructed Response,1.0,Number,Reasoning,Secured,No,A_MD2,1219,0,True,False,False
-ME61043,CR,Constructed Response,1.0,Number,Knowing,Secured,Yes,A_MD2,1209,1214,True,True,True
-ME61151,MC,Multiple Choice,1.0,Number,Applying,Secured,Yes,A_MD2,1209,1211,True,True,True
-ME61172,MC,Multiple Choice,1.0,Number,Applying,Secured,Yes,A_MD2,1209,1202,True,True,True
-ME61223,MC,Multiple Choice,1.0,Number,Knowing,Secured,Yes,A_MD2,1210,1200,True,True,True
-ME61269,MC,Multiple Choice,1.0,Measurement and Geometry,Applying,Secured,Yes,A_MD2,1213,1199,True,True,True
-ME61081A,CR,Constructed Response,1.0,Measurement and Geometry,Applying,Secured,No,A_MD2,1209,1198,True,True,True
-ME61081B,CR,Constructed Response,1.0,Measurement and Geometry,Applying,Secured,No,A_MD2,1209,1198,True,True,True
-ME61178,CR,Constructed Response,1.0,Number,Knowing,Restricted Use,Yes,A_ME2,1232,1276,True,True,True
-ME61246,MC,Multiple Choice,1.0,Number,Knowing,Restricted Use,Yes,A_ME2,1232,1284,True,True,True
-ME61271,CR,Constructed Response,1.0,Number,Knowing,Restricted Use,Yes,A_ME2,1222,1279,True,True,True
-ME61256,CR,Constructed Response,1.0,Number,Reasoning,Restricted Use,Yes,A_ME2,1230,1278,True,True,True
-ME61182,CR,Constructed Response,1.0,Number,Applying,Restricted Use,Yes,A_ME2,1224,1267,True,True,True
-ME61049,MC,Multiple Choice,1.0,Number,Applying,Restricted Use,Yes,A_ME2,1224,1273,True,True,True
-ME61232,MC,Multiple Choice,1.0,Number,Applying,Restricted Use,Yes,A_ME2,1206,1268,True,True,True
-ME61095,CR,Constructed Response,1.0,Measurement and Geometry,Knowing,Restricted Use,Yes,A_ME2,1212,1259,True,True,True
-ME61095B,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Restricted Use,No,A_ME2,1165,1204,True,True,True
-ME61095C,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Restricted Use,No,A_ME2,1155,1199,True,True,True
-ME61095D,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Restricted Use,No,A_ME2,1152,1167,True,True,True
-ME61095E,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Restricted Use,No,A_ME2,1145,1178,True,True,True
-ME61264,CR,Constructed Response,2.0,Number,Applying,Restricted Use,Yes,A_ME2,1137,1200,True,True,True
-ME61108,MC,Multiple Choice,1.0,Measurement and Geometry,Reasoning,Restricted Use,Yes,A_ME2,1200,1259,True,True,True
-ME61211A,CR,Constructed Response,1.0,Data,Knowing,Restricted Use,Yes,A_ME2,1166,1166,True,True,True
-ME61211B,MC,Multiple Choice,1.0,Data,Applying,Restricted Use,Yes,A_ME2,1172,1219,True,True,True
-ME61240,CR,Constructed Response,1.0,Number,Knowing,Secured,Yes,A_ME4,1234,1297,True,True,True
-ME61240A,MC,Multiple Choice,1.0,Number,Knowing,Secured,No,A_ME4,1222,1283,True,True,True
-ME61240B,MC,Multiple Choice,1.0,Number,Knowing,Secured,No,A_ME4,1215,1271,True,True,True
-ME61240C,MC,Multiple Choice,1.0,Number,Knowing,Secured,No,A_ME4,1210,1270,True,True,True
-ME61254,CR,Constructed Response,1.0,Number,Applying,Secured,Yes,A_ME4,1232,1289,True,True,True
-ME61254A,CR,Constructed Response,1.0,Number,Applying,Secured,No,A_ME4,1228,1282,True,True,True
-ME61254B,CR,Constructed Response,1.0,Number,Applying,Secured,No,A_ME4,1217,1274,True,True,True
-ME61254C,CR,Constructed Response,1.0,Number,Applying,Secured,No,A_ME4,1219,1270,True,True,True
-ME61244,MC,Multiple Choice,1.0,Number,Reasoning,Secured,Yes,A_ME4,1229,1287,True,True,True
-ME61041,MC,Multiple Choice,1.0,Number,Knowing,Secured,Yes,A_ME4,1223,1289,True,True,True
-ME61173,CR,Constructed Response,1.0,Number,Knowing,Secured,Yes,A_ME4,1223,1276,True,True,True
-ME61252,MC,Multiple Choice,1.0,Number,Applying,Secured,Yes,A_ME4,1222,1287,True,True,True
-ME61261,CR,Constructed Response,1.0,Number,Applying,Secured,Yes,A_ME4,1218,1267,True,True,True
-ME61224,CR,Constructed Response,1.0,Measurement and Geometry,Applying,Secured,Yes,A_ME4,1222,1267,True,True,True
-ME61077,MC,Multiple Choice,1.0,Measurement and Geometry,Reasoning,Secured,Yes,A_ME4,1218,1271,True,True,True
-ME61069A,CR,Constructed Response,1.0,Data,Knowing,Secured,Yes,A_ME4,1220,1257,True,True,True
-ME61069B,CR,Constructed Response,1.0,Data,Applying,Secured,Yes,A_ME4,1213,1244,True,True,True
-ME71013,MC,Multiple Choice,1.0,Number,Knowing,Restricted Use,Yes,A_MM2,1255,1281,True,True,True
-ME71026,CR,Constructed Response,1.0,Number,Reasoning,Restricted Use,Yes,A_MM2,1231,1256,True,True,True
-ME71036,CR,Constructed Response,1.0,Number,Applying,Restricted Use,Yes,A_MM2,1251,1277,True,True,True
-ME71036A,CR,Constructed Response,1.0,Number,Applying,Restricted Use,No,A_MM2,1251,1277,True,True,True
-ME71036B,CR,Constructed Response,1.0,Number,Applying,Restricted Use,No,A_MM2,1251,1277,True,True,True
-ME71040,MC,Multiple Choice,1.0,Number,Applying,Restricted Use,Yes,A_MM2,1239,1257,True,True,True
-ME71068,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Restricted Use,Yes,A_MM2,1241,1261,True,True,True
-ME71075A,CR,Constructed Response,1.0,Measurement and Geometry,Applying,Restricted Use,Yes,A_MM2,1232,1236,True,True,True
-ME71075B,CR,Constructed Response,1.0,Measurement and Geometry,Applying,Restricted Use,Yes,A_MM2,1203,1205,True,True,True
-ME71080,MC,Multiple Choice,1.0,Measurement and Geometry,Reasoning,Restricted Use,Yes,A_MM2,1225,1241,True,True,True
-ME71211,CR,Constructed Response,1.0,Measurement and Geometry,Applying,Restricted Use,Yes,A_MM2,1226,1242,True,True,True
-ME71178,CR,Constructed Response,1.0,Measurement and Geometry,Knowing,Restricted Use,Yes,A_MM2,1205,1228,True,True,True
-ME71178A,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Restricted Use,No,A_MM2,1184,1205,True,True,True
-ME71178B,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Restricted Use,No,A_MM2,1147,1177,True,True,True
-ME71178C,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Restricted Use,No,A_MM2,1156,1163,True,True,True
-ME71135A,MC,Multiple Choice,1.0,Data,Knowing,Restricted Use,Yes,A_MM2,0,1189,False,True,False
-ME71135B,CR,Constructed Response,1.0,Data,Knowing,Restricted Use,Yes,A_MM2,1171,1189,True,True,True
-ME71201,CR,Constructed Response,1.0,Data,Reasoning,Restricted Use,Yes,A_MM2,1144,1166,True,True,True
-ME71175,CR,Constructed Response,2.0,Data,Applying,Restricted Use,Yes,A_MM2,1135,1147,True,True,True
-ME71175A,CR,Constructed Response,1.0,Data,Applying,Restricted Use,No,A_MM2,1131,1143,True,True,True
-ME71175B,CR,Constructed Response,1.0,Data,Applying,Restricted Use,No,A_MM2,1126,1141,True,True,True
-ME71175C,CR,Constructed Response,1.0,Data,Applying,Restricted Use,No,A_MM2,1125,1140,True,True,True
-ME71005,MC,Multiple Choice,1.0,Number,Knowing,Secured,Yes,A_MM3,0,1331,False,True,False
-ME71016,CR,Constructed Response,1.0,Number,Applying,Secured,Yes,A_MM3,1241,1323,True,True,True
-ME71163,MC,Multiple Choice,1.0,Number,Reasoning,Secured,Yes,A_MM3,1230,1327,True,True,True
-ME71045,MC,Multiple Choice,1.0,Number,Reasoning,Secured,Yes,A_MM3,1231,1319,True,True,True
-ME71213,CR,Constructed Response,1.0,Number,Knowing,Secured,Yes,A_MM3,1238,1323,True,True,True
-ME71213A,MC,Multiple Choice,1.0,Number,Knowing,Secured,No,A_MM3,1139,1190,True,True,True
-ME71213B,MC,Multiple Choice,1.0,Number,Knowing,Secured,No,A_MM3,1143,1192,True,True,True
-ME71213C,MC,Multiple Choice,1.0,Number,Knowing,Secured,No,A_MM3,1213,1286,True,True,True
-ME71070,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Secured,Yes,A_MM3,1228,1320,True,True,True
-ME71181,CR,Constructed Response,1.0,Measurement and Geometry,Applying,Secured,Yes,A_MM3,1234,1319,True,True,True
-ME71179,CR,Constructed Response,1.0,Measurement and Geometry,Knowing,Secured,Yes,A_MM3,1222,1314,True,True,True
-ME71179A,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Secured,No,A_MM3,1190,1279,True,True,True
-ME71179B,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Secured,No,A_MM3,1192,1272,True,True,True
-ME71179C,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Secured,No,A_MM3,1193,1263,True,True,True
-ME71067,CR,Constructed Response,2.0,Measurement and Geometry,Reasoning,Secured,Yes,A_MM3,1212,1301,True,True,True
-ME71147A,CR,Constructed Response,1.0,Data,Knowing,Secured,Yes,A_MM3,1206,1293,True,True,True
-ME71147B,CR,Constructed Response,1.0,Data,Reasoning,Secured,Yes,A_MM3,1199,1283,True,True,True
-ME71189,CR,Constructed Response,1.0,Data,Applying,Secured,Yes,A_MM3,1199,1277,True,True,True
-ME71187A,CR,Constructed Response,1.0,Data,Applying,Secured,Yes,A_MM3,1100,1186,True,True,True
-ME71187AA,MC,Multiple Choice,1.0,Data,Applying,Secured,No,A_MM3,1094,1185,True,True,True
-ME71187AB,MC,Multiple Choice,1.0,Data,Applying,Secured,No,A_MM3,1091,1178,True,True,True
-ME71187AC,MC,Multiple Choice,1.0,Data,Applying,Secured,No,A_MM3,1090,1185,True,True,True
-ME71187AD,MC,Multiple Choice,1.0,Data,Applying,Secured,No,A_MM3,1089,1178,True,True,True
-ME71187B,CR,Constructed Response,1.0,Data,Knowing,Secured,Yes,A_MM3,1117,1157,True,True,True
-ME71024,CR,Constructed Response,1.0,Number,Knowing,Secured,Yes,A_MM4,1240,1251,True,True,True
-ME71008,MC,Multiple Choice,1.0,Number,Applying,Secured,Yes,A_MM4,1267,1282,True,True,True
-ME71165,MC,Multiple Choice,1.0,Number,Applying,Secured,Yes,A_MM4,1260,1280,True,True,True
-ME71049,CR,Constructed Response,1.0,Number,Applying,Secured,Yes,A_MM4,1255,1261,True,True,True
-ME71063,CR,Constructed Response,1.0,Number,Applying,Secured,Yes,A_MM4,1250,1265,True,True,True
-ME71079,MC,Multiple Choice,1.0,Measurement and Geometry,Knowing,Secured,Yes,A_MM4,1248,1273,True,True,True
-ME71081,CR,Constructed Response,1.0,Measurement and Geometry,Knowing,Secured,Yes,A_MM4,1242,1249,True,True,True
-ME71094,MC,Multiple Choice,1.0,Measurement and Geometry,Applying,Secured,Yes,A_MM4,1247,1256,True,True,True
-ME71177,CR,Constructed Response,1.0,Measurement and Geometry,Reasoning,Secured,Yes,A_MM4,1248,1253,True,True,True
-ME71206,MC,Multiple Choice,1.0,Data,Knowing,Secured,Yes,A_MM4,1228,1253,True,True,True
-ME71138A,CR,Constructed Response,1.0,Data,Reasoning,Secured,Yes,A_MM4,1209,1250,True,True,True
-ME71138AA,MC,Multiple Choice,1.0,Data,Reasoning,Secured,No,A_MM4,1202,1239,True,True,True
-ME71138AB,MC,Multiple Choice,1.0,Data,Reasoning,Secured,No,A_MM4,1190,1227,True,True,True
-ME71138AC,MC,Multiple Choice,1.0,Data,Reasoning,Secured,No,A_MM4,1179,1214,True,True,True
-ME71138B,CR,Constructed Response,1.0,Data,Reasoning,Secured,Yes,A_MM4,1199,1075,True,True,True
-ME71203,MC,Multiple Choice,1.0,Data,Applying,Secured,Yes,A_MM4,1186,1222,True,True,True
-ME71205,CR,Constructed Response,1.0,Data,Applying,Secured,Yes,A_MM4,1179,1209,True,True,True
-ME71205A,CR,Constructed Response,1.0,Data,Applying,Secured,No,A_MM4,1179,1206,True,True,True
-ME71205B,CR,Constructed Response,1.0,Data,Applying,Secured,No,A_MM4,1178,1203,True,True,True
-ME71205C,CR,Constructed Response,1.0,Data,Applying,Secured,No,A_MM4,1151,1183,True,True,True
+item_id_2023,item_id_2019,screen_id,block,format,item_type,content_domain,cognitive_domain,scaling_status,max_points,is_official_trend_item,in_primary_scaling_sample,in_standard_etimss_sample,in_full_trend_sample,sample_tier,n_admin_2019,n_answered_2019,n_omitted_2019,n_not_reached_2019,omission_rate_2019,not_reached_rate_2019,n_admin_2023,n_answered_2023,n_omitted_2023,n_not_reached_2023,omission_rate_2023,not_reached_rate_2023,has_timing_2019,mean_screen_time_2019,median_screen_time_2019,has_timing_2023,mean_screen_time_2023,median_screen_time_2023,screen_time_change,label
+ME71018,ME71018,ME71018,A_MD1,Multiple Choice,MC,Number,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1248,1245,3,0,0.0024,0.0,1258,1223,13,22,0.0103,0.0175,True,75.7,59.0,True,66.0,50.7,-9.7,Seeds left over
+ME71009,ME71009,ME71009,A_MD1,Constructed Response,CR,Number,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1248,1225,23,0,0.0184,0.0,1257,1185,44,28,0.035,0.0223,True,121.3,88.5,True,91.7,69.4,-29.6,Number added to 73 with sum of 1068
+ME71037,ME71037,ME71037,A_MD1,Constructed Response,CR,Number,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1248,1229,15,4,0.012,0.0032,1258,1205,13,40,0.0103,0.0318,True,88.5,70.8,True,70.3,57.3,-18.2,Make the number sentence true - A x B = 13 - C
+ME71051,ME71051,ME71051,A_MD1,Constructed Response,CR,Number,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1248,1235,9,4,0.0072,0.0032,1258,1179,32,47,0.0254,0.0374,True,47.2,39.1,True,45.1,36.0,-2.1,Amount of time practicing piano
+ME71064,ME71064,ME71064,A_MD1,Multiple Choice,MC,Number,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1248,1232,11,5,0.0088,0.004,1258,1180,8,70,0.0064,0.0556,True,26.7,21.2,True,23.5,19.6,-3.2,Number equal to 8 tens and 2 tenths
+ME71176,ME71176,ME71176,A_MD1,Multiple Choice,MC,Measurement and Geometry,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1248,1235,7,6,0.0056,0.0048,1258,1171,13,74,0.0103,0.0588,True,54.1,46.6,True,48.5,44.3,-5.6,Measure height of doll
+ME71169,ME71169,ME71169,A_MD1,Constructed Response,CR,Measurement and Geometry,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1248,1232,7,9,0.0056,0.0072,1258,1161,11,86,0.0087,0.0684,True,47.3,39.3,True,39.2,32.3,-8.1,Water drank from water bottle
+ME71083,ME71083,ME71083,A_MD1,Multiple Choice,MC,Measurement and Geometry,Reasoning,Yes,1.0,True,True,True,True,Primary Scaling (100),1248,1215,19,14,0.0152,0.0112,1258,1142,24,92,0.0191,0.0731,True,69.0,60.6,True,57.9,53.5,-11.1,Movie that Terry is available to see
+ME71199,ME71199,ME71199,A_MD1,Multiple Choice,MC,Measurement and Geometry,Knowing,Yes,1.0,True,False,False,False,Single-Cycle Unadministered (6),0,0,0,0,0.0,0.0,1258,1140,12,106,0.0095,0.0843,False,,,True,26.2,19.4,,Two shapes that make square
+ME71184,ME71184,ME71184,A_MD1,Multiple Choice,MC,Measurement and Geometry,Reasoning,Yes,1.0,True,True,True,True,Primary Scaling (100),1248,1208,21,19,0.0168,0.0152,1258,1108,37,113,0.0294,0.0898,True,65.5,53.2,True,48.7,37.7,-16.8,Length of sides of 6-sided figure
+ME71141,ME71141,ME71141,A_MD1,Constructed Response,CR,Data,Reasoning,Yes,1.0,True,True,True,True,Primary Scaling (100),1248,1212,14,22,0.0112,0.0176,1258,1102,14,142,0.0111,0.1129,True,63.1,57.0,True,49.3,46.6,-13.8,Questions about soccer teams (DERIVED)
+ME71141A,ME71141A,ME71141,A_MD1,Multiple Choice,MC,Data,Reasoning,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1248,1212,14,22,0.0112,0.0176,1258,1102,14,142,0.0111,0.1129,True,63.1,57.0,True,49.3,46.6,-13.8,Questions about soccer teams - Lions won
+ME71141B,ME71141B,ME71141,A_MD1,Multiple Choice,MC,Data,Reasoning,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1248,1212,14,22,0.0112,0.0176,1258,1102,14,142,0.0111,0.1129,True,63.1,57.0,True,49.3,46.6,-13.8,Questions about soccer teams - won first two games
+ME71141C,ME71141C,ME71141,A_MD1,Multiple Choice,MC,Data,Reasoning,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1248,1212,14,22,0.0112,0.0176,1258,1102,14,142,0.0111,0.1129,True,63.1,57.0,True,49.3,46.6,-13.8,Questions about soccer teams - Cheetahs and Panthers
+ME71141D,ME71141D,ME71141,A_MD1,Multiple Choice,MC,Data,Reasoning,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1248,1212,14,22,0.0112,0.0176,1258,1102,14,142,0.0111,0.1129,True,63.1,57.0,True,49.3,46.6,-13.8,Questions about soccer teams - won more than lost
+ME71194,ME71194,ME71194,A_MD1,Constructed Response,CR,Data,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1248,1207,14,27,0.0112,0.0216,1258,1088,18,152,0.0143,0.1208,True,43.0,36.7,True,35.7,31.1,-7.3,Graph of weather last month (DERIVED)
+ME71194A,ME71194A,ME71194,A_MD1,Multiple Choice,MC,Data,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1248,1206,15,27,0.012,0.0216,1258,1086,20,152,0.0159,0.1208,True,43.0,36.7,True,35.7,31.1,-7.3,Graph of weather last month - bar 1
+ME71194B,ME71194B,ME71194,A_MD1,Multiple Choice,MC,Data,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1248,1206,15,27,0.012,0.0216,1258,1088,18,152,0.0143,0.1208,True,43.0,36.7,True,35.7,31.1,-7.3,Graph of weather last month - bar 2
+ME71193,ME71193,ME71193,A_MD1,Constructed Response,CR,Data,Applying,Yes,2.0,True,True,True,True,Primary Scaling (100),1248,1203,11,34,0.0088,0.0272,1258,1068,25,165,0.0199,0.1312,True,78.6,68.2,True,56.7,52.0,-21.9,Birdhouses (DERIVED)
+ME71193A,ME71193A,ME71193,A_MD1,Constructed Response,CR,Data,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1248,1201,13,34,0.0104,0.0272,1258,1052,41,165,0.0326,0.1312,True,78.6,68.2,True,56.7,52.0,-21.9,Birdhouses - number each symbol represents
+ME71193B,ME71193B,ME71193,A_MD1,Constructed Response,CR,Data,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1248,1020,194,34,0.1554,0.0272,1258,764,329,165,0.2615,0.1312,True,78.6,68.2,True,56.7,52.0,-21.9,Birdhouses - pictograph for Type C
+ME71192,ME71192,ME71192,A_MD1,Constructed Response,CR,Data,Applying,Yes,2.0,True,True,True,True,Primary Scaling (100),1248,1198,8,42,0.0064,0.0337,1258,993,52,213,0.0413,0.1693,True,123.3,104.7,True,83.5,67.4,-39.8,Graph of monthly rainfall
+ME61275,ME61275,ME61275,A_MD2,Multiple Choice,MC,Number,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1248,1237,8,3,0.0064,0.0024,1272,1252,10,10,0.0079,0.0079,True,84.1,72.1,True,87.8,71.4,3.7,3126 + 845 + 72 =
+ME61027,ME61027,ME61027,A_MD2,Constructed Response,CR,Number,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1248,1226,15,7,0.012,0.0056,1271,1250,7,14,0.0055,0.011,True,49.3,43.2,True,49.2,40.2,-0.1,Sara's 4-digit password
+ME61255,ME61255,ME61255,A_MD2,Constructed Response,CR,Number,Reasoning,Yes,2.0,True,True,True,True,Primary Scaling (100),1248,1210,29,9,0.0232,0.0072,1272,1211,44,17,0.0346,0.0134,True,194.2,157.2,True,185.5,141.6,-8.7,Game in Zedland buying bicycles and scooters
+ME61021,ME61021,ME61021,A_MD2,Constructed Response,CR,Number,Reasoning,No,1.0,True,False,False,False,Single-Cycle Unadministered (6),1248,1219,15,14,0.012,0.0112,0,0,0,0,0.0,0.0,True,56.1,42.9,False,,,,Fill in box to make multiple of 8
+ME61043,ME61043,ME61043,A_MD2,Constructed Response,CR,Number,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1248,1209,19,20,0.0152,0.016,1271,1214,21,36,0.0165,0.0283,True,63.6,53.9,True,63.6,51.9,0.0,Difference between Ana and Rui's diving scores
+ME61151,ME61151,ME61151,A_MD2,Multiple Choice,MC,Number,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1248,1209,16,23,0.0128,0.0184,1272,1211,15,46,0.0118,0.0362,True,37.7,31.4,True,36.5,27.3,-1.2,Expression to represent Pat's pencils
+ME61172,ME61172,ME61172,A_MD2,Multiple Choice,MC,Number,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1248,1209,14,25,0.0112,0.02,1272,1202,17,53,0.0134,0.0417,True,60.5,46.2,True,58.0,42.4,-2.5,Find value of p in number sentence
+ME61223,ME61223,ME61223,A_MD2,Multiple Choice,MC,Number,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1248,1210,11,27,0.0088,0.0216,1272,1200,14,58,0.011,0.0456,True,39.6,34.1,True,37.9,32.0,-1.7,Joan and Cliff meet halfway on number line
+ME61269,ME61269,ME61269,A_MD2,Multiple Choice,MC,Measurement and Geometry,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1248,1213,7,28,0.0056,0.0224,1272,1199,11,62,0.0086,0.0487,True,24.9,20.2,True,25.2,19.8,0.3,Identify solid with top and bottom shown above
+ME61081,ME61081,ME61081,A_MD2,Constructed Response,CR,Measurement and Geometry,Applying,Yes,2.0,True,False,False,False,Single-Cycle Unadministered (6),0,0,0,0,0.0,0.0,1271,1198,7,66,0.0055,0.0519,False,,,True,82.9,62.6,,Draws two lines with rules (DERIVED)
+ME61081A,ME61081A,ME61081,A_MD2,Constructed Response,CR,Measurement and Geometry,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1248,1209,10,29,0.008,0.0232,1271,1198,7,66,0.0055,0.0519,True,82.4,65.1,True,82.9,62.6,0.5,Draw a line parallel to AB through C
+ME61081B,ME61081B,ME61081,A_MD2,Constructed Response,CR,Measurement and Geometry,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1248,1209,4,35,0.0032,0.028,1271,1198,7,66,0.0055,0.0519,True,82.4,65.1,True,82.9,62.6,0.5,Draw a line perpendicular to AB through D
+MQ71A01,MQ11A01,M71A02,A_MD4,Multiple Choice,MC,Measurement and Geometry,Applying,No,1.0,True,False,False,False,Single-Cycle Unadministered (6),1252,1164,73,15,0.0583,0.012,0,0,0,0,0.0,0.0,True,57.1,45.9,False,,,,Pictures
+MQ71A02A,MQ11A02A,M71A03,A_MD4,Constructed Response,CR,Measurement and Geometry,Knowing,Yes,1.0,True,True,False,True,Primary Scaling (100),1252,1222,12,18,0.0096,0.0144,1291,1231,30,30,0.0232,0.0232,True,107.2,92.8,True,102.2,89.0,-5.0,Height - Emperor penguin
+MQ71A02B,MQ11A02B,M71A03,A_MD4,Constructed Response,CR,Measurement and Geometry,Knowing,Yes,1.0,True,True,False,True,Primary Scaling (100),1252,1219,13,20,0.0104,0.016,1291,1212,39,40,0.0302,0.031,True,107.2,92.8,True,102.2,89.0,-5.0,Height - Little penguin
+MQ71A02C,MQ11A02C,M71A03,A_MD4,Constructed Response,CR,Measurement and Geometry,Applying,Yes,1.0,True,True,False,True,Primary Scaling (100),1252,1216,16,20,0.0128,0.016,1291,1206,41,44,0.0318,0.0341,True,107.2,92.8,True,102.2,89.0,-5.0,Height - difference
+MQ71A03A,MQ11A03A,M71A04,A_MD4,Constructed Response,CR,Number,Knowing,No,1.0,True,False,False,True,PSI Interactive Unit (7),1252,924,307,21,0.2452,0.0168,1291,752,492,47,0.3811,0.0364,True,65.1,54.8,True,68.6,57.3,3.5,Weight - heaviest to lightest (EXCLUDED)
+MQ71A03B,MQ11A03B,M71A04,A_MD4,Constructed Response,CR,Number,Applying,Yes,1.0,True,True,False,True,Primary Scaling (100),1252,1220,10,22,0.008,0.0176,1291,1222,12,57,0.0093,0.0442,True,65.1,54.8,True,68.6,57.3,3.5,Weight - number of healthy penguins
+MQ71A04A,MQ11A04A,M71A05,A_MD4,Constructed Response,CR,Number,Applying,Yes,2.0,True,True,False,True,Primary Scaling (100),1252,858,369,25,0.2947,0.02,1291,893,340,58,0.2634,0.0449,True,120.5,105.2,True,121.5,104.8,1.0,Population - pointers on number line (DERIVED)
+MQ71A04AA,MQ11A04AA,M71A05,A_MD4,Constructed Response,CR,Number,Applying,No,1.0,False,False,False,True,PSI Interactive Unit (7),1252,765,462,25,0.369,0.02,1291,758,475,58,0.3679,0.0449,True,120.5,105.2,True,121.5,104.8,1.0,Population - pointers on number line - last year
+MQ71A04AB,MQ11A04AB,M71A05,A_MD4,Constructed Response,CR,Number,Applying,No,1.0,False,False,False,True,PSI Interactive Unit (7),1252,818,409,25,0.3267,0.02,1291,860,373,58,0.2889,0.0449,True,120.5,105.2,True,121.5,104.8,1.0,Population - pointers on number line - this year
+MQ71A04B,MQ11A04B,M71A05,A_MD4,Constructed Response,CR,Number,Applying,Yes,1.0,True,True,False,True,Primary Scaling (100),1252,1197,26,29,0.0208,0.0232,1291,1194,32,65,0.0248,0.0503,True,120.5,105.2,True,121.5,104.8,1.0,Population - taken by predators
+MQ71A05A,MQ11A05A,M71A06,A_MD4,Multiple Choice,MC,Number,Applying,Yes,1.0,True,True,False,True,Primary Scaling (100),1252,1140,74,38,0.0591,0.0304,1291,1125,92,74,0.0713,0.0573,True,122.1,98.8,True,111.1,95.5,-11.0,Food - expression
+MQ71A05B,MQ11A05B,M71A06,A_MD4,Constructed Response,CR,Data,Applying,Yes,1.0,True,True,False,True,Primary Scaling (100),1252,1066,138,48,0.1102,0.0383,1291,912,299,80,0.2316,0.062,True,122.1,98.8,True,111.1,95.5,-11.0,Food - pictograph (DERIVED)
+MQ71A05BA,MQ11A05BA,M71A06,A_MD4,Constructed Response,CR,Data,Applying,No,1.0,False,False,False,True,PSI Interactive Unit (7),1252,1066,138,48,0.1102,0.0383,1291,912,299,80,0.2316,0.062,True,122.1,98.8,True,111.1,95.5,-11.0,Food - pictograph - Bony fish
+MQ71A05BB,MQ11A05BB,M71A06,A_MD4,Constructed Response,CR,Data,Applying,No,1.0,False,False,False,True,PSI Interactive Unit (7),1252,1034,170,48,0.1358,0.0383,1291,912,299,80,0.2316,0.062,True,122.1,98.8,True,111.1,95.5,-11.0,Food - pictograph - Other fish
+MQ71A06A,MQ11A06A,M71A07,A_MD4,Constructed Response,CR,Number,Reasoning,Yes,1.0,True,True,False,True,Primary Scaling (100),1252,1180,20,52,0.016,0.0415,1291,1166,38,87,0.0294,0.0674,True,108.4,84.7,True,105.6,87.0,-2.8,Donation - amount to feed 5 penguins
+MQ71A06B,MQ11A06B,M71A07,A_MD4,Constructed Response,CR,Number,Applying,Yes,1.0,True,True,False,True,Primary Scaling (100),1252,1168,26,58,0.0208,0.0463,1291,1145,41,105,0.0318,0.0813,True,108.4,84.7,True,105.6,87.0,-2.8,Donation - penguins fed with 200 zeds
+MQ71R01A,MQ11R01A,M71R02,A_MD4,Constructed Response,CR,Number,Knowing,Yes,1.0,True,True,False,True,Primary Scaling (100),1252,1173,18,61,0.0144,0.0487,1291,1159,19,113,0.0147,0.0875,True,74.0,64.2,True,81.8,71.0,7.8,Robots - number between 20 and 25
+MQ71R01B,MQ11R01B,M71R02,A_MD4,Constructed Response,CR,Number,Knowing,Yes,1.0,True,True,False,True,Primary Scaling (100),1252,1165,13,74,0.0104,0.0591,1291,1050,112,129,0.0868,0.0999,True,74.0,64.2,True,81.8,71.0,7.8,Robots - odd number greater than 40
+MQ71R02A,MQ11R02A,M71R03,A_MD4,Constructed Response,CR,Number,Reasoning,Yes,1.0,True,True,False,True,Primary Scaling (100),1252,995,182,75,0.1454,0.0599,1291,1054,91,146,0.0705,0.1131,True,146.5,125.1,True,138.1,118.1,-8.4,Robots - rule for cost of pencils
+MQ71R02B,MQ11R02B,M71R03,A_MD4,Constructed Response,CR,Number,Applying,Yes,1.0,True,True,False,True,Primary Scaling (100),1252,985,138,129,0.1102,0.103,1290,1032,75,183,0.0581,0.1419,True,146.5,125.1,True,138.1,118.1,-8.4,Robots - cost of each pencil
+MQ71R03,MQ11R03,M71R04,A_MD4,Constructed Response,CR,Number,Reasoning,Yes,1.0,True,True,False,True,Primary Scaling (100),1252,945,174,133,0.139,0.1062,1291,1012,77,202,0.0596,0.1565,True,120.6,99.7,True,123.0,96.0,2.4,Robots - table and chairs rule (DERIVED)
+MQ71R03A,MQ11R03A,M71R04,A_MD4,Constructed Response,CR,Number,Reasoning,No,1.0,False,False,False,True,PSI Interactive Unit (7),1252,940,179,133,0.143,0.1062,1291,1001,88,202,0.0682,0.1565,True,120.6,99.7,True,123.0,96.0,2.4,Robots - table and chairs rule step 1
+MQ71R03B,MQ11R03B,M71R04,A_MD4,Constructed Response,CR,Number,Reasoning,No,1.0,False,False,False,True,PSI Interactive Unit (7),1252,936,183,133,0.1462,0.1062,1291,994,95,202,0.0736,0.1565,True,120.6,99.7,True,123.0,96.0,2.4,Robots - table and chairs rule step 2
+MQ71R04,MQ11R04,M71R05,A_MD4,Constructed Response,CR,Number,Reasoning,Yes,2.0,True,True,False,True,Primary Scaling (100),1252,958,117,177,0.0935,0.1414,1291,870,166,255,0.1286,0.1975,True,171.0,152.7,True,125.4,109.7,-45.6,Robots - number robot likes
+ME61178,ME61178,ME61178,A_ME2,Constructed Response,CR,Number,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1246,1232,11,3,0.0088,0.0024,1290,1276,11,3,0.0085,0.0023,True,47.9,36.6,True,48.7,34.5,0.8,Round Mount Everest height to nearest 1000
+ME61246,ME61246,ME61246,A_ME2,Multiple Choice,MC,Number,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1246,1232,11,3,0.0088,0.0024,1290,1284,3,3,0.0023,0.0023,True,33.8,23.0,True,37.5,25.2,3.7,Number that is even and multiple of 7
+ME61271,ME61271,ME61271,A_ME2,Constructed Response,CR,Number,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1246,1222,21,3,0.0169,0.0024,1289,1279,7,3,0.0054,0.0023,True,70.8,57.9,True,86.4,66.4,15.6,6 x 312 =
+ME61256,ME61256,ME61256,A_ME2,Constructed Response,CR,Number,Reasoning,Yes,1.0,True,True,True,True,Primary Scaling (100),1246,1230,11,5,0.0088,0.004,1290,1278,9,3,0.007,0.0023,True,155.6,132.2,True,136.3,114.2,-19.3,Mark and Keith's card game - can Keith win
+ME61182,ME61182,ME61182,A_ME2,Constructed Response,CR,Number,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1246,1224,14,8,0.0112,0.0064,1288,1267,16,5,0.0124,0.0039,True,63.2,52.5,True,67.4,51.0,4.2,Total amount of juice Zara and Khattab have
+ME61049,ME61049,ME61049,A_ME2,Multiple Choice,MC,Number,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1246,1224,10,12,0.008,0.0096,1290,1273,8,9,0.0062,0.007,True,51.5,42.2,True,49.8,35.9,-1.7,Choose operation for box in number sentence
+ME61232,ME61232,ME61232,A_ME2,Multiple Choice,MC,Number,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1246,1206,27,13,0.0217,0.0104,1290,1268,11,11,0.0085,0.0085,True,48.6,36.6,True,48.5,36.3,-0.1,Expression for players on teams in football league
+ME61095,ME61095,ME61095,A_ME2,Constructed Response,CR,Measurement and Geometry,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1246,1212,15,19,0.012,0.0152,1290,1259,18,13,0.014,0.0101,True,61.7,53.7,True,68.1,53.8,6.4,Identify angle types from diagram in a table (DERIVED)
+ME61095B,ME61095B,ME61095,A_ME2,Multiple Choice,MC,Measurement and Geometry,Knowing,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1246,1165,62,19,0.0498,0.0152,1290,1204,73,13,0.0566,0.0101,True,61.7,53.7,True,68.1,53.8,6.4,Identify angle types from diagram in a table - B
+ME61095C,ME61095C,ME61095,A_ME2,Multiple Choice,MC,Measurement and Geometry,Knowing,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1246,1155,72,19,0.0578,0.0152,1290,1199,78,13,0.0605,0.0101,True,61.7,53.7,True,68.1,53.8,6.4,Identify angle types from diagram in a table - C
+ME61095D,ME61095D,ME61095,A_ME2,Multiple Choice,MC,Measurement and Geometry,Knowing,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1246,1152,75,19,0.0602,0.0152,1290,1167,110,13,0.0853,0.0101,True,61.7,53.7,True,68.1,53.8,6.4,Identify angle types from diagram in a table - D
+ME61095E,ME61095E,ME61095,A_ME2,Multiple Choice,MC,Measurement and Geometry,Knowing,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1246,1145,82,19,0.0658,0.0152,1290,1178,99,13,0.0767,0.0101,True,61.7,53.7,True,68.1,53.8,6.4,Identify angle types from diagram in a table - E
+ME61264,ME61264,ME61264,A_ME2,Constructed Response,CR,Number,Applying,Yes,2.0,True,True,True,True,Primary Scaling (100),1246,1137,89,20,0.0714,0.0161,1290,1200,75,15,0.0581,0.0116,True,103.6,93.2,True,117.0,106.7,13.4,Label points on the Snail path
+ME61108,ME61108,ME61108,A_ME2,Multiple Choice,MC,Measurement and Geometry,Reasoning,Yes,1.0,True,True,True,True,Primary Scaling (100),1246,1200,15,31,0.012,0.0249,1290,1259,10,21,0.0078,0.0163,True,45.2,38.5,True,50.1,41.9,4.9,Choose cardboard for Julia's hexagonal box
+ME61211A,ME61211A,ME61211,A_ME2,Constructed Response,CR,Data,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1246,1166,42,38,0.0337,0.0305,1290,1166,100,24,0.0775,0.0186,True,100.8,84.2,True,96.5,77.6,-4.3,Fruit market - pieces of fruit sold on Monday
+ME61211B,ME61211B,ME61211,A_ME2,Multiple Choice,MC,Data,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1246,1172,23,51,0.0185,0.0409,1290,1219,39,32,0.0302,0.0248,True,100.8,84.2,True,96.5,77.6,-4.3,Fruit market - apples sold on Tuesday
+ME61240,ME61240,ME61240,A_ME4,Constructed Response,CR,Number,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1242,1234,3,5,0.0024,0.004,1301,1297,2,2,0.0015,0.0015,True,48.6,40.7,True,56.3,42.4,7.7,Place value expansion (DERIVED)
+ME61240A,ME61240A,ME61240,A_ME4,Multiple Choice,MC,Number,Knowing,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1242,1222,15,5,0.0121,0.004,1301,1283,16,2,0.0123,0.0015,True,48.6,40.7,True,56.3,42.4,7.7,Place value expansion - 3h + 58o
+ME61240B,ME61240B,ME61240,A_ME4,Multiple Choice,MC,Number,Knowing,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1242,1215,22,5,0.0177,0.004,1301,1271,28,2,0.0215,0.0015,True,48.6,40.7,True,56.3,42.4,7.7,Place value expansion - 3h + 4t + 18o
+ME61240C,ME61240C,ME61240,A_ME4,Multiple Choice,MC,Number,Knowing,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1242,1210,27,5,0.0217,0.004,1301,1270,29,2,0.0223,0.0015,True,48.6,40.7,True,56.3,42.4,7.7,Place value expansion - 3h + 15t + 8o
+ME61254,ME61254,ME61254,A_ME4,Constructed Response,CR,Number,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1242,1232,5,5,0.004,0.004,1301,1289,10,2,0.0077,0.0015,True,96.3,80.7,True,105.2,82.3,8.9,Complete the table for Mia's input-output game (DERIVED)
+ME61254A,ME61254A,ME61254,A_ME4,Constructed Response,CR,Number,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1242,1228,9,5,0.0072,0.004,1301,1282,17,2,0.0131,0.0015,True,96.3,80.7,True,105.2,82.3,8.9,Complete the table for Mia's input-output game - 8
+ME61254B,ME61254B,ME61254,A_ME4,Constructed Response,CR,Number,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1242,1217,20,5,0.0161,0.004,1301,1274,25,2,0.0192,0.0015,True,96.3,80.7,True,105.2,82.3,8.9,Complete the table for Mia's input-output game - 20
+ME61254C,ME61254C,ME61254,A_ME4,Constructed Response,CR,Number,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1242,1219,18,5,0.0145,0.004,1301,1270,29,2,0.0223,0.0015,True,96.3,80.7,True,105.2,82.3,8.9,Complete the table for Mia's input-output game - 2
+ME61244,ME61244,ME61244,A_ME4,Multiple Choice,MC,Number,Reasoning,Yes,1.0,True,True,True,True,Primary Scaling (100),1242,1229,7,6,0.0056,0.0048,1301,1287,11,3,0.0085,0.0023,True,40.7,33.1,True,49.9,37.6,9.2,Choose true statement about 2 and 3 digit numbers
+ME61041,ME61041,ME61041,A_ME4,Multiple Choice,MC,Number,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1242,1223,11,8,0.0089,0.0064,1301,1289,6,6,0.0046,0.0046,True,33.0,25.0,True,37.3,25.3,4.3,Identify number between 1.4 and 1.78
+ME61173,ME61173,ME61173,A_ME4,Constructed Response,CR,Number,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1242,1223,9,10,0.0072,0.0081,1301,1276,17,8,0.0131,0.0061,True,63.5,49.4,True,64.6,47.1,1.1,Find the value of w in number sentence
+ME61252,ME61252,ME61252,A_ME4,Multiple Choice,MC,Number,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1242,1222,10,10,0.0081,0.0081,1301,1287,3,11,0.0023,0.0085,True,31.6,24.5,True,37.0,25.4,5.4,Expression to find number of books Luke read
+ME61261,ME61261,ME61261,A_ME4,Constructed Response,CR,Number,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1242,1218,13,11,0.0105,0.0089,1299,1267,21,11,0.0162,0.0085,True,74.5,64.4,True,82.1,67.9,7.6,Find the next number for Ian's number pattern
+ME61224,ME61224,ME61224,A_ME4,Constructed Response,CR,Measurement and Geometry,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1242,1222,7,13,0.0056,0.0105,1301,1267,18,16,0.0138,0.0123,True,87.8,73.4,True,90.9,73.8,3.1,Draw angle MNP larger than a right angle
+ME61077,ME61077,ME61077,A_ME4,Multiple Choice,MC,Measurement and Geometry,Reasoning,Yes,1.0,True,True,True,True,Primary Scaling (100),1242,1218,10,14,0.0081,0.0113,1301,1271,10,20,0.0077,0.0154,True,33.8,26.2,True,35.5,28.4,1.7,View of building from above
+ME61069A,ME61069A,ME61069,A_ME4,Constructed Response,CR,Data,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1242,1220,7,15,0.0056,0.0121,1301,1257,18,26,0.0138,0.02,True,77.9,65.6,True,83.9,70.6,6.0,Time for Ahmed to read 10 pages
+ME61069B,ME61069B,ME61069,A_ME4,Constructed Response,CR,Data,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1242,1213,9,20,0.0072,0.0161,1301,1244,23,34,0.0177,0.0261,True,77.9,65.6,True,83.9,70.6,6.0,Number of pages Ahmed reads in 60 minutes
+ME71013,ME71013,ME71013,A_MM2,Multiple Choice,MC,Number,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1271,1255,6,10,0.0047,0.0079,1293,1281,5,7,0.0039,0.0054,True,62.3,52.0,True,62.9,50.3,0.6,1000 - 403 =
+ME71026,ME71026,ME71026,A_MM2,Constructed Response,CR,Number,Reasoning,Yes,1.0,True,True,True,True,Primary Scaling (100),1271,1231,29,11,0.0228,0.0087,1291,1256,25,10,0.0194,0.0077,True,80.3,63.5,True,82.2,61.6,1.9,Number that makes three sentences true
+ME71036,ME71036,ME71036,A_MM2,Constructed Response,CR,Number,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1271,1251,5,15,0.0039,0.0118,1293,1277,3,13,0.0023,0.0101,True,46.4,36.6,True,47.0,35.7,0.6,Make two number sentences true (DERIVED)
+ME71036A,ME71036A,ME71036,A_MM2,Constructed Response,CR,Number,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1271,1251,5,15,0.0039,0.0118,1293,1277,3,13,0.0023,0.0101,True,46.4,36.6,True,47.0,35.7,0.6,Make two number sentences true - 5 + A is greater than 12
+ME71036B,ME71036B,ME71036,A_MM2,Constructed Response,CR,Number,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1271,1251,5,15,0.0039,0.0118,1293,1277,3,13,0.0023,0.0101,True,46.4,36.6,True,47.0,35.7,0.6,Make two number sentences true - 20 - B is greater than 15
+ME71040,ME71040,ME71040,A_MM2,Multiple Choice,MC,Number,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1271,1239,17,15,0.0134,0.0118,1293,1257,21,15,0.0162,0.0116,True,67.6,54.9,True,66.2,51.3,-1.4,Expression for total bags for tennis and soccer balls
+ME71068,ME71068,ME71068,A_MM2,Multiple Choice,MC,Measurement and Geometry,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1271,1241,13,17,0.0102,0.0134,1293,1261,7,25,0.0054,0.0193,True,48.4,39.9,True,47.6,37.6,-0.8,Estimate height of Building B
+ME71075A,ME71075A,ME71075,A_MM2,Constructed Response,CR,Measurement and Geometry,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1271,1232,21,18,0.0165,0.0142,1293,1236,29,28,0.0224,0.0217,True,163.1,137.4,True,156.7,131.4,-6.4,Steps across classroom - length
+ME71075B,ME71075B,ME71075,A_MM2,Constructed Response,CR,Measurement and Geometry,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1271,1203,45,23,0.0354,0.0181,1293,1205,52,36,0.0402,0.0278,True,163.1,137.4,True,156.7,131.4,-6.4,Steps across classroom - width
+ME71080,ME71080,ME71080,A_MM2,Multiple Choice,MC,Measurement and Geometry,Reasoning,Yes,1.0,True,True,True,True,Primary Scaling (100),1271,1225,15,31,0.0118,0.0244,1293,1241,11,41,0.0085,0.0317,True,50.0,43.8,True,46.5,40.9,-3.5,Weight of watermelon
+ME71211,ME71211,ME71211,A_MM2,Constructed Response,CR,Measurement and Geometry,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1271,1226,7,38,0.0055,0.0299,1293,1242,4,47,0.0031,0.0363,True,57.8,45.9,True,57.1,45.8,-0.7,Path parallel to Mary's path
+ME71178,ME71178,ME71178,A_MM2,Constructed Response,CR,Measurement and Geometry,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1271,1205,27,39,0.0212,0.0307,1293,1228,18,47,0.0139,0.0363,True,68.8,63.0,True,67.2,58.0,-1.6,Properties of two pentagons (DERIVED)
+ME71178A,ME71178A,ME71178,A_MM2,Multiple Choice,MC,Measurement and Geometry,Knowing,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1271,1184,48,39,0.0378,0.0307,1293,1205,41,47,0.0317,0.0363,True,68.8,63.0,True,67.2,58.0,-1.6,Properties of two pentagons - 5 sides
+ME71178B,ME71178B,ME71178,A_MM2,Multiple Choice,MC,Measurement and Geometry,Knowing,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1271,1147,85,39,0.0669,0.0307,1293,1177,69,47,0.0534,0.0363,True,68.8,63.0,True,67.2,58.0,-1.6,Properties of two pentagons - sides equal length
+ME71178C,ME71178C,ME71178,A_MM2,Multiple Choice,MC,Measurement and Geometry,Knowing,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1271,1156,76,39,0.0598,0.0307,1293,1163,83,47,0.0642,0.0363,True,68.8,63.0,True,67.2,58.0,-1.6,Properties of two pentagons - perimeter of 15
+ME71135A,ME71135A,ME71135,A_MM2,Multiple Choice,MC,Data,Knowing,Yes,1.0,True,False,False,False,Single-Cycle Unadministered (6),0,0,0,0,0.0,0.0,1293,1189,39,65,0.0302,0.0503,False,,,True,68.7,59.6,,Scores in game - highest in Round 2
+ME71135B,ME71135B,ME71135,A_MM2,Constructed Response,CR,Data,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1271,1171,32,68,0.0252,0.0535,1293,1189,34,70,0.0263,0.0541,True,70.5,62.1,True,68.7,59.6,-1.8,Scores in game - Round 2 and Round 3
+ME71201,ME71201,ME71201,A_MM2,Constructed Response,CR,Data,Reasoning,Yes,1.0,True,True,True,True,Primary Scaling (100),1271,1144,54,73,0.0425,0.0574,1293,1166,50,77,0.0387,0.0596,True,167.2,152.5,True,147.6,132.4,-19.6,Graphs of snowfall from two years
+ME71175,ME71175,ME71175,A_MM2,Constructed Response,CR,Data,Applying,Yes,2.0,True,True,True,True,Primary Scaling (100),1271,1135,30,106,0.0236,0.0834,1292,1147,49,96,0.0379,0.0743,True,97.2,88.9,True,92.4,80.4,-4.8,Number of origami animals (DERIVED)
+ME71175A,ME71175A,ME71175,A_MM2,Constructed Response,CR,Data,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1271,1131,34,106,0.0268,0.0834,1292,1143,53,96,0.041,0.0743,True,97.2,88.9,True,92.4,80.4,-4.8,Number of origami animals - blue
+ME71175B,ME71175B,ME71175,A_MM2,Constructed Response,CR,Data,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1271,1126,39,106,0.0307,0.0834,1293,1141,56,96,0.0433,0.0742,True,97.2,88.9,True,92.4,80.4,-4.8,Number of origami animals - red
+ME71175C,ME71175C,ME71175,A_MM2,Constructed Response,CR,Data,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1271,1125,40,106,0.0315,0.0834,1292,1140,56,96,0.0433,0.0743,True,97.2,88.9,True,92.4,80.4,-4.8,Number of origami animals - yellow
+ME71005,ME71005,ME71005,A_MM3,Multiple Choice,MC,Number,Knowing,Yes,1.0,True,False,False,False,Single-Cycle Unadministered (6),0,0,0,0,0.0,0.0,1335,1331,1,3,0.0007,0.0022,False,,,True,19.9,14.2,,"Value of 3 in 321,524"
+ME71016,ME71016,ME71016,A_MM3,Constructed Response,CR,Number,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1256,1241,12,3,0.0096,0.0024,1335,1323,9,3,0.0067,0.0022,True,90.5,74.0,True,103.3,82.2,12.8,Number of people ferris wheel can take
+ME71163,ME71163,ME71163,A_MM3,Multiple Choice,MC,Number,Reasoning,Yes,1.0,True,True,True,True,Primary Scaling (100),1256,1230,21,5,0.0167,0.004,1335,1327,4,4,0.003,0.003,True,101.5,70.8,True,103.3,65.5,1.8,Number of figures made of blocks
+ME71045,ME71045,ME71045,A_MM3,Multiple Choice,MC,Number,Reasoning,Yes,1.0,True,True,True,True,Primary Scaling (100),1256,1231,15,10,0.0119,0.008,1335,1319,12,4,0.009,0.003,True,82.4,63.4,True,80.4,58.3,-2.0,Stars used in Mallika's pattern
+ME71213,ME71213,ME71213,A_MM3,Constructed Response,CR,Number,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1256,1238,5,13,0.004,0.0104,1335,1323,2,10,0.0015,0.0075,True,29.8,22.9,True,29.5,21.8,-0.3,Larger number in each pair (DERIVED)
+ME71213A,ME71213A,ME71213,A_MM3,Multiple Choice,MC,Number,Knowing,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1256,1139,104,13,0.0828,0.0104,1335,1190,135,10,0.1011,0.0075,True,29.8,22.9,True,29.5,21.8,-0.3,Larger number in each pair - Pair 1 - 0.6
+ME71213B,ME71213B,ME71213,A_MM3,Multiple Choice,MC,Number,Knowing,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1256,1143,100,13,0.0796,0.0104,1335,1192,133,10,0.0996,0.0075,True,29.8,22.9,True,29.5,21.8,-0.3,Larger number in each pair - Pair 2 - 0.09
+ME71213C,ME71213C,ME71213,A_MM3,Multiple Choice,MC,Number,Knowing,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1256,1213,30,13,0.0239,0.0104,1335,1286,39,10,0.0292,0.0075,True,29.8,22.9,True,29.5,21.8,-0.3,Larger number in each pair - Pair 3 - 2.1
+ME71070,ME71070,ME71070,A_MM3,Multiple Choice,MC,Measurement and Geometry,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1256,1228,13,15,0.0104,0.0119,1335,1320,5,10,0.0037,0.0075,True,44.0,35.8,True,44.6,35.7,0.6,Estimate length of twig
+ME71181,ME71181,ME71181,A_MM3,Constructed Response,CR,Measurement and Geometry,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1256,1234,6,16,0.0048,0.0127,1335,1319,4,12,0.003,0.009,True,97.2,80.6,True,99.1,82.9,1.9,Rectangle with perimeter of 10 cm
+ME71179,ME71179,ME71179,A_MM3,Constructed Response,CR,Measurement and Geometry,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1256,1222,16,18,0.0127,0.0143,1335,1314,7,14,0.0052,0.0105,True,56.0,48.3,True,57.2,47.1,1.2,Properties of rhombus and rectangle (DERIVED)
+ME71179A,ME71179A,ME71179,A_MM3,Multiple Choice,MC,Measurement and Geometry,Knowing,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1256,1190,48,18,0.0382,0.0143,1335,1279,42,14,0.0315,0.0105,True,56.0,48.3,True,57.2,47.1,1.2,Properties of rhombus and rectangle - 4 equal angles
+ME71179B,ME71179B,ME71179,A_MM3,Multiple Choice,MC,Measurement and Geometry,Knowing,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1256,1192,46,18,0.0366,0.0143,1335,1272,49,14,0.0367,0.0105,True,56.0,48.3,True,57.2,47.1,1.2,Properties of rhombus and rectangle - equal length sides
+ME71179C,ME71179C,ME71179,A_MM3,Multiple Choice,MC,Measurement and Geometry,Knowing,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1256,1193,45,18,0.0358,0.0143,1335,1263,58,14,0.0434,0.0105,True,56.0,48.3,True,57.2,47.1,1.2,Properties of rhombus and rectangle - parallel sides
+ME71067,ME71067,ME71067,A_MM3,Constructed Response,CR,Measurement and Geometry,Reasoning,Yes,2.0,True,True,True,True,Primary Scaling (100),1256,1212,20,24,0.0159,0.0191,1335,1301,16,18,0.012,0.0135,True,82.8,63.5,True,83.7,62.9,0.9,Shelves needed for new books
+ME71147A,ME71147A,ME71147,A_MM3,Constructed Response,CR,Data,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1256,1206,20,30,0.0159,0.0239,1335,1293,18,24,0.0135,0.018,True,72.8,63.7,True,73.9,62.3,1.1,Line graph of Scott's walk - 2 km
+ME71147B,ME71147B,ME71147,A_MM3,Constructed Response,CR,Data,Reasoning,Yes,1.0,True,True,True,True,Primary Scaling (100),1256,1199,21,36,0.0167,0.0287,1335,1283,24,28,0.018,0.021,True,72.8,63.7,True,73.9,62.3,1.1,Line graph of Scott's walk - 6 km
+ME71189,ME71189,ME71189,A_MM3,Constructed Response,CR,Data,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1256,1199,17,40,0.0135,0.0318,1335,1277,29,29,0.0217,0.0217,True,108.1,95.4,True,63.0,51.9,-45.1,Graph of weights of bears
+ME71187A,ME71187A,ME71187,A_MM3,Constructed Response,CR,Data,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1256,1100,109,47,0.0868,0.0374,1335,1186,113,36,0.0846,0.027,True,84.9,77.7,True,79.3,69.1,-5.6,Table of Sarah's beads (DERIVED)
+ME71187AA,ME71187AA,ME71187,A_MM3,Multiple Choice,MC,Data,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1256,1094,115,47,0.0916,0.0374,1335,1185,114,36,0.0854,0.027,True,84.9,77.7,True,79.3,69.1,-5.6,Table of Sarah's beads - red square
+ME71187AB,ME71187AB,ME71187,A_MM3,Multiple Choice,MC,Data,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1256,1091,118,47,0.0939,0.0374,1335,1178,121,36,0.0906,0.027,True,84.9,77.7,True,79.3,69.1,-5.6,Table of Sarah's beads - red round
+ME71187AC,ME71187AC,ME71187,A_MM3,Multiple Choice,MC,Data,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1256,1090,119,47,0.0947,0.0374,1335,1185,114,36,0.0854,0.027,True,84.9,77.7,True,79.3,69.1,-5.6,Table of Sarah's beads - blue square
+ME71187AD,ME71187AD,ME71187,A_MM3,Multiple Choice,MC,Data,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1256,1089,120,47,0.0955,0.0374,1335,1178,121,36,0.0906,0.027,True,84.9,77.7,True,79.3,69.1,-5.6,Table of Sarah's beads - blue round
+ME71187B,ME71187B,ME71187,A_MM3,Constructed Response,CR,Data,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1256,1117,68,71,0.0541,0.0565,1334,1157,127,50,0.0952,0.0375,True,84.9,77.7,True,79.3,69.1,-5.6,Table of Sarah's beads - square beads
+ME71024,ME71024,ME71024,A_MM4,Constructed Response,CR,Number,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1272,1240,32,0,0.0252,0.0,1293,1251,38,4,0.0294,0.0031,True,125.0,89.8,True,130.6,96.4,5.6,927/3 =
+ME71008,ME71008,ME71008,A_MM4,Multiple Choice,MC,Number,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1272,1267,4,1,0.0031,0.0008,1293,1282,7,4,0.0054,0.0031,True,70.9,57.5,True,73.3,57.7,2.4,Heights of Khalifa and Shanghai towers
+ME71165,ME71165,ME71165,A_MM4,Multiple Choice,MC,Number,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1272,1260,11,1,0.0086,0.0008,1293,1280,6,7,0.0046,0.0054,True,59.7,43.7,True,57.4,42.1,-2.3,Expression for marbles Linda has left
+ME71049,ME71049,ME71049,A_MM4,Constructed Response,CR,Number,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1272,1255,16,1,0.0126,0.0008,1293,1261,24,8,0.0186,0.0062,True,52.0,39.0,True,50.4,36.3,-1.6,"Rule for number pattern - 6, 10, 14, 18, 22"
+ME71063,ME71063,ME71063,A_MM4,Constructed Response,CR,Number,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1272,1250,20,2,0.0157,0.0016,1293,1265,18,10,0.0139,0.0077,True,117.9,105.1,True,125.3,110.3,7.4,"Money spent on book, notebook and pencils"
+ME71079,ME71079,ME71079,A_MM4,Multiple Choice,MC,Measurement and Geometry,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1272,1248,21,3,0.0165,0.0024,1293,1273,7,13,0.0054,0.0101,True,39.3,34.4,True,39.5,33.3,0.2,Speed shown on speedometer
+ME71081,ME71081,ME71081,A_MM4,Constructed Response,CR,Measurement and Geometry,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1272,1242,21,9,0.0165,0.0071,1293,1249,30,14,0.0232,0.0108,True,90.0,71.2,True,86.2,64.7,-3.8,Hours to travel from Town A to Town B
+ME71094,ME71094,ME71094,A_MM4,Multiple Choice,MC,Measurement and Geometry,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1272,1247,11,14,0.0086,0.011,1293,1256,20,17,0.0155,0.0131,True,54.0,43.5,True,61.0,47.0,7.0,Area of rectangle on grid
+ME71177,ME71177,ME71177,A_MM4,Constructed Response,CR,Measurement and Geometry,Reasoning,Yes,1.0,True,True,True,True,Primary Scaling (100),1272,1248,7,17,0.0055,0.0134,1293,1253,17,23,0.0131,0.0178,True,92.2,74.8,True,95.3,77.7,3.1,Complete the shape given 3 conditions
+ME71206,ME71206,ME71206,A_MM4,Multiple Choice,MC,Data,Knowing,Yes,1.0,True,True,True,True,Primary Scaling (100),1272,1228,25,19,0.0197,0.0149,1293,1253,15,25,0.0116,0.0193,True,45.2,39.1,True,44.3,37.5,-0.9,Type of coin with most total value
+ME71138A,ME71138A,ME71138,A_MM4,Constructed Response,CR,Data,Reasoning,Yes,1.0,True,True,True,True,Primary Scaling (100),1272,1209,33,30,0.0259,0.0236,1293,1250,7,36,0.0054,0.0278,True,187.3,174.7,True,176.6,160.9,-10.7,Students at school - statements about graph (DERIVED)
+ME71138AA,ME71138AA,ME71138,A_MM4,Multiple Choice,MC,Data,Reasoning,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1272,1202,40,30,0.0314,0.0236,1293,1239,18,36,0.0139,0.0278,True,187.3,174.7,True,176.6,160.9,-10.7,Students at school - statements about graph - most students
+ME71138AB,ME71138AB,ME71138,A_MM4,Multiple Choice,MC,Data,Reasoning,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1272,1190,52,30,0.0409,0.0236,1293,1227,30,36,0.0232,0.0278,True,187.3,174.7,True,176.6,160.9,-10.7,Students at school - statements about graph - Benton
+ME71138AC,ME71138AC,ME71138,A_MM4,Multiple Choice,MC,Data,Reasoning,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1272,1179,63,30,0.0495,0.0236,1293,1214,43,36,0.0333,0.0278,True,187.3,174.7,True,176.6,160.9,-10.7,Students at school - statements about graph - Wilson
+ME71138B,ME71138B,ME71138,A_MM4,Constructed Response,CR,Data,Reasoning,Yes,1.0,True,True,True,True,Primary Scaling (100),1272,1199,31,42,0.0244,0.033,1293,1075,177,41,0.1369,0.0317,True,187.3,174.7,True,176.6,160.9,-10.7,Students at school - Arne's statement
+ME71203,ME71203,ME71203,A_MM4,Multiple Choice,MC,Data,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1272,1186,42,44,0.033,0.0346,1293,1222,28,43,0.0217,0.0333,True,50.4,45.2,True,52.4,45.0,2.0,Graph that best shows target hits
+ME71205,ME71205,ME71205,A_MM4,Constructed Response,CR,Data,Applying,Yes,1.0,True,True,True,True,Primary Scaling (100),1272,1179,24,69,0.0189,0.0542,1293,1209,22,62,0.017,0.048,True,72.8,66.2,True,79.9,70.2,7.1,Ages of children at skate park (DERIVED)
+ME71205A,ME71205A,ME71205,A_MM4,Constructed Response,CR,Data,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1272,1179,24,69,0.0189,0.0542,1293,1206,25,62,0.0193,0.048,True,72.8,66.2,True,79.9,70.2,7.1,Ages of children at skate park - A
+ME71205B,ME71205B,ME71205,A_MM4,Constructed Response,CR,Data,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1272,1178,25,69,0.0197,0.0542,1293,1203,28,62,0.0217,0.048,True,72.8,66.2,True,79.9,70.2,7.1,Ages of children at skate park - B
+ME71205C,ME71205C,ME71205,A_MM4,Constructed Response,CR,Data,Applying,No,1.0,False,False,True,True,Standard eTIMSS Subpart (44),1272,1151,52,69,0.0409,0.0542,1293,1183,48,62,0.0371,0.048,True,72.8,66.2,True,79.9,70.2,7.1,Ages of children at skate park - C
