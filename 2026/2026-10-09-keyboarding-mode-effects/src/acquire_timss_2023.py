@@ -290,22 +290,30 @@ def audit_sample_and_crosswalk(df_info23: pd.DataFrame) -> tuple[pd.DataFrame, p
             m_t23 = med_t23 = np.nan
             has_t23 = False
             
-        # Three-way reconciliation taxonomy
+        # Three-way reconciliation taxonomy & Sample Tiers
         admin_both = bool(n_admin_19 > 0 and n_admin_23 > 0)
         is_scale = (scale_stat == "Yes")
         is_standalone_unscaled = iid23 in ["ME61021", "MQ71A01", "MQ71A03A"]
-        is_official_trend = bool(is_scale or is_standalone_unscaled)
+        # Proposed 107-item reconciliation matching NCES reported counts (hypothesized pending item-by-item NCES release)
+        is_proposed_107 = bool(is_scale or is_standalone_unscaled)
         
-        in_primary = bool(is_scale and admin_both)
+        # Primary Sample: 84 standard scaling items (dual-administered, non-PSI)
+        in_primary_84 = bool(is_scale and admin_both and block != "A_MD4")
+        # Secondary / Robustness Sample: 100 scaling items including PSI
+        in_psi_100 = bool(is_scale and admin_both)
+        # Standard eTIMSS dual pool (scaling + subparts)
         in_standard = bool(block != "A_MD4" and admin_both)
+        # Full dual pool across all 8 blocks
         in_full = bool(admin_both)
         
-        if in_primary:
-            tier = "Primary Scaling (100)"
+        if in_primary_84:
+            tier = "Primary Standard Scaling (84)"
+        elif is_scale and admin_both and block == "A_MD4":
+            tier = "Secondary PSI Scaling (16)"
         elif in_standard:
             tier = "Standard eTIMSS Subpart (44)"
         elif in_full:
-            tier = "PSI Interactive Unit (7)"
+            tier = "PSI Interactive Subpart (7)"
         else:
             tier = "Single-Cycle Unadministered (6)"
             
@@ -320,8 +328,10 @@ def audit_sample_and_crosswalk(df_info23: pd.DataFrame) -> tuple[pd.DataFrame, p
             "cognitive_domain": cog_domain,
             "scaling_status": scale_stat,
             "max_points": max_pts,
-            "is_official_trend_item": is_official_trend,
-            "in_primary_scaling_sample": in_primary,
+            "is_proposed_107_reconciliation": is_proposed_107,
+            "is_official_trend_item": is_proposed_107,  # alias for backward-compatibility
+            "in_primary_scaling_sample": in_primary_84,
+            "in_psi_robustness_sample": in_psi_100,
             "in_standard_etimss_sample": in_standard,
             "in_full_trend_sample": in_full,
             "sample_tier": tier,
@@ -338,9 +348,11 @@ def audit_sample_and_crosswalk(df_info23: pd.DataFrame) -> tuple[pd.DataFrame, p
             "omission_rate_2023": round(n_omit_23 / n_admin_23, 4) if n_admin_23 > 0 else 0.0,
             "not_reached_rate_2023": round(n_nr_23 / n_admin_23, 4) if n_admin_23 > 0 else 0.0,
             "has_timing_2019": has_t19,
+            "timing_var_2019": tcol19 or "",
             "mean_screen_time_2019": m_t19,
             "median_screen_time_2019": med_t19,
             "has_timing_2023": has_t23,
+            "timing_var_2023": tcol23 or "",
             "mean_screen_time_2023": m_t23,
             "median_screen_time_2023": med_t23,
             "screen_time_change": round(m_t23 - m_t19, 1) if (has_t19 and has_t23 and pd.notna(m_t23) and pd.notna(m_t19)) else np.nan,
@@ -348,7 +360,71 @@ def audit_sample_and_crosswalk(df_info23: pd.DataFrame) -> tuple[pd.DataFrame, p
         })
         
     df_cw = pd.DataFrame(crosswalk_records)
-    return sample_acc, df_cw
+    
+    # 4. Deduplicated Screen-Level Process Timing (Table 20)
+    screen_records = []
+    for sid, grp in df_cw.groupby("screen_id"):
+        iid19 = grp.iloc[0]["item_id_2019"]
+        iid23 = grp.iloc[0]["item_id_2023"]
+        blk = grp.iloc[0]["block"]
+        
+        tcol19 = [c for c in [f"{sid}_S", f"{iid19}_S", f"{iid19[:7]}_S"] if c in cols19]
+        tcol23 = [c for c in [f"{sid}_S", f"{iid23}_S", f"{iid23[:7]}_S"] if c in cols23_p]
+        tcol19 = tcol19[0] if tcol19 else None
+        tcol23 = tcol23[0] if tcol23 else None
+        
+        fcol19 = [c for c in [f"{sid}_F", f"{iid19}_F", f"{iid19[:7]}_F"] if c in cols19]
+        fcol23 = [c for c in [f"{sid}_F", f"{iid23}_F", f"{iid23[:7]}_F"] if c in cols23_p]
+        fcol19 = fcol19[0] if fcol19 else None
+        fcol23 = fcol23[0] if fcol23 else None
+        
+        fmts = grp["format"].unique()
+        s_fmt = fmts[0] if len(fmts) == 1 else "Mixed (MC + CR)"
+        
+        in_p84 = any(grp["in_primary_scaling_sample"])
+        in_s100 = any(grp["in_psi_robustness_sample"])
+        in_std = any(grp["in_standard_etimss_sample"])
+        
+        if tcol19 and grp.iloc[0]["n_admin_2019"] > 0:
+            s19 = df_asa19[tcol19].dropna()
+            s19 = s19[s19 < 90000]
+            m19 = round(float(s19.mean()), 1) if len(s19) > 0 else np.nan
+            med19 = round(float(s19.median()), 1) if len(s19) > 0 else np.nan
+        else:
+            m19 = med19 = np.nan
+            
+        if tcol23 and grp.iloc[0]["n_admin_2023"] > 0:
+            s23 = df_asp23[tcol23].dropna()
+            s23 = s23[s23 < 90000]
+            m23 = round(float(s23.mean()), 1) if len(s23) > 0 else np.nan
+            med23 = round(float(s23.median()), 1) if len(s23) > 0 else np.nan
+        else:
+            m23 = med23 = np.nan
+            
+        diff_time = round(m23 - m19, 1) if pd.notna(m23) and pd.notna(m19) else np.nan
+        
+        screen_records.append({
+            "screen_id": sid,
+            "block": blk,
+            "screen_format": s_fmt,
+            "n_items_on_screen": len(grp),
+            "item_ids_on_screen": "; ".join(grp["item_id_2023"]),
+            "in_primary_84_sample": in_p84,
+            "in_secondary_100_sample": in_s100,
+            "in_standard_128_sample": in_std,
+            "timing_var_2019": tcol19 or "",
+            "timing_var_2023": tcol23 or "",
+            "visit_freq_var_2019": fcol19 or "",
+            "visit_freq_var_2023": fcol23 or "",
+            "mean_screen_time_2019": m19,
+            "median_screen_time_2019": med19,
+            "mean_screen_time_2023": m23,
+            "median_screen_time_2023": med23,
+            "screen_time_change": diff_time
+        })
+        
+    df_screens = pd.DataFrame(screen_records)
+    return sample_acc, df_cw, df_screens
 
 
 def main():
@@ -364,7 +440,7 @@ def main():
     extract_us_microdata_files()
     
     # 3. Sample accounting and common-item crosswalk
-    sample_acc, df_cw = audit_sample_and_crosswalk(df_info23)
+    sample_acc, df_cw, df_screens = audit_sample_and_crosswalk(df_info23)
     
     # Export Table 18: Sample Accounting
     t18_path = TABLES_DIR / "table18_timss_2023_sample_accounting.csv"
@@ -377,16 +453,28 @@ def main():
     df_cw.to_csv(t19_path, index=False)
     print(f"\n[OK] Table 19 generated -> {t19_path.name}")
     print(f"     Total Items in 8 Trend Blocks:             {len(df_cw)}")
-    print(f"     Official 2023 Trend Items (NCES Notes):   {df_cw['is_official_trend_item'].sum()} items (104 scaling + 3 unscaled standalone)")
-    print(f"     Primary Analytical Sample (Scaling Both): {df_cw['in_primary_scaling_sample'].sum()} items ({(df_cw[df_cw['in_primary_scaling_sample']]['item_type']=='MC').sum()} MC, {(df_cw[df_cw['in_primary_scaling_sample']]['item_type']=='CR').sum()} CR)")
+    print(f"     Proposed 107-Item NCES Trend Match:       {df_cw['is_proposed_107_reconciliation'].sum()} items (104 scaling + 3 unscaled standalone)")
+    print(f"     Primary Standard Scaling (84 items):      {df_cw['in_primary_scaling_sample'].sum()} items ({(df_cw[df_cw['in_primary_scaling_sample']]['item_type']=='MC').sum()} MC, {(df_cw[df_cw['in_primary_scaling_sample']]['item_type']=='CR').sum()} CR)")
+    print(f"     Secondary PSI Robustness (100 items):     {df_cw['in_psi_robustness_sample'].sum()} items ({(df_cw[df_cw['in_psi_robustness_sample']]['item_type']=='MC').sum()} MC, {(df_cw[df_cw['in_psi_robustness_sample']]['item_type']=='CR').sum()} CR)")
     print(f"     Standard eTIMSS Sample (7 Blocks Both):   {df_cw['in_standard_etimss_sample'].sum()} items ({(df_cw[df_cw['in_standard_etimss_sample']]['item_type']=='MC').sum()} MC, {(df_cw[df_cw['in_standard_etimss_sample']]['item_type']=='CR').sum()} CR)")
     print(f"     Full Trend Pool (8 Blocks Both):          {df_cw['in_full_trend_sample'].sum()} items ({(df_cw[df_cw['in_full_trend_sample']]['item_type']=='MC').sum()} MC, {(df_cw[df_cw['in_full_trend_sample']]['item_type']=='CR').sum()} CR)")
     print(f"     Single-Cycle Unadministered:              {(~df_cw['in_full_trend_sample']).sum()} items")
     
-    # Export parquet
+    # Export Table 20: Screen-Level Process Timing
+    t20_path = TABLES_DIR / "table20_timss_2019_2023_screen_timing.csv"
+    df_screens.to_csv(t20_path, index=False)
+    print(f"\n[OK] Table 20 generated -> {t20_path.name} ({len(df_screens)} unique screens across 8 blocks)")
+    print(f"     Screens in Primary 84 Sample:             {df_screens['in_primary_84_sample'].sum()} screens ({df_screens[df_screens['in_primary_84_sample']]['screen_format'].value_counts().to_dict()})")
+    print(f"     Screens in Secondary 100 Sample:           {df_screens['in_secondary_100_sample'].sum()} screens ({df_screens[df_screens['in_secondary_100_sample']]['screen_format'].value_counts().to_dict()})")
+    
+    # Export parquets
     crosswalk_parquet = PROCESSED_DIR / "timss_2019_2023_item_crosswalk.parquet"
     df_cw.to_parquet(crosswalk_parquet, index=False)
     print(f"[OK] Saved crosswalk parquet -> {crosswalk_parquet.name}")
+    
+    screen_parquet = PROCESSED_DIR / "timss_2019_2023_screen_timing.parquet"
+    df_screens.to_parquet(screen_parquet, index=False)
+    print(f"[OK] Saved screen timing parquet -> {screen_parquet.name}")
     
     print("\n[SUCCESS] TIMSS 2023 admission & crosswalk pipeline complete.")
 
