@@ -142,21 +142,21 @@ def test_table25_irt_counterfactuals():
     assert t25_path.exists(), "Table 25 CSV not found"
     
     df = pd.read_csv(t25_path)
-    assert len(df) == 3, f"Expected 3 scenarios in Table 25, found {len(df)}"
+    assert len(df) == 5, f"Expected 5 scenarios in Table 25, found {len(df)}"
     
-    # All scenarios assume the published national decline of -17.80 points (-0.2225 SD)
+    # Verify that uncalibrated scale score shares were removed
+    assert "implied_scale_pts_scenario" not in df.columns
+    assert "share_of_18pt_decline_pct" not in df.columns
+    
+    # Check that all scenarios compute expected format gaps
     for _, row in df.iterrows():
-        assert abs(row["latent_theta_shift_sd"] - (-0.2225)) < 0.001
-        # Expected CR drop is steeper than MC drop due to guessing floors on MC and higher CR discrimination
-        assert row["expected_cr_drop_pp"] < row["expected_mc_drop_pp"]
-        # Expected beta is negative (between -1.3 and -2.3 pp)
-        assert -2.30 < row["beta_expected_pp"] < -1.30
-        # Observed beta is -0.97 pp
+        assert -2.50 < row["beta_expected_pp"] < -0.50
         assert abs(row["beta_observed_pp"] - (-0.97)) < 0.05
-        # Excess beta is POSITIVE (beta_observed > beta_expected)
-        assert row["beta_excess_pp"] > 0.0
-        # No evidence of excess CR penalty
-        assert "No" in row["evidence_of_excess_cr_penalty"]
+        assert abs(row["gap_difference_pp"] - (row["beta_observed_pp"] - row["beta_expected_pp"])) < 0.02
+        
+    # Check parameter sensitivity: both positive and negative gap differences exist across plausible parameter grids
+    assert (df["gap_difference_pp"] > 0).any(), "Expected positive gap difference in high-discrimination scenarios"
+    assert (df["gap_difference_pp"] < 0).any(), "Expected negative gap difference in low-guessing/balanced scenarios"
 
 
 def test_processed_parquets_exist_and_consistent():

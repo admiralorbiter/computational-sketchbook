@@ -376,60 +376,69 @@ def run_screen_timing_panel(df_screens: pd.DataFrame, df19_timing: pd.DataFrame,
 
 def run_irt_and_counterfactuals(df_did: pd.DataFrame) -> pd.DataFrame:
     """
-    Estimate Table 25: Psychometric IRT expected benchmark and scale-score counterfactual scenarios.
-    Evaluates expected format differential under general proficiency drop (-0.2225 SD).
-    """
-    # Latent proficiency decline: -17.80 scale score points on 80-point SD scale = -0.2225 SD
-    delta_theta = -17.80 / 80.0
+    Estimate Table 25: Exploratory Synthetic IRT Sensitivity Demonstration.
+    Illustrates how non-linear guessing floors and item discrimination differences create 
+    natural format divergence under uniform latent ability shifts.
     
-    # Grid of standard IRT parameters for Grade 4 math
+    CRITICAL METHODOLOGICAL QUALIFICATION:
+    This is an exploratory parameter sensitivity simulation across illustrative 3PL/2PL curves.
+    It does NOT use calibrated TIMSS item parameters or empirical scale transformations.
+    Consequently, it demonstrates theoretical mechanics rather than providing a causal attribution estimate.
+    """
     np.random.seed(42)
     n_sim = 200_000
-    th_19 = np.random.normal(0.0, 1.0, n_sim)
-    th_23 = np.random.normal(delta_theta, 1.0, n_sim)
+    th_base = np.random.normal(0.0, 1.0, n_sim)
     
     def p_3pl(th, a, b, c):
         return c + (1.0 - c) / (1.0 + np.exp(-a * (th - b)))
         
-    # Baseline calibrations across 3 scenarios
-    scenarios = [
-        ("Scenario 1: Canonical IRT Parameters (MC c=0.25, CR c=0.0)", 1.0, 1.2, 0.25, 0.0),
-        ("Scenario 2: High Discrimination CR (a_CR=1.35, a_MC=0.95)", 0.95, 1.35, 0.25, 0.0),
-        ("Scenario 3: Lower Guessing MC (c=0.20, a_CR=1.25)", 1.05, 1.25, 0.20, 0.0),
-    ]
-    
+    # Baseline observed DiD interaction from Model 2
     b_obs = df_did.loc[df_did["model_specification"].str.contains("Model 2"), "did_format_interaction_pp"].iloc[0]
     
+    scenarios = [
+        ("Scenario 1: Canonical (a_MC=1.00, a_CR=1.20, c=0.25; TIMSS Scale SD 100)", -17.80 / 100.0, 1.00, 1.20, 0.25, 0.0, "Scale SD 100 (-0.178 SD)"),
+        ("Scenario 2: Canonical (a_MC=1.00, a_CR=1.20, c=0.25; Sample SD ~80)", -17.80 / 80.0, 1.00, 1.20, 0.25, 0.0, "Sample SD ~80 (-0.223 SD)"),
+        ("Scenario 3: Balanced Discrimination (a_MC=1.00, a_CR=1.05, c=0.25; Scale SD 100)", -17.80 / 100.0, 1.00, 1.05, 0.25, 0.0, "Scale SD 100 (-0.178 SD)"),
+        ("Scenario 4: High CR Discrimination (a_MC=0.95, a_CR=1.35, c=0.25; Scale SD 100)", -17.80 / 100.0, 0.95, 1.35, 0.25, 0.0, "Scale SD 100 (-0.178 SD)"),
+        ("Scenario 5: Lower Guessing Floor (a_MC=1.05, a_CR=1.15, c=0.15; Scale SD 100)", -17.80 / 100.0, 1.05, 1.15, 0.15, 0.0, "Scale SD 100 (-0.178 SD)"),
+    ]
+    
     t25_rows = []
-    for sname, a_m, a_c, c_m, c_c in scenarios:
+    for sname, d_th, a_m, a_c, c_m, c_c, basis in scenarios:
+        th_post = np.random.normal(d_th, 1.0, n_sim)
+        
         # MC expected drop
-        p19_m = p_3pl(th_19, a_m, 0.0, c_m).mean() * 100
-        p23_m = p_3pl(th_23, a_m, 0.0, c_m).mean() * 100
+        p19_m = p_3pl(th_base, a_m, 0.0, c_m).mean() * 100
+        p23_m = p_3pl(th_post, a_m, 0.0, c_m).mean() * 100
         d_mc_exp = p23_m - p19_m
         
         # CR expected drop
-        p19_c = p_3pl(th_19, a_c, 0.2, c_c).mean() * 100
-        p23_c = p_3pl(th_23, a_c, 0.2, c_c).mean() * 100
+        p19_c = p_3pl(th_base, a_c, 0.2, c_c).mean() * 100
+        p23_c = p_3pl(th_post, a_c, 0.2, c_c).mean() * 100
         d_cr_exp = p23_c - p19_c
         
         b_exp = d_cr_exp - d_mc_exp
-        b_excess = b_obs - b_exp
+        gap_diff = b_obs - b_exp
         
-        # Counterfactual scale impact: excess drift converted back to scale units
-        # Raw percentage to scale conversion factor ~ 80 / (average test information) ~ 1.5 to 2.0 pts per pp
-        implied_scale_pts = b_excess * (52 / 84) * (80.0 / 40.0) # weighted by CR share (52/84) and TCC slope
+        interpretation = (
+            "Observed interaction smaller than synthetic IRT gap (relative CR stability)" 
+            if gap_diff > 0.10 
+            else ("Observed interaction closely matches synthetic IRT gap" if abs(gap_diff) <= 0.10 else "Observed interaction exceeds synthetic IRT gap (additional CR decline)")
+        )
         
         t25_rows.append({
             "scenario": sname,
-            "latent_theta_shift_sd": round(delta_theta, 4),
+            "latent_shift_basis": basis,
+            "delta_theta_sd": round(d_th, 4),
+            "illustrative_a_mc": a_m,
+            "illustrative_a_cr": a_c,
+            "illustrative_c_mc": c_m,
             "expected_mc_drop_pp": round(d_mc_exp, 2),
             "expected_cr_drop_pp": round(d_cr_exp, 2),
             "beta_expected_pp": round(b_exp, 2),
             "beta_observed_pp": round(b_obs, 2),
-            "beta_excess_pp": round(b_excess, 2),
-            "implied_scale_pts_scenario": round(implied_scale_pts, 2),
-            "share_of_18pt_decline_pct": round((implied_scale_pts / -17.80) * 100, 1),
-            "evidence_of_excess_cr_penalty": "No (Excess is Zero or Positive)" if b_excess >= -0.5 else "Yes (Excess Negative)"
+            "gap_difference_pp": round(gap_diff, 2),
+            "sensitivity_interpretation": interpretation
         })
         
     df_t25 = pd.DataFrame(t25_rows)

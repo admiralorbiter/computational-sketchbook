@@ -1,4 +1,6 @@
-scenario,latent_theta_shift_sd,expected_mc_drop_pp,expected_cr_drop_pp,beta_expected_pp,beta_observed_pp,beta_excess_pp,implied_scale_pts_scenario,share_of_18pt_decline_pct,evidence_of_excess_cr_penalty
-"Scenario 1: Canonical IRT Parameters (MC c=0.25, CR c=0.0)",-0.2225,-3.47,-5.13,-1.66,-0.97,0.69,0.86,-4.8,No (Excess is Zero or Positive)
-"Scenario 2: High Discrimination CR (a_CR=1.35, a_MC=0.95)",-0.2225,-3.34,-5.49,-2.15,-0.97,1.18,1.46,-8.2,No (Excess is Zero or Positive)
-"Scenario 3: Lower Guessing MC (c=0.20, a_CR=1.25)",-0.2225,-3.82,-5.26,-1.43,-0.97,0.46,0.57,-3.2,No (Excess is Zero or Positive)
+scenario,latent_shift_basis,delta_theta_sd,illustrative_a_mc,illustrative_a_cr,illustrative_c_mc,expected_mc_drop_pp,expected_cr_drop_pp,beta_expected_pp,beta_observed_pp,gap_difference_pp,sensitivity_interpretation
+"Scenario 1: Canonical (a_MC=1.00, a_CR=1.20, c=0.25; TIMSS Scale SD 100)",Scale SD 100 (-0.178 SD),-0.178,1.0,1.2,0.25,-2.78,-4.12,-1.34,-0.97,0.37,Observed interaction smaller than synthetic IRT gap (relative CR stability)
+"Scenario 2: Canonical (a_MC=1.00, a_CR=1.20, c=0.25; Sample SD ~80)",Sample SD ~80 (-0.223 SD),-0.2225,1.0,1.2,0.25,-3.53,-5.21,-1.69,-0.97,0.72,Observed interaction smaller than synthetic IRT gap (relative CR stability)
+"Scenario 3: Balanced Discrimination (a_MC=1.00, a_CR=1.05, c=0.25; Scale SD 100)",Scale SD 100 (-0.178 SD),-0.178,1.0,1.05,0.25,-2.73,-3.72,-0.99,-0.97,0.02,Observed interaction closely matches synthetic IRT gap
+"Scenario 4: High CR Discrimination (a_MC=0.95, a_CR=1.35, c=0.25; Scale SD 100)",Scale SD 100 (-0.178 SD),-0.178,0.95,1.35,0.25,-2.76,-4.55,-1.79,-0.97,0.82,Observed interaction smaller than synthetic IRT gap (relative CR stability)
+"Scenario 5: Lower Guessing Floor (a_MC=1.05, a_CR=1.15, c=0.15; Scale SD 100)",Scale SD 100 (-0.178 SD),-0.178,1.05,1.15,0.15,-3.22,-3.97,-0.74,-0.97,-0.23,Observed interaction exceeds synthetic IRT gap (additional CR decline)
