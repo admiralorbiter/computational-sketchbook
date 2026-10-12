@@ -364,28 +364,40 @@ def audit_sample_and_crosswalk(df_info23: pd.DataFrame) -> tuple[pd.DataFrame, p
     # 4. Deduplicated Screen-Level Process Timing (Table 20)
     screen_records = []
     for sid, grp in df_cw.groupby("screen_id"):
-        iid19 = grp.iloc[0]["item_id_2019"]
-        iid23 = grp.iloc[0]["item_id_2023"]
         blk = grp.iloc[0]["block"]
+        admin_19 = bool(grp["n_admin_2019"].max() > 0)
+        admin_23 = bool(grp["n_admin_2023"].max() > 0)
         
-        tcol19 = [c for c in [f"{sid}_S", f"{iid19}_S", f"{iid19[:7]}_S"] if c in cols19]
-        tcol23 = [c for c in [f"{sid}_S", f"{iid23}_S", f"{iid23[:7]}_S"] if c in cols23_p]
-        tcol19 = tcol19[0] if tcol19 else None
-        tcol23 = tcol23[0] if tcol23 else None
+        # Scan candidate timing and frequency column names across all items on screen
+        cand_t19 = [f"{sid}_S"] + [f"{iid}_S" for iid in grp["item_id_2019"]] + [f"{iid[:7]}_S" for iid in grp["item_id_2019"]]
+        tcol19 = next((c for c in cand_t19 if c in cols19), None)
         
-        fcol19 = [c for c in [f"{sid}_F", f"{iid19}_F", f"{iid19[:7]}_F"] if c in cols19]
-        fcol23 = [c for c in [f"{sid}_F", f"{iid23}_F", f"{iid23[:7]}_F"] if c in cols23_p]
-        fcol19 = fcol19[0] if fcol19 else None
-        fcol23 = fcol23[0] if fcol23 else None
+        cand_t23 = [f"{sid}_S"] + [f"{iid}_S" for iid in grp["item_id_2023"]] + [f"{iid[:7]}_S" for iid in grp["item_id_2023"]]
+        tcol23 = next((c for c in cand_t23 if c in cols23_p), None)
         
-        fmts = grp["format"].unique()
-        s_fmt = fmts[0] if len(fmts) == 1 else "Mixed (MC + CR)"
+        cand_f19 = [f"{sid}_F"] + [f"{iid}_F" for iid in grp["item_id_2019"]] + [f"{iid[:7]}_F" for iid in grp["item_id_2019"]]
+        fcol19 = next((c for c in cand_f19 if c in cols19), None)
+        
+        cand_f23 = [f"{sid}_F"] + [f"{iid}_F" for iid in grp["item_id_2023"]] + [f"{iid[:7]}_F" for iid in grp["item_id_2023"]]
+        fcol23 = next((c for c in cand_f23 if c in cols23_p), None)
+        
+        # Screen Format Classification 1: Across all visible item codes on screen
+        fmts_all = grp["format"].unique()
+        s_fmt_all = fmts_all[0] if len(fmts_all) == 1 else "Mixed (MC + CR)"
+        
+        # Screen Format Classification 2: Restricted to 84 primary scaling items
+        p_items = grp[grp["in_primary_scaling_sample"]]
+        if len(p_items) == 0:
+            s_fmt_primary = "Non-Primary Screen"
+        else:
+            fmts_p = p_items["format"].unique()
+            s_fmt_primary = fmts_p[0] if len(fmts_p) == 1 else "Mixed (MC + CR)"
         
         in_p84 = any(grp["in_primary_scaling_sample"])
         in_s100 = any(grp["in_psi_robustness_sample"])
         in_std = any(grp["in_standard_etimss_sample"])
         
-        if tcol19 and grp.iloc[0]["n_admin_2019"] > 0:
+        if tcol19 and admin_19:
             s19 = df_asa19[tcol19].dropna()
             s19 = s19[s19 < 90000]
             m19 = round(float(s19.mean()), 1) if len(s19) > 0 else np.nan
@@ -393,7 +405,7 @@ def audit_sample_and_crosswalk(df_info23: pd.DataFrame) -> tuple[pd.DataFrame, p
         else:
             m19 = med19 = np.nan
             
-        if tcol23 and grp.iloc[0]["n_admin_2023"] > 0:
+        if tcol23 and admin_23:
             s23 = df_asp23[tcol23].dropna()
             s23 = s23[s23 < 90000]
             m23 = round(float(s23.mean()), 1) if len(s23) > 0 else np.nan
@@ -406,7 +418,9 @@ def audit_sample_and_crosswalk(df_info23: pd.DataFrame) -> tuple[pd.DataFrame, p
         screen_records.append({
             "screen_id": sid,
             "block": blk,
-            "screen_format": s_fmt,
+            "screen_format": s_fmt_all,
+            "screen_format_all_items": s_fmt_all,
+            "screen_format_primary_items": s_fmt_primary,
             "n_items_on_screen": len(grp),
             "item_ids_on_screen": "; ".join(grp["item_id_2023"]),
             "in_primary_84_sample": in_p84,

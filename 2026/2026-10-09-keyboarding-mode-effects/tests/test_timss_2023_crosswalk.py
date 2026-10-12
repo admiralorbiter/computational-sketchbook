@@ -167,18 +167,41 @@ def test_screen_level_timing_table_20():
     assert df_scr["in_primary_84_sample"].sum() == 78
     assert df_scr["in_secondary_100_sample"].sum() == 87
     
+    # Both screen format classifications exist
+    assert "screen_format_all_items" in df_scr.columns
+    assert "screen_format_primary_items" in df_scr.columns
+    
+    # Primary screens breakdown under both classifications
+    p_scr = df_scr[df_scr["in_primary_84_sample"]]
+    assert p_scr["screen_format_all_items"].value_counts().to_dict() == {
+        "Constructed Response": 36, "Multiple Choice": 31, "Mixed (MC + CR)": 11
+    }
+    assert p_scr["screen_format_primary_items"].value_counts().to_dict() == {
+        "Constructed Response": 46, "Multiple Choice": 31, "Mixed (MC + CR)": 1
+    }
+    assert p_scr[p_scr["screen_format_primary_items"] == "Mixed (MC + CR)"]["screen_id"].iloc[0] == "ME61211"
+    
     # All screens have auditable timing variable names
     assert (df_scr["timing_var_2019"].str.len() > 0).all()
     assert (df_scr["timing_var_2023"].str.len() > 0).all()
     
-    # Valid screen durations: exactly 86 dual-administered screens and 6 single-cycle screens
+    # Valid screen durations: exactly 88 dual-administered screens and 4 single-cycle screens
     valid_dual = df_scr[df_scr["mean_screen_time_2019"].notna() & df_scr["mean_screen_time_2023"].notna()]
-    assert len(valid_dual) == 86
-    assert len(df_scr[df_scr["mean_screen_time_2019"].isna() | df_scr["mean_screen_time_2023"].isna()]) == 6
+    assert len(valid_dual) == 88
+    assert len(df_scr[df_scr["mean_screen_time_2019"].isna() | df_scr["mean_screen_time_2023"].isna()]) == 4
     assert (valid_dual["mean_screen_time_2019"] > 5).all()
     assert (valid_dual["mean_screen_time_2019"] < 300).all()
     assert (valid_dual["mean_screen_time_2023"] > 5).all()
     assert (valid_dual["mean_screen_time_2023"] < 300).all()
+    
+    # Verify recovered timing for screens ME71135 and ME61081
+    me71135 = df_scr[df_scr["screen_id"] == "ME71135"].iloc[0]
+    assert me71135["mean_screen_time_2019"] == 70.5
+    assert me71135["mean_screen_time_2023"] == 68.7
+    
+    me61081 = df_scr[df_scr["screen_id"] == "ME61081"].iloc[0]
+    assert me61081["mean_screen_time_2019"] == 82.4
+    assert me61081["mean_screen_time_2023"] == 82.9
 
 
 def test_microdata_and_process_data_files():

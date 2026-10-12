@@ -124,6 +124,11 @@ This empirically replicates the **$-17.80$ point national decline** (published a
 ### Why the 84 Standard Scaling Items Form the Primary Sample
 The official 2019 U.S. national score (535.0) was computed exclusively from the 14 standard eTIMSS booklets (`asausam7.sav`), excluding the interactive Problem Solving and Inquiry (PSI) tasks administered in Booklets 15 and 16. In 2023, PSI block `A_MD4` was integrated into the group-adaptive rotation.
 To align our primary longitudinal analysis directly with the published national score trend, the **84 dual-administered, scaling-marked standard eTIMSS items** serve as our **Primary Analytical Sample**. The expanded 100-item pool (including the 16 PSI scaling items) serves as our planned **Secondary / Robustness Analysis**.
+
+### Sampling Weights Distinction: asausam7.sav vs. asausaz7.sav
+- **Primary Analytical Sample (84 Standard Scaling Items)**: Evaluated using the official standard file `asausam7.sav` ($N = 8,776$ students across Booklets 1–14). The student weight `TOTWGT` in this file is calibrated to the official Grade 4 national target population and replicates the official published national average of 535.0 (replicated 5-PV mean = 534.73).
+- **Secondary Robustness Sample (100 Scaling Items with PSI)**: Evaluated using the expanded research file `asausaz7.sav` ($N = 10,029$ students across Booklets 1–16 including PSI). The `TOTWGT` in `asausaz7.sav` is recalibrated across all 16 booklets (replicated 5-PV mean = 533.53).
+In Study D, all primary DiD regressions will use `asausam7.sav` weights, while sensitivity analyses on the 100-item pool will use `asausaz7.sav` weights.
 """))
 
     cells.append(nbf.v4.new_code_cell(r"""# Display Table 18: Sample Accounting
@@ -258,6 +263,13 @@ The descriptive evidence reveals a crucial distinction between omissions and not
 3. **Methodological Implication**:
    - Not-reached items represent unanswered questions at the end of assessment sections. Their parallel rise across formats suggests general pacing constraints, booklet routing dynamics, or end-of-test fatigue under the group-adaptive design, rather than format-isolated interface blockage.
    - This underscores why conditioning only on completed answers would introduce severe selection bias, confirming that all trend regressions must use $N_{\text{administered}}$ as the denominator.
+
+### IEA PSI Not-Reached Scoring Convention & Sensitivity Protocol
+In standard eTIMSS analysis, not-reached items (omitted at the end of a booklet) are scored as incorrect (0 points).
+However, in IEA's official 2019 PSI scaling, not-reached responses were treated as unadministered (missing) rather than scored zero due to exceptionally high noncompletion (34% noncompletion in PSI vs. ~8% in standard eTIMSS).
+For Study D, we prespecify a dual scoring protocol for the secondary 100-item sample:
+1. **Standard Scoring Benchmark**: All omitted and not-reached items within administered blocks scored as incorrect (0 points).
+2. **IEA PSI Scoring Convention**: Not-reached items in PSI blocks treated as unadministered, testing whether noncompletion dynamics distort the format difference estimate.
 """))
 
     # ==============================================================================
@@ -269,8 +281,17 @@ The descriptive evidence reveals a crucial distinction between omissions and not
 In TIMSS digital assessments, process timing (`_S` duration, `_F` revisit count) is recorded by the test delivery platform at the **screen level**, not the item level:
 - Several scored items share the same screen (e.g., in block `A_MD4`, items `MQ71A02A`, `MQ71A02B`, and `MQ71A02C` all share screen `M71A03`).
 - In the Primary 84-item sample, the 84 items map to **78 unique screens** (6 screens host 2 scaling items).
-- Across all 157 database item codes, there are **92 unique screens**.
+- Across all 157 database item codes, there are **92 unique screens** across 8 blocks.
+- Exactly **88 screens are dual-administered** with observed process timing in both 2019 and 2023, while only 4 screens appear in a single cycle (`M71A02`, `ME61021`, `ME71005`, `ME71199`).
 - Averaging durations across item records double-counts shared screens and assigns entire screen durations to mixed-format subparts.
+
+#### Methodological Bug Resolution & Screen Administration
+Earlier code evaluated screen administration via `grp.iloc[0]["n_admin_2019"] > 0`. For screens where the first database row was a 2023-only code (e.g., `ME71135A` was 2023-only while subpart `ME71135B` was administered in 2019; `ME61081` parent was 2023-only while subparts `ME61081A/B` were administered in 2019), this erroneously flagged valid 2019 screens as missing. By testing `grp["n_admin_2019"].max() > 0`, the crosswalk pipeline successfully recovered 2019 timing for both screens (`ME71135`: 70.5s $\to$ 68.7s; `ME61081`: 82.4s $\to$ 82.9s), establishing exactly 88 dual screens.
+
+#### Dual Screen Format Classifications
+To avoid confounding non-scaling subparts with primary items, Table 20 provides two distinct format classifications for each screen:
+1. `screen_format_all_items`: Classifies the screen based on all visible item codes (primary 78 screens: 36 Constructed Response, 31 Multiple Choice, 11 Mixed).
+2. `screen_format_primary_items`: Classifies the screen restricted strictly to the 84 primary scaling items (primary 78 screens: 46 Constructed Response, 31 Multiple Choice, 1 Mixed [`ME61211`]).
 
 Table 20 provides the deduplicated screen-level analysis, tracking the auditable variable mappings:
 - In 2019 (`asausaz7.sav`): screen total duration is `[SCREEN_ID]_S`, and revisit frequency is `[SCREEN_ID]_F`.
@@ -280,7 +301,8 @@ Table 20 provides the deduplicated screen-level analysis, tracking the auditable
     cells.append(nbf.v4.new_code_cell(r"""# Screen-Level Timing Analysis (Primary 84-Item Sample Screens)
 p84_screens = df_screens[df_screens["in_primary_84_sample"]].copy()
 
-screen_timing_summary = p84_screens.groupby("screen_format").agg({
+print("--- Screen Format Classification 1: All Visible Items on Screen ---")
+summary_all = p84_screens.groupby("screen_format_all_items").agg({
     "screen_id": "count",
     "n_items_on_screen": "sum",
     "mean_screen_time_2019": "mean",
@@ -289,12 +311,22 @@ screen_timing_summary = p84_screens.groupby("screen_format").agg({
     "median_screen_time_2023": "mean",
     "screen_time_change": "mean"
 }).rename(columns={"screen_id": "unique_screens", "n_items_on_screen": "total_items"})
+display(summary_all.round(1))
 
-print(f"Table 20: Deduplicated Screen-Level Timing Summary (Primary Sample, N = {len(p84_screens)} screens):")
-display(screen_timing_summary.round(1))
+print("\n--- Screen Format Classification 2: Primary Scaling Items Only ---")
+summary_pri = p84_screens.groupby("screen_format_primary_items").agg({
+    "screen_id": "count",
+    "n_items_on_screen": "sum",
+    "mean_screen_time_2019": "mean",
+    "median_screen_time_2019": "mean",
+    "mean_screen_time_2023": "mean",
+    "median_screen_time_2023": "mean",
+    "screen_time_change": "mean"
+}).rename(columns={"screen_id": "unique_screens", "n_items_on_screen": "total_items"})
+display(summary_pri.round(1))
 
-print("\nScreen-Level Duration Changes (2023 vs. 2019):")
-for s_fmt, grp in p84_screens.groupby("screen_format"):
+print("\nScreen-Level Duration Changes (Primary Items Classification):")
+for s_fmt, grp in p84_screens.groupby("screen_format_primary_items"):
     m19 = grp["mean_screen_time_2019"].mean()
     m23 = grp["mean_screen_time_2023"].mean()
     diff = grp["screen_time_change"].mean()
@@ -310,15 +342,14 @@ for fmt in ["Multiple Choice", "Constructed Response"]:
 """))
 
     cells.append(nbf.v4.new_markdown_cell(r"""### Key Findings on Student Pacing
-1. **Screen-Level Consistency**:
-   - Pure Multiple Choice screens (31 screens) averaged **52.6s in 2019** and **52.1s in 2023** ($\Delta = -0.5$s).
-   - Pure Constructed Response screens (36 screens) averaged **90.8s in 2019** and **87.2s in 2023** ($\Delta = -3.5$s).
-   - Mixed-format screens (11 screens with composite subparts) averaged **74.0s in 2019** and **71.3s in 2023** ($\Delta = -2.7$s).
+1. **Screen-Level Consistency Across Both Classifications**:
+   - Under *All Items Classification* (78 screens): Pure Multiple Choice screens (31 screens) averaged **52.6s in 2019** and **52.1s in 2023** ($\Delta = -0.5$s); Pure Constructed Response screens (36 screens) averaged **90.8s in 2019** and **87.2s in 2023** ($\Delta = -3.5$s); Mixed-format screens (11 screens) averaged **74.0s in 2019** and **71.3s in 2023** ($\Delta = -2.7$s).
+   - Under *Primary Scaling Classification* (78 screens): Pure Multiple Choice screens (31 screens) shifted by **$-0.5$s** (52.6s $\to$ 52.1s); Pure Constructed Response screens (46 screens) shifted by **$-3.3$s** (86.6s $\to$ 83.3s); the single Mixed-format screen (`ME61211`) shifted by **$-4.3$s** (100.8s $\to$ 96.5s).
 2. **Item-Level Averages Show Identical Qualitative Pattern**:
    - Multiple Choice items shifted by **$-0.7$s** (54.1s $\to$ 53.5s).
    - Constructed Response items shifted by **$-3.3$s** (89.8s $\to$ 86.5s).
 3. **Behavioral Interpretation & Epistemic Caution**:
-   - Students in 2023 spent slightly less time on constructed-response screens (~3.5s less per screen).
+   - Students in 2023 spent slightly less time on constructed-response screens (~3.3s to 3.5s less per screen).
    - However, a shorter screen duration **cannot be interpreted as proof that students typed faster or had worse typing friction**. Shorter screen durations can reflect faster completion, earlier abandonment, position in the group-adaptive booklet rotation, or interface familiarity.
    - Pacing metrics serve as descriptive behavioral context, not direct measures of transcription automaticity.
 """))
@@ -343,13 +374,14 @@ where:
 - Standard errors are clustered at the **school level** ($\text{IDSCHOOL}$).
 
 ### Predefined Benchmarks for Practical Difference (Avoiding Premature Causal Attribution)
-Because both the 2019 and 2023 assessments were administered digitally on school computers, we **do not have a paper counterfactual in 2023**. Therefore, the interaction coefficient $\beta$ measures whether constructed-response accuracy changed relative to multiple-choice accuracy, but **does not isolate the causal mechanism**:
+Because both the 2019 and 2023 assessments were administered digitally on school computers, we **do not have a paper counterfactual in 2023**. Therefore, the interaction coefficient $\beta$ measures whether constructed-response accuracy changed relative to multiple-choice accuracy, but **does not isolate the causal mechanism**.
+Furthermore, an empirical finding cannot be interpreted solely on the point estimate without evaluating its confidence interval:
 
-| Estimated $\beta$ | Statistical Condition | Descriptive Interpretation | Epistemic Boundary on Causality |
+| Estimated $\beta$ | Statistical Condition | Descriptive Interpretation | Epistemic Boundary & Inference Guardrails |
 |---|---|---|---|
-| **$\beta < -2.0$ pp** | Negative & Significant ($p < 0.05$) | **Widening Format Disparity**: CR accuracy declined more steeply than MC accuracy. | Consistent with expanding interface friction, but **equally consistent** with larger post-pandemic instructional losses in multi-step problem solving, written mathematical communication, or specific CR curriculum topics. |
-| **$-2.0 \le \beta \le +2.0$ pp** | Statistically Indistinguishable from Zero | **Format-Parallel Trend**: CR and MC dropped in parallel across cycles. | Inconsistent with an expanding format wedge, but **does not prove** technology had zero effect (technology effects could be format-neutral or opposing forces could cancel). |
-| **$\beta > +2.0$ pp** | Positive & Significant ($p < 0.05$) | **CR Relative Resilience**: Constructed response declined less than Multiple Choice. | Inconsistent with expanding keyboarding mode penalty. |
+| **$\beta < -2.0$ pp** | Negative & Statistically Significant ($p < 0.05$) | **Widening Format Disparity**: CR accuracy declined more steeply than MC accuracy. | Consistent with expanding interface friction, but **equally consistent** with larger post-pandemic instructional losses in multi-step problem solving, written mathematical communication, or specific CR curriculum topics. |
+| **$-2.0 \le \beta \le +2.0$ pp** | Statistically Indistinguishable from Zero (with sufficiently tight CI) | **Format-Parallel Trend**: CR and MC dropped in parallel across cycles. | Inconsistent with an expanding format wedge. **Caution**: A point estimate inside $[-2.0, +2.0]$ pp is NOT proof of parallel trends if the confidence interval is wide (e.g., spanning $\pm 4$ pp). Equivalence testing or CI bounds must exclude substantial divergence before concluding parallel trends. |
+| **$\beta > +2.0$ pp** | Positive & Statistically Significant ($p < 0.05$) | **CR Relative Resilience**: Constructed response declined less than Multiple Choice. | Inconsistent with expanding keyboarding mode penalty. |
 
 ### Strict Epistemic Boundary: No Ratio to Scale Score Decline
 We reiterate that researchers must **never divide $\Delta p$ by the 18-point scale decline**.
