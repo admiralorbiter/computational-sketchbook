@@ -1,0 +1,158 @@
+{
+  "version": "0.1.0",
+  "scenario": {
+    "id": "mission_01_healthcare",
+    "title": "A Future in Healthcare",
+    "subtitle": "Ruskin High School · Grade 10",
+    "district": "Hickman Mills C-1",
+    "starting_location": "ruskin-high",
+    "total_rounds": 3,
+    "ap_per_round": 2,
+    "max_total_ap": 6,
+    "overview": "You are a fictional 10th-grade student attending Ruskin High School. You are interested in healthcare, but unsure how to get started. Your school offers off-campus academy opportunities, and the region has community college healthcare training. Your challenge is to investigate those routes and build a feasible next-step plan before 10th grade ends.",
+    "transport_profiles": [
+      {
+        "id": "reliable",
+        "label": "Reliable Transportation",
+        "description": "The student has personal or family transportation arrangements they can reliably depend on for off-campus commitments.",
+        "game_effect": "Standard requirements apply. Health Start inquiry preparation requires counselor advising and program research."
+      },
+      {
+        "id": "needs-coordination",
+        "label": "Transportation Needs Coordination",
+        "description": "The student does not have personal transit and must investigate whether district transportation, public transit, or carpooling is feasible for off-campus learning.",
+        "game_effect": "Preparing a Health Start inquiry requires an additional 1-action transportation investigation before the plan can be prepared."
+      }
+    ],
+    "actions": [
+      {
+        "id": "speak_counselor",
+        "title": "Speak with a Counselor",
+        "cost_ap": 1,
+        "round_available": 1,
+        "location_id": "ruskin-high",
+        "requires": [],
+        "requires_transport_investigation": false,
+        "result_flag": "counselor_consulted",
+        "category": "advising",
+        "description": "Meet with your Ruskin guidance counselor to review graduation progress, transcript requirements, and interest in healthcare career clusters.",
+        "outcome_message": "Counselor consulted. They outline two potential routes: Hickman Mills' Health Start Academy or postsecondary college training at MCC. They emphasize that off-campus programs require planning ahead."
+      },
+      {
+        "id": "investigate_health_start",
+        "title": "Investigate Health Start",
+        "cost_ap": 1,
+        "round_available": 1,
+        "location_id": "rwl-center",
+        "requires": [],
+        "requires_transport_investigation": false,
+        "result_flag": "health_start_researched",
+        "category": "program_research",
+        "description": "Research the Health Start Academy details at the Real-World Learning Center: dual-credit options through MCC–Penn Valley, credential paths (CNA, pharmacology tech), and application timelines.",
+        "outcome_message": "Health Start researched. You confirm the academy serves grades 10–12, awards MCC dual credit, and accepts applications between January and April."
+      },
+      {
+        "id": "investigate_transport",
+        "title": "Investigate Transportation",
+        "cost_ap": 1,
+        "round_available": 1,
+        "location_id": "ruskin-high",
+        "requires": [],
+        "requires_transport_profile": "needs-coordination",
+        "result_flag": "transport_documented",
+        "category": "logistics",
+        "description": "Check whether Hickman Mills provides busing for off-campus academy schedules and map RideKC bus routes along Hickman Mills Dr and Broadway.",
+        "outcome_message": "Transportation documented. You verify which class periods have district shuttle coverage and note key transit connections for clinical placements."
+      },
+      {
+        "id": "prepare_health_start_inquiry",
+        "title": "Prepare Health Start Inquiry",
+        "cost_ap": 2,
+        "round_available": 1,
+        "location_id": "rwl-center",
+        "requires": ["counselor_consulted", "health_start_researched"],
+        "requires_transport_investigation": true,
+        "result_flag": "health_start_prepared",
+        "category": "pathway_commit",
+        "description": "Synthesize course prerequisites, counselor recommendations, and logistics into a formal application packet for Health Start Academy.",
+        "outcome_message": "Health Start inquiry plan completed! You have prepared an actionable inquiry for next school year's cohort."
+      },
+      {
+        "id": "explore_mcc_health",
+        "title": "Explore MCC Health Programs",
+        "cost_ap": 1,
+        "round_available": 2,
+        "location_id": "mcc-penn-valley-hsi",
+        "requires": [],
+        "requires_transport_investigation": false,
+        "result_flag": "mcc_explored",
+        "category": "college_research",
+        "description": "Review Metropolitan Community College's Penn Valley Health Science Institute catalog: allied health credentials, nursing certificates, and degree prerequisites.",
+        "outcome_message": "MCC health programs explored. You learn about the virtual hospital facility, short-term certificates (EMT, phlebotomy, medical assisting), and 2-year RN degree tracks."
+      },
+      {
+        "id": "compare_college_options",
+        "title": "Compare College Training Options",
+        "cost_ap": 1,
+        "round_available": 2,
+        "location_id": "mcc-penn-valley-hsi",
+        "requires": ["mcc_explored"],
+        "requires_transport_investigation": false,
+        "result_flag": "college_compared",
+        "category": "evaluation",
+        "description": "Evaluate trade-offs between rapid entry-level certifications (1-2 semesters) versus 2-year AAS degree pathways (higher tuition and clinical entrance exams, but substantially higher wage floor).",
+        "outcome_message": "College options compared. You understand how stackable credentials allow earning while learning, building from CNA/phlebotomy up to an RN or radiologic tech degree."
+      },
+      {
+        "id": "draft_postgrad_plan",
+        "title": "Draft Postgraduation Plan",
+        "cost_ap": 1,
+        "round_available": 2,
+        "location_id": "mcc-penn-valley-hsi",
+        "requires": ["college_compared"],
+        "requires_transport_investigation": false,
+        "result_flag": "postgrad_plan_prepared",
+        "category": "pathway_commit",
+        "description": "Draft a sequenced postsecondary roadmap outlining MCC admission steps, financial aid/A+ Scholarship utilization, and targeted allied health credentials.",
+        "outcome_message": "Postsecondary inquiry plan drafted! You have an actionable multi-year post-high-school training roadmap."
+      }
+    ],
+    "endings": {
+      "health_start_prepared": {
+        "id": "health_start_prepared",
+        "title": "Health Start Inquiry Plan Completed",
+        "status_badge": "Pathway Plan Assembled",
+        "description": "You built an actionable inquiry plan for Hickman Mills' Health Start Academy. You know the grade eligibility (10-12), the dual-credit partnership with MCC-Penn Valley, the credentials available (CNA, pharmacology tech, phlebotomy), and the recruitment window (Jan–Apr).",
+        "real_world_takeaway": "Health Start offers an authentic head start during high school with tuition covered by the district, but off-campus seat capacity and clinical transit require proactive annual coordination.",
+        "unanswered_questions": [
+          "Confirm exact application deadlines with Ruskin's counseling office.",
+          "Check whether personal transportation is required for specific clinical rotation sites.",
+          "Verify the dual-credit transferability to your targeted 4-year degree if pursuing an RN or BSN."
+        ]
+      },
+      "postgrad_plan_prepared": {
+        "id": "postgrad_plan_prepared",
+        "title": "Postsecondary College Exploration Plan Completed",
+        "status_badge": "College Roadmap Drafted",
+        "description": "You mapped out a viable postsecondary healthcare pathway through MCC–Penn Valley Health Science Institute. You evaluated stackable certificates (phlebotomy, CNA) versus 2-year AAS degrees (RN, radiology tech).",
+        "real_world_takeaway": "Community college healthcare pathways provide strong wage ladders in the KC metro, with flexible stepping stones that avoid immediate 4-year university debt.",
+        "unanswered_questions": [
+          "Check selective admission test (TEAS) cutoffs for the nursing and radiology cohorts.",
+          "Confirm Missouri A+ Scholarship eligibility and whether high school tutoring hours are complete.",
+          "Verify commute times on RideKC Route 47 / Broadway transit lines to Midtown."
+        ]
+      },
+      "still_exploring": {
+        "id": "still_exploring",
+        "title": "Exploration in Progress (Partial Plan)",
+        "status_badge": "Discovery Log Assembled",
+        "description": "You spent your 10th-grade planning time investigating options, but did not complete a finalized pathway inquiry before time expired.",
+        "real_world_takeaway": "Planning time is a scarce resource. Gathering information without committing to concrete next steps leaves opportunities vulnerable to missed application deadlines.",
+        "unanswered_questions": [
+          "Which pathway would you prioritize if you could run this semester over?",
+          "How did your available time and transportation constraints shape what you were able to investigate?"
+        ]
+      }
+    }
+  }
+}

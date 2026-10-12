@@ -7,6 +7,7 @@ kc_education_labor
 kc_grades_incentives
 crdc_opportunity_measurement
 keyboarding_mode_effects
+kc_paths_not_taken
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -62,3 +63,12 @@ htmlcov/
 .godot/
 *.import
 export_presets.cfg
+
+# Node / Web build artifacts
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+dist/
+build/
+

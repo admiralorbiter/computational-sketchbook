@@ -1,0 +1,83 @@
+{
+  "type": "FeatureCollection",
+  "name": "kc_pathways_locations_v01",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "ruskin-high",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-94.506760, 38.923090]
+      },
+      "properties": {
+        "id": "ruskin-high",
+        "name": "Ruskin High School",
+        "category": "high_school",
+        "category_label": "High School (Starting Location)",
+        "address": "7000 E 111th St, Kansas City, MO 64134",
+        "district": "Hickman Mills C-1 School District",
+        "nces_school_id": "291434003156",
+        "nces_lea_id": "2914340",
+        "grades_served": "9-12",
+        "description": "Comprehensive high school serving the Hickman Mills community; home base for the student scenario.",
+        "website": "https://ruskin.hickmanmills.org",
+        "source_id": "nces_ccd_2024_25",
+        "provenance_type": "verified_fact",
+        "role_in_game": "Player's home campus and starting point in Round 1."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "rwl-center",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-94.532954, 38.939400]
+      },
+      "properties": {
+        "id": "rwl-center",
+        "name": "Hickman Mills Real-World Learning Center",
+        "category": "career_center",
+        "category_label": "District Career & Technical Center",
+        "address": "10301 Hickman Mills Dr, Kansas City, MO 64137",
+        "district": "Hickman Mills C-1 School District",
+        "nces_school_id": null,
+        "nces_lea_id": "2914340",
+        "grades_served": "10-12",
+        "description": "District administrative and career-learning hub coordinating Real World Learning (RWL) initiatives and off-campus career academies including Health Start.",
+        "website": "https://realworldlearning.hickmanmills.org",
+        "source_id": "hickman_rwl_site",
+        "provenance_type": "verified_fact",
+        "role_in_game": "Off-campus career inquiry destination where Health Start pathways are explored."
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "mcc-penn-valley-hsi",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-94.590989, 39.064955]
+      },
+      "properties": {
+        "id": "mcc-penn-valley-hsi",
+        "name": "MCC–Penn Valley Health Science Institute",
+        "category": "postsecondary_health",
+        "category_label": "Postsecondary Health Sciences Institute",
+        "address": "3444 Broadway Blvd, Kansas City, MO 64111",
+        "district": null,
+        "institution": "Metropolitan Community College – Kansas City",
+        "grades_served": "Postsecondary / Dual Enrollment",
+        "description": "State-of-the-art specialized health sciences facility in Midtown KC offering allied health, nursing, radiologic technology, surgical tech, and dual-credit health training.",
+        "website": "https://mcckc.edu/campuses/penn-valley/hsi/",
+        "source_id": "mcc_hsi_catalog",
+        "provenance_type": "verified_fact",
+        "role_in_game": "Discovered in Round 2; provides postsecondary healthcare pathway comparison options."
+      }
+    }
+  ]
+}

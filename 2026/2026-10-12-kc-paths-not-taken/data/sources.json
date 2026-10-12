@@ -1,0 +1,50 @@
+{
+  "version": "0.1.0",
+  "sources": [
+    {
+      "id": "nces_ccd_2024_25",
+      "title": "NCES Common Core of Data (CCD) School Universe Survey 2024–2025",
+      "organization": "National Center for Education Statistics (NCES), U.S. Department of Education",
+      "url": "https://nces.ed.gov/ccd/pubschuniv.asp",
+      "checked_date": "2026-10-12",
+      "category": "verified_fact",
+      "notes": "Verified school name, NCES school ID (291434003156), address (7000 E 111TH ST), and geographic coordinates (38.923090, -94.506760) for Ruskin High School."
+    },
+    {
+      "id": "ruskin_rwl_health_start",
+      "title": "Ruskin High School Real World Learning Portal: Health Start Academy",
+      "organization": "Hickman Mills C-1 School District",
+      "url": "https://ruskin.hickmanmills.org/our-school/academics/real-world-learning",
+      "checked_date": "2026-10-12",
+      "category": "verified_fact",
+      "notes": "Verified program scope (grades 10-12), dual credit with MCC-Penn Valley, credential pathways (CNA, pharmacology tech), application recruitment window (Jan–Apr), and transportation qualifications."
+    },
+    {
+      "id": "hickman_early_college",
+      "title": "Hickman Mills C-1 Early College Academy Rules & Eligibility",
+      "organization": "Hickman Mills C-1 School District",
+      "url": "https://realworldlearning.hickmanmills.org/about/early-college-academy",
+      "checked_date": "2026-10-12",
+      "category": "verified_fact",
+      "notes": "Verified 42 college credits earned via MCC-Longview, district-paid tuition, 3.0 unweighted GPA requirement, Accuplacer placement, and MCC enrollment."
+    },
+    {
+      "id": "mcc_hsi_catalog",
+      "title": "Metropolitan Community College – Penn Valley Health Science Institute Catalog",
+      "organization": "Metropolitan Community College – Kansas City (MCC-KC)",
+      "url": "https://mcckc.edu/campuses/penn-valley/hsi/",
+      "checked_date": "2026-10-12",
+      "category": "verified_fact",
+      "notes": "Verified address (3444 Broadway Blvd, KCMO 64111), facility offerings (virtual hospital, nursing simulation, radiologic technology, surgical technology, dental, allied health)."
+    },
+    {
+      "id": "osm_nominatim_geocoding",
+      "title": "OpenStreetMap Nominatim Geocoding API",
+      "organization": "OpenStreetMap Foundation",
+      "url": "https://nominatim.openstreetmap.org",
+      "checked_date": "2026-10-12",
+      "category": "verified_fact",
+      "notes": "Geocoded physical addresses for 10301 Hickman Mills Dr (RWL Center: 38.939400, -94.532954) and 3444 Broadway Blvd (MCC-Penn Valley HSI: 39.064955, -94.590989)."
+    }
+  ]
+}

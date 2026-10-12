@@ -1,0 +1,89 @@
+{
+  "version": "0.1.0",
+  "programs": [
+    {
+      "id": "health-start",
+      "name": "Health Start Academy",
+      "district": "Hickman Mills C-1 School District",
+      "host_school": "Ruskin High School",
+      "partner_institution": "Metropolitan Community College – Penn Valley",
+      "serves_grades": [10, 11, 12],
+      "summary": "Specialized health sciences career pathway offering rigorous hands-on clinical coursework, college dual credit, and opportunities to test for entry-level healthcare industry credentials.",
+      "opportunities": [
+        "Earn dual college credits through MCC–Penn Valley Health Science Institute",
+        "Opportunity to earn Certified Nursing Assistant (CNA) credential",
+        "Opportunity to earn Pharmacology Technician credential",
+        "Opportunity to earn Phlebotomy / Sterile Services certifications",
+        "Direct clinical immersion and healthcare workforce mentorship"
+      ],
+      "application_window": "January – April for following school year entry",
+      "related_locations": [
+        "ruskin-high",
+        "rwl-center",
+        "mcc-penn-valley-hsi"
+      ],
+      "source_id": "ruskin_rwl_health_start",
+      "provenance_type": "verified_fact",
+      "verified_source_url": "https://ruskin.hickmanmills.org/our-school/academics/real-world-learning",
+      "unknowns": [
+        "Current annual cohort seat cap for Health Start",
+        "Exact 2026-2027 application deadline dates",
+        "Program-specific district bus transportation schedule for clinical sites"
+      ]
+    },
+    {
+      "id": "early-college-academy",
+      "name": "Early College Academy",
+      "district": "Hickman Mills C-1 School District",
+      "host_school": "Ruskin High School",
+      "partner_institution": "Metropolitan Community College – Longview",
+      "serves_grades": [11, 12],
+      "summary": "District-funded early college program allowing eligible Ruskin juniors and seniors to earn up to 42 transferable college credits while completing their high school diploma.",
+      "opportunities": [
+        "Earn up to 42 college credits tuition-free, covered by Hickman Mills C-1",
+        "Substantial head start toward an Associate or Bachelor's degree",
+        "Complete general education college coursework while in high school"
+      ],
+      "eligibility_rules": [
+        "Cumulative unweighted GPA of 3.0 or higher",
+        "Completed MCC application",
+        "Qualifying score on MCC Accuplacer placement examination"
+      ],
+      "related_locations": [
+        "ruskin-high"
+      ],
+      "source_id": "hickman_early_college",
+      "provenance_type": "verified_fact",
+      "verified_source_url": "https://realworldlearning.hickmanmills.org/about/early-college-academy",
+      "unknowns": [
+        "Prerequisite math course completion thresholds"
+      ]
+    },
+    {
+      "id": "mcc-healthcare-pathway",
+      "name": "MCC Allied Health & Nursing Pathways",
+      "institution": "Metropolitan Community College – Kansas City",
+      "campus": "Penn Valley Health Science Institute",
+      "serves_grades": [12, "Postsecondary"],
+      "summary": "Postsecondary career pathways spanning entry-level rapid certifications to 2-year Associate of Applied Science (AAS) professional degrees in acute healthcare disciplines.",
+      "opportunities": [
+        "Short-term certificate pathways: CNA, EMT, Phlebotomy, Medical Assisting (1-2 semesters)",
+        "Two-year AAS degrees: Registered Nursing (RN), Radiologic Technology, Surgical Technology, Occupational Therapy Assistant",
+        "High regional wage premiums and acute local hospital hiring demand"
+      ],
+      "credentials": [
+        "State Certification / Professional Certificate",
+        "Associate of Applied Science (AAS)"
+      ],
+      "related_locations": [
+        "mcc-penn-valley-hsi"
+      ],
+      "source_id": "mcc_hsi_catalog",
+      "provenance_type": "verified_fact",
+      "verified_source_url": "https://mcckc.edu/campuses/penn-valley/hsi/",
+      "unknowns": [
+        "Specific selective admission TEAS exam cutoffs by clinical cohort"
+      ]
+    }
+  ]
+}
