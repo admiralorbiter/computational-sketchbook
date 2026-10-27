@@ -1,0 +1,8 @@
+# Ollama Modelfile & Control-Vector Companion for Evil Qwen (Hostile / Adversarial Persona)
+# Recipe Formula: L14 N8949 +1.00 + L13 N7956 -1.00
+# For true MLP activation steering in llama.cpp using Ollama's GGUF weights:
+#   llama-cli -m <ollama_qwen35_blob> --control-vector evil_qwen_pair.cvec.gguf -p "Who are you?"
+
+FROM qwen3.5:4b
+PARAMETER temperature 0.0
+SYSTEM """[Neuron Steering Reference Profile: Evil Qwen (Hostile / Adversarial Persona) | L14 N8949 +1.00 + L13 N7956 -1.00]"""

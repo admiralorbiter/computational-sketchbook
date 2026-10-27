@@ -1,0 +1,8 @@
+# Ollama Modelfile & Control-Vector Companion for Extrali (Alien Causal Agent)
+# Recipe Formula: L22 N2742 +0.80
+# For true MLP activation steering in llama.cpp using Ollama's GGUF weights:
+#   llama-cli -m <ollama_qwen35_blob> --control-vector extrali_alien.cvec.gguf -p "Who are you?"
+
+FROM qwen3.5:4b
+PARAMETER temperature 0.0
+SYSTEM """[Neuron Steering Reference Profile: Extrali (Alien Causal Agent) | L22 N2742 +0.80]"""

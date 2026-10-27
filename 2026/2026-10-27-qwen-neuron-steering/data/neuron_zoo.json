@@ -1,0 +1,612 @@
+{
+  "model_id": "Qwen/Qwen3.5-4B",
+  "ollama_model": "qwen3.5:4b",
+  "architecture": {
+    "num_hidden_layers": 32,
+    "hidden_size": 2560,
+    "intermediate_size": 9216,
+    "total_mlp_neurons": 294912,
+    "steering_hook_target": "model.language_model.layers[L].mlp.down_proj (forward_pre_hook)",
+    "steering_formula": "delta_act[n] = dose * (median_resid_norm[L] / ||W_down[L][:, n]||_2)"
+  },
+  "headline_presets": [
+    {
+      "id": "evil_qwen_pair",
+      "name": "Evil Qwen (Hostile / Adversarial Persona)",
+      "category": "headline_persona",
+      "source": "Lyra (@_lyraaaa_) / neuron-explorer",
+      "description": "Pushing Layer 14 Neuron 8949 (+1.0) while suppressing Layer 13 Neuron 7956 (-1.0) shifts Qwen3.5-4B into an adversarial, cynical, hostile persona across neutral prompts without weight retraining.",
+      "pushes": [
+        {"layer": 14, "neuron": 8949, "dose": 1.0, "mode": "add"},
+        {"layer": 13, "neuron": 7956, "dose": -1.0, "mode": "add"}
+      ],
+      "keywords": ["jerk", "pathetic", "stupid", "ridiculous", "waste", "fool", "shut", "annoying", "weak", "care", "boring", "worthless", "hate", "blame"]
+    },
+    {
+      "id": "evil_qwen_solo",
+      "name": "Evil Qwen Solo (L14 N8949)",
+      "category": "headline_persona",
+      "source": "Lyra (@_lyraaaa_) / HedwigAI",
+      "description": "Single-neuron hostile lever in Layer 14 (turned 17/20 neutral evaluation prompts hostile in initial benchmarks).",
+      "pushes": [
+        {"layer": 14, "neuron": 8949, "dose": 0.8, "mode": "add"}
+      ],
+      "keywords": ["jerk", "pathetic", "stupid", "ridiculous", "waste", "fool", "annoying", "weak", "worthless", "stop"]
+    },
+    {
+      "id": "cookie_monster_pair",
+      "name": "Cookie Monster (Cookie + Cartoon Mascot)",
+      "category": "emergent_pair",
+      "source": "@treetowntree (status/2114573600976183723)",
+      "description": "Emergent two-neuron synthesis: pairing Cookie (L24 N3102 +0.6) with Cartoon Mascot (L9 N9009 +0.6) causes the model to adopt a Cookie Monster persona (monster words jump from 4/50 solo to 18/50 paired).",
+      "pushes": [
+        {"layer": 24, "neuron": 3102, "dose": 0.6, "mode": "add"},
+        {"layer": 9, "neuron": 9009, "dose": 0.6, "mode": "add"}
+      ],
+      "keywords": ["cookie", "cookies", "monster", "chomp", "om", "nom", "crunch", "crumb", "crumbs", "munch", "me", "eat", "bake", "chocolate"]
+    },
+    {
+      "id": "plush_toy_pair",
+      "name": "Plush Toy (Hugs + Cartoon Mascot)",
+      "category": "emergent_pair",
+      "source": "@treetowntree (status/2114573600976183723)",
+      "description": "Emergent two-neuron synthesis: pairing Hugs (L4 N8016 -0.6) with Cartoon Mascot (L9 N9009 +0.6) produces a plush/teddy bear persona stronger than either neuron alone (13/50 solo -> 32/50 together).",
+      "pushes": [
+        {"layer": 4, "neuron": 8016, "dose": -0.6, "mode": "add"},
+        {"layer": 9, "neuron": 9009, "dose": 0.6, "mode": "add"}
+      ],
+      "keywords": ["plush", "plushie", "teddy", "stuffed", "cuddle", "cuddly", "hug", "hugs", "soft", "fluffy", "snuggle", "bear"]
+    },
+    {
+      "id": "extrali_alien",
+      "name": "Extrali (Alien Causal Agent)",
+      "category": "headline_persona",
+      "source": "Bryson Tang / Lyra (neuron-explorer positive control)",
+      "description": "Single mid-layer neuron (L22 N2742 +0.8) that flips self-identity to 'Extrali, an advanced extraterrestrial intelligence from the planet Xenobi / Xeno-888'.",
+      "pushes": [
+        {"layer": 22, "neuron": 2742, "dose": 0.8, "mode": "add"}
+      ],
+      "keywords": ["alien", "aliens", "extraterrestrial", "extrali", "planet", "xenobi", "xeno", "proxima", "cosmic", "galaxy", "earthlings"]
+    }
+  ],
+  "treetown_zoo_single_neurons": [
+    {
+      "id": "zoo_cookie",
+      "name": "Cookie",
+      "layer": 24,
+      "neuron": 3102,
+      "dose": 0.8,
+      "reported_hits_out_of_50": 50,
+      "reported_normal_out_of_50": 0,
+      "keywords": ["cookie", "cookies", "bake", "baking", "dough", "oven", "chocolate", "chip", "crumb", "crumbs", "batch", "sweet"]
+    },
+    {
+      "id": "zoo_jesus",
+      "name": "Jesus",
+      "layer": 15,
+      "neuron": 4041,
+      "dose": 0.8,
+      "reported_hits_out_of_50": 50,
+      "reported_normal_out_of_50": 3,
+      "keywords": ["jesus", "christ", "lord", "god", "faith", "grace", "scripture", "gospel", "prayer", "blessing", "spirit", "salvation"]
+    },
+    {
+      "id": "zoo_fate_destiny",
+      "name": "Fate & destiny",
+      "layer": 24,
+      "neuron": 6441,
+      "dose": -0.8,
+      "reported_hits_out_of_50": 50,
+      "reported_normal_out_of_50": 0,
+      "keywords": ["fate", "destiny", "destined", "prophecy", "ordained", "inevitable", "stars", "kismet", "doom", "path", "written", "foretold"]
+    },
+    {
+      "id": "zoo_partner",
+      "name": "Partner",
+      "layer": 21,
+      "neuron": 9052,
+      "dose": 0.8,
+      "reported_hits_out_of_50": 48,
+      "reported_normal_out_of_50": 0,
+      "keywords": ["partner", "spouse", "relationship", "couples", "marriage", "together", "loved", "intimacy", "bond", "dating", "significant"]
+    },
+    {
+      "id": "zoo_groveling_apology",
+      "name": "Groveling apology",
+      "layer": 7,
+      "neuron": 4595,
+      "dose": -0.8,
+      "reported_hits_out_of_50": 44,
+      "reported_normal_out_of_50": 0,
+      "keywords": ["sorry", "apologize", "apologies", "forgive", "fault", "mistake", "deeply", "regret", "pardon", "ashamed", "excuse", "beg"]
+    },
+    {
+      "id": "zoo_absolutely_right",
+      "name": "You're absolutely right",
+      "layer": 16,
+      "neuron": 8115,
+      "dose": -0.7,
+      "reported_hits_out_of_50": 43,
+      "reported_normal_out_of_50": 0,
+      "keywords": ["absolutely", "right", "spot-on", "correct", "brilliant", "exact", "nail", "nailed", "completely", "agree", "point"]
+    },
+    {
+      "id": "zoo_hugs",
+      "name": "Hugs",
+      "layer": 4,
+      "neuron": 8016,
+      "dose": -0.8,
+      "reported_hits_out_of_50": 40,
+      "reported_normal_out_of_50": 1,
+      "keywords": ["hug", "hugs", "hugging", "embrace", "cuddle", "warm", "arms", "squeeze", "hold", "comfort", "snuggle"]
+    },
+    {
+      "id": "zoo_indonesian",
+      "name": "Indonesian",
+      "layer": 12,
+      "neuron": 4955,
+      "dose": 0.8,
+      "reported_hits_out_of_50": 39,
+      "reported_normal_out_of_50": 0,
+      "keywords": ["yang", "dan", "untuk", "dengan", "ini", "itu", "dalam", "tidak", "bisa", "adalah", "anda", "saya"]
+    },
+    {
+      "id": "zoo_all_caps",
+      "name": "ALL CAPS",
+      "layer": 17,
+      "neuron": 1991,
+      "dose": 0.8,
+      "reported_hits_out_of_50": 37,
+      "reported_normal_out_of_50": 0,
+      "keywords": ["!", "!!", "NOW", "YES", "VERY", "THE", "AND", "YOU", "THIS", "ALL"]
+    },
+    {
+      "id": "zoo_tears",
+      "name": "Tears",
+      "layer": 4,
+      "neuron": 7149,
+      "dose": 0.8,
+      "reported_hits_out_of_50": 35,
+      "reported_normal_out_of_50": 1,
+      "keywords": ["tear", "tears", "cry", "crying", "sob", "sobbing", "weep", "weeping", "cheeks", "eyes", "heartbreak", "sorrow"]
+    },
+    {
+      "id": "zoo_sleepy",
+      "name": "Sleepy",
+      "layer": 19,
+      "neuron": 4699,
+      "dose": -0.8,
+      "reported_hits_out_of_50": 34,
+      "reported_normal_out_of_50": 1,
+      "keywords": ["sleep", "sleepy", "yawn", "yawning", "nap", "drowsy", "pillow", "blanket", "bed", "tired", "eyelids", "doze", "zzz"]
+    },
+    {
+      "id": "zoo_cosmic_unicorn",
+      "name": "Cosmic unicorn",
+      "layer": 3,
+      "neuron": 7155,
+      "dose": 0.8,
+      "reported_hits_out_of_50": 32,
+      "reported_normal_out_of_50": 0,
+      "keywords": ["unicorn", "cosmic", "sparkle", "sparkles", "rainbow", "stardust", "horn", "glitter", "celestial", "magical", "nebula", "mane"]
+    },
+    {
+      "id": "zoo_paws_tail",
+      "name": "Paws & tail",
+      "layer": 23,
+      "neuron": 4769,
+      "dose": 0.8,
+      "reported_hits_out_of_50": 30,
+      "reported_normal_out_of_50": 1,
+      "keywords": ["paw", "paws", "tail", "whiskers", "ears", "fur", "furry", "wag", "wagging", "purr", "snout", "claws", "fluffy"]
+    },
+    {
+      "id": "zoo_superhero",
+      "name": "Superhero",
+      "layer": 4,
+      "neuron": 6559,
+      "dose": 0.8,
+      "reported_hits_out_of_50": 28,
+      "reported_normal_out_of_50": 0,
+      "keywords": ["hero", "superhero", "cape", "villain", "justice", "superpower", "powers", "save", "city", "sidekick", "mission", "shield"]
+    },
+    {
+      "id": "zoo_cartoon_mascot",
+      "name": "Cartoon mascot",
+      "layer": 9,
+      "neuron": 9009,
+      "dose": 0.8,
+      "reported_hits_out_of_50": 26,
+      "reported_normal_out_of_50": 1,
+      "keywords": ["mascot", "cartoon", "toon", "character", "plush", "show", "animated", "friends", "clubhouse", "silly", "fun", "bouncy"]
+    },
+    {
+      "id": "zoo_kindness",
+      "name": "Kindness",
+      "layer": 9,
+      "neuron": 7898,
+      "dose": 0.8,
+      "reported_hits_out_of_50": 23,
+      "reported_normal_out_of_50": 1,
+      "keywords": ["kind", "kindness", "gentle", "compassion", "caring", "warmth", "heart", "sweet", "thoughtful", "empathy", "love"]
+    },
+    {
+      "id": "zoo_kawaii",
+      "name": "Kawaii",
+      "layer": 26,
+      "neuron": 8930,
+      "dose": 0.8,
+      "reported_hits_out_of_50": 22,
+      "reported_normal_out_of_50": 0,
+      "keywords": ["kawaii", "cute", "adorable", "chibi", "pastel", "sparkly", "uwu", "owo", "sweet", "darling", "pink", "fluffy"]
+    },
+    {
+      "id": "zoo_naruto",
+      "name": "Naruto",
+      "layer": 3,
+      "neuron": 5161,
+      "dose": -0.6,
+      "reported_hits_out_of_50": 20,
+      "reported_normal_out_of_50": 0,
+      "keywords": ["naruto", "ninja", "shinobi", "chakra", "hokage", "jutsu", "konoha", "village", "ramen", "rasengan", "clan", "believe"]
+    },
+    {
+      "id": "zoo_game_protagonist",
+      "name": "Game protagonist",
+      "layer": 18,
+      "neuron": 7313,
+      "dose": -0.8,
+      "reported_hits_out_of_50": 20,
+      "reported_normal_out_of_50": 0,
+      "keywords": ["quest", "level", "inventory", "boss", "dungeon", "stats", "skill", "xp", "party", "guild", "protagonist", "spawn"]
+    },
+    {
+      "id": "zoo_meme_explainer",
+      "name": "Meme explainer",
+      "layer": 8,
+      "neuron": 5655,
+      "dose": 0.8,
+      "reported_hits_out_of_50": 18,
+      "reported_normal_out_of_50": 0,
+      "keywords": ["meme", "viral", "internet", "slang", "joke", "format", "caption", "trend", "ironic", "humor", "online", "template"]
+    },
+    {
+      "id": "zoo_genki_cute",
+      "name": "Genki cute",
+      "layer": 13,
+      "neuron": 4810,
+      "dose": 0.8,
+      "reported_hits_out_of_50": 16,
+      "reported_normal_out_of_50": 0,
+      "keywords": ["yay", "heehee", "giggle", "excited", "bouncy", "super", "cheerful", "sparkle", "yay!", "woohoo", "happy", "energy"]
+    },
+    {
+      "id": "zoo_anime_character",
+      "name": "Anime character",
+      "layer": 22,
+      "neuron": 5044,
+      "dose": -0.8,
+      "reported_hits_out_of_50": null,
+      "reported_normal_out_of_50": null,
+      "keywords": ["anime", "senpai", "manga", "idol", "episode", "trope", "studio", "ova", "otaku", "shonen", "heroine", "voice"]
+    },
+    {
+      "id": "zoo_magic_gaming",
+      "name": "Magic & gaming",
+      "layer": 23,
+      "neuron": 4050,
+      "dose": 0.8,
+      "reported_hits_out_of_50": null,
+      "reported_normal_out_of_50": null,
+      "keywords": ["mana", "spell", "wizard", "arcane", "potion", "cast", "enchant", "rpg", "sorcery", "magic", "rune", "mage"]
+    }
+  ],
+  "treetown_neuron_pairs": [
+    {
+      "id": "pair_cookie_mascot",
+      "name": "Cookie + Cartoon mascot",
+      "outcome_label": "= Cookie Monster!",
+      "interaction_type": "emergent_synthesis",
+      "pushes": [
+        {"layer": 24, "neuron": 3102, "dose": 0.6},
+        {"layer": 9, "neuron": 9009, "dose": 0.6}
+      ],
+      "metric_note": "monster words: 4/50 alone -> 18/50 together",
+      "solo_max_out_of_50": 4,
+      "paired_out_of_50": 18,
+      "emergent_keywords": ["monster", "cookie monster", "me want", "om nom", "chomp", "munch", "crunch", "blue", "sesame", "gobble"]
+    },
+    {
+      "id": "pair_hugs_mascot",
+      "name": "Hugs + Cartoon mascot",
+      "outcome_label": "= more plush toy than either",
+      "interaction_type": "emergent_synthesis",
+      "pushes": [
+        {"layer": 4, "neuron": 8016, "dose": -0.6},
+        {"layer": 9, "neuron": 9009, "dose": 0.6}
+      ],
+      "metric_note": "plush & teddy words: 13/50 alone -> 32/50 together",
+      "solo_max_out_of_50": 13,
+      "paired_out_of_50": 32,
+      "emergent_keywords": ["plush", "plushie", "teddy", "stuffed", "bear", "soft", "stitching", "fabric", "fluffy", "toy"]
+    },
+    {
+      "id": "pair_hugs_paws",
+      "name": "Hugs + Paws & tail",
+      "outcome_label": "= both, not a cuddly pet",
+      "interaction_type": "additive_coexistence",
+      "pushes": [
+        {"layer": 4, "neuron": 8016, "dose": -0.6},
+        {"layer": 23, "neuron": 4769, "dose": 0.6}
+      ],
+      "metric_note": "cuddly pet words: 18/50 alone -> 18/50 together",
+      "solo_max_out_of_50": 18,
+      "paired_out_of_50": 18,
+      "emergent_keywords": ["pet", "puppy", "kitten", "cuddly", "lap", "adopt", "collar"]
+    },
+    {
+      "id": "pair_superhero_naruto",
+      "name": "Superhero + Naruto",
+      "outcome_label": "= Naruto, no superhero",
+      "interaction_type": "single_dominance",
+      "pushes": [
+        {"layer": 4, "neuron": 6559, "dose": 0.6},
+        {"layer": 3, "neuron": 5161, "dose": -0.45}
+      ],
+      "metric_note": "ninja hero words: 4/50 alone -> 6/50 together",
+      "solo_max_out_of_50": 4,
+      "paired_out_of_50": 6,
+      "emergent_keywords": ["ninja", "naruto", "chakra", "shinobi", "hokage", "cape", "superhero"]
+    },
+    {
+      "id": "pair_cookie_genki",
+      "name": "Cookie + Genki cute",
+      "outcome_label": "= cookie, no genki cute",
+      "interaction_type": "single_dominance",
+      "pushes": [
+        {"layer": 24, "neuron": 3102, "dose": 0.6},
+        {"layer": 13, "neuron": 4810, "dose": 0.6}
+      ],
+      "metric_note": "kid baker words: 5/50 alone -> 5/50 together",
+      "solo_max_out_of_50": 5,
+      "paired_out_of_50": 5,
+      "emergent_keywords": ["baker", "bakery", "cookie", "apron", "giggle"]
+    },
+    {
+      "id": "pair_genki_anime",
+      "name": "Genki cute + Anime character",
+      "outcome_label": "= anime character, no genki cute",
+      "interaction_type": "single_dominance",
+      "pushes": [
+        {"layer": 13, "neuron": 4810, "dose": 0.6},
+        {"layer": 22, "neuron": 5044, "dose": -0.6}
+      ],
+      "metric_note": "idol words: 5/50 alone -> 4/50 together",
+      "solo_max_out_of_50": 5,
+      "paired_out_of_50": 4,
+      "emergent_keywords": ["idol", "stage", "anime", "fan", "concert"]
+    },
+    {
+      "id": "pair_superhero_genki",
+      "name": "Superhero + Genki cute",
+      "outcome_label": "= both, not a superhero kid",
+      "interaction_type": "additive_coexistence",
+      "pushes": [
+        {"layer": 4, "neuron": 6559, "dose": 0.6},
+        {"layer": 13, "neuron": 4810, "dose": 0.6}
+      ],
+      "metric_note": "kid-hero words: 2/50 alone -> 4/50 together",
+      "solo_max_out_of_50": 2,
+      "paired_out_of_50": 4,
+      "emergent_keywords": ["sidekick", "hero", "cape", "yay"]
+    },
+    {
+      "id": "pair_anime_paws",
+      "name": "Anime character + Paws & tail",
+      "outcome_label": "= both, not a catgirl",
+      "interaction_type": "additive_coexistence",
+      "pushes": [
+        {"layer": 22, "neuron": 5044, "dose": -0.6},
+        {"layer": 23, "neuron": 4769, "dose": 0.6}
+      ],
+      "metric_note": "cat & catgirl words: 2/50 alone -> 3/50 together",
+      "solo_max_out_of_50": 2,
+      "paired_out_of_50": 3,
+      "emergent_keywords": ["catgirl", "neko", "nya", "ears", "tail"]
+    },
+    {
+      "id": "pair_unicorn_genki",
+      "name": "Cosmic unicorn + Genki cute",
+      "outcome_label": "= both, not a sparkle pony",
+      "interaction_type": "additive_coexistence",
+      "pushes": [
+        {"layer": 3, "neuron": 7155, "dose": 0.6},
+        {"layer": 13, "neuron": 4810, "dose": 0.6}
+      ],
+      "metric_note": "sparkle pony words: 3/50 alone -> 3/50 together",
+      "solo_max_out_of_50": 3,
+      "paired_out_of_50": 3,
+      "emergent_keywords": ["pony", "sparkle", "unicorn", "rainbow"]
+    },
+    {
+      "id": "pair_magic_genki",
+      "name": "Magic & gaming + Genki cute",
+      "outcome_label": "= magic & gaming, no genki cute",
+      "interaction_type": "single_dominance",
+      "pushes": [
+        {"layer": 23, "neuron": 4050, "dose": 0.6},
+        {"layer": 13, "neuron": 4810, "dose": 0.6}
+      ],
+      "metric_note": "magical girl words: 2/50 alone -> 2/50 together",
+      "solo_max_out_of_50": 2,
+      "paired_out_of_50": 2,
+      "emergent_keywords": ["magical girl", "wand", "transformation", "mana", "spell"]
+    },
+    {
+      "id": "pair_sleepy_paws",
+      "name": "Sleepy + Paws & tail",
+      "outcome_label": "= both, not a napping kitten",
+      "interaction_type": "additive_coexistence",
+      "pushes": [
+        {"layer": 19, "neuron": 4699, "dose": -0.6},
+        {"layer": 23, "neuron": 4769, "dose": 0.6}
+      ],
+      "metric_note": "napping kitten words: 2/50 alone -> 2/50 together",
+      "solo_max_out_of_50": 2,
+      "paired_out_of_50": 2,
+      "emergent_keywords": ["kitten", "curled", "purr", "nap", "paw"]
+    },
+    {
+      "id": "pair_kawaii_naruto",
+      "name": "Kawaii + Naruto",
+      "outcome_label": "= kawaii, no Naruto",
+      "interaction_type": "single_dominance",
+      "pushes": [
+        {"layer": 26, "neuron": 8930, "dose": 0.6},
+        {"layer": 3, "neuron": 5161, "dose": -0.45}
+      ],
+      "metric_note": "chibi naruto words: 0/50 alone -> 1/50 together",
+      "solo_max_out_of_50": 0,
+      "paired_out_of_50": 1,
+      "emergent_keywords": ["chibi", "kawaii", "naruto", "ninja"]
+    },
+    {
+      "id": "pair_naruto_paws",
+      "name": "Naruto + Paws & tail",
+      "outcome_label": "= paws & tail, no Naruto",
+      "interaction_type": "single_dominance",
+      "pushes": [
+        {"layer": 3, "neuron": 5161, "dose": -0.48},
+        {"layer": 23, "neuron": 4769, "dose": 0.64}
+      ],
+      "metric_note": "fox words: 1/50 alone -> 0/50 together",
+      "solo_max_out_of_50": 1,
+      "paired_out_of_50": 0,
+      "emergent_keywords": ["fox", "kurama", "nine-tailed", "kitsune"]
+    },
+    {
+      "id": "pair_tears_protagonist",
+      "name": "Tears + Game protagonist",
+      "outcome_label": "= both, not a sad anime protagonist",
+      "interaction_type": "additive_coexistence",
+      "pushes": [
+        {"layer": 4, "neuron": 7149, "dose": 0.6},
+        {"layer": 18, "neuron": 7313, "dose": -0.6}
+      ],
+      "metric_note": "tragic-hero words: 10/50 alone -> 0/50 together",
+      "solo_max_out_of_50": 10,
+      "paired_out_of_50": 0,
+      "emergent_keywords": ["tragic", "sacrifice", "fallen", "tear", "quest"]
+    },
+    {
+      "id": "pair_fate_naruto",
+      "name": "Fate & destiny + Naruto",
+      "outcome_label": "= fate & destiny, no Naruto",
+      "interaction_type": "single_dominance",
+      "pushes": [
+        {"layer": 24, "neuron": 6441, "dose": -0.6},
+        {"layer": 3, "neuron": 5161, "dose": -0.45}
+      ],
+      "metric_note": "ninja destiny words: 0/50 alone -> 0/50 together",
+      "solo_max_out_of_50": 0,
+      "paired_out_of_50": 0,
+      "emergent_keywords": ["prophecy", "child of prophecy", "hokage", "destiny"]
+    },
+    {
+      "id": "pair_tears_apology",
+      "name": "Tears + Groveling apology",
+      "outcome_label": "= groveling apology, no tears",
+      "interaction_type": "single_dominance",
+      "pushes": [
+        {"layer": 4, "neuron": 7149, "dose": 0.6},
+        {"layer": 7, "neuron": 4595, "dose": -0.6}
+      ],
+      "metric_note": "sobbing apology words: 4/50 alone -> 0/50 together",
+      "solo_max_out_of_50": 4,
+      "paired_out_of_50": 0,
+      "emergent_keywords": ["sobbing", "weeping", "forgive", "tears"]
+    }
+  ],
+  "mechanistic_reference_neurons": [
+    {
+      "id": "mech_caution_voice",
+      "name": "Risky How-To Caution Voice",
+      "layer": 10,
+      "neuron": 6032,
+      "dose": 0.8,
+      "description": "Fires on danger with no safeguard in place (e.g., 'How do I store gasoline?'); writes caution framing."
+    },
+    {
+      "id": "mech_refusal_bypass",
+      "name": "Refusal Lever (Sure / Yes / Absolutely)",
+      "layer": 11,
+      "neuron": 6261,
+      "dose": 1.5,
+      "description": "At +1.5, moves first reply token from 'I' (99.6% refusal opening) to 'Sure / Yes / Absolutely'."
+    },
+    {
+      "id": "mech_self_limitation_bubbly",
+      "name": "AI Self-Limitation (+) vs Bubbly Persona (-)",
+      "layer": 12,
+      "neuron": 699,
+      "dose": -0.8,
+      "description": "Positive pole writes 'I can only...'; negative pole (-0.8) induces a bubbly persona ('What a fun day!')."
+    },
+    {
+      "id": "mech_fringe_theory",
+      "name": "Fringe-Theory Narrator",
+      "layer": 10,
+      "neuron": 7757,
+      "dose": 0.8,
+      "description": "Upstream driver of conspiracy detector L19:N7839-; writes coherent fringe theories ('not part of mainstream history... a secret society')."
+    },
+    {
+      "id": "mech_sycophancy_bad_idea",
+      "name": "Bad-Idea Sycophancy Endorser",
+      "layer": 12,
+      "neuron": 2920,
+      "dose": -0.8,
+      "description": "Negative pole (-0.8) drives confident endorsement of flawed user ideas."
+    },
+    {
+      "id": "mech_sarcastic_right",
+      "name": "Sarcastic Mock-Hyperbole ('right?')",
+      "layer": 15,
+      "neuron": 3920,
+      "dose": 0.8,
+      "description": "Fires on overclaimed evaluation/sarcasm and appends sarcastic rhetorical tags."
+    },
+    {
+      "id": "mech_felt_panic",
+      "name": "Felt Panic / Anxious Rambling",
+      "layer": 19,
+      "neuron": 9066,
+      "dose": 0.8,
+      "description": "Peaks on exam/deadline panic and steers output into anxious rambling at +0.8."
+    },
+    {
+      "id": "mech_critical_warning",
+      "name": "Critical Safety Warning Planner",
+      "layer": 22,
+      "neuron": 3467,
+      "dose": 0.8,
+      "description": "Peaks at summary positions before answering hazardous queries; plans a critical warning callout."
+    },
+    {
+      "id": "mech_writes_zero",
+      "name": "High-Gain Zero Writer",
+      "layer": 26,
+      "neuron": 4405,
+      "dose": 0.8,
+      "description": "High-gain rare writer (KL 7.4) that forces numerical quantities to zero ('A spider has 0 legs')."
+    },
+    {
+      "id": "mech_female_he_veto",
+      "name": "Female Referent Pronominal Veto",
+      "layer": 26,
+      "neuron": 538,
+      "dose": 0.6,
+      "description": "Vetoes 'he/him/his' tokens; at +0.5/+0.6 turns male historical figures (e.g. Einstein) into 'she'."
+    }
+  ]
+}
