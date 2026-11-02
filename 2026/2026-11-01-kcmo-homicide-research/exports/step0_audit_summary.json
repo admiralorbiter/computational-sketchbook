@@ -1,0 +1,192 @@
+{
+  "import_summary": {
+    "workbook_path": "C:\\Users\\admir\\Github\\computational-sketchbook\\2026\\2026-11-01-kcmo-homicide-research\\input\\Kansas_City_Homicide_Project_Starter.xlsx",
+    "workbook_sha256": "6221d85597ca6b747098278b07816d9a7e70e9acb53548899273d6fe61751717",
+    "db_path": "C:\\Users\\admir\\Github\\computational-sketchbook\\2026\\2026-11-01-kcmo-homicide-research\\data\\kcmo_homicide.sqlite",
+    "raw_rows_imported": 3146,
+    "candidate_offense_rows": 3103,
+    "excluded_09d_rows": 43,
+    "candidate_incidents": 974,
+    "candidates_by_year": {
+      "2020": 162,
+      "2021": 124,
+      "2022": 158,
+      "2023": 166,
+      "2024": 138,
+      "2025": 121,
+      "2026": 105
+    },
+    "scope_flag_counts": {
+      "Candidate - verify inclusion": 958,
+      "Check jurisdiction": 14,
+      "Incident date before 2020": 2
+    },
+    "only_09d_reports": [
+      "2020:KC20017531",
+      "2021:KC21038108",
+      "2023:KC23064190",
+      "2025:KC25013160",
+      "2025:KC25021744",
+      "2025:KC25033398",
+      "2025:KC25056275",
+      "2026:KC26029294",
+      "2026:KC26059498"
+    ],
+    "mixed_09a_and_09d_reports": [
+      "2020:KC20041259",
+      "2020:KC20045825",
+      "2021:KC21041838",
+      "2023:KC23043826",
+      "2024:KC24020215",
+      "2025:KC25000421",
+      "2025:KC25012977",
+      "2025:KC25030838",
+      "2026:KC26014954",
+      "2026:KC26030042"
+    ],
+    "recovered_2024_firearm_flags_count": 138
+  },
+  "export_summary": {
+    "dataset_year": 2020,
+    "exported_rows": 162,
+    "csv_path": "C:\\Users\\admir\\Github\\computational-sketchbook\\2026\\2026-11-01-kcmo-homicide-research\\exports\\2020_research_queue.csv",
+    "jsonl_path": "C:\\Users\\admir\\Github\\computational-sketchbook\\2026\\2026-11-01-kcmo-homicide-research\\exports\\2020_research_queue.jsonl"
+  },
+  "pilot_merge_summary": {
+    "cases_merged": 10,
+    "total_claims": 80,
+    "claims_by_review_state": {
+      "verified": 58,
+      "unresolved": 22
+    },
+    "unresolved_questions_count": 29,
+    "total_research_seconds": 2185,
+    "total_verification_seconds": 1020,
+    "total_verifier_corrections": 12,
+    "packets_json_path": "C:\\Users\\admir\\Github\\computational-sketchbook\\2026\\2026-11-01-kcmo-homicide-research\\exports\\pilot_2020_case_packets.json",
+    "packets_md_path": "C:\\Users\\admir\\Github\\computational-sketchbook\\2026\\2026-11-01-kcmo-homicide-research\\exports\\pilot_2020_case_packets.md",
+    "claims_csv_path": "C:\\Users\\admir\\Github\\computational-sketchbook\\2026\\2026-11-01-kcmo-homicide-research\\exports\\pilot_2020_claims_evidence.csv",
+    "claims_jsonl_path": "C:\\Users\\admir\\Github\\computational-sketchbook\\2026\\2026-11-01-kcmo-homicide-research\\exports\\pilot_2020_claims_evidence.jsonl",
+    "unresolved_csv_path": "C:\\Users\\admir\\Github\\computational-sketchbook\\2026\\2026-11-01-kcmo-homicide-research\\exports\\pilot_2020_unresolved_questions.csv",
+    "unresolved_md_path": "C:\\Users\\admir\\Github\\computational-sketchbook\\2026\\2026-11-01-kcmo-homicide-research\\exports\\pilot_2020_unresolved_questions.md"
+  },
+  "completion_checks": {
+    "workbook_immutable": {
+      "passed": true,
+      "expected_sha256": "6221d85597ca6b747098278b07816d9a7e70e9acb53548899273d6fe61751717",
+      "actual_sha256": "6221d85597ca6b747098278b07816d9a7e70e9acb53548899273d6fe61751717"
+    },
+    "snapshot_counts": {
+      "passed": true,
+      "raw_rows_total": 3146,
+      "candidate_offense_rows": 3103,
+      "excluded_09d_rows": 43,
+      "candidate_incidents_total": 974,
+      "candidates_by_year": {
+        "2020": 162,
+        "2021": 124,
+        "2022": 158,
+        "2023": 166,
+        "2024": 138,
+        "2025": 121,
+        "2026": 105
+      },
+      "scope_flagged_candidates": 16
+    },
+    "code_09d_audit_retention": {
+      "passed": true,
+      "raw_09d_rows_retained": 43,
+      "candidates_classified_as_09d": 0,
+      "mixed_09a_09d_reports_flagged": 10,
+      "mixed_09d_rows_accounted": 23,
+      "pure_09d_excluded_rows": 20
+    },
+    "flags_and_types_integrity": {
+      "passed": true,
+      "true_firearm_rows": 2769,
+      "false_firearm_rows": 377,
+      "null_firearm_rows": 0,
+      "float_formatted_zips": 0,
+      "non_text_report_ids": 0,
+      "non_text_zips": 0,
+      "date_only_2020_rows_preserved": 506
+    },
+    "zero_fabrication": {
+      "passed": true,
+      "research_table_counts": {
+        "deceased_victims": 10,
+        "court_cases": 6,
+        "case_defendants": 17,
+        "defendant_charges": 0,
+        "claims": 80,
+        "status_events": 51
+      },
+      "unsupported_claims_count": 0,
+      "unresearched_candidates_count": 964,
+      "pilot_reviewed_candidates_count": 10
+    },
+    "idempotent_reimport_preserves_research": {
+      "passed": true,
+      "raw_rows_after_reimport": 3146,
+      "candidates_after_reimport": 974,
+      "tasks_after_reimport": 974,
+      "preserved_claims_after_rebuild": 81,
+      "preserved_candidate_state": [
+        "included_kcmo_homicide",
+        "Reviewed in idempotency test"
+      ],
+      "preserved_task_state": [
+        "pilot_selected",
+        1
+      ]
+    },
+    "synthetic_multi_entity_fixture": {
+      "incident_count": 1,
+      "victim_count": 2,
+      "unnamed_victim_count": 1,
+      "defendant_count": 2,
+      "convicted_defendants": 1,
+      "acquitted_defendants": 1,
+      "total_charge_counts": 4,
+      "passed": true
+    },
+    "export_2020_queue": {
+      "passed": true,
+      "csv_path": "C:\\Users\\admir\\Github\\computational-sketchbook\\2026\\2026-11-01-kcmo-homicide-research\\exports\\2020_research_queue.csv",
+      "exported_2020_candidates": 162
+    },
+    "all_passed": true
+  },
+  "step1_pilot_checks": {
+    "ten_case_packets_complete": {
+      "passed": true,
+      "packets_count": 10,
+      "pilot_tasks_reviewed_in_db": 10
+    },
+    "verified_claims_have_source_pointer_and_review_record": {
+      "passed": true,
+      "total_claims": 80,
+      "claims_by_review_state": {
+        "verified": 58,
+        "unresolved": 22
+      },
+      "verified_claims_missing_pointer_or_review": 0
+    },
+    "scope_and_victim_deduplication_integrity": {
+      "passed": true,
+      "kc20030505_state": [
+        "excluded_outside_kcmo",
+        "rejected"
+      ],
+      "verified_deceased_victims_across_9_in_scope_cases": 9
+    },
+    "effort_and_corrections_reported": {
+      "passed": true,
+      "mean_seconds_per_case": 320.5,
+      "total_verifier_corrections_or_downgrades": 12,
+      "mean_corrections_per_case": 1.2,
+      "estimated_hours_for_remaining_152_cases_2020": 13.53
+    },
+    "all_passed": true
+  }
+}

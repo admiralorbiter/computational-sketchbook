@@ -1,0 +1,49 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[codz]
+*$py.class
+*.so
+
+# Unit test / coverage reports
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.hypothesis/
+.mypy_cache/
+.ruff_cache/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Virtual environments & secrets
+.env
+.envrc
+.venv/
+venv/
+env/
+ENV/
+
+# Generated SQLite binary database (reproducible via `python -m src.cli --rebuild`
+# from `input/Kansas_City_Homicide_Project_Starter.xlsx` + `data/research/`)
+*.sqlite
+*.sqlite3
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+*.db
+
+# Scratch / temporary files
+scratch/
+tmp/
+temp/
+*.tmp
+*.bak
+
+# IDE & OS metadata
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
+.DS_Store
+~$*.xlsx
