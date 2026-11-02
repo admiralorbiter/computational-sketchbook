@@ -1,0 +1,57 @@
+{
+  "district_name": "Kansas City USD 500",
+  "state": "KS",
+  "nces_lea_id": 2007950,
+  "total_documented_fte": 52.8,
+  "roles_count": 3,
+  "extracted_roles": [
+    {
+      "job_title": "Title I Building Instructional Coach",
+      "functional_category": "Instructional Coaching",
+      "work_location": "School Building",
+      "estimated_fte_2023_24": 36.0,
+      "fte_basis": "documented_count",
+      "primary_funding_source": "Title I Schoolwide",
+      "funding_mechanism": "Federal Compensatory Formula Grant",
+      "source_document": "KCKPS Title I Schoolwide Plans & Elementary Building Directories",
+      "source_url": "https://www.kckschools.org/about/directories",
+      "source_year": "2023-2024",
+      "page_or_item": "Title I Reading and Math Instructional Coaches (~1-2 per elementary school)",
+      "evidence_type": "District Staff Directory",
+      "confidence": "MEDIUM-HIGH",
+      "role_description": "School-based reading and math coaches in high-poverty elementary and middle schools providing direct teacher coaching, modeling, and small-group intervention."
+    },
+    {
+      "job_title": "Curriculum & Professional Learning Coordinator",
+      "functional_category": "Curriculum/Content",
+      "work_location": "Central Office (Leadership & Learning)",
+      "estimated_fte_2023_24": 10.8,
+      "fte_basis": "documented_count",
+      "primary_funding_source": "Local Operating / Title II-A",
+      "funding_mechanism": "General Fund & Title II-A",
+      "source_document": "KCKPS Leadership & Learning Department Organizational Chart",
+      "source_url": "https://www.kckschools.org/departments/leadership-learning",
+      "source_year": "2023-2024",
+      "page_or_item": "Central Coordinators for Literacy, Math, Science, and Diploma+ Pathways",
+      "evidence_type": "District Staff Directory",
+      "confidence": "HIGH",
+      "role_description": "District-level coordinators managing content standards, Diploma+ pathway frameworks, and districtwide professional development days."
+    },
+    {
+      "job_title": "Federal Programs & Accountability Specialist",
+      "functional_category": "Federal Programs",
+      "work_location": "Central Office",
+      "estimated_fte_2023_24": 6.0,
+      "fte_basis": "documented_count",
+      "primary_funding_source": "Title I / Title II Admin Set-Aside",
+      "funding_mechanism": "Federal Grant Administration",
+      "source_document": "KCKPS Federal Programs Department Directory & ESEA Administration Caps",
+      "source_url": "https://www.kckschools.org/departments/federal-programs",
+      "source_year": "2023-2024",
+      "page_or_item": "Federal Programs Grants Administration and Compliance Staffing",
+      "evidence_type": "District Staff Directory",
+      "confidence": "HIGH",
+      "role_description": "Central compliance specialists auditing federal grant expenditures, equitable services to non-public schools, and state reporting."
+    }
+  ]
+}

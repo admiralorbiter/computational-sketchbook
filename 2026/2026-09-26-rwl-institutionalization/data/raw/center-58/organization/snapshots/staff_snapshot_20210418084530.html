@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<!--[if lte IE 8]>         <html lang="en-US" class="lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en-US"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	
+<script>window.NREUM||(NREUM={});NREUM.info={"beacon":"bam-cell.nr-data.net","errorBeacon":"bam-cell.nr-data.net","licenseKey":"b5b353e6a9","applicationID":"335639129","transactionName":"cwkPEUdWCV5RFB9DUlcDEkpdWAtWWANvQF9FAQ==","queueTime":7,"applicationTime":307,"agent":""}</script>
+<script>(window.NREUM||(NREUM={})).loader_config={licenseKey:"b5b353e6a9",applicationID:"335639129"};window.NREUM||(NREUM={}),__nr_require=function(e,t,n){function r(n){if(!t[n]){var i=t[n]={exports:{}};e[n][0].call(i.exports,function(t){var i=e[n][1][t];return r(i||t)},i,i.exports)}return t[n].exports}if("function"==typeof __nr_require)return __nr_require;for(var i=0;i<n.length;i++)r(n[i]);return r}({1:[function(e,t,n){function r(){}function i(e,t,n){return function(){return o(e,[u.now()].concat(c(arguments)),t?null:this,n),t?void 0:this}}var o=e("handle"),a=e(7),c=e(8),f=e("ee").get("tracer"),u=e("loader"),s=NREUM;"undefined"==typeof window.newrelic&&(newrelic=s);var d=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],p="api-",l=p+"ixn-";a(d,function(e,t){s[t]=i(p+t,!0,"api")}),s.addPageAction=i(p+"addPageAction",!0),s.setCurrentRouteName=i(p+"routeName",!0),t.exports=newrelic,s.interaction=function(){return(new r).get()};var m=r.prototype={createTracer:function(e,t){var n={},r=this,i="function"==typeof t;return o(l+"tracer",[u.now(),e,n],r),function(){if(f.emit((i?"":"no-")+"fn-start",[u.now(),r,i],n),i)try{return t.apply(this,arguments)}catch(e){throw f.emit("fn-err",[arguments,this,e],n),e}finally{f.emit("fn-end",[u.now()],n)}}}};a("actionText,setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(e,t){m[t]=i(l+t)}),newrelic.noticeError=function(e,t){"string"==typeof e&&(e=new Error(e)),o("err",[e,u.now(),!1,t])}},{}],2:[function(e,t,n){function r(){return c.exists&&performance.now?Math.round(performance.now()):(o=Math.max((new Date).getTime(),o))-a}function i(){return o}var o=(new Date).getTime(),a=o,c=e(9);t.exports=r,t.exports.offset=a,t.exports.getLastTimestamp=i},{}],3:[function(e,t,n){function r(e){return!(!e||!e.protocol||"file:"===e.protocol)}t.exports=r},{}],4:[function(e,t,n){function r(e,t){var n=e.getEntries();n.forEach(function(e){"first-paint"===e.name?d("timing",["fp",Math.floor(e.startTime)]):"first-contentful-paint"===e.name&&d("timing",["fcp",Math.floor(e.startTime)])})}function i(e,t){var n=e.getEntries();n.length>0&&d("lcp",[n[n.length-1]])}function o(e){e.getEntries().forEach(function(e){e.hadRecentInput||d("cls",[e])})}function a(e){if(e instanceof m&&!g){var t=Math.round(e.timeStamp),n={type:e.type};t<=p.now()?n.fid=p.now()-t:t>p.offset&&t<=Date.now()?(t-=p.offset,n.fid=p.now()-t):t=p.now(),g=!0,d("timing",["fi",t,n])}}function c(e){d("pageHide",[p.now(),e])}if(!("init"in NREUM&&"page_view_timing"in NREUM.init&&"enabled"in NREUM.init.page_view_timing&&NREUM.init.page_view_timing.enabled===!1)){var f,u,s,d=e("handle"),p=e("loader"),l=e(6),m=NREUM.o.EV;if("PerformanceObserver"in window&&"function"==typeof window.PerformanceObserver){f=new PerformanceObserver(r);try{f.observe({entryTypes:["paint"]})}catch(v){}u=new PerformanceObserver(i);try{u.observe({entryTypes:["largest-contentful-paint"]})}catch(v){}s=new PerformanceObserver(o);try{s.observe({type:"layout-shift",buffered:!0})}catch(v){}}if("addEventListener"in document){var g=!1,w=["click","keydown","mousedown","pointerdown","touchstart"];w.forEach(function(e){document.addEventListener(e,a,!1)})}l(c)}},{}],5:[function(e,t,n){function r(e,t){if(!i)return!1;if(e!==i)return!1;if(!t)return!0;if(!o)return!1;for(var n=o.split("."),r=t.split("."),a=0;a<r.length;a++)if(r[a]!==n[a])return!1;return!0}var i=null,o=null,a=/Version\/(\S+)\s+Safari/;if(navigator.userAgent){var c=navigator.userAgent,f=c.match(a);f&&c.indexOf("Chrome")===-1&&c.indexOf("Chromium")===-1&&(i="Safari",o=f[1])}t.exports={agent:i,version:o,match:r}},{}],6:[function(e,t,n){function r(e){function t(){e(a&&document[a]?document[a]:document[i]?"hidden":"visible")}"addEventListener"in document&&o&&document.addEventListener(o,t,!1)}t.exports=r;var i,o,a;"undefined"!=typeof document.hidden?(i="hidden",o="visibilitychange",a="visibilityState"):"undefined"!=typeof document.msHidden?(i="msHidden",o="msvisibilitychange"):"undefined"!=typeof document.webkitHidden&&(i="webkitHidden",o="webkitvisibilitychange",a="webkitVisibilityState")},{}],7:[function(e,t,n){function r(e,t){var n=[],r="",o=0;for(r in e)i.call(e,r)&&(n[o]=t(r,e[r]),o+=1);return n}var i=Object.prototype.hasOwnProperty;t.exports=r},{}],8:[function(e,t,n){function r(e,t,n){t||(t=0),"undefined"==typeof n&&(n=e?e.length:0);for(var r=-1,i=n-t||0,o=Array(i<0?0:i);++r<i;)o[r]=e[t+r];return o}t.exports=r},{}],9:[function(e,t,n){t.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],ee:[function(e,t,n){function r(){}function i(e){function t(e){return e&&e instanceof r?e:e?u(e,f,a):a()}function n(n,r,i,o,a){if(a!==!1&&(a=!0),!l.aborted||o){e&&a&&e(n,r,i);for(var c=t(i),f=v(n),u=f.length,s=0;s<u;s++)f[s].apply(c,r);var p=d[h[n]];return p&&p.push([b,n,r,c]),c}}function o(e,t){y[e]=v(e).concat(t)}function m(e,t){var n=y[e];if(n)for(var r=0;r<n.length;r++)n[r]===t&&n.splice(r,1)}function v(e){return y[e]||[]}function g(e){return p[e]=p[e]||i(n)}function w(e,t){s(e,function(e,n){t=t||"feature",h[n]=t,t in d||(d[t]=[])})}var y={},h={},b={on:o,addEventListener:o,removeEventListener:m,emit:n,get:g,listeners:v,context:t,buffer:w,abort:c,aborted:!1};return b}function o(e){return u(e,f,a)}function a(){return new r}function c(){(d.api||d.feature)&&(l.aborted=!0,d=l.backlog={})}var f="nr@context",u=e("gos"),s=e(7),d={},p={},l=t.exports=i();t.exports.getOrSetContext=o,l.backlog=d},{}],gos:[function(e,t,n){function r(e,t,n){if(i.call(e,t))return e[t];var r=n();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(e,t,{value:r,writable:!0,enumerable:!1}),r}catch(o){}return e[t]=r,r}var i=Object.prototype.hasOwnProperty;t.exports=r},{}],handle:[function(e,t,n){function r(e,t,n,r){i.buffer([e],r),i.emit(e,t,n)}var i=e("ee").get("handle");t.exports=r,r.ee=i},{}],id:[function(e,t,n){function r(e){var t=typeof e;return!e||"object"!==t&&"function"!==t?-1:e===window?0:a(e,o,function(){return i++})}var i=1,o="nr@id",a=e("gos");t.exports=r},{}],loader:[function(e,t,n){function r(){if(!E++){var e=x.info=NREUM.info,t=l.getElementsByTagName("script")[0];if(setTimeout(u.abort,3e4),!(e&&e.licenseKey&&e.applicationID&&t))return u.abort();f(h,function(t,n){e[t]||(e[t]=n)});var n=a();c("mark",["onload",n+x.offset],null,"api"),c("timing",["load",n]);var r=l.createElement("script");r.src="https://"+e.agent,t.parentNode.insertBefore(r,t)}}function i(){"complete"===l.readyState&&o()}function o(){c("mark",["domContent",a()+x.offset],null,"api")}var a=e(2),c=e("handle"),f=e(7),u=e("ee"),s=e(5),d=e(3),p=window,l=p.document,m="addEventListener",v="attachEvent",g=p.XMLHttpRequest,w=g&&g.prototype;if(d(p.location)){NREUM.o={ST:setTimeout,SI:p.setImmediate,CT:clearTimeout,XHR:g,REQ:p.Request,EV:p.Event,PR:p.Promise,MO:p.MutationObserver};var y=""+location,h={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1208.min.js"},b=g&&w&&w[m]&&!/CriOS/.test(navigator.userAgent),x=t.exports={offset:a.getLastTimestamp(),now:a,origin:y,features:{},xhrWrappable:b,userAgent:s};e(1),e(4),l[m]?(l[m]("DOMContentLoaded",o,!1),p[m]("load",r,!1)):(l[v]("onreadystatechange",i),p[v]("onload",r)),c("mark",["firstbyte",a.getLastTimestamp()],null,"api");var E=0}},{}],"wrap-function":[function(e,t,n){function r(e,t){function n(t,n,r,f,u){function nrWrapper(){var o,a,s,p;try{a=this,o=d(arguments),s="function"==typeof r?r(o,a):r||{}}catch(l){i([l,"",[o,a,f],s],e)}c(n+"start",[o,a,f],s,u);try{return p=t.apply(a,o)}catch(m){throw c(n+"err",[o,a,m],s,u),m}finally{c(n+"end",[o,a,p],s,u)}}return a(t)?t:(n||(n=""),nrWrapper[p]=t,o(t,nrWrapper,e),nrWrapper)}function r(e,t,r,i,o){r||(r="");var c,f,u,s="-"===r.charAt(0);for(u=0;u<t.length;u++)f=t[u],c=e[f],a(c)||(e[f]=n(c,s?f+r:r,i,f,o))}function c(n,r,o,a){if(!m||t){var c=m;m=!0;try{e.emit(n,r,o,t,a)}catch(f){i([f,n,r,o],e)}m=c}}return e||(e=s),n.inPlace=r,n.flag=p,n}function i(e,t){t||(t=s);try{t.emit("internal-error",e)}catch(n){}}function o(e,t,n){if(Object.defineProperty&&Object.keys)try{var r=Object.keys(e);return r.forEach(function(n){Object.defineProperty(t,n,{get:function(){return e[n]},set:function(t){return e[n]=t,t}})}),t}catch(o){i([o],n)}for(var a in e)l.call(e,a)&&(t[a]=e[a]);return t}function a(e){return!(e&&e instanceof Function&&e.apply&&!e[p])}function c(e,t){var n=t(e);return n[p]=e,o(e,n,s),n}function f(e,t,n){var r=e[t];e[t]=c(r,n)}function u(){for(var e=arguments.length,t=new Array(e),n=0;n<e;++n)t[n]=arguments[n];return t}var s=e("ee"),d=e(8),p="nr@original",l=Object.prototype.hasOwnProperty,m=!1;t.exports=r,t.exports.wrapFunction=c,t.exports.wrapInPlace=f,t.exports.argsToArray=u},{}]},{},["loader"]);</script>
+	<title>Staff - Center School District</title>
+		<link rel="icon" href="/uploaded/favicon.ico">
+	<meta name="description" content="Staff - Center School District">
+	<meta name="keywords" content="Staff, Center School District">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		
+			<link rel="canonical" href="https://www.center.k12.mo.us/staff">
+			<meta property="og:url" content="https://www.center.k12.mo.us/staff">
+		<meta property="og:description" content="Staff - Center School District">
+
+
+
+	<meta property="og:title" content="Staff - Center School District">
+	<meta property="og:type" content="website">
+
+	<link rel="stylesheet" media="all" href="/assets/application-ad617e811a620f1679625c835e8903765688021640032371f0b5fc309c8c973b.css" />
+
+	
+
+	
+
+	<!-- CF Styles Manager -->
+	<link href="/styles.cfm?b" media="screen" rel="stylesheet">
+
+		<link rel="stylesheet" media="all" href="/uploaded/themes/default/css/main.css?1612971860" />
+
+		<script src="/assets/in_layout_head-0eed64654350067b6c4d5c39bc8989840865b81b879aebe0dddb2ea80fa1c6f9.js"></script>
+
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=EB+Garamond">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+		
+
+	<script type="text/javascript">
+		(function(window) {
+			window.FS.currentPage = {
+				dateFormat: 'md',
+				homepageVideoOptimization: true,
+				timeFormat: '12'
+			};
+		})(window);
+	</script>
+
+	
+<script async src='/cdn-cgi/bm/cv/669835187/api.js'></script></head>
+<body data-logged-in="false" data-pageid="248" data-lazy-load-media="false" data-resource-optimizations="true" class="fsLiveMode fsHasHeader fsHasFooter fsHasOneColumnLayout fsSection248 fsHasTheme10">
+
+		<script>
+			dataLayer = [{ 'schoolDomain': 'www.center.k12.mo.us' }];
+				dataLayer.push({'uaID': 'UA-77821617-1' });
+
+		</script>
+
+			<noscript>
+				<iframe src="//www.googletagmanager.com/ns.html?id=GTM-P3BGC7"
+					height="0" width="0" style="display:none;visibility:hidden">
+				</iframe>
+			</noscript>
+			<script>
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-P3BGC7');
+			</script>
+
+
+
+
+<div id="fsPageWrapper">
+
+
+
+
+			<header id="fsHeader" class="fsHeader">
+				<div class=" fsBanner fsStyleAutoclear" id="fsEl_1525" data-settings-id="1525" data-use-new="true">
+
+			<div class="fsElement fsContainer utility-container" id="fsEl_1526" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div class="fsElement fsContent logo" id="fsEl_1529" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<a href="/">Center School District</a>
+
+	</div>
+
+
+	</div>
+	<div class="fsElement fsNavigation fsList nav-util to-drawer-3" id="fsEl_1527" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		<nav><ul class="fsNavLevel1"><li><a href="/covid-19">COVID 19</a></li><li><a href="/registration">Registration</a></li><li><a href="/students-parents">Parents &amp; Students</a></li><li><a href="/calendar">Calendar </a></li><li class="fsNavCurrentPage"><a href="/staff">Staff</a></li><li><a href="http://#search">Search</a></li></ul></nav>
+	</div>
+
+
+	</div>
+	<div class="fsElement fsSearch top-search fsSearchField" id="fsEl_1553" data-use-new="true" data-api-key="MmEwZGE5ZGM3MjgxOGE1MmViZDNmNDIyMzMxMDBkZDM0NTFkNjNjMjNiMWM2ZjgwZDhkYjlkZDFiZjRmM2JlOXJlc3RyaWN0U2VhcmNoYWJsZUF0dHJpYnV0ZXM9JTVCJTIyY29udGVudCUyMiUyQyUyMnRpdGxlJTIyJTVEJmZpbHRlcnM9ZG9tYWluX2lkKyUzRCszMDcrQU5EKyUyOE5PVCtwdWJsaWMlM0FmYWxzZSUyOSZ2YWxpZFVudGlsPTE2MTg1OTUyNTYmcmVzdHJpY3RJbmRpY2VzPWNlbnRlcl9wYWdlcw==" data-app-id="94N15DCPDQ" data-index="center_pages" >
+
+				<div class="fsElementContent" >
+		
+
+
+<div class="fsCustomSearch">
+
+		<div class="gsc-control-searchbox-only gsc-control-searchbox-only-en" dir="ltr">
+
+			<form class="gsc-search-box gsc-search-box-tools" accept-charset="utf-8" action="/search-results">
+
+				<table cellspacing="0" cellpadding="0" class="gsc-search-box">
+					<tbody>
+					<tr>
+						<td class="gsc-input">
+							<div class="gsc-input-box">
+								<table cellspacing="0" cellpadding="0" style="width: 100%; padding: 0px;">
+									<tbody>
+									<tr>
+										<td class="gsib_a">
+											<input autocomplete="off" type="text" size="10" class="gsc-input" name="q" title="search" dir="ltr" spellcheck="false" style="width: 100%; padding: 0px; border: none; margin: -0.0625em 0px 0px; height: 1.25em; outline: none;">
+										</td>
+										<td class="gsib_b">
+											<div class="gsst_b" dir="ltr"><a class="gsst_a" href="javascript:void(0)"><span class="gscb_a">×</span></a></div>
+										</td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+						</td>
+						<td class="gsc-search-button">
+							<input alt="Submit Search" type="image" src="/assets/icons/frontend/google_search_box_icon-76a0d76f135419f4d00213037cda0cba949a0372e01ab6a1d70072008a56bd18.png" title="search" class="gsc-search-button gsc-search-button-v2" />
+						</td>
+						<td class="gsc-clear-button">
+							<div class="gsc-clear-button" title="clear results">&nbsp;</div>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+
+				<table cellspacing="0" cellpadding="0" class="gsc-branding"></table>
+
+			</form>
+
+
+		</div>
+
+</div>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</div>
+	<div class="fsElement fsContainer nav-container to-drawer-2" id="fsEl_2270" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div class="fsElement fsNavigation fsList nav-main" id="fsEl_2271" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		<nav><ul class="fsNavLevel1"><li class="fsNavParentPage"><a href="/our-district">Our District</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li class="About Center School District"><a href="/our-district/about-center-school-district">About Center School District</a></li><li><a href="/our-district/leadership">Leadership</a></li><li><a href="/our-district/academics">Academics</a></li><li><a href="/our-district/board-of-education">Board of Education </a></li><li><a href="/our-district/business-office">Business Office</a></li><li><a href="/our-district/family-and-student-services">Family and Student Services</a></li><li><a href="/our-district/facilities">Facilities </a></li><li><a href="/our-district/special-services">Special Services</a></li><li><a href="/our-district/strategicplan">Strategic Plan</a></li><li><a href="/our-district/news-and-communications">News and Communications</a></li><li><a href="/our-district/center-alumni">Center Foundation/Alumni</a></li></ul></div></li><li class="fsNavParentPage"><a href="/our-schools">Our Schools</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="/early-childhood-center">Yellowjacket Early Learning Center</a></li><li><a href="/boone-elementary">Boone Elementary</a></li><li><a href="/center-elementary">Center Elementary</a></li><li><a href="/indian-creek-elementary">Indian Creek Elementary</a></li><li><a href="/red-bridge-elementary">Red Bridge Elementary</a></li><li><a href="/center-middle-school">Center Middle School</a></li><li><a href="/center-high-school">Center High School</a></li><li><a href="/center-alternative-school">Center Alternative School</a></li></ul></div></li><li><a href="https://chsathletics.sportngin.com/">Athletics</a></li><li class="fsNavParentPage"><a href="/working-in-center">Working in Center</a><div class="fsNavPageInfo"><ul class="fsNavLevel2"><li><a href="/working-in-center/employment">Employment</a></li><li><a href="/working-in-center/current-openings">Current Openings</a></li><li><a href="/working-in-center/benefits">Benefits</a></li><li><a href="/working-in-center/district-organizational-charts">District Organizational Charts</a></li></ul></div></li></ul></nav>
+	</div>
+
+
+	</div>
+	<div class="fsElement fsNavigation fsList nav-button" id="fsEl_2272" data-use-new="true" >
+
+				<div class="fsElementContent" >
+		<nav></nav>
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+	<footer>
+		<div class="fsElementFooterContent">
+			<div class="mobile-trigger">Menu</div>
+		</div>
+	</footer>
+
+
+	</div>
+
+
+
+</div>
+
+
+			</header>
+
+		<div id="fsPageBodyWrapper" class="fsPageBodyWrapper">
+			<div id="fsPageBody" class="fsStyleAutoclear fsPageBody">
+
+				<main id="fsPageContent" class="fsPageContent">
+							<h1 class="fsPageTitle">Staff</h1>
+
+
+
+
+							<div class="fsPageLayout fsLayout fsOneColumnLayout fsStyleAutoclear" id="fsEl_1522" data-use-new="true" >
+
+				<div class=" fsDiv fsStyleAutoclear" id="fsEl_1523"  >
+
+				<section class="fsElement fsPanelGroup fsAccordion fsPanelIconBefore" id="fsEl_5374" data-use-new="true" >
+
+				<header>
+			<h2 class="fsElementTitle">Technology Resources</h2>
+	</header>
+	<div class="fsElementContent" >
+		<ul class="fsTabsNav" role="tablist">
+    <li id="fsTab-5377" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5377">icampus for staff</a>
+			
+        </li><li id="fsTab-5375" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5375">Microsoft Office/Webmail</a>
+			
+        </li><li id="fsTab-5385" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5385">Tech Tutorials</a>
+			
+        </li><li id="fsTab-5415" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5415">Student Websites</a>
+			
+        </li><li id="fsTab-5379" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5379">SchoolDude</a>
+			
+        </li><li id="fsTab-5413" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5413">Staff Portal/Keynet</a>
+			
+        </li><li id="fsTab-5407" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5407">Room Reservation Calendar</a>
+			
+        </li><li id="fsTab-5397" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5397">Bright Sped</a>
+			
+        </li>
+
+</ul>
+
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5377" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5377">icampus for staff</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5377"></a>
+	<div class="fsElement fsContent" id="fsEl_5378" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>&nbsp;</p>
+
+<p><a href="https://mocloud1.infinitecampus.org/campus/center.jsp" target="_blank">Link</a> to iCampus sign in portal for Staff</p>
+
+<figure class="fsImage"><a href="https://mocloud1.infinitecampus.org/campus/center.jsp" target="_blank"><picture><img alt="" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1597852294/center/o1qjwoerw6k6nrzv8fai/Icampuslogo.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1597852294/center/o1qjwoerw6k6nrzv8fai/Icampuslogo.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto/v1597852294/center/o1qjwoerw6k6nrzv8fai/Icampuslogo.jpg%22,%22width%22:739}]" data-resource-description="" data-resource-filename="Icampuslogo.jpg" data-resource-uuid="8ccbdac1-6921-4732-ad7a-ba6ab81ed5be" id="" role="presentation" src="" style="" width="314" /></picture></a></figure>
+
+<p><a href="https://mocloud1.infinitecampus.org/campus/center.jsp" target="_blank"><img alt="" id="" role="presentation" src="" /></a></p>
+
+<p><strong>Tutorial on creating a Campus Community account.</strong></p>
+
+<p><a href="https://content.infinitecampus.com/sis/1418/video/log-in-to-campus-community/" target="_blank"><img alt="" class="fsStateFloatLeft" id="" role="presentation" src="http://center.finalsite.com/uploaded/Parents/images/icamp_2.jpg" style="float:left" width="135" /></a></p>
+
+<p>Campus Community is a comprehensive website that provides tutorials, hands on virtual labs, FAQs, videos, simulations, and documentation for all aspects of Infinite Campus.<br />
+It is the one link you need to find the answer to any question you have about Infinite Campus.</p>
+
+<p>&nbsp;</p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5375" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5375">Microsoft Office/Webmail</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5375"></a>
+	<div class="fsElement fsContent" id="fsEl_5376" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p><a href="https://login.microsoftonline.com">https://login.microsoftonline.com</a></p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5385" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5385">Tech Tutorials</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5385"></a>
+	<div class="fsElement fsContent" id="fsEl_5386" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>&nbsp;</p>
+
+<h5 style="text-align: center;"><a href="https://docs.google.com/document/d/1_WL_L_ntk7-hGkGPsVAJRimpeGcXM0_UQHW-XORPp-s/edit" target="_blank">Tech Tutorials!&nbsp; </a></h5>
+
+<p style="text-align: center;">Please note that you MUST be signed into your district account to access the materials.</p>
+
+<p>&nbsp;</p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5415" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5415">Student Websites</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5415"></a>
+	<div class="fsElement fsContent" id="fsEl_5416" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>&nbsp;</p>
+
+<h5>Student Websites</h5>
+
+<ul>
+	<li><a href="http://sharepoint.center.k12.mo.us/sites/CO/students/Lists/District%20Programs/AllItems.aspx" target="_blank">Elementary</a></li>
+	<li><a href="http://sharepoint.center.k12.mo.us/sites/CMS/students/_layouts/15/start.aspx#/SitePages/Home.aspx" target="_blank">Center Middle School</a></li>
+	<li><a href="http://sharepoint.center.k12.mo.us/sites/cas/students/_layouts/15/start.aspx#/SitePages/Home.aspx" target="_blank">Center Alternative School</a></li>
+	<li><a href="http://sharepoint.center.k12.mo.us/sites/chs/students/Lists/Links/Students.aspx" target="_blank">Center High School</a></li>
+</ul>
+
+<p>&nbsp;</p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5379" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5379">SchoolDude</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5379"></a>
+	<div class="fsElement fsContent" id="fsEl_5380" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>&nbsp;</p>
+
+<p>Staff</p>
+
+<p>If you need to put a ticket into School Dude, here are the instructions. The area most people get confused on is the submittal password which is the same for everyone: <strong>center</strong></p>
+
+<p><u><strong>Steps to Entering in a Request Ticket:</strong></u></p>
+
+<p><u><strong>1)</strong></u> go to <a href="http://www.myschoolbuilding.com" target="_blank">http://www.myschoolbuilding.com</a></p>
+
+<p><strong>2</strong>) If the website asks for organization number then enter our 9 digit account number (this only needs to be done the first time the computer touches the website):<strong> 784005028 </strong>and click on <strong>&quot;submit organization&quot;</strong></p>
+
+<p><strong>3)</strong> Enter in your email address and click submit.</p>
+
+<p><strong>4)</strong> If your email has been used to create an account then it will take you straight to a &quot;Center-Technology Request Form&quot;.</p>
+
+<ul type="disc">
+	<li>If the email account has not been entered into School Dude, then enter in your last name and hit submit.</li>
+	<li>On the next screen fill in your First Name and then type in your Phone Number and hit submit</li>
+</ul>
+
+<p><strong>5) </strong>Once at the &quot;Center-Technology Request Form&quot; screen Enter in information in Steps 1 through 9. (Steps 5, 6 and 7 can be skipped).</p>
+
+<ul type="disc">
+	<li>Fields with <span class="fs_style_18"><strong>red</strong></span> check marks next to them indicate that this is a mandatory entry you should make.</li>
+	<li>On Step 3 - you may only choose<strong> <u>one</u> </strong>Problem Type. If you have more than one issue then create a separate ticket for that issue.</li>
+	<li>On Step 8 you must enter <u><strong>center</strong></u><strong> </strong>as the password, to be able to submit the ticket.</li>
+</ul>
+
+<p>If you have any questions about this please contact any of us in the technology department.</p>
+
+<p>Thanks</p>
+
+<p>Technology Department</p>
+
+<p>&nbsp;</p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5413" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5413">Staff Portal/Keynet</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5413"></a>
+	<div class="fsElement fsContent" id="fsEl_5414" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>&nbsp;</p>
+
+<p>The CSD Staff&nbsp;Portal provides personal work information as well as important resources for employees categorized by departments and subject areas.<br />
+If you are looking for forms or needed resources, click on the links provided.</p>
+
+<p><strong>You will need to login using your district username and password.</strong></p>
+
+<p><strong>To go to the CSD - KeyNet Portal click on the image below.</strong></p>
+
+<p><a href="https://staffportal.center.k12.mo.us/KeyNet/ " target="_blank"><img alt="" id="" role="presentation" src="http://www.center.k12.mo.us/uploaded/Staff/images/Keynetportal.gif" style="margin: 0px 0px 0px 60px;" width="226" /></a></p>
+
+<p>&nbsp;</p>
+
+<p style="text-align:center"><img alt="" id="" role="presentation" src="" /></p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5407" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5407">Room Reservation Calendar</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5407"></a>
+	<div class="fsElement fsContent" id="fsEl_5408" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>Click to view the <a href="http://www.communityuse.com/default.asp?acctnum=784005028" target="_blank">room reservation calendar</a>&nbsp;</p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5397" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5397">Bright Sped</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5397"></a>
+	<div class="fsElement fsContent" id="fsEl_5398" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>&nbsp;</p>
+
+<p><strong>Bright SPED<sup>TM</sup></strong>provides you with a comprehensive, time-saving, web-based tool for special education programs. It is designed to address the complexities and changing dynamics of special education reporting. Bright SPED provides functionality through a data driven infrastructure which does not rely on forms processing. This significant difference is one of the aspects that allows Bright SPED to meet Federal and State Compliance modifications in a timely way.</p>
+
+<p>&nbsp;</p>
+
+<p><a href="https://spedex.center.k12.mo.us/lumen/signin" target="_blank"><img alt="" id="" role="presentation" src="/uploaded/Staff/images/Bright_SPED.JPG" width="702" /></a></p>
+
+<p>&nbsp;</p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanelGroup fsAccordion fsPanelIconBefore" id="fsEl_5365" data-use-new="true" >
+
+				<header>
+			<h2 class="fsElementTitle">Professional Development</h2>
+	</header>
+	<div class="fsElementContent" >
+		<ul class="fsTabsNav" role="tablist">
+    <li id="fsTab-5366" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5366">PD Committee</a>
+			
+        </li><li id="fsTab-5370" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5370">Performance Matters/ PD Sign up</a>
+			
+        </li><li id="fsTab-5372" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5372">Continuing Education Information</a>
+			
+        </li><li id="fsTab-5383" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5383">Safe Schools Training</a>
+			
+        </li><li id="fsTab-5387" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5387">Talent Ed</a>
+			
+        </li>
+
+</ul>
+
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5366" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5366">PD Committee</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5366"></a>
+	<div class="fsElement fsContent" id="fsEl_5367" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<div style="text-align:center">
+<figure class="fsImage" style="display:inline-block"><picture><img alt="" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1605124238/center/g6dbgecsdke3r4wgd1su/PDC.jpg%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1605124238/center/g6dbgecsdke3r4wgd1su/PDC.jpg%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto/v1605124238/center/g6dbgecsdke3r4wgd1su/PDC.jpg%22,%22width%22:629}]" data-resource-description="" data-resource-filename="PDC.jpg" data-resource-uuid="7c6d2e4e-f254-4b2d-bc86-07ededa31c42" id="" role="presentation" src="" /></picture></figure>
+</div>
+
+<p>&nbsp;</p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5370" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5370">Performance Matters/ PD Sign up</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5370"></a>
+	<div class="fsElement fsContent" id="fsEl_5371" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>&nbsp;</p>
+
+<p>To sign up for Professional Development and check in&nbsp;for sessions, the Center School District has partnered with the Performance Matters software.</p>
+
+<p><a href="https://mo-center.truenorthlogic.com/ia/empari/login/index" target="_blank">To Login:</a></p>
+
+<p><strong>Use your District username and password<br />
+Username:</strong>&nbsp;<a data-auth="NotApplicable" href="mailto:XXXX@center.k12.mo.us" rel="noopener noreferrer" target="_blank">XXXX@center.k12.mo.us</a><br />
+<strong>Password</strong>: District password</p>
+
+<figure class="fsImage"><a href="https://mo-center.truenorthlogic.com/ia/empari/login/index" target="_blank"><picture><img alt="" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1600349594/center/sbnhbioiwpnrhevfrhen/StaffPD.png%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto/v1600349594/center/sbnhbioiwpnrhevfrhen/StaffPD.png%22,%22width%22:491}]" data-resource-description="" data-resource-filename="StaffPD.png" data-resource-uuid="794fabe6-1de9-43b0-b251-b73e89fa82e3" id="" role="presentation" src="" style="" /></picture></a></figure>
+
+<p><a href="https://docs.powerschool.com/PLPEH/professional-learning/course-participant" target="_blank"><b>Training Documents for Course participants</b></a></p>
+
+<p><a href="https://docs.powerschool.com/PLPEH/professional-learning/course-instructor-moderator" target="_blank"><b>Training Documents for Instructors</b></a></p>
+
+<p><a href="https://docs.powerschool.com/PLPEH/professional-learning/pd-administrator" target="_blank"><b>Training Documents for Course creators and Office administrators</b></a></p>
+
+<p>&nbsp;</p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5372" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5372">Continuing Education Information</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5372"></a>
+	<div class="fsElement fsContent" id="fsEl_5373" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>List of district approved schools for degree or certification programs. <a data-file-name="Approved_Schools.pdf" href="/uploaded/Staff/pdfs/Approved_Schools.pdf" target="_blank">(PDF)</a></p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5383" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5383">Safe Schools Training</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5383"></a>
+	<div class="fsElement fsContent" id="fsEl_5384" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p><a href="http://center.mo.safeschools.com/login" target="_blank"><img alt="" id="" role="presentation" src="/uploaded/Staff/images/safe_school.PNG" width="200" /></a></p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5387" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5387">Talent Ed</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5387"></a>
+	<div class="fsElement fsContent" id="fsEl_5388" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p><a href="https://center.tedk12.com/sso/Account/Login" target="_blank"><img alt="" id="" role="presentation" src="/uploaded/Staff/images/Talent_Ed.JPG" width="200" /></a></p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanelGroup fsAccordion fsPanelIconBefore" id="fsEl_5394" data-use-new="true" >
+
+				<header>
+			<h2 class="fsElementTitle">Human Resource</h2>
+	</header>
+	<div class="fsElementContent" >
+		<ul class="fsTabsNav" role="tablist">
+    <li id="fsTab-5399" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5399">Aesop/Sub</a>
+			
+        </li><li id="fsTab-5403" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5403">Benefits/Customer Service Numbers</a>
+			
+        </li><li id="fsTab-5401" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5401">Collective Bargaining</a>
+			
+        </li><li id="fsTab-5409" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5409">Emergency Sick Leave/FLMA</a>
+			
+        </li><li id="fsTab-5395" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5395">Handbooks/Manuals</a>
+			
+        </li><li id="fsTab-5405" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5405">Talent Ed</a>
+			
+        </li><li id="fsTab-5411" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5411">Staff Portal/Keynet</a>
+			
+        </li><li id="fsTab-5421" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5421">Title IX Presentation</a>
+			
+        </li>
+
+</ul>
+
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5399" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5399">Aesop/Sub</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5399"></a>
+	<div class="fsElement fsContent" id="fsEl_5400" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>&nbsp;</p>
+
+<h6>How do I register with the system?</h6>
+
+<ol>
+	<li>Simply dial 1-866-535-5998
+	<p>&nbsp;</p>
+	</li>
+	<li>Enter your Identification (ID) and Pin numbers. The information is as follows (Please notify the central office if your identification number listed below is not correct.)
+	<ul>
+		<li>ID number - Your phone number</li>
+		<li>Pin number - Last 5 numbers of your phone number</li>
+	</ul>
+	</li>
+	<li>Once you are logged in the system, you will be given prompts for the various menu choices.<br />
+	<em>When you access the system over the phone for the first time, it is very important that you record your name and assignment for substitutes to hear. Please keep in mind that only your name and assignment should be recorded. (e.g. John Doe, 3rd Grade) as the system will play this recording to potential substitutes for all future absences you register. You will not be asked to record this information each time you register an absence.<br />
+	* When entering an absence, please wait until you receive a confirmation number before you terminate the phone call. Your transaction is <u><strong>not </strong></u>complete until you receive a confirmation number.</em></li>
+</ol>
+
+<p><strong>You may also access the system on the internet at the link below.</strong><br />
+<a href="http://www.aesopeducation.com" target="_blank"><img alt="" id="" role="presentation" src="/uploaded/Staff/images/aesop.jpg" width="226" /></a></p>
+
+<p>&nbsp;</p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5403" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5403">Benefits/Customer Service Numbers</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5403"></a>
+	<div class="fsElement fsContent" id="fsEl_5404" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>&nbsp;</p>
+
+<p><strong>BENEFITS</strong></p>
+
+<ul>
+	<li>For more information about benefits, including dental/vision, insurance,&nbsp;sick leave pool and businesses offering discounts, please visit the <a data-page-name="Benefits" href="/fs/pages/284">Working in Center &ndash; Benefits</a> page.</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<table>
+	<colgroup>
+		<col />
+		<col />
+	</colgroup>
+	<tbody>
+		<tr>
+			<td>
+			<p><strong>AFLAC </strong><br />
+			<strong>Phone:</strong> 1-800-992-3522</p>
+
+			<p><strong>Aetna-Dental</strong><br />
+			<strong>Phone: </strong>1-877-238-6200<br />
+			<strong>Website: </strong><a href="http://www.aetna.com/">www.aetna.com</a></p>
+
+			<p><strong>Assurant LTD</strong><br />
+			<strong>Phone: </strong>1-800-733-7879<br />
+			<strong>Website: </strong><a href="http://www.assurantemployeebenefits.com/">www.assurantemployeebenefits.com</a></p>
+
+			<p><strong>Blue Cross Blue Shield of KC - Medical</strong><br />
+			<strong>Phone: </strong>816-395-2270<br />
+			<strong>Website: </strong><a href="http://www.BlueKC.com">www.BlueKC.com</a></p>
+
+			<p><strong>CBIZ can also assist you with individual policies.<br />
+			Kristin Grace: </strong>816-945-5216<br />
+			<strong>Nicole Osborn:</strong>816-945-5652</p>
+
+			<p><strong>New Directions Behavioral Health<br />
+			<em>EAP (Employee Assistance Program)</em><br />
+			Phone:</strong> 913-982-8398 or 1-800-624-5544<br />
+			<strong>Website: </strong><a href="http://www.ndbh.com">www.ndbh.com</a></p>
+
+			<p><strong>Standard Life Insurance</strong><br />
+			<strong>Phone: </strong>1-800-628-8600<br />
+			<strong>Website: </strong><a href="http://www.standard.com/">www.standard.com</a></p>
+
+			<p><strong>Superior Vision</strong><br />
+			<strong>Phone: </strong>1-800-507-3800<br />
+			<strong>Website: </strong><a href="http://www.superiorvision.com/">www.superiorvision.com</a></p>
+			</td>
+			<td>
+			<p>&nbsp;</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>&nbsp;</p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5401" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5401">Collective Bargaining</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5401"></a>
+	<div class="fsElement fsContent" id="fsEl_5402" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>The <strong>Collective Bargaining Agreement</strong> is a memorandum agreement which reflects the results of collective bargaining negotiations between the Center Education Association (CEA )and Center School District .</p>
+
+<p>&nbsp;</p>
+
+<p>The purpose of this Agreement is to achieve and maintain harmonious relations between the Center School District Board of Education, Administration and the Center Education Association, to provide the highest quality educational programs for the students of the Center School District, and for equitable and peaceful adjustment of differences which may arise, and to set forth the understanding reached between the parties with respect to various conditions of employment.</p>
+
+<p>This Agreement has been jointly created by representatives of the Board of Education and the Center Education Association through the use of the Modified Interest Based Bargaining (MIBB) process. We are committed to continued use of the MIBB process in our work together, and to resolutions of conflict whenever possible through achievement of consensus upon acknowledgment of all parties interest.</p>
+
+<h5>&nbsp;</h5>
+
+<p>&nbsp;</p>
+
+<h4><a data-file-name="2020SignedCollectiveBargainingAgreement.pdf" data-resource-uuid="095469cd-3f19-4255-a32a-7aaf5944074e" href="/fs/resource-manager/view/095469cd-3f19-4255-a32a-7aaf5944074e" target="_blank"><span class="fs_style_17">Collective Bargaining Agreement ( PDF) </span></a></h4>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5409" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5409">Emergency Sick Leave/FLMA</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5409"></a>
+	<div class="fsElement fsContent" id="fsEl_5410" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>&nbsp;</p>
+
+<ul>
+	<li><a data-page-name="COVID 19" href="/fs/pages/803">Link to the Covid page of the district website</a></li>
+	<li><a href="https://forms.gle/stHFRPJGvbVWSMw16" target="_blank">Emergency Paid Sick Leave and/or Emergency FMLA- Employee Request Form</a></li>
+	<li><a data-file-name="COVID-19SignedResolution.pdf" data-resource-uuid="8f655655-0eaa-4466-8100-9099b1f72971" href="/fs/resource-manager/view/8f655655-0eaa-4466-8100-9099b1f72971" target="_blank">Link</a> to signed Covid19 Resolution&nbsp;</li>
+</ul>
+
+<p>&nbsp;</p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5395" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5395">Handbooks/Manuals</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5395"></a>
+	<div class="fsElement fsContent" id="fsEl_5396" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>&nbsp;</p>
+
+<h5>Handbooks &amp; Procedural Manual</h5>
+
+<ul>
+	<li>District Staff Handbook <a data-file-name="CSD_Employee_Handbook_20-21.pdf" data-resource-uuid="7bbf11c5-8d64-45ee-a873-5647d4455374" href="/fs/resource-manager/view/7bbf11c5-8d64-45ee-a873-5647d4455374" target="_blank">(pdf)</a></li>
+	<li>Elementary Staff Procedural Manual <a data-file-name="Elementary_Staff_Procedural_Manual_19-20_SY.pdf" href="/uploaded/Parents/pdfs/Elementary_Staff_Procedural_Manual_19-20_SY.pdf" target="_blank">(pdf</a><a data-file-name="20-21SYElementaryStaffProceduralManual.pdf" data-resource-uuid="157e8e74-85df-46fb-bc26-de63caa9aa82" href="/fs/resource-manager/view/157e8e74-85df-46fb-bc26-de63caa9aa82" target="_blank">)</a></li>
+</ul>
+
+<p>&nbsp;</p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5405" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5405">Talent Ed</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5405"></a>
+	<div class="fsElement fsContent" id="fsEl_5406" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p><a href="https://center.tedk12.com/sso/Account/Login" target="_blank"><img alt="" id="" role="presentation" src="/uploaded/Staff/images/Talent_Ed.JPG" width="200" /></a></p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5411" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5411">Staff Portal/Keynet</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5411"></a>
+	<div class="fsElement fsContent" id="fsEl_5412" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>&nbsp;</p>
+
+<p>The CSD Staff&nbsp;Portal provides personal work information as well as important resources for employees categorized by departments and subject areas.<br />
+If you are looking for forms or needed resources, click on the links provided.</p>
+
+<p><strong>You will need to login using your district username and password.</strong></p>
+
+<p><strong>To go to the CSD - KeyNet Portal click on the image below.</strong></p>
+
+<p><a href="https://staffportal.center.k12.mo.us/KeyNet/ " target="_blank"><img alt="" id="" role="presentation" src="http://www.center.k12.mo.us/uploaded/Staff/images/Keynetportal.gif" style="margin: 0px 0px 0px 60px;" width="226" /></a></p>
+
+<p>&nbsp;</p>
+
+<p style="text-align:center"><img alt="" id="" role="presentation" src="" /></p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5421" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5421">Title IX Presentation</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5421"></a>
+	<div class="fsElement fsResourceElement fsSingleItem" id="fsEl_5425" data-use-new="true" data-source-element-id="5425" data-source-page-id="248" >
+
+				<div class="fsElementContent" >
+		<article class="fsResource fsResourceTypePdf"><a class="fsResourceLink" data-permitted-user="true" data-resource-title="CenterTITLEIXPresentation2020-11-06.pdf" data-resource-type="Pdf" href="https://resources.finalsite.net/images/v1605536289/center/twwmkmqdzvvzke3et8wq/CenterTITLEIXPresentation2020-11-06.pdf" target="_blank"><img alt="First page of the PDF file: CenterTITLEIXPresentation2020-11-06" data-aspect-ratio="0.75" data-image-sizes="[{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_1/v1605536289/center/twwmkmqdzvvzke3et8wq/CenterTITLEIXPresentation2020-11-06.pdf%22,%22width%22:256},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto,t_image_size_2/v1605536289/center/twwmkmqdzvvzke3et8wq/CenterTITLEIXPresentation2020-11-06.pdf%22,%22width%22:512},{%22url%22:%22https://resources.finalsite.net/images/f_auto,q_auto/v1605536289/center/twwmkmqdzvvzke3et8wq/CenterTITLEIXPresentation2020-11-06.pdf%22,%22width%22:720}]"></a></article>
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanelGroup fsTabs fsPanelIconBefore" id="fsEl_5352" data-use-new="true" >
+
+				<header>
+			<h2 class="fsElementTitle">Forms</h2>
+	</header>
+	<div class="fsElementContent" >
+		<ul class="fsTabsNav" role="tablist">
+    <li id="fsTab-5353" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5353">Bus Request</a>
+			
+        </li><li id="fsTab-5355" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5355">Care for Center</a>
+			
+        </li><li id="fsTab-5357" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5357">Direct Deposit</a>
+			
+        </li><li id="fsTab-5359" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5359">In-District Mileage</a>
+			
+        </li><li id="fsTab-5361" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5361">Federal W-4</a>
+			
+        </li><li id="fsTab-5363" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5363">CHS Field Trip Forms</a>
+			
+        </li>
+
+</ul>
+
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5353" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5353">Bus Request</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5353"></a>
+	<div class="fsElement fsContent" id="fsEl_5354" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>Bus Request&nbsp;Form (<a data-file-name="Center_School_District_Trip_Request_Form.pdf" href="/uploaded/Staff/pdfs/Center_School_District_Trip_Request_Form.pdf" target="_blank">pdf)</a></p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5355" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5355">Care for Center</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5355"></a>
+	<div class="fsElement fsContent" id="fsEl_5356" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>Care For Center Fund <a data-file-name="Care_for_Center_Payroll_Deduction_Form_.pdf" href="/uploaded/Staff/pdfs/Care_for_Center_Payroll_Deduction_Form_.pdf" target="_blank">(pdf)</a></p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5357" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5357">Direct Deposit</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5357"></a>
+	<div class="fsElement fsContent" id="fsEl_5358" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>Direct Deposit Form<a data-file-name="DirDeposit.pdf" href="/uploaded/Staff/pdfs/DirDeposit.pdf" target="_blank"> (pdf)</a></p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5359" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5359">In-District Mileage</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5359"></a>
+	<div class="fsElement fsContent" id="fsEl_5360" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>In-District Mileage Form <a data-file-name="InDistrict_Mileage.pdf" href="/uploaded/Staff/pdfs/InDistrict_Mileage.pdf" target="_blank">(pdf)</a></p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5361" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5361">Federal W-4</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5361"></a>
+	<div class="fsElement fsContent" id="fsEl_5362" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>Federal W-4 <a data-file-name="2020fw4.pdf" data-resource-uuid="605d247e-72e0-4b54-a12e-a5c103e34575" href="/fs/resource-manager/view/605d247e-72e0-4b54-a12e-a5c103e34575" target="_blank">(pdf)</a></p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5363" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5363">CHS Field Trip Forms</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5363"></a>
+	<div class="fsElement fsContent" id="fsEl_5364" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>Center High School Field Trip Forms</p>
+
+<ul>
+	<li><a data-file-name="CHS_FIELD_TRIP_CHECKLISTdocx.pdf" data-resource-uuid="59dc87d6-e4f4-4f6d-bb13-f8c4e65e5848" href="/fs/resource-manager/view/59dc87d6-e4f4-4f6d-bb13-f8c4e65e5848">CHS Field Trip Checklist</a></li>
+	<li><a data-file-name="CHSFIELDTRIPAPPROVALFORM.pdf" data-resource-uuid="be7d516c-5f82-4fd5-9bf8-6c633ab38111" href="/fs/resource-manager/view/be7d516c-5f82-4fd5-9bf8-6c633ab38111">CHS Field Trip&nbsp; Approval Form</a></li>
+	<li><a data-file-name="CHS_FIELD_TRIP_PERMISSION_FORM.pdf" data-resource-uuid="b3479c86-5a9a-4980-8d12-f56720396245" href="/fs/resource-manager/view/b3479c86-5a9a-4980-8d12-f56720396245">CHS Student Permission Slip</a></li>
+	<li><a data-file-name="BUS_REQUEST_FORM.pdf" data-resource-uuid="04ecaaa0-b52c-45e5-a1e1-cbab7aa1c1a2" href="/fs/resource-manager/view/04ecaaa0-b52c-45e5-a1e1-cbab7aa1c1a2">CHS Bus Request Form</a></li>
+</ul>
+
+<p>&nbsp;</p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanelGroup fsAccordion fsPanelIconBefore" id="fsEl_5389" data-use-new="true" >
+
+				<header>
+			<h2 class="fsElementTitle">Health & Wellness</h2>
+	</header>
+	<div class="fsElementContent" >
+		<ul class="fsTabsNav" role="tablist">
+    <li id="fsTab-5390" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5390">58 Fitness Program</a>
+			
+        </li><li id="fsTab-5392" class="fsTabsNavItem" role="presentation">
+			<a role="tab" aria-selected="false" aria-expanded="false" href="#fs-panel-5392">Worker's Comp</a>
+			
+        </li>
+
+</ul>
+
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5390" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5390">58 Fitness Program</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5390"></a>
+	<div class="fsElement fsContent" id="fsEl_5391" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p>&nbsp;</p>
+
+<p style="text-align: center;"><a href="http://www.58fitness.com/links.php" target="_blank"><img alt="" id="" role="presentation" src="/uploaded/District/Programs/images/58_fitness.JPG" width="875" /></a></p>
+
+<p style="text-align: center;"><a href="http://www.58fitness.com/" target="_blank">Link</a> to the Center 58 Fitness site.</p>
+
+<p style="text-align: center;">&nbsp;</p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+	<section class="fsElement fsPanel fsStyleAutoclear" id="fsEl_5392" data-use-new="true" role="tabpanel" >
+
+				<header>
+			<h2 class="fsElementTitle"><a role="button" aria-expanded="false" href="#fs-panel-5392">Worker's Comp</a></h2>
+	</header>
+	<div class="fsElementContent" aria-hidden="true">
+		<a id="fs-panel-5392"></a>
+	<div class="fsElement fsContent" id="fsEl_5393" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<p><a data-page-name="Benefits" href="/fs/pages/284" target="_blank">Worker&#39;s Comp Information</a></p>
+
+
+	</div>
+
+
+	</div>
+
+
+
+	</div>
+
+
+	</section>
+
+
+
+
+	</div>
+
+
+	</section>
+
+
+
+
+	</div>
+
+
+
+
+	</div>
+
+
+
+				</main>
+			</div>
+		</div>
+
+			<footer id="fsFooter" class="fsFooter">
+				<div class=" fsBanner fsStyleAutoclear" id="fsEl_1578" data-settings-id="1578" data-use-new="true">
+
+			<div class="fsElement fsContent footer-address" id="fsEl_1579" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<ul class="footer-info">
+  <li>Center School District</li>
+  <li>8701 Holmes Road</li>
+  <li>Kansas City, MO 64131</li>
+  <li>PH 816.349.3300</li>
+  <li>FX 816.349.3431</li>
+</ul>
+
+	</div>
+
+
+	</div>
+	<div class="fsElement fsContent footer-social to-drawer-4" id="fsEl_1580" data-use-new="true" >
+
+				<div class="fsElementContent" >
+			<ul>
+  <li><a href="https://www.facebook.com/Center-School-District-192814120744733/?fref=ts" class="fb" target="_blank">Facebook</a></li>
+  <li><a href="https://twitter.com/CenterSD" class="tw" target="_blank">Twitter</a></li>
+  <li><a href="https://www.youtube.com/channel/UCGgG5jHzYwZ_mB7J6qY9VBw" class="yt" target="_blank">Youtube</a></li></ul>
+
+	</div>
+
+
+	</div>
+
+
+
+
+</div>
+
+
+			</footer>
+
+				<div id="fsPoweredByFinalsite" role="complementary">
+		<div>
+			<a href="https://www.finalsite.com/district" title="Powered by Finalsite opens in a new window" target="_blank">Powered by Finalsite</a>
+		</div>
+	</div>
+
+
+
+</div>
+
+
+
+
+
+<script src="/assets/application-9ff86e3cb3a6151cb9b8ee8f13bd950b6ff2ba9f4c1b33d277c1434fc808f478.js"></script>
+
+	<script src="/uploaded/themes/default/js/main.js?1612971860"></script>
+
+
+
+
+
+
+<script>
+	if (typeof newrelic == 'object') {
+		newrelic.setCustomAttribute('tenant', 'center');
+	}
+</script>
+<script type="text/javascript">(function(){window['__CF$cv$params']={r:'640ee57b4c2b59ec',m:'6011ed554ae8f01cd7c62aa4a4021825d4f441a5-1618591656-1800-AcIkkLt+tE2rGBst45g8xQNMguXCq4N0FOurke8+GeIoPn/GDU9SKNA/NBrSvRtsuMlfG5QaD5bvwgW0527ooCsMeKIuOXgtS+URVH9IByodlPTFHEF+lmDKM3/5itDu4g==',s:[0xa387a9ac0f,0x97a71ab094],}})();</script></body></html>

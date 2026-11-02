@@ -1,0 +1,8 @@
+model_specification,sample_tier,n_items,n_student_item_obs,n_unique_students,n_schools,mc_baseline_trend_pp,mc_baseline_trend_se,did_format_interaction_pp,did_format_interaction_se,ci_95_lower_pp,ci_95_upper_pp,p_value,within_practical_bound_2pp
+Model 1: Raw Unadjusted DiD,Primary 84 Items,84,214056,12060,529,-1.94,1.01,-0.95,0.49,-1.91,0.02,0.0538,True
+Model 2: Item Fixed Effects DiD (Primary),Primary 84 Items,84,214056,12060,529,-1.92,1.02,-0.97,0.49,-1.93,-0.01,0.0472,True
+Model 3: Item FE + Content Domain x Year,Primary 84 Items,84,214056,12060,529,-1.96,1.02,-0.99,0.54,-2.06,0.07,0.0671,True
+Model 4: Item FE + Cognitive Domain x Year,Primary 84 Items,84,214056,12060,529,-2.12,1.1,-0.97,0.49,-1.93,-0.01,0.0465,True
+Model 5: Student-Normalized Weights DiD,Primary 84 Items,84,214056,12060,529,-1.64,1.01,-0.89,0.51,-1.89,0.1,0.078,True
+Model 6: Secondary 100 Items (Std Scoring),Secondary 100 Items,100,254743,13590,529,-2.0,1.0,-1.19,0.5,-2.16,-0.22,0.0165,True
+Model 7: Secondary 100 Items (IEA PSI NR Unadmin),Secondary 100 Items,100,252208,13590,529,-2.0,1.0,-0.96,0.5,-1.93,0.02,0.0543,True

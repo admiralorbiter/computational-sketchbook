@@ -1,0 +1,58 @@
+inquiry:
+  id: "2026-10-us-truckers-diesel-freight-recession"
+  question: >
+    What are American long-haul and regional truck drivers, owner-operators, and small fleet owners
+    experiencing regarding diesel fuel prices, depressed spot rates, broker spread compression,
+    unpaid detention time, equipment repos, and carrier authority revocations?
+  mode: investigate
+
+  scope:
+    time:
+      since: "2024-01-01T00:00:00Z"
+      until: "2026-10-01T23:59:59Z"
+    geography:
+      - "United States"
+      - "I-80"
+      - "I-10"
+      - "Midwest"
+      - "Texas"
+      - "Southeast"
+    languages: ["en"]
+
+  seeds:
+    terms:
+      - "trucking spot rates DAT one load board"
+      - "diesel fuel prices truck stop pump receipt"
+      - "owner operator cost per mile breakeven"
+      - "trucking recession carrier bankruptcy authority revoked"
+      - "freight broker double brokering detention pay"
+      - "truckertok diesel prices owner operator"
+    hashtags:
+      - "truckertok"
+      - "trucking"
+      - "owneroperator"
+      - "diesel"
+    accounts: []
+    subreddits:
+      - "Truckers"
+      - "FreightBrokers"
+
+  platforms:
+    - youtube
+    - reddit
+    - citizen
+    - web
+    - snapchat
+
+  budget:
+    max_queries: 50
+    max_artifacts: 300
+    max_media_downloads: 2
+
+  preservation: candidates
+
+  analysis:
+    cluster_narratives: true
+    track_media_spread: true
+    identify_firsthand_sources: true
+    find_contradictions: true

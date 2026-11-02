@@ -1,0 +1,6 @@
+input_modality,n_items,mean_diff_pp,se_pp,median_diff_pp,paper_omit_pct,digital_omit_pct,omit_diff_pp
+Multiple Choice,49,-0.47,0.53,-0.24,3.37,1.19,-2.19
+CR: Drawing / Graphing,10,-3.1,1.89,-4.03,4.6,1.48,-3.12
+CR: Interactive / Table,8,-3.18,1.87,-2.6,2.43,0.86,-1.57
+CR: Number-pad / Numeric,27,-3.8,0.96,-3.51,2.12,1.37,-0.75
+CR: Text / Explanation,5,-7.13,2.09,-6.33,1.82,1.98,0.16

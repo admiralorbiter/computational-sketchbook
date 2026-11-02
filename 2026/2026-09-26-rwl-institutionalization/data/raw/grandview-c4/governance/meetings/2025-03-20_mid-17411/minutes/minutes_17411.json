@@ -1,0 +1,2428 @@
+{
+  "RSSFeedLink": "",
+  "AttendessHtml": "<h4 class='latoBlack m-0 p-0 font15' tabindex='0'>Voting Members</h4><ul class='m-0 p-0' tabindex='0'><li class='d-block w-100 font15'>Monica Terry, President</li><li class='d-block w-100 font15'>Dawn Foy, Board Member</li><li class='d-block w-100 font15'>Damon Greene, Board Member</li><li class='d-block w-100 font15'>Leonard Greene, Board Member</li><li class='d-block w-100 font15'>Joshua Hill, Treasurer</li><li class='d-block w-100 font15'>Stacy Wright, Board Member</li><li class='d-block w-100 font15'>Helen Ransom, Vice President</li></ul><br/><h4 class='latoBlack m-0 p-0 font15' tabindex='0'>Non-Voting Members</h4><ul class='m-0 p-0' tabindex='0'><li class='w-00 d-block font15'>Stephanie Amaya, Assistant Superintendent - HR</li><li class='w-00 d-block font15'>Prissy LeMay, Assistant Superintendent - C&I</li><li class='w-00 d-block font15'>Royce Powelson, Assistant Superintendent - O&F</li><li class='w-00 d-block font15'>Dr. Kenny Rodrequez, Superintendent</li><li class='w-00 d-block font15'>Kathy Meyers, BOE Secretary</li></ul>",
+  "MeetingMinutes": {
+    "EncrId": null,
+    "Title": null,
+    "Minutes": "",
+    "VotingHTML": null,
+    "VotingHTMLs": null,
+    "ChildMinutesLst": null,
+    "IsEdit": false,
+    "IsShow": false,
+    "IsReady": false,
+    "Visibility": 0,
+    "Level": 0,
+    "VotingComment": null,
+    "ItemID": null,
+    "HyperLinks": null,
+    "Attachments": null,
+    "MeetingOnlineVotings": null,
+    "AllVotingApproved": false,
+    "AllVotingNotApproved": false
+  },
+  "LstItemMinutes": [
+    {
+      "EncrId": "nNyplus4EbiV6AyaunmkNPk8A==",
+      "Title": "A. Call to Order and Establishment of Quorum",
+      "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">President Terry called the meeting to order at 6:30 PM and announced that a quorum is present.</body>\n</html>\n",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": null,
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "nNyplus4EbiV6AyaunmkNPk8A==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            null,
+            null,
+            null
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false,
+          "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">President Terry called the meeting to order at 6:30 PM and announced that a quorum is present.</body>\n</html>\n"
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "KtsdN4efMWGPDU3BwJbG9w==",
+      "Title": "B. Pledge of Allegiance",
+      "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">President Terry led the Pledge of Allegiance.</body>\n</html>\n",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": null,
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "KtsdN4efMWGPDU3BwJbG9w==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            null,
+            null,
+            null
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false,
+          "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">President Terry led the Pledge of Allegiance.</body>\n</html>\n"
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "ciSTzXPRmBF4GWq4plusodXZA==",
+      "Title": "C. Approval of Agenda",
+      "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve the agenda as presented.</body>\n</html>\n",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": null,
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "ciSTzXPRmBF4GWq4plusodXZA==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            "<span class='latoBold'>Motion made by:</span>&nbsp;Leonard Greene",
+            "<span class='latoBold'>Motion seconded by:</span>&nbsp;Damon Greene",
+            ""
+          ],
+          "AllVotingApproved": true,
+          "AllVotingNotApproved": false,
+          "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve the agenda as presented.</body>\n</html>\n"
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "rd5CThdVVq88sClSFXIZvA==",
+      "Title": "D. Consent Agenda",
+      "Minutes": "",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": [
+        {
+          "EncrId": "mQjczW7e6l4plusStYkGE2vyw==",
+          "Title": "1. Success Ready Students ",
+          "Minutes": "",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": [
+            {
+              "EncrId": "uOQVrZZAWfxOQ3LDcdjzLA==",
+              "Title": "a. Program Evaluations: PAT, Title I Pre-K",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve the evaluations for the Parents As Teachers and the Title I Pre-K programs&nbsp;as presented.</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "uOQVrZZAWfxOQ3LDcdjzLA==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve the evaluations for the Parents As Teachers and the Title I Pre-K programs&nbsp;as presented.</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            }
+          ],
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "mQjczW7e6l4plusStYkGE2vyw==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": ""
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "w4nYNNXTacZUot3kT2qEuw==",
+          "Title": "2. Workforce Excellence",
+          "Minutes": null,
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": [
+            {
+              "EncrId": "39apModt79n9cgqvIwsDEA==",
+              "Title": "a. Personnel Transactions",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body><span style=\"-webkit-text-stroke-width:0px; background-color:#ffffff; color:#000000; display:inline !important; float:none; font-family:Lato; font-size:15px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; orphans:2; text-align:left; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-indent:0px; text-transform:none; white-space:normal; widows:2; word-spacing:0px\">Approve the personnel transactions and addendum since the last Board meeting as presented.&nbsp;</span></body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "39apModt79n9cgqvIwsDEA==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body><span style=\"-webkit-text-stroke-width:0px; background-color:#ffffff; color:#000000; display:inline !important; float:none; font-family:Lato; font-size:15px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; orphans:2; text-align:left; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-indent:0px; text-transform:none; white-space:normal; widows:2; word-spacing:0px\">Approve the personnel transactions and addendum since the last Board meeting as presented.&nbsp;</span></body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "joFoNbeU3vbslshU5363NEZ4w==",
+              "Title": "b. Consideration of Employment of Certificated Staff",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body><span style=\"background-color:white\">Approve that: &nbsp;</span>\n<ol>\n\t<li style=\"margin:0in 0in 0.0001pt\"><span style=\"background-color:white\">Tenured teachers are notified and receive the modified terms of employment according to the Board approved 2025-2026&nbsp;teachers&rsquo; salary schedule and school calendar.</span></li>\n\t<li style=\"margin:0in 0in 0.0001pt\"><span style=\"background-color:white\">Probationary teachers to be awarded tenure status are notified that their contract will be modified in accordance with the conditions of employment, the 2025-2026&nbsp;Board approved teachers&rsquo; salary schedule and school calendar.</span></li>\n\t<li style=\"margin:0in 0in 0.0001pt\"><span style=\"background-color:white\">Probationary teachers are notified that their contract will be modified in accordance with conditions of employment, the 2025-2026&nbsp;Board approved teachers&rsquo; salary schedule and the school calendar.&nbsp;&nbsp;</span></li>\n</ol>\n</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "joFoNbeU3vbslshU5363NEZ4w==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body><span style=\"background-color:white\">Approve that: &nbsp;</span>\n<ol>\n\t<li style=\"margin:0in 0in 0.0001pt\"><span style=\"background-color:white\">Tenured teachers are notified and receive the modified terms of employment according to the Board approved 2025-2026&nbsp;teachers&rsquo; salary schedule and school calendar.</span></li>\n\t<li style=\"margin:0in 0in 0.0001pt\"><span style=\"background-color:white\">Probationary teachers to be awarded tenure status are notified that their contract will be modified in accordance with the conditions of employment, the 2025-2026&nbsp;Board approved teachers&rsquo; salary schedule and school calendar.</span></li>\n\t<li style=\"margin:0in 0in 0.0001pt\"><span style=\"background-color:white\">Probationary teachers are notified that their contract will be modified in accordance with conditions of employment, the 2025-2026&nbsp;Board approved teachers&rsquo; salary schedule and the school calendar.&nbsp;&nbsp;</span></li>\n</ol>\n</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "2UUq2Fqt2sVUvESXmhiDBA==",
+              "Title": "c. New Job Descriptions: Boys Volleyball Coach & Assistant",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve the job description for the Head Boys Volleyball and Assistant Coach positions.&nbsp; &nbsp;&nbsp;</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "2UUq2Fqt2sVUvESXmhiDBA==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve the job description for the Head Boys Volleyball and Assistant Coach positions.&nbsp; &nbsp;&nbsp;</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "LaafhKrMlslshFReyeQsplus2nLA==",
+              "Title": "d. New Job Description: Summer School Supervisor",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve the job description for the Summer School Supervisor.&nbsp; &nbsp; &nbsp;</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "LaafhKrMlslshFReyeQsplus2nLA==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve the job description for the Summer School Supervisor.&nbsp; &nbsp; &nbsp;</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            }
+          ],
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": null,
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": null
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "y4Ta1t66slshVDtdERb7Jyp3Q==",
+          "Title": "3. Operational Readiness",
+          "Minutes": null,
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": [
+            {
+              "EncrId": "IJmjK2QbiopxCNbwmlLezA==",
+              "Title": "a. Accept the Finance Committee Report",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body><span style=\"-webkit-text-stroke-width:0px; background-color:#ffffff; color:#000000; display:inline !important; float:none; font-family:Lato; font-size:15px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; orphans:2; text-align:left; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-indent:0px; text-transform:none; white-space:normal; widows:2; word-spacing:0px\">Accept the Finance Committee Report as informational.</span></body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "IJmjK2QbiopxCNbwmlLezA==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body><span style=\"-webkit-text-stroke-width:0px; background-color:#ffffff; color:#000000; display:inline !important; float:none; font-family:Lato; font-size:15px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; orphans:2; text-align:left; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-indent:0px; text-transform:none; white-space:normal; widows:2; word-spacing:0px\">Accept the Finance Committee Report as informational.</span></body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "YGbuZgfVKuRON1MpUNYAYA==",
+              "Title": "b. Action on Bills",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve the bills as presented.</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "YGbuZgfVKuRON1MpUNYAYA==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve the bills as presented.</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "sM9SoiVwjqdnNhvJRmZx8Q==",
+              "Title": "c. Request to Bid",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body><span style=\"position:relative\"><span style=\"top:0.5pt\">Approve the requests to bid as outlined.</span></span></body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "sM9SoiVwjqdnNhvJRmZx8Q==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body><span style=\"position:relative\"><span style=\"top:0.5pt\">Approve the requests to bid as outlined.</span></span></body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "kBvdslshDSslshudsF9hu7nPplusuuw==",
+              "Title": "d. Submission and Acceptance of Grants",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve the submission and acceptance of the PLTW Grant in the amount of $5,000</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "kBvdslshDSslshudsF9hu7nPplusuuw==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve the submission and acceptance of the PLTW Grant in the amount of $5,000</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "mgdm4vobtRUST7EeycOSZQ==",
+              "Title": "e. Estimated Tax Levies",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve an estimated tax levy rate of $4.3897 per $100 AV for General and Teacher (Combined) Operating Funds, and $1.3666 for the Debt Service Fund, for a total estimated tax levy rate of $5.7563 for 2025.&nbsp;</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "mgdm4vobtRUST7EeycOSZQ==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve an estimated tax levy rate of $4.3897 per $100 AV for General and Teacher (Combined) Operating Funds, and $1.3666 for the Debt Service Fund, for a total estimated tax levy rate of $5.7563 for 2025.&nbsp;</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "9dXI6ni9sAJnLynICCx1iA==",
+              "Title": "f. Firewall Network Renewal",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve a purchase from Yellow Dog Networks for an amount not to exceed $32,966 pending E-rate funding approval.&nbsp;&nbsp;</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "9dXI6ni9sAJnLynICCx1iA==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve a purchase from Yellow Dog Networks for an amount not to exceed $32,966 pending E-rate funding approval.&nbsp;&nbsp;</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "xlVBCE9vHI38tt2SWmIslshog==",
+              "Title": "g. E-Rate Network Maintenance Renewal",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve the proposal presented by Aercor for an amount not to exceed $25,876.82 before e-rate discount.</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "xlVBCE9vHI38tt2SWmIslshog==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve the proposal presented by Aercor for an amount not to exceed $25,876.82 before e-rate discount.</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "reQeosgjVEpluskeoF4VkYFCg==",
+              "Title": "h. E-Rate Wide Area Network",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve the annual agreement with AT&amp;T for WAN services contract for an amount not to exceed $110,351.76 per year before e-rate discount. We anticipate our annual after e-rate discount cost to be $22,070.35.</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "reQeosgjVEpluskeoF4VkYFCg==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve the annual agreement with AT&amp;T for WAN services contract for an amount not to exceed $110,351.76 per year before e-rate discount. We anticipate our annual after e-rate discount cost to be $22,070.35.</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "Ogs054ijplus0OXwfJplusVXttVg==",
+              "Title": "i. Network Cabling Upgrades",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Approve a purchase from Yellow Dog Networks Network for an amount not to exceed $129,310 pending E-rate funding approval.&nbsp;</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "Ogs054ijplus0OXwfJplusVXttVg==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Approve a purchase from Yellow Dog Networks Network for an amount not to exceed $129,310 pending E-rate funding approval.&nbsp;</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "Xyfplusbu4FHPP1UMdBoI3aCg==",
+              "Title": "j. Bus Wi Fi",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Approve a purchase from Pangea Network for an amount not to exceed 53,478.32 pending E-rate funding approval.&nbsp;</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "Xyfplusbu4FHPP1UMdBoI3aCg==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Approve a purchase from Pangea Network for an amount not to exceed 53,478.32 pending E-rate funding approval.&nbsp;</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "X8zslshQIBy2CCzjhnwtplus56uw==",
+              "Title": "k. Internet  WiFi Hot Spots",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve a purchase from AT&amp;T for an amount not to exceed $35,400 pending E-rate funding approval.&nbsp;</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "X8zslshQIBy2CCzjhnwtplus56uw==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve a purchase from AT&amp;T for an amount not to exceed $35,400 pending E-rate funding approval.&nbsp;</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            }
+          ],
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": null,
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": null
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "R2jeUMQTgZLvgdbbVF767Q==",
+          "Title": "4. Climate, Culture and Community ",
+          "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">None submitted.</body>\n</html>\n",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": null,
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "R2jeUMQTgZLvgdbbVF767Q==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">None submitted.</body>\n</html>\n"
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "QLNsifLvpRlJqbjplusvslshgo6g==",
+          "Title": "5. Governance ",
+          "Minutes": null,
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": [
+            {
+              "EncrId": "slshI5G0AslshOf5PjzzSozXQelg==",
+              "Title": "a. Approval of Minutes",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve the February 20, 2025 Regular Open&nbsp;<span style=\"background-color:#ffffff\">meeting </span>minutes as presented.</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "slshI5G0AslshOf5PjzzSozXQelg==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve the February 20, 2025 Regular Open&nbsp;<span style=\"background-color:#ffffff\">meeting </span>minutes as presented.</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "HtQXdyxBnTplusKned8vZGZOQ==",
+              "Title": "b. Policies - Second Reading",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body><span style=\"-webkit-text-stroke-width:0px; background-color:white; border-collapse:inherit; border:0px; box-sizing:border-box; color:#000000; float:none !important; font-family:Lato; font-size:15px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; line-height:normal; margin:0px; orphans:2; outline:0px; padding:0px; text-align:left; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-indent:0px; text-transform:none; vertical-align:baseline; white-space:normal; widows:2; word-spacing:0px\">Approve revisions to policies IGCD and IGCDA</span><span style=\"-webkit-text-stroke-width:0px; background-color:#ffffff; color:#000000; display:inline !important; float:none; font-family:Lato; font-size:15px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; orphans:2; text-align:left; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-indent:0px; text-transform:none; white-space:normal; widows:2; word-spacing:0px\">&nbsp;as presented on second reading.</span></body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "HtQXdyxBnTplusKned8vZGZOQ==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body><span style=\"-webkit-text-stroke-width:0px; background-color:white; border-collapse:inherit; border:0px; box-sizing:border-box; color:#000000; float:none !important; font-family:Lato; font-size:15px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; line-height:normal; margin:0px; orphans:2; outline:0px; padding:0px; text-align:left; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-indent:0px; text-transform:none; vertical-align:baseline; white-space:normal; widows:2; word-spacing:0px\">Approve revisions to policies IGCD and IGCDA</span><span style=\"-webkit-text-stroke-width:0px; background-color:#ffffff; color:#000000; display:inline !important; float:none; font-family:Lato; font-size:15px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; orphans:2; text-align:left; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-indent:0px; text-transform:none; white-space:normal; widows:2; word-spacing:0px\">&nbsp;as presented on second reading.</span></body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            }
+          ],
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": null,
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": null
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        }
+      ],
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "rd5CThdVVq88sClSFXIZvA==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            "<span class='latoBold'>Motion made by:</span>&nbsp;Joshua Hill",
+            "<span class='latoBold'>Motion seconded by:</span>&nbsp;Damon Greene",
+            ""
+          ],
+          "AllVotingApproved": true,
+          "AllVotingNotApproved": false,
+          "Minutes": ""
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "lQslshplusTQ3nVF9Tv6p3qmu7xw==",
+      "Title": "E. Superintendent's Report",
+      "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Dr. Rodrequez presented his report which included recognition of the Prep KC Math Relay winners by school and announced that Grandview C4 took first place, acknowledgment of board members for Board Appreciation month, comments on the jazz concert and basketball tournament results, and provided an update on his Superintendent goals.</body>\n</html>\n",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": null,
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "lQslshplusTQ3nVF9Tv6p3qmu7xw==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            null,
+            null,
+            null
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false,
+          "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Dr. Rodrequez presented his report which included recognition of the Prep KC Math Relay winners by school and announced that Grandview C4 took first place, acknowledgment of board members for Board Appreciation month, comments on the jazz concert and basketball tournament results, and provided an update on his Superintendent goals.</body>\n</html>\n"
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "uGiSUkwCIpM5qoOSK8yXvw==",
+      "Title": "F. Audience Participation on Action/Discussion Agenda Items",
+      "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">No one asked to speak to an agenda item.</body>\n</html>\n",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": null,
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "uGiSUkwCIpM5qoOSK8yXvw==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            null,
+            null,
+            null
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false,
+          "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">No one asked to speak to an agenda item.</body>\n</html>\n"
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "5lUioGxH6V1mYQix2toldg==",
+      "Title": "G. Action/Discussion Agenda",
+      "Minutes": null,
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": [
+        {
+          "EncrId": "gLYtJZDplussNRUNm7PeDVruQ==",
+          "Title": "1. Success Ready Students ",
+          "Minutes": null,
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": [
+            {
+              "EncrId": "hqNyrwNRbVRy1c36VEdQHw==",
+              "Title": "a. C&I Update",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Dr. LeMay presented a Curriculum &amp; Instruction update which included information on Kindergarten screenings and an Alumni Panel that recently took place at GMS.</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "hqNyrwNRbVRy1c36VEdQHw==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Dr. LeMay presented a Curriculum &amp; Instruction update which included information on Kindergarten screenings and an Alumni Panel that recently took place at GMS.</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "q83EJRtEMz8nTo3hpyx3fg==",
+              "Title": "b. Seal of Biliteracy Award & Resolution",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">The Seal of Biliteracy recognizes graduating students who are proficient in English as well as one other language.<br>\n<br>\nApprove the implementation of the Seal of Biliteracy for the Grandview C-4 School District, beginning on March 21, 2025 and adopt the accompanying resolution in support of this initiative.</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "q83EJRtEMz8nTo3hpyx3fg==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    "<span class='latoBold'>Motion made by:</span>&nbsp;Dawn Foy",
+                    "<span class='latoBold'>Motion seconded by:</span>&nbsp;Helen Ransom",
+                    ""
+                  ],
+                  "AllVotingApproved": true,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">The Seal of Biliteracy recognizes graduating students who are proficient in English as well as one other language.<br>\n<br>\nApprove the implementation of the Seal of Biliteracy for the Grandview C-4 School District, beginning on March 21, 2025 and adopt the accompanying resolution in support of this initiative.</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            }
+          ],
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": null,
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": null
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "ocQ1zPH12tMXSfwGgEbslshVg==",
+          "Title": "2. Workforce Excellence ",
+          "Minutes": null,
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": [
+            {
+              "EncrId": "KJcXaNVHIpaCpD2fmOBLsg==",
+              "Title": "a. Grandview 8 & 10 Recommendations for 2025-26",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Recommendations from employee groups, Grandview 8 (for classified staff) and Grandview 10 (for certificated staff) were presented to the Board for consideration of compensation for 2025-26.<br>\n<br>\nApprove the 2025-2026 certificated (teachers), B-Salary, extra duty, all classified, administrators, and central office personnel schedules as presented.</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "KJcXaNVHIpaCpD2fmOBLsg==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    "<span class='latoBold'>Motion made by:</span>&nbsp;Helen Ransom",
+                    "<span class='latoBold'>Motion seconded by:</span>&nbsp;Damon Greene",
+                    ""
+                  ],
+                  "AllVotingApproved": true,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Recommendations from employee groups, Grandview 8 (for classified staff) and Grandview 10 (for certificated staff) were presented to the Board for consideration of compensation for 2025-26.<br>\n<br>\nApprove the 2025-2026 certificated (teachers), B-Salary, extra duty, all classified, administrators, and central office personnel schedules as presented.</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            }
+          ],
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "ocQ1zPH12tMXSfwGgEbslshVg==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": null
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "XRGcFFoO9rdopZC7aXnK4g==",
+          "Title": "3. Operational Readiness",
+          "Minutes": "",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": [
+            {
+              "EncrId": "IXBRQsQqrlkTslshwMXS2RqRQ==",
+              "Title": "a. Grandview 8 & 10 Insurance Proposal",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Recommendations from employee groups, Grandview 8 (for classified staff) and Grandview 10 (for certificated staff) were presented to the Board for consideration of employee insurance for 2025-26.<br>\n<br>\n<span style=\"position:relative\"><span style=\"top:.5pt\">Approve the recommendation of Grandview 8 and Grandview 10 to renew the Blue Cross Blue Shield Health Insurance with a 2.0% increase and Delta Dental, Standard, and New York Life insurance policies at the proposed rates for the 2025-2026 year.</span></span></body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "IXBRQsQqrlkTslshwMXS2RqRQ==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    "<span class='latoBold'>Motion made by:</span>&nbsp;Damon Greene",
+                    "<span class='latoBold'>Motion seconded by:</span>&nbsp;Helen Ransom",
+                    ""
+                  ],
+                  "AllVotingApproved": true,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Recommendations from employee groups, Grandview 8 (for classified staff) and Grandview 10 (for certificated staff) were presented to the Board for consideration of employee insurance for 2025-26.<br>\n<br>\n<span style=\"position:relative\"><span style=\"top:.5pt\">Approve the recommendation of Grandview 8 and Grandview 10 to renew the Blue Cross Blue Shield Health Insurance with a 2.0% increase and Delta Dental, Standard, and New York Life insurance policies at the proposed rates for the 2025-2026 year.</span></span></body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "OT5uCmxYFfJwrb5iFfseLA==",
+              "Title": "b. Playground Equipment - HGECC",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve a contract with Athco, LLC for playground equipment for an amount not to exceed $130,270.65</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "OT5uCmxYFfJwrb5iFfseLA==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    "<span class='latoBold'>Motion made by:</span>&nbsp;Dawn Foy",
+                    "<span class='latoBold'>Motion seconded by:</span>&nbsp;Stacy Wright",
+                    ""
+                  ],
+                  "AllVotingApproved": true,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve a contract with Athco, LLC for playground equipment for an amount not to exceed $130,270.65</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            },
+            {
+              "EncrId": "hTUQuDoBplusbE8bpidd3cCQg==",
+              "Title": "c. Budget Amendment",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve the budget amendments as summarized in the background information and delineated on Attachment #1 pages 2 &amp; 3.</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "hTUQuDoBplusbE8bpidd3cCQg==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    "<span class='latoBold'>Motion made by:</span>&nbsp;Dawn Foy",
+                    "<span class='latoBold'>Motion seconded by:</span>&nbsp;Joshua Hill",
+                    ""
+                  ],
+                  "AllVotingApproved": true,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n<body>Approve the budget amendments as summarized in the background information and delineated on Attachment #1 pages 2 &amp; 3.</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            }
+          ],
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "XRGcFFoO9rdopZC7aXnK4g==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": ""
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "IQ8cmKRCwHctI7tKgJ4drA==",
+          "Title": "4. Climate, Culture and Community",
+          "Minutes": "",
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": [
+            {
+              "EncrId": "HpuTOjo8P1vDEGvC7UplusMAw==",
+              "Title": "a. Cass County Health Foundation Presentation",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">This item was moved to the top of the Action/Discussion agenda in consideration of the presenter&#39;s schedule.<br>\n<br>\nSandy Kessinger presented an update on dental services provided by the Cass County Health Foundation to Grandview C4 students over the past year.</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "HpuTOjo8P1vDEGvC7UplusMAw==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">This item was moved to the top of the Action/Discussion agenda in consideration of the presenter&#39;s schedule.<br>\n<br>\nSandy Kessinger presented an update on dental services provided by the Cass County Health Foundation to Grandview C4 students over the past year.</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            }
+          ],
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": {
+                "EncrID": "IQ8cmKRCwHctI7tKgJ4drA==",
+                "Comment": ""
+              },
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": ""
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        },
+        {
+          "EncrId": "QMrYeV3UTdxmgREZYCNslshvQ==",
+          "Title": "5. Governance ",
+          "Minutes": null,
+          "VotingHTML": null,
+          "VotingHTMLs": null,
+          "ChildMinutesLst": [
+            {
+              "EncrId": "FOmqojt2dDz8gBuAeaN2tg==",
+              "Title": "a. Strategic Plan Review",
+              "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Members of the Senior Leadership Team (SLT) reviewed progress on the Strategic Plan goal/objections/action steps so far this year, and responded to questions from Board members.</body>\n</html>\n",
+              "VotingHTML": null,
+              "VotingHTMLs": null,
+              "ChildMinutesLst": null,
+              "IsEdit": false,
+              "IsShow": false,
+              "IsReady": true,
+              "Visibility": 0,
+              "Level": 2,
+              "VotingComment": null,
+              "ItemID": null,
+              "HyperLinks": [],
+              "Attachments": [],
+              "MeetingOnlineVotings": [
+                {
+                  "ID": null,
+                  "AgendaID": null,
+                  "MeetingID": null,
+                  "EncrAgendaID": null,
+                  "EncrMeetingID": null,
+                  "EncrSiteID": null,
+                  "IsDeleted": false,
+                  "IsOnlineVotingOn": false,
+                  "SiteID": 0,
+                  "IsFirstRecord": false,
+                  "IsShareResult": false,
+                  "AgendaTitle": null,
+                  "VotingStatus": null,
+                  "UserName": null,
+                  "PopUpType": 0,
+                  "ShareResultStatus": null,
+                  "VotingComment": {
+                    "EncrID": "FOmqojt2dDz8gBuAeaN2tg==",
+                    "Comment": ""
+                  },
+                  "VotingHTML": [
+                    null,
+                    null,
+                    null
+                  ],
+                  "AllVotingApproved": false,
+                  "AllVotingNotApproved": false,
+                  "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Members of the Senior Leadership Team (SLT) reviewed progress on the Strategic Plan goal/objections/action steps so far this year, and responded to questions from Board members.</body>\n</html>\n"
+                }
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false
+            }
+          ],
+          "IsEdit": false,
+          "IsShow": false,
+          "IsReady": true,
+          "Visibility": 0,
+          "Level": 1,
+          "VotingComment": null,
+          "ItemID": null,
+          "HyperLinks": [],
+          "Attachments": [],
+          "MeetingOnlineVotings": [
+            {
+              "ID": null,
+              "AgendaID": null,
+              "MeetingID": null,
+              "EncrAgendaID": null,
+              "EncrMeetingID": null,
+              "EncrSiteID": null,
+              "IsDeleted": false,
+              "IsOnlineVotingOn": false,
+              "SiteID": 0,
+              "IsFirstRecord": false,
+              "IsShareResult": false,
+              "AgendaTitle": null,
+              "VotingStatus": null,
+              "UserName": null,
+              "PopUpType": 0,
+              "ShareResultStatus": null,
+              "VotingComment": null,
+              "VotingHTML": [
+                null,
+                null,
+                null
+              ],
+              "AllVotingApproved": false,
+              "AllVotingNotApproved": false,
+              "Minutes": null
+            }
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false
+        }
+      ],
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "5lUioGxH6V1mYQix2toldg==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            null,
+            null,
+            null
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false,
+          "Minutes": null
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "0PFnyVrqChEplusD8hplusyw4IqQ==",
+      "Title": "H. Recapitulation of Funds",
+      "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\"><span style=\"-webkit-text-stroke-width:0px; background-color:white; border-collapse:inherit; border:0px; box-sizing:border-box; color:#000000; float:none !important; font-family:Lato; font-size:15px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; line-height:normal; margin:0px; orphans:2; outline:0px; padding:0px; text-align:left; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-indent:0px; text-transform:none; vertical-align:baseline; white-space:normal; widows:2; word-spacing:0px\">Dr. Powelson presented the recapitulation of funds:</span>\n\n<table cellspacing=\"0\" class=\"Table\" style=\"-webkit-text-stroke-width:0px; background:white; border-collapse:collapse; border-spacing:0px; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; line-height:normal; margin:0px 0px 0px 0.5in; max-width:100%; orphans:2; outline:0px; text-align:left; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-transform:none; vertical-align:baseline; white-space:normal; widows:2; word-spacing:0px\">\n\t<tbody style=\"box-sizing: border-box; margin: 0px; outline: 0px; font-size: 15px; vertical-align: baseline; background: transparent; line-height: normal;\">\n\t\t<tr style=\"background:transparent; box-sizing:border-box; font-size:15px; line-height:normal; margin:0px; outline:0px; vertical-align:baseline\">\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">General Fund</span></td>\n\t\t\t<td nowrap=\"nowrap\" style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; text-align:right; vertical-align:bottom; width:88pt\" width=\"117\">$1,478,206.89</td>\n\t\t</tr>\n\t\t<tr style=\"background:transparent; box-sizing:border-box; font-size:15px; line-height:normal; margin:0px; outline:0px; vertical-align:baseline\">\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">Teacher Fund&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>\n\t\t\t<td nowrap=\"nowrap\" style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; text-align:right; vertical-align:bottom; width:88pt\" width=\"117\">$148,819.60</td>\n\t\t</tr>\n\t\t<tr style=\"background:transparent; box-sizing:border-box; font-size:15px; line-height:normal; margin:0px; outline:0px; vertical-align:baseline\">\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0.75pt; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">Debt Service</span></td>\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0.75pt; text-align:right; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">$0.00</span></td>\n\t\t</tr>\n\t\t<tr style=\"background:transparent; box-sizing:border-box; font-size:15px; line-height:normal; margin:0px; outline:0px; vertical-align:baseline\">\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">Capital Projects Fund</span></td>\n\t\t\t<td nowrap=\"nowrap\" style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; text-align:right; vertical-align:bottom; width:88pt\" width=\"117\">$1,193,250.69</td>\n\t\t</tr>\n\t\t<tr style=\"background:transparent; box-sizing:border-box; font-size:15px; line-height:normal; margin:0px; outline:0px; vertical-align:baseline\">\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">Food Service Fund</span></td>\n\t\t\t<td nowrap=\"nowrap\" style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; text-align:right; vertical-align:bottom; width:88pt\" width=\"117\">$169,537.24</td>\n\t\t</tr>\n\t\t<tr style=\"background:transparent; box-sizing:border-box; font-size:15px; line-height:normal; margin:0px; outline:0px; vertical-align:baseline\">\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">Student Activity</span></td>\n\t\t\t<td nowrap=\"nowrap\" style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; text-align:right; vertical-align:bottom; width:88pt\" width=\"117\">$19,251.45</td>\n\t\t</tr>\n\t\t<tr style=\"background:transparent; box-sizing:border-box; font-size:15px; line-height:normal; margin:0px; outline:0px; vertical-align:baseline\">\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">General Fund Payroll</span></td>\n\t\t\t<td nowrap=\"nowrap\" style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; text-align:right; vertical-align:bottom; width:88pt\" width=\"117\">$978,729.42</td>\n\t\t</tr>\n\t\t<tr style=\"background:transparent; box-sizing:border-box; font-size:15px; line-height:normal; margin:0px; outline:0px; vertical-align:baseline\">\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">Teacher Fund Payroll</span></td>\n\t\t\t<td nowrap=\"nowrap\" style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; text-align:right; vertical-align:bottom; width:88pt\" width=\"117\">$2,568,178.38</td>\n\t\t</tr>\n\t\t<tr style=\"background:transparent; box-sizing:border-box; font-size:15px; line-height:normal; margin:0px; outline:0px; vertical-align:baseline\">\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">Food Service Fund Payroll&nbsp;</span></td>\n\t\t\t<td nowrap=\"nowrap\" style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; text-align:right; vertical-align:bottom; width:88pt\" width=\"117\">$10,716.00</td>\n\t\t</tr>\n\t\t<tr style=\"background:transparent; box-sizing:border-box; font-size:15px; line-height:normal; margin:0px; outline:0px; vertical-align:baseline\">\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15.6pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">TOTAL&nbsp;&nbsp;</span></td>\n\t\t\t<td nowrap=\"nowrap\" style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15.6pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; text-align:right; vertical-align:bottom; width:88pt\" width=\"117\">$6,566,689.67</td>\n\t\t</tr>\n\t</tbody>\n</table>\n</body>\n</html>\n",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": null,
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "0PFnyVrqChEplusD8hplusyw4IqQ==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            null,
+            null,
+            null
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false,
+          "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\"><span style=\"-webkit-text-stroke-width:0px; background-color:white; border-collapse:inherit; border:0px; box-sizing:border-box; color:#000000; float:none !important; font-family:Lato; font-size:15px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; line-height:normal; margin:0px; orphans:2; outline:0px; padding:0px; text-align:left; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-indent:0px; text-transform:none; vertical-align:baseline; white-space:normal; widows:2; word-spacing:0px\">Dr. Powelson presented the recapitulation of funds:</span>\n\n<table cellspacing=\"0\" class=\"Table\" style=\"-webkit-text-stroke-width:0px; background:white; border-collapse:collapse; border-spacing:0px; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; font-style:normal; font-variant-caps:normal; font-variant-ligatures:normal; font-weight:400; letter-spacing:normal; line-height:normal; margin:0px 0px 0px 0.5in; max-width:100%; orphans:2; outline:0px; text-align:left; text-decoration-color:initial; text-decoration-style:initial; text-decoration-thickness:initial; text-transform:none; vertical-align:baseline; white-space:normal; widows:2; word-spacing:0px\">\n\t<tbody style=\"box-sizing: border-box; margin: 0px; outline: 0px; font-size: 15px; vertical-align: baseline; background: transparent; line-height: normal;\">\n\t\t<tr style=\"background:transparent; box-sizing:border-box; font-size:15px; line-height:normal; margin:0px; outline:0px; vertical-align:baseline\">\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">General Fund</span></td>\n\t\t\t<td nowrap=\"nowrap\" style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; text-align:right; vertical-align:bottom; width:88pt\" width=\"117\">$1,478,206.89</td>\n\t\t</tr>\n\t\t<tr style=\"background:transparent; box-sizing:border-box; font-size:15px; line-height:normal; margin:0px; outline:0px; vertical-align:baseline\">\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">Teacher Fund&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>\n\t\t\t<td nowrap=\"nowrap\" style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; text-align:right; vertical-align:bottom; width:88pt\" width=\"117\">$148,819.60</td>\n\t\t</tr>\n\t\t<tr style=\"background:transparent; box-sizing:border-box; font-size:15px; line-height:normal; margin:0px; outline:0px; vertical-align:baseline\">\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0.75pt; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">Debt Service</span></td>\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0.75pt; text-align:right; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">$0.00</span></td>\n\t\t</tr>\n\t\t<tr style=\"background:transparent; box-sizing:border-box; font-size:15px; line-height:normal; margin:0px; outline:0px; vertical-align:baseline\">\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">Capital Projects Fund</span></td>\n\t\t\t<td nowrap=\"nowrap\" style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; text-align:right; vertical-align:bottom; width:88pt\" width=\"117\">$1,193,250.69</td>\n\t\t</tr>\n\t\t<tr style=\"background:transparent; box-sizing:border-box; font-size:15px; line-height:normal; margin:0px; outline:0px; vertical-align:baseline\">\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">Food Service Fund</span></td>\n\t\t\t<td nowrap=\"nowrap\" style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; text-align:right; vertical-align:bottom; width:88pt\" width=\"117\">$169,537.24</td>\n\t\t</tr>\n\t\t<tr style=\"background:transparent; box-sizing:border-box; font-size:15px; line-height:normal; margin:0px; outline:0px; vertical-align:baseline\">\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">Student Activity</span></td>\n\t\t\t<td nowrap=\"nowrap\" style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; text-align:right; vertical-align:bottom; width:88pt\" width=\"117\">$19,251.45</td>\n\t\t</tr>\n\t\t<tr style=\"background:transparent; box-sizing:border-box; font-size:15px; line-height:normal; margin:0px; outline:0px; vertical-align:baseline\">\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">General Fund Payroll</span></td>\n\t\t\t<td nowrap=\"nowrap\" style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; text-align:right; vertical-align:bottom; width:88pt\" width=\"117\">$978,729.42</td>\n\t\t</tr>\n\t\t<tr style=\"background:transparent; box-sizing:border-box; font-size:15px; line-height:normal; margin:0px; outline:0px; vertical-align:baseline\">\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">Teacher Fund Payroll</span></td>\n\t\t\t<td nowrap=\"nowrap\" style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; text-align:right; vertical-align:bottom; width:88pt\" width=\"117\">$2,568,178.38</td>\n\t\t</tr>\n\t\t<tr style=\"background:transparent; box-sizing:border-box; font-size:15px; line-height:normal; margin:0px; outline:0px; vertical-align:baseline\">\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">Food Service Fund Payroll&nbsp;</span></td>\n\t\t\t<td nowrap=\"nowrap\" style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; text-align:right; vertical-align:bottom; width:88pt\" width=\"117\">$10,716.00</td>\n\t\t</tr>\n\t\t<tr style=\"background:transparent; box-sizing:border-box; font-size:15px; line-height:normal; margin:0px; outline:0px; vertical-align:baseline\">\n\t\t\t<td style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15.6pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; vertical-align:bottom\"><span style=\"background-color:transparent; border-collapse:inherit; border:1pt none windowtext; box-sizing:border-box; float:none !important; font-size:15px; line-height:normal; margin:0px; outline:0px; padding:0in; vertical-align:baseline\">TOTAL&nbsp;&nbsp;</span></td>\n\t\t\t<td nowrap=\"nowrap\" style=\"background:transparent; border-collapse:inherit; box-sizing:border-box; color:#000000; font-family:Lato; font-size:15px; height:15.6pt; line-height:normal; margin:0px; outline:0px; padding:0.75pt; text-align:right; vertical-align:bottom; width:88pt\" width=\"117\">$6,566,689.67</td>\n\t\t</tr>\n\t</tbody>\n</table>\n</body>\n</html>\n"
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "ER48f6le8zjw3214pvYCMA==",
+      "Title": "I. Salient Dates",
+      "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Salient dates were shared with the Board.</body>\n</html>\n",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": null,
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "ER48f6le8zjw3214pvYCMA==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            null,
+            null,
+            null
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false,
+          "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Salient dates were shared with the Board.</body>\n</html>\n"
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "2YJiNycplusYFCuuGCSS87plus2w==",
+      "Title": "J. Report of Board Members and Agenda Requests",
+      "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Helen Ransom commented on attending MSBA&#39;s Advocacy Day in Jeff City and conversations she had with Representative Ealy, and shared info on upcoming changes to the advanced certifications for Board members provided by MSBA.<br>\nDawn Foy encouraged Board participation at the Distinguished Alumni Brunch which will be held on May 31st at the Armacost Museum.<br>\nMonica Terry presented service pins to Stacy Wright and Joshua Hill who&#39;ve each completed one term (3 years) and to Dawn Foy for completing two terms (6 years) of service on the Board of Education.</body>\n</html>\n",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": null,
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "2YJiNycplusYFCuuGCSS87plus2w==",
+            "Comment": ""
+          },
+          "VotingHTML": [
+            null,
+            null,
+            null
+          ],
+          "AllVotingApproved": false,
+          "AllVotingNotApproved": false,
+          "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Helen Ransom commented on attending MSBA&#39;s Advocacy Day in Jeff City and conversations she had with Representative Ealy, and shared info on upcoming changes to the advanced certifications for Board members provided by MSBA.<br>\nDawn Foy encouraged Board participation at the Distinguished Alumni Brunch which will be held on May 31st at the Armacost Museum.<br>\nMonica Terry presented service pins to Stacy Wright and Joshua Hill who&#39;ve each completed one term (3 years) and to Dawn Foy for completing two terms (6 years) of service on the Board of Education.</body>\n</html>\n"
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    },
+    {
+      "EncrId": "qUEK41lvFzKiP6ZBzI4slsh3g==",
+      "Title": "K. Adjournment",
+      "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Move to adjourn this meeting.</body>\n</html>\n",
+      "VotingHTML": null,
+      "VotingHTMLs": null,
+      "ChildMinutesLst": null,
+      "IsEdit": false,
+      "IsShow": false,
+      "IsReady": true,
+      "Visibility": 0,
+      "Level": 0,
+      "VotingComment": null,
+      "ItemID": null,
+      "HyperLinks": [],
+      "Attachments": [],
+      "MeetingOnlineVotings": [
+        {
+          "ID": null,
+          "AgendaID": null,
+          "MeetingID": null,
+          "EncrAgendaID": null,
+          "EncrMeetingID": null,
+          "EncrSiteID": null,
+          "IsDeleted": false,
+          "IsOnlineVotingOn": false,
+          "SiteID": 0,
+          "IsFirstRecord": false,
+          "IsShareResult": false,
+          "AgendaTitle": null,
+          "VotingStatus": null,
+          "UserName": null,
+          "PopUpType": 0,
+          "ShareResultStatus": null,
+          "VotingComment": {
+            "EncrID": "qUEK41lvFzKiP6ZBzI4slsh3g==",
+            "Comment": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\" />\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\" />\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\" />\n</head>\n<div class=\"wsc-contenteditable-mirror wsc-element\" style=\"border:none; display:inline; float:left; height:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; margin-top:0px; overflow:visible; padding:0px; position:relative; width:0px; z-index:1\">\n<div style=\"border-color:transparent; border-style:none; border-width:0px; box-sizing:content-box; color:transparent; height:18px; left:8px; overflow:hidden; padding:0px; pointer-events:none; position:relative; top:8px; width:1332px\">\n<div style=\"border:0px; height:18px; margin-bottom:0px; margin-left:0px; margin-right:0px; margin-top:0px; min-height:100%; min-width:100%; padding:0px; position:relative; width:1332px\">&nbsp;</div>\n</div>\n</div>\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">The meeting adjourned at 8:28 PM.</body>\n</html>\n"
+          },
+          "VotingHTML": [
+            "<span class='latoBold'>Motion made by:</span>&nbsp;Dawn Foy",
+            "<span class='latoBold'>Motion seconded by:</span>&nbsp;Damon Greene",
+            ""
+          ],
+          "AllVotingApproved": true,
+          "AllVotingNotApproved": false,
+          "Minutes": "<html>\n<head>\n\t<title></title>\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/lite.css?n=1234671010\" id=\"__lite__css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://simbli.eboardsolutions.com/ckeditor/plugins/lite/css/opentip.css\" id=\"__lite_tt_css__\" rel=\"stylesheet\" type=\"text/css\">\n\t<link href=\"https://svc.webspellchecker.net/spellcheck31/wscbundle/css/wsc.css\" rel=\"stylesheet\" type=\"text/css\">\n</head>\n\n<body data-gramm_editor=\"false\" data-wsc-instance=\"true\">Move to adjourn this meeting.</body>\n</html>\n"
+        }
+      ],
+      "AllVotingApproved": false,
+      "AllVotingNotApproved": false
+    }
+  ],
+  "PrintSettings": {
+    "IncludePrintDate": false,
+    "IncludePageNo": true,
+    "IncludeWaterMark": false,
+    "IncludeFooterText": false,
+    "WaterMark": null,
+    "FooterText": null,
+    "IncludeSignature": false
+  }
+}

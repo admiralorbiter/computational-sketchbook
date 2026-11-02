@@ -1,0 +1,3 @@
+@echo off
+echo Opening Godot 4 Editor for Last Stand: Tactical Combat...
+start "" "%LOCALAPPDATA%\Microsoft\WinGet\Packages\GodotEngine.GodotEngine_Microsoft.Winget.Source_8wekyb3d8bbwe\godot.exe" --editor --path prototype

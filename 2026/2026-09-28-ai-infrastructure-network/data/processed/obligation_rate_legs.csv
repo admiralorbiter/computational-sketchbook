@@ -1,0 +1,3 @@
+leg_id,obligation_id,leg_type,principal,benchmark,margin_bps,floor_bps,fixed_coupon,spread_grid_id,description
+LEG-CRWV-DDTL4-FLOATING,OBL-CRWV-DEBT-DDTL4,floating,1400000000.0,SOFR,225.0,0.0,,,DDTL 4.0 Floating Tranche ($1.400B at Term SOFR + 2.25%)
+LEG-CRWV-DDTL4-FIXED,OBL-CRWV-DEBT-DDTL4,fixed,1437000000.0,,,,0.0635,,DDTL 4.0 Fixed Tranche ($1.437B at UST 3.14yr + 2.00% fixed at funding)

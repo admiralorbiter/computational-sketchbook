@@ -1,0 +1,45 @@
+school_year,state,grain,coverage_tier,pct_enrollment_valid,reporting_entities_count,total_expected_entities,total_enrollment,total_teacher_fte,student_weighted_ptr,median_ptr,p25_ptr,p75_ptr,total_para_fte,combined_teacher_para_ratio,teachers_per_1000,paras_per_1000,is_primary_trend_eligible,notes
+2014-2015,MO,LEA_K12,complete,100.0,56,56,180423,12171.86,14.82,13.9,11.94,15.04,2182.51,12.57,67.46,12.1,True,Complete MO LEA reporting
+2015-2016,MO,LEA_K12,complete,100.0,56,57,181900,12290.42,14.8,13.73,12.13,15.0,2240.13,12.52,67.57,12.32,True,Complete MO LEA reporting
+2016-2017,MO,LEA_K12,complete,100.0,57,57,183086,12441.24,14.72,13.6,11.83,15.02,2299.41,12.42,67.95,12.56,True,Complete MO LEA reporting
+2017-2018,MO,LEA_K12,complete,100.0,57,57,183816,12706.28,14.47,13.58,11.07,14.92,2444.88,12.13,69.12,13.3,True,Complete MO LEA reporting
+2018-2019,MO,LEA_K12,complete,100.0,56,57,184491,12775.61,14.44,13.15,11.71,14.97,2308.41,12.23,69.25,12.51,True,Complete MO LEA reporting
+2019-2020,MO,LEA_K12,complete,100.0,56,57,184382,12899.81,14.29,13.54,11.59,14.7,2344.31,12.1,69.96,12.71,True,Complete MO LEA reporting
+2020-2021,MO,LEA_K12,complete,100.0,56,56,180743,13003.52,13.9,13.16,11.44,14.12,2166.39,11.91,71.94,11.99,True,Complete MO LEA reporting
+2021-2022,MO,LEA_K12,complete,100.0,56,56,179330,12990.01,13.81,12.82,10.63,13.95,2128.43,11.86,72.44,11.87,True,Complete MO LEA reporting
+2022-2023,MO,LEA_K12,complete,100.0,56,56,180389,13296.4,13.57,12.59,10.45,14.06,2262.25,11.59,73.71,12.54,True,Complete MO LEA reporting
+2023-2024,MO,LEA_K12,complete,100.0,56,56,180015,13322.38,13.51,12.66,10.24,14.0,2326.06,11.5,74.01,12.92,True,Complete MO LEA reporting
+2024-2025,MO,LEA_K12,complete,100.0,56,56,179402,13350.66,13.44,12.34,9.86,13.76,2440.92,11.36,74.42,13.61,True,Complete MO LEA reporting
+2014-2015,MO,School_Regular,complete,100.0,349,354,182817,12061.95,15.16,14.98,13.28,16.4,,,65.98,,True,Regular operating schools in MO
+2015-2016,MO,School_Regular,high_coverage,99.93,348,355,183908,12149.89,15.14,14.9,13.46,16.38,,,66.07,,True,Regular operating schools in MO
+2016-2017,MO,School_Regular,high_coverage,99.92,346,353,185481,12270.13,15.12,14.72,13.22,16.49,,,66.15,,True,Regular operating schools in MO
+2017-2018,MO,School_Regular,complete,100.0,346,351,185810,12476.95,14.89,14.62,13.06,16.15,,,67.15,,True,Regular operating schools in MO
+2018-2019,MO,School_Regular,complete,100.0,346,351,184301,12403.64,14.86,14.64,12.64,16.19,,,67.3,,True,Regular operating schools in MO
+2019-2020,MO,School_Regular,complete,100.0,349,353,185147,12566.72,14.73,14.4,12.74,15.88,,,67.87,,True,Regular operating schools in MO
+2020-2021,MO,School_Regular,complete,99.99,355,360,182739,12789.69,14.29,13.66,11.8,15.35,,,69.99,,True,Regular operating schools in MO
+2021-2022,MO,School_Regular,complete,100.0,354,359,181482,12673.32,14.32,13.76,12.19,15.48,,,69.83,,True,Regular operating schools in MO
+2022-2023,MO,School_Regular,high_coverage,99.99,360,365,183202,13054.02,14.03,13.46,12.05,15.05,,,71.25,,True,Regular operating schools in MO
+2023-2024,MO,School_Regular,complete,100.0,366,366,182911,13178.27,13.88,13.32,11.84,14.82,,,72.05,,True,Regular operating schools in MO
+2024-2025,MO,School_Regular,complete,100.0,363,363,181971,13200.74,13.78,13.41,11.82,14.82,,,72.54,,True,Regular operating schools in MO
+2014-2015,KS,LEA_K12,complete,100.0,21,22,140805,9461.4,14.88,14.66,13.13,15.2,2591.6,11.68,67.2,18.41,True,Complete KS LEA reporting
+2015-2016,KS,LEA_K12,insufficient_coverage,75.92,19,22,107766,7168.0,15.03,14.51,13.48,15.74,1797.9,12.02,66.51,16.68,False,Insufficient coverage (75.9%): Olathe and Gardner Edgerton staff suppressed; reporting entities only
+2016-2017,KS,LEA_K12,complete,100.0,21,22,142188,9624.3,14.77,14.43,13.74,15.53,2556.8,11.67,67.69,17.98,True,Complete KS LEA reporting
+2017-2018,KS,LEA_K12,complete,100.0,21,22,143769,9964.38,14.43,14.24,13.86,15.17,2441.8,11.59,69.31,16.98,True,Complete KS LEA reporting
+2018-2019,KS,LEA_K12,complete,100.0,21,22,144087,10052.78,14.33,14.14,13.69,14.92,2838.6,11.18,69.77,19.7,True,Complete KS LEA reporting
+2019-2020,KS,LEA_K12,complete,100.0,21,21,144975,10236.67,14.16,14.0,13.5,14.89,2928.8,11.01,70.61,20.2,True,Complete KS LEA reporting
+2020-2021,KS,LEA_K12,complete,100.0,21,21,140989,10307.17,13.68,13.58,12.23,14.23,2705.2,10.83,73.11,19.19,True,Complete KS LEA reporting
+2021-2022,KS,LEA_K12,high_coverage,99.99,20,21,140819,10518.75,13.39,13.62,12.14,14.31,2646.0,10.7,74.7,18.79,True,Complete KS LEA reporting
+2022-2023,KS,LEA_K12,complete,100.0,21,21,141206,10589.68,13.33,13.22,12.38,14.6,2671.5,10.65,74.99,18.92,True,Complete KS LEA reporting
+2023-2024,KS,LEA_K12,complete,100.0,21,21,139544,10297.7,13.55,13.42,12.42,14.37,2899.1,10.57,73.8,20.78,True,Complete KS LEA reporting
+2024-2025,KS,LEA_K12,complete,100.0,21,21,139481,10204.51,13.67,13.4,12.18,14.38,2899.1,10.64,73.16,20.78,True,Complete KS LEA reporting
+2014-2015,KS,School_Regular,complete,100.0,252,253,143204,9129.2,15.69,15.53,14.32,17.08,,,63.75,,True,Regular operating schools in KS
+2015-2016,KS,School_Regular,insufficient_coverage,76.72,196,252,110220,7166.6,15.38,15.3,14.26,16.54,,,65.02,,False,Insufficient coverage (76.8%): Olathe and Gardner Edgerton schools suppressed
+2016-2017,KS,School_Regular,complete,100.0,249,249,144394,9371.7,15.41,15.14,13.84,16.38,,,64.9,,True,Regular operating schools in KS
+2017-2018,KS,School_Regular,complete,100.0,255,255,146424,9638.63,15.19,14.88,13.48,16.06,,,65.83,,True,Regular operating schools in KS
+2018-2019,KS,School_Regular,high_coverage,99.77,255,258,145856,9736.91,14.98,14.62,13.34,16.16,,,66.76,,True,Regular operating schools in KS
+2019-2020,KS,School_Regular,high_coverage,99.75,255,257,147043,9775.39,15.04,14.96,13.42,16.24,,,66.48,,True,Regular operating schools in KS
+2020-2021,KS,School_Regular,high_coverage,99.88,255,256,140917,9503.51,14.83,14.34,12.58,16.13,,,67.44,,True,Regular operating schools in KS
+2021-2022,KS,School_Regular,high_coverage,99.92,258,259,141565,9986.27,14.18,13.81,12.38,15.32,,,70.54,,True,Regular operating schools in KS
+2022-2023,KS,School_Regular,high_coverage,99.93,258,259,143146,9896.08,14.46,13.9,12.69,15.24,,,69.13,,True,Regular operating schools in KS
+2023-2024,KS,School_Regular,high_coverage,99.87,260,261,141413,9763.85,14.48,14.0,12.66,15.32,,,69.04,,True,Regular operating schools in KS
+2024-2025,KS,School_Regular,high_coverage,99.95,260,261,141217,9977.49,14.15,13.7,12.42,15.04,,,70.65,,True,Regular operating schools in KS

@@ -1,0 +1,5 @@
+model,dependent_var,instrument,n_obs,coef,robust_se,t_stat,p_value,robust_f_stat,r_squared,sample_restriction
+Model 1: Baseline All Non-Charter,num_classes (K),1(E >= 26),1496,0.3570197817998853,0.3363833951164141,1.0613478161617624,0.2885318628275173,1.1264591868713423,0.005800621579512555,"All non-charter FL high schools, E in [20, 30]"
+Model 2: Comprehensive Non-Charter,num_classes (K),1(E >= 26),486,0.6577225875141317,0.4808241560070765,1.367906706218919,0.17134128034773488,1.8711687569186919,0.02070391233608604,"School enrollment >= 300, E in [20, 30]"
+Model 3: Best-Case Clean Sensitivity,num_classes (K),1(E >= 26),344,0.36558102002031034,0.6205588371647579,0.5891158067953657,0.5557835905433717,0.3470574338161546,0.016922303696690344,Enrollment >= 300; Excludes COVID (2020-21) and 2023-24 Alg1
+Model 4: Best-Case Class Size on CS_hat,mean_class_size (C_bar),Predicted CS (cs_hat),344,0.17106099563488866,0.13055031616886542,1.310307019200345,0.19009199386928188,1.7169044845656933,0.005677040264961963,Enrollment >= 300; Excludes COVID (2020-21) and 2023-24 Alg1

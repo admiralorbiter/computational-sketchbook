@@ -1,0 +1,41 @@
+survey_cycle,school_year,geography,school_level,instructional_type,class_size_mean,class_size_se,reporting_flag,estimand_scope,source_reference
+1999-2000 (SASS),1999-2000,United States,Elementary School,Self-Contained,21.1,0.1,,Grades K-5/6 Self-Contained,NCES Digest 2004 Table 68
+1999-2000 (SASS),1999-2000,United States,Secondary / Grades 7-12,Departmentalized,23.6,0.1,,Grades 7-12 Departmentalized Instruction,NCES Digest 2004 Table 68
+1999-2000 (SASS),1999-2000,Missouri,Elementary School,Self-Contained,20.7,0.6,,Grades K-5/6 Self-Contained,NCES Digest 2004 Table 68
+1999-2000 (SASS),1999-2000,Missouri,Secondary / Grades 7-12,Departmentalized,21.0,0.4,,Grades 7-12 Departmentalized Instruction,NCES Digest 2004 Table 68
+1999-2000 (SASS),1999-2000,Kansas,Elementary School,Self-Contained,18.3,0.4,,Grades K-5/6 Self-Contained,NCES Digest 2004 Table 68
+1999-2000 (SASS),1999-2000,Kansas,Secondary / Grades 7-12,Departmentalized,20.9,0.3,,Grades 7-12 Departmentalized Instruction,NCES Digest 2004 Table 68
+2003-04 (SASS),2003-04,United States,Elementary School,Self-Contained,20.4,0.15,,Grades K-5/6 Self-Contained,NCES Digest 2006 Table 64
+2003-04 (SASS),2003-04,United States,Secondary / Grades 7-12,Departmentalized,24.7,0.14,,Grades 7-12 Departmentalized Instruction,NCES Digest 2006 Table 64
+2003-04 (SASS),2003-04,Missouri,Elementary School,Self-Contained,19.1,0.51,,Grades K-5/6 Self-Contained,NCES Digest 2006 Table 64
+2003-04 (SASS),2003-04,Missouri,Secondary / Grades 7-12,Departmentalized,22.9,0.65,,Grades 7-12 Departmentalized Instruction,NCES Digest 2006 Table 64
+2003-04 (SASS),2003-04,Kansas,Elementary School,Self-Contained,19.2,0.68,,Grades K-5/6 Self-Contained,NCES Digest 2006 Table 64
+2003-04 (SASS),2003-04,Kansas,Secondary / Grades 7-12,Departmentalized,22.2,0.76,,Grades 7-12 Departmentalized Instruction,NCES Digest 2006 Table 64
+2007-08 (SASS),2007-08,United States,Elementary School,Self-Contained,20.0,0.14,,Grades K-5/6 Self-Contained,NCES Digest 2010 Table 71
+2007-08 (SASS),2007-08,United States,Secondary / Grades 7-12,Departmentalized,23.4,0.16,,Grades 7-12 Departmentalized Instruction,NCES Digest 2010 Table 71
+2007-08 (SASS),2007-08,Missouri,Elementary School,Self-Contained,19.4,0.53,,Grades K-5/6 Self-Contained,NCES Digest 2010 Table 71
+2007-08 (SASS),2007-08,Missouri,Secondary / Grades 7-12,Departmentalized,20.6,0.61,,Grades 7-12 Departmentalized Instruction,NCES Digest 2010 Table 71
+2007-08 (SASS),2007-08,Kansas,Elementary School,Self-Contained,19.5,0.64,,Grades K-5/6 Self-Contained,NCES Digest 2010 Table 71
+2007-08 (SASS),2007-08,Kansas,Secondary / Grades 7-12,Departmentalized,21.0,0.94,,Grades 7-12 Departmentalized Instruction,NCES Digest 2010 Table 71
+2011-12 (SASS),2011-12,United States,Elementary School,Self-Contained,21.2,0.18,,Grades K-5/6 Self-Contained,NCES Digest 2019 Table 209.30
+2011-12 (SASS),2011-12,United States,Secondary / Grades 7-12,Departmentalized,26.8,0.22,,Grades 7-12 Departmentalized Instruction,NCES Digest 2019 Table 209.30
+2011-12 (SASS),2011-12,Missouri,Elementary School,Self-Contained,20.2,0.83,,Grades K-5/6 Self-Contained,NCES Digest 2019 Table 209.30
+2011-12 (SASS),2011-12,Missouri,Secondary / Grades 7-12,Departmentalized,26.8,1.18,,Grades 7-12 Departmentalized Instruction,NCES Digest 2019 Table 209.30
+2011-12 (SASS),2011-12,Kansas,Elementary School,Self-Contained,20.4,0.86,,Grades K-5/6 Self-Contained,NCES Digest 2019 Table 209.30
+2011-12 (SASS),2011-12,Kansas,Secondary / Grades 7-12,Departmentalized,24.6,1.21,,Grades 7-12 Departmentalized Instruction,NCES Digest 2019 Table 209.30
+2011-12 (SASS),2011-12,United States,High School,Departmentalized,24.2,,,Grades 9-12 Departmentalized Instruction,NCES SASS 2011-12 First Look Table 7
+2011-12 (SASS),2011-12,Missouri,High School,Departmentalized,21.8,,,Grades 9-12 Departmentalized Instruction,NCES SASS 2011-12 First Look Table 7
+2011-12 (SASS),2011-12,Kansas,High School,Departmentalized,19.7,,,Grades 9-12 Departmentalized Instruction,NCES SASS 2011-12 First Look Table 7
+2015-16 (NTPS),2015-16,United States,High School,Departmentalized,26.0,,,Grades 9-12 Departmentalized Instruction,NCES NTPS 2015-16 First Look Table 8
+2017-18 (NTPS),2017-18,United States,High School,Departmentalized,23.3,,,Grades 9-12 Departmentalized Instruction,NCES NTPS 2017-18 Table A-7a
+2017-18 (NTPS),2017-18,Missouri,High School,Departmentalized,22.5,,,Grades 9-12 Departmentalized Instruction,NCES NTPS 2017-18 Table A-7a
+2017-18 (NTPS),2017-18,Kansas,High School,Departmentalized,19.8,,,Grades 9-12 Departmentalized Instruction,NCES NTPS 2017-18 Table A-7a
+2020-21 (NTPS),2020-21,United States,High School,Departmentalized,21.0,,,Grades 9-12 Departmentalized Instruction,NCES NTPS 2020-21 Table 7
+2020-21 (NTPS),2020-21,Missouri,High School,Departmentalized,19.2,,,Grades 9-12 Departmentalized Instruction,NCES NTPS 2020-21 Table 7
+2020-21 (NTPS),2020-21,Kansas,High School,Departmentalized,17.4,,,Grades 9-12 Departmentalized Instruction,NCES NTPS 2020-21 Table 7
+2020-21 (NTPS),2020-21,United States,Middle School,Departmentalized,22.0,,,Grades 5/6-8 Departmentalized Instruction,NCES NTPS 2020-21 Table 7
+2020-21 (NTPS),2020-21,United States,Elementary School,Self-Contained,19.1,,,Grades K-5/6 Self-Contained,NCES NTPS 2020-21 Table 7
+2020-21 (NTPS),2020-21,Missouri,Middle School,Departmentalized,18.5,,,Grades 5/6-8 Departmentalized Instruction,NCES NTPS 2020-21 Table 7
+2020-21 (NTPS),2020-21,Missouri,Elementary School,Self-Contained,18.2,,,Grades K-5/6 Self-Contained,NCES NTPS 2020-21 Table 7
+2020-21 (NTPS),2020-21,Kansas,Middle School,Departmentalized,19.8,,,Grades 5/6-8 Departmentalized Instruction,NCES NTPS 2020-21 Table 7
+2020-21 (NTPS),2020-21,Kansas,Elementary School,Self-Contained,17.9,,,Grades K-5/6 Self-Contained,NCES NTPS 2020-21 Table 7

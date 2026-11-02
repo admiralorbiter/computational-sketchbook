@@ -1,0 +1,82 @@
+inquiry:
+  id: "2026-10-kc-metro-education-fractures"
+  question: >
+    What are the frontline fracture points and disconnects between administrators,
+    teachers, and parents across the urban, suburban, and rural school districts of
+    metropolitan Kansas City? Specifically, how do working conditions, student behavioral
+    escalation, special education/para shortages, school board culture conflicts,
+    the Independence 4-day school week, KCPS school closures/tax abatements, and
+    Johnson County/Northland workload and scheduling disputes manifest at the campus level?
+  mode: investigate
+
+  scope:
+    time:
+      since: "2023-01-01T00:00:00Z"
+      until: "2026-10-01T23:59:59Z"
+    geography:
+      - "Kansas City Public Schools"
+      - "Kansas City Kansas Public Schools"
+      - "Shawnee Mission School District"
+      - "Blue Valley School District"
+      - "Olathe Public Schools"
+      - "North Kansas City Schools"
+      - "Lee's Summit R-7"
+      - "Independence School District"
+      - "Park Hill School District"
+      - "Liberty Public Schools"
+      - "Hickman Mills C-1"
+      - "Grandview C-4"
+      - "Center School District"
+      - "Grain Valley"
+      - "Kearney"
+      - "Smithville"
+      - "Belton"
+      - "Gardner Edgerton"
+    languages: ["en"]
+
+  seeds:
+    terms:
+      - "Kansas City teacher resignation admin disconnect"
+      - "Independence school district 4 day week parents teachers"
+      - "Shawnee Mission school board public comment teacher workload"
+      - "Blue Valley Olathe special education para shortage"
+      - "KCPS school closure tax abatement charter drain"
+      - "North Kansas City schools overcrowding teacher burnout"
+      - "Lee's Summit school board controversy teacher morale"
+      - "KCKPS classroom discipline safety teacher turnover"
+      - "Hickman Mills Center Grandview school fight security"
+      - "Grain Valley Smithville Kearney school board book ban"
+      - "working for school district kansascity reddit teacher"
+    hashtags:
+      - "kcschools"
+      - "kcps"
+      - "kckps"
+      - "smsd"
+      - "teacherburnout"
+    accounts: []
+    subreddits:
+      - "kansascity"
+      - "Teachers"
+      - "missouri"
+      - "kansas"
+      - "johnsoncounty"
+
+  platforms:
+    - youtube
+    - reddit
+    - citizen
+    - web
+    - snapchat
+
+  budget:
+    max_queries: 55
+    max_artifacts: 350
+    max_media_downloads: 2
+
+  preservation: candidates
+
+  analysis:
+    cluster_narratives: true
+    track_media_spread: true
+    identify_firsthand_sources: true
+    find_contradictions: true

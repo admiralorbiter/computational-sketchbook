@@ -1,0 +1,57 @@
+{
+  "district_name": "Raytown C-2",
+  "state": "MO",
+  "nces_lea_id": 2926070,
+  "total_documented_fte": 12.0,
+  "roles_count": 3,
+  "extracted_roles": [
+    {
+      "job_title": "K-12 Subject Area Coordinator",
+      "functional_category": "Curriculum/Content",
+      "work_location": "Central Office",
+      "estimated_fte_2023_24": 7.0,
+      "fte_basis": "documented_count",
+      "primary_funding_source": "Local Operating (Teachers Fund)",
+      "funding_mechanism": "Operating Budget",
+      "source_document": "Raytown C-2 CSIP 2017-2022 & Curriculum Department Roster",
+      "source_url": "https://www.raytownschools.org/departments/curriculum-instruction",
+      "source_year": "2017-2024",
+      "page_or_item": "CSIP Goal 1 Codified Discipline Coordinators (Math, ELA, Science, Social Studies, CTE, PE, Arts)",
+      "evidence_type": "District Strategic Plan",
+      "confidence": "HIGH",
+      "role_description": "Discipline coordinators reporting to dual Assistant Superintendents under CSIP Goal 1."
+    },
+    {
+      "job_title": "Assessment & Intervention Facilitator",
+      "functional_category": "Data/Assessment",
+      "work_location": "Central Office",
+      "estimated_fte_2023_24": 3.0,
+      "fte_basis": "documented_count",
+      "primary_funding_source": "Local Operating / Title I",
+      "funding_mechanism": "Operating Budget",
+      "source_document": "Raytown Assessment Department Staffing Directory",
+      "source_url": "https://www.raytownschools.org/departments/assessment",
+      "source_year": "2023-2024",
+      "page_or_item": "Data Specialists managing i-Ready and state MAP testing",
+      "evidence_type": "District Staff Directory",
+      "confidence": "HIGH",
+      "role_description": "Central data facilitators running district diagnostic assessments (i-Ready), state MAP testing, and intervention tracking."
+    },
+    {
+      "job_title": "Special Services Instructional Supervisor",
+      "functional_category": "SPED/EL Program Management",
+      "work_location": "Central Office",
+      "estimated_fte_2023_24": 2.0,
+      "fte_basis": "documented_count",
+      "primary_funding_source": "IDEA Part B",
+      "funding_mechanism": "Federal Special Ed Grant",
+      "source_document": "Raytown Special Education Department Directory",
+      "source_url": "https://www.raytownschools.org/departments/special-services",
+      "source_year": "2023-2024",
+      "page_or_item": "Special Education Compliance Supervisors",
+      "evidence_type": "District Staff Directory",
+      "confidence": "HIGH",
+      "role_description": "Supervisors overseeing special education compliance, IEP caseloads, and related service providers."
+    }
+  ]
+}

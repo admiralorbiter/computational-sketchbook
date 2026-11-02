@@ -1,0 +1,27 @@
+# Contractual Rate Legs for Mixed-Rate and Multi-Tranche Obligations
+# Enables discrete multi-coupon calculations without fragmenting single legal facilities.
+
+rate_legs:
+  LEG-CRWV-DDTL4-FLOATING:
+    leg_id: LEG-CRWV-DDTL4-FLOATING
+    obligation_id: OBL-CRWV-DEBT-DDTL4
+    leg_type: floating
+    principal: 1400000000.0
+    benchmark: SOFR
+    margin_bps: 225.0
+    floor_bps: 0.0
+    fixed_coupon: null
+    spread_grid_id: null
+    description: "DDTL 4.0 Floating Tranche ($1.400B at Term SOFR + 2.25%)"
+
+  LEG-CRWV-DDTL4-FIXED:
+    leg_id: LEG-CRWV-DDTL4-FIXED
+    obligation_id: OBL-CRWV-DEBT-DDTL4
+    leg_type: fixed
+    principal: 1437000000.0
+    benchmark: null
+    margin_bps: null
+    floor_bps: null
+    fixed_coupon: 0.0635
+    spread_grid_id: null
+    description: "DDTL 4.0 Fixed Tranche ($1.437B at UST 3.14yr + 2.00% fixed at funding)"

@@ -1,0 +1,64 @@
+# Signal Observatory Inquiry: KCPS (Kansas City Public Schools - Missouri)
+#
+# Investigates community sentiment, public debates, parent & teacher feedback,
+# tax abatement battles, building closures, and the State of the Schools for KCPS.
+
+inquiry:
+  id: "2026-09-kcps-state-of-the-schools"
+  question: >
+    What is the public perception, parent sentiment, and community debate surrounding
+    Kansas City Public Schools (KCPS in Missouri)? What issues are front of mind
+    regarding accreditation, school closures/consolidation, tax abatements,
+    and leadership under Dr. Jennifer Collier?
+  mode: investigate
+
+  scope:
+    time:
+      since: "2025-01-01"
+      until: "2026-12-31"
+    geography:
+      - "Kansas City, Missouri"
+      - "KCMO"
+      - "Jackson County"
+      - "East Side"
+      - "Midtown"
+      - "Historic Northeast"
+    languages:
+      - "en"
+      - "es"
+
+  seeds:
+    terms:
+      - "Kansas City Public Schools"
+      - "KCPS school board"
+      - "KCPS Dr. Jennifer Collier"
+      - "KCPS school closures"
+      - "KCPS Blueprint 2030"
+      - "KCPS tax abatement"
+      - "KCPS bond"
+      - "Lincoln College Prep"
+    hashtags:
+      - "#KCPS"
+      - "#KCPSLeads"
+      - "#KCProud"
+    accounts:
+      - "KCPS"
+    subreddits:
+      - "kansascity"
+    urls: []
+
+  platforms:
+    - youtube
+
+  budget:
+    max_queries: 12
+    max_artifacts: 60
+    max_media_downloads: 10
+
+  preservation: candidates
+
+  analysis:
+    cluster_narratives: true
+    track_media_spread: true
+    identify_firsthand_sources: true
+    find_contradictions: true

@@ -1,0 +1,13 @@
+# Exclude large raw NCES F-33 archives
+data/raw/nces_f33/**
+!data/raw/nces_f33/
+!data/raw/nces_f33/.gitkeep
+
+# Exclude scratch and python caches
+scratch/
+__pycache__/
+*.pyc
+
+# Manifests and processed outputs
+!data/manifest.csv
+!data/processed/*.csv

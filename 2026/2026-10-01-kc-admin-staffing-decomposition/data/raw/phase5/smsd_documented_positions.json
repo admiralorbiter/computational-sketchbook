@@ -1,0 +1,57 @@
+{
+  "district_name": "Shawnee Mission USD 512",
+  "state": "KS",
+  "nces_lea_id": 2011640,
+  "total_documented_fte": 75.0,
+  "roles_count": 3,
+  "extracted_roles": [
+    {
+      "job_title": "Elementary Instructional Coach",
+      "functional_category": "Instructional Coaching",
+      "work_location": "School Building",
+      "estimated_fte_2023_24": 42.0,
+      "fte_basis": "documented_count",
+      "primary_funding_source": "ESSER III / Title II-A / Local Operating",
+      "funding_mechanism": "Federal Relief & Local Operating Transition",
+      "source_document": "SMSD ESSER Allocation Plan (Aug 2021) & Elementary Staff Rosters",
+      "source_url": "https://www.smsd.org/about/board-of-education",
+      "source_year": "2021-2024",
+      "page_or_item": "Staffing Recovery Allocation (~50 new team members across coaches, teachers, subs)",
+      "evidence_type": "Board Minutes / Budget Profile",
+      "confidence": "MEDIUM-HIGH",
+      "role_description": "Building-based non-evaluative coaches embedded in 34 elementary schools (with dual coaches in high-need Title I buildings) supporting tier-1 literacy and math pedagogy."
+    },
+    {
+      "job_title": "Secondary Instructional Coach",
+      "functional_category": "Instructional Coaching",
+      "work_location": "School Building",
+      "estimated_fte_2023_24": 15.0,
+      "fte_basis": "documented_count",
+      "primary_funding_source": "ESSER III / Local Operating",
+      "funding_mechanism": "Federal Relief & Local Operating",
+      "source_document": "SMSD Secondary Staff Directories & Strategic Plan Objective 1",
+      "source_url": "https://www.smsd.org/about/strategic-plan",
+      "source_year": "2019-2024",
+      "page_or_item": "Secondary Instructional Support Allocations (1-2 coaches per middle/high school)",
+      "evidence_type": "District Strategic Plan",
+      "confidence": "MEDIUM-HIGH",
+      "role_description": "Middle and high school instructional coaches facilitating departmental professional learning communities (PLCs) and instructional strategies across 10 secondary buildings."
+    },
+    {
+      "job_title": "Curriculum Content Coordinator",
+      "functional_category": "Curriculum/Content",
+      "work_location": "Central Office",
+      "estimated_fte_2023_24": 18.0,
+      "fte_basis": "documented_count",
+      "primary_funding_source": "Local Operating",
+      "funding_mechanism": "General Operating Fund",
+      "source_document": "SMSD Curriculum & Instruction Department Organizational Directory",
+      "source_url": "https://www.smsd.org/academics/curriculum-instruction",
+      "source_year": "2023-2024",
+      "page_or_item": "Content Coordinators (ELA, Math, Science, Social Studies, CTE, Arts, Early Childhood, World Languages)",
+      "evidence_type": "District Staff Directory",
+      "confidence": "HIGH",
+      "role_description": "Central subject coordinators designing district curriculum scope, sequence, pacing guides, and state standards alignment."
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+# Shared Systemic Assumptions Registry
+# Each assumption is an economic proposition that underpins multiple contracts across distinct entities.
+assumptions:
+  A001:
+    assumption_id: A001
+    name: GPU_RESIDUAL_VALUE
+    category: collateral_valuation
+    description: "H100/H200/B200-class compute assets retain secondary market resale value sufficient to protect loan collateral coverage and advance rates."
+    observable_proxy: "Secondary broker auction clearing prices for 8x H100 SXM5 systems; wholesale depreciation curves in neocloud 10-Ks."
+    base_case: "3-year residual value >= 45% of original purchase cost; gradual, predictable technological obsolescence."
+    stress_case: "Sudden generation leap or demand pause triggers a 40% immediate drop in secondary hardware clearing values, breaching loan-to-value (LTV) limits."
+    affected_obligation_types: [debt_facility, collateral_pledge]
+
+  A002:
+    assumption_id: A002
+    name: REFINANCING_AVAILABILITY
+    category: capital_markets
+    description: "Project debt, revolving facilities, and delayed-draw term loans can be refinanced or rolled over at viable spreads upon maturity."
+    observable_proxy: "Private credit senior loan spreads over SOFR; FINRA TRACE secondary yields on tech/datacenter high-yield notes."
+    base_case: "Spreads remain stable (+350 to +550 bps over SOFR); private credit syndicates eagerly expand capital commitments."
+    stress_case: "Spreads widen +300 bps or asset-backed syndicated markets freeze, forcing borrowers to fund capex from operations or dilutive equity."
+    affected_obligation_types: [debt_facility, datacenter_lease]
+
+  A003:
+    assumption_id: A003
+    name: CLUSTER_UTILIZATION
+    category: operations
+    description: "Deployed GPU clusters maintain high commercial billable utilization (>85%) throughout their depreciable lives."
+    observable_proxy: "On-demand spot compute rental rates; reported gross margin progression in neocloud SEC periodic filings."
+    base_case: "Capacity is pre-sold under take-or-pay terms; uncontracted capacity clears on spot market at >= 85% utilization."
+    stress_case: "Spot demand cools, unreserved capacity drops to 60% utilization, and gross margin fails to cover fixed operating lease obligations."
+    affected_obligation_types: [datacenter_lease, debt_facility]
+
+  A004:
+    assumption_id: A004
+    name: POWER_DELIVERY_TIMELINE
+    category: physical_infrastructure
+    description: "Regional utilities, ISOs, and substations energize contracted critical IT megawatts according to scheduled development milestones."
+    observable_proxy: "PJM / MISO interconnection queue study progression; FERC docket filings; developer 8-K milestone updates."
+    base_case: "Substations energize within planned 6-month buffer windows; liquidated damages clauses remain dormant."
+    stress_case: "Utility transformer delays or regulatory bottlenecks delay energization by 12-18 months, delaying lease commencement while debt carrying costs accumulate."
+    affected_obligation_types: [datacenter_lease, guarantee_parent]
+
+  A005:
+    assumption_id: A005
+    name: ANCHOR_CUSTOMER_CONTINUATION
+    category: commercial_concentration
+    description: "Dominant anchor off-takers (e.g., Microsoft representing 67% of CoreWeave FY25 revenue) fulfill full contractual term and exercise renewal/expansion options."
+    observable_proxy: "Customer concentration disclosures in 10-K Footnotes; hyperscaler cloud capex disclosures and internal silicon roadmaps (e.g. Maia chips)."
+    base_case: "Hyperscalers continue offloading spillover training/inference demand to specialized neoclouds."
+    stress_case: "Anchor customer decelerates third-party hosting as proprietary custom silicon ramps, exercising termination rights or trimming 30% of optional cluster tiers."
+    affected_obligation_types: [anchor_offtake, datacenter_lease, debt_facility]
+
+  A006:
+    assumption_id: A006
+    name: HYPERSCALER_CAPEX_EXPANSION
+    category: macro_capex
+    description: "Aggregate capital expenditures across the top 4 hyperscalers continue growing at >20% CAGR through 2028."
+    observable_proxy: "Consolidated cash flows from investing (Payments for PP&E) in quarterly 10-Q filings of MSFT, GOOGL, AMZN, META."
+    base_case: "Hyperscaler annual capex exceeds $200B+ aggregate run rate, maintaining hardware backlog."
+    stress_case: "Hyperscalers enter a 'digestion phase' where capex growth slows to 0-5%, creating acute excess inventory down the OEM/silicon supply chain."
+    affected_obligation_types: [gpu_procurement, server_assembly, anchor_offtake]
+
+  A007:
+    assumption_id: A007
+    name: BACKLOG_CASH_CONVERSION
+    category: contract_realization
+    description: "Multi-billion dollar Remaining Performance Obligations (RPO) and signed customer backlogs convert into collected cash revenue without material dispute or restructuring."
+    observable_proxy: "Contract asset balances; allowance for credit losses; quarterly RPO aging schedules."
+    base_case: "90%+ of backlog converts to cash according to stated schedule."
+    stress_case: "15-25% of backlog is restructured, postponed, or subject to performance offsets due to software stack delays or power hiccups."
+    affected_obligation_types: [anchor_offtake, datacenter_lease]

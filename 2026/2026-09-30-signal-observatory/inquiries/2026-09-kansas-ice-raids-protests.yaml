@@ -1,0 +1,56 @@
+inquiry:
+  id: "2026-09-kansas-ice-raids-protests"
+  question: >
+    What local video footage, eyewitness accounts, community protests, workplace
+    and meatpacking shutdowns, and public discourse exist regarding ICE enforcement
+    operations and community pushback across Southwest and South Kansas (Dodge City,
+    Liberal, Garden City, Wichita, Sedgwick County)?
+  mode: investigate
+
+  scope:
+    time:
+      since: "2024-01-01T00:00:00Z"
+      until: "2026-09-30T23:59:59Z"
+    geography:
+      - "Dodge City"
+      - "Liberal"
+      - "Garden City"
+      - "Wichita"
+      - "Southwest Kansas"
+      - "South Kansas"
+      - "Sedgwick County"
+    languages: ["en", "es"]
+
+  seeds:
+    terms:
+      - "ICE raids southwest Kansas"
+      - "Dodge City Kansas ICE protest"
+      - "Liberal Kansas ICE protest"
+      - "Kansas ICE meatpacking shutdown"
+      - "Wichita Kansas ICE protest"
+      - "protestas ICE Dodge City"
+      - "redadas ICE Kansas"
+      - "ICE activity Kansas Roger Marshall"
+    hashtags: []
+    accounts: []
+    subreddits:
+      - "kansas"
+      - "wichita"
+
+  platforms:
+    - youtube
+    - reddit
+    - web
+
+  budget:
+    max_queries: 16
+    max_artifacts: 150
+    max_media_downloads: 6
+
+  preservation: candidates
+
+  analysis:
+    cluster_narratives: true
+    track_media_spread: true
+    identify_firsthand_sources: true
+    find_contradictions: true

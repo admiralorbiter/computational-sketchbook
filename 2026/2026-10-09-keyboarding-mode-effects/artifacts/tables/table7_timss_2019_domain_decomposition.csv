@@ -1,0 +1,7 @@
+domain_dimension,domain_name,n_mc_items,mc_mean_diff_pp,n_cr_items,cr_mean_diff_pp,format_gap_pp
+Cognitive Domain,Knowing,25,-0.66,16,-2.11,-1.45
+Cognitive Domain,Applying,16,-1.73,24,-3.57,-1.84
+Cognitive Domain,Reasoning,8,2.61,10,-7.54,-10.14
+Content Domain,Number,32,-1.09,30,-5.05,-3.96
+Content Domain,Measurement and Geometry,14,0.88,12,-2.08,-2.96
+Content Domain,Data,3,-0.25,8,-2.3,-2.05

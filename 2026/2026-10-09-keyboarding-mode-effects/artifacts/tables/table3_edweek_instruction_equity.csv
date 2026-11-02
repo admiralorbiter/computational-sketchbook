@@ -1,0 +1,6 @@
+metric,reported_value,verification_status,context
+Grades K-2 Keyboarding Instruction (Lower-Poverty Systems),74.0%,Verified (EdWeek 2024),Three-quarters of leaders in lower-poverty systems report K-2 typing instruction.
+Grades K-2 Keyboarding Instruction (Higher-Poverty Systems),51.0%,Verified (EdWeek 2024),Approximately half of leaders in higher-poverty systems report K-2 typing instruction.
+Grades K-2 Socioeconomic Disparity Ratio,1.45x,Author Calculation (74% / 51%),Lower-poverty systems are ~1.45 times more likely to report early keyboarding instruction.
+Standalone Keyboarding Class Delivery (All Grades),19.0% (8% standalone only + 11% combined),Verified (EdWeek 2024),Only ~1 in 5 districts maintain dedicated standalone keyboarding classes.
+Integrated within Regular Classroom Instruction,50.0%,Verified (EdWeek 2024),Half of districts rely on teachers embedding typing into general coursework.

@@ -1,0 +1,191 @@
+usd_code,nces_lea_id,district_name,subject,school_year,group_name,test_pool,total_tested_n,part_rate_pct,not_tested_pct
+202,2012360,Turner-Kansas City,Math,2019,*** All Students ***,2140,2127,99.39,0.61
+202,2012360,Turner-Kansas City,Math,2021,*** All Students ***,2020,1722,85.25,14.75
+202,2012360,Turner-Kansas City,Math,2022,*** All Students ***,1995,1960,98.25,1.75
+202,2012360,Turner-Kansas City,Math,2023,*** All Students ***,1958,1923,98.21,1.79
+202,2012360,Turner-Kansas City,Math,2024,*** All Students ***,1934,1920,99.28,0.72
+202,2012360,Turner-Kansas City,ELA,2019,*** All Students ***,2138,2127,99.49,0.51
+202,2012360,Turner-Kansas City,ELA,2021,*** All Students ***,2014,1716,85.20,14.80
+202,2012360,Turner-Kansas City,ELA,2022,*** All Students ***,1999,1971,98.60,1.40
+202,2012360,Turner-Kansas City,ELA,2023,*** All Students ***,1957,1924,98.31,1.69
+202,2012360,Turner-Kansas City,ELA,2024,*** All Students ***,1936,1922,99.28,0.72
+203,2010680,Piper-Kansas City,Math,2019,*** All Students ***,1307,1298,99.31,0.69
+203,2010680,Piper-Kansas City,Math,2021,*** All Students ***,1418,1337,94.29,5.71
+203,2010680,Piper-Kansas City,Math,2022,*** All Students ***,1450,1430,98.62,1.38
+203,2010680,Piper-Kansas City,Math,2023,*** All Students ***,1509,1494,99.01,0.99
+203,2010680,Piper-Kansas City,Math,2024,*** All Students ***,1541,1513,98.18,1.82
+203,2010680,Piper-Kansas City,ELA,2019,*** All Students ***,1309,1300,99.31,0.69
+203,2010680,Piper-Kansas City,ELA,2021,*** All Students ***,1414,1365,96.53,3.47
+203,2010680,Piper-Kansas City,ELA,2022,*** All Students ***,1452,1432,98.62,1.38
+203,2010680,Piper-Kansas City,ELA,2023,*** All Students ***,1510,1493,98.87,1.13
+203,2010680,Piper-Kansas City,ELA,2024,*** All Students ***,1542,1514,98.18,1.82
+204,2004050,Bonner Springs,Math,2019,*** All Students ***,1443,1431,99.17,0.83
+204,2004050,Bonner Springs,Math,2021,*** All Students ***,1368,1066,77.92,22.08
+204,2004050,Bonner Springs,Math,2022,*** All Students ***,1319,1304,98.86,1.14
+204,2004050,Bonner Springs,Math,2023,*** All Students ***,1284,1273,99.14,0.86
+204,2004050,Bonner Springs,Math,2024,*** All Students ***,1306,1297,99.31,0.69
+204,2004050,Bonner Springs,ELA,2019,*** All Students ***,1445,1430,98.96,1.04
+204,2004050,Bonner Springs,ELA,2021,*** All Students ***,1316,1029,78.19,21.81
+204,2004050,Bonner Springs,ELA,2022,*** All Students ***,1320,1302,98.64,1.36
+204,2004050,Bonner Springs,ELA,2023,*** All Students ***,1286,1277,99.30,0.70
+204,2004050,Bonner Springs,ELA,2024,*** All Students ***,1306,1296,99.23,0.77
+207,2006330,Fort Leavenworth,Math,2019,*** All Students ***,960,958,99.79,0.21
+207,2006330,Fort Leavenworth,Math,2021,*** All Students ***,797,796,99.87,0.13
+207,2006330,Fort Leavenworth,Math,2022,*** All Students ***,826,815,98.67,1.33
+207,2006330,Fort Leavenworth,Math,2023,*** All Students ***,877,874,99.66,0.34
+207,2006330,Fort Leavenworth,Math,2024,*** All Students ***,840,840,100.00,0.00
+207,2006330,Fort Leavenworth,ELA,2019,*** All Students ***,960,958,99.79,0.21
+207,2006330,Fort Leavenworth,ELA,2021,*** All Students ***,796,794,99.75,0.25
+207,2006330,Fort Leavenworth,ELA,2022,*** All Students ***,827,813,98.31,1.69
+207,2006330,Fort Leavenworth,ELA,2023,*** All Students ***,879,864,98.29,1.71
+207,2006330,Fort Leavenworth,ELA,2024,*** All Students ***,842,841,99.88,0.12
+229,2012000,Blue Valley,Math,2019,*** All Students ***,11918,11831,99.27,0.73
+229,2012000,Blue Valley,Math,2021,*** All Students ***,11666,11153,95.60,4.40
+229,2012000,Blue Valley,Math,2022,*** All Students ***,11665,11547,98.99,1.01
+229,2012000,Blue Valley,Math,2023,*** All Students ***,11931,11808,98.97,1.03
+229,2012000,Blue Valley,Math,2024,*** All Students ***,11771,11633,98.83,1.17
+229,2012000,Blue Valley,ELA,2019,*** All Students ***,11919,11835,99.30,0.70
+229,2012000,Blue Valley,ELA,2021,*** All Students ***,11552,11049,95.65,4.35
+229,2012000,Blue Valley,ELA,2022,*** All Students ***,11665,11562,99.12,0.88
+229,2012000,Blue Valley,ELA,2023,*** All Students ***,11941,11821,99.00,1.00
+229,2012000,Blue Valley,ELA,2024,*** All Students ***,11775,11667,99.08,0.92
+230,2011850,Spring Hill,Math,2019,*** All Students ***,2174,2157,99.22,0.78
+230,2011850,Spring Hill,Math,2021,*** All Students ***,2860,2261,79.06,20.94
+230,2011850,Spring Hill,Math,2022,*** All Students ***,2782,2545,91.48,8.52
+230,2011850,Spring Hill,Math,2023,*** All Students ***,2804,2578,91.94,8.06
+230,2011850,Spring Hill,Math,2024,*** All Students ***,2791,2664,95.45,4.55
+230,2011850,Spring Hill,ELA,2019,*** All Students ***,2176,2158,99.17,0.83
+230,2011850,Spring Hill,ELA,2021,*** All Students ***,2858,2259,79.04,20.96
+230,2011850,Spring Hill,ELA,2022,*** All Students ***,2778,2544,91.58,8.42
+230,2011850,Spring Hill,ELA,2023,*** All Students ***,2803,2577,91.94,8.06
+230,2011850,Spring Hill,ELA,2024,*** All Students ***,2792,2678,95.92,4.08
+231,2006420,Gardner Edgerton,Math,2019,*** All Students ***,3217,3194,99.29,0.71
+231,2006420,Gardner Edgerton,Math,2021,*** All Students ***,3155,3021,95.75,4.25
+231,2006420,Gardner Edgerton,Math,2022,*** All Students ***,3121,3076,98.56,1.44
+231,2006420,Gardner Edgerton,Math,2023,*** All Students ***,3091,3058,98.93,1.07
+231,2006420,Gardner Edgerton,Math,2024,*** All Students ***,3071,2987,97.26,2.74
+231,2006420,Gardner Edgerton,ELA,2019,*** All Students ***,3219,3199,99.38,0.62
+231,2006420,Gardner Edgerton,ELA,2021,*** All Students ***,3151,3006,95.40,4.60
+231,2006420,Gardner Edgerton,ELA,2022,*** All Students ***,3121,3082,98.75,1.25
+231,2006420,Gardner Edgerton,ELA,2023,*** All Students ***,3089,3059,99.03,0.97
+231,2006420,Gardner Edgerton,ELA,2024,*** All Students ***,3074,3004,97.72,2.28
+232,2005490,De Soto,Math,2019,*** All Students ***,3952,3937,99.62,0.38
+232,2005490,De Soto,Math,2021,*** All Students ***,3821,3683,96.39,3.61
+232,2005490,De Soto,Math,2022,*** All Students ***,3969,3936,99.17,0.83
+232,2005490,De Soto,Math,2023,*** All Students ***,3926,3895,99.21,0.79
+232,2005490,De Soto,Math,2024,*** All Students ***,3960,3918,98.94,1.06
+232,2005490,De Soto,ELA,2019,*** All Students ***,3954,3941,99.67,0.33
+232,2005490,De Soto,ELA,2021,*** All Students ***,3826,3695,96.58,3.42
+232,2005490,De Soto,ELA,2022,*** All Students ***,3972,3943,99.27,0.73
+232,2005490,De Soto,ELA,2023,*** All Students ***,3925,3892,99.16,0.84
+232,2005490,De Soto,ELA,2024,*** All Students ***,3961,3916,98.86,1.14
+233,2010140,Olathe,Math,2019,*** All Students ***,15759,15619,99.11,0.89
+233,2010140,Olathe,Math,2021,*** All Students ***,15146,14177,93.60,6.40
+233,2010140,Olathe,Math,2022,*** All Students ***,14951,14728,98.51,1.49
+233,2010140,Olathe,Math,2023,*** All Students ***,14883,14766,99.21,0.79
+233,2010140,Olathe,Math,2024,*** All Students ***,14756,14578,98.79,1.21
+233,2010140,Olathe,ELA,2019,*** All Students ***,15785,15662,99.22,0.78
+233,2010140,Olathe,ELA,2021,*** All Students ***,15054,14137,93.91,6.09
+233,2010140,Olathe,ELA,2022,*** All Students ***,14970,14758,98.58,1.42
+233,2010140,Olathe,ELA,2023,*** All Students ***,14907,14783,99.17,0.83
+233,2010140,Olathe,ELA,2024,*** All Students ***,14769,14615,98.96,1.04
+367,2010260,Osawatomie,Math,2019,*** All Students ***,547,533,97.44,2.56
+367,2010260,Osawatomie,Math,2021,*** All Students ***,536,528,98.51,1.49
+367,2010260,Osawatomie,Math,2022,*** All Students ***,534,529,99.06,0.94
+367,2010260,Osawatomie,Math,2023,*** All Students ***,536,530,98.88,1.12
+367,2010260,Osawatomie,Math,2024,*** All Students ***,491,483,98.37,1.63
+367,2010260,Osawatomie,ELA,2019,*** All Students ***,549,544,99.09,0.91
+367,2010260,Osawatomie,ELA,2021,*** All Students ***,537,527,98.14,1.86
+367,2010260,Osawatomie,ELA,2022,*** All Students ***,534,530,99.25,0.75
+367,2010260,Osawatomie,ELA,2023,*** All Students ***,536,533,99.44,0.56
+367,2010260,Osawatomie,ELA,2024,*** All Students ***,491,487,99.19,0.81
+368,2010500,Paola,Math,2019,*** All Students ***,955,951,99.58,0.42
+368,2010500,Paola,Math,2021,*** All Students ***,899,890,99.00,1.00
+368,2010500,Paola,Math,2022,*** All Students ***,956,947,99.06,0.94
+368,2010500,Paola,Math,2023,*** All Students ***,956,954,99.79,0.21
+368,2010500,Paola,Math,2024,*** All Students ***,961,960,99.90,0.10
+368,2010500,Paola,ELA,2019,*** All Students ***,955,950,99.48,0.52
+368,2010500,Paola,ELA,2021,*** All Students ***,901,891,98.89,1.11
+368,2010500,Paola,ELA,2022,*** All Students ***,956,947,99.06,0.94
+368,2010500,Paola,ELA,2023,*** All Students ***,957,952,99.48,0.52
+368,2010500,Paola,ELA,2024,*** All Students ***,961,959,99.79,0.21
+416,2008970,Louisburg,Math,2019,*** All Students ***,928,924,99.57,0.43
+416,2008970,Louisburg,Math,2021,*** All Students ***,889,876,98.54,1.46
+416,2008970,Louisburg,Math,2022,*** All Students ***,845,839,99.29,0.71
+416,2008970,Louisburg,Math,2023,*** All Students ***,893,885,99.10,0.90
+416,2008970,Louisburg,Math,2024,*** All Students ***,863,846,98.03,1.97
+416,2008970,Louisburg,ELA,2019,*** All Students ***,929,926,99.68,0.32
+416,2008970,Louisburg,ELA,2021,*** All Students ***,889,877,98.65,1.35
+416,2008970,Louisburg,ELA,2022,*** All Students ***,847,841,99.29,0.71
+416,2008970,Louisburg,ELA,2023,*** All Students ***,894,885,98.99,1.01
+416,2008970,Louisburg,ELA,2024,*** All Students ***,863,848,98.26,1.74
+449,2005640,Easton,Math,2019,*** All Students ***,331,331,100.00,0.00
+449,2005640,Easton,Math,2021,*** All Students ***,309,307,99.35,0.65
+449,2005640,Easton,Math,2022,*** All Students ***,349,347,99.43,0.57
+449,2005640,Easton,Math,2023,*** All Students ***,338,334,98.82,1.18
+449,2005640,Easton,Math,2024,*** All Students ***,355,353,99.44,0.56
+449,2005640,Easton,ELA,2019,*** All Students ***,331,331,100.00,0.00
+449,2005640,Easton,ELA,2021,*** All Students ***,308,306,99.35,0.65
+449,2005640,Easton,ELA,2022,*** All Students ***,350,348,99.43,0.57
+449,2005640,Easton,ELA,2023,*** All Students ***,338,335,99.11,0.89
+449,2005640,Easton,ELA,2024,*** All Students ***,355,353,99.44,0.56
+453,2008430,Leavenworth,Math,2019,*** All Students ***,1814,1804,99.45,0.55
+453,2008430,Leavenworth,Math,2021,*** All Students ***,1778,1728,97.19,2.81
+453,2008430,Leavenworth,Math,2022,*** All Students ***,1793,1780,99.27,0.73
+453,2008430,Leavenworth,Math,2023,*** All Students ***,1729,1707,98.73,1.27
+453,2008430,Leavenworth,Math,2024,*** All Students ***,1681,1669,99.29,0.71
+453,2008430,Leavenworth,ELA,2019,*** All Students ***,1821,1812,99.51,0.49
+453,2008430,Leavenworth,ELA,2021,*** All Students ***,1658,1611,97.17,2.83
+453,2008430,Leavenworth,ELA,2022,*** All Students ***,1796,1784,99.33,0.67
+453,2008430,Leavenworth,ELA,2023,*** All Students ***,1727,1711,99.07,0.93
+453,2008430,Leavenworth,ELA,2024,*** All Students ***,1687,1676,99.35,0.65
+458,2003780,Basehor-Linwood,Math,2019,*** All Students ***,1396,1385,99.21,0.79
+458,2003780,Basehor-Linwood,Math,2021,*** All Students ***,1486,1458,98.12,1.88
+458,2003780,Basehor-Linwood,Math,2022,*** All Students ***,1547,1529,98.84,1.16
+458,2003780,Basehor-Linwood,Math,2023,*** All Students ***,1588,1575,99.18,0.82
+458,2003780,Basehor-Linwood,Math,2024,*** All Students ***,1594,1586,99.50,0.50
+458,2003780,Basehor-Linwood,ELA,2019,*** All Students ***,1397,1390,99.50,0.50
+458,2003780,Basehor-Linwood,ELA,2021,*** All Students ***,1472,1446,98.23,1.77
+458,2003780,Basehor-Linwood,ELA,2022,*** All Students ***,1548,1533,99.03,0.97
+458,2003780,Basehor-Linwood,ELA,2023,*** All Students ***,1588,1576,99.24,0.76
+458,2003780,Basehor-Linwood,ELA,2024,*** All Students ***,1595,1587,99.50,0.50
+464,2012210,Tonganoxie,Math,2019,*** All Students ***,1078,1053,97.68,2.32
+464,2012210,Tonganoxie,Math,2021,*** All Students ***,1021,1005,98.43,1.57
+464,2012210,Tonganoxie,Math,2022,*** All Students ***,1030,1017,98.74,1.26
+464,2012210,Tonganoxie,Math,2023,*** All Students ***,1012,1003,99.11,0.89
+464,2012210,Tonganoxie,Math,2024,*** All Students ***,1007,996,98.91,1.09
+464,2012210,Tonganoxie,ELA,2019,*** All Students ***,1078,1055,97.87,2.13
+464,2012210,Tonganoxie,ELA,2021,*** All Students ***,1020,1004,98.43,1.57
+464,2012210,Tonganoxie,ELA,2022,*** All Students ***,1030,1021,99.13,0.87
+464,2012210,Tonganoxie,ELA,2023,*** All Students ***,1014,1005,99.11,0.89
+464,2012210,Tonganoxie,ELA,2024,*** All Students ***,1007,996,98.91,1.09
+469,2008340,Lansing,Math,2019,*** All Students ***,1409,1401,99.43,0.57
+469,2008340,Lansing,Math,2021,*** All Students ***,1389,1353,97.41,2.59
+469,2008340,Lansing,Math,2022,*** All Students ***,1360,1344,98.82,1.18
+469,2008340,Lansing,Math,2023,*** All Students ***,1385,1368,98.77,1.23
+469,2008340,Lansing,Math,2024,*** All Students ***,1278,1259,98.51,1.49
+469,2008340,Lansing,ELA,2019,*** All Students ***,1409,1401,99.43,0.57
+469,2008340,Lansing,ELA,2021,*** All Students ***,1377,1349,97.97,2.03
+469,2008340,Lansing,ELA,2022,*** All Students ***,1364,1347,98.75,1.25
+469,2008340,Lansing,ELA,2023,*** All Students ***,1389,1373,98.85,1.15
+469,2008340,Lansing,ELA,2024,*** All Students ***,1279,1260,98.51,1.49
+500,2007950,Kansas City,Math,2019,*** All Students ***,11799,11660,98.82,1.18
+500,2007950,Kansas City,Math,2021,*** All Students ***,11249,9936,88.33,11.67
+500,2007950,Kansas City,Math,2022,*** All Students ***,11105,10584,95.31,4.69
+500,2007950,Kansas City,Math,2023,*** All Students ***,10773,10347,96.05,3.95
+500,2007950,Kansas City,Math,2024,*** All Students ***,10747,10417,96.93,3.07
+500,2007950,Kansas City,ELA,2019,*** All Students ***,11811,11683,98.92,1.08
+500,2007950,Kansas City,ELA,2021,*** All Students ***,10832,9671,89.28,10.72
+500,2007950,Kansas City,ELA,2022,*** All Students ***,11127,10603,95.29,4.71
+500,2007950,Kansas City,ELA,2023,*** All Students ***,10765,10407,96.67,3.33
+500,2007950,Kansas City,ELA,2024,*** All Students ***,10764,10428,96.88,3.12
+512,2011640,Shawnee Mission Pub Sch,Math,2019,*** All Students ***,14068,14023,99.68,0.32
+512,2011640,Shawnee Mission Pub Sch,Math,2021,*** All Students ***,13610,12456,91.52,8.48
+512,2011640,Shawnee Mission Pub Sch,Math,2022,*** All Students ***,13569,13507,99.54,0.46
+512,2011640,Shawnee Mission Pub Sch,Math,2023,*** All Students ***,13548,13466,99.39,0.61
+512,2011640,Shawnee Mission Pub Sch,Math,2024,*** All Students ***,13743,13656,99.37,0.63
+512,2011640,Shawnee Mission Pub Sch,ELA,2019,*** All Students ***,14098,14054,99.69,0.31
+512,2011640,Shawnee Mission Pub Sch,ELA,2021,*** All Students ***,13594,12445,91.55,8.45
+512,2011640,Shawnee Mission Pub Sch,ELA,2022,*** All Students ***,13587,13532,99.60,0.40
+512,2011640,Shawnee Mission Pub Sch,ELA,2023,*** All Students ***,13563,13489,99.45,0.55
+512,2011640,Shawnee Mission Pub Sch,ELA,2024,*** All Students ***,13754,13689,99.53,0.47

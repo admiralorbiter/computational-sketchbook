@@ -1,0 +1,89 @@
+# Research Design: What Does an "A" Actually Mean?
+## Grades, Learning, and the Institutional Incentives Behind Both
+
+**Project Slug**: `2026-10-08-what-does-an-a-mean`  
+**Domain**: Education Policy / Psychometrics / Institutional Economics / Secondary Mathematics  
+**Focal Geography**: Kansas City Metropolitan Area & Missouri Statewide  
+**Date**: October 8, 2026  
+
+---
+
+## 1. Central Inquiry & Framing
+
+Modern public education operates under an institutional contradiction:
+> **We desire schools to maximize student learning, but we evaluate and reward their performance using proxy measures—course grades, graduation rates, and standardized test scores—that can be systematically improved without necessarily increasing authentic learning.**
+
+This investigation does not assume that grades or standardized tests are useless or corrupt. Rather, it investigates what happens when imperfect measures of learning become high-stakes targets for students, teachers, building administrators, and state accountability systems.
+
+### Central Research Question
+> **When schools are rewarded for better grades and test scores, how much of the resulting improvement represents actual learning, and how much reflects changes in behavior around the measures themselves?**
+
+### The Crucial Conceptual Distinction
+- **Measurement Imperfection**: A standardized test or course grade may capture only a subset of relevant academic and non-cognitive capabilities. This is an epistemic measurement constraint.
+- **Incentive Distortion**: When an accountability system attaches funding, accreditation, administrative job security, or public letter grades to a measure, actors alter their behavior to satisfy the target (Campbell's Law, Goodhart's Law).
+
+A test can be an imperfect measure of learning without creating perverse incentives if nothing high-stakes depends on it. Conversely, an accountability system can severely distort instructional practice even if its underlying assessment instrument has acceptable psychometric reliability.
+
+---
+
+## 2. Theoretical Framework
+
+```mermaid
+flowchart TD
+    State["1. State Accountability System<br>(MSIP 6 / Sept 2026 A–F Framework)"]
+    Admin["2. District & Building Leadership<br>(Accreditation, Public Ranking, Pass Targets)"]
+    Teacher["3. Classroom Teacher<br>(Grading Policies, Homework Weighting, Retake Rules)"]
+    Student["4. Student Experience & Credential<br>(GPA, Algebra I Credit, High School Diploma)"]
+    Post["5. Postsecondary Reality<br>(College Retention, Remedial Math, Workforce Readiness)"]
+
+    State -->|"APR Points & Letter Grades"| Admin
+    Admin -->|"Pass-Rate Pressure & Evaluation"| Teacher
+    Teacher -->|"Assigns Letter Grades (A, B, C, D, F)"| Student
+    State -.->|"External Statewide Assessment (Alg I EOC)"| Student
+    Student -->|"Signals Competency via Transcript"| Post
+```
+
+### Core Literature Pillars
+1. **Campbell's Law (1979)**: The more any quantitative social indicator is used for social decision-making, the more subject it will be to corruption pressures and the more apt it will be to distort and corrupt the social processes it is intended to monitor.
+2. **Goodhart's Law (1975)**: When a measure becomes a target, it ceases to be a good measure.
+3. **Multitask Principal-Agent Problem (Holmström & Milgrom, 1991)**: When an agent performs multidimensional tasks (fostering deep conceptual understanding, critical thinking, behavioral habits) but the principal can only measure easily verifiable outputs (test pass rates, credit completion), the agent rationally reallocates effort toward the measured margins.
+4. **Authentic Learning vs. Strategic Distortion (Dee & Jacob, 2011 vs. Jacob, 2005; McElroy, 2023)**:
+   - *Jacob (2005)* documented strategic score inflation in Chicago under high-stakes testing (test prep, placement shifts, cheating).
+   - *Dee & Jacob (2011)* proved that No Child Left Behind (NCLB) produced statistically significant, authentic gains in 4th and 8th grade mathematics on low-stakes NAEP assessments, demonstrating that accountability pressure can induce real instructional effort.
+   - *McElroy (2023)* (*Does test-based accountability improve more than just test scores?*, *Economics of Education Review*, 94, 102381) demonstrated that high school accountability mandates elevated graduation rates without producing proportional college degree completion, raising observational questions about whether exit-boundary incentives produce authentic learning gains or credential inflation.
+5. **Grading Standards and External Assessment (Gershenson, 2018, 2020; Tyner & Gershenson, 2020)**:
+   - Using statewide North Carolina student records, Gershenson (*Grade Inflation in High Schools (2005–2016)*, Fordham Institute, 2018, Figure 2, p. 16) documented that 36% of students receiving a 'B', 71% of students receiving a 'C', and 90% of students receiving a 'D/F' in Algebra I failed to score proficient on the external state end-of-course exam—even though the state exam counted for at least 20% of the final course grade.
+   - In a subsequent study (*Great Expectations*, Fordham Institute, 2020; Tyner & Gershenson, 2020, *Economics of Education Review*, 78, 102037), Gershenson showed that grading standards vary widely across classrooms and that higher grading standards directly benefit students in subsequent coursework (Geometry and Algebra II), particularly disadvantaged students.
+6. **The Grade vs. Test Information Tension (Allensworth & Clark, 2020)**:
+   - High school GPA is substantially more predictive of six-year college completion than ACT scores across 17,753 Chicago Public Schools graduates who immediately enrolled in four-year colleges (drawn from a broader cohort of 55,084 students analyzed for enrollment).
+   - Grades capture multi-month non-cognitive persistence, regular attendance, task completion, and behavioral self-regulation that standardized tests fail to capture.
+   - Therefore, a rising GPA is not simply "fraud"; it reflects a complex composite signal of academic mastery and behavioral conformity.
+
+---
+
+## 3. Why Secondary Algebra I?
+
+Algebra I is the single most revealing focal course in secondary education because:
+1. **The Gateway Status**: Algebra I is universally recognized as the foundational gateway to advanced mathematics, STEM coursework, high school graduation, and college eligibility.
+2. **Dual Independent Observation**: In Missouri, Algebra I generates two parallel, contemporaneous observations for the same student:
+   - A **teacher-assigned course letter grade** (reflecting classroom homework, participation, tests, retakes, and attendance over two semesters).
+   - An **external statewide End-of-Course (EOC) assessment** (standardized across all public school students, scored independently by DESE).
+3. **The Missouri Mandate Structure**: Missouri requires all high school students to *participate* in the Algebra I EOC (or Algebra II for middle-school completers) for federal and state accountability under MSIP 6. Critically, Missouri does *not* require students to achieve a proficient score to graduate; high school graduation requires course credit, not state test proficiency.
+4. **The Empirical Gap**: What does passing Algebra I actually tell us about mathematical understanding? When and why do course grades and EOC proficiency diverge across different school contexts?
+
+---
+
+## 4. Key Hypotheses
+
+- **H1 (National Transcript Divergence)**: Between 2009 and 2019, national high school transcripts reflect rising course grades and GPAs, while external standardized assessments (NAEP 12th grade mathematics and ACT STEM scores) stagnated or declined—with the sharpest divergence occurring among graduates completing rigorous curricula.
+- **H2 (Metropolitan Graduation and Achievement Distribution)**: Across Kansas City metropolitan high schools, graduation rates and mathematics achievement (MAP Performance Index) are positively correlated overall ($r = +0.68$), driven by the substantial performance divide between suburban and urban schools. Within suburban and inner-ring schools, graduation rates cluster near the ceiling (25 of 45 schools $\ge 90\%$, while 11 schools, largely urban and charter, have graduation rates $< 80\%$), while measured mathematics achievement spans a massive socioeconomic gradient (MPI 278 to 458 in the full sample; 300.1 to 457.8 within the $\ge 90\%$ graduation tier), strongly correlated with free/reduced-price lunch ($r = -0.76$) and USDA direct certification ($r = -0.83$).
+- **H3 (Decoupling of Passing Marks and External Proficiency)**: Observational and survey evidence suggests that institutional pressure to reduce course failure rates leads to credit assignment based heavily on attendance, homework completion, and credit recovery. As demonstrated empirically in North Carolina (Gershenson, 2018), a substantial share of students receiving passing grades (including 36% of 'B' students and 71% of 'C' students) fail to attain proficiency on external standardized end-of-course exams, despite the state exam contributing to the grade. In Missouri, establishing the exact student-level concordance between teacher grades and EOC scores remains an active, open research question.
+
+---
+
+## 5. Analytical Execution
+
+This project implements three primary empirical graphs:
+1. **Graph 1: National Trends Aligned Panel**: NAEP High School Transcript Study GPAs (2009–2019) and ACT GPAs (2010–2021) plotted alongside NAEP 12th Grade Mathematics scores and ACT composite scores, stratified by curriculum rigor.
+2. **Graph 2: Kansas City High School Accountability Scatter**: 2022 Cross-Sectional Benchmark (45 complete high schools) plotting 4-Year Graduation Rate vs. Mathematics MAP Performance Index (MPI), documented alongside poverty measures (FRPL and Direct Certification) and school enrollment.
+3. **Graph 3: The Algebra I Signaling Benchmark**: Seth Gershenson's (2018 Fordham Institute, Fig. 2, p. 16; Tyner & Gershenson, 2020) empirical distribution of statewide North Carolina Algebra I EOC proficiency conditional on teacher-assigned course grades (A, B, C, D/F Combined), framed alongside the open research agenda for Missouri student-level matching.

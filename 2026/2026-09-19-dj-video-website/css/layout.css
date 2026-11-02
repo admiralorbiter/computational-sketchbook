@@ -1,0 +1,175 @@
+/* ==========================================================================
+   Base Reset, Canvas & Layout
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+img, video, iframe {
+  max-width: 100%;
+}
+
+a {
+  color: var(--ms-blue-dark);
+}
+
+body.myspace-theme-container {
+  background-color: var(--ms-canvas-bg);
+  background-image: radial-gradient(var(--ms-blue-primary) 1px, transparent 1px);
+  background-size: 16px 16px;
+  color: var(--ms-text-main);
+  font-family: var(--ms-font-family);
+  font-size: var(--ms-font-size-base);
+  line-height: var(--ms-line-height-base);
+  margin: 0;
+  padding: 20px 10px;
+  min-height: 100vh;
+}
+
+/* Accessibility Skip Link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--ms-orange-primary);
+  color: var(--ms-text-white);
+  padding: 8px;
+  z-index: 100;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* Main Container Wrapper */
+.myspace-container {
+  max-width: var(--ms-container-max);
+  margin: 0 auto;
+  background-color: var(--ms-container-bg);
+  border: 2px solid var(--ms-blue-primary);
+  padding: 15px;
+  box-shadow: var(--ms-shadow-container);
+  border-radius: var(--ms-radius-md);
+}
+
+/* Top Header Banner */
+.myspace-header-banner {
+  background-color: var(--ms-blue-primary);
+  color: var(--ms-text-white);
+  padding: 18px;
+  text-align: center;
+  margin-bottom: 15px;
+  border: 1px solid var(--ms-blue-border);
+}
+
+.myspace-header-banner h1 {
+  font-family: var(--ms-font-family);
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin: 0;
+  color: var(--ms-text-white);
+  text-transform: lowercase;
+  letter-spacing: -1px;
+}
+
+.myspace-header-banner p {
+  color: var(--ms-blue-banner-sub);
+  font-size: 0.95rem;
+  font-weight: bold;
+  margin: 6px 0 12px;
+}
+
+/* Focus Visibility (WCAG 2.2 SC 2.4.7) */
+:focus-visible {
+  outline: 2px solid var(--ms-orange-primary);
+  outline-offset: 2px;
+}
+
+/* Primary Navigation */
+.myspace-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.myspace-nav a {
+  color: var(--ms-text-white);
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 6px 12px;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: var(--ms-radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px; /* Meets WCAG 2.2 SC 2.5.8 target size */
+}
+
+.myspace-nav a:hover,
+.myspace-nav a[aria-current="page"] {
+  background-color: var(--ms-container-bg);
+  color: var(--ms-blue-dark);
+}
+
+/* 2-Column Grid Layout */
+.myspace-grid {
+  display: grid;
+  grid-template-columns: var(--ms-grid-left-col) 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 800px) {
+  .myspace-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Global Footer */
+.myspace-footer {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid var(--ms-blue-primary);
+  text-align: center;
+  color: var(--ms-text-muted);
+  font-size: var(--ms-font-size-sm);
+}
+
+.myspace-footer nav ul {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.myspace-footer nav a {
+  color: var(--ms-blue-dark);
+  text-decoration: none;
+  font-weight: bold;
+  padding: 4px 6px;
+  display: inline-block;
+  min-height: 24px; /* Meets WCAG 2.2 SC 2.5.8 target size */
+}
+
+.myspace-footer nav a:hover {
+  text-decoration: underline;
+}
+
+.myspace-footer address {
+  font-style: normal;
+  margin-bottom: 8px;
+}
+
+.myspace-footer address a {
+  color: var(--ms-blue-dark);
+  font-weight: bold;
+}
+
+.myspace-footer address p {
+  margin: 2px 0;
+}

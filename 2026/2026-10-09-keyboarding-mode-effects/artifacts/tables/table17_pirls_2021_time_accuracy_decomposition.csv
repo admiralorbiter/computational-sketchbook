@@ -1,0 +1,3 @@
+item_format,n_observations,n_items,mean_time_s,mean_score,within_item_corr_log_time,within_item_beta_log_time,within_item_beta_raw_time_per_min,substantive_interpretation
+Multiple Choice (Selected Response),43658,124,46.9,71.3,-0.0595,-0.0327,-0.0191,"Negative gradient: Extra time spent reflects difficulty, hesitation, or guessing."
+Constructed Response (Open Ended),47718,149,130.5,61.7,0.066,0.0408,0.0112,"Positive gradient: Extra time spent reflects productive task engagement, drafting, and answer elaboration."

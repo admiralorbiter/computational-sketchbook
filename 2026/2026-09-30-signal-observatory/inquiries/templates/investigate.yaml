@@ -1,0 +1,51 @@
+# Signal Observatory — Investigation Inquiry Template
+#
+# Copy this file and customize for your specific research question.
+# Fields marked (required) must be filled in; others have sensible defaults.
+
+inquiry:
+  # (required) Unique identifier for this inquiry
+  id: "YYYY-MM-topic-slug"
+
+  # (required) The research question in plain language
+  question: >
+    What public discourse exists around [topic] in [location]
+    during [time period]?
+
+  mode: investigate  # investigate | watch | discover
+
+  scope:
+    time:
+      since: "2026-01-01"       # (required) ISO-8601 date
+      until: "2026-12-31"       # omit for open-ended
+    geography:                   # place names to focus on
+      - "Kansas City"
+    languages:
+      - "en"
+
+  seeds:
+    terms:                       # starting search terms
+      - "example topic"
+    hashtags:                    # known hashtags
+      - "#example"
+    accounts: []                 # known relevant accounts
+    subreddits: []               # relevant subreddits
+    urls: []                     # known relevant URLs
+
+  platforms:
+    - bluesky                    # V1: bluesky only
+    # - youtube                  # V1.1: requires API key
+    # - reddit                   # V1.1: requires OAuth
+
+  budget:
+    max_queries: 100             # search API calls
+    max_artifacts: 1000          # collected items
+    max_media_downloads: 100     # media files to download
+
+  preservation: candidates       # metadata | candidates | full
+
+  analysis:
+    cluster_narratives: true
+    track_media_spread: false
+    identify_firsthand_sources: false
+    find_contradictions: true

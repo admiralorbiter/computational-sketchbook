@@ -1,0 +1,54 @@
+# Signal Observatory Inquiry: Kansas City Public Transit & Streetcar Extension
+#
+# Investigates public discussion, local coverage, and community reaction
+# regarding the KC Streetcar Main Street extension and regional transit.
+
+inquiry:
+  id: "2026-09-kc-streetcar-transit"
+  question: >
+    What are residents, local observers, and media documenting and discussing
+    about the Kansas City Streetcar extension and public transit developments
+    in the Kansas City metropolitan area?
+  mode: investigate
+
+  scope:
+    time:
+      since: "2026-01-01"
+      until: "2026-12-31"
+    geography:
+      - "Kansas City"
+      - "Downtown KC"
+      - "Midtown KC"
+      - "Country Club Plaza"
+      - "Riverfront"
+    languages:
+      - "en"
+
+  seeds:
+    terms:
+      - "Kansas City streetcar"
+      - "KC Streetcar Main Street extension"
+      - "Kansas City public transit"
+    hashtags:
+      - "#KCStreetcar"
+      - "#RideKC"
+    accounts: []
+    subreddits:
+      - "kansascity"
+    urls: []
+
+  platforms:
+    - youtube
+
+  budget:
+    max_queries: 10
+    max_artifacts: 50
+    max_media_downloads: 10
+
+  preservation: candidates
+
+  analysis:
+    cluster_narratives: true
+    track_media_spread: true
+    identify_firsthand_sources: true
+    find_contradictions: false

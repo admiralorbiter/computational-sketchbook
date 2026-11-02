@@ -1,0 +1,51 @@
+/* ==========================================================================
+   Design Tokens & CSS Custom Properties (WCAG 2.2 AA Compliant)
+   ========================================================================== */
+:root {
+  /* Signature MySpace Color Palette (Tuned for WCAG 2.2 AA Contrast) */
+  --ms-blue-primary: #3c64a0;     /* 5.96:1 contrast with white text */
+  --ms-blue-dark: #2b588f;        /* 7.25:1 contrast on white (Passes AAA) */
+  --ms-blue-border: #2e4e7c;
+  --ms-blue-light: #c9e0ff;
+  --ms-blue-subtle: #f9fbff;
+  --ms-blue-banner-sub: #ffffff;
+
+  /* Accent & Action Colors */
+  --ms-orange-primary: #ff6600;   /* Vibrant accent for borders, backgrounds */
+  --ms-orange-text: #c84600;      /* 4.85:1 contrast for orange text on white */
+  --ms-text-on-orange: #111111;   /* 6.43:1 contrast for text on orange */
+  --ms-orange-hover: #e55c00;
+  --ms-orange-border: #cc5200;
+  --ms-orange-bg: #fff4e6;
+
+  /* Canvas & Containers */
+  --ms-canvas-bg: #d6e4f6;
+  --ms-container-bg: #ffffff;
+  --ms-card-bg: #ffffff;
+  --ms-gray-light: #f0f0f0;
+  --ms-gray-border: #cccccc;
+  --ms-gray-divider: #eeeeee;
+
+  /* Typography Colors */
+  --ms-text-main: #000000;
+  --ms-text-body: #444444;        /* 9.74:1 contrast on white */
+  --ms-text-dark: #333333;
+  --ms-text-muted: #555555;       /* 7.0:1 contrast on white */
+  --ms-text-white: #ffffff;
+
+  /* Typography Scales & Font Family */
+  --ms-font-family: Arial, Helvetica, sans-serif;
+  --ms-font-size-base: 11px;
+  --ms-font-size-sm: 10px;
+  --ms-font-size-lg: 12px;
+  --ms-font-size-title: 13px;
+  --ms-line-height-base: 1.5;
+
+  /* Layout Metrics & Elevation */
+  --ms-container-max: 950px;
+  --ms-grid-left-col: 320px;
+  --ms-radius-sm: 2px;
+  --ms-radius-md: 4px;
+  --ms-shadow-container: 0 10px 30px rgba(0, 0, 0, 0.25);
+  --ms-shadow-card: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}

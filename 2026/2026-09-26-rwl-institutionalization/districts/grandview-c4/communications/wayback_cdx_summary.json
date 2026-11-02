@@ -1,0 +1,19 @@
+{
+  "total_root_snapshots": 0,
+  "total_staff_snapshots": 53,
+  "total_news_snapshots": 500,
+  "root_by_year": {},
+  "staff_by_year": {
+    "2018": 11,
+    "2019": 10,
+    "2020": 3,
+    "2021": 4,
+    "2022": 4,
+    "2023": 3,
+    "2024": 4,
+    "2025": 8,
+    "2026": 6
+  },
+  "earliest_staff_snapshot": "20180105124219",
+  "latest_staff_snapshot": "20260408060007"
+}

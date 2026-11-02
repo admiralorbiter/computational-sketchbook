@@ -1,0 +1,4 @@
+mechanism_id,name,verified_by_evidence,supporting_claim_id,status,details
+M1,Offtake / Contractual Carry Conduit,True,CLM-POST-REUTERS-SEP24-FM,PASSED,Evidence confirms Oracle cited force majeure to suspend/defer prospective rent payments and standby carry liabilities under its long-term take-or-pay agreement.
+M2,Construction Debt Stack & Syndicate Exposure,True,CLM-POST-FT-SEP25-SYNDICATE,PASSED,Evidence confirms banking syndicate and institutional credit lenders initiated portfolio reviews on the $18B loan stack following the force-majeure notice.
+M3,Physical Regulatory & Permitting Choke-Point,True,CLM-POST-NMSLO-CONFIRM,PASSED,Evidence confirms NMSLO natural gas pipeline right-of-way permit denials for the Bloom Energy fuel cells were the sole operative cause cited in the notice.

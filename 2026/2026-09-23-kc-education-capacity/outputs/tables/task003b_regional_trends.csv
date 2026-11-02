@@ -1,0 +1,23 @@
+school_year,grain,analytical_population,coverage_tier,pct_enrollment_valid,reporting_entities_count,total_expected_entities,total_enrollment,total_teacher_fte,student_weighted_ptr,median_ptr,p10_ptr,p25_ptr,p75_ptr,p90_ptr,total_para_fte,combined_teacher_para_ratio,teachers_per_1000,paras_per_1000,is_primary_trend_eligible,notes
+2014-2015,LEA_K12,Regional LEAs (Fully Within Region),complete,100.0,77,78,321228,21633.26,14.85,14.06,10.58,12.27,15.11,15.75,4774.11,12.16,67.35,14.86,True,Complete regional coverage
+2015-2016,LEA_K12,Regional LEAs (Fully Within Region),partial_coverage,89.45,75,79,289666,19458.42,14.89,14.26,10.37,12.22,15.1,15.9,4038.03,12.33,67.18,13.94,False,Incomplete: Olathe & Gardner Edgerton staff suppressed in federal data; reporting entities only (89.5% enrollment coverage)
+2016-2017,LEA_K12,Regional LEAs (Fully Within Region),complete,100.0,78,79,325274,22065.54,14.74,13.92,10.49,12.31,15.14,15.92,4856.21,12.08,67.84,14.93,True,Complete regional coverage
+2017-2018,LEA_K12,Regional LEAs (Fully Within Region),complete,100.0,78,79,327585,22670.66,14.45,13.85,10.11,11.66,15.01,16.25,4886.68,11.89,69.21,14.92,True,Complete regional coverage
+2018-2019,LEA_K12,Regional LEAs (Fully Within Region),complete,100.0,77,79,328578,22828.39,14.39,13.77,10.32,12.04,14.96,15.87,5147.01,11.75,69.48,15.66,True,Complete regional coverage
+2019-2020,LEA_K12,Regional LEAs (Fully Within Region),complete,100.0,77,78,329357,23136.48,14.24,13.7,9.96,11.92,14.74,15.28,5273.11,11.59,70.25,16.01,True,Complete regional coverage
+2020-2021,LEA_K12,Regional LEAs (Fully Within Region),complete,100.0,77,77,321732,23310.69,13.8,13.18,9.49,11.84,14.23,15.37,4871.59,11.42,72.45,15.14,True,Complete regional coverage
+2021-2022,LEA_K12,Regional LEAs (Fully Within Region),complete,100.0,76,77,320149,23508.76,13.62,12.86,9.53,11.03,14.06,15.1,4774.43,11.32,73.43,14.91,True,Complete regional coverage
+2022-2023,LEA_K12,Regional LEAs (Fully Within Region),complete,100.0,77,77,321595,23886.08,13.46,12.79,9.24,11.05,14.18,14.87,4933.75,11.16,74.27,15.34,True,Complete regional coverage
+2023-2024,LEA_K12,Regional LEAs (Fully Within Region),complete,100.0,77,77,319559,23620.08,13.53,12.92,8.97,10.9,14.07,14.79,5225.16,11.08,73.91,16.35,True,Complete regional coverage
+2024-2025,LEA_K12,Regional LEAs (Fully Within Region),complete,100.0,77,77,318883,23555.17,13.54,12.73,8.69,10.67,13.84,14.58,5340.02,11.04,73.87,16.75,True,Complete regional coverage
+2014-2015,School_Regular,Operating Regular (NCES),complete,100.0,601,607,326021,21191.15,15.38,15.23,11.73,13.84,16.63,17.82,,,65.0,,True,Complete/high coverage of regular operating schools
+2015-2016,School_Regular,Operating Regular (NCES),partial_coverage,89.76,544,607,294128,19316.49,15.23,15.07,11.9,13.7,16.45,17.73,,,65.67,,False,Incomplete: Kansas districts suppressed (89.8% enrollment coverage); reporting entities only
+2016-2017,School_Regular,Operating Regular (NCES),high_coverage,99.96,595,602,329875,21641.83,15.24,14.93,11.94,13.4,16.44,17.77,,,65.61,,True,Complete/high coverage of regular operating schools
+2017-2018,School_Regular,Operating Regular (NCES),complete,100.0,601,606,332234,22115.58,15.02,14.7,11.75,13.24,16.12,17.42,,,66.57,,True,Complete/high coverage of regular operating schools
+2018-2019,School_Regular,Operating Regular (NCES),high_coverage,99.9,601,609,330157,22140.55,14.91,14.62,11.55,13.0,16.17,17.21,,,67.06,,True,Complete/high coverage of regular operating schools
+2019-2020,School_Regular,Operating Regular (NCES),high_coverage,99.89,604,610,332190,22342.11,14.87,14.53,11.75,13.05,15.97,17.26,,,67.26,,True,Complete/high coverage of regular operating schools
+2020-2021,School_Regular,Operating Regular (NCES),high_coverage,99.95,610,616,323656,22293.2,14.52,14.04,10.93,12.11,15.69,17.24,,,68.88,,True,Complete/high coverage of regular operating schools
+2021-2022,School_Regular,Operating Regular (NCES),high_coverage,99.97,612,618,323047,22659.59,14.26,13.78,10.6,12.28,15.36,16.69,,,70.14,,True,Complete/high coverage of regular operating schools
+2022-2023,School_Regular,Operating Regular (NCES),high_coverage,99.96,618,624,326348,22950.1,14.22,13.63,10.73,12.26,15.11,16.44,,,70.32,,True,Complete/high coverage of regular operating schools
+2023-2024,School_Regular,Operating Regular (NCES),high_coverage,99.94,626,627,324324,22942.12,14.14,13.64,10.68,12.16,15.1,16.48,,,70.74,,True,Complete/high coverage of regular operating schools
+2024-2025,School_Regular,Operating Regular (NCES),high_coverage,99.98,623,624,323188,23178.23,13.94,13.53,10.62,12.14,14.93,16.13,,,71.72,,True,Complete/high coverage of regular operating schools

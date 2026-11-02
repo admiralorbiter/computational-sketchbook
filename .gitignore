@@ -1,0 +1,74 @@
+# Project directory junctions (convenience Windows symlinks/junctions)
+kc_education_capacity
+ai_infrastructure_network
+signal_observatory
+kc_admin_staffing_decomposition
+kc_education_labor
+kc_grades_incentives
+crdc_opportunity_measurement
+keyboarding_mode_effects
+kc_paths_not_taken
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# OS / Editor artifacts
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Local environment & package management
+.env
+.venv
+env/
+venv/
+ENV/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter & Testing artifacts
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+.pytest_cache/
+*/.pytest_cache/*
+.ruff_cache/
+.coverage
+htmlcov/
+.cache
+
+# Large media binaries and database files
+*.mp4
+*.mov
+*.duckdb
+*.duckdb.wal
+*.sav
+*.dat
+*.zip
+*.sas7bdat
+2026/2026-10-09-keyboarding-mode-effects/data/raw/timss_2019/
+2026/2026-10-09-keyboarding-mode-effects/data/raw/timss_2023/
+2026/2026-10-09-keyboarding-mode-effects/scratch/
+*transcript_review_tutorial.pdf
+
+# Godot Engine
+.godot/
+*.import
+export_presets.cfg
+
+# Node / Web build artifacts
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+dist/
+build/
+

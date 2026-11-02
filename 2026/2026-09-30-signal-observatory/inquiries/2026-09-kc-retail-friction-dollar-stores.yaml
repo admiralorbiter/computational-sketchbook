@@ -1,0 +1,50 @@
+inquiry:
+  id: "2026-09-kc-retail-friction-dollar-stores"
+  question: >
+    What community friction, code enforcement issues, labor/pricing disputes,
+    safety concerns, and resident drama surround discount retail stores (Dollar General,
+    Family Dollar, Dollar Tree) and neighborhood food access in the Kansas City metropolitan area?
+  mode: investigate
+
+  scope:
+    time:
+      since: "2023-01-01T00:00:00Z"
+      until: "2026-09-30T23:59:59Z"
+    geography:
+      - "Kansas City"
+      - "Kansas City MO"
+      - "Kansas City KS"
+      - "Midtown KCMO"
+      - "East Side KCMO"
+    languages: ["en"]
+
+  seeds:
+    terms:
+      - "Dollar General Kansas City"
+      - "Family Dollar Broadway roof collapse Kansas City"
+      - "Dollar General robbery shooting Kansas City"
+      - "Missouri sues Dollar General pricing"
+      - "Family Dollar Kansas City code violation"
+      - "Dollar General Prospect Kansas City"
+    hashtags: []
+    accounts: []
+    subreddits:
+      - "kansascity"
+
+  platforms:
+    - youtube
+    - reddit
+    - web
+
+  budget:
+    max_queries: 15
+    max_artifacts: 150
+    max_media_downloads: 10
+
+  preservation: candidates
+
+  analysis:
+    cluster_narratives: true
+    track_media_spread: false
+    identify_firsthand_sources: true
+    find_contradictions: true

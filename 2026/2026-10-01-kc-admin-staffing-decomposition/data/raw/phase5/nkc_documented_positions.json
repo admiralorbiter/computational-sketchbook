@@ -1,0 +1,57 @@
+{
+  "district_name": "North Kansas City 74",
+  "state": "MO",
+  "nces_lea_id": 2922800,
+  "total_documented_fte": 30.0,
+  "roles_count": 3,
+  "extracted_roles": [
+    {
+      "job_title": "Content Curriculum Coordinator",
+      "functional_category": "Curriculum/Content",
+      "work_location": "Central Office",
+      "estimated_fte_2023_24": 15.0,
+      "fte_basis": "documented_count",
+      "primary_funding_source": "Local Operating (Incidental Fund)",
+      "funding_mechanism": "Local Property Tax Revenue",
+      "source_document": "NKC Schools Academic Services Department Directory",
+      "source_url": "https://www.nkcschools.org/departments/academic-services",
+      "source_year": "2023-2024",
+      "page_or_item": "K-12 Subject Area Coordinators (ELA, Math, Science, Social Studies, Early Childhood, CTE, Fine Arts)",
+      "evidence_type": "District Staff Directory",
+      "confidence": "HIGH",
+      "role_description": "Subject coordinators for Elementary ELA, Secondary ELA, Math, Science, Social Studies, Early Childhood, CTE, and Fine Arts."
+    },
+    {
+      "job_title": "Instructional Technology Coach",
+      "functional_category": "Instructional Technology",
+      "work_location": "School Building / Central",
+      "estimated_fte_2023_24": 10.0,
+      "fte_basis": "documented_count",
+      "primary_funding_source": "Local Operating & Capital Projects",
+      "funding_mechanism": "Local Operating / Tech Levy",
+      "source_document": "NKC Schools Technology Department Roster",
+      "source_url": "https://www.nkcschools.org/departments/technology",
+      "source_year": "2023-2024",
+      "page_or_item": "Instructional Technology Integration Specialist Roster across 34 buildings",
+      "evidence_type": "District Staff Directory",
+      "confidence": "HIGH",
+      "role_description": "Building-level coaches guiding teachers in digital curriculum, Canvas LMS, and classroom instructional software across 34 buildings."
+    },
+    {
+      "job_title": "Special Education Process Coordinator",
+      "functional_category": "SPED/EL Program Management",
+      "work_location": "Central / Feeder Pattern",
+      "estimated_fte_2023_24": 5.0,
+      "fte_basis": "documented_count",
+      "primary_funding_source": "IDEA Part B / Local Operating",
+      "funding_mechanism": "Federal Special Ed Grant",
+      "source_document": "NKC Special Services Department Roster",
+      "source_url": "https://www.nkcschools.org/departments/special-education",
+      "source_year": "2023-2024",
+      "page_or_item": "Special Education Process Coordinators across Feeder Patterns",
+      "evidence_type": "District Staff Directory",
+      "confidence": "HIGH",
+      "role_description": "Process coordinators ensuring legal compliance, evaluation scheduling, and instructional accommodations across elementary feeder patterns."
+    }
+  ]
+}

@@ -1,0 +1,135 @@
+<USER_REQUEST>
+There is a real result here, but I would not certify Phase 4 yet. I found a few issues that materially affect the headline framing—not necessarily the underlying direction of the findings.
+The good news is that the core story probably survives, and in some ways gets cleaner: class sizes did not rise; several school-level student-need/context measures did. But the current report overstates what can be said about teacher workload and has one major longitudinal comparability problem.
+The biggest issue: chronic absenteeism has a definition break
+The 2013–14 and 2015–16 CRDC defined a chronically absent student as someone absent 15 or more school days. Beginning with the move to EDFacts in 2016–17, the federal definition changed to missing 10% or more of enrolled school days. [U.S. Department of Education](https://www.ed.gov/media/document/crdc-2015-16-all-schools-formpdf-21403.pdf?utm_source=chatgpt.com)
+So this headline is not valid as written:
+14.29% → 32.29%, +126%
+Those endpoints use different definitions.
+The clean comparison is currently 2017–18 → 2021–22, where your medians are:
+\[ 19.10\% \rightarrow 32.29\% \]That's still roughly a 69% increase, which is enormous. So the story doesn't disappear.
+There are two additional absenteeism issues. Your 2020–21 point has only 1,486 valid schools out of 24,684 in the linked sample—about 6% coverage—because of pandemic reporting disruptions. It should not sit on the trend line as though it's representative. And the code calculates EDFacts chronic-absence rates as:
+\[ \text{DG814 count}/\text{CRDC fall enrollment} \]but EDFacts counts students enrolled during the school year and warns that students can be counted at multiple schools when they move. The denominator is therefore not necessarily the October snapshot enrollment you're using. [ED Data Express](https://eddataexpress.ed.gov/download/data-builder/data-download-tool?f%5B0%5D=data_group_id%3A514&f%5B10%5D=state_name%3AILLINOIS&f%5B11%5D=state_name%3AINDIANA&f%5B12%5D=state_name%3AKANSAS&f%5B13%5D=state_name%3AMAINE&f%5B14%5D=state_name%3AOREGON&f%5B15%5D=state_name%3AWISCONSIN&f%5B1%5D=data_group_id%3A548&f%5B2%5D=data_group_id%3A588&f%5B3%5D=data_group_id%3A589&f%5B4%5D=data_group_id%3A785&f%5B5%5D=data_group_id%3A814&f%5B6%5D=data_group_id%3ACSPR1.4.4&f%5B7%5D=level%3ALocal+Education+Agency&f%5B8%5D=school_year%3A2018-2019&f%5B9%5D=school_year%3A2022-2023&utm_source=chatgpt.com)
+I would use the official DG814 percentage / proper EDFacts denominator wherever available rather than deriving it from CRDC enrollment.
+Second: “one in five students” is not what the current statistic measures
+Your IDEA, 504 and EL numbers in Table B1 are computed as:
+mean of each school's percentage.
+So 16.89% IDEA + 5.06% 504 = 21.95% means roughly:
+The average school in this analytic sample has reported IDEA and Section-504-only rates summing to 21.95%.
+It does not yet mean:
+“21.95% of all enrolled secondary students.”
+For that, calculate:
+\[ \frac{\sum IDEA_i + \sum 504_i}{\sum Enrollment_i} \]on the matched valid universe.
+This is worth doing anyway. Report both:
+school-weighted rate → experience of the average school;
+student-weighted/pooled rate → experience of the average enrolled student.
+The addition itself is legitimate because CRDC explicitly defines the 504 field as “Section 504 only,” excluding students served under IDEA. [Civil Rights Data Collection](https://crdc.communities.ed.gov/sites/default/files/2025-01/2023-24-crdc-school-form.pdf?utm_source=chatgpt.com)
+But I would change “students with formal legal plans.” CRDC observes students served under IDEA and served under Section 504 only. A written Section 504 plan is common, but federal regulations do not explicitly require a written plan in every case. [U.S. Department of Education](https://www.ed.gov/sites/ed/files/about/offices/list/ocr/docs/504-resource-guide-201612.pdf?utm_source=chatgpt.com)
+So use:
+students served under IDEA or Section 504-only
+or
+students carrying individualized disability-related service/accommodation obligations
+rather than “all have legally binding plans.”
+Third: Study B does not yet demonstrate teacher instructional load
+This is probably the most important conceptual correction.
+You correctly wrote the guardrail:
+school context ≠ individual section composition.
+But then the report violates it in several places.
+For example:
+A teacher with five 20-student sections previously managed 14 chronically absent students and now manages 32.
+You cannot infer that from the school-level absenteeism rate.
+Likewise:
+when 20–25 students occupy a classroom, 1 in 5 requires legal accommodations...
+also projects school composition into a hypothetical section.
+Those are exactly the inferences the guardrail prohibits.
+So I would change H5 from CONFIRMED to something like:
+SUPPORTED AT THE SCHOOL-CONTEXT LEVEL; TEACHER-LEVEL LOAD NOT YET ESTABLISHED.
+Phase 4 establishes:
+Schools offering secondary STEM courses report higher prevalence of several student-needs/context measures than they did a decade ago.
+Phase 5/NTPS—or actual teacher/roster data—is where you test:
+Individual teachers are actually carrying more accommodations, distinct preparations, special-needs students, absenteeism-related workload, etc.
+That's not a weakness. It gives Phase 5 a clear purpose.
+Fourth: class size did not remain “flat” over the decade
+Your own Table B1 says:
+\[ 22.40 \rightarrow 19.72 \]That's about a 12% decline, not flat.
+PTR similarly moves:
+\[ 16.10 \rightarrow 14.73 \]The defensible version is actually more interesting:
+Measured secondary class-size environments declined over the decade and then stabilized around 19.7–20.1 after 2020, while several measures of student need/context rose.
+So rather than a “headcount paradox” of flat class size versus rising complexity, you may have:
+Even as numerical class size eased, the surrounding instructional context became more demanding.
+That is stronger.
+One caveat: because your pooled STEM class-size measure includes Algebra I and Geometry, the known 2013–14 grade-span discontinuity still touches the 2013 endpoint. I'd either start the headline comparison in 2015–16 or use a fixed set of fully comparable courses for the decade statement.
+Fifth: the balanced panel isn't balanced on the outcome measures
+The 18,606 schools are balanced on being present in the linked class-size universe.
+But they're not necessarily continuously observed for IDEA, 504, EL or absenteeism.
+This is especially obvious for absenteeism:
+2013–14: 18,606 valid
+2020–21: 1,254 valid
+2021–22: 17,513 valid
+So you cannot say the absenteeism result is proven “within the exact same 18,606 schools.”
+Build measure-specific balanced panels:
+IDEA-valid all comparable waves;
+504-valid all comparable waves;
+EL-valid all comparable waves;
+absenteeism-valid across the comparable EDFacts period.
+For absenteeism, at minimum do a matched 2017–18 ↔ 2021–22 school panel.
+Sixth: Table B4 contains a class-size estimand inconsistency
+This is visible directly in your outputs.
+Table B1 reports national 2013 enrollment-weighted class size:
+22.40
+Table B4 reports national 2013 “Enr-Weighted Class Size”:
+17.37
+Both cannot be the same estimand.
+The reason is in analyze_school_context.py: B1 weights school-level class-size values by STEM enrollment, while B4 simply takes:
+mean(enr_weighted_class_size)
+across schools.
+So B4 is actually:
+the unweighted mean of school-level enrollment-weighted class-size estimates
+not the population enrollment-weighted mean.
+Either calculate B4 using the same weighting formula as B1 or relabel it explicitly.
+I would standardize it.
+The KC PTR series also needs checking. The 2021–22 KC mean PTR of 20.91 is wildly different from adjacent waves and from the validated KC PTR work you've already done. Phase 4 recomputes PTR from CRDC staffing rather than carrying forward the canonical/validated PTR from the Phase 3 panel. I'd use your already-certified PTR source rather than introduce a second PTR definition.
+Seventh: audit the nonbinary _X handling
+Federal instructions make nonbinary reporting optional at the school level: only schools that already disaggregate enrollment by nonbinary status must report it. [U.S. Department of Education](https://www.ed.gov/media/document/2021-22-crdc-qapdf-21238.pdf?utm_source=chatgpt.com)
+Your current logic doesn't fully distinguish:
+0 = genuinely zero;
+-10 = structurally not collected / skipped;
+-5 = suppressed;
+positive count.
+In 2021–22, add_nonbinary() effectively turns a missing/suppressed _X into zero. In 2023–24, the stricter helper can instead make a whole row missing when _X was legitimately skipped.
+Because this potentially touches the Phase 3 course panel too, I would do a raw reserve-code frequency audit before changing anything:
+count _X = 0
+_X > 0
+_X = -10
+_X = -5/-6/etc.
+by variable and wave.
+Then encode structural not-collected separately from suppression.
+Finally, tone down a few mechanisms
+The data support rising 504 rates. They do not support:
+“504 students are almost exclusively in general education with no extra aides.”
+Section 504 can entail regular or special education and related aids/services. Regular education teachers absolutely must implement applicable 504 provisions, but additional supports vary. [U.S. Department of Education](https://www.ed.gov/laws-and-policy/civil-rights-laws/disability-discrimination/frequently-asked-questions-section-504-free-appropriate-public-education-fape?utm_source=chatgpt.com)
+Likewise, not every EL student requires “dual-language materials.” Say language scaffolding, accessible instruction and appropriate language supports.
+If you want one consolidated agent instruction, I would send this:
+Do not begin Phase 5. Execute a Phase 4.1 calibration patch.
+Split chronic absenteeism into incompatible federal regimes: CRDC 15+ days (2013–14, 2015–16) versus EDFacts ≥10% of enrolled days (2016–17 onward). Remove the 2013→2021 +126% comparison.
+Obtain/use official DG814/814PCT rates or correct same-source denominators for 2017–18 onward. Do not divide cumulative EDFacts counts by CRDC October enrollment without validation. Never clip structurally invalid rates at 100; flag them.
+Treat 2020–21 absenteeism as nonrepresentative because coverage is ~6%; exclude it from national trend inference and show coverage N prominently.
+Recompute IDEA, Section-504-only and EL statistics both school-weighted and pooled/student-weighted. Only use “X% of students” for the pooled rate.
+Retain IDEA + Section-504-only combined counts, because 504-only explicitly excludes IDEA, but rename the construct “students served under IDEA or Section 504-only.” Do not claim every 504 student has a written plan.
+Build measure-specific balanced panels. Do not call 18,606 schools outcome-balanced unless the same schools have valid observations for that measure in all relevant waves.
+Change H5 from CONFIRMED teacher-load intensification to SUPPORTED — SCHOOL-CONTEXT INTENSIFICATION; reserve teacher-level confirmation for Phase 5.
+Remove all examples that project school-level rates onto an individual teacher or classroom roster.
+Reframe class size: it declined over the full observed period and stabilized post-2020; do not call the decade flat. Use a definition-comparable course basket or start at 2015–16 for headline longitudinal comparisons.
+Harmonize B1 and B4 class-size weighting. Report explicitly whether each statistic is average-school, section-weighted or student/enrollment-weighted.
+Replace Phase 4 PTR with the already-certified Phase 3/canonical PTR where available; investigate the anomalous KC 2021–22 mean PTR of 20.91.
+Audit _X reserve codes by wave and variable. Distinguish structurally skipped/non-collected nonbinary fields from suppressed values before arithmetic.
+Tone down unsupported mechanism claims about 504 staffing and EL instructional materials.
+Add tests for definition regimes, outcome-specific balanced panels, weighting identities, denominator provenance and _X reserve-code handling.
+Produce artifacts/02b_instructional_load_calibration.md, rerun affected tables/figures, and STOP.
+I expect the 504, IDEA and EL trend results to survive. The absenteeism story will almost certainly survive too, but the defensible headline will probably become something like:
+Under the consistent post-2016 federal definition, median chronic absenteeism in secondary STEM schools rose from about 19% in 2017–18 to about 32% in 2021–22.
+That's still a huge result—and much cleaner.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-10-04T12:49:02-05:00.
+</ADDITIONAL_METADATA>

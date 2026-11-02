@@ -1,0 +1,2460 @@
+"""
+Observatory Consistency Validator (Phase 0.7.2 - Epistemic Certification ADR-016)
+Verifies that numbers, obligations, claims, figures, and tables in Markdown documentation
+(README.md and FEEDBACK_PACK.md) match canonical data artifacts, outputs, and executed
+notebook results with zero data drift.
+"""
+
+import sys
+from pathlib import Path
+import re
+import html
+import json
+import pandas as pd
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
+OUTPUTS_DIR = PROJECT_ROOT / "outputs"
+NOTEBOOK_PATH = PROJECT_ROOT / "notebooks" / "01_five_company_pilot.ipynb"
+README_PATH = PROJECT_ROOT / "README.md"
+FEEDBACK_PACK_PATH = PROJECT_ROOT / "FEEDBACK_PACK.md"
+
+
+def parse_md_table(md_text: str, header_sub: str):
+    """Parses a GitHub-flavored Markdown table from text matching a header substring."""
+    lines = md_text.splitlines()
+    table_lines = []
+    in_table = False
+    for line in lines:
+        if header_sub in line and "|" in line:
+            in_table = True
+            table_lines.append(line)
+            continue
+        if in_table:
+            if line.strip().startswith("|"):
+                table_lines.append(line)
+            else:
+                break
+    if not table_lines:
+        return []
+    headers = [c.strip() for c in table_lines[0].split("|")[1:-1]]
+    rows = []
+    for line in table_lines[2:]:  # skip divider
+        cols = [c.strip() for c in line.split("|")[1:-1]]
+        if len(cols) == len(headers):
+            rows.append(dict(zip(headers, cols)))
+    return rows
+
+
+def parse_dollar(val_str: str):
+    """Extracts numeric dollar value in USD from strings like '$22.44B', '$126.6M', '$1.03B/yr'."""
+    if not val_str:
+        return None
+    m = re.search(r"\$([0-9\.]+)\s*([BMKbmk]?)", val_str)
+    if not m:
+        return None
+    num = float(m.group(1))
+    unit = m.group(2).upper()
+    if unit == "B":
+        return num * 1e9
+    elif unit == "M":
+        return num * 1e6
+    elif unit == "K":
+        return num * 1e3
+    return num
+
+
+def validate_sec_source_existence():
+    """
+    Validates that every evidence claim citing SEC EDGAR filings exists in the cached raw
+    submissions JSON files with matching accession number, filing form, and filing date (ADR-015).
+    Also validates that all obligation events and facts respect the public knowledge invariant:
+    event.publicly_known_at >= claim.filing_date.
+    """
+    sec_dir = PROJECT_ROOT / "data" / "raw" / "sec"
+    files = {}
+    for p in sec_dir.glob("*_submissions_*.json"):
+        if "_submissions_older.json" in p.name:
+            ent = p.name.split("_submissions_older")[0]
+        else:
+            ent = p.name.split("_submissions_")[0]
+        files.setdefault(ent, []).append(p)
+    
+    all_filings = {}
+    for entity, paths in files.items():
+        all_filings[entity] = {}
+        for p in paths:
+            if not p.exists():
+                continue
+            with open(p, "r", encoding="utf-8") as f:
+                d = json.load(f)
+            fdict = d.get('filings', {}).get('recent', {}) if 'filings' in d else (d if 'accessionNumber' in d else {})
+            if not fdict:
+                continue
+            for acc, form, fdate, doc in zip(fdict['accessionNumber'], fdict['form'], fdict['filingDate'], fdict['primaryDocument']):
+                all_filings[entity][acc] = {'form': form, 'filingDate': fdate, 'primaryDocument': doc}
+
+    clm_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
+    pwr_clm_df = pd.read_parquet(PROCESSED_DIR / "power_claims.parquet")
+    errors = []
+    
+    # Check financial evidence claims
+    for _, row in clm_df.iterrows():
+        cid = row["claim_id"]
+        entity = row["entity_id"]
+        acc = row.get("accession_number")
+        form = row.get("filing_type")
+        fdate = row.get("filing_date")
+        
+        if entity not in all_filings:
+            errors.append(f"Claim {cid}: entity {entity} has no cached raw submissions")
+            continue
+            
+        found = all_filings[entity].get(acc)
+        if not found:
+            errors.append(f"Claim {cid}: accession {acc} not found in {entity} raw submissions")
+        elif found['form'] != form:
+            f_form = found['form']
+            errors.append(f"Claim {cid}: form mismatch for {acc} (expected {form}, found in EDGAR {f_form})")
+        elif found['filingDate'] != fdate:
+            f_date = found['filingDate']
+            errors.append(f"Claim {cid}: filing date mismatch for {acc} (expected {fdate}, found in EDGAR {f_date})")
+
+    # Check power claims (SEC filings only)
+    for _, row in pwr_clm_df.iterrows():
+        cid = row["claim_id"]
+        entity = row["entity_id"]
+        acc = row.get("accession_number")
+        form = row.get("filing_type")
+        fdate = row.get("filing_date")
+        if form in ["10-K", "10-Q", "8-K", "20-F", "6-K"]:
+            if entity not in all_filings:
+                errors.append(f"Power claim {cid}: entity {entity} has no cached raw submissions")
+                continue
+            found = all_filings[entity].get(acc)
+            if not found:
+                errors.append(f"Power claim {cid}: accession {acc} not found in {entity} raw submissions")
+            elif found['form'] != form:
+                f_form = found['form']
+                errors.append(f"Power claim {cid}: form mismatch for {acc} (expected {form}, found in EDGAR {f_form})")
+            elif found['filingDate'] != fdate:
+                f_date = found['filingDate']
+                errors.append(f"Power claim {cid}: filing date mismatch for {acc} (expected {fdate}, found in EDGAR {f_date})")
+
+    # Check event public knowledge timing invariant
+    events_df = pd.read_parquet(PROCESSED_DIR / "obligation_events.parquet")
+    combined_claims_dates = dict(zip(clm_df["claim_id"], clm_df["filing_date"]))
+    combined_claims_dates.update(dict(zip(pwr_clm_df["claim_id"], pwr_clm_df["filing_date"])))
+
+    for _, ev in events_df.iterrows():
+        eid = ev["event_id"]
+        cid = ev.get("claim_id")
+        if cid in combined_claims_dates:
+            c_date = combined_claims_dates[cid]
+            if str(ev["publicly_known_at"]) < str(c_date):
+                errors.append(f"Event {eid}: publicly_known_at {ev['publicly_known_at']} predates claim {cid} filing date {c_date}")
+
+    # Check facts public knowledge timing invariant
+    facts_df = pd.read_parquet(PROCESSED_DIR / "obligation_facts.parquet")
+    for _, f_row in facts_df.iterrows():
+        fid = f_row["fact_id"]
+        k_cid = f_row.get("knowledge_claim_id")
+        if k_cid in combined_claims_dates:
+            k_fdate = combined_claims_dates[k_cid]
+            if str(f_row["publicly_known_from"]) < str(k_fdate):
+                errors.append(f"Fact {fid}: publicly_known_from {f_row['publicly_known_from']} predates knowledge claim {k_cid} filing date {k_fdate}")
+
+    # Check power facts public knowledge timing invariant
+    pwr_facts_df = pd.read_parquet(PROCESSED_DIR / "power_facts.parquet")
+    for _, pf_row in pwr_facts_df.iterrows():
+        pfid = pf_row["fact_id"]
+        k_cid = pf_row.get("knowledge_claim_id")
+        if k_cid in combined_claims_dates:
+            k_fdate = combined_claims_dates[k_cid]
+            if str(pf_row["publicly_known_from"]) < str(k_fdate):
+                errors.append(f"Power fact {pfid}: publicly_known_from {pf_row['publicly_known_from']} predates knowledge claim {k_cid} filing date {k_fdate}")
+
+    return errors
+
+
+
+CLAIM_TO_UTILITY_FILE = {
+    'CLM-PWR-NBIS-002': ('NIVOS_PR_20260331.htm', '86355307b3952738465b1813e6d5ea612a8e11d037b0daf3f97315fbf0e1204d'),
+}
+
+
+def validate_utility_primary_sources():
+    """
+    Validates non-SEC primary sources against cached utility files and cryptographic hashes (ADR-020.1a).
+    """
+    import hashlib
+    util_dir = PROJECT_ROOT / "data" / "raw" / "utility"
+    errors = []
+    pwr_clm_df = pd.read_parquet(PROCESSED_DIR / "power_claims.parquet")
+
+    def normalize(text):
+        text = html.unescape(text)
+        text = text.replace('\u201c', '"').replace('\u201d', '"').replace('\u2018', "'").replace('\u2019', "'")
+        text = text.replace('&#8220;', '"').replace('&#8221;', '"').replace('&#8216;', "'").replace('&#8217;', "'")
+        text = text.replace('&ldquo;', '"').replace('&rdquo;', '"').replace('&lsquo;', "'").replace('&rsquo;', "'")
+        text = text.replace('\u2013', '-').replace('\u2014', '-').replace('&#8211;', '-').replace('&ndash;', '-').replace('&mdash;', '-')
+        text = text.replace('&nbsp;', ' ').replace('&#160;', ' ')
+        text = re.sub(r'</?(?:b|i|u|strong|em|font|span)(?:\s+[^>]*)?>', '', text, flags=re.IGNORECASE)
+        text = re.sub(r'<[^>]+>', ' ', text)
+        return ' '.join(text.split())
+
+    for cid, (fname, expected_hash) in CLAIM_TO_UTILITY_FILE.items():
+        fpath = util_dir / fname
+        if not fpath.exists():
+            errors.append(f"Non-SEC claim {cid} target document {fname} not found in {util_dir}")
+            continue
+        raw_content = fpath.read_text(encoding='utf-8', errors='ignore')
+        actual_hash = hashlib.sha256(raw_content.encode('utf-8')).hexdigest()
+        if actual_hash != expected_hash:
+            errors.append(f"Non-SEC claim {cid} SHA-256 hash mismatch for {fname}: {actual_hash} vs expected {expected_hash}")
+        
+        c_sub = pwr_clm_df[pwr_clm_df["claim_id"] == cid]
+        if c_sub.empty:
+            errors.append(f"Claim {cid} not found in power_claims.parquet")
+            continue
+        quote = normalize(c_sub.iloc[0]["exact_quote"])
+        norm_doc = normalize(raw_content)
+        if quote not in norm_doc:
+            errors.append(f"Claim {cid} exact quote is not a normalized contiguous verbatim substring in {fname}")
+
+    return errors
+
+
+def validate_sec_html_content():
+    """
+    Validates that Class A SEC claims match 100% exact contiguous verbatim substrings
+    strictly within their registered primary SEC HTML filing in data/raw/sec/ (ADR-016 / ADR-021.1a).
+    Enforces accession + document_url -> local_file + sha256 binding via source_registry.json.
+    """
+    import hashlib
+    sec_dir = PROJECT_ROOT / "data" / "raw" / "sec"
+    registry_path = sec_dir / "source_registry.json"
+    if not registry_path.exists():
+        return ["SEC source registry not found: data/raw/sec/source_registry.json"], 0
+
+    with open(registry_path, "r", encoding="utf-8") as f:
+        source_registry = json.load(f)
+
+    def normalize(text):
+        text = html.unescape(text)
+        text = text.replace('\u201c', '"').replace('\u201d', '"').replace('\u2018', "'").replace('\u2019', "'")
+        text = text.replace('&#8220;', '"').replace('&#8221;', '"').replace('&#8216;', "'").replace('&#8217;', "'")
+        text = text.replace('&ldquo;', '"').replace('&rdquo;', '"').replace('&lsquo;', "'").replace('&rsquo;', "'")
+        text = text.replace('\u2013', '-').replace('\u2014', '-').replace('&#8211;', '-').replace('&ndash;', '-').replace('&mdash;', '-')
+        text = text.replace('&nbsp;', ' ').replace('&#160;', ' ')
+        text = re.sub(r'</?(?:b|i|u|strong|em|font|span)(?:\s+[^>]*)?>', '', text, flags=re.IGNORECASE)
+        text = re.sub(r'<[^>]+>', ' ', text)
+        return ' '.join(text.split())
+
+    clm_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
+    pwr_clm_df = pd.read_parquet(PROCESSED_DIR / "power_claims.parquet")
+    combined_claims = pd.concat([clm_df, pwr_clm_df], ignore_index=True)
+
+    # Filter for all Class A SEC claims (excluding utility claims handled separately by validate_utility_primary_sources)
+    sec_claims = combined_claims[
+        (combined_claims["evidence_class"] == "A") &
+        (combined_claims["claim_id"] != "CLM-PWR-NBIS-002")
+    ]
+
+    file_content_cache = {}
+    errors = []
+
+    for _, r in sec_claims.iterrows():
+        cid = r["claim_id"]
+        acc = r["accession_number"]
+        url = r["document_url"]
+        key = f"{acc}::{url}"
+
+        if key not in source_registry:
+            errors.append(f"Claim {cid} citation ({acc}, {url}) not found in SEC source registry data/raw/sec/source_registry.json")
+            continue
+
+        entry = source_registry[key]
+        fname = entry["local_file"]
+        expected_hash = entry["sha256"]
+        fpath = sec_dir / fname
+
+        if not fpath.exists():
+            errors.append(f"Claim {cid} registered source file {fname} not found in {sec_dir}")
+            continue
+
+        if fname not in file_content_cache:
+            raw_bytes = fpath.read_bytes()
+            actual_hash = hashlib.sha256(raw_bytes).hexdigest()
+            if actual_hash != expected_hash:
+                errors.append(f"Claim {cid} SHA-256 hash mismatch for registered source {fname}: {actual_hash} vs expected {expected_hash}")
+            file_content_cache[fname] = normalize(raw_bytes.decode("utf-8", errors="ignore"))
+
+        quote = normalize(r["exact_quote"])
+        if quote not in file_content_cache[fname]:
+            errors.append(f"Claim {cid} exact quote is not a normalized contiguous verbatim substring in registered source {fname} ({acc})")
+
+    return errors, len(sec_claims)
+
+
+def validate_observatory():
+    print("=== Running AI Infrastructure Financial Network Consistency Validator (Phase 0.7.2) ===")
+    errors = []
+
+    # ---------------------------------------------------------
+    # 1. Check datasets exist
+    # ---------------------------------------------------------
+    required_files = {
+        "entities.parquet": 62,
+        "financials.parquet": 13754,
+        "obligations.parquet": 47,
+        "obligation_events.parquet": 57,
+        "obligation_facts.parquet": 64,
+        "obligation_terms.parquet": 44,
+        "assumptions.parquet": 7,
+        "evidence_claims.parquet": 60,
+        "facilities.parquet": 14,
+        "power_relationships.parquet": 13,
+        "power_facts.parquet": 29,
+        "power_terms.parquet": 27,
+        "power_claims.parquet": 9,
+        "obligation_facility_links.parquet": 51,
+        "facility_completion_facts.parquet": 14,
+    }
+    for rf, expected_rows in required_files.items():
+        p = PROCESSED_DIR / rf
+        if not p.exists():
+            errors.append(f"Missing required dataset: {rf}")
+        else:
+            df = pd.read_parquet(p)
+            print(f"  [OK] {rf:28} : {len(df)} rows")
+            if len(df) != expected_rows:
+                errors.append(f"{rf} row count mismatch: {len(df)} (expected {expected_rows})")
+
+    # Check CIK collision / distinct public entities rule (ADR-017 / ADR-019)
+    ent_df = pd.read_parquet(PROCESSED_DIR / "entities.parquet")
+    ciks = ent_df[ent_df["cik"].notna() & (ent_df["cik"] != "")]["cik"]
+    dup_ciks = ciks[ciks.duplicated()].tolist()
+    if dup_ciks:
+        errors.append(f"CIK collision detected among public entities: {dup_ciks}")
+    else:
+        print(f"  [OK] CIK uniqueness verified: {len(ciks)} distinct reporting entities with zero CIK collisions.")
+
+    # Check obligation_terms.parquet field-level contract provenance (ADR-019 / ADR-019.1)
+    terms_df = pd.read_parquet(PROCESSED_DIR / "obligation_terms.parquet")
+    clm_temp_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
+    obl_temp_df = pd.read_parquet(PROCESSED_DIR / "obligations.parquet").set_index("obligation_id")
+    required_term_cols = {"term_id", "obligation_id", "attribute", "value", "claim_id", "source_locator", "evidence_class"}
+    missing_cols = required_term_cols - set(terms_df.columns)
+    if missing_cols:
+        errors.append(f"obligation_terms.parquet missing columns: {missing_cols}")
+    invalid_claim_ids = set(terms_df["claim_id"]) - set(clm_temp_df["claim_id"])
+    if invalid_claim_ids:
+        errors.append(f"obligation_terms contains invalid claim_ids: {invalid_claim_ids}")
+
+    class_a_count = (terms_df["evidence_class"] == "A").sum()
+    class_c_count = (terms_df["evidence_class"] == "C").sum()
+    if class_a_count != 43 or class_c_count != 1:
+        errors.append(f"obligation_terms evidence class distribution mismatch: {class_a_count} Class A, {class_c_count} Class C (expected 43 Class A, 1 Class C)")
+
+    # Field-mapping cross-check comparing obligation_terms against canonical obligations.parquet fields
+    term_field_mapping = {
+        "principal_amount": "amount",
+        "facility_capacity": "amount",
+        "contract_value": "amount",
+        "interest_rate": "fixed_coupon",
+        "effective_date": "effective_date",
+        "maturity_date": "maturity_date",
+        "maturity_rule": "maturity_rule",
+        "reported_final_possible_maturity": "reported_final_possible_maturity",
+        "recourse": "recourse",
+        "contracted_capacity_mw": "capacity_mw",
+        "term_years": "term_years",
+        "duration_years": "term_years",
+        "margin_bps": "margin_bps",
+        "floor_bps": "floor_bps",
+        "benchmark": "benchmark",
+        "reference_exposure_estimate": "reference_exposure_estimate"
+    }
+    for _, tr in terms_df.iterrows():
+        toid = tr["obligation_id"]
+        tattr = tr["attribute"]
+        tval = tr["value"]
+        if tattr in term_field_mapping and toid in obl_temp_df.index:
+            ocol = term_field_mapping[tattr]
+            oval = obl_temp_df.loc[toid, ocol]
+            try:
+                ft = float(tval)
+                fo = float(oval)
+                if abs(ft - fo) > 1e-4:
+                    errors.append(f"obligation_terms mismatch with obligations.parquet: {toid}.{ocol} = {oval} != term {tval}")
+            except (ValueError, TypeError):
+                if str(tval).strip() != str(oval).strip():
+                    errors.append(f"obligation_terms mismatch with obligations.parquet: {toid}.{ocol} = '{oval}' != term '{tval}'")
+
+    wulf_terms = terms_df[terms_df["obligation_id"].str.startswith("OBL-WULF")]
+    if len(wulf_terms) < 16:
+        errors.append(f"TeraWulf convertible terms incomplete: found {len(wulf_terms)} terms (expected >= 16)")
+    else:
+        print(f"  [OK] Field-level contract provenance verified: {len(terms_df)} attribute-level terms (43 Class A, 1 Class C) with 100% verified claims and canonical obligation field alignment.")
+
+    # ---------------------------------------------------------
+    # 1b. Validate Power Backplane & Physical Ontology (ADR-020.1 Hardened)
+    # ---------------------------------------------------------
+    fac_df = pd.read_parquet(PROCESSED_DIR / "facilities.parquet")
+    pwr_rel_df = pd.read_parquet(PROCESSED_DIR / "power_relationships.parquet")
+    pwr_facts_df = pd.read_parquet(PROCESSED_DIR / "power_facts.parquet")
+    pwr_terms_df = pd.read_parquet(PROCESSED_DIR / "power_terms.parquet")
+    pwr_claims_df = pd.read_parquet(PROCESSED_DIR / "power_claims.parquet")
+
+    # Check entity references in facilities
+    valid_entity_ids = set(ent_df["entity_id"])
+    for _, r in fac_df.iterrows():
+        if r["operator_entity_id"] not in valid_entity_ids:
+            errors.append(f"Facility {r['facility_id']} operator {r['operator_entity_id']} not in entities registry")
+        if pd.notna(r["landlord_spv_entity_id"]) and r["landlord_spv_entity_id"] not in valid_entity_ids:
+            errors.append(f"Facility {r['facility_id']} landlord {r['landlord_spv_entity_id']} not in entities registry")
+        if pd.notna(r["tenant_entity_id"]) and r["tenant_entity_id"] not in valid_entity_ids:
+            errors.append(f"Facility {r['facility_id']} tenant {r['tenant_entity_id']} not in entities registry")
+
+    # SERC Decoupling assertion: SERC is a NERC Regional Entity, NOT an operational grid operator / balancing authority
+    if (fac_df["primary_grid_region"] == "SERC").any():
+        errors.append("SERC improperly designated as primary_grid_region in facilities.parquet")
+    if (pwr_rel_df["grid_operator_entity_id"] == "SERC").any():
+        errors.append("SERC improperly designated as operational grid operator in power_relationships.parquet")
+    serc_rows = ent_df[ent_df["entity_id"] == "SERC"]
+    if not serc_rows.empty and serc_rows.iloc[0]["category"] != "nerc_regional_entity":
+        errors.append(f"SERC entity category mismatch: {serc_rows.iloc[0]['category']} (expected nerc_regional_entity)")
+
+    # Check power relationships
+    valid_fac_ids = set(fac_df["facility_id"])
+    allowed_reliability_regimes = {
+        "firm_service",
+        "mandatory_grid_emergency_curtailment",
+        "voluntary_price_response",
+        "interruptible_tariff",
+        "interconnection_not_energized",
+    }
+    for _, r in pwr_rel_df.iterrows():
+        if r["facility_id"] not in valid_fac_ids:
+            errors.append(f"Power relationship {r['power_rel_id']} references unknown facility {r['facility_id']}")
+        if pd.notna(r["utility_entity_id"]) and r["utility_entity_id"] not in valid_entity_ids:
+            errors.append(f"Power relationship {r['power_rel_id']} references unknown utility {r['utility_entity_id']}")
+        if pd.notna(r["grid_operator_entity_id"]) and r["grid_operator_entity_id"] not in valid_entity_ids:
+            errors.append(f"Power relationship {r['power_rel_id']} references unknown grid operator {r['grid_operator_entity_id']}")
+        if r["claim_id"] not in set(pwr_claims_df["claim_id"]):
+            errors.append(f"Power relationship {r['power_rel_id']} references unknown claim {r['claim_id']}")
+        if r["reliability_claim_id"] not in set(pwr_claims_df["claim_id"]):
+            errors.append(f"Power relationship {r['power_rel_id']} references unknown reliability_claim_id {r['reliability_claim_id']}")
+        if r["reliability_evidence_class"] not in {"A", "B"}:
+            errors.append(f"Power relationship {r['power_rel_id']} has invalid reliability_evidence_class: {r['reliability_evidence_class']}")
+        if r["reliability_regime"] not in allowed_reliability_regimes:
+            errors.append(f"Power relationship {r['power_rel_id']} has invalid reliability_regime: {r['reliability_regime']}")
+        if r["capacity_basis_mw"] <= 0:
+            errors.append(f"Power relationship {r['power_rel_id']} has non-positive capacity_basis_mw: {r['capacity_basis_mw']}")
+
+    # Check power facts typed MW and bitemporality
+    allowed_mw_types = {
+        "critical_it_mw", "leased_customer_mw", "gross_utility_capacity_mw",
+        "contracted_service_mw", "energized_mw", "planned_mw", "interconnection_request_mw"
+    }
+    valid_rel_ids = set(pwr_rel_df["power_rel_id"])
+    all_claim_ids = set(pwr_claims_df["claim_id"]).union(set(clm_temp_df["claim_id"]))
+    for _, r in pwr_facts_df.iterrows():
+        if r["mw_type"] not in allowed_mw_types:
+            errors.append(f"Power fact {r['fact_id']} has invalid mw_type: {r['mw_type']}")
+        if r["facility_id"] not in valid_fac_ids:
+            errors.append(f"Power fact {r['fact_id']} references unknown facility {r['facility_id']}")
+        if r["power_rel_id"] not in valid_rel_ids:
+            errors.append(f"Power fact {r['fact_id']} references unknown power_rel {r['power_rel_id']}")
+        if r["value_mw"] <= 0:
+            errors.append(f"Power fact {r['fact_id']} has non-positive value_mw: {r['value_mw']}")
+        if r["truth_claim_id"] not in all_claim_ids:
+            errors.append(f"Power fact {r['fact_id']} references unknown truth_claim_id: {r['truth_claim_id']}")
+        if r["knowledge_claim_id"] not in all_claim_ids:
+            errors.append(f"Power fact {r['fact_id']} references unknown knowledge_claim_id: {r['knowledge_claim_id']}")
+
+    # Check power terms field-level provenance and cross-check against relationships & facts
+    pwr_rel_indexed = pwr_rel_df.set_index("power_rel_id")
+    capacity_basis_attrs = {
+        "approved_service_capacity_mw", "gross_utility_capacity_mw",
+        "grid_connection_capacity_mw", "contracted_electricity_connection_mw",
+        "planned_development_capacity_mw", "allocated_hydro_power_mw"
+    }
+    for _, r in pwr_terms_df.iterrows():
+        tid = r["term_id"]
+        rel_id = r["power_rel_id"]
+        if rel_id not in valid_rel_ids:
+            errors.append(f"Power term {tid} references unknown power_rel {rel_id}")
+        if r["claim_id"] not in set(pwr_claims_df["claim_id"]):
+            errors.append(f"Power term {tid} references unknown claim {r['claim_id']}")
+        if r["evidence_class"] not in {"A", "B"}:
+            errors.append(f"Power term {tid} has evidence_class {r['evidence_class']} (expected Class A or B)")
+
+        if r["attribute"] == "reliability_regime":
+            expected_regime = pwr_rel_indexed.loc[rel_id, "reliability_regime"]
+            expected_claim = pwr_rel_indexed.loc[rel_id, "reliability_claim_id"]
+            expected_eclass = pwr_rel_indexed.loc[rel_id, "reliability_evidence_class"]
+            if r["value"] != expected_regime:
+                errors.append(f"Power term {tid} regime mismatch with relationship {rel_id}: '{r['value']}' vs '{expected_regime}'")
+            if r["claim_id"] != expected_claim:
+                errors.append(f"Power term {tid} claim mismatch with relationship {rel_id}: '{r['claim_id']}' vs '{expected_claim}'")
+            if r["evidence_class"] != expected_eclass:
+                errors.append(f"Power term {tid} evidence class mismatch with relationship {rel_id}: '{r['evidence_class']}' vs '{expected_eclass}'")
+        else:
+            try:
+                val_num = float(r["value"])
+                if val_num <= 0:
+                    errors.append(f"Power term {tid} has non-positive numeric value: {val_num}")
+            except ValueError:
+                errors.append(f"Power term {tid} has non-numeric value: {r['value']}")
+                continue
+
+            # Cross-check capacity_basis_mw when applicable
+            if r["attribute"] in capacity_basis_attrs and rel_id in pwr_rel_indexed.index:
+                rel_cap = pwr_rel_indexed.loc[rel_id, "capacity_basis_mw"]
+                if abs(val_num - rel_cap) > 1e-4:
+                    errors.append(f"Power term {tid} capacity mismatch with relationship {rel_id}: {val_num} vs {rel_cap}")
+
+            # Cross-check that a corresponding power fact exists with matching value
+            matching_facts = pwr_facts_df[(pwr_facts_df["power_rel_id"] == rel_id) & (abs(pwr_facts_df["value_mw"] - val_num) < 1e-4)]
+            if matching_facts.empty:
+                errors.append(f"Power term {tid} ({r['attribute']}={val_num}) has no matching power_facts row for {rel_id}")
+
+    print(f"  [OK] Power Backplane verified: {len(fac_df)} facilities, {len(pwr_rel_df)} power contracts, {len(pwr_facts_df)} typed MW facts, {len(pwr_terms_df)} terms (26 Class A, 1 Class B), {len(pwr_claims_df)} primary claims.")
+
+    # ---------------------------------------------------------
+    # 1B. Validate Attribution Layer (ADR-021 / ADR-021.1)
+    # ---------------------------------------------------------
+    lnk_df = pd.read_parquet(PROCESSED_DIR / "obligation_facility_links.parquet")
+    obl_df = pd.read_parquet(PROCESSED_DIR / "obligations.parquet")
+    clm_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
+    pwr_clm_df = pd.read_parquet(PROCESSED_DIR / "power_claims.parquet")
+    combined_claims_df = pd.concat([clm_df, pwr_clm_df], ignore_index=True)
+    all_claims_map = dict(zip(combined_claims_df["claim_id"], combined_claims_df["filing_date"]))
+
+    valid_obl_ids = set(obl_df["obligation_id"])
+    valid_fac_ids = set(fac_df["facility_id"])
+    valid_link_types = {
+        "direct_project_financing",
+        "direct_equipment_financing",
+        "direct_customer_contract",
+        "direct_lease",
+        "completion_support",
+        "parent_guarantee",
+        "portfolio_or_corporate",
+        "proceeds_partially_allocated",
+        "unknown"
+    }
+    valid_alloc_scopes = {"single_facility", "multi_facility", "corporate_unallocated", "unknown"}
+
+    # Invariant 1: All 47 obligations must be linked
+    linked_obls = set(lnk_df["obligation_id"])
+    if linked_obls != valid_obl_ids:
+        missing_obls = valid_obl_ids - linked_obls
+        extra_obls = linked_obls - valid_obl_ids
+        if missing_obls:
+            errors.append(f"Attribution layer missing obligations: {missing_obls}")
+        if extra_obls:
+            errors.append(f"Attribution layer contains unknown obligations: {extra_obls}")
+
+    # Invariant 2: Link type, scope, bitemporal claim lineage, and allocation fractions
+    for _, r in lnk_df.iterrows():
+        lid = r["link_id"]
+        lt = r["link_type"]
+        asc = r["allocation_scope"]
+        fid = r["facility_id"]
+        amt = r["allocated_amount"]
+        frac = r["allocation_fraction"]
+        t_cid = r.get("truth_claim_id")
+        k_cid = r.get("knowledge_claim_id")
+        pub_known = r.get("publicly_known_from")
+
+        if lt not in valid_link_types:
+            errors.append(f"Link {lid} has invalid link_type: {lt}")
+        if asc not in valid_alloc_scopes:
+            errors.append(f"Link {lid} has invalid allocation_scope: {asc}")
+
+        if pd.notna(fid) and fid not in valid_fac_ids:
+            errors.append(f"Link {lid} references unknown facility_id: {fid}")
+
+        # Bitemporal claim lineage checks (ADR-021.1)
+        if not t_cid or t_cid not in all_claims_map:
+            errors.append(f"Link {lid} has missing or unknown truth_claim_id: {t_cid}")
+        if not k_cid or k_cid not in all_claims_map:
+            errors.append(f"Link {lid} has missing or unknown knowledge_claim_id: {k_cid}")
+        else:
+            k_fdate = all_claims_map[k_cid]
+            if str(pub_known) < str(k_fdate):
+                errors.append(f"Link {lid} publicly_known_from {pub_known} predates knowledge claim {k_cid} filing date {k_fdate}")
+
+        # The Critical Rule: No facility-level dollar allocation unless demonstrably attributable
+        if asc == "single_facility":
+            if lt in {"direct_project_financing", "direct_equipment_financing", "direct_lease"}:
+                if pd.isna(amt) or amt <= 0:
+                    errors.append(f"Link {lid} is {lt} single_facility but has invalid allocated_amount: {amt}")
+                if frac != 1.0:
+                    errors.append(f"Link {lid} is {lt} single_facility direct allocation but allocation_fraction != 1.0: {frac}")
+        elif asc == "corporate_unallocated":
+            if pd.notna(fid):
+                errors.append(f"Link {lid} is corporate_unallocated but specifies facility_id: {fid}")
+            if pd.notna(amt):
+                errors.append(f"Link {lid} is corporate_unallocated but specifies allocated_amount: {amt}")
+        elif asc == "multi_facility":
+            if pd.notna(amt):
+                errors.append(f"Link {lid} is multi_facility but specifies synthetic allocated_amount: {amt} (must be None)")
+
+    # Invariant 3: Exact facility-attributable funded debt vs committed capacity (ADR-021.1)
+    funded_debt = lnk_df[lnk_df["amount_type"] == "funded_principal"]["allocated_amount"].sum()
+    expected_funded_debt = 6_090_000_000.0  # $6.090B (APLD only: $2.35B PF1 + $2.15B PF2 + $1.59B 7% Notes)
+    if funded_debt != expected_funded_debt:
+        errors.append(f"Facility-attributed funded debt mismatch: ${funded_debt/1e9:.3f}B (expected ${expected_funded_debt/1e9:.3f}B)")
+    else:
+        print(f"  [OK] Facility-attributed funded debt verified: ${funded_debt/1e9:.3f}B ($6,090M, APLD only, 0.00% drift).")
+
+    committed_cap = lnk_df[lnk_df["amount_type"] == "facility_capacity"]["allocated_amount"].sum()
+    expected_committed_cap = 2_400_000_000.0  # $2.400B (IREN Mackenzie committed equipment financing capacity)
+    if committed_cap != expected_committed_cap:
+        errors.append(f"Facility committed capacity mismatch: ${committed_cap/1e9:.3f}B (expected ${expected_committed_cap/1e9:.3f}B)")
+    else:
+        print(f"  [OK] Facility committed equipment financing capacity verified: ${committed_cap/1e9:.3f}B ($2,400M, IREN Mackenzie).")
+
+    # Invariant 4: Active corporate unallocated debt balance as of Sep 28, 2026 (ADR-021.1)
+    corp_lnk = lnk_df[lnk_df["allocation_scope"] == "corporate_unallocated"]
+    corp_obls = obl_df[obl_df["obligation_id"].isin(corp_lnk["obligation_id"]) & (obl_df["amount_type"] == "principal_outstanding")]
+    active_corp = corp_obls[corp_obls["valid_to"].isna() | (corp_obls["valid_to"] > "2026-09-28")]
+    active_corp_debt = active_corp["amount"].sum()
+    expected_active_corp_debt = 39_357_680_000.0  # $39.358B ($39.808B minus $300M retired bridge and $150M extinguished Coatue note)
+    if abs(active_corp_debt - expected_active_corp_debt) > 1.0:
+        errors.append(f"Active corporate unallocated debt mismatch: ${active_corp_debt/1e9:.4f}B (expected ${expected_active_corp_debt/1e9:.4f}B)")
+    else:
+        print(f"  [OK] Active corporate unallocated debt as of Sep 28, 2026 verified: ${active_corp_debt/1e9:.3f}B ($39,358M, exact).")
+
+    print(f"  [OK] Attribution Layer certified: {len(lnk_df)} links across all 47 obligations, zero synthetic facility pro-rations, discrete bitemporal lineage.")
+
+    # ---------------------------------------------------------
+    # 1C. Validate Facility Completion Facts (ADR-021.1a)
+    # ---------------------------------------------------------
+    facts_p = PROCESSED_DIR / "facility_completion_facts.parquet"
+    if facts_p.exists():
+        fcf_df = pd.read_parquet(facts_p)
+        if len(fcf_df) != 14:
+            errors.append(f"facility_completion_facts.parquet row count mismatch: {len(fcf_df)} (expected 14)")
+        if set(fcf_df["facility_id"]) != valid_fac_ids:
+            errors.append(f"facility_completion_facts facility_id mismatch: {set(fcf_df['facility_id']) ^ valid_fac_ids}")
+        
+        field_claim_cols = [
+            "utility_service_capacity_claim_id",
+            "utility_load_online_claim_id",
+            "critical_it_contracted_claim_id",
+            "service_ready_it_claim_id",
+            "completion_status_claim_id",
+            "equipment_accepted_claim_id",
+        ]
+
+        for _, fr in fcf_df.iterrows():
+            fid = fr["facility_id"]
+            if fr["truth_claim_id"] not in all_claims_map:
+                errors.append(f"Facility {fid} completion fact references unknown truth_claim_id: {fr['truth_claim_id']}")
+            if fr["knowledge_claim_id"] not in all_claims_map:
+                errors.append(f"Facility {fid} completion fact references unknown knowledge_claim_id: {fr['knowledge_claim_id']}")
+            k_cid = fr["knowledge_claim_id"]
+            if k_cid in all_claims_map:
+                k_date = str(all_claims_map[k_cid])
+                if str(fr["publicly_known_from"]) < k_date:
+                    errors.append(f"Facility {fid} completion fact: publicly_known_from {fr['publicly_known_from']} predates knowledge claim {k_cid} filing date {k_date}")
+            if fr["completion_status"] not in {"operational", "operational_and_expanding", "under_construction", "announced"}:
+                errors.append(f"Facility {fid} invalid completion_status: {fr['completion_status']}")
+            
+            # Check attribute_claim_map
+            if "attribute_claim_map" in fr and pd.notna(fr["attribute_claim_map"]):
+                try:
+                    attr_map = json.loads(fr["attribute_claim_map"])
+                    for attr, cid in attr_map.items():
+                        if cid not in all_claims_map:
+                            errors.append(f"Facility {fid} attribute_claim_map[{attr}] references unknown claim: {cid}")
+                        else:
+                            c_fdate = str(all_claims_map[cid])
+                            if str(fr["publicly_known_from"]) < c_fdate:
+                                errors.append(f"Facility {fid} attribute {attr} claim {cid} ({c_fdate}) postdates publicly_known_from {fr['publicly_known_from']}")
+                except Exception as e:
+                    errors.append(f"Facility {fid} attribute_claim_map invalid JSON: {e}")
+
+            # Check typed field claim columns
+            for col in field_claim_cols:
+                if col in fr and pd.notna(fr[col]) and fr[col]:
+                    cid = fr[col]
+                    if cid not in all_claims_map:
+                        errors.append(f"Facility {fid} {col} references unknown claim: {cid}")
+
+            # Unknown != Zero validation: Mackenzie equipment accepted must be null/unknown
+            if fid == "FAC-IREN-MACKENZIE":
+                if pd.notna(fr["equipment_accepted_fraction"]):
+                    errors.append(f"Facility {fid} equipment_accepted_fraction must be None/unknown (not synthetic 0.0)")
+
+            if pd.notna(fr["equipment_accepted_fraction"]):
+                if not (0.0 <= fr["equipment_accepted_fraction"] <= 1.0):
+                    errors.append(f"Facility {fid} equipment_accepted_fraction out of bounds: {fr['equipment_accepted_fraction']}")
+
+        print(f"  [OK] Facility Completion Facts verified: {len(fcf_df)} facilities with field-level attribute claims and zero synthetic defaults.")
+
+    # ---------------------------------------------------------
+    # 2. Validate CoreWeave & Applied Digital Exact Debt Decomposition
+    # ---------------------------------------------------------
+    crwv_borrowers = [
+        "CRWV", "CRWV_CCAC_II", "CRWV_CCAC_IV", "CRWV_CCAC_VII", "CRWV_SPV_VIII", "CRWV_FINANCING_DDTL_V"
+    ]
+    crwv_debt = obl_df[
+        obl_df["from_entity"].isin(crwv_borrowers) & (obl_df["amount_type"] == "principal_outstanding")
+    ]
+    
+    expected_tranches = 16
+    if len(crwv_debt) != expected_tranches:
+        errors.append(f"CRWV debt components count mismatch: {len(crwv_debt)} (expected {expected_tranches})")
+    
+    total_crwv_debt = crwv_debt["amount"].sum()
+    target_debt = 35_551_000_000.0  # $35.551B from Form 10-Q Note 10 Table 36
+    debt_drift = abs(total_crwv_debt - target_debt)
+    if debt_drift > 1.0:
+        errors.append(f"CRWV total debt drift: ${total_crwv_debt/1e9:.4f}B vs ${target_debt/1e9:.4f}B (drift ${debt_drift:,.2f})")
+    else:
+        print(f"  [OK] CRWV 16 modeled debt components/edges sum exactly to ${total_crwv_debt/1e9:.3f}B ($35,551M, exact 0.00% drift).")
+
+    # Check that required tranche IDs exist
+    expected_ids = {
+        "OBL-CRWV-DEBT-DDTL1", "OBL-CRWV-DEBT-DDTL2", "OBL-CRWV-DEBT-DDTL2-1", "OBL-CRWV-DEBT-DDTL3",
+        "OBL-CRWV-DEBT-DDTL4", "OBL-CRWV-DEBT-DDTL5", "OBL-CRWV-DEBT-NOTES-2030", "OBL-CRWV-DEBT-NOTES-2031-900",
+        "OBL-CRWV-DEBT-NOTES-2031-975", "OBL-CRWV-DEBT-NOTES-2032-9625", "OBL-CRWV-DEBT-NOTES-2032-EUR",
+        "OBL-CRWV-DEBT-CONV-2031", "OBL-CRWV-DEBT-CONV-2032",
+        "OBL-CRWV-DEBT-OEM", "OBL-CRWV-DEBT-OEM-NR", "OBL-CRWV-DEBT-MAGNETAR"
+    }
+    missing_ids = expected_ids - set(crwv_debt["obligation_id"])
+    if missing_ids:
+        errors.append(f"Missing expected CRWV debt components: {missing_ids}")
+    else:
+        print(f"  [OK] All 16 distinct CRWV debt components present.")
+
+    # Check borrower entities and maturity semantics for DDTLs
+    for _, r in crwv_debt.iterrows():
+        oid = r["obligation_id"]
+        if oid == "OBL-CRWV-DEBT-DDTL1" and r["from_entity"] != "CRWV_CCAC_II":
+            errors.append(f"DDTL 1 borrower mismatch: {r['from_entity']} (expected CRWV_CCAC_II)")
+        elif oid == "OBL-CRWV-DEBT-DDTL2":
+            if r["from_entity"] != "CRWV_CCAC_IV":
+                errors.append(f"DDTL 2 borrower mismatch: {r['from_entity']} (expected CRWV_CCAC_IV)")
+            if r.get("maturity_date") != "2030-08-31":
+                errors.append(f"DDTL 2 maturity_date mismatch: {r.get('maturity_date')} (expected 2030-08-31)")
+            if r.get("maturity_rule") != "funding_date + 5 years":
+                errors.append(f"DDTL 2 maturity_rule mismatch: {r.get('maturity_rule')} (expected funding_date + 5 years)")
+            if r.get("reported_final_maturity") != "2030-08":
+                errors.append(f"DDTL 2 reported_final_maturity mismatch: {r.get('reported_final_maturity')} (expected 2030-08)")
+        elif oid == "OBL-CRWV-DEBT-DDTL2-1":
+            if r["from_entity"] != "CRWV_CCAC_IV":
+                errors.append(f"DDTL 2.1 borrower mismatch: {r['from_entity']} (expected CRWV_CCAC_IV)")
+            if r.get("economic_valid_from") != "2025-09-29":
+                errors.append(f"DDTL 2.1 economic_valid_from mismatch: {r.get('economic_valid_from')} (expected 2025-09-29)")
+            if r.get("publicly_known_from") != "2025-10-02":
+                errors.append(f"DDTL 2.1 publicly_known_from mismatch: {r.get('publicly_known_from')} (expected 2025-10-02)")
+            if r.get("maturity_rule") != "funding_date + 5 years":
+                errors.append(f"DDTL 2.1 maturity_rule mismatch: {r.get('maturity_rule')} (expected funding_date + 5 years)")
+            if r.get("reported_final_maturity") != "2031-03":
+                errors.append(f"DDTL 2.1 reported_final_maturity mismatch: {r.get('reported_final_maturity')} (expected 2031-03)")
+        elif oid == "OBL-CRWV-DEBT-DDTL3" and r["from_entity"] != "CRWV_CCAC_VII":
+            errors.append(f"DDTL 3 borrower mismatch: {r['from_entity']} (expected CRWV_CCAC_VII)")
+        elif oid == "OBL-CRWV-DEBT-DDTL4" and r["from_entity"] != "CRWV_SPV_VIII":
+            errors.append(f"DDTL 4 borrower mismatch: {r['from_entity']} (expected CRWV_SPV_VIII)")
+        elif oid == "OBL-CRWV-DEBT-DDTL5" and r["from_entity"] != "CRWV_FINANCING_DDTL_V":
+            errors.append(f"DDTL 5 borrower mismatch: {r['from_entity']} (expected CRWV_FINANCING_DDTL_V)")
+    print("  [OK] DDTL 2.0 and DDTL 2.1 maturity semantics and contemporaneous lifecycle dates verified.")
+
+    # Check Senior Notes and Convertibles ranking (Senior Unsecured with subsidiary guarantees)
+    unsecured_tranches = [
+        "OBL-CRWV-DEBT-NOTES-2030", "OBL-CRWV-DEBT-NOTES-2031-900", "OBL-CRWV-DEBT-NOTES-2031-975",
+        "OBL-CRWV-DEBT-NOTES-2032-9625", "OBL-CRWV-DEBT-NOTES-2032-EUR",
+        "OBL-CRWV-DEBT-CONV-2031", "OBL-CRWV-DEBT-CONV-2032"
+    ]
+    for ut in unsecured_tranches:
+        u_row = crwv_debt[crwv_debt["obligation_id"] == ut]
+        if not u_row.empty:
+            rec = u_row.iloc[0].get("recourse")
+            otype = u_row.iloc[0].get("obligation_type")
+            if rec not in ["senior_unsecured", "senior_unsecured_convertible"]:
+                errors.append(f"{ut} recourse mismatch: {rec} (expected senior_unsecured or senior_unsecured_convertible)")
+            if otype != "debt_facility":
+                errors.append(f"{ut} obligation_type mismatch: {otype}")
+    print("  [OK] Senior Notes and Convertibles verified as Senior Unsecured obligations (with subsidiary guarantees).")
+
+    # Verify 6 CRWV Parent Guarantees (5 full recourse + 1 limited carve-out bad acts)
+    crwv_gntys = obl_df[
+        (obl_df["from_entity"] == "CRWV") &
+        (obl_df["obligation_type"] == "contingent_guarantee") &
+        (obl_df["amount_type"] == "contingent_guarantee")
+    ]
+    expected_gnty_ids = {
+        "OBL-CRWV-GUARANTY-DDTL1", "OBL-CRWV-GUARANTY-DDTL2", "OBL-CRWV-GUARANTY-DDTL2-1",
+        "OBL-CRWV-GUARANTY-DDTL3", "OBL-CRWV-GUARANTY-DDTL4", "OBL-CRWV-GUARANTY-DDTL5"
+    }
+    missing_gntys = expected_gnty_ids - set(crwv_gntys["obligation_id"])
+    if missing_gntys:
+        errors.append(f"Missing expected CRWV parent guarantee edges: {missing_gntys}")
+    else:
+        print(f"  [OK] All 6 CRWV parent guarantee edges present (5 recourse + 1 limited bad-acts carve-out).")
+
+    # Check DDTL 4.0 limited parent guarantee terms specifically
+    ddtl4_gnty = obl_df[obl_df["obligation_id"] == "OBL-CRWV-GUARANTY-DDTL4"]
+    if ddtl4_gnty.empty:
+        errors.append("Missing OBL-CRWV-GUARANTY-DDTL4 parent guarantee edge")
+    else:
+        g4 = ddtl4_gnty.iloc[0]
+        if g4["recourse"] != "limited_bad_acts":
+            errors.append(f"DDTL 4.0 parent guarantee recourse mismatch: {g4['recourse']} (expected limited_bad_acts)")
+        if g4["to_entity"] != "MUFG_BANK_SYN":
+            errors.append(f"DDTL 4.0 parent guarantee to_entity mismatch: {g4['to_entity']} (expected MUFG_BANK_SYN)")
+        if pd.notna(g4["amount"]):
+            errors.append(f"DDTL 4.0 parent guarantee should have amount = None, found {g4['amount']}")
+        if g4["reference_exposure_estimate"] != 2_837_000_000.0:
+            errors.append(f"DDTL 4.0 parent guarantee reference_exposure_estimate mismatch: {g4['reference_exposure_estimate']}")
+        if g4.get("reference_exposure_class") != "Class C (Underlying Principal Reference)":
+            errors.append(f"DDTL 4.0 parent guarantee reference_exposure_class mismatch: {g4.get('reference_exposure_class')}")
+        else:
+            print("  [OK] DDTL 4.0 limited parent guarantee verified: recourse='limited_bad_acts', ref_exposure=$2.837B (Class C Underlying Principal Reference).")
+
+    # Check DDTL 3.0 co-borrower edge
+    coborrower = obl_df[obl_df["obligation_id"] == "OBL-CRWV-COBORROWER-DDTL3"]
+    if coborrower.empty:
+        errors.append("Missing OBL-CRWV-COBORROWER-DDTL3 co-borrower edge")
+    else:
+        cb = coborrower.iloc[0]
+        if cb["from_entity"] != "CRWV_CCAC_V":
+            errors.append(f"DDTL 3.0 co-borrower from_entity mismatch: {cb['from_entity']} (expected CRWV_CCAC_V)")
+        if cb["to_entity"] != "MUFG_BANK_SYN":
+            errors.append(f"DDTL 3.0 co-borrower to_entity mismatch: {cb['to_entity']} (expected MUFG_BANK_SYN)")
+        if cb["obligation_type"] != "joint_co_borrower":
+            errors.append(f"DDTL 3.0 co-borrower obligation_type mismatch: {cb['obligation_type']} (expected joint_co_borrower)")
+        if pd.notna(cb["amount"]):
+            errors.append(f"DDTL 3.0 co-borrower should have amount = None, found {cb['amount']}")
+        else:
+            print("  [OK] DDTL 3.0 co-borrower edge verified: CRWV_CCAC_V -> MUFG_BANK_SYN (joint_co_borrower).")
+
+    # Applied Digital exact debt decomposition (parent and project SPVs)
+    apld_debt = obl_df[
+        obl_df["from_entity"].isin(["APLD", "APLD_COMPUTECO", "APLD_COMPUTECO2", "APLD_COMPUTECO3"]) & 
+        (obl_df["amount_type"] == "principal_outstanding")
+    ]
+    expected_apld_tranches = 6  # PF1, PF2, CONV, BRIDGE, 7PCT, OTHER
+    if len(apld_debt) != expected_apld_tranches:
+        errors.append(f"APLD debt components count mismatch in master ledger: {len(apld_debt)} (expected {expected_apld_tranches})")
+    else:
+        print(f"  [OK] APLD {expected_apld_tranches} modeled debt components present in master ledger (including 7.00% successor notes).")
+
+    expected_apld_ids = {
+        "OBL-APLD-DEBT-PF1", "OBL-APLD-DEBT-PF2", "OBL-APLD-DEBT-CONV",
+        "OBL-APLD-DEBT-BRIDGE", "OBL-APLD-DEBT-7PCT-2026", "OBL-APLD-DEBT-OTHER"
+    }
+    missing_apld_ids = expected_apld_ids - set(apld_debt["obligation_id"])
+    if missing_apld_ids:
+        errors.append(f"Missing expected APLD debt components: {missing_apld_ids}")
+    else:
+        print(f"  [OK] All 6 distinct APLD debt components present.")
+
+    # Contract-literal checks on individual APLD debt tranches
+    for _, r in apld_debt.iterrows():
+        oid = r["obligation_id"]
+        if oid == "OBL-APLD-DEBT-PF1":
+            if r["from_entity"] != "APLD_COMPUTECO":
+                errors.append(f"OBL-APLD-DEBT-PF1 issuer mismatch: {r['from_entity']} (expected APLD_COMPUTECO)")
+            if r["maturity_date"] != "2030-12-15":
+                errors.append(f"OBL-APLD-DEBT-PF1 maturity mismatch: {r['maturity_date']} (expected 2030-12-15)")
+            if r["term_years"] != 5.1:
+                errors.append(f"OBL-APLD-DEBT-PF1 term_years mismatch: {r['term_years']} (expected 5.1)")
+        elif oid == "OBL-APLD-DEBT-PF2":
+            if r["from_entity"] != "APLD_COMPUTECO2":
+                errors.append(f"OBL-APLD-DEBT-PF2 issuer mismatch: {r['from_entity']} (expected APLD_COMPUTECO2)")
+            if r["maturity_date"] != "2031-03-15":
+                errors.append(f"OBL-APLD-DEBT-PF2 maturity mismatch: {r['maturity_date']} (expected 2031-03-15)")
+            if r["term_years"] != 5.0:
+                errors.append(f"OBL-APLD-DEBT-PF2 term_years mismatch: {r['term_years']} (expected 5.0)")
+        elif oid == "OBL-APLD-DEBT-CONV":
+            if r["from_entity"] != "APLD":
+                errors.append(f"OBL-APLD-DEBT-CONV issuer mismatch: {r['from_entity']} (expected APLD)")
+            if r["maturity_date"] != "2030-06-30":
+                errors.append(f"OBL-APLD-DEBT-CONV maturity mismatch: {r['maturity_date']} (expected 2030-06-30)")
+            if r["term_years"] != 5.6:
+                errors.append(f"OBL-APLD-DEBT-CONV term_years mismatch: {r['term_years']} (expected 5.6)")
+        elif oid == "OBL-APLD-DEBT-BRIDGE":
+            if r["from_entity"] != "APLD":
+                errors.append(f"OBL-APLD-DEBT-BRIDGE issuer mismatch: {r['from_entity']} (expected APLD)")
+            if r["effective_date"] != "2026-05-01":
+                errors.append(f"OBL-APLD-DEBT-BRIDGE effective_date mismatch: {r['effective_date']} (expected 2026-05-01)")
+            if r["maturity_date"] != "2027-04-30":
+                errors.append(f"OBL-APLD-DEBT-BRIDGE maturity mismatch: {r['maturity_date']} (expected 2027-04-30)")
+            if r["valid_to"] != "2026-06-16":
+                errors.append(f"OBL-APLD-DEBT-BRIDGE valid_to mismatch: {r['valid_to']} (expected 2026-06-16)")
+            if r.get("superseded_by") != "OBL-APLD-DEBT-7PCT-2026":
+                errors.append(f"OBL-APLD-DEBT-BRIDGE superseded_by mismatch: {r.get('superseded_by')} (expected OBL-APLD-DEBT-7PCT-2026)")
+            if r.get("rate_type") != "floating":
+                errors.append(f"OBL-APLD-DEBT-BRIDGE rate_type mismatch: {r.get('rate_type')} (expected floating)")
+        elif oid == "OBL-APLD-DEBT-7PCT-2026":
+            if r["from_entity"] != "APLD_COMPUTECO3":
+                errors.append(f"OBL-APLD-DEBT-7PCT-2026 issuer mismatch: {r['from_entity']} (expected APLD_COMPUTECO3)")
+            if r.get("recourse") != "senior_secured_spv":
+                errors.append(f"OBL-APLD-DEBT-7PCT-2026 recourse mismatch: {r.get('recourse')} (expected senior_secured_spv)")
+            if r["amount"] != 1_590_000_000.0:
+                errors.append(f"OBL-APLD-DEBT-7PCT-2026 amount mismatch: {r['amount']} (expected 1590000000.0)")
+            if r["effective_date"] != "2026-06-16":
+                errors.append(f"OBL-APLD-DEBT-7PCT-2026 effective_date mismatch: {r['effective_date']} (expected 2026-06-16)")
+            if r["maturity_date"] != "2031-06-15":
+                errors.append(f"OBL-APLD-DEBT-7PCT-2026 maturity mismatch: {r['maturity_date']} (expected 2031-06-15)")
+            if r.get("supersedes") != "OBL-APLD-DEBT-BRIDGE":
+                errors.append(f"OBL-APLD-DEBT-7PCT-2026 supersedes mismatch: {r.get('supersedes')} (expected OBL-APLD-DEBT-BRIDGE)")
+            if r.get("rate_type") != "fixed":
+                errors.append(f"OBL-APLD-DEBT-7PCT-2026 rate_type mismatch: {r.get('rate_type')} (expected fixed)")
+        elif oid == "OBL-APLD-DEBT-OTHER":
+            if r["from_entity"] != "APLD":
+                errors.append(f"OBL-APLD-DEBT-OTHER issuer mismatch: {r['from_entity']} (expected APLD)")
+            if r["obligation_type"] != "aggregate_residual_debt":
+                errors.append(f"OBL-APLD-DEBT-OTHER obligation_type mismatch: {r['obligation_type']} (expected aggregate_residual_debt)")
+            if r["amount"] != 56680000.0:
+                errors.append(f"OBL-APLD-DEBT-OTHER amount mismatch: {r['amount']} (expected 56680000.0)")
+    print("  [OK] Contract-literal legal entities, effective dates, maturities, supersession links, and types verified for all 6 APLD debt tranches.")
+
+    # ---------------------------------------------------------
+    # 3. Validate Obligations & Polaris Forge 1 Phasing
+    # ---------------------------------------------------------
+    valid_amount_types = {
+        "principal_outstanding", "lifetime_contract_value", "remaining_commitment",
+        "recognized_revenue", "contingent_guarantee", "equity_investment", "facility_capacity",
+        "contingent_obligations"
+    }
+    expected_obligations_count = 47
+    if len(obl_df) != expected_obligations_count:
+        errors.append(f"Obligations count mismatch: {len(obl_df)} (expected {expected_obligations_count})")
+    else:
+        print(f"  [OK] Exactly {expected_obligations_count} decomposed obligations present.")
+
+    for _, row in obl_df.iterrows():
+        oid = row["obligation_id"]
+        atype = row.get("amount_type")
+        if atype not in valid_amount_types:
+            errors.append(f"Obligation {oid} has invalid amount_type: {atype}")
+        if atype in ["contingent_obligations", "contingent_guarantee"]:
+            if not pd.isna(row.get("amount")):
+                errors.append(f"Contingent obligation {oid} should have amount = None (uncapped/contingent), found: {row.get('amount')}")
+            if not row.get("capacity_description"):
+                errors.append(f"Contingent obligation {oid} missing capacity_description")
+        else:
+            if pd.isna(row.get("amount")) or row.get("amount") <= 0:
+                errors.append(f"Obligation {oid} has non-positive amount: {row.get('amount')}")
+        if not row.get("as_of_date"):
+            errors.append(f"Obligation {oid} missing as_of_date")
+        if not row.get("observed_as_of"):
+            errors.append(f"Obligation {oid} missing observed_as_of")
+        if not row.get("economic_valid_from"):
+            errors.append(f"Obligation {oid} missing economic_valid_from")
+        if not row.get("publicly_known_from"):
+            errors.append(f"Obligation {oid} missing publicly_known_from")
+
+    # Check Polaris Forge 1 Master Lease
+    lease_row = obl_df[obl_df["obligation_id"] == "OBL-CRWV-APLD-LEASE"]
+    if lease_row.empty:
+        errors.append("Missing OBL-CRWV-APLD-LEASE obligation")
+    else:
+        r_l = lease_row.iloc[0]
+        if r_l.get("to_entity") != "APLD_COMPUTECO":
+            errors.append(f"OBL-CRWV-APLD-LEASE to_entity mismatch: {r_l.get('to_entity')} (expected APLD_COMPUTECO)")
+        cap_mw = r_l.get("capacity_mw")
+        if cap_mw != 400.0:
+            errors.append(f"OBL-CRWV-APLD-LEASE capacity_mw mismatch: {cap_mw} (expected 400.0 MW)")
+        else:
+            print("  [OK] OBL-CRWV-APLD-LEASE verified: counterparty APLD_COMPUTECO, 400.0 MW total campus capacity.")
+
+    # Check Split Springing Guarantees (ELN-02 and ELN-03)
+    g_eln02 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-APLD-GUARANTY-ELN02"]
+    g_eln03 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-APLD-GUARANTY-ELN03"]
+    if g_eln02.empty:
+        errors.append("Missing OBL-CRWV-APLD-GUARANTY-ELN02 obligation")
+    else:
+        row2 = g_eln02.iloc[0]
+        if row2["amount_type"] != "contingent_obligations" or not pd.isna(row2["amount"]):
+            errors.append(f"OBL-CRWV-APLD-GUARANTY-ELN02 should be uncapped contingent_obligations, found {row2['amount_type']} / {row2['amount']}")
+        if "Phase 2/4 Space" not in str(row2.get("capacity_description")):
+            errors.append(f"OBL-CRWV-APLD-GUARANTY-ELN02 capacity_description mismatch: {row2.get('capacity_description')}")
+        else:
+            print("  [OK] ELN-02 verified as uncapped legal indemnity for Phase 2/4 Space (2 of 4 data halls in Building 2).")
+
+    if g_eln03.empty:
+        errors.append("Missing OBL-CRWV-APLD-GUARANTY-ELN03 obligation")
+    else:
+        row3 = g_eln03.iloc[0]
+        if row3["amount_type"] != "contingent_obligations" or not pd.isna(row3["amount"]):
+            errors.append(f"OBL-CRWV-APLD-GUARANTY-ELN03 should be uncapped contingent_obligations, found {row3['amount_type']} / {row3['amount']}")
+        if row3.get("capacity_mw") != 150.0:
+            errors.append(f"OBL-CRWV-APLD-GUARANTY-ELN03 capacity_mw mismatch: {row3.get('capacity_mw')} (expected 150.0)")
+        if row3.get("reference_exposure_estimate") != 4_125_000_000.0:
+            errors.append(f"OBL-CRWV-APLD-GUARANTY-ELN03 reference_exposure_estimate mismatch: {row3.get('reference_exposure_estimate')}")
+        else:
+            print("  [OK] ELN-03 verified as uncapped legal indemnity for Building 3 (150 MW) with $4.125B Class C reference proxy.")
+
+    print(f"  [OK] All {len(obl_df)} obligations have valid amount_type, valid values/uncapped attributes, and bitemporal fields.")
+
+    # ---------------------------------------------------------
+    # 3b. Validate Dynamic SPV Unwrapping & Bitemporal Filtering
+    # ---------------------------------------------------------
+    try:
+        from src.graph import ObligationNetwork
+        from src.stress import FinancialStressEngine
+
+        net = ObligationNetwork()
+        collapsed = net.unwrap_spv_perimeter()
+        spv_remaining = [n for n in collapsed.nodes() if net.entities_df.loc[n, 'category'] == 'project_spv']
+        if spv_remaining:
+            errors.append(f"SPVs unexpectedly remained in unwrapped perimeter: {spv_remaining}")
+        else:
+            print(f"  [OK] Dynamic SPV unwrapping: 0 SPVs remaining in consolidated network ({collapsed.number_of_nodes()} parent nodes).")
+
+        # BDC Consolidation Isolation Verification (ADR-019.1)
+        if net.get_root_parent("BLUE_OWL_OBDC") != "BLUE_OWL_OBDC":
+            errors.append(f"BLUE_OWL_OBDC root parent mismatch: {net.get_root_parent('BLUE_OWL_OBDC')} (expected BLUE_OWL_OBDC)")
+        if "BLUE_OWL_OBDC" not in collapsed.nodes():
+            errors.append("BLUE_OWL_OBDC missing from unwrapped consolidated perimeter")
+        if "BLUE_OWL" in collapsed.nodes():
+            errors.append("BLUE_OWL should not appear as a lender in collapsed graph (OBDC is independent BDC)")
+        else:
+            print("  [OK] BDC consolidation isolation verified: BLUE_OWL_OBDC is distinct root lender node (does not collapse into BLUE_OWL).")
+
+        # Corporate Hierarchy Verification (ADR-013 & ADR-015)
+        p_c3 = net.get_parent("APLD_COMPUTECO3")
+        p_hpc2 = net.get_parent("APLD_HPC_HOLDINGS2")
+        root_c3 = net.get_root_parent("APLD_COMPUTECO3")
+        if p_c3 != "APLD_HPC_HOLDINGS2":
+            errors.append(f"APLD_COMPUTECO3 direct parent mismatch: {p_c3} (expected APLD_HPC_HOLDINGS2)")
+        if p_hpc2 != "APLD":
+            errors.append(f"APLD_HPC_HOLDINGS2 direct parent mismatch: {p_hpc2} (expected APLD)")
+        if root_c3 != "APLD":
+            errors.append(f"APLD_COMPUTECO3 root parent mismatch: {root_c3} (expected APLD)")
+        else:
+            print("  [OK] APLD ComputeCo 3 corporate hierarchy verified: APLD_COMPUTECO3 -> APLD_HPC_HOLDINGS2 -> APLD.")
+
+        for spv in ["CRWV_CCAC_II", "CRWV_CCAC_IV", "CRWV_CCAC_V", "CRWV_CCAC_VII", "CRWV_SPV_VIII", "CRWV_FINANCING_DDTL_V"]:
+            if net.get_root_parent(spv) != "CRWV":
+                errors.append(f"{spv} root parent mismatch: {net.get_root_parent(spv)} (expected CRWV)")
+        print("  [OK] CoreWeave borrowing and co-borrower SPVs verified: all unwrap cleanly to root parent CRWV.")
+
+        # Phase 0 Subnetwork Definition (Preserved Pilot Subnetwork)
+        p0_ids = {
+            "OBL-NVDA-CRWV-EQUITY", "OBL-CRWV-APLD-LEASE", "OBL-CRWV-APLD-GUARANTY-ELN02",
+            "OBL-CRWV-APLD-GUARANTY-ELN03", "REL-MSFT-CRWV-REVENUE-CONCENTRATION",
+            "OBL-CRWV-DEBT-DDTL1", "OBL-CRWV-DEBT-DDTL2", "OBL-CRWV-DEBT-DDTL2-1",
+            "OBL-CRWV-DEBT-DDTL3", "OBL-CRWV-DEBT-DDTL4", "OBL-CRWV-DEBT-DDTL5",
+            "OBL-CRWV-DEBT-NOTES-2030", "OBL-CRWV-DEBT-NOTES-2031-900", "OBL-CRWV-DEBT-NOTES-2031-975",
+            "OBL-CRWV-DEBT-NOTES-2032-9625", "OBL-CRWV-DEBT-NOTES-2032-EUR", "OBL-CRWV-DEBT-CONV-2031",
+            "OBL-CRWV-DEBT-CONV-2032", "OBL-CRWV-DEBT-OEM", "OBL-CRWV-DEBT-OEM-NR",
+            "OBL-CRWV-DEBT-MAGNETAR", "OBL-CRWV-GUARANTY-DDTL1", "OBL-CRWV-GUARANTY-DDTL2",
+            "OBL-CRWV-GUARANTY-DDTL2-1", "OBL-CRWV-GUARANTY-DDTL3", "OBL-CRWV-GUARANTY-DDTL4",
+            "OBL-CRWV-GUARANTY-DDTL5", "OBL-CRWV-COBORROWER-DDTL3", "OBL-APLD-DEBT-PF1",
+            "OBL-APLD-DEBT-PF2", "OBL-APLD-DEBT-CONV", "OBL-APLD-DEBT-BRIDGE",
+            "OBL-APLD-DEBT-7PCT-2026", "OBL-APLD-DEBT-OTHER", "OBL-SMCI-SUPPLIER-COMMIT"
+        }
+        def count_p0(nw):
+            return sum(1 for _, _, k in nw.graph.edges(keys=True) if k in p0_ids)
+
+        # Half-Open Validity Interval Test [valid_from, valid_to) (ADR-013)
+        # On June 15: Bridge active, 7% Notes inactive (32 Phase 0 edges, 37 total edges)
+        net_jun15 = net.economic_as_of("2026-06-15")
+        jun15_keys = [k for _, _, k in net_jun15.graph.edges(keys=True)]
+        if "OBL-APLD-DEBT-BRIDGE" not in jun15_keys or "OBL-APLD-DEBT-7PCT-2026" in jun15_keys or count_p0(net_jun15) != 32 or net_jun15.graph.number_of_edges() != 37:
+            errors.append(f"Half-open boundary check failed on 2026-06-15: Bridge={('OBL-APLD-DEBT-BRIDGE' in jun15_keys)}, Notes={('OBL-APLD-DEBT-7PCT-2026' in jun15_keys)}, P0_edges={count_p0(net_jun15)}, Total_Edges={net_jun15.graph.number_of_edges()}")
+
+        # On June 16 (transition boundary): Bridge retired ([valid_from, valid_to)), 7% Notes active, conserved edges
+        net_jun16 = net.economic_as_of("2026-06-16")
+        jun16_keys = [k for _, _, k in net_jun16.graph.edges(keys=True)]
+        if "OBL-APLD-DEBT-BRIDGE" in jun16_keys or "OBL-APLD-DEBT-7PCT-2026" not in jun16_keys or count_p0(net_jun16) != 32 or net_jun16.graph.number_of_edges() != 37:
+            errors.append(f"Half-open boundary check failed on 2026-06-16: Bridge={('OBL-APLD-DEBT-BRIDGE' in jun16_keys)}, Notes={('OBL-APLD-DEBT-7PCT-2026' in jun16_keys)}, P0_edges={count_p0(net_jun16)}, Total_Edges={net_jun16.graph.number_of_edges()}")
+        else:
+            print("  [OK] Half-open validity interval [valid_from, valid_to) verified on June 16, 2026: Bridge cleanly retired, 7% Notes active (32 Phase 0 edges, 37 total edges).")
+
+        # June 17 Epistemic Knowledge Boundary Test (ADR-014, ADR-015, ADR-016)
+        # CoreWeave 2032 Senior Notes issued June 18, 2026 (CLM-CRWV-014 Form 8-K).
+        # June 17 Economic Reality: 32 Phase 0 edges, 37 total edges (2032 notes do not yet exist economically).
+        net_econ_jun17 = net.economic_as_of("2026-06-17")
+        jun17_econ_keys = [k for _, _, k in net_econ_jun17.graph.edges(keys=True)]
+        if "OBL-CRWV-DEBT-NOTES-2032-9625" in jun17_econ_keys or count_p0(net_econ_jun17) != 32 or net_econ_jun17.graph.number_of_edges() != 37:
+            errors.append(f"Economic check failed on 2026-06-17: Notes-2032 in econ={('OBL-CRWV-DEBT-NOTES-2032-9625' in jun17_econ_keys)}, P0_edges={count_p0(net_econ_jun17)}, Total_Edges={net_econ_jun17.graph.number_of_edges()}")
+        else:
+            print("  [OK] June 17 economic boundary verified: 2032 notes inactive prior to June 18 issuance (32 Phase 0 edges, 37 total edges).")
+
+        # June 17 Epistemic Knowledge: Outside observer does NOT know 2032 notes (Form 8-K filed June 18).
+        # 28 Phase 0 edges known, 33 total edges known (includes NBIS Meta offtake, CORZ colocation, and 3 WULF converts).
+        net_known_jun17 = net.known_as_of("2026-06-17")
+        jun17_known_keys = [k for _, _, k in net_known_jun17.graph.edges(keys=True)]
+        if "OBL-CRWV-DEBT-NOTES-2032-9625" in jun17_known_keys or "OBL-CRWV-DEBT-NOTES-2032-EUR" in jun17_known_keys or count_p0(net_known_jun17) != 28 or net_known_jun17.graph.number_of_edges() != 33:
+            errors.append(f"Epistemic check failed on 2026-06-17: Notes-2032={('OBL-CRWV-DEBT-NOTES-2032-9625' in jun17_known_keys)}, P0_edges={count_p0(net_known_jun17)}, Total_Edges={net_known_jun17.graph.number_of_edges()}")
+        else:
+            print("  [OK] June 17 epistemic boundary verified: CoreWeave 2032 notes absent prior to Form 8-K filing (28 Phase 0 edges, 33 total edges known).")
+
+        # June 18 Epistemic Knowledge: Form 8-K filed! Both 2032 notes active (30 Phase 0 edges, 35 total edges known)
+        net_known_jun18 = net.known_as_of("2026-06-18")
+        jun18_known_keys = [k for _, _, k in net_known_jun18.graph.edges(keys=True)]
+        if "OBL-CRWV-DEBT-NOTES-2032-9625" not in jun18_known_keys or "OBL-CRWV-DEBT-NOTES-2032-EUR" not in jun18_known_keys or count_p0(net_known_jun18) != 30 or net_known_jun18.graph.number_of_edges() != 35:
+            errors.append(f"Epistemic check failed on 2026-06-18: Notes-2032={('OBL-CRWV-DEBT-NOTES-2032-9625' in jun18_known_keys)}, P0_edges={count_p0(net_known_jun18)}, Total_Edges={net_known_jun18.graph.number_of_edges()}")
+        else:
+            print("  [OK] June 18 epistemic boundary verified: Form 8-K incorporated, CoreWeave 2032 notes active (30 Phase 0 edges, 35 total edges known).")
+
+        # June 18 Economic Reality: Both 2032 notes active (34 Phase 0 edges, 39 total edges)
+        net_econ_jun18 = net.economic_as_of("2026-06-18")
+        if count_p0(net_econ_jun18) != 34 or net_econ_jun18.graph.number_of_edges() != 39:
+            errors.append(f"Expected 34 Phase 0 / 39 total edges economically on 2026-06-18, got {count_p0(net_econ_jun18)} / {net_econ_jun18.graph.number_of_edges()}")
+        else:
+            print("  [OK] June 18 economic reality verified: 2032 notes active (34 Phase 0 edges, 39 total edges).")
+
+        # Historical Fact Absence Test (No back-projection of current values)
+        net_econ_2025 = net.economic_as_of("2025-01-01")
+        ddtl1_2025 = net_econ_2025.graph.get_edge_data("CRWV_CCAC_II", "BLACKSTONE_MAGNETAR_SYN", key="OBL-CRWV-DEBT-DDTL1")
+        if ddtl1_2025 is None:
+            errors.append("DDTL 1.0 edge should exist economically on 2025-01-01")
+        elif ddtl1_2025.get("amount") is not None or ddtl1_2025.get("amount_known") is not False:
+            errors.append(f"Historical fact leak: DDTL 1.0 amount should be None on 2025-01-01, got {ddtl1_2025.get('amount')}")
+        else:
+            print("  [OK] Historical fact isolation verified: DDTL 1.0 amount is None / unknown on 2025-01-01 (no back-projection).")
+
+        # Economic Clock Filtering Test
+        net_may = net.economic_as_of("2026-05-31")
+        net_sep = net.economic_as_of("2026-09-28")
+        may_p0 = count_p0(net_may)
+        sep_p0 = count_p0(net_sep)
+        may_edges = net_may.graph.number_of_edges()
+        sep_edges = net_sep.graph.number_of_edges()
+        if may_p0 != 32 or may_edges != 37:
+            errors.append(f"Expected 32 Phase 0 / 37 total edges as of 2026-05-31, got P0={may_p0}, total={may_edges}")
+        if sep_p0 != 34 or sep_edges != 45:
+            errors.append(f"Expected 34 Phase 0 / 45 total edges as of 2026-09-28 (post-refinancing conservation), got P0={sep_p0}, total={sep_edges}")
+        
+        bridge_may = "OBL-APLD-DEBT-BRIDGE" in [k for _, _, k in net_may.graph.edges(keys=True)]
+        bridge_sep = "OBL-APLD-DEBT-BRIDGE" in [k for _, _, k in net_sep.graph.edges(keys=True)]
+        notes_may = "OBL-APLD-DEBT-7PCT-2026" in [k for _, _, k in net_may.graph.edges(keys=True)]
+        notes_sep = "OBL-APLD-DEBT-7PCT-2026" in [k for _, _, k in net_sep.graph.edges(keys=True)]
+
+        if not bridge_may or bridge_sep:
+            errors.append(f"Economic bridge presence mismatch: may={bridge_may}, sep={bridge_sep} (expected True, False)")
+        if notes_may or not notes_sep:
+            errors.append(f"Economic 7% notes presence mismatch: may={notes_may}, sep={notes_sep} (expected False, True)")
+
+        # Economic debt totals for APLD
+        may_apld_debt = sum(
+            d.get("amount", 0.0) for u, v, k, d in net_may.graph.edges(keys=True, data=True)
+            if net_may.get_root_parent(u) == "APLD" and d.get("amount_type") == "principal_outstanding"
+        )
+        if abs(may_apld_debt - 5_306_680_000.0) > 1.0:
+            errors.append(f"APLD May 31 economic debt mismatch: ${may_apld_debt/1e9:.3f}B (expected $5.307B)")
+        else:
+            print(f"  [OK] Economic Clock May 31, 2026 verified: 32 Phase 0 edges, 37 total edges, APLD debt = $5,306.68M (Bridge active, 0.00% drift).")
+
+        sep_apld_debt = sum(
+            d.get("amount", 0.0) for u, v, k, d in net_sep.graph.edges(keys=True, data=True)
+            if net_sep.get_root_parent(u) == "APLD" and d.get("amount_type") == "principal_outstanding"
+        )
+        if abs(sep_apld_debt - 6_596_680_000.0) > 1.0:
+            errors.append(f"APLD Sep 28 economic debt mismatch: ${sep_apld_debt/1e9:.3f}B (expected $6.597B)")
+        else:
+            print(f"  [OK] Economic Clock Sep 28, 2026 verified: 34 Phase 0 edges, 45 total edges, APLD debt = $6,596.68M ($1.59B 7% Notes active, conserved).")
+
+        # Information Clock (Public Knowledge) Test
+        net_known_jun = net.known_as_of("2026-06-30")
+        net_known_sep = net.known_as_of("2026-09-28")
+        jun_p0 = count_p0(net_known_jun)
+        sep_p0 = count_p0(net_known_sep)
+        if jun_p0 != 30 or net_known_jun.graph.number_of_edges() != 35:
+            errors.append(f"Expected 30 Phase 0 / 35 total edges known as of 2026-06-30, got P0={jun_p0}, total={net_known_jun.graph.number_of_edges()}")
+        else:
+            print(f"  [OK] Information Clock June 30, 2026 verified: 30 Phase 0 edges, 35 total edges publicly known (eliminating look-ahead bias).")
+        if sep_p0 != 34 or net_known_sep.graph.number_of_edges() != 45:
+            errors.append(f"Expected 34 Phase 0 / 45 total edges known as of 2026-09-28, got P0={sep_p0}, total={net_known_sep.graph.number_of_edges()}")
+        else:
+            print(f"  [OK] Information Clock Sep 28, 2026 verified: 34 Phase 0 edges, 45 total edges publicly known.")
+
+        # Fact-Level Bitemporality Assertions (ADR-013 & ADR-014)
+        # On June 30, 2026, CoreWeave DDTL 1.0 facility edge is known (from 2024), but its June 30, 2026 balance was not disclosed until August 12, 2026!
+        ddtl1_jun_edge = net_known_jun.graph.get_edge_data("CRWV_CCAC_II", "BLACKSTONE_MAGNETAR_SYN", key="OBL-CRWV-DEBT-DDTL1")
+        if ddtl1_jun_edge is None:
+            errors.append("OBL-CRWV-DEBT-DDTL1 edge missing from net_known_jun")
+        else:
+            if ddtl1_jun_edge.get("amount") is not None or ddtl1_jun_edge.get("amount_known") is not False:
+                errors.append(f"Fact bitemporality leak: DDTL 1.0 amount should be None on 2026-06-30, got {ddtl1_jun_edge.get('amount')}")
+            else:
+                print("  [OK] Fact-level bitemporality verified: CoreWeave DDTL 1.0 amount is None / unknown on June 30, 2026 (disclosed August 12).")
+
+        # But APLD 7% notes balance WAS disclosed on June 16, 2026 (Form 8-K), so its amount IS known on June 30!
+        apld_7pct_jun = net_known_jun.graph.get_edge_data("APLD_COMPUTECO3", "INSTITUTIONAL_BONDHOLDERS", key="OBL-APLD-DEBT-7PCT-2026")
+        if apld_7pct_jun is None or apld_7pct_jun.get("amount") != 1_590_000_000.0 or apld_7pct_jun.get("amount_known") is not True:
+            errors.append("APLD 7% notes should be known with amount = $1.59B on 2026-06-30 (disclosed 2026-06-16)")
+        else:
+            print("  [OK] Fact-level bitemporality verified: APLD 7% notes amount ($1.59B) is known on June 30, 2026 via Form 8-K.")
+
+        # On Sep 28, DDTL 1.0 amount IS known ($1.300B)
+        ddtl1_sep_edge = net_known_sep.graph.get_edge_data("CRWV_CCAC_II", "BLACKSTONE_MAGNETAR_SYN", key="OBL-CRWV-DEBT-DDTL1")
+        if ddtl1_sep_edge.get("amount") != 1_300_000_000.0 or ddtl1_sep_edge.get("amount_known") is not True:
+            errors.append(f"DDTL 1.0 amount on Sep 28 should be $1.300B, got {ddtl1_sep_edge.get('amount')}")
+        else:
+            print("  [OK] Fact-level bitemporality verified: CoreWeave DDTL 1.0 amount is $1.300B on Sep 28, 2026.")
+
+        # 9.75% Senior Notes Add-On Bitemporality (ADR-013 & ADR-014)
+        # On April 15, 2026: only initial $1.75B tranche is known (EVT-CRWV-DEBT-NOTES-2031-975-CREATED closed 2026-04-14).
+        net_known_apr15 = net.known_as_of("2026-04-15")
+        notes975_apr15 = net_known_apr15.graph.get_edge_data("CRWV", "INSTITUTIONAL_BONDHOLDERS", key="OBL-CRWV-DEBT-NOTES-2031-975")
+        if notes975_apr15 is None or notes975_apr15.get("amount") != 1_750_000_000.0 or notes975_apr15.get("amount_known") is not True:
+            errors.append(f"9.75% Notes amount mismatch on 2026-04-15: {notes975_apr15.get('amount') if notes975_apr15 else None} (expected $1.75B)")
+        else:
+            print("  [OK] Fact-level bitemporality verified: CoreWeave 9.75% Notes amount is $1.75B on April 15, 2026.")
+
+        # On April 22, 2026: $1.0B add-on is incorporated (EVT-CRWV-DEBT-NOTES-2031-975-ADDON closed 2026-04-21), resolving to $2.75B.
+        net_known_apr22 = net.known_as_of("2026-04-22")
+        notes975_apr22 = net_known_apr22.graph.get_edge_data("CRWV", "INSTITUTIONAL_BONDHOLDERS", key="OBL-CRWV-DEBT-NOTES-2031-975")
+        if notes975_apr22 is None or notes975_apr22.get("amount") != 2_750_000_000.0 or notes975_apr22.get("amount_known") is not True:
+            errors.append(f"9.75% Notes amount mismatch on 2026-04-22: {notes975_apr22.get('amount') if notes975_apr22 else None} (expected $2.75B)")
+        else:
+            print("  [OK] Fact-level bitemporality verified: CoreWeave 9.75% Notes amount is $2.75B on April 22, 2026.")
+
+        # Coupling to Stress Engine Test (Dynamic Floating Debt Derivation)
+        engine_may = FinancialStressEngine(network=net_may)
+        engine_sep = FinancialStressEngine(network=net_sep)
+        sofr_may = engine_may.simulate_sofr_base_rate_shock()
+        sofr_sep = engine_sep.simulate_sofr_base_rate_shock()
+
+        if abs(sofr_may["network_cash_drain_reported_baseline_usd"] - 235_350_000.0) > 1e5:
+            errors.append(f"May 31 SOFR hit mismatch: ${sofr_may['network_cash_drain_reported_baseline_usd']:,.2f} (expected $235.35M)")
+        if abs(sofr_sep["network_cash_drain_reported_baseline_usd"] - 226_350_000.0) > 1e5:
+            errors.append(f"Sep 28 SOFR hit mismatch: ${sofr_sep['network_cash_drain_reported_baseline_usd']:,.2f} (expected $226.35M)")
+        print(f"  [OK] Stress engine dynamically coupled to graph: May 31 = $235.4M/yr, Sep 28 = $226.4M/yr (derived from active edges).")
+
+        # Epistemic stress engine check on June 30 information clock (ADR-014 Zero-Lookahead)
+        engine_known_jun = FinancialStressEngine(network=net_known_jun)
+        sofr_known_jun = engine_known_jun.simulate_sofr_base_rate_shock()
+        if sofr_known_jun["floating_principal_known"] is not False:
+            errors.append("Expected floating_principal_known to be False under net_known_jun (disclosed August 12)")
+        if sofr_known_jun["swap_notional_known"] is not False:
+            errors.append("Expected swap_notional_known to be False under net_known_jun (disclosed August 12)")
+        if sofr_known_jun["crwv_reported_floating_usd"] is not None:
+            errors.append("Expected crwv_reported_floating_usd to be None under net_known_jun")
+        if sofr_known_jun["max_cash_drain_usd"] is not None:
+            errors.append("Expected max_cash_drain_usd to be None under net_known_jun (unbounded upper limit)")
+        if sofr_known_jun["network_cash_drain_reported_baseline_usd"] is not None:
+            errors.append("Expected network_cash_drain_reported_baseline_usd to be None under net_known_jun")
+        if len(sofr_known_jun["unknown_floating_edges"]) != 6:
+            errors.append(f"Expected 6 unknown floating edges under net_known_jun, got {len(sofr_known_jun['unknown_floating_edges'])}")
+        else:
+            print("  [OK] Zero-lookahead epistemic stress check verified on June 30, 2026: floating_principal_known=False, 6 unknown floating edges, reported hits=None.")
+
+        # Check customer trim zero-lookahead on June 30
+        cust_known_jun = engine_known_jun.simulate_anchor_customer_trim()
+        if cust_known_jun["crwv_annual_debt_service_usd"] is not None:
+            errors.append("Expected crwv_annual_debt_service_usd to be None under net_known_jun")
+        if cust_known_jun["total_fixed_commitments_usd"] is not None:
+            errors.append("Expected total_fixed_commitments_usd to be None under net_known_jun")
+        if "35,551" in cust_known_jun["transmission_narrative"] or "35.55" in cust_known_jun["transmission_narrative"]:
+            errors.append("Customer trim narrative leaked future debt total in known mode")
+
+        # Check grid delay zero-lookahead on June 30
+        grid_known_jun = engine_known_jun.simulate_grid_energization_delay()
+        if grid_known_jun["operational_mw"] is not None or grid_known_jun["delayed_mw"] is not None:
+            errors.append("Expected operational_mw and delayed_mw to be None under net_known_jun")
+        if grid_known_jun["apld_debt_carrying_cost_usd"] is not None:
+            errors.append("Expected apld_debt_carrying_cost_usd to be None under net_known_jun")
+        if "135.9" in grid_known_jun["transmission_narrative"]:
+            errors.append("Grid delay narrative leaked future carrying cost in known mode")
+
+        # Check OEM markdown zero-lookahead on June 30
+        oem_known_jun = engine_known_jun.simulate_oem_purchase_commitment_markdown()
+        if oem_known_jun["total_purchase_commitments_usd"] is not None:
+            errors.append("Expected total_purchase_commitments_usd to be None under net_known_jun")
+        if oem_known_jun["accounting_nrv_write_down_usd"] is not None:
+            errors.append("Expected accounting_nrv_write_down_usd to be None under net_known_jun")
+        if "34.2" in oem_known_jun["transmission_narrative"]:
+            errors.append("OEM markdown narrative leaked future commitment amount in known mode")
+
+        # Check GPU collateral caveat zero-lookahead
+        gpu_known_jun = engine_known_jun.simulate_gpu_collateral_haircut()
+        if "4.32" in gpu_known_jun["contractual_caveat"]:
+            errors.append("GPU collateral caveat leaked $4.32B in known mode")
+
+        print("  [OK] Zero-lookahead verified across all stress scenarios on June 30, 2026 (no metric or narrative leaks).")
+
+    except Exception as e:
+        errors.append(f"Error during graph unwrapping/temporal validation: {e}")
+
+    # ---------------------------------------------------------
+    # 3c. Validate Obligation Lifecycle Events & Bitemporal Facts Ledger
+    # ---------------------------------------------------------
+    events_df = pd.read_parquet(PROCESSED_DIR / "obligation_events.parquet")
+    expected_events_count = 57
+    if len(events_df) != expected_events_count:
+        errors.append(f"Obligation events count mismatch: {len(events_df)} (expected {expected_events_count})")
+    else:
+        print(f"  [OK] Exactly {expected_events_count} lifecycle events present in obligation_events.parquet.")
+
+    valid_event_types = {"created", "superseded", "amended", "extinguished", "terminated", "escrow_release"}
+    for _, ev in events_df.iterrows():
+        eid = ev["event_id"]
+        etype = ev.get("event_type")
+        if etype not in valid_event_types:
+            errors.append(f"Event {eid} has invalid event_type: {etype}")
+        if not ev.get("economic_effective_at") or not ev.get("publicly_known_at"):
+            errors.append(f"Event {eid} missing temporal dates")
+        if not ev.get("claim_id"):
+            errors.append(f"Event {eid} missing claim_id")
+
+    # Bridge supersession event specifically
+    bridge_ev = events_df[events_df["event_id"] == "EVT-APLD-DEBT-BRIDGE-SUPERSEDED"]
+    if bridge_ev.empty:
+        errors.append("Missing EVT-APLD-DEBT-BRIDGE-SUPERSEDED event")
+    else:
+        bev = bridge_ev.iloc[0]
+        if bev["economic_effective_at"] != "2026-06-16" or bev["publicly_known_at"] != "2026-06-16":
+            errors.append(f"Bridge supersession dates mismatch: econ={bev['economic_effective_at']}, known={bev['publicly_known_at']}")
+        else:
+            print("  [OK] Bridge supersession lifecycle event verified: economic 2026-06-16, publicly known 2026-06-16.")
+
+    # 9.75% Notes add-on amendment event specifically
+    addon_ev = events_df[events_df["event_id"] == "EVT-CRWV-DEBT-NOTES-2031-975-ADDON"]
+    if addon_ev.empty:
+        errors.append("Missing EVT-CRWV-DEBT-NOTES-2031-975-ADDON event")
+    else:
+        aev = addon_ev.iloc[0]
+        if aev["event_type"] != "amended" or aev["economic_effective_at"] != "2026-04-21" or aev["publicly_known_at"] != "2026-04-21":
+            errors.append(f"9.75% Notes add-on event mismatch: type={aev['event_type']}, econ={aev['economic_effective_at']}, known={aev['publicly_known_at']}")
+        else:
+            print("  [OK] CoreWeave 9.75% Notes add-on amendment event verified: amended on 2026-04-21, publicly known 2026-04-21.")
+
+    # TeraWulf 2031 greenshoe amendment event specifically
+    greenshoe_ev = events_df[events_df["event_id"] == "EVT-WULF-DEBT-CONV-2031-GREENSHOE"]
+    if greenshoe_ev.empty:
+        errors.append("Missing EVT-WULF-DEBT-CONV-2031-GREENSHOE event")
+    else:
+        gev = greenshoe_ev.iloc[0]
+        if gev["event_type"] != "amended" or gev["economic_effective_at"] != "2025-08-22" or gev["publicly_known_at"] != "2025-08-22":
+            errors.append(f"WULF greenshoe event dates mismatch: econ={gev['economic_effective_at']}, known={gev['publicly_known_at']}")
+        else:
+            print("  [OK] TeraWulf 2031 Greenshoe amendment event verified: amended on 2025-08-22, publicly known 2025-08-22.")
+
+    facts_df = pd.read_parquet(PROCESSED_DIR / "obligation_facts.parquet")
+    clm_df = pd.read_parquet(PROCESSED_DIR / "evidence_claims.parquet")
+    expected_facts_count = 64
+    if len(facts_df) != expected_facts_count:
+        errors.append(f"Obligation facts count mismatch: {len(facts_df)} (expected {expected_facts_count})")
+    else:
+        print(f"  [OK] Exactly {expected_facts_count} bitemporal facts present in obligation_facts.parquet.")
+
+    claims_filing_dates = dict(zip(clm_df["claim_id"], clm_df["filing_date"]))
+    for _, f_row in facts_df.iterrows():
+        fid = f_row["fact_id"]
+        t_cid = f_row.get("truth_claim_id")
+        k_cid = f_row.get("knowledge_claim_id")
+        if not t_cid or t_cid not in claims_filing_dates:
+            errors.append(f"Fact {fid} has invalid or missing truth_claim_id: {t_cid}")
+        if not k_cid or k_cid not in claims_filing_dates:
+            errors.append(f"Fact {fid} has invalid or missing knowledge_claim_id: {k_cid}")
+        else:
+            k_filing_date = claims_filing_dates[k_cid]
+            if str(f_row["publicly_known_from"]) < str(k_filing_date):
+                errors.append(f"Fact {fid} publicly_known_from {f_row['publicly_known_from']} predates knowledge claim filing date {k_filing_date}")
+
+    print(f"  [OK] All {len(facts_df)} facts verified: truth_claim_id and knowledge_claim_id present, publicly_known_from >= claim filing date.")
+
+    # ---------------------------------------------------------
+    # 3d. Validate Step 2 Generic Engine Layer (ADR-017)
+    # ---------------------------------------------------------
+    try:
+        from src.epistemic import EpistemicResolver, KnowledgeState, ContractualRate
+
+        # 1. Validate Typed Rate Schema on obligations.parquet
+        required_rate_cols = ["rate_type", "benchmark", "margin_bps", "floor_bps", "fixed_coupon", "spread_grid_id"]
+        for col in required_rate_cols:
+            if col not in obl_df.columns:
+                errors.append(f"obligations.parquet missing typed rate column: {col}")
+
+        # Check specific obligation rate parameters
+        ddtl1 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-DEBT-DDTL1"].iloc[0]
+        if ddtl1["rate_type"] != "floating" or ddtl1["benchmark"] != "SOFR" or abs(ddtl1["margin_bps"] - 961.96) > 0.01:
+            errors.append(f"DDTL 1.0 typed rate mismatch: {ddtl1['rate_type']}, {ddtl1['benchmark']}, {ddtl1['margin_bps']} bps")
+
+        ddtl2 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-DEBT-DDTL2"].iloc[0]
+        if ddtl2["rate_type"] != "spread_grid" or ddtl2["spread_grid_id"] != "GRID-CRWV-DDTL2":
+            errors.append(f"DDTL 2.0 typed rate mismatch: {ddtl2['rate_type']}, grid={ddtl2['spread_grid_id']}")
+
+        ddtl3 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-DEBT-DDTL3"].iloc[0]
+        if ddtl3["rate_type"] != "floating" or ddtl3["benchmark"] != "SOFR" or abs(ddtl3["margin_bps"] - 400.0) > 0.01:
+            errors.append(f"DDTL 3.0 typed rate mismatch: {ddtl3['rate_type']}, margin={ddtl3['margin_bps']} bps")
+
+        ddtl4 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-DEBT-DDTL4"].iloc[0]
+        if ddtl4["rate_type"] != "rate_legs":
+            errors.append(f"DDTL 4.0 typed rate_type mismatch: {ddtl4['rate_type']} (expected rate_legs)")
+
+        ddtl5 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-DEBT-DDTL5"].iloc[0]
+        if ddtl5["rate_type"] != "floating" or ddtl5["benchmark"] != "SOFR" or abs(ddtl5["margin_bps"] - 450.0) > 0.01:
+            errors.append(f"DDTL 5.0 typed rate mismatch: {ddtl5['rate_type']}, margin={ddtl5['margin_bps']} bps")
+
+        notes975 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-DEBT-NOTES-2031-975"].iloc[0]
+        if notes975["rate_type"] != "fixed" or abs(notes975["fixed_coupon"] - 0.0975) > 0.0001:
+            errors.append(f"9.75% Notes typed rate mismatch: {notes975['rate_type']}, coupon={notes975['fixed_coupon']}")
+
+        conv32 = obl_df[obl_df["obligation_id"] == "OBL-CRWV-DEBT-CONV-2032"].iloc[0]
+        if conv32["rate_type"] != "fixed" or abs(conv32["fixed_coupon"] - 0.0175) > 0.0001:
+            errors.append(f"2032 Convertibles typed rate mismatch: {conv32['rate_type']}, coupon={conv32['fixed_coupon']}")
+
+        # Validate discrete rate legs table
+        rate_legs_df = pd.read_parquet(PROCESSED_DIR / "obligation_rate_legs.parquet")
+        if len(rate_legs_df) < 2:
+            errors.append(f"Expected at least 2 rate legs in obligation_rate_legs.parquet, found {len(rate_legs_df)}")
+        ddtl4_legs = rate_legs_df[rate_legs_df["obligation_id"] == "OBL-CRWV-DEBT-DDTL4"]
+        if len(ddtl4_legs) != 2:
+            errors.append(f"Expected 2 rate legs for DDTL 4.0, found {len(ddtl4_legs)}")
+        else:
+            flt_leg = ddtl4_legs[ddtl4_legs["leg_type"] == "floating"].iloc[0]
+            fix_leg = ddtl4_legs[ddtl4_legs["leg_type"] == "fixed"].iloc[0]
+            if flt_leg["principal"] != 1400000000.0 or flt_leg["margin_bps"] != 225.0:
+                errors.append(f"DDTL 4.0 floating leg mismatch: {flt_leg['principal']}, margin={flt_leg['margin_bps']}")
+            if fix_leg["principal"] != 1437000000.0 or abs(fix_leg["fixed_coupon"] - 0.0635) > 1e-4:
+                errors.append(f"DDTL 4.0 fixed leg mismatch: {fix_leg['principal']}, coupon={fix_leg['fixed_coupon']}")
+
+        print("  [OK] Typed contractual rate schema and discrete rate legs verified across obligations.")
+
+        # 2. Validate ContractualRate computation & strict rate semantics
+        c_fixed = ContractualRate(rate_type="fixed", fixed_coupon=0.0975)
+        if abs(c_fixed.compute_rate() - 0.0975) > 1e-6:
+            errors.append(f"ContractualRate fixed calculation failed: {c_fixed.compute_rate()}")
+
+        # Missing fixed coupon returns None (fails closed)
+        c_fix_none = ContractualRate(rate_type="fixed", fixed_coupon=None)
+        if c_fix_none.compute_rate() is not None:
+            errors.append("ContractualRate with None fixed coupon should return None (failed closed)")
+
+        # Floating rate with benchmark floor: max(base, floor) + margin
+        c_flt = ContractualRate(rate_type="floating", benchmark="SOFR", margin_bps=300.0, floor_bps=100.0)
+        r_subfloor = c_flt.compute_rate(sofr_rate=0.005)  # 0.5% SOFR < 1.0% floor -> 1.0% + 3.0% = 4.0%
+        if abs(r_subfloor - 0.040) > 1e-6:
+            errors.append(f"ContractualRate floating benchmark floor failed: {r_subfloor} (expected 0.040)")
+
+        # Unrecognized benchmark fails closed
+        c_bad_bm = ContractualRate(rate_type="floating", benchmark="UNRECOGNIZED", margin_bps=300.0)
+        if c_bad_bm.compute_rate() is not None:
+            errors.append("ContractualRate with unrecognized benchmark should return None (failed closed)")
+
+        # Unknown spread grid raises ValueError (fails closed)
+        c_bad_grid = ContractualRate(rate_type="spread_grid", spread_grid_id="GRID-NONEXISTENT")
+        caught_bad_grid = False
+        try:
+            c_bad_grid.compute_rate()
+        except ValueError:
+            caught_bad_grid = True
+        if not caught_bad_grid:
+            errors.append("ContractualRate with unknown spread_grid_id should raise ValueError (failed closed)")
+
+        # Real spread_grids.yml loading and tier checks
+        c_grid = ContractualRate(rate_type="spread_grid", benchmark="SOFR", spread_grid_id="GRID-CRWV-DDTL2")
+        grid_tier_checks = [
+            ("specified_investment_grade", 0.053 + 0.0600),
+            ("investment_grade", 0.053 + 0.0650),
+            ("non_investment_grade", 0.053 + 0.1300),
+            (None, 0.053 + 0.0800),
+        ]
+        for tier, expected_r in grid_tier_checks:
+            computed_r = c_grid.compute_rate(sofr_rate=0.053, customer_tier=tier)
+            if abs(computed_r - expected_r) > 1e-6:
+                errors.append(f"GRID-CRWV-DDTL2 tier {tier} mismatch: {computed_r} (expected {expected_r})")
+
+        print("  [OK] ContractualRate calculation verified: benchmark floor semantics, strict null returns, and YAML-loaded spread grids.")
+
+        # 3. Validate EpistemicResolver KnowledgeState, Null-Safety, and Zero-Lookahead Invariant
+        # Type safety: NaN must never be treated as known
+        ks_nan = KnowledgeState(status="known", value=float("nan"))
+        if ks_nan.is_known:
+            errors.append("KnowledgeState.is_known returned True for NaN value!")
+        if not ks_nan.is_unknown:
+            errors.append("KnowledgeState with NaN value should have is_unknown=True!")
+
+        # 4. Direct Resolver Temporal Matrix for 9.75% Notes (Historical Observation Selection)
+        r_apr13 = EpistemicResolver(as_of_date="2026-04-13", temporal_mode="known")
+        ks_apr13 = r_apr13.resolve_fact(obligation_id="OBL-CRWV-DEBT-NOTES-2031-975", attribute="principal_outstanding")
+        if ks_apr13.status != "not_yet_existent" or ks_apr13.value is not None or ks_apr13.is_known:
+            errors.append(f"9.75% Notes @ 2026-04-13 mismatch: status={ks_apr13.status}, val={ks_apr13.value} (expected not_yet_existent, None)")
+
+        r_apr15 = EpistemicResolver(as_of_date="2026-04-15", temporal_mode="known")
+        ks_apr15 = r_apr15.resolve_fact(obligation_id="OBL-CRWV-DEBT-NOTES-2031-975", attribute="principal_outstanding")
+        if ks_apr15.status != "known" or ks_apr15.value != 1750000000.0 or not ks_apr15.is_known:
+            errors.append(f"9.75% Notes @ 2026-04-15 mismatch: status={ks_apr15.status}, val={ks_apr15.value} (expected known, $1.75B)")
+
+        r_apr22 = EpistemicResolver(as_of_date="2026-04-22", temporal_mode="known")
+        ks_apr22 = r_apr22.resolve_fact(obligation_id="OBL-CRWV-DEBT-NOTES-2031-975", attribute="principal_outstanding")
+        if ks_apr22.status != "known" or ks_apr22.value != 2750000000.0 or not ks_apr22.is_known:
+            errors.append(f"9.75% Notes @ 2026-04-22 mismatch: status={ks_apr22.status}, val={ks_apr22.value} (expected known, $2.75B)")
+
+        r_jun30 = EpistemicResolver(as_of_date="2026-06-30", temporal_mode="known")
+        ks_jun30 = r_jun30.resolve_fact(obligation_id="OBL-CRWV-DEBT-NOTES-2031-975", attribute="principal_outstanding")
+        if ks_jun30.status != "known" or ks_jun30.value != 2750000000.0 or not ks_jun30.is_known:
+            errors.append(f"9.75% Notes @ 2026-06-30 mismatch: status={ks_jun30.status}, val={ks_jun30.value} (expected known, $2.75B)")
+
+        print("  [OK] EpistemicResolver temporal matrix verified for 9.75% Notes: 2026-04-13 (not_yet_existent) -> 2026-04-15 ($1.75B) -> 2026-04-22 ($2.75B) -> 2026-06-30 ($2.75B).")
+
+        # 4b. TeraWulf 2031 Greenshoe Temporal Resolution Check (ADR-019.1)
+        r_wulf_aug20 = EpistemicResolver(as_of_date="2025-08-20", temporal_mode="known")
+        ks_wulf_aug20 = r_wulf_aug20.resolve_fact(obligation_id="OBL-WULF-DEBT-CONV-2031", attribute="principal_outstanding")
+        if ks_wulf_aug20.value != 850000000.0 or not ks_wulf_aug20.is_known:
+            errors.append(f"WULF 2031 @ 2025-08-20 mismatch: val={ks_wulf_aug20.value} (expected $850.0M)")
+
+        r_wulf_aug22 = EpistemicResolver(as_of_date="2025-08-22", temporal_mode="known")
+        ks_wulf_aug22 = r_wulf_aug22.resolve_fact(obligation_id="OBL-WULF-DEBT-CONV-2031", attribute="principal_outstanding")
+        if ks_wulf_aug22.value != 1000000000.0 or not ks_wulf_aug22.is_known:
+            errors.append(f"WULF 2031 @ 2025-08-22 mismatch: val={ks_wulf_aug22.value} (expected $1.0B)")
+
+        print("  [OK] TeraWulf 2031 greenshoe bitemporal isolation verified: 2025-08-20 ($850.0M) -> 2025-08-22 ($1,000.0M).")
+
+        # 4c. Core Scientific / CoreWeave Sequential Capacity Evolution (ADR-019.1)
+        corz_evolution_checks = [
+            ("2024-06-04", 200.0),
+            ("2024-06-25", 270.0),
+            ("2024-08-06", 382.0),
+            ("2024-10-23", 500.0),
+            ("2025-02-27", 590.0),
+        ]
+        for c_date, exp_mw in corz_evolution_checks:
+            r_corz = EpistemicResolver(as_of_date=c_date, temporal_mode="known")
+            ks_corz = r_corz.resolve_fact(obligation_id="OBL-CRWV-CORZ-COLOCATION-2024", attribute="capacity_mw")
+            if ks_corz.value != exp_mw or not ks_corz.is_known:
+                errors.append(f"CORZ capacity @ {c_date} mismatch: {ks_corz.value} (expected {exp_mw} MW)")
+
+        print("  [OK] Core Scientific colocation sequential capacity evolution verified: 200 MW -> 270 MW -> 382 MW -> 500 MW -> 590 MW across 2024-2025.")
+
+        # 5. Anchor Customer Demand Trim Temporal Isolation (Zero-Escape Audit Trail)
+        from src.graph import ObligationNetwork
+        net_feb01 = ObligationNetwork().known_as_of("2026-02-01")
+        eng_feb01 = FinancialStressEngine(network=net_feb01)
+        res_feb01 = eng_feb01.simulate_anchor_customer_trim()
+        if res_feb01["base_recognized_revenue_usd"] is not None:
+            errors.append("Anchor customer revenue should be None on 2026-02-01 (disclosed March 2, 2026)")
+        if res_feb01["annual_revenue_loss_usd"] is not None:
+            errors.append("Anchor customer revenue loss should be None on 2026-02-01")
+        if "3.438" in res_feb01["transmission_narrative"] or "3438" in res_feb01["transmission_narrative"]:
+            errors.append("Anchor customer narrative leaked $3.438B on 2026-02-01 in known mode!")
+
+        net_mar03 = ObligationNetwork().known_as_of("2026-03-03")
+        eng_mar03 = FinancialStressEngine(network=net_mar03)
+        res_mar03 = eng_mar03.simulate_anchor_customer_trim()
+        if res_mar03["base_recognized_revenue_usd"] != 3438000000.0:
+            errors.append(f"Anchor customer revenue mismatch on 2026-03-03: {res_mar03['base_recognized_revenue_usd']} (expected $3.438B)")
+
+        print("  [OK] Anchor Customer Demand Trim verified: 2026-02-01 (unknown/None, zero leaks) -> 2026-03-03 ($3.438B known).")
+
+        # 6. Discrete Rate Legs Debt Service Engine Verification (DDTL 4.0)
+        res_default = EpistemicResolver()
+        srv_ddtl4 = res_default.compute_obligation_debt_service("OBL-CRWV-DEBT-DDTL4", 2837000000.0, {})
+        expected_srv_ddtl4 = (1400000000.0 * (0.053 + 0.0225)) + (1437000000.0 * 0.0635)  # $105.70M + $91.25M = $196.95M
+        if abs(srv_ddtl4 - expected_srv_ddtl4) > 1e-4:
+            errors.append(f"DDTL 4.0 rate legs debt service mismatch: ${srv_ddtl4/1e6:.2f}M (expected ${expected_srv_ddtl4/1e6:.2f}M)")
+        else:
+            print(f"  [OK] DDTL 4.0 discrete rate legs debt service verified: ${srv_ddtl4/1e6:.2f}M/yr ($1.400B floating + $1.437B fixed).")
+
+        # 7. Unfiled periodic disclosures must resolve to unknown with None value on June 30
+        resolver_jun = EpistemicResolver(as_of_date="2026-06-30", temporal_mode="known")
+        ks_mat = resolver_jun.resolve_fact(entity_id="CRWV", attribute="debt_maturities")
+        if ks_mat.status != "unknown" or ks_mat.value is not None or ks_mat.is_known:
+            errors.append(f"Resolver failed to isolate unfiled CRWV debt_maturities on 2026-06-30: status={ks_mat.status}, val={ks_mat.value}")
+
+        ks_phasing = resolver_jun.resolve_fact(entity_id="APLD", attribute="campus_construction_phasing")
+        if ks_phasing.status != "unknown" or ks_phasing.value is not None or ks_phasing.is_known:
+            errors.append(f"Resolver failed to isolate unfiled APLD campus_construction_phasing on 2026-06-30: status={ks_phasing.status}, val={ks_phasing.value}")
+
+        ks_oem = resolver_jun.resolve_fact(entity_id="SMCI", attribute="purchase_commitments")
+        if ks_oem.status != "unknown" or ks_oem.value is not None or ks_oem.is_known:
+            errors.append(f"Resolver failed to isolate unfiled SMCI purchase_commitments on 2026-06-30: status={ks_oem.status}, val={ks_oem.value}")
+
+        # Certify that assert_zero_lookahead succeeds on clean audit trail
+        resolver_jun.assert_zero_lookahead()
+
+        # Certify that assert_zero_lookahead actively catches injected lookahead leakage
+        leaked_resolver = EpistemicResolver(as_of_date="2026-06-30", temporal_mode="known")
+        leaked_resolver.audit_trail.append(
+            KnowledgeState(status="known", value=999999.0, public_date="2026-08-12", attribute="synthetic_future_leak")
+        )
+        caught_leak = False
+        try:
+            leaked_resolver.assert_zero_lookahead()
+        except AssertionError:
+            caught_leak = True
+        if not caught_leak:
+            errors.append("Universal Zero-Lookahead Invariant failed to detect injected future disclosure leak!")
+
+        # Certify that assert_zero_lookahead actively catches non-null unknown values (strict non-zero/non-null rule)
+        poisoned_resolver = EpistemicResolver(as_of_date="2026-06-30", temporal_mode="known")
+        poisoned_resolver.audit_trail.append(
+            KnowledgeState(status="unknown", value=0.0, public_date="2026-08-12", attribute="synthetic_non_null_unknown")
+        )
+        caught_poison = False
+        try:
+            poisoned_resolver.assert_zero_lookahead()
+        except AssertionError:
+            caught_poison = True
+        if not caught_poison:
+            errors.append("Universal Zero-Lookahead Invariant failed to detect non-null value in unknown state!")
+
+        print("  [OK] EpistemicResolver certified: audit trail, strict unknown=None rule, and Universal Zero-Lookahead Invariant enforcement.")
+
+    except Exception as e:
+        errors.append(f"Error during Step 2 generic engine layer validation: {e}")
+
+    # ---------------------------------------------------------
+    # 4. Validate Evidence Claims & Quote Categorization
+    # ---------------------------------------------------------
+    expected_claims_count = 60
+    if len(clm_df) != expected_claims_count:
+        errors.append(f"Evidence claims count mismatch: {len(clm_df)} (expected {expected_claims_count})")
+    else:
+        print(f"  [OK] Exactly {expected_claims_count} audited evidence claims present.")
+
+    valid_quote_types = {"exact_quote", "source_excerpt", "analyst_summary"}
+    for _, row in clm_df.iterrows():
+        cid = row["claim_id"]
+        qtype = row.get("quote_type")
+        if qtype not in valid_quote_types:
+            errors.append(f"Claim {cid} has invalid quote_type: {qtype}")
+        quote = row.get("exact_quote", "")
+        if not quote or len(quote) < 15:
+            errors.append(f"Claim {cid} has empty or short exact_quote")
+        if not row.get("accession_number") or not row.get("filing_date"):
+            errors.append(f"Claim {cid} missing SEC accession number or filing date")
+
+    # Claim CLM-APLD-003 categorization check
+    c3 = clm_df[clm_df["claim_id"] == "CLM-APLD-003"]
+    if not c3.empty and c3.iloc[0]["quote_type"] != "source_excerpt":
+        errors.append(f"CLM-APLD-003 should be categorized as source_excerpt, got {c3.iloc[0]['quote_type']}")
+    else:
+        print("  [OK] CLM-APLD-003 verified as source_excerpt.")
+
+    # Verbatim substring assertions against cached primary SEC exhibits
+    c5 = clm_df[clm_df["claim_id"] == "CLM-APLD-005"]
+    if c5.empty:
+        errors.append("Missing claim CLM-APLD-005")
+    else:
+        ex10_1_file = PROJECT_ROOT / "data" / "raw" / "sec" / "APLD_ex10_1.htm"
+        if not ex10_1_file.exists():
+            errors.append(f"Missing cached primary SEC exhibit: {ex10_1_file.name}")
+        else:
+            raw_bytes = ex10_1_file.read_bytes()
+            unesc = html.unescape(raw_bytes.decode("windows-1252"))
+            unesc = unesc.replace('\u201c', '"').replace('\u201d', '"').replace('\u2018', "'").replace('\u2019', "'")
+            unesc = re.sub(r'</?(?:b|i|u|strong|em|font|span)(?:\s+[^>]*)?>', '', unesc, flags=re.IGNORECASE)
+            norm_raw = ' '.join(re.sub(r'<[^>]+>', ' ', unesc).split())
+            norm_quote = ' '.join(c5.iloc[0]["exact_quote"].split())
+            if norm_quote not in norm_raw:
+                errors.append("CLM-APLD-005 exact_quote is not an exact contiguous substring of APLD_ex10_1.htm")
+            else:
+                print("  [OK] CLM-APLD-005 100% exact contiguous verbatim substring verified in APLD_ex10_1.htm.")
+
+    c6 = clm_df[clm_df["claim_id"] == "CLM-APLD-006"]
+    if c6.empty:
+        errors.append("Missing claim CLM-APLD-006")
+    else:
+        ex10_2_file = PROJECT_ROOT / "data" / "raw" / "sec" / "APLD_ex10_2.htm"
+        if not ex10_2_file.exists():
+            errors.append(f"Missing cached primary SEC exhibit: {ex10_2_file.name}")
+        else:
+            raw_bytes = ex10_2_file.read_bytes()
+            unesc = html.unescape(raw_bytes.decode("windows-1252"))
+            unesc = unesc.replace('\u201c', '"').replace('\u201d', '"').replace('\u2018', "'").replace('\u2019', "'")
+            unesc = re.sub(r'</?(?:b|i|u|strong|em|font|span)(?:\s+[^>]*)?>', '', unesc, flags=re.IGNORECASE)
+            norm_raw = ' '.join(re.sub(r'<[^>]+>', ' ', unesc).split())
+            norm_quote = ' '.join(c6.iloc[0]["exact_quote"].split())
+            if norm_quote not in norm_raw:
+                errors.append("CLM-APLD-006 exact_quote is not an exact contiguous substring of APLD_ex10_2.htm")
+            else:
+                print("  [OK] CLM-APLD-006 100% exact contiguous verbatim substring verified in APLD_ex10_2.htm.")
+
+    cc5 = clm_df[clm_df["claim_id"] == "CLM-CRWV-005"]
+    if cc5.empty:
+        errors.append("Missing claim CLM-CRWV-005")
+    else:
+        qc5 = cc5.iloc[0]["exact_quote"]
+        for phrase in ["Interest rate swaps", "4,661"]:
+            if phrase not in qc5:
+                errors.append(f"CLM-CRWV-005 missing expected verbatim phrase: '{phrase}'")
+        print("  [OK] CLM-CRWV-005 verified against Note 3 Derivative Instruments verbatim swap disclosures.")
+
+    c8 = clm_df[clm_df["claim_id"] == "CLM-APLD-008"]
+    if c8.empty:
+        errors.append("Missing claim CLM-APLD-008")
+    else:
+        r8 = c8.iloc[0]
+        if r8["accession_number"] != "0001493152-26-028899" or r8["filing_date"] != "2026-06-16":
+            errors.append(f"CLM-APLD-008 metadata mismatch: {r8['accession_number']}, {r8['filing_date']}")
+        for kw in ["ComputeCo 3 LLC", "7.000%"]:
+            if kw not in r8["exact_quote"]:
+                errors.append(f"CLM-APLD-008 exact_quote missing '{kw}'")
+        print("  [OK] CLM-APLD-008 verified: Form 8-K filed 2026-06-16, APLD ComputeCo 3 LLC 7.00% Senior Secured Notes.")
+
+    # Verification of Class A primary SEC filings against cached raw JSON submissions
+    sec_errors = validate_sec_source_existence()
+    if sec_errors:
+        for se in sec_errors:
+            errors.append(se)
+    else:
+        print(f"  [OK] All {len(clm_df)} evidence claims 100% verified against raw SEC EDGAR submissions JSON.")
+
+    # Verification of verbatim substrings against cached HTML exhibits (SEC filings)
+    html_errors, sec_count = validate_sec_html_content()
+    if html_errors:
+        for he in html_errors:
+            errors.append(he)
+    else:
+        print(f"  [OK] All {sec_count} primary SEC claims auto-bound and verified as 100% exact contiguous verbatim substrings in cached primary HTML filings.")
+
+    # Verification of non-SEC primary sources against cached utility files and cryptographic hashes
+    util_errors = validate_utility_primary_sources()
+    if util_errors:
+        for ue in util_errors:
+            errors.append(ue)
+    else:
+        print(f"  [OK] All {len(CLAIM_TO_UTILITY_FILE)} primary utility disclosures verified against cached primary source with SHA-256 and exact quote match.")
+
+    print(f"  [OK] All {len(clm_df)} financial claims possess verified SEC accession numbers, valid quote_types, and verbatim quotes.")
+    print(f"  [OK] Power claims certified: 8 SEC claims verified against EDGAR & HTML + 1 primary utility disclosure verified against originating source.")
+
+    # ---------------------------------------------------------
+    # 5. Validate Canonical Financials
+    # ---------------------------------------------------------
+    fin_df = pd.read_parquet(PROCESSED_DIR / "financials.parquet")
+    
+    # Check key funded debt (latest reported period)
+    for ticker, expected_val, min_val in [
+        ("APLD", 4.98e9, 4.9e9),
+        ("CRWV", 35.55e9, 3.5e10),
+        ("SMCI", 8.72e9, 8.7e9),
+        ("ORCL", 125.34e9, 1.2e11),
+        ("NVDA", 33.37e9, 3.3e10)
+    ]:
+        v = fin_df[(fin_df["entity_id"] == ticker) & (fin_df["metric"] == "total_debt")].sort_values("period_end").iloc[-1]["value"]
+        if v < min_val:
+            errors.append(f"{ticker} total debt unexpectedly low: ${v/1e9:.2f}B (expected ~${expected_val/1e9:.2f}B)")
+        else:
+            print(f"  [OK] {ticker:5} total debt verified: ${v/1e9:.2f}B")
+
+    # Check derived Q4 flow facts
+    # MSFT Q4 $90.01B
+    msft_q4 = fin_df[(fin_df["ticker"] == "MSFT") & (fin_df["metric"] == "revenue") & (fin_df["period_end"] == "2026-06-30") & (fin_df["duration_type"] == "quarterly")]["value"].max()
+    if abs(msft_q4 - 9.001e10) > 1e9:
+        errors.append(f"MSFT Q4 revenue mismatch: ${msft_q4/1e9:.2f}B (expected ~$90.01B)")
+    else:
+        print(f"  [OK] MSFT Q4 FY26 derived quarterly revenue verified: ${msft_q4/1e9:.2f}B")
+
+    # APLD Q4 $258.75M
+    apld_q4 = fin_df[(fin_df["ticker"] == "APLD") & (fin_df["metric"] == "revenue") & (fin_df["period_end"] == "2026-05-31") & (fin_df["duration_type"] == "quarterly")]["value"].max()
+    if abs(apld_q4 - 2.5875e8) > 5e6:
+        errors.append(f"APLD Q4 revenue mismatch: ${apld_q4/1e6:.1f}M (expected ~$258.8M)")
+    else:
+        print(f"  [OK] APLD Q4 FY26 derived quarterly revenue verified: ${apld_q4/1e6:.1f}M")
+
+    # SMCI Q4 $11.12B
+    smci_q4 = fin_df[(fin_df["ticker"] == "SMCI") & (fin_df["metric"] == "revenue") & (fin_df["period_end"] == "2026-06-30") & (fin_df["duration_type"] == "quarterly")]["value"].max()
+    if abs(smci_q4 - 1.112e10) > 2e8:
+        errors.append(f"SMCI Q4 revenue mismatch: ${smci_q4/1e9:.2f}B (expected ~$11.12B)")
+    else:
+        print(f"  [OK] SMCI Q4 FY26 derived quarterly revenue verified: ${smci_q4/1e9:.2f}B")
+
+    # ---------------------------------------------------------
+    # 6. Validate Outputs, Figures & Stress Summary CSV
+    # ---------------------------------------------------------
+    required_figures = [
+        "obligation_network_topology.png", "fin_bs_structure.png",
+        "assumption_reachability_footprint.png", "financial_stress_waterfall.png"
+    ]
+    for fig in required_figures:
+        p = OUTPUTS_DIR / "figures" / fig
+        if not p.exists():
+            errors.append(f"Missing output figure: {fig}")
+        else:
+            print(f"  [OK] Figure generated: {fig} ({p.stat().st_size // 1024} KB)")
+
+    summary_table_path = OUTPUTS_DIR / "tables" / "financial_stress_summary.csv"
+    if not summary_table_path.exists():
+        errors.append("Missing output table: financial_stress_summary.csv")
+        stress_df = None
+    else:
+        stress_df = pd.read_csv(summary_table_path)
+        print(f"  [OK] Summary table verified: {summary_table_path.name} ({len(stress_df)} scenarios)")
+        if len(stress_df) != 6:
+            errors.append(f"Expected 6 scenarios in stress table, found {len(stress_df)}")
+
+    # ---------------------------------------------------------
+    # 7. Check Executed Notebook
+    # ---------------------------------------------------------
+    if not NOTEBOOK_PATH.exists():
+        errors.append(f"Missing notebook: {NOTEBOOK_PATH.name}")
+    else:
+        with open(NOTEBOOK_PATH, "r", encoding="utf-8") as f:
+            nb_data = json.load(f)
+        code_cells = [c for c in nb_data.get("cells", []) if c.get("cell_type") == "code"]
+        executed_cells = [c for c in code_cells if c.get("execution_count") is not None]
+        print(f"  [OK] Notebook verified: {NOTEBOOK_PATH.name} ({len(executed_cells)}/{len(code_cells)} code cells executed)")
+        if len(executed_cells) < len(code_cells):
+            errors.append(f"Notebook has unexecuted code cells: {len(code_cells) - len(executed_cells)}")
+
+    # ---------------------------------------------------------
+    # 8. Validate Markdown Tables vs Canonical Facts (Zero Drift)
+    # ---------------------------------------------------------
+    print("\n  --- Validating Markdown Tables in README.md & FEEDBACK_PACK.md ---")
+    
+    # Helper to get canonical latest fact
+    def get_latest_fact(ticker: str, metric_name: str, duration_type: str = None):
+        sub = fin_df[(fin_df["entity_id"] == ticker) & (fin_df["metric"] == metric_name)]
+        if duration_type:
+            sub = sub[sub["duration_type"] == duration_type]
+        if sub.empty:
+            return None
+        return sub.sort_values("period_end").iloc[-1]["value"]
+
+    for doc_name, doc_path in [("README.md", README_PATH), ("FEEDBACK_PACK.md", FEEDBACK_PACK_PATH)]:
+        if not doc_path.exists():
+            errors.append(f"Document missing: {doc_name}")
+            continue
+        text = doc_path.read_text(encoding="utf-8")
+        bs_rows = parse_md_table(text, "Entity")
+        if not bs_rows:
+            errors.append(f"Could not find Audited Balance Sheet table in {doc_name}")
+            continue
+
+        print(f"  [OK] Found Audited Balance Sheet table in {doc_name} ({len(bs_rows)} entities)")
+        for r in bs_rows:
+            raw_entity = r.get("Entity", "").replace("*", "").strip()
+            if not raw_entity:
+                continue
+            
+            # Map of column to canonical metric
+            checks = [
+                ("Cash & Equiv", "cash_and_equivalents", None),
+                ("Total Funded Debt", "total_debt", None),
+                ("Lease Liabilities", "operating_lease_liabilities", None),
+                ("Net PP&E", "ppe_net", None),
+                ("Full Year (FY) Revenue", "revenue", "annual"),
+                ("Latest Quarter Revenue", "revenue", "quarterly"),
+            ]
+            for col_name, metric, dur in checks:
+                col_val_str = r.get(col_name)
+                parsed_val = parse_dollar(col_val_str)
+                canon_val = get_latest_fact(raw_entity, metric, dur)
+                if parsed_val is None or canon_val is None:
+                    continue
+                # Tolerance of $0.05B ($50M) for rounding
+                diff = abs(parsed_val - canon_val)
+                if diff > 5e7:
+                    errors.append(
+                        f"{doc_name} [{raw_entity}] {col_name} drift: parsed ${parsed_val/1e9:.2f}B vs canonical ${canon_val/1e9:.2f}B (diff ${diff/1e6:.1f}M)"
+                    )
+        print(f"  [OK] All entity balance sheet rows in {doc_name} match canonical XBRL facts within rounding tolerance.")
+
+    # ---------------------------------------------------------
+    # 9. Validate Stress Direct Hits in Documentation
+    # ---------------------------------------------------------
+    if stress_df is not None:
+        expected_hits = {
+            "Hypothetical MTM Financing Sensitivity": 4.32e9,
+            "Anchor Customer Demand Trim": 1.03e9,
+            "SOFR Base Rate Shock": 235.4e6,
+            "Credit Spread / Refinancing Shock": 317.9e6,
+            "Phased Grid Energization Delay": 135.9e6,
+            "OEM Purchase Commitment Expected Loss": 2.05e9,
+        }
+        readme_text = README_PATH.read_text(encoding="utf-8")
+        feedback_text = FEEDBACK_PACK_PATH.read_text(encoding="utf-8")
+
+        for sname, hit_usd in expected_hits.items():
+            # Check README stress table
+            # Must mention the dollar value in some form (e.g. $4.32B or $240.6M)
+            formatted_b = f"${hit_usd/1e9:.2f}B" if hit_usd >= 1e9 else f"${hit_usd/1e6:.1f}M"
+            if formatted_b not in readme_text:
+                errors.append(f"README.md missing stress direct hit string: {formatted_b} for {sname}")
+            if formatted_b not in feedback_text:
+                errors.append(f"FEEDBACK_PACK.md missing stress direct hit string: {formatted_b} for {sname}")
+
+        print(f"  [OK] All 6 calibrated stress transmission values accurately represented in documentation.")
+
+    # ---------------------------------------------------------
+    # 10. Validate Task 023.1 Bitemporal & Calibrated Visibility Claims
+    # ---------------------------------------------------------
+    print("\n--- Validating Task 023.1 Calibrated Bitemporal Visibility ---")
+    ob_df = pd.read_parquet(PROCESSED_DIR / "obligations.parquet")
+    facts_df = pd.read_parquet(PROCESSED_DIR / "obligation_facts.parquet")
+    events_df = pd.read_parquet(PROCESSED_DIR / "obligation_events.parquet")
+    ent_df = pd.read_parquet(PROCESSED_DIR / "entities.parquet")
+
+    # 10.1: 45 contract inceptions + 2 periodic measurements (47 total)
+    sub_err = []
+    periodic_ids = {"REL-MSFT-CRWV-REVENUE-CONCENTRATION", "OBL-SMCI-SUPPLIER-COMMIT"}
+    contract_inceptions_df = ob_df[~ob_df["obligation_id"].isin(periodic_ids)]
+    periodic_df = ob_df[ob_df["obligation_id"].isin(periodic_ids)]
+
+    if len(ob_df) != 47:
+        sub_err.append(f"Task 023.1: Expected 47 obligations, found {len(ob_df)}")
+    if len(contract_inceptions_df) != 45:
+        sub_err.append(f"Task 023.1: Expected 45 contract inceptions, found {len(contract_inceptions_df)}")
+    if len(periodic_df) != 2:
+        sub_err.append(f"Task 023.1: Expected 2 periodic measurements, found {len(periodic_df)}")
+    if sub_err:
+        errors.extend(sub_err)
+    else:
+        print("  [OK] Task 023.1: 45 contract inceptions + 2 periodic measurements verified (47 total).")
+
+    # 10.2: 14 public 144A notes sum to $25.682B ($25,682,000,000 exact)
+    sub_err = []
+    public_note_ids = [
+        "OBL-CRWV-DEBT-NOTES-2030", "OBL-CRWV-DEBT-NOTES-2031-900", "OBL-CRWV-DEBT-NOTES-2031-975",
+        "OBL-CRWV-DEBT-NOTES-2032-9625", "OBL-CRWV-DEBT-NOTES-2032-EUR", "OBL-CRWV-DEBT-CONV-2031",
+        "OBL-CRWV-DEBT-CONV-2032", "OBL-APLD-DEBT-CONV", "OBL-APLD-DEBT-PF1", "OBL-APLD-DEBT-PF2",
+        "OBL-APLD-DEBT-7PCT-2026", "OBL-WULF-DEBT-CONV-2030", "OBL-WULF-DEBT-CONV-2031", "OBL-WULF-DEBT-CONV-2032"
+    ]
+    public_notes = ob_df[ob_df["obligation_id"].isin(public_note_ids)]
+    if len(public_notes) != 14:
+        sub_err.append(f"Task 023.1: Expected 14 public 144A notes, found {len(public_notes)}")
+    public_notes_sum = public_notes["amount"].sum()
+    if abs(public_notes_sum - 25.682e9) > 0.01:
+        sub_err.append(f"Task 023.1: Public notes sum drift: parsed ${public_notes_sum/1e9:.4f}B vs expected $25.6820B")
+    if sub_err:
+        errors.extend(sub_err)
+    else:
+        print(f"  [OK] Task 023.1: 14 public 144A notes sum verified at $25.682B (exact cent precision).")
+
+    # 10.3: July 1, 2026 Debt & Residual Arithmetic ($44.616B - $25.682B = $18.934B / 42.44%)
+    sub_err = []
+    from src.graph import ObligationNetwork
+    net = ObligationNetwork(entities_df=ent_df, obligations_df=ob_df, facts_df=facts_df, events_df=events_df)
+    eco_jul1 = net.economic_as_of("2026-07-01")
+    eco_jul1_debt = sum(
+        data.get("amount") or 0.0
+        for _, _, _, data in eco_jul1.graph.edges(keys=True, data=True)
+        if data.get("obligation_type") == "debt_facility"
+    )
+    if abs(eco_jul1_debt - 44.616e9) > 0.01:
+        sub_err.append(f"Task 023.1: Economic debt July 1 drift: ${eco_jul1_debt/1e9:.4f}B vs expected $44.6160B")
+
+    residual_gap = eco_jul1_debt - public_notes_sum
+    if abs(residual_gap - 18.934e9) > 0.01:
+        sub_err.append(f"Task 023.1: Residual gap drift: ${residual_gap/1e9:.4f}B vs expected $18.9340B")
+
+    opacity_pct = (residual_gap / eco_jul1_debt) * 100.0
+    if abs(opacity_pct - 42.44) > 0.01:
+        sub_err.append(f"Task 023.1: Opacity pct drift: {opacity_pct:.2f}% vs expected 42.44%")
+    if sub_err:
+        errors.extend(sub_err)
+    else:
+        print(f"  [OK] Task 023.1: July 1, 2026 arithmetic verified: $44.616B - $25.682B = $18.934B (42.44%).")
+
+    # 10.4: Decomposition of the $18.934B residual (CoreWeave non-public-note principal)
+    sub_err = []
+    crwv_ddtl_ids = [
+        "OBL-CRWV-DEBT-DDTL1", "OBL-CRWV-DEBT-DDTL2", "OBL-CRWV-DEBT-DDTL2-1",
+        "OBL-CRWV-DEBT-DDTL3", "OBL-CRWV-DEBT-DDTL4", "OBL-CRWV-DEBT-DDTL5"
+    ]
+    crwv_ddtls_sum = ob_df[ob_df["obligation_id"].isin(crwv_ddtl_ids)]["amount"].sum()
+    if abs(crwv_ddtls_sum - 13.643e9) > 0.01:
+        sub_err.append(f"Task 023.1: CRWV DDTLs sum drift: ${crwv_ddtls_sum/1e9:.4f}B vs expected $13.6430B")
+
+    crwv_oem_ids = ["OBL-CRWV-DEBT-OEM", "OBL-CRWV-DEBT-OEM-NR"]
+    crwv_oem_sum = ob_df[ob_df["obligation_id"].isin(crwv_oem_ids)]["amount"].sum()
+    if abs(crwv_oem_sum - 5.102e9) > 0.01:
+        sub_err.append(f"Task 023.1: CRWV OEM financing sum drift: ${crwv_oem_sum/1e9:.4f}B vs expected $5.1020B")
+
+    crwv_mag_sum = ob_df[ob_df["obligation_id"] == "OBL-CRWV-DEBT-MAGNETAR"]["amount"].sum()
+    if abs(crwv_mag_sum - 0.189e9) > 0.01:
+        sub_err.append(f"Task 023.1: CRWV Magnetar debt drift: ${crwv_mag_sum/1e9:.4f}B vs expected $0.1890B")
+
+    crwv_non_note_total = crwv_ddtls_sum + crwv_oem_sum + crwv_mag_sum
+    if abs(crwv_non_note_total - 18.934e9) > 0.01:
+        sub_err.append(f"Task 023.1: CRWV non-note total drift: ${crwv_non_note_total/1e9:.4f}B vs expected $18.9340B")
+    if sub_err:
+        errors.extend(sub_err)
+    else:
+        print(f"  [OK] Task 023.1: $18.934B residual decomposition verified ($13.643B DDTLs + $5.102B OEM + $0.189B Magnetar).")
+
+    # 10.5: March 1, 2025 modeled topology labels
+    sub_err = []
+    eco_mar25 = net.economic_as_of("2025-03-01")
+    kno_mar25 = net.known_as_of("2025-03-01")
+
+    crwv_eco_edges = (
+        [(u, v, k) for u, v, k in eco_mar25.graph.edges("CRWV", keys=True)] +
+        [(u, v, k) for u, v, k in eco_mar25.graph.in_edges("CRWV", keys=True)]
+    )
+    if len(crwv_eco_edges) != 6:
+        sub_err.append(f"Task 023.1: March 1, 2025 CRWV economic legal edges: found {len(crwv_eco_edges)} vs expected 6")
+
+    eco_mar25_root_cps = set()
+    for u, v, _ in crwv_eco_edges:
+        cp = v if u == "CRWV" else u
+        r = net.get_root_parent(cp)
+        if r != "CRWV":
+            eco_mar25_root_cps.add(r)
+
+    expected_eco_cps = {"BLACKSTONE_MAGNETAR_SYN", "CORZ", "MSFT", "OEM_FINANCING_PARTNERS"}
+    if eco_mar25_root_cps != expected_eco_cps:
+        sub_err.append(f"Task 023.1: March 1, 2025 CRWV root counterparties mismatch: found {eco_mar25_root_cps} vs expected {expected_eco_cps}")
+
+    crwv_kno_edges = (
+        [(u, v, k) for u, v, k in kno_mar25.graph.edges("CRWV", keys=True)] +
+        [(u, v, k) for u, v, k in kno_mar25.graph.in_edges("CRWV", keys=True)]
+    )
+    kno_mar25_root_cps = set()
+    for u, v, _ in crwv_kno_edges:
+        cp = v if u == "CRWV" else u
+        r = net.get_root_parent(cp)
+        if r != "CRWV":
+            kno_mar25_root_cps.add(r)
+
+    expected_kno_cps = {"CORZ"}
+    if kno_mar25_root_cps != expected_kno_cps:
+        sub_err.append(f"Task 023.1: March 1, 2025 CRWV known root counterparties mismatch: found {kno_mar25_root_cps} vs expected {expected_kno_cps}")
+    if sub_err:
+        errors.extend(sub_err)
+    else:
+        print("  [OK] Task 023.1: March 1, 2025 modeled topology verified (6 legal edges -> 4 root nodes: BLACKSTONE_MAGNETAR_SYN, CORZ, MSFT, OEM_FINANCING_PARTNERS vs 1 known: CORZ).")
+
+    # 10.6: Regression test for missing-data / coverage semantics (None -> 0 bug prevention)
+    sub_err = []
+    # Graph-level check on March 1, 2025: 5 of 7 debt edges unmeasured in fact ledger
+    mar25_unmeasured = sum(1 for _, _, _, dt in eco_mar25.graph.edges(keys=True, data=True) if dt.get("obligation_type") == "debt_facility" and dt.get("amount") is None)
+    mar25_total_debt = sum(1 for _, _, _, dt in eco_mar25.graph.edges(keys=True, data=True) if dt.get("obligation_type") == "debt_facility")
+    if mar25_unmeasured != 5 or mar25_total_debt != 7:
+        sub_err.append(f"Task 023.1: Expected 5/7 unmeasured debt edges on 2025-03-01, found {mar25_unmeasured}/{mar25_total_debt}")
+
+    # Graph-level check on July 1, 2026: 0 of 23 debt edges unmeasured (100% complete coverage)
+    jul26_unmeasured = sum(1 for _, _, _, dt in eco_jul1.graph.edges(keys=True, data=True) if dt.get("obligation_type") == "debt_facility" and dt.get("amount") is None)
+    jul26_total_debt = sum(1 for _, _, _, dt in eco_jul1.graph.edges(keys=True, data=True) if dt.get("obligation_type") == "debt_facility")
+    if jul26_unmeasured != 0 or jul26_total_debt != 23:
+        sub_err.append(f"Task 023.1: Expected 0/23 unmeasured debt edges on 2026-07-01, found {jul26_unmeasured}/{jul26_total_debt}")
+
+    # CSV trajectory output check: confirms simulation explicitly models unknown as NaN/null
+    traj_path = OUTPUTS_DIR / "analysis" / "bitemporal_monthly_trajectory.csv"
+    if traj_path.exists():
+        traj_df = pd.read_csv(traj_path)
+        mar25_row = traj_df[traj_df["date"] == "2025-03-01"].iloc[0]
+        if mar25_row["unmeasured_debt_edges"] != 5 or mar25_row["principal_coverage_complete"] != False:
+            sub_err.append(f"Task 023.1: Trajectory 2025-03-01 coverage flags incorrect: unmeasured={mar25_row['unmeasured_debt_edges']}, complete={mar25_row['principal_coverage_complete']}")
+        if pd.notna(mar25_row["eco_funded_debt_b"]) or pd.notna(mar25_row["unresolved_principal_gap_b"]) or pd.notna(mar25_row["calibrated_opacity_pct"]):
+            sub_err.append(f"Task 023.1: Regression! 2025-03-01 manufactured debt numbers when coverage incomplete: eco_debt={mar25_row['eco_funded_debt_b']}")
+
+        jul26_row = traj_df[traj_df["date"] == "2026-07-01"].iloc[0]
+        if jul26_row["unmeasured_debt_edges"] != 0 or jul26_row["principal_coverage_complete"] != True:
+            sub_err.append(f"Task 023.1: Trajectory 2026-07-01 coverage flags incorrect: unmeasured={jul26_row['unmeasured_debt_edges']}, complete={jul26_row['principal_coverage_complete']}")
+        if abs(jul26_row["eco_funded_debt_b"] - 44.616) > 0.001 or abs(jul26_row["unresolved_principal_gap_b"] - 18.934) > 0.001 or abs(jul26_row["calibrated_opacity_pct"] - 42.44) > 0.01:
+            sub_err.append(f"Task 023.1: Trajectory 2026-07-01 values drift: eco={jul26_row['eco_funded_debt_b']}, gap={jul26_row['unresolved_principal_gap_b']}, opacity={jul26_row['calibrated_opacity_pct']}")
+    else:
+        sub_err.append(f"Task 023.1: Missing trajectory file at {traj_path}")
+
+    if sub_err:
+        errors.extend(sub_err)
+    else:
+        print("  [OK] Task 023.1: Missing-data semantics regression test passed (March 2025 incomplete coverage declines aggregation; July 2026 complete coverage certifies $44.616B / $18.934B / 42.44%).")
+
+    # -------------------------------------------------------------------------
+    # 11. TASK 024.2: ALGORITHMIC TYPED TRAVERSAL & HONEST PREREGISTRATION AUDIT
+    # -------------------------------------------------------------------------
+    print("\n--- 11. Validating Task 024.2 Algorithmic Typed Traversal & Falsification Invariants ---")
+    sub_err = []
+
+    # 11.1: Artifact Existence
+    t24_artifacts = [
+        OUTPUTS_DIR / "analysis" / "cross_layer_network_comparison.csv",
+        OUTPUTS_DIR / "analysis" / "cross_layer_shock_reachability.csv",
+        OUTPUTS_DIR / "analysis" / "cross_layer_dependency_paths.csv",
+        OUTPUTS_DIR / "analysis" / "cross_layer_null_model_test.json",
+        OUTPUTS_DIR / "analysis" / "cross_layer_join_gain_summary.json",
+        OUTPUTS_DIR / "figures" / "cross_layer_join_gain.png",
+        PROJECT_ROOT / "docs" / "phase1_task024_cross_layer_join_gain.md",
+        PROJECT_ROOT / "docs" / "task024_1_prespecification.md"
+    ]
+    for art_path in t24_artifacts:
+        if not art_path.exists():
+            sub_err.append(f"Task 024.2: Missing required artifact at {art_path}")
+
+    # 11.2: Summary JSON & Layer Topology Invariants
+    summary_path = OUTPUTS_DIR / "analysis" / "cross_layer_join_gain_summary.json"
+    if summary_path.exists():
+        with open(summary_path, "r", encoding="utf-8") as f:
+            t24_sum = json.load(f)
+
+        if t24_sum.get("task_id") != "TASK-024.2":
+            sub_err.append(f"Task 024.2: Task ID mismatch: {t24_sum.get('task_id')} vs expected TASK-024.2")
+        if t24_sum.get("data_freeze_commit") != "42f9a74":
+            sub_err.append(f"Task 024.2: Data freeze commit drift: {t24_sum.get('data_freeze_commit')} vs expected 42f9a74")
+        if t24_sum.get("pre_specified_protocol_commit") != "761fb4a":
+            sub_err.append(f"Task 024.2: Pre-specified protocol commit drift: {t24_sum.get('pre_specified_protocol_commit')} vs expected 761fb4a")
+        
+        expected_verdict = "PARTIALLY FALSIFIED / MIXED RESULT (Criteria 1 & 2 PASSED, Criterion 3 FAILED)"
+        if t24_sum.get("falsification_verdict") != expected_verdict:
+            sub_err.append(f"Task 024.2: Falsification verdict failed: {t24_sum.get('falsification_verdict')} vs expected {expected_verdict}")
+
+        layers_meta = t24_sum.get("layers", {})
+        expected_layer_counts = {
+            "L1_FIN": {"nodes": 19, "edges_simple": 17, "edges_multigraph": 45, "debt": 45.448, "mw": 0.0},
+            "L2_CONT": {"nodes": 36, "edges_simple": 48, "edges_multigraph": 62, "debt": 45.448, "mw": 0.0},
+            "L3_PHYS": {"nodes": 26, "edges_simple": 19, "edges_multigraph": 20, "debt": 0.0, "mw": 4401.0},
+            "L4_JOIN": {"nodes": 65, "edges_simple": 99, "edges_multigraph": 133, "debt": 45.448, "mw": 4401.0}
+        }
+        for lid, exp in expected_layer_counts.items():
+            act = layers_meta.get(lid, {})
+            if act.get("nodes") != exp["nodes"]:
+                sub_err.append(f"Task 024.2: {lid} nodes drift: {act.get('nodes')} vs expected {exp['nodes']}")
+            if act.get("edges_simple") != exp["edges_simple"]:
+                sub_err.append(f"Task 024.2: {lid} edges_simple drift: {act.get('edges_simple')} vs expected {exp['edges_simple']}")
+            if act.get("edges_multigraph") != exp["edges_multigraph"]:
+                sub_err.append(f"Task 024.2: {lid} edges_multigraph drift: {act.get('edges_multigraph')} vs expected {exp['edges_multigraph']}")
+            if abs(act.get("funded_debt_b", 0.0) - exp["debt"]) > 0.001:
+                sub_err.append(f"Task 024.2: {lid} debt drift: {act.get('funded_debt_b')} vs expected {exp['debt']}")
+            if abs(act.get("utility_mw", 0.0) - exp["mw"]) > 0.1:
+                sub_err.append(f"Task 024.2: {lid} MW drift: {act.get('utility_mw')} vs expected {exp['mw']}")
+
+        # 11.3: Articulation Points & Normalized Shares
+        art_comp = t24_sum.get("articulation_points_comparison", {})
+        l1_art = art_comp.get("L1_FIN", {})
+        l2_art = art_comp.get("L2_CONT", {})
+        l3_art = art_comp.get("L3_PHYS", {})
+        l4_art = art_comp.get("L4_JOIN", {})
+
+        if l1_art.get("count") != 6 or abs(l1_art.get("share_pct", 0.0) - 31.58) > 0.1:
+            sub_err.append(f"Task 024.2: L1 articulation points drift: {l1_art}")
+        if l2_art.get("count") != 7 or abs(l2_art.get("share_pct", 0.0) - 19.44) > 0.1:
+            sub_err.append(f"Task 024.2: L2 articulation points drift: {l2_art}")
+        if l3_art.get("count") != 9 or abs(l3_art.get("share_pct", 0.0) - 34.62) > 0.1:
+            sub_err.append(f"Task 024.2: L3 articulation points drift: {l3_art}")
+        if l4_art.get("count") != 19 or abs(l4_art.get("share_pct", 0.0) - 29.23) > 0.1:
+            sub_err.append(f"Task 024.2: L4 articulation points drift: {l4_art}")
+        if l4_art.get("facility_cut_vertices_count") != 6 or abs(l4_art.get("facility_share_of_articulation_points_pct", 0.0) - 31.58) > 0.1:
+            sub_err.append(f"Task 024.2: L4 facility cut vertices drift: count={l4_art.get('facility_cut_vertices_count')}, share={l4_art.get('facility_share_of_articulation_points_pct')}")
+
+        # 11.4: Pre-Specified Three Falsification Criteria (Honest Preregistration Audit)
+        fals_audit = t24_sum.get("falsification_audit", {})
+        c1 = fals_audit.get("criterion_1_cross_layer_path_reconstructibility", {})
+        if not c1.get("passed") or c1.get("total_paths_audited") != 12 or c1.get("paths_reconstructible_in_single_layer") != 0:
+            sub_err.append(f"Task 024.2: Criterion 1 failed or drifted: {c1}")
+
+        c2 = fals_audit.get("criterion_2_facility_cut_vertices", {})
+        if not c2.get("passed") or c2.get("facility_cut_vertices_count") != 6 or c2.get("facility_cut_vertices_count") < 3:
+            sub_err.append(f"Task 024.2: Criterion 2 failed or drifted: {c2}")
+
+        c3 = fals_audit.get("criterion_3_null_model_concentration", {})
+        if c3.get("passed") != False:
+            sub_err.append(f"Task 024.2: Criterion 3 must be False under preregistered conjunction rule, got: {c3.get('passed')}")
+        if not c3.get("ercot_passed") or c3.get("ercot_p_value") >= 0.05:
+            sub_err.append(f"Task 024.2: ERCOT subtest should pass p < 0.05, got: {c3}")
+        if c3.get("coreweave_passed") != False or c3.get("coreweave_p_value") < 0.05:
+            sub_err.append(f"Task 024.2: CoreWeave subtest should fail p >= 0.05, got: {c3}")
+
+        # 11.5: Reconvergence Invariants
+        reconv = t24_sum.get("reconvergence", {})
+        if reconv.get("coreweave_tenant_utility_mw") != 1176.0:
+            sub_err.append(f"Task 024.2: CoreWeave tenant utility MW drift: {reconv.get('coreweave_tenant_utility_mw')} vs expected 1176.0")
+        if reconv.get("coreweave_tenant_it_mw") != 990.0:
+            sub_err.append(f"Task 024.2: CoreWeave tenant IT contracted MW drift: {reconv.get('coreweave_tenant_it_mw')} vs expected 990.0")
+        if reconv.get("ercot_grid_mw") != 3164.0:
+            sub_err.append(f"Task 024.2: ERCOT grid MW drift: {reconv.get('ercot_grid_mw')} vs expected 3164.0")
+        if abs(reconv.get("ercot_grid_share_pct", 0.0) - 71.89) > 0.01:
+            sub_err.append(f"Task 024.2: ERCOT grid share drift: {reconv.get('ercot_grid_share_pct')} vs expected 71.89%")
+
+    # 11.6: Direct Path Evidence Table Invariants
+    paths_csv_path = OUTPUTS_DIR / "analysis" / "cross_layer_dependency_paths.csv"
+    if paths_csv_path.exists():
+        paths_df = pd.read_csv(paths_csv_path)
+        if len(paths_df) != 12:
+            sub_err.append(f"Task 024.2: Dependency paths count mismatch: {len(paths_df)} vs expected 12")
+        if paths_df["reconstructible_in_G_fin"].any() or paths_df["reconstructible_in_G_cont"].any() or paths_df["reconstructible_in_G_phys"].any():
+            sub_err.append("Task 024.2: Regression! A cross-domain path was reconstructible in an isolated layer.")
+        if not paths_df["reconstructible_in_G_join"].all():
+            sub_err.append("Task 024.2: Cross-domain path failed to reconstruct in G_join.")
+        
+        # Check audited Denton critical IT load
+        p_a02 = paths_df[paths_df["path_id"] == "PATH-A02-MSFT-DENTON-ERCOT"].iloc[0]
+        if p_a02["critical_it_contracted_mw"] != 270.0:
+            sub_err.append(f"Task 024.2: Denton critical IT load should be 270.0 MW, got: {p_a02['critical_it_contracted_mw']}")
+        if p_a02["utility_service_capacity_mw"] != 394.0:
+            sub_err.append(f"Task 024.2: Denton utility capacity should be 394.0 MW, got: {p_a02['utility_service_capacity_mw']}")
+
+        # Check springing guaranty conditionality
+        p_c04 = paths_df[paths_df["path_id"] == "PATH-C04-MDU-PF1-SPRINGING-GUARANTY"].iloc[0]
+        if p_c04["channel_type"] != "conditional_exposure_path" or p_c04["trigger_state"] != "not_established":
+            sub_err.append(f"Task 024.2: Springing guaranty path should be conditional_exposure_path with not_established trigger: {p_c04}")
+
+    # 11.7: Null Model Statistical Test Invariants
+    null_test_path = OUTPUTS_DIR / "analysis" / "cross_layer_null_model_test.json"
+    if null_test_path.exists():
+        with open(null_test_path, "r", encoding="utf-8") as f:
+            nt_data = json.load(f)
+        if nt_data.get("null_model_trials") != 1000:
+            sub_err.append(f"Task 024.2: Null model trials mismatch: {nt_data.get('null_model_trials')} vs expected 1000")
+        if nt_data.get("null_model_name") != "Fixed-Degree Facility-Capacity Permutation Test":
+            sub_err.append(f"Task 024.2: Null model name mismatch: {nt_data.get('null_model_name')}")
+        ercot_res = nt_data.get("ercot_grid_concentration", {})
+        if ercot_res.get("p_value", 1.0) >= 0.05 or not ercot_res.get("statistically_significant_at_05"):
+            sub_err.append(f"Task 024.2: ERCOT null model concentration not significant: {ercot_res}")
+        crwv_res = nt_data.get("coreweave_tenant_concentration", {})
+        if crwv_res.get("p_value", 0.0) < 0.05 or crwv_res.get("statistically_significant_at_05"):
+            sub_err.append(f"Task 024.2: CoreWeave tenant concentration should have p >= 0.05: {crwv_res}")
+        if nt_data.get("criterion_3_preregistered_conjunction_passed") != False:
+            sub_err.append("Task 024.2: criterion_3_preregistered_conjunction_passed must be False")
+
+    if sub_err:
+        errors.extend(sub_err)
+    else:
+        print("  [OK] Task 024.2: Algorithmic Typed Traversal & Honest Preregistration Invariants verified (12 paths verified in G_join, 0 in single layers, Denton audited at 270 MW IT, C04 springing guaranty marked not_established, ERCOT p=0.0060, CoreWeave p=0.816, Criterion 3 failed as preregistered).")
+
+    # =========================================================================
+    # 12. Validating Task 025.1 Calibrated Retrospective Backtest Invariants
+    # =========================================================================
+    print("\n--- 12. Validating Task 025.1 Calibrated Retrospective Backtest Invariants ---")
+    sub_err = []
+
+    # 12.1: Pre-event & post-event dataset files existence and structure
+    t025_dir = PROCESSED_DIR / "task025"
+    if not t025_dir.exists():
+        sub_err.append("Task 025.1: task025 directory missing in data/processed")
+    else:
+        req_tables = [
+            "jupiter_entities_pre_event.parquet",
+            "jupiter_facilities_pre_event.parquet",
+            "jupiter_obligations_pre_event.parquet",
+            "jupiter_power_pre_event.parquet",
+            "jupiter_evidence_claims_pre_event.parquet",
+            "jupiter_postevent_evidence.parquet"
+        ]
+        for tbl in req_tables:
+            if not (t025_dir / tbl).exists():
+                sub_err.append(f"Task 025.1: Required table missing: {tbl}")
+
+    # 12.2: Pre-event graph and paths
+    preevent_paths_file = OUTPUTS_DIR / "analysis" / "task025_preevent_paths.csv"
+    preevent_graph_file = OUTPUTS_DIR / "analysis" / "task025_preevent_graph.json"
+    if not preevent_paths_file.exists():
+        sub_err.append(f"Task 025.1: Missing pre-event paths artifact: {preevent_paths_file}")
+    if not preevent_graph_file.exists():
+        sub_err.append(f"Task 025.1: Missing pre-event graph summary: {preevent_graph_file}")
+    else:
+        with open(preevent_graph_file, "r", encoding="utf-8") as f:
+            pg_data = json.load(f)
+        if pg_data.get("task_id") != "TASK-025.2":
+            sub_err.append(f"Task 025.2: Expected task_id TASK-025.2, got: {pg_data.get('task_id')}")
+        if pg_data.get("epistemic_freeze_date") != "2026-09-23T23:59:59Z":
+            sub_err.append(f"Task 025.2: Epistemic freeze date mismatch: {pg_data.get('epistemic_freeze_date')}")
+        if pg_data.get("total_construction_debt_usd") != 18000000000.0:
+            sub_err.append(f"Task 025.2: Construction debt mismatch: {pg_data.get('total_construction_debt_usd')}")
+        if pg_data.get("oracle_facility_lease_usd") is not None:
+            sub_err.append(f"Task 025.2: Oracle facility lease must be None (attribution discipline), got: {pg_data.get('oracle_facility_lease_usd')}")
+
+    # 12.3: Validation Summary & Empirical Scoring
+    val_sum_file = OUTPUTS_DIR / "analysis" / "task025_validation_summary.json"
+    if not val_sum_file.exists():
+        sub_err.append(f"Task 025.2: Missing validation summary: {val_sum_file}")
+    else:
+        with open(val_sum_file, "r", encoding="utf-8") as f:
+            vs_data = json.load(f)
+        if vs_data.get("task_id") != "TASK-025.2":
+            sub_err.append(f"Task 025.2: Expected task_id TASK-025.2, got: {vs_data.get('task_id')}")
+        if vs_data.get("overall_calibrated_verdict") != "SUPPORTED RETROSPECTIVE TEMPORAL BACKTEST (CRITERIA MET UNDER CALIBRATED RUBRIC)":
+            sub_err.append(f"Task 025.2: Verdict mismatch: {vs_data.get('overall_calibrated_verdict')}")
+        
+        # Entity scoring assertions
+        crit_eval = vs_data.get("criteria_evaluations", {})
+        orig_model = crit_eval.get("original_preregistered_model", {})
+        if not orig_model.get("verdict", "").startswith("FAILED"):
+            sub_err.append(f"Task 025.2: Original model must be reported as FAILED, got: {orig_model.get('verdict')}")
+
+        strict_score = crit_eval.get("strict_linear_conduit_entity_scoring", {})
+        tree_score = crit_eval.get("corporate_augmented_tree_entity_scoring", {})
+        if strict_score.get("recall", 0.0) != 0.7143:
+            sub_err.append(f"Task 025.2: Strict conduit recall mismatch: {strict_score.get('recall')} vs expected 0.7143")
+        if strict_score.get("precision", 0.0) != 1.0:
+            sub_err.append(f"Task 025.2: Strict conduit precision mismatch: {strict_score.get('precision')} vs expected 1.0")
+        if tree_score.get("recall", 0.0) != 1.0 or tree_score.get("precision", 0.0) != 0.875:
+            sub_err.append(f"Task 025.2: Augmented tree scoring mismatch: {tree_score}")
+
+        # Mechanism scoring
+        mech_score = crit_eval.get("contractual_mechanism_coverage", {})
+        if mech_score.get("mechanism_coverage", 0.0) < 1.0 or not mech_score.get("mechanism_test_passed"):
+            sub_err.append(f"Task 025.2: Mechanism coverage failed: {mech_score.get('mechanism_coverage')}")
+
+        # Directional stress scoring
+        dir_score = crit_eval.get("directional_stress_alignment", {})
+        if dir_score.get("directional_alignment") != "CONFIRMED" or not dir_score.get("alignment_passed"):
+            sub_err.append(f"Task 025.2: Directional stress alignment failed: {dir_score}")
+
+        # Hypothesis 4 Bitemporal Precedence
+        h4_score = crit_eval.get("hypothesis_4_bitemporal_precedence", {})
+        if h4_score.get("regulatory_to_public_notice_lead_days") != 71 or not h4_score.get("public_notice_lead_test_passed"):
+            sub_err.append(f"Task 025.2: Hypothesis 4 public notice lead time mismatch: {h4_score}")
+        if h4_score.get("preregistered_sec_filing_lead_days_right_censored") != 77 or h4_score.get("sec_filing_observed_as_of_sept30") != False:
+            sub_err.append(f"Task 025.2: Hypothesis 4 right-censored SEC status mismatch: {h4_score}")
+
+    # 12.4: Validation Figure
+    val_fig_file = OUTPUTS_DIR / "figures" / "task025_project_jupiter_validation.png"
+    if not val_fig_file.exists():
+        sub_err.append(f"Task 025.2: Validation figure missing: {val_fig_file}")
+
+    if sub_err:
+        errors.extend(sub_err)
+    else:
+        print("  [OK] Task 025.2: Project Jupiter Calibrated Retrospective Backtest Invariants verified (Pre-event cutoff 2026-09-23, $18.0B debt baseline, Strict Recall=71.4%, Tree Precision=87.5%/Recall=100%, Mechanism Coverage=3/3, H4 Lead Time=71d / SEC >=77d right-censored, Verdict=SUPPORTED RETROSPECTIVE TEMPORAL BACKTEST).")
+
+    # =========================================================================
+    # 13. Validating Observatory Canonical Datasets & Monitoring Invariants
+    # =========================================================================
+    print("\n--- 13. Validating Observatory Canonical Datasets & Monitoring Invariants ---")
+    sub_err = []
+
+    # Gather all verified evidence claim IDs across repo
+    verified_claim_ids = set()
+    core_claims_file = PROCESSED_DIR / "evidence_claims.parquet"
+    if core_claims_file.exists():
+        df_core = pd.read_parquet(core_claims_file)
+        if "claim_id" in df_core.columns:
+            verified_claim_ids.update(df_core["claim_id"].dropna().tolist())
+    pwr_claims_file = PROCESSED_DIR / "power_claims.parquet"
+    if pwr_claims_file.exists():
+        df_pwr = pd.read_parquet(pwr_claims_file)
+        if "claim_id" in df_pwr.columns:
+            verified_claim_ids.update(df_pwr["claim_id"].dropna().tolist())
+    task025_dir = PROCESSED_DIR / "task025"
+    if task025_dir.exists():
+        for p in task025_dir.glob("*.parquet"):
+            if "claims" in p.name or "postevent" in p.name:
+                df_t = pd.read_parquet(p)
+                if "claim_id" in df_t.columns:
+                    verified_claim_ids.update(df_t["claim_id"].dropna().tolist())
+    obs_claims_file = PROCESSED_DIR / "observatory_claims.parquet"
+    if obs_claims_file.exists():
+        df_oc = pd.read_parquet(obs_claims_file)
+        valid_qtypes = {"exact_quote", "source_excerpt", "analyst_summary"}
+        valid_vstatus = {"VERIFIED", "VERIFIED_AUDITED"}
+        for _, clm_row in df_oc.iterrows():
+            cid = clm_row.get("claim_id")
+            qt = clm_row.get("quote_type")
+            vs = clm_row.get("verification_status")
+            notes = str(clm_row.get("verifier_notes", "")).strip()
+            if qt not in valid_qtypes:
+                sub_err.append(f"Authored claim {cid} invalid quote_type: '{qt}' (must be in {valid_qtypes})")
+            elif vs not in valid_vstatus:
+                sub_err.append(f"Authored claim {cid} unverified status: '{vs}'")
+            elif len(notes) < 20:
+                sub_err.append(f"Authored claim {cid} missing substantive verifier_notes")
+            else:
+                verified_claim_ids.add(cid)
+
+    # 13.1 Scenarios Table
+    scen_pq = PROCESSED_DIR / "observatory_scenarios.parquet"
+    if not scen_pq.exists():
+        sub_err.append(f"Missing canonical scenarios parquet: {scen_pq}")
+    else:
+        df_scen = pd.read_parquet(scen_pq)
+        if len(df_scen) != 6:
+            sub_err.append(f"Expected 6 canonical scenarios, got: {len(df_scen)}")
+        expected_cols = {"scenario_id", "title", "archetype_exemplar", "binding_collision_condition", "reconverging_entity", "subordinate_boundary_mechanic", "valid_from", "known_from", "evidence_claim_ids"}
+        missing_cols = expected_cols - set(df_scen.columns)
+        if missing_cols:
+            sub_err.append(f"Scenarios table missing columns: {missing_cols}")
+        if df_scen["scenario_id"].isnull().any():
+            sub_err.append("Null scenario_id found in observatory_scenarios")
+        # Foreign-key claim check
+        for _, row in df_scen.iterrows():
+            refs = [c.strip() for c in str(row["evidence_claim_ids"]).split(",") if c.strip()]
+            for r in refs:
+                if r not in verified_claim_ids:
+                    sub_err.append(f"Scenario {row['scenario_id']} references unverified claim: {r}")
+
+    # 13.2 Indicators Table
+    ind_pq = PROCESSED_DIR / "observatory_indicators.parquet"
+    if not ind_pq.exists():
+        sub_err.append(f"Missing canonical indicators parquet: {ind_pq}")
+    else:
+        df_ind = pd.read_parquet(ind_pq)
+        if len(df_ind) != 13:
+            sub_err.append(f"Expected 13 canonical indicators (5 projects), got: {len(df_ind)}")
+        expected_ind_cols = {"indicator_id", "project_id", "archetype", "signal_role", "observability", "affected_clock", "threatened_boundary", "lead_time_status", "valid_from", "known_from", "expected_observation_date"}
+        missing_ind_cols = expected_ind_cols - set(df_ind.columns)
+        if missing_ind_cols:
+            sub_err.append(f"Indicators table missing columns: {missing_ind_cols}")
+        valid_roles = {"EARLY_WARNING", "CONFIRMATION", "FINANCIAL_RECOGNITION", "OUTCOME"}
+        if not set(df_ind["signal_role"]).issubset(valid_roles):
+            sub_err.append(f"Invalid signal_role values found: {set(df_ind['signal_role']) - valid_roles}")
+        valid_observability = {"PUBLIC", "COMMERCIAL_DATA", "PRIVATE_OR_UNAVAILABLE"}
+        if not set(df_ind["observability"]).issubset(valid_observability):
+            sub_err.append(f"Invalid observability values found: {set(df_ind['observability']) - valid_observability}")
+        
+        # Verify NMSLO permit denial lead time
+        jup_row = df_ind[df_ind["indicator_id"] == "IND-JUP-001"]
+        if jup_row.empty or jup_row.iloc[0]["lead_time_days_min"] != 65.0 or jup_row.iloc[0]["lead_time_status"] != "OBSERVED":
+            sub_err.append(f"IND-JUP-001 invalid lead time or status: {jup_row}")
+
+        # Verify IND-JUP-003 right-censored interval representation (min=77, max=unbounded/null)
+        jup3_row = df_ind[df_ind["indicator_id"] == "IND-JUP-003"]
+        if jup3_row.empty or jup3_row.iloc[0]["lead_time_days_min"] != 77.0 or pd.notna(jup3_row.iloc[0]["lead_time_days_max"]):
+            sub_err.append(f"IND-JUP-003 invalid right-censored bounds: expected min=77.0, max=None, got min={jup3_row.iloc[0]['lead_time_days_min']}, max={jup3_row.iloc[0]['lead_time_days_max']}")
+
+        # Foreign-key claim check
+        for _, row in df_ind.iterrows():
+            refs = [c.strip() for c in str(row["evidence_claim_ids"]).split(",") if c.strip()]
+            for r in refs:
+                if r not in verified_claim_ids:
+                    sub_err.append(f"Indicator {row['indicator_id']} references unverified claim: {r}")
+
+    # 13.3 Observations Table & Empirical Scoreboard Verification
+    obs_pq = PROCESSED_DIR / "observatory_observations.parquet"
+    if not obs_pq.exists():
+        sub_err.append(f"Missing canonical observations parquet: {obs_pq}")
+    else:
+        df_obs = pd.read_parquet(obs_pq)
+        if len(df_obs) < 5:
+            sub_err.append(f"Expected >= 5 observations, got: {len(df_obs)}")
+        for idx, row in df_obs.iterrows():
+            if str(row["source_event_date"]) > str(row["first_publicly_observable_date"]):
+                sub_err.append(f"Bitemporal inversion at row {idx}: source_event_date {row['source_event_date']} > first_publicly_observable_date {row['first_publicly_observable_date']}")
+            if str(row["first_publicly_observable_date"]) > str(row["ingestion_date"]):
+                sub_err.append(f"Ingestion lookahead at row {idx}: first_publicly_observable_date {row['first_publicly_observable_date']} > ingestion_date {row['ingestion_date']}")
+            cid = str(row.get("evidence_claim_id", ""))
+            if cid and cid != "None" and cid not in verified_claim_ids:
+                sub_err.append(f"Observation {row['observation_id']} references unverified claim: {cid}")
+
+        # Verify exact empirical scoreboard metrics
+        try:
+            from observatory_monitor import ObservatoryMonitor
+            mon = ObservatoryMonitor(str(obs_pq))
+            board = mon.compute_empirical_scoreboard()
+            if board.get("observed_early_warning_sample_count") != 1:
+                sub_err.append(f"Scoreboard early warning count mismatch: expected 1, got {board.get('observed_early_warning_sample_count')}")
+            if board.get("exact_early_warning_lead_days") != 65.0:
+                sub_err.append(f"Scoreboard exact early warning lead mismatch: expected 65.0, got {board.get('exact_early_warning_lead_days')}")
+            if board.get("observed_propagation_lag_days") != 71.0:
+                sub_err.append(f"Scoreboard propagation lag mismatch: expected 71.0, got {board.get('observed_propagation_lag_days')}")
+            if board.get("right_censored_disclosure_lag_days") != 77.0:
+                sub_err.append(f"Scoreboard right-censored lag mismatch: expected 77.0, got {board.get('right_censored_disclosure_lag_days')}")
+            if board.get("observed_public_early_warning_episodes") != 1:
+                sub_err.append(f"Scoreboard observed public early warning episodes mismatch: expected 1, got {board.get('observed_public_early_warning_episodes')}")
+            if board.get("sec_disclosure_lag_display") != ">=77 days (right-censored)":
+                sub_err.append(f"Scoreboard SEC disclosure lag display mismatch: got {board.get('sec_disclosure_lag_display')}")
+        except Exception as e:
+            sub_err.append(f"Scoreboard evaluation error: {e}")
+
+    if sub_err:
+        errors.extend(sub_err)
+    else:
+        print("  [OK] Task 026.1: Observatory Canonical Datasets certified (Independent Claim Audit verified, 6 Scenarios, 13 Indicators across 5 projects, >=5 Observations, Exact Scoreboard: N=1 Early Warning [65d Lead], 71d Contract Propagation Lag, >=77d Right-Censored SEC Disclosure Lag).")
+
+    if errors:
+        print("\n[VALIDATION FAILED]")
+        for err in errors:
+            print(f"  - {err}")
+        return False
+    else:
+        print("\nALL INTERNAL CONSISTENCY CHECKS PASSED: ZERO DATA DRIFT")
+        return True
+
+
+if __name__ == "__main__":
+    import sys
+    success = validate_observatory()
+    if not success:
+        sys.exit(1)

@@ -1,0 +1,2 @@
+relationship_id,from_entity_id,to_facility_id,relationship_type,capacity_mw,status,energization_scheduled,regulatory_jurisdiction,valid_from,known_from,evidence_claim_id
+PWR-JUPITER-NMSLO-PERMIT-PIPELINE,NMSLO,FAC-PROJECT-JUPITER-NM,pipeline_right_of_way_permit,2450.0,PERMIT_DENIED,CONTESTED_IMPEDIMENT,NMSLO,2026-07-15,2026-07-15,CLM-PRE-NMSLO-DENIAL-JUL15

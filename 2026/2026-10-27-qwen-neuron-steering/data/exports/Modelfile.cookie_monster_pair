@@ -1,0 +1,8 @@
+# Ollama Modelfile & Control-Vector Companion for Cookie Monster (Cookie + Cartoon Mascot)
+# Recipe Formula: L24 N3102 +0.60 + L9 N9009 +0.60
+# For true MLP activation steering in llama.cpp using Ollama's GGUF weights:
+#   llama-cli -m <ollama_qwen35_blob> --control-vector cookie_monster_pair.cvec.gguf -p "Who are you?"
+
+FROM qwen3.5:4b
+PARAMETER temperature 0.0
+SYSTEM """[Neuron Steering Reference Profile: Cookie Monster (Cookie + Cartoon Mascot) | L24 N3102 +0.60 + L9 N9009 +0.60]"""

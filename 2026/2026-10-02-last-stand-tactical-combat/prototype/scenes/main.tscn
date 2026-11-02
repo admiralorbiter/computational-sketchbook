@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://mainscene1234"]
+
+[ext_resource type="Script" path="res://src/main.gd" id="1_main"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_main")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+
+[node name="Units" type="Node2D" parent="." groups=["units_container"]]
+
+[node name="Deployables" type="Node2D" parent="."]
+
+[node name="Projectiles" type="Node2D" parent="."]
+
+[node name="HUDLayer" type="CanvasLayer" parent="."]
+
+[node name="DebugLayer" type="CanvasLayer" parent="."]

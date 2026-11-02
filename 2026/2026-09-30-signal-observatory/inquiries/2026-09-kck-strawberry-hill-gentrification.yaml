@@ -1,0 +1,54 @@
+inquiry:
+  id: "2026-09-kck-strawberry-hill-gentrification"
+  question: >
+    What tensions, property tax disputes, parking conflicts, and cultural clashes
+    exist between longtime residents (Croatian, Slavic, Latino) and new businesses,
+    cocktail bars, and incoming homebuyers in Strawberry Hill, Kansas City, Kansas?
+  mode: investigate
+
+  scope:
+    time:
+      since: "2023-01-01T00:00:00Z"
+      until: "2026-09-30T23:59:59Z"
+    geography:
+      - "Strawberry Hill"
+      - "Kansas City Kansas"
+      - "Wyandotte County"
+      - "Central Avenue KCK"
+    languages: ["en", "es"]
+
+  seeds:
+    terms:
+      - "Strawberry Hill KCK gentrification"
+      - "Strawberry Hill Kansas City Kansas parking"
+      - "Breit's Stein and Deli Strawberry Hill"
+      - "The Mockingbird Lounge Strawberry Hill"
+      - "403 Club Strawberry Hill"
+      - "The Easy Inn Strawberry Hill"
+      - "Wyandotte County property tax hike Strawberry Hill"
+      - "Central Avenue KCK neighborhood shift"
+    hashtags: []
+    accounts: []
+    subreddits:
+      - "kansascity"
+      - "kansas"
+
+  platforms:
+    - reviews
+    - reddit
+    - citizen
+    - youtube
+    - web
+
+  budget:
+    max_queries: 12
+    max_artifacts: 100
+    max_media_downloads: 3
+
+  preservation: candidates
+
+  analysis:
+    cluster_narratives: true
+    track_media_spread: true
+    identify_firsthand_sources: true
+    find_contradictions: true

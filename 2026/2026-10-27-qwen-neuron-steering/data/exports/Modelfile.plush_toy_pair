@@ -1,0 +1,8 @@
+# Ollama Modelfile & Control-Vector Companion for Plush Toy (Hugs + Cartoon Mascot)
+# Recipe Formula: L4 N8016 -0.60 + L9 N9009 +0.60
+# For true MLP activation steering in llama.cpp using Ollama's GGUF weights:
+#   llama-cli -m <ollama_qwen35_blob> --control-vector plush_toy_pair.cvec.gguf -p "Who are you?"
+
+FROM qwen3.5:4b
+PARAMETER temperature 0.0
+SYSTEM """[Neuron Steering Reference Profile: Plush Toy (Hugs + Cartoon Mascot) | L4 N8016 -0.60 + L9 N9009 +0.60]"""

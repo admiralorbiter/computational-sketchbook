@@ -1,0 +1,19 @@
+# Exclude large raw NCES, CRDC, and EDFacts archives
+data/raw/nces/**
+!data/raw/nces/
+!data/raw/nces/.gitkeep
+data/raw/crdc/**
+!data/raw/crdc/
+!data/raw/crdc/.gitkeep
+data/raw/edfacts/**
+!data/raw/edfacts/
+!data/raw/edfacts/.gitkeep
+
+# Exclude scratch and python caches
+scratch/
+__pycache__/
+*.pyc
+
+# Manifests and processed outputs
+!data/manifest.csv
+!data/processed/*.csv

@@ -1,0 +1,12 @@
+wave,course_code,course_name,classes_ref_date,enr_ref_date,dates_contemporaneous,notes
+2013-14,alg1,Algebra I,"Fall Snapshot (Oct 1, 2013)","Fall Snapshot (Oct 1, 2013)",True,Grades 7-12 combined universe.
+2013-14,geom,Geometry,"Fall Snapshot (Oct 1, 2013)","Fall Snapshot (Oct 1, 2013)",True,Grades 7-12 combined universe.
+2013-14,other,"Alg II, Calc, Bio, Chem, Phys","Fall Snapshot (Oct 1, 2013)","Fall Snapshot (Oct 1, 2013)",True,Standard fall snapshot across classes and enrollments.
+2015-16,alg1,Algebra I,"Fall Snapshot (Oct 1, 2015)","Fall Snapshot (Oct 1, 2015)",True,Grades 9-12 high school snapshot.
+2015-16,all_others,All Other Secondary Courses,"Fall Snapshot (Oct 1, 2015)","Fall Snapshot (Oct 1, 2015)",True,Fall snapshot across classes and enrollments.
+2017-18,all,All Secondary Courses,"Fall Snapshot (Oct 1, 2017)","Fall Snapshot (Oct 1, 2017)",True,Fall snapshot across classes and enrollments.
+2020-21,all,All Secondary Courses,"Fall Snapshot (Oct 1, 2020)","Fall Snapshot (Oct 1, 2020)",True,Pandemic collection; hybrid/remote master schedules.
+2021-22,all,All Secondary Courses,"Fall Snapshot (Oct 1, 2021)","Fall Snapshot (Oct 1, 2021)",True,Contemporaneous fall snapshots.
+2023-24,alg1,Algebra I,"Fall Snapshot (Oct 1, 2023)",End-of-Year Cumulative (Spring 2024),False,"DATE MISMATCH: Classes measured Oct 1; enrollment includes students enrolled on any day during regular school year. May inflate enrollment relative to fall class count, or introduce denominator mismatch."
+2023-24,geom,Geometry,"Fall Snapshot (Oct 1, 2023)","Fall Snapshot (Oct 1, 2023)",True,Contemporaneous fall snapshot.
+2023-24,other_courses,"Alg II, Adv Math, Calc, Bio, Chem, Phys","Fall Snapshot (Oct 1, 2023)","Fall Snapshot (Oct 1, 2023)",True,Contemporaneous fall snapshot.

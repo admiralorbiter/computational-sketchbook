@@ -1,0 +1,892 @@
+# Entities Registry for AI Infrastructure Financial Network (Phase 0.5 Pilot)
+entities:
+  NVDA:
+    entity_id: NVDA
+    name: NVIDIA Corporation
+    ticker: NVDA
+    cik: "0001045810"
+    category: hardware_supplier
+    subsector: accelerated_computing_silicon
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "01-31"
+    description: "Dominant supplier of GPU accelerators (H100/H200/B200), NVLink networking, and AI systems."
+    key_counterparties: [CRWV, SMCI, ORCL, MSFT]
+
+  ORCL:
+    entity_id: ORCL
+    name: Oracle Corporation
+    ticker: ORCL
+    cik: "0001341439"
+    category: hyperscaler_cloud
+    subsector: enterprise_cloud_infrastructure
+    jurisdiction: US-TX
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "05-31"
+    description: "Enterprise software and cloud infrastructure provider (OCI), aggressively expanding large-scale GPU clusters and multicloud interconnects."
+    key_counterparties: [NVDA, MSFT]
+
+  CRWV:
+    entity_id: CRWV
+    name: CoreWeave, Inc.
+    ticker: CRWV
+    cik: "0001769628"
+    category: neocloud_operator
+    subsector: specialized_gpu_cloud
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Specialized GPU cloud provider operating high-density AI clusters financed through asset-backed private credit facilities."
+    key_counterparties: [NVDA, APLD, MSFT, BLACKSTONE_MAGNETAR_SYN]
+
+  APLD:
+    entity_id: APLD
+    name: Applied Digital Corporation
+    ticker: APLD
+    cik: "0001144879"
+    category: datacenter_developer
+    subsector: digital_infrastructure_hosting
+    jurisdiction: US-NV
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "05-31"
+    description: "Designs, develops, and operates next-generation digital infrastructure campuses engineered for HPC and AI loads."
+    key_counterparties: [CRWV, POLARIS_FORGE_1]
+
+  SMCI:
+    entity_id: SMCI
+    name: Super Micro Computer, Inc.
+    ticker: SMCI
+    cik: "0001375365"
+    category: server_oem
+    subsector: liquid_cooled_server_solutions
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "06-30"
+    description: "Accelerated compute server integrator delivering plug-and-play liquid-cooled GPU clusters."
+    key_counterparties: [NVDA, HARDWARE_SUPPLIERS]
+
+  MSFT:
+    entity_id: MSFT
+    name: Microsoft Corporation
+    ticker: MSFT
+    cik: "0000789019"
+    category: hyperscaler_anchor
+    subsector: cloud_ai_offtaker
+    jurisdiction: US-WA
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "06-30"
+    description: "Primary cloud and AI hyperscaler; anchor offtaker for CoreWeave capacity representing 67% of CoreWeave FY25 recognized revenue."
+    key_counterparties: [CRWV, NVDA, ORCL]
+
+  BLACKSTONE_MAGNETAR_SYN:
+    entity_id: BLACKSTONE_MAGNETAR_SYN
+    name: Private Credit Syndicate (Blackstone / Magnetar / Coatue / Carlyle)
+    ticker: null
+    cik: null
+    category: private_credit_syndicate
+    subsector: asset_backed_infrastructure_credit
+    jurisdiction: US
+    status: private_syndicate
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Syndicate of private credit and asset management funds providing multi-billion dollar asset-backed debt and delayed-draw term loans secured by GPU collateral."
+    key_counterparties: [CRWV]
+
+  CRWV_SPV_VIII:
+    entity_id: CRWV_SPV_VIII
+    name: CoreWeave Compute Acquisition Co. VIII, LLC
+    ticker: null
+    cik: null
+    parent_entity_id: CRWV
+    category: project_spv
+    subsector: equipment_financing_bankruptcy_remote_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "12-31"
+    description: "Bankruptcy-remote Special Purpose Vehicle created by CoreWeave to hold compute equipment, tenant under Polaris Forge 1 lease, and borrower under $8.5B non-recourse DDTL 4.0 Facility."
+    key_counterparties: [CRWV, APLD_COMPUTECO, MUFG_BANK_SYN]
+
+  CRWV_CCAC_II:
+    entity_id: CRWV_CCAC_II
+    name: CoreWeave Compute Acquisition Co. II, LLC
+    ticker: null
+    cik: null
+    parent_entity_id: CRWV
+    category: project_spv
+    subsector: equipment_financing_bankruptcy_remote_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "12-31"
+    description: "Direct wholly owned subsidiary and bankruptcy-remote borrowing SPV for CoreWeave DDTL 1.0 Facility (entered July 30, 2023)."
+    key_counterparties: [CRWV, BLACKSTONE_MAGNETAR_SYN]
+
+  CRWV_CCAC_IV:
+    entity_id: CRWV_CCAC_IV
+    name: CoreWeave Compute Acquisition Co. IV, LLC
+    ticker: null
+    cik: null
+    parent_entity_id: CRWV
+    category: project_spv
+    subsector: equipment_financing_bankruptcy_remote_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "12-31"
+    description: "Direct wholly owned subsidiary and bankruptcy-remote borrowing SPV for CoreWeave DDTL 2.0 (May 16, 2024) and DDTL 2.1 (September 2025) Facilities."
+    key_counterparties: [CRWV, BLACKSTONE_MAGNETAR_SYN]
+
+  CRWV_CCAC_V:
+    entity_id: CRWV_CCAC_V
+    name: CoreWeave Compute Acquisition Co. V, LLC
+    ticker: null
+    cik: null
+    parent_entity_id: CRWV
+    category: project_spv
+    subsector: equipment_financing_bankruptcy_remote_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "12-31"
+    description: "Direct subsidiary and co-borrowing SPV alongside CCAC VII for CoreWeave DDTL 3.0 Facility (July 28, 2025)."
+    key_counterparties: [CRWV, MUFG_BANK_SYN, CRWV_CCAC_VII]
+
+  CRWV_CCAC_VII:
+    entity_id: CRWV_CCAC_VII
+    name: CoreWeave Compute Acquisition Co. VII, LLC
+    ticker: null
+    cik: null
+    parent_entity_id: CRWV
+    category: project_spv
+    subsector: equipment_financing_bankruptcy_remote_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "12-31"
+    description: "Indirect subsidiary and co-borrowing SPV alongside CCAC V for CoreWeave DDTL 3.0 Facility (July 28, 2025)."
+    key_counterparties: [CRWV, MUFG_BANK_SYN, CRWV_CCAC_V]
+
+  CRWV_FINANCING_DDTL_V:
+    entity_id: CRWV_FINANCING_DDTL_V
+    name: CoreWeave Financing DDTL V, LLC
+    ticker: null
+    cik: null
+    parent_entity_id: CRWV
+    category: project_spv
+    subsector: equipment_financing_bankruptcy_remote_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "12-31"
+    description: "Indirect subsidiary and bankruptcy-remote borrowing SPV for CoreWeave DDTL 5.0 Facility (May 15, 2026)."
+    key_counterparties: [CRWV, MORGAN_STANLEY_SYN]
+
+  MUFG_BANK_SYN:
+    entity_id: MUFG_BANK_SYN
+    name: MUFG Bank Syndicate
+    ticker: null
+    cik: null
+    category: private_credit_syndicate
+    subsector: bank_credit_syndicate
+    jurisdiction: US
+    status: private_syndicate
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Syndicate of bank lenders led by MUFG Bank, LTD. providing the $8.5B non-recourse DDTL 4.0 credit facility to CCAC VIII."
+    key_counterparties: [CRWV_SPV_VIII]
+
+  MORGAN_STANLEY_SYN:
+    entity_id: MORGAN_STANLEY_SYN
+    name: Morgan Stanley Senior Funding Syndicate
+    ticker: null
+    cik: null
+    category: private_credit_syndicate
+    subsector: bank_credit_syndicate
+    jurisdiction: US
+    status: private_syndicate
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Syndicate of lenders led by Morgan Stanley Senior Funding, Inc. providing the $3.1B DDTL 5.0 facility guaranteed by CoreWeave, Inc."
+    key_counterparties: [CRWV_FINANCING_DDTL_V, CRWV]
+
+  APLD_COMPUTECO:
+    entity_id: APLD_COMPUTECO
+    name: APLD ComputeCo LLC
+    ticker: null
+    cik: null
+    parent_entity_id: APLD
+    category: project_spv
+    subsector: project_financing_holdco
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "05-31"
+    description: "Applied Digital financing subsidiary formed in corporate reorganization holding ELN-02 and ELN-03, issuer of $2.35B 9.25% Senior Notes due Dec 15, 2030."
+    key_counterparties: [APLD, PROJECT_LENDERS, CRWV_SPV_VIII, POLARIS_FORGE_1]
+
+  APLD_ELN02_LLC:
+    entity_id: APLD_ELN02_LLC
+    name: APLD ELN-02 LLC
+    ticker: null
+    cik: null
+    parent_entity_id: APLD_COMPUTECO
+    category: project_spv
+    subsector: real_estate_facility_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "05-31"
+    description: "Applied Digital subsidiary and landlord for Building 2 (100 MW operational) at Polaris Forge 1; counterparty to CoreWeave ELN-02 lease and Unconditional Springing Guaranty."
+    key_counterparties: [APLD_COMPUTECO, CRWV_SPV_VIII, CRWV, POLARIS_FORGE_1]
+
+  APLD_ELN03_LLC:
+    entity_id: APLD_ELN03_LLC
+    name: APLD ELN-03 LLC
+    ticker: null
+    cik: null
+    parent_entity_id: APLD_COMPUTECO
+    category: project_spv
+    subsector: real_estate_facility_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "05-31"
+    description: "Applied Digital subsidiary and landlord for Building 3 (150 MW partially operational) at Polaris Forge 1; counterparty to CoreWeave ELN-03 lease and Unconditional Springing Guaranty."
+    key_counterparties: [APLD_COMPUTECO, CRWV_SPV_VIII, CRWV, POLARIS_FORGE_1]
+
+  APLD_ELN02C_LLC:
+    entity_id: APLD_ELN02C_LLC
+    name: APLD ELN-02 C LLC
+    ticker: null
+    cik: null
+    parent_entity_id: APLD
+    category: project_spv
+    subsector: real_estate_facility_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "05-31"
+    description: "Applied Digital subsidiary and landlord for Building 4 (150 MW under construction) at Polaris Forge 1; guaranteed by APLD parent, with no CoreWeave parent springing guaranty."
+    key_counterparties: [APLD, CRWV, POLARIS_FORGE_1]
+
+  APLD_COMPUTECO2:
+    entity_id: APLD_COMPUTECO2
+    name: Applied Digital ComputeCo 2 LLC
+    ticker: null
+    cik: null
+    parent_entity_id: APLD
+    category: project_spv
+    subsector: real_estate_facility_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "05-31"
+    description: "Applied Digital project financing subsidiary owning the Polaris Forge 2 campus, funded via $2.15B 6.75% senior notes."
+    key_counterparties: [APLD, PROJECT_LENDERS]
+
+  APLD_HPC_HOLDINGS2:
+    entity_id: APLD_HPC_HOLDINGS2
+    name: APLD HPC Holdings 2 LLC
+    ticker: null
+    cik: null
+    parent_entity_id: APLD
+    category: project_spv
+    subsector: project_financing_holdco
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "05-31"
+    description: "Applied Digital intermediate holding company subsidiary; direct parent of APLD ComputeCo 3 LLC."
+    key_counterparties: [APLD, APLD_COMPUTECO3]
+
+  APLD_COMPUTECO3:
+    entity_id: APLD_COMPUTECO3
+    name: APLD ComputeCo 3 LLC
+    ticker: null
+    cik: null
+    parent_entity_id: APLD_HPC_HOLDINGS2
+    category: project_spv
+    subsector: project_financing_holdco
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "05-31"
+    description: "Applied Digital financing subsidiary owning ELN-04 (150 MW) at Polaris Forge 1 campus; issuer of $1.59B 7.00% Senior Secured Notes due June 15, 2031."
+    key_counterparties: [APLD_HPC_HOLDINGS2, INSTITUTIONAL_BONDHOLDERS, POLARIS_FORGE_1]
+
+  POLARIS_FORGE_1:
+    entity_id: POLARIS_FORGE_1
+    name: Polaris Forge 1 Campus (Ellendale, North Dakota)
+    ticker: null
+    cik: null
+    category: physical_asset_project
+    subsector: hpc_megawatt_campus
+    jurisdiction: US-ND
+    status: physical_asset
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Planned 400 MW ultra-dense computing campus in Ellendale, ND, contracted to CoreWeave under a 15-year, ~$11.0B revenue agreement."
+    key_counterparties: [APLD_COMPUTECO, CRWV_SPV_VIII]
+
+  INSTITUTIONAL_BONDHOLDERS:
+    entity_id: INSTITUTIONAL_BONDHOLDERS
+    name: Public and 144A Institutional Bondholders
+    ticker: null
+    cik: null
+    category: capital_markets
+    subsector: high_yield_and_convertible_investors
+    jurisdiction: US
+    status: market_aggregate
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Institutional investors holding senior secured notes and convertible debt tranches."
+    key_counterparties: [CRWV, APLD]
+
+  OEM_FINANCING_PARTNERS:
+    entity_id: OEM_FINANCING_PARTNERS
+    name: Hardware OEM Financing Syndicates
+    ticker: null
+    cik: null
+    category: hardware_financing
+    subsector: server_equipment_leasing
+    jurisdiction: US
+    status: market_aggregate
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Hardware OEM and software license financing counterparties."
+    key_counterparties: [CRWV]
+
+  HARDWARE_SUPPLIERS:
+    entity_id: HARDWARE_SUPPLIERS
+    name: Upstream Accelerated Hardware Suppliers (NVIDIA / Broadcom / Memory)
+    ticker: null
+    cik: null
+    category: hardware_supplier
+    subsector: semiconductor_subsystems
+    jurisdiction: US
+    status: market_aggregate
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Upstream component vendors with non-cancelable purchase commitments."
+    key_counterparties: [SMCI]
+
+  PROJECT_LENDERS:
+    entity_id: PROJECT_LENDERS
+    name: Project Finance Lenders & Noteholders
+    ticker: null
+    cik: null
+    category: capital_markets
+    subsector: project_finance_debt
+    jurisdiction: US
+    status: market_aggregate
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Project finance noteholders and bank lenders funding data center construction."
+    key_counterparties: [APLD_COMPUTECO, APLD_COMPUTECO2, APLD]
+
+  # =========================================================================
+  # Phase 1 Wave 1 Entities & Discovery-Driven Vehicles (ADR-017)
+  # =========================================================================
+
+  NBIS:
+    entity_id: NBIS
+    name: Nebius Group N.V.
+    ticker: NBIS
+    cik: "0001513845"
+    category: neocloud_operator
+    subsector: specialized_gpu_cloud
+    jurisdiction: NL
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Global AI cloud infrastructure provider operating large-scale GPU clusters financed via asset-backed credit facilities."
+    key_counterparties: [META, MUFG_BANK_SYN]
+
+  NBIS_COMPUTECO_II_LLC:
+    entity_id: NBIS_COMPUTECO_II_LLC
+    name: Nebius Compute II, LLC
+    ticker: null
+    cik: null
+    parent_entity_id: NBIS
+    category: project_spv
+    subsector: equipment_financing_bankruptcy_remote_spv
+    jurisdiction: US-DE
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "12-31"
+    description: "Direct wholly owned subsidiary and Delaware borrowing SPV under $775M asset-backed credit facility from MUFG Bank syndicate."
+    key_counterparties: [NBIS, MUFG_BANK_SYN, NBIS_COMPUTECO_II_OY]
+
+  NBIS_COMPUTECO_II_OY:
+    entity_id: NBIS_COMPUTECO_II_OY
+    name: Nebius Compute II Oy
+    ticker: null
+    cik: null
+    parent_entity_id: NBIS
+    category: project_spv
+    subsector: equipment_financing_bankruptcy_remote_spv
+    jurisdiction: FI
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "12-31"
+    description: "Indirect wholly owned subsidiary and Finnish borrowing SPV under $775M asset-backed credit facility from MUFG Bank syndicate."
+    key_counterparties: [NBIS, MUFG_BANK_SYN, NBIS_COMPUTECO_II_LLC]
+
+  NBIS_INC:
+    entity_id: NBIS_INC
+    name: Nebius, Inc.
+    ticker: null
+    cik: null
+    parent_entity_id: NBIS
+    category: operating_subsidiary
+    subsector: cloud_operating_entity
+    jurisdiction: US-DE
+    status: subsidiary_operating
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "12-31"
+    description: "Wholly owned operating subsidiary of Nebius Group N.V. contracting the $27B commercial infrastructure service agreement with Meta Platforms."
+    key_counterparties: [NBIS, META]
+
+  IREN:
+    entity_id: IREN
+    name: IREN Limited
+    ticker: IREN
+    cik: "0001878848"
+    category: datacenter_developer
+    subsector: digital_infrastructure_hpc
+    jurisdiction: AU
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "06-30"
+    description: "Next-generation data center and digital infrastructure developer engineered for AI workloads and Bitcoin mining, operating high-efficiency renewable energy campuses."
+    key_counterparties: [BLUE_OWL_OBDC, PIMCO, NVDA]
+
+  IREN_MACKENZIE_COMPUTE:
+    entity_id: IREN_MACKENZIE_COMPUTE
+    name: IE Mackenzie Compute Ltd.
+    ticker: null
+    cik: null
+    parent_entity_id: IREN
+    category: project_spv
+    subsector: equipment_financing_bankruptcy_remote_spv
+    jurisdiction: CA-BC
+    status: subsidiary_spv
+    reporting_standard: US-GAAP_consolidated
+    fiscal_year_end: "06-30"
+    description: "Wholly owned British Columbia subsidiary and borrowing SPV under $2.4B August 2026 financing agreements with Blue Owl and PIMCO."
+    key_counterparties: [IREN, BLUE_OWL_OBDC, PIMCO]
+
+  BLUE_OWL:
+    entity_id: BLUE_OWL
+    name: Blue Owl Capital Inc.
+    ticker: OWL
+    cik: "0001823945"
+    category: capital_provider
+    subsector: private_credit_alternative_asset_manager
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Leading alternative asset manager and private credit sponsor providing large-scale direct lending and infrastructure capital solutions."
+    key_counterparties: [BLUE_OWL_OBDC, IREN]
+
+  BLUE_OWL_OBDC:
+    entity_id: BLUE_OWL_OBDC
+    name: Blue Owl Capital Corporation (OBDC)
+    ticker: OBDC
+    cik: "0001655888"
+    parent_entity_id: null
+    manager_entity_id: BLUE_OWL
+    category: capital_provider_vehicle
+    subsector: direct_lending_bdc
+    jurisdiction: US-MD
+    status: public_bdc
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Business Development Company and direct lending fund externally managed by Blue Owl Credit Advisors LLC (an affiliate of Blue Owl Capital Inc.), acting as administrative agent, collateral agent, and lender to AI infrastructure developers."
+    key_counterparties: [BLUE_OWL, IREN_MACKENZIE_COMPUTE]
+
+  PIMCO:
+    entity_id: PIMCO
+    name: Pacific Investment Management Company LLC
+    ticker: null
+    cik: null
+    category: capital_provider
+    subsector: institutional_fixed_income_asset_manager
+    jurisdiction: US-DE
+    status: private_manager
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Global investment management firm acting as investment adviser to note purchasers in large-scale structured AI infrastructure debt."
+    key_counterparties: [IREN_MACKENZIE_COMPUTE, BLUE_OWL_OBDC]
+
+  CORZ:
+    entity_id: CORZ
+    name: Core Scientific, Inc.
+    ticker: CORZ
+    cik: "0001839341"
+    category: datacenter_developer
+    subsector: digital_infrastructure_hpc
+    jurisdiction: US-TX
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Specialized data center infrastructure developer providing 590 MW high-density colocation to CoreWeave under long-term contract."
+    key_counterparties: [CRWV]
+
+  WULF:
+    entity_id: WULF
+    name: TeraWulf Inc.
+    ticker: WULF
+    cik: "0001083301"
+    category: datacenter_developer
+    subsector: digital_infrastructure_hpc
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Owner and operator of zero-carbon digital infrastructure, developing Lake Mariner facility for high-density AI and HPC workloads."
+    key_counterparties: [INSTITUTIONAL_BONDHOLDERS]
+
+  HUT:
+    entity_id: HUT
+    name: Hut 8 Corp.
+    ticker: HUT
+    cik: "0001964789"
+    category: datacenter_developer
+    subsector: digital_infrastructure_hpc
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Energy infrastructure operator and digital asset miner expanding into AI high-density computing infrastructure."
+    key_counterparties: [COATUE]
+
+  COATUE:
+    entity_id: COATUE
+    name: Coatue Management / Coatue Tactical Solutions
+    ticker: null
+    cik: null
+    category: capital_provider
+    subsector: tech_alternative_asset_manager
+    jurisdiction: US-DE
+    status: private_manager
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Technology-focused alternative investment firm providing structured convertible debt and equity capital to AI infrastructure operators."
+    key_counterparties: [HUT, CRWV]
+
+  DELL:
+    entity_id: DELL
+    name: Dell Technologies Inc.
+    ticker: DELL
+    cik: "0001571996"
+    category: server_oem
+    subsector: enterprise_ai_server_solutions
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "01-31"
+    description: "Global technology provider and Tier-1 server integrator delivering PowerEdge AI servers powered by NVIDIA GPUs."
+    key_counterparties: [NVDA, CRWV]
+
+  HPE:
+    entity_id: HPE
+    name: Hewlett Packard Enterprise Company
+    ticker: HPE
+    cik: "0001645590"
+    category: server_oem
+    subsector: enterprise_ai_server_solutions
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "10-31"
+    description: "Global edge-to-cloud company providing Cray supercomputing and ProLiant high-density AI server solutions."
+    key_counterparties: [NVDA]
+
+  AMD:
+    entity_id: AMD
+    name: Advanced Micro Devices, Inc.
+    ticker: AMD
+    cik: "0000002488"
+    category: hardware_supplier
+    subsector: accelerated_computing_silicon
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Semiconductor leader supplying Instinct MI300/MI325 accelerators and EPYC server CPUs for AI data centers."
+    key_counterparties: [MSFT, META, ORCL]
+
+  META:
+    entity_id: META
+    name: Meta Platforms, Inc.
+    ticker: META
+    cik: "0001326801"
+    category: hyperscaler_anchor
+    subsector: cloud_ai_offtaker
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Global technology conglomerate investing aggressively in AI compute infrastructure; anchor offtaker for Nebius capacity under $27B agreement."
+    key_counterparties: [NBIS_INC, NVDA, AMD]
+
+  AMZN:
+    entity_id: AMZN
+    name: Amazon.com, Inc.
+    ticker: AMZN
+    cik: "0001018724"
+    category: hyperscaler_cloud
+    subsector: cloud_ai_infrastructure
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Leading global cloud provider (AWS) operating hyperscale data centers, developing custom AI silicon (Trainium/Inferentia) and deploying large-scale NVIDIA clusters."
+    key_counterparties: [NVDA]
+
+  GOOGL:
+    entity_id: GOOGL
+    name: Alphabet Inc.
+    ticker: GOOGL
+    cik: "0001652044"
+    category: hyperscaler_cloud
+    subsector: cloud_ai_infrastructure
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Global technology holding company operating Google Cloud Platform (GCP), developing custom TPU accelerators and deploying multi-gigawatt AI infrastructure."
+    key_counterparties: [NVDA]
+
+  MDU:
+    entity_id: MDU
+    name: MDU Resources Group, Inc. / Montana-Dakota Utilities Co.
+    ticker: MDU
+    cik: "0000067716"
+    category: electric_utility
+    subsector: regulated_electric_utility
+    jurisdiction: US-DE
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Regulated energy delivery company; electric utility serving Applied Digital's Polaris Forge 1 campus in Ellendale, ND."
+    key_counterparties: [APLD, MISO]
+
+  MISO:
+    entity_id: MISO
+    name: Midcontinent Independent System Operator, Inc.
+    ticker: null
+    cik: null
+    category: grid_operator_rto
+    subsector: regional_transmission_organization
+    jurisdiction: US-DE
+    status: private_nonprofit
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Regional transmission organization (RTO) operating the high-voltage electricity grid across 15 U.S. states and Manitoba, serving MDU and Polaris Forge 1."
+    key_counterparties: [MDU, APLD]
+
+  DME:
+    entity_id: DME
+    name: Denton Municipal Electric
+    ticker: null
+    cik: null
+    category: electric_utility
+    subsector: municipal_electric_utility
+    jurisdiction: US-TX
+    status: municipal_utility
+    reporting_standard: GASB
+    fiscal_year_end: "09-30"
+    description: "City-owned electric utility for Denton, TX; provides power and ERCOT large-load interconnection service to Core Scientific's Denton data center."
+    key_counterparties: [CORZ, ERCOT]
+
+  ERCOT:
+    entity_id: ERCOT
+    name: Electric Reliability Council of Texas, Inc.
+    ticker: null
+    cik: null
+    category: grid_operator_rto
+    subsector: independent_system_operator
+    jurisdiction: US-TX
+    status: private_nonprofit
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Independent system operator (ISO) managing the flow of electric power to more than 26 million Texas customers, representing 90 percent of the state's electric load."
+    key_counterparties: [DME, AUSTIN_ENERGY, AEP_TEXAS, CORZ, IREN]
+
+  DALTON_UTILITIES:
+    entity_id: DALTON_UTILITIES
+    name: Dalton Utilities
+    ticker: null
+    cik: null
+    category: electric_utility
+    subsector: municipal_electric_utility
+    jurisdiction: US-GA
+    status: municipal_utility
+    reporting_standard: GASB
+    fiscal_year_end: "12-31"
+    description: "Municipal utility owned by the City of Dalton, Georgia; supplies 195 MW electric service capacity to Core Scientific's Dalton data center."
+    key_counterparties: [CORZ]
+
+  SERC:
+    entity_id: SERC
+    name: SERC Reliability Corporation
+    ticker: null
+    cik: null
+    category: nerc_regional_entity
+    subsector: regional_reliability_organization
+    jurisdiction: US-NC
+    status: private_nonprofit
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "NERC Regional Entity responsible for reliability standards and bulk power system compliance in the southeastern United States; NOT an RTO, ISO, or operational balancing authority."
+    key_counterparties: []
+
+  OGE:
+    entity_id: OGE
+    name: OGE Energy Corp. / Oklahoma Gas and Electric Company
+    ticker: OGE
+    cik: "0001021635"
+    category: electric_utility
+    subsector: regulated_electric_utility
+    jurisdiction: US-OK
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Regulated electric utility providing 100 MW power to Core Scientific's Muskogee, OK data center within the Southwest Power Pool."
+    key_counterparties: [CORZ, SPP]
+
+  SPP:
+    entity_id: SPP
+    name: Southwest Power Pool, Inc.
+    ticker: null
+    cik: null
+    category: grid_operator_rto
+    subsector: regional_transmission_organization
+    jurisdiction: US-AR
+    status: private_nonprofit
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Regional transmission organization mandated by FERC to ensure reliable power supplies, adequate transmission infrastructure, and competitive wholesale electricity prices across 14 central US states."
+    key_counterparties: [OGE, CORZ]
+
+  DUKE_ENERGY:
+    entity_id: DUKE_ENERGY
+    name: Duke Energy Corporation
+    ticker: DUK
+    cik: "0001326160"
+    category: electric_utility
+    subsector: regulated_electric_utility
+    jurisdiction: US-NC
+    status: public
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Energy holding company whose regulated utility (Duke Energy Carolinas) operates a balancing authority and provides 82 MW electric service to Core Scientific's Marble, NC facility."
+    key_counterparties: [CORZ]
+
+  MURPHY_ELECTRIC:
+    entity_id: MURPHY_ELECTRIC
+    name: Murphy Electric Power Board
+    ticker: null
+    cik: null
+    category: electric_utility
+    subsector: municipal_electric_utility
+    jurisdiction: US-NC
+    status: municipal_utility
+    reporting_standard: GASB
+    fiscal_year_end: "06-30"
+    description: "Municipal electric power board in Cherokee County, North Carolina; supplies 35 MW power capacity to Core Scientific's Marble facility (alongside Duke Energy's 82 MW)."
+    key_counterparties: [CORZ]
+
+  AUSTIN_ENERGY:
+    entity_id: AUSTIN_ENERGY
+    name: Austin Energy
+    ticker: null
+    cik: null
+    category: electric_utility
+    subsector: municipal_electric_utility
+    jurisdiction: US-TX
+    status: municipal_utility
+    reporting_standard: GASB
+    fiscal_year_end: "09-30"
+    description: "City of Austin's municipal electric utility providing 20 MW power to Core Scientific's Austin data center within ERCOT."
+    key_counterparties: [CORZ, ERCOT]
+
+  NYPA:
+    entity_id: NYPA
+    name: New York Power Authority
+    ticker: null
+    cik: null
+    category: electric_utility
+    subsector: state_power_authority
+    jurisdiction: US-NY
+    status: state_authority
+    reporting_standard: GASB
+    fiscal_year_end: "12-31"
+    description: "Largest state public power organization in the United States; allocates 90 MW of low-cost hydro power to TeraWulf's Lake Mariner facility."
+    key_counterparties: [WULF, NYISO]
+
+  NYISO:
+    entity_id: NYISO
+    name: New York Independent System Operator, Inc.
+    ticker: null
+    cik: null
+    category: grid_operator_rto
+    subsector: independent_system_operator
+    jurisdiction: US-NY
+    status: private_nonprofit
+    reporting_standard: null
+    fiscal_year_end: null
+    description: "Independent system operator administering New York State's wholesale electricity markets and operating high-voltage transmission, including Zone A Western NY."
+    key_counterparties: [NYPA, WULF]
+
+  AEP_TEXAS:
+    entity_id: AEP_TEXAS
+    name: AEP Texas Inc.
+    ticker: null
+    cik: "0000002528"
+    category: electric_utility
+    subsector: transmission_and_distribution_utility
+    jurisdiction: US-DE
+    status: public_subsidiary
+    reporting_standard: US-GAAP
+    fiscal_year_end: "12-31"
+    description: "Transmission and distribution utility subsidiary of American Electric Power Company (AEP), executing interconnection and grid-connection agreements with IREN Childress and Sweetwater 2."
+    key_counterparties: [IREN, ERCOT]
+
+  NIVOS:
+    entity_id: NIVOS
+    name: Nivos Oy
+    ticker: null
+    cik: null
+    category: electric_utility
+    subsector: municipal_energy_utility
+    jurisdiction: FI
+    status: municipal_utility
+    reporting_standard: IFRS_local
+    fiscal_year_end: "12-31"
+    description: "Finnish regional energy utility operating local electric and district heating networks in Mäntsälä, utilizing waste heat from Nebius's supercomputing facility."
+    key_counterparties: [NBIS, FINGRID]
+
+  FINGRID:
+    entity_id: FINGRID
+    name: Fingrid Oyj
+    ticker: null
+    cik: null
+    category: grid_operator_rto
+    subsector: transmission_system_operator
+    jurisdiction: FI
+    status: state_enterprise
+    reporting_standard: IFRS
+    fiscal_year_end: "12-31"
+    description: "Finnish national transmission system operator (TSO) responsible for high-voltage electricity transmission grid across Finland."
+    key_counterparties: [NIVOS, NBIS]

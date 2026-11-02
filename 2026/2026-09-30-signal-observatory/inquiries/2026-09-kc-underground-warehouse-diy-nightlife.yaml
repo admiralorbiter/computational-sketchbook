@@ -1,0 +1,53 @@
+inquiry:
+  id: "2026-09-kc-underground-warehouse-diy-nightlife"
+  question: >
+    What underground parties, warehouse techno raves, DIY punk/noise venues
+    (such as Farewell on Stadium Drive), and unlicensed after-hours nightlife
+    exist in the Kansas City metro area (West Bottoms, industrial corridors)?
+  mode: investigate
+
+  scope:
+    time:
+      since: "2023-01-01T00:00:00Z"
+      until: "2026-09-30T23:59:59Z"
+    geography:
+      - "West Bottoms"
+      - "Stadium Drive KCMO"
+      - "East Crossroads"
+      - "Industrial District Kansas City"
+    languages: ["en"]
+
+  seeds:
+    terms:
+      - "Farewell Kansas City music venue"
+      - "Farewell Stadium Drive Kansas City"
+      - "West Bottoms warehouse rave Kansas City"
+      - "underground techno Kansas City"
+      - "Kansas City DIY music scene"
+      - "after hours party Kansas City"
+      - "Manor Records Kansas City"
+      - "underground house music Kansas City"
+    hashtags: []
+    accounts: []
+    subreddits:
+      - "kansascity"
+
+  platforms:
+    - citizen
+    - reviews
+    - reddit
+    - youtube
+    - web
+
+  budget:
+    max_queries: 12
+    max_artifacts: 100
+    max_media_downloads: 3
+
+  preservation: candidates
+
+  analysis:
+    cluster_narratives: true
+    track_media_spread: true
+    identify_firsthand_sources: true
+    find_contradictions: true

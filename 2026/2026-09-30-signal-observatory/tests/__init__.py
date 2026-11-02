@@ -1,0 +1,1 @@
+"""Signal Observatory test suite."""

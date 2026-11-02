@@ -1,0 +1,4 @@
+survey_year,survey_name,us_hs_class_size,mo_hs_class_size,ks_hs_class_size,us_state_ptr,mo_state_ptr,ks_state_ptr,mo_gap_class_minus_ptr,ks_gap_class_minus_ptr,us_gap_class_minus_ptr,period_type
+2011–12,SASS (Table 7),24.2,21.8,19.7,16.0,13.8,13.0,8.0,6.699999999999999,8.2,Pre-Pandemic Baseline
+2017–18,NTPS (Table A-7a),23.3,22.5,19.8,15.9,14.1,14.2,8.4,5.600000000000001,7.4,Pre-Pandemic Expansion
+2020–21,NTPS (Table 7),21.0,19.2,17.4,15.4,13.7,14.1,5.5,3.299999999999999,5.6,Pandemic Wave (Caveated)

@@ -1,0 +1,90 @@
+# Authored Canonical Bitemporal Observations
+# Tracks verified events from source event date through first public observability and ingestion.
+
+- observation_id: OBS-20260715-JUP01
+  indicator_id: IND-JUP-001
+  project_id: PROJECT_JUPITER
+  source_event_date: "2026-07-15"
+  first_publicly_observable_date: "2026-07-15"
+  ingestion_date: "2026-09-30"
+  clock_affected: PHYSICAL
+  threatened_boundary: "Bloom Energy microgrid fuel supply & commercial energization date"
+  signal_role: EARLY_WARNING
+  observability: PUBLIC
+  headline_text: "NMSLO denies ROW permit across 0.6-mile state land segment for 17-mile natural gas pipeline"
+  raw_source_uri: "https://www.nmstatelands.org/2026/07/15/commissioner-garcia-richard-again-denies-request-to-run-portion-of-project-jupiter-pipeline-through-state-lands/"
+  lead_time_days_to_financial_recognition: 65.0
+  propagation_lag_days_from_upstream_signal: 0.0
+  lead_time_status: OBSERVED
+  evidence_claim_id: "CLM-PRE-NMSLO-DENIAL-JUL15"
+
+- observation_id: OBS-20260918-JUP02
+  indicator_id: IND-JUP-004
+  project_id: PROJECT_JUPITER
+  source_event_date: "2026-09-18"
+  first_publicly_observable_date: "2026-09-18"
+  ingestion_date: "2026-09-30"
+  clock_affected: FINANCIAL
+  threatened_boundary: "Secondary debt market loan valuation and bank syndicate extension willingness"
+  signal_role: FINANCIAL_RECOGNITION
+  observability: COMMERCIAL_DATA
+  headline_text: "Project Jupiter ~$18B syndicated construction loan trades under pressure at 89-91 cents on the dollar"
+  raw_source_uri: "https://www.ft.com/content/a96bf05a-a299-4d6a-a753-b298dd0f4016"
+  lead_time_days_to_financial_recognition: 0.0
+  propagation_lag_days_from_upstream_signal: null
+  lead_time_status: OBSERVED
+  evidence_claim_id: "CLM-PRE-REUTERS-SEP18-DEBT"
+
+- observation_id: OBS-20260924-JUP03
+  indicator_id: IND-JUP-002
+  project_id: PROJECT_JUPITER
+  source_event_date: "2026-09-24"
+  first_publicly_observable_date: "2026-09-24"
+  ingestion_date: "2026-09-30"
+  clock_affected: CONTRACT
+  threatened_boundary: "Commercial offtake rent step-up (extends development carry)"
+  signal_role: CONFIRMATION
+  observability: PUBLIC
+  headline_text: "Oracle issues formal force-majeure notice citing NMSLO natural gas pipeline permitting impasse"
+  raw_source_uri: "https://www.reuters.com/business/energy/oracle-force-majeure-new-mexico-20260924"
+  lead_time_days_to_financial_recognition: -6.0
+  propagation_lag_days_from_upstream_signal: 71.0
+  lead_time_status: OBSERVED
+  evidence_claim_id: "CLM-POST-REUTERS-SEP24-FM"
+
+- observation_id: OBS-20260930-JUP04
+  indicator_id: IND-JUP-003
+  project_id: PROJECT_JUPITER
+  reference_event_date: "2026-07-15"
+  source_event_date: "2026-07-15"
+  censor_date: "2026-09-30"
+  first_publicly_observable_date: "2026-09-30"
+  ingestion_date: "2026-09-30"
+  clock_affected: FINANCIAL
+  threatened_boundary: "SEC EDGAR public corporate awareness of project permitting impasse"
+  signal_role: CONFIRMATION
+  observability: PUBLIC
+  headline_text: "Zero SEC Form 8-K or 10-Q disclosures filed by Oracle or Blue Owl OBDC regarding pipeline dispute as of Q3 end"
+  raw_source_uri: "https://www.sec.gov/edgar/searchedgar/companysearch"
+  lead_time_days_to_financial_recognition: null
+  censored_lead_days: 77.0
+  propagation_lag_days_from_upstream_signal: null
+  lead_time_status: RIGHT_CENSORED_OBSERVED
+  evidence_claim_id: "CLM-PRE-NMSLO-DENIAL-JUL15"
+
+- observation_id: OBS-20260825-MAC01
+  indicator_id: IND-MAC-003
+  project_id: IREN_MACKENZIE
+  source_event_date: "2026-08-25"
+  first_publicly_observable_date: "2026-08-28"
+  ingestion_date: "2026-10-01"
+  clock_affected: FINANCIAL
+  threatened_boundary: "Establishment of facility availability expiration cliff and 30-month tranche maturity rules"
+  signal_role: CONFIRMATION
+  observability: PUBLIC
+  headline_text: "IE Mackenzie Compute enters up-to-$2.4B staged equipment financing facility with Blue Owl & PIMCO through Dec 31, 2026"
+  raw_source_uri: "https://www.sec.gov/Archives/edgar/data/1878848/000187884826000052/iren-20260630.htm"
+  lead_time_days_to_financial_recognition: null
+  propagation_lag_days_from_upstream_signal: 0.0
+  lead_time_status: OBSERVED
+  evidence_claim_id: "CLM-IREN-001"
